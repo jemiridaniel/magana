@@ -4,6 +4,11 @@ import type { Learner, Version } from "./data";
 
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 const useMock = !API_URL;
+// The backend's MAGANA_API_KEY. NEXT_PUBLIC_ values ship to the browser, so this is for local
+// development only; a deployed portal needs teacher sign-in and a server-side key instead.
+const keyHeader: Record<string, string> = process.env.NEXT_PUBLIC_API_KEY
+  ? { "X-Magana-Key": process.env.NEXT_PUBLIC_API_KEY }
+  : {};
 
 const wait = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -16,7 +21,7 @@ export async function uploadMaterial(file: File, classId: string, versions: Vers
   body.append("file", file);
   body.append("class_id", classId);
   versions.forEach((v) => body.append("versions", v));
-  const r = await fetch(`${API_URL}/materials`, { method: "POST", body });
+  const r = await fetch(`${API_URL}/materials`, { method: "POST", body, headers: keyHeader });
   if (!r.ok) throw new Error(`Upload failed (${r.status})`);
   return r.json();
 }
@@ -34,7 +39,7 @@ export async function saveRegister(sessionId: string, learners: Pick<Learner, "i
   }
   const r = await fetch(`${API_URL}/sessions/${encodeURIComponent(sessionId)}/register`, {
     method: "PUT",
-    headers: { "Content-Type": "application/json" },
+    headers: { "Content-Type": "application/json", ...keyHeader },
     body: JSON.stringify(learners.map(({ id, mark }) => ({ learner_id: id, mark }))),
   });
   if (!r.ok) throw new Error(`Save failed (${r.status})`);
