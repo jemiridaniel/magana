@@ -7,6 +7,7 @@ import 'package:app/language.dart';
 import 'package:app/main.dart';
 import 'package:app/policy.dart';
 import 'package:app/profile.dart';
+import 'package:app/screens/about.dart';
 import 'package:app/screens/settings.dart';
 import 'package:app/voice_input.dart';
 import 'package:flutter/material.dart';
@@ -183,6 +184,14 @@ void main() {
     expect(find.text(en.settingsVersion('0.1.0', '3')), findsOneWidget);
     expect(find.text(en.reportHow), findsOneWidget);
     expectAccessible(tester, 'Settings');
+    await tap(tester, RegExp('^${en.aboutTitle}'));
+    // The terms' credit lines, verbatim, as each model card words them.
+    expect(find.text(natlasAttribution), findsOneWidget);
+    for (final line in asrAttributions) {
+      expect(find.text(line), findsOneWidget);
+    }
+    expect(find.text(termsCondition), findsOneWidget);
+    expectAccessible(tester, 'About');
     handle.dispose();
   });
 
@@ -201,6 +210,8 @@ void main() {
 
     await say(tester, voice, 'change language to Hausa');
     expect(language.value, const Locale('ha'));
+    // Commands are English keywords, whatever the app language.
+    expect(voice.languages.toSet(), {'en'});
     handle.dispose();
   });
 
@@ -256,6 +267,7 @@ void main() {
 
       voice.replies.add(['what does this table mean']);
       await tap(tester, en.askAQuestion);
+      expect(voice.languages.last, 'en'); // the app language
       expect(
         find.bySemanticsLabel('${en.youSaid}: what does this table mean'),
         findsOneWidget,

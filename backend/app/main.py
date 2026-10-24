@@ -18,7 +18,7 @@ from typing import Literal
 import httpx
 from pydantic import BaseModel, ConfigDict
 
-from . import explain, policy, safety, triage
+from . import asr, explain, policy, safety, triage
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
 from .messages import CodedError
@@ -179,25 +179,47 @@ class ExplainRequest(BaseModel):
 
 
 @lru_cache(maxsize=1)
-def get_explainer() -> explain.Explainer:
-    return explain.default_explainer()
+def get_explain_engine() -> explain.Engine:
+    """One engine per process, from EXPLAIN_ENGINE (docs/MODELS.md)."""
+    return explain.default_engine()
 
 
 @app.post("/explain")
 def explain_page(body: ExplainRequest, tier: policy.Tier = Depends(caller_tier),
-                 explainer: explain.Explainer = Depends(get_explainer)) -> dict:
+                 engine: explain.Engine = Depends(get_explain_engine)) -> dict:
     """An explanation of page text, always through the verbatim-number guard (CLAUDE.md
-    rule 1). If the guard fails, the app reads the page text instead."""
+    rule 1). If the guard fails or the model is unavailable, the app reads the page instead.
+    Guided learners (13-17) get a curriculum-only prompt."""
     require(tier, policy.Feature.EXPLAIN)
     if not body.source_text.strip() or len(body.source_text) > explain.MAX_SOURCE_CHARS:
         raise HTTPException(400, {"code": "explain_bad_source"})
-    text = explainer.explain(body.source_text, body.question, body.lang, body.style)
-    guard = safety.guard_explanation(body.source_text, text)
-    if not guard.ok:
-        return {"code": guard.message, "explanation": None, "read_instead": body.source_text,
-                "preview": explainer.preview}
-    return {"code": "explain_preview" if explainer.preview else "explained", "explanation": text,
-            "read_instead": None, "preview": explainer.preview}
+    r = explain.explain(engine, body.source_text, body.question, body.lang, body.style,
+                        guided=tier is policy.Tier.GUIDED)
+    return {"code": r.code, "explanation": r.explanation, "read_instead": r.read_instead,
+            "preview": r.preview}
+
+
+@lru_cache(maxsize=1)
+def get_asr_engine() -> asr.ASREngine:
+    return asr.default_engine()
+
+
+@app.post("/asr")
+async def transcribe(file: UploadFile = File(...), lang: Literal["en", "ha", "yo", "ig"] = Form("en"),
+                     engine: asr.ASREngine = Depends(get_asr_engine)) -> dict:
+    """A short spoken answer or command (at most 30 s). The audio is never stored. When the
+    server has no ASR, the app uses the phone's own recogniser."""
+    audio = await file.read()
+    if len(audio) > 2_000_000:  # 30 s of 16 kHz 16-bit mono is about 1 MB
+        raise HTTPException(413, {"code": "audio_too_long"})
+    try:
+        text = await asyncio.to_thread(engine.transcribe, audio, lang)
+    except asr.ASRUnavailable:
+        raise HTTPException(503, {"code": "asr_unavailable"})
+    except Exception:
+        log.exception("asr failed")
+        raise HTTPException(400, {"code": "unreadable_audio"})
+    return {"text": text.strip(), "engine": engine.name}
 
 
 def get_iba() -> IbaClient | None:

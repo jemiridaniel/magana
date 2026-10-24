@@ -1,0 +1,6 @@
+Account statement, 1 to 31 October 2026
+Opening balance: N45,200.00
+03 Oct 2026 | Transfer to Ada | Money out N2,000.00 | Balance N43,200.00
+14 Oct 2026 | POS purchase, supermarket | Money out N6,450.00 | Balance N36,750.00
+25 Oct 2026 | Salary | Money in N150,000.00 | Balance N186,750.00
+Closing balance: N186,750.00

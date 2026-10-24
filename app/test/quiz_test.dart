@@ -21,13 +21,15 @@ class FakeVoice implements VoiceInput {
   final bool works;
   final replies = <List<String>>[];
   int listens = 0;
+  final languages = <String>[];
 
   @override
   Future<bool> init() async => works;
 
   @override
-  Future<List<String>> listen() async {
+  Future<List<String>> listen({String language = 'en'}) async {
     listens++;
+    languages.add(language);
     return replies.isEmpty ? const [] : replies.removeAt(0);
   }
 
@@ -216,6 +218,7 @@ void main() {
 
     await say(tester, voice, ['bee']);
     expect(voice.listens, 1);
+    expect(voice.languages, ['en']); // the quiz is in English
     final right =
         '${en.quizCorrect('B')} '
         'Iodine solution turns blue-black when starch is present.';

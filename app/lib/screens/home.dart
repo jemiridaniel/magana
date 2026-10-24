@@ -576,7 +576,8 @@ class _SpeakButtonState extends State<_SpeakButton> {
     }
     await speaker.stop();
     setState(() => _listening = true);
-    final heard = await _voice.listen();
+    // Commands are English keywords for now.
+    final heard = await _voice.listen(language: 'en');
     if (!mounted) return;
     setState(() => _listening = false);
     if (heard.isEmpty) {

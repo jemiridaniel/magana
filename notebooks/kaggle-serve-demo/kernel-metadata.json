@@ -1,0 +1,17 @@
+{
+  "id": "certifiedsurvey/kaggle-serve-demo",
+  "id_no": 138087621,
+  "title": "kaggle_serve_demo",
+  "code_file": "kaggle-serve-demo.ipynb",
+  "language": "python",
+  "kernel_type": "notebook",
+  "is_private": false,
+  "enable_gpu": true,
+  "enable_tpu": false,
+  "enable_internet": true,
+  "keywords": [],
+  "dataset_sources": [],
+  "kernel_sources": [],
+  "competition_sources": [],
+  "model_sources": []
+}

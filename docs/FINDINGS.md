@@ -13,6 +13,21 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Safety: N-ATLaS engines behind the number guard, and its false-alarm baseline
+
+- **What we tested and how:**
+  - `test_explain.py`, 16 tests: the engines' exact requests, sections, the per-section guard, the 20 s deadline, injection attempts and the Guided prompt.
+  - The explanation benchmark (`benchmark/explain/`) run with the **stub** engine, which returns each page unchanged, on the 10 team-written pages in English, Hausa, Yorùbá and Igbo, on the Mac.
+- **Result:**
+  - **Baseline: the guard rejected 0 of 40 unchanged pages.** The pages are packed with doses ("1 to 2 tablets every 4 to 6 hours"), amounts ("N186,750.00", "N13,636.59"), dates, "7.5%", "4,698 kWh" and a fraction. So any rejection in a real model run means the model added or changed a number, not that the guard misfired.
+  - **Engine requests:**
+    - vLLM gets the card's settings (temperature 0.1, repetition_penalty 1.12) and `chat_template_kwargs.date_string`. `EXPLAIN_MODEL` picks the base model or a LoRA adapter served with `--enable-lora`.
+    - For llama.cpp, Magana renders N-ATLaS's Llama 3.1 template itself.
+  - **Long pages and the deadline:** long pages go in sections of at most 6,000 characters, within the card's 8,092-token context. An answer that uses a number from another section is rejected. The whole explanation has one 20 s deadline, and a slow or down model means the page is read instead.
+  - **Page text is data:** control tokens such as `<|eot_id|>` are stripped from page text, and a page can't close its own `<page>` fence.
+- **What we changed:** this commit.
+- **Status:** the engines are tested with fakes only. N-ATLaS's real number-change rate and quality per language are measured in a later entry.
+
 ## 2026-10-24 · Release build: signed APK size, and the API key
 
 - **What we tested and how:**

@@ -1464,4 +1464,39 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get msg_bad_api_key =>
       'Wannan kwafin Magana ba zai iya kaiwa ga sabis ɗin karatu ba. Don Allah ka sabunta manhajar.';
+
+  @override
+  String get msg_explain_unavailable =>
+      'Ba a samun bayani a yanzu. Ga shafin, an karanta shi daidai yadda aka buga.';
+
+  @override
+  String get msg_asr_unavailable =>
+      'Ba a saita gane murya a sabar ba; ana amfani da na wayar.';
+
+  @override
+  String get msg_audio_too_long =>
+      'Rikodin ya yi tsawo sosai. Don Allah ka faɗi gajeriyar amsa.';
+
+  @override
+  String get msg_unreadable_audio =>
+      'Ban ji wannan rikodin ba. Don Allah ka sake gwadawa.';
+
+  @override
+  String get aboutTitle => 'Game da Magana';
+
+  @override
+  String get aboutModels => 'Samfuran harshe';
+
+  @override
+  String get aboutModelsNote =>
+      'Magana tana amfani da waɗannan samfuran buɗe ido ƙarƙashin Sharuɗɗan Amfani na N-ATLaS, siga 1.0. An kawo layukan yabo da ke ƙasa kamar yadda sharuɗɗan suka buƙata.';
+
+  @override
+  String get aboutExplain => 'Bayani a harshenka';
+
+  @override
+  String get aboutSpeech => 'Gane murya';
+
+  @override
+  String get openSourceLicences => 'Lasisin buɗaɗɗen tushe';
 }

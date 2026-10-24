@@ -1,0 +1,8 @@
+# Server speech recognition (ASR_ENGINE=local): NCAIR1's Whisper Small models on CPU.
+# About 1 GB per language model, downloaded on first use. Install on top of requirements.txt:
+#   pip install -r requirements-asr.txt
+-r requirements.txt
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.3
+transformers>=4.46
+soundfile>=0.12

@@ -1,0 +1,6 @@
+Electricity bill, September 2026
+Account number: 0123456789
+Previous reading: 4,512 kWh. Present reading: 4,698 kWh. Units used: 186 kWh.
+Tariff: N68.20 per kWh.
+Energy charge: N12,685.20. VAT 7.5%: N951.39.
+Total due: N13,636.59. Pay by 15 October 2026.

@@ -294,6 +294,7 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
 
   /// E6 "Or say yes or no": a spoken answer, by fixed word rules.
   Future<void> _listen() async {
+    final lang = Localizations.localeOf(context).languageCode;
     if (_listening) {
       await _voice.stop();
       return;
@@ -307,7 +308,7 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
     }
     await speaker.stop();
     setState(() => _listening = true);
-    final heard = await _voice.listen();
+    final heard = await _voice.listen(language: lang);
     if (!mounted) return;
     setState(() => _listening = false);
     final q = _asked[_index];

@@ -139,7 +139,7 @@ class _QuizScreenState extends State<QuizScreen> {
       _listening = true;
       if (_chosen == null) _feedback = null; // an old "did not hear" note
     });
-    final heard = await _voice.listen();
+    final heard = await _voice.listen(language: 'en'); // the quiz is in English
     if (!mounted) return;
     setState(() => _listening = false);
     switch (hear(heard, _q)) {

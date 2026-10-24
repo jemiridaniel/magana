@@ -1006,5 +1006,15 @@
   "sayNameNote": "Off: the lock screen says only “Magana reminder”. On: the lock screen shows the medicine and how much, and Magana says them aloud at each time, so people near you may see or hear them.",
   "reminderGenericTitle": "Magana reminder",
   "reminderGenericBody": "Open Magana to hear which medicine.",
-  "msg_bad_api_key": "This copy of Magana can't reach the reading service. Please update the app."
+  "msg_bad_api_key": "This copy of Magana can't reach the reading service. Please update the app.",
+  "msg_explain_unavailable": "Explanations aren't available right now. Here is the page, read exactly as printed.",
+  "msg_asr_unavailable": "Speech recognition on the server is not set up; the phone's own is used.",
+  "msg_audio_too_long": "That recording is too long. Please say a short answer.",
+  "msg_unreadable_audio": "I couldn't hear that recording. Please try again.",
+  "aboutTitle": "About Magana",
+  "aboutModels": "Language models",
+  "aboutModelsNote": "Magana uses these open models under the N-ATLaS Terms of Use, version 1.0. The credit lines below are quoted as the terms require.",
+  "aboutExplain": "Explanations in your language",
+  "aboutSpeech": "Speech recognition",
+  "openSourceLicences": "Open-source licences"
 }

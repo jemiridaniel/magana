@@ -2387,6 +2387,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This copy of Magana can\'t reach the reading service. Please update the app.'**
   String get msg_bad_api_key;
+
+  /// No description provided for @msg_explain_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Explanations aren\'t available right now. Here is the page, read exactly as printed.'**
+  String get msg_explain_unavailable;
+
+  /// No description provided for @msg_asr_unavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech recognition on the server is not set up; the phone\'s own is used.'**
+  String get msg_asr_unavailable;
+
+  /// No description provided for @msg_audio_too_long.
+  ///
+  /// In en, this message translates to:
+  /// **'That recording is too long. Please say a short answer.'**
+  String get msg_audio_too_long;
+
+  /// No description provided for @msg_unreadable_audio.
+  ///
+  /// In en, this message translates to:
+  /// **'I couldn\'t hear that recording. Please try again.'**
+  String get msg_unreadable_audio;
+
+  /// No description provided for @aboutTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'About Magana'**
+  String get aboutTitle;
+
+  /// No description provided for @aboutModels.
+  ///
+  /// In en, this message translates to:
+  /// **'Language models'**
+  String get aboutModels;
+
+  /// No description provided for @aboutModelsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana uses these open models under the N-ATLaS Terms of Use, version 1.0. The credit lines below are quoted as the terms require.'**
+  String get aboutModelsNote;
+
+  /// No description provided for @aboutExplain.
+  ///
+  /// In en, this message translates to:
+  /// **'Explanations in your language'**
+  String get aboutExplain;
+
+  /// No description provided for @aboutSpeech.
+  ///
+  /// In en, this message translates to:
+  /// **'Speech recognition'**
+  String get aboutSpeech;
+
+  /// No description provided for @openSourceLicences.
+  ///
+  /// In en, this message translates to:
+  /// **'Open-source licences'**
+  String get openSourceLicences;
 }
 
 class _AppLocalizationsDelegate

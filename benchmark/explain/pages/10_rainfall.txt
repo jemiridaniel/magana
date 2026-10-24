@@ -1,0 +1,4 @@
+Average monthly rainfall in Lagos (mm)
+January 35 | February 50 | March 100 | April 145 | May 270 | June 460
+July 280 | August 70 | September 160 | October 200 | November 70 | December 25
+Question: Which month has the highest rainfall? What is the difference between June and July?

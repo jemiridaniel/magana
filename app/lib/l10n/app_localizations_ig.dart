@@ -1461,4 +1461,38 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get msg_bad_api_key =>
       'Mbipụta Magana a enweghị ike iru ọrụ ịgụ ihe. Biko melite ngwa ahụ.';
+
+  @override
+  String get msg_explain_unavailable =>
+      'Enweghị nkọwa ugbu a. Lee peeji ahụ, a gụrụ ya kpọmkwem ka e si bipụta ya.';
+
+  @override
+  String get msg_asr_unavailable =>
+      'Edoziteghị nghọta olu na sava; a na-eji nke ekwentị.';
+
+  @override
+  String get msg_audio_too_long =>
+      'Ndekọ ahụ ogologo nke ukwuu. Biko kwuo azịza dị mkpụmkpụ.';
+
+  @override
+  String get msg_unreadable_audio => 'Anụghị m ndekọ ahụ. Biko nwaa ọzọ.';
+
+  @override
+  String get aboutTitle => 'Banyere Magana';
+
+  @override
+  String get aboutModels => 'Ụdị asụsụ';
+
+  @override
+  String get aboutModelsNote =>
+      'Magana na-eji ụdị mepere emepe ndị a n\'okpuru Usoro Ojiji N-ATLaS, ụdị 1.0. A kọpịrị ahịrị nkwanye ùgwù ndị dị n\'okpuru ka usoro ahụ si chọọ.';
+
+  @override
+  String get aboutExplain => 'Nkọwa n\'asụsụ gị';
+
+  @override
+  String get aboutSpeech => 'Nghọta olu';
+
+  @override
+  String get openSourceLicences => 'Ikikere isi mmalite mepere emepe';
 }

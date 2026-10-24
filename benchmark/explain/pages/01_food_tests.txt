@@ -1,0 +1,6 @@
+Table 3.1 Food tests
+Food tested | Reagent | Positive result
+Starch | Iodine solution | Blue-black colour
+Reducing sugar | Benedict's solution, heat for 5 minutes | Brick-red precipitate
+Protein | Biuret reagent | Purple colour
+Fat | Ethanol, then add water | Cloudy white emulsion

@@ -5,6 +5,7 @@ import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
 import '../language.dart';
 import '../widgets.dart';
+import 'about.dart';
 import 'home.dart';
 
 /// The installed build's version; replaceable in tests.
@@ -66,6 +67,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
         NoteBox(text: l.reportHow),
         NoteBox(text: l.privacyNote, kind: NoteKind.privacy),
+        ChoiceCard(
+          title: l.aboutTitle,
+          detail: l.aboutModels,
+          leading: const Icon(Icons.info_outline, size: 30),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) => AboutScreen(
+                version: v == null
+                    ? null
+                    : l.settingsVersion(v.version, v.build),
+              ),
+            ),
+          ),
+        ),
         SecondaryButton(
           label: l.hearAgain,
           onTap: () => AppScope.of(context).speaker.say(

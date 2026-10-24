@@ -124,13 +124,14 @@ class _ReaderScreenState extends State<ReaderScreen> {
   /// E2 "What does this mean?": Magana never interprets a result. It says so,
   /// and offers to save the question for the next visit or ask a nurse.
   Future<void> _askAboutResult() async {
+    final lang = Localizations.localeOf(context).languageCode;
     _run++;
     setState(() => _playing = false);
     await _speaker.stop();
     final voice = voiceInput();
     String? question;
     if (await voice.init()) {
-      final heard = await voice.listen();
+      final heard = await voice.listen(language: lang);
       if (heard.isNotEmpty) question = heard.first;
     }
     if (!mounted) return;
@@ -859,7 +860,7 @@ class _FindDialogState extends State<_FindDialog> {
       speaker.say(l.voiceCommandsUnavailable);
       return;
     }
-    final heard = await voice.listen();
+    final heard = await voice.listen(language: 'en');
     if (heard.isNotEmpty && mounted) Navigator.of(context).pop(heard.first);
   }
 

@@ -381,5 +381,15 @@
   "sayNameNote": "A kashe: allon kulle zai ce “Tunatarwar Magana” kawai. A kunne: allon kulle zai nuna maganin da yawansa, kuma Magana za ta faɗa da ƙarfi a kowane lokaci, don haka mutanen da ke kusa da kai za su iya gani ko ji.",
   "reminderGenericTitle": "Tunatarwar Magana",
   "reminderGenericBody": "Buɗe Magana don jin wane magani.",
-  "msg_bad_api_key": "Wannan kwafin Magana ba zai iya kaiwa ga sabis ɗin karatu ba. Don Allah ka sabunta manhajar."
+  "msg_bad_api_key": "Wannan kwafin Magana ba zai iya kaiwa ga sabis ɗin karatu ba. Don Allah ka sabunta manhajar.",
+  "msg_explain_unavailable": "Ba a samun bayani a yanzu. Ga shafin, an karanta shi daidai yadda aka buga.",
+  "msg_asr_unavailable": "Ba a saita gane murya a sabar ba; ana amfani da na wayar.",
+  "msg_audio_too_long": "Rikodin ya yi tsawo sosai. Don Allah ka faɗi gajeriyar amsa.",
+  "msg_unreadable_audio": "Ban ji wannan rikodin ba. Don Allah ka sake gwadawa.",
+  "aboutTitle": "Game da Magana",
+  "aboutModels": "Samfuran harshe",
+  "aboutModelsNote": "Magana tana amfani da waɗannan samfuran buɗe ido ƙarƙashin Sharuɗɗan Amfani na N-ATLaS, siga 1.0. An kawo layukan yabo da ke ƙasa kamar yadda sharuɗɗan suka buƙata.",
+  "aboutExplain": "Bayani a harshenka",
+  "aboutSpeech": "Gane murya",
+  "openSourceLicences": "Lasisin buɗaɗɗen tushe"
 }

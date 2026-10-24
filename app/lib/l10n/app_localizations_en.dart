@@ -1459,4 +1459,39 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get msg_bad_api_key =>
       'This copy of Magana can\'t reach the reading service. Please update the app.';
+
+  @override
+  String get msg_explain_unavailable =>
+      'Explanations aren\'t available right now. Here is the page, read exactly as printed.';
+
+  @override
+  String get msg_asr_unavailable =>
+      'Speech recognition on the server is not set up; the phone\'s own is used.';
+
+  @override
+  String get msg_audio_too_long =>
+      'That recording is too long. Please say a short answer.';
+
+  @override
+  String get msg_unreadable_audio =>
+      'I couldn\'t hear that recording. Please try again.';
+
+  @override
+  String get aboutTitle => 'About Magana';
+
+  @override
+  String get aboutModels => 'Language models';
+
+  @override
+  String get aboutModelsNote =>
+      'Magana uses these open models under the N-ATLaS Terms of Use, version 1.0. The credit lines below are quoted as the terms require.';
+
+  @override
+  String get aboutExplain => 'Explanations in your language';
+
+  @override
+  String get aboutSpeech => 'Speech recognition';
+
+  @override
+  String get openSourceLicences => 'Open-source licences';
 }

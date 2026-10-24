@@ -22,6 +22,9 @@ ENGLISH = {
     # Request errors (HTTP detail)
     "unknown_mode": "Choose schoolwork, health or money.",
     "bad_api_key": "This copy of Magana can't reach the reading service. Please update the app.",
+    "asr_unavailable": "Speech recognition on the server is not set up; the phone's own is used.",
+    "audio_too_long": "That recording is too long. Please say a short answer.",
+    "unreadable_audio": "I couldn't hear that recording. Please try again.",
     "unknown_tier": "Please set up Magana again: your age group wasn't recognised.",
     "not_allowed_for_tier": "This isn't available on this account.",
     "consent_required": "Learners aged 13 to 17 need a parent's or guardian's consent first.",
@@ -31,6 +34,7 @@ ENGLISH = {
     "numbers_unconfirmed": "I can't confirm some numbers in this explanation, so I'll read the page exactly instead.",
     "explain_preview": "This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",
     "explained": "Here is the explanation.",
+    "explain_unavailable": "Explanations aren't available right now. Here is the page, read exactly as printed.",
     "explain_bad_source": "There is no page text to explain. Please read a page first.",
     # Ibà quick check. The Ibà service owns this wording (iba-natlas, backend/app/questions.py,
     # pending clinical sign-off by Dr. Amos); these are the fallback copies, kept identical.

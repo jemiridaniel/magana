@@ -1458,4 +1458,39 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get msg_bad_api_key =>
       'Ẹ̀dà Magana yìí kò lè dé iṣẹ́ kíkà. Jọ̀wọ́ ṣe àtúnṣe áàpù náà.';
+
+  @override
+  String get msg_explain_unavailable =>
+      'Àlàyé kò sí lọ́wọ́lọ́wọ́. Ojú-ìwé náà nìyí, a kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́.';
+
+  @override
+  String get msg_asr_unavailable =>
+      'A kò tíì ṣètò ìdánimọ̀ ohùn lórí sáfà; ti fóònù ni a ń lò.';
+
+  @override
+  String get msg_audio_too_long =>
+      'Gbígbohùnsílẹ̀ yẹn ti gùn jù. Jọ̀wọ́ sọ ìdáhùn kúkúrú.';
+
+  @override
+  String get msg_unreadable_audio =>
+      'Mi ò gbọ́ gbígbohùnsílẹ̀ yẹn. Jọ̀wọ́ tún gbìyànjú.';
+
+  @override
+  String get aboutTitle => 'Nípa Magana';
+
+  @override
+  String get aboutModels => 'Àwọn àwòṣe èdè';
+
+  @override
+  String get aboutModelsNote =>
+      'Magana ń lo àwọn àwòṣe ṣíṣí wọ̀nyí lábẹ́ Òfin Ìlò N-ATLaS, ẹ̀yà 1.0. A ṣe àdàkọ àwọn ìlà ìdúpẹ́ ìsàlẹ̀ yìí gẹ́gẹ́ bí òfin náà ṣe béèrè.';
+
+  @override
+  String get aboutExplain => 'Àlàyé ní èdè rẹ';
+
+  @override
+  String get aboutSpeech => 'Ìdánimọ̀ ohùn';
+
+  @override
+  String get openSourceLicences => 'Ìwé-àṣẹ orísun ṣíṣí';
 }

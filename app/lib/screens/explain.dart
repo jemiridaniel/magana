@@ -91,6 +91,7 @@ class _ExplainScreenState extends State<ExplainScreen> {
   }
 
   Future<void> _listen() async {
+    final lang = Localizations.localeOf(context).languageCode;
     if (_listening) {
       await _voice.stop();
       return;
@@ -105,7 +106,7 @@ class _ExplainScreenState extends State<ExplainScreen> {
     }
     await speaker.stop();
     setState(() => _listening = true);
-    final heard = await _voice.listen();
+    final heard = await _voice.listen(language: lang);
     if (!mounted) return;
     setState(() => _listening = false);
     if (heard.isEmpty) {

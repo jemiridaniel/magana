@@ -381,5 +381,15 @@
   "sayNameNote": "Agbanyụọ: ihuenyo mkpọchi ga-ekwu naanị “Ihe ncheta Magana”. Agbanyere: ihuenyo mkpọchi ga-egosi ọgwụ na ole, Magana ga-ekwukwa ha n'oke olu n'oge ọ bụla, ya mere ndị nọ gị nso nwere ike ịhụ ma ọ bụ nụ ha.",
   "reminderGenericTitle": "Ihe ncheta Magana",
   "reminderGenericBody": "Mepee Magana ka ị nụ ọgwụ ole.",
-  "msg_bad_api_key": "Mbipụta Magana a enweghị ike iru ọrụ ịgụ ihe. Biko melite ngwa ahụ."
+  "msg_bad_api_key": "Mbipụta Magana a enweghị ike iru ọrụ ịgụ ihe. Biko melite ngwa ahụ.",
+  "msg_explain_unavailable": "Enweghị nkọwa ugbu a. Lee peeji ahụ, a gụrụ ya kpọmkwem ka e si bipụta ya.",
+  "msg_asr_unavailable": "Edoziteghị nghọta olu na sava; a na-eji nke ekwentị.",
+  "msg_audio_too_long": "Ndekọ ahụ ogologo nke ukwuu. Biko kwuo azịza dị mkpụmkpụ.",
+  "msg_unreadable_audio": "Anụghị m ndekọ ahụ. Biko nwaa ọzọ.",
+  "aboutTitle": "Banyere Magana",
+  "aboutModels": "Ụdị asụsụ",
+  "aboutModelsNote": "Magana na-eji ụdị mepere emepe ndị a n'okpuru Usoro Ojiji N-ATLaS, ụdị 1.0. A kọpịrị ahịrị nkwanye ùgwù ndị dị n'okpuru ka usoro ahụ si chọọ.",
+  "aboutExplain": "Nkọwa n'asụsụ gị",
+  "aboutSpeech": "Nghọta olu",
+  "openSourceLicences": "Ikikere isi mmalite mepere emepe"
 }
