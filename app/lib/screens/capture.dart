@@ -14,6 +14,7 @@ import '../l10n/app_localizations.dart';
 import '../messages.dart';
 import '../papers.dart';
 import '../platform.dart';
+import '../tasks.dart';
 import '../theme.dart';
 import 'reader.dart';
 
@@ -320,6 +321,7 @@ class _CaptureScreenState extends State<CaptureScreen>
         _resume();
         return;
       }
+      await TaskLog.record(TaskKind.forPaper(widget.paper));
       await _stopCamera();
       if (!mounted) return;
       await Navigator.of(context).pushReplacement(

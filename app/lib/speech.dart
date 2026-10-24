@@ -5,11 +5,13 @@ import 'package:flutter_tts/flutter_tts.dart';
 import 'platform.dart';
 
 /// Text-to-speech wrapper. [say] completes when the utterance finishes or is
-/// interrupted, so callers can read items one after another.
+/// interrupted, so callers can read items one after another. It returns false
+/// when it was cut off (by [stop], or by TalkBack speaking over it), so reading
+/// loops pause there instead of skipping ahead.
 class Speaker {
   FlutterTts? _ttsInstance;
   FlutterTts get _tts => _ttsInstance ??= _create();
-  Completer<void>? _pending;
+  Completer<bool>? _pending;
   bool _started = false;
   bool _active =
       false; // the engine is speaking (or has not yet reported a stop)
@@ -28,16 +30,16 @@ class Speaker {
     // the current utterance once it has actually started.
     tts.setCompletionHandler(() {
       _active = false;
-      _finish(onlyIfStarted: true);
+      _finish(true, onlyIfStarted: true);
     });
     tts.setCancelHandler(() {
       _active = false;
-      _finish(onlyIfStarted: true);
+      _finish(false, onlyIfStarted: true);
     });
     // On the web a cancelled utterance reports an "interrupted" error.
     tts.setErrorHandler((_) {
       _active = false;
-      _finish();
+      _finish(false);
     });
     unawaited(_pickVoice(tts));
     return tts;
@@ -78,20 +80,20 @@ class Speaker {
     await _applyRate(_tts);
   }
 
-  Future<void> say(String text) async {
+  Future<bool> say(String text) async {
     await stop();
-    final done = _pending = Completer<void>();
+    final done = _pending = Completer<bool>();
     _started = false;
     await _tts.speak(text);
     // Never hang a reading loop on an utterance the engine silently dropped.
     Timer(const Duration(seconds: 3), () {
-      if (identical(_pending, done) && !_started) _finish();
+      if (identical(_pending, done) && !_started) _finish(true);
     });
     return done.future;
   }
 
   Future<void> stop() async {
-    _finish();
+    _finish(false);
     await _tts.stop();
     // The web engine ignores speak() until the cancelled utterance reports
     // back, so wait briefly for that before the next say().
@@ -101,10 +103,10 @@ class Speaker {
     _active = false;
   }
 
-  void _finish({bool onlyIfStarted = false}) {
+  void _finish(bool finished, {bool onlyIfStarted = false}) {
     if (onlyIfStarted && !_started) return;
     final c = _pending;
     _pending = null;
-    if (c != null && !c.isCompleted) c.complete();
+    if (c != null && !c.isCompleted) c.complete(finished);
   }
 }

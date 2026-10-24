@@ -771,4 +771,207 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get quizSource =>
       'Questions written by the Magana team in the style of WAEC Biology. They are not past questions. The questions are in English.';
+
+  @override
+  String get skillsSubtitle => 'Short spoken lessons, at your pace';
+
+  @override
+  String nextLesson(int minutes) {
+    return 'Next lesson · $minutes min';
+  }
+
+  @override
+  String get playLesson => 'Play lesson';
+
+  @override
+  String get pauseLesson => 'Pause';
+
+  @override
+  String get practiseNow => 'Practise now';
+
+  @override
+  String get lessonDone => 'Done';
+
+  @override
+  String lessonStepOf(int step, int total) {
+    return 'Step $step of $total';
+  }
+
+  @override
+  String get lessonNotStarted => 'Not started';
+
+  @override
+  String get allLessonsDone => 'You have finished every lesson. Well done!';
+
+  @override
+  String get practiseWithChampion => 'Practise with a Magana Champion';
+
+  @override
+  String get skillsNote =>
+      'Sample lessons written by the Magana team, to be reviewed by rehabilitation trainers. Lessons are in English for now.';
+
+  @override
+  String get previousStep => 'Previous step';
+
+  @override
+  String get nextStep => 'Next step';
+
+  @override
+  String get lessonFinished => 'Lesson finished.';
+
+  @override
+  String get scoreTitle => 'My Independence Score';
+
+  @override
+  String get scoreSubtitle => 'Tasks you finished in Magana';
+
+  @override
+  String scoreOutOf(int score) {
+    return '$score out of 100';
+  }
+
+  @override
+  String get scoreByArea => 'By area';
+
+  @override
+  String get areaLearning => 'Learning';
+
+  @override
+  String get areaHealth => 'Health papers';
+
+  @override
+  String get areaMoney => 'Money';
+
+  @override
+  String get areaSkills => 'Skills';
+
+  @override
+  String areaScoreLabel(String area, int score) {
+    return '$area: $score out of 100';
+  }
+
+  @override
+  String get scoreThisWeek => 'This week';
+
+  @override
+  String get scoreNothingThisWeek =>
+      'No tasks yet this week. Read a page or take a quiz to start.';
+
+  @override
+  String weekReadSchool(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pages of schoolwork read',
+      one: '1 page of schoolwork read',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekReadMedicine(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count medicine labels read',
+      one: '1 medicine label read',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekReadReport(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count medical reports read',
+      one: '1 medical report read',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekReadStatement(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count bank statements or receipts read',
+      one: '1 bank statement or receipt read',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekQuiz(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count quizzes finished',
+      one: '1 quiz finished',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekLesson(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lessons finished',
+      one: '1 lesson finished',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get scoreHow =>
+      'Your score counts real tasks you finished in Magana in the last 30 days. It stays on this phone; only you see it.';
+
+  @override
+  String get championsTitle => 'Magana Champions';
+
+  @override
+  String get championsSubtitle => 'Learn from people who have been there';
+
+  @override
+  String get championSample => 'Sample profile';
+
+  @override
+  String get championDetail => 'Blind since age 12 · Kano · Hausa, English';
+
+  @override
+  String get championNotYet =>
+      'This is a sample profile. Champions will be matched to you through partner organisations. Calls are not available yet.';
+
+  @override
+  String get becomeChampion => 'Become a Champion';
+
+  @override
+  String get becomeChampionBody =>
+      'Help others in your community and earn a certificate.';
+
+  @override
+  String get champStepBasics => 'Finish Phone basics';
+
+  @override
+  String get champStepPhotos => 'Finish Taking clear photos';
+
+  @override
+  String get champStepScore => 'Reach an Independence Score of 60';
+
+  @override
+  String get champStepTraining => 'Join a 2-hour Champion training';
+
+  @override
+  String get champStepHelp => 'Help your first 3 people';
+
+  @override
+  String get stepDone => 'done';
+
+  @override
+  String get stepNotDone => 'not done yet';
+
+  @override
+  String get championsPartnerNote =>
+      'Champion training will be run with partner organisations. It is not open yet.';
 }

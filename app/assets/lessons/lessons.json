@@ -1,0 +1,51 @@
+{
+  "source": "Sample lessons written by the Magana team. CC BY 4.0.",
+  "review": "Draft: to be reviewed by rehabilitation trainers before testing with learners.",
+  "lessons": [
+    {
+      "id": "talkback-basics",
+      "title": "Phone basics: moving around with TalkBack",
+      "minutes": 3,
+      "feature": "skills",
+      "practice": "home",
+      "steps": [
+        "Welcome. In this lesson you will learn to move around your phone with TalkBack, the screen reader built into Android. Take your time. You can pause at any point.",
+        "When TalkBack is on, touching the screen does not press anything. It reads out what is under your finger. Slide one finger slowly around the screen and listen.",
+        "To move to the next item, swipe right with one finger. To go back to the item before, swipe left. Each item is read as you reach it.",
+        "To press the item TalkBack has just read, double tap anywhere on the screen: two quick taps with one finger.",
+        "To scroll a long page, swipe up or down with two fingers.",
+        "Practise now: on Magana's home screen, swipe right until you hear Read a page. Then double tap to open it."
+      ]
+    },
+    {
+      "id": "clear-photos",
+      "title": "Taking clear photos of pages",
+      "minutes": 3,
+      "feature": "skills",
+      "practice": "capture",
+      "steps": [
+        "In this lesson you will learn to take a clear photo of a printed page, so Magana can read it well.",
+        "Find good light. Daylight near a window is best. A torch shone straight at shiny paper causes glare, so light the page from the side.",
+        "Lay the page flat on a table. Hold the phone flat above it, with the camera facing down, about thirty centimetres away. That is about the length from your elbow to your wrist.",
+        "Magana tells you which way to move the phone, with short words and a tone. When the whole page fits, hold still and take the photo.",
+        "If Magana says the text is faint or blurred, add more light, hold the phone steadier, and take the photo again.",
+        "Practise now: open Read a page and photograph any printed page near you."
+      ]
+    },
+    {
+      "id": "bank-statement",
+      "title": "Money: reading a bank statement safely",
+      "minutes": 3,
+      "feature": "everydayMoney",
+      "practice": "statement",
+      "steps": [
+        "In this lesson you will learn to read a bank statement or a receipt with Magana, safely.",
+        "Open Everyday papers, then Bank statement. Take the photo as you learned in the photo lesson.",
+        "Magana reads tables row by row: the date, the description, then the amount. Numbers and amounts are read exactly as printed. If a number is unclear, Magana says so instead of guessing.",
+        "Magana never asks for your PIN or password, and nobody from Magana ever will. Do not say your PIN aloud near other people, and never share it on a call.",
+        "Magana does not give financial advice. If something on your statement looks wrong, call your bank on the number printed on your card.",
+        "Practise now: read a receipt or statement from Everyday papers."
+      ]
+    }
+  ]
+}

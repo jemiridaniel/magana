@@ -561,5 +561,128 @@
     }
   },
   "quizAgain": "Practise again",
-  "quizSource": "Questions written by the Magana team in the style of WAEC Biology. They are not past questions. The questions are in English."
+  "quizSource": "Questions written by the Magana team in the style of WAEC Biology. They are not past questions. The questions are in English.",
+  "skillsSubtitle": "Short spoken lessons, at your pace",
+  "nextLesson": "Next lesson · {minutes} min",
+  "@nextLesson": {
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "playLesson": "Play lesson",
+  "pauseLesson": "Pause",
+  "practiseNow": "Practise now",
+  "lessonDone": "Done",
+  "lessonStepOf": "Step {step} of {total}",
+  "@lessonStepOf": {
+    "placeholders": {
+      "step": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "lessonNotStarted": "Not started",
+  "allLessonsDone": "You have finished every lesson. Well done!",
+  "practiseWithChampion": "Practise with a Magana Champion",
+  "skillsNote": "Sample lessons written by the Magana team, to be reviewed by rehabilitation trainers. Lessons are in English for now.",
+  "previousStep": "Previous step",
+  "nextStep": "Next step",
+  "lessonFinished": "Lesson finished.",
+  "scoreTitle": "My Independence Score",
+  "scoreSubtitle": "Tasks you finished in Magana",
+  "scoreOutOf": "{score} out of 100",
+  "@scoreOutOf": {
+    "placeholders": {
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "scoreByArea": "By area",
+  "areaLearning": "Learning",
+  "areaHealth": "Health papers",
+  "areaMoney": "Money",
+  "areaSkills": "Skills",
+  "areaScoreLabel": "{area}: {score} out of 100",
+  "@areaScoreLabel": {
+    "placeholders": {
+      "area": {
+        "type": "String"
+      },
+      "score": {
+        "type": "int"
+      }
+    }
+  },
+  "scoreThisWeek": "This week",
+  "scoreNothingThisWeek": "No tasks yet this week. Read a page or take a quiz to start.",
+  "weekReadSchool": "{count, plural, =1{1 page of schoolwork read} other{{count} pages of schoolwork read}}",
+  "@weekReadSchool": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "weekReadMedicine": "{count, plural, =1{1 medicine label read} other{{count} medicine labels read}}",
+  "@weekReadMedicine": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "weekReadReport": "{count, plural, =1{1 medical report read} other{{count} medical reports read}}",
+  "@weekReadReport": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "weekReadStatement": "{count, plural, =1{1 bank statement or receipt read} other{{count} bank statements or receipts read}}",
+  "@weekReadStatement": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "weekQuiz": "{count, plural, =1{1 quiz finished} other{{count} quizzes finished}}",
+  "@weekQuiz": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "weekLesson": "{count, plural, =1{1 lesson finished} other{{count} lessons finished}}",
+  "@weekLesson": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "scoreHow": "Your score counts real tasks you finished in Magana in the last 30 days. It stays on this phone; only you see it.",
+  "championsTitle": "Magana Champions",
+  "championsSubtitle": "Learn from people who have been there",
+  "championSample": "Sample profile",
+  "championDetail": "Blind since age 12 · Kano · Hausa, English",
+  "championNotYet": "This is a sample profile. Champions will be matched to you through partner organisations. Calls are not available yet.",
+  "becomeChampion": "Become a Champion",
+  "becomeChampionBody": "Help others in your community and earn a certificate.",
+  "champStepBasics": "Finish Phone basics",
+  "champStepPhotos": "Finish Taking clear photos",
+  "champStepScore": "Reach an Independence Score of 60",
+  "champStepTraining": "Join a 2-hour Champion training",
+  "champStepHelp": "Help your first 3 people",
+  "stepDone": "done",
+  "stepNotDone": "not done yet",
+  "championsPartnerNote": "Champion training will be run with partner organisations. It is not open yet."
 }

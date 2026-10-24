@@ -775,4 +775,208 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get quizSource =>
       'Ƙungiyar Magana ce ta rubuta tambayoyin irin na WAEC Biology. Ba tsofaffin tambayoyi ba ne. Tambayoyin da Turanci suke.';
+
+  @override
+  String get skillsSubtitle => 'Gajerun darussa na murya, a saurinka';
+
+  @override
+  String nextLesson(int minutes) {
+    return 'Darasi na gaba · minti $minutes';
+  }
+
+  @override
+  String get playLesson => 'Kunna darasi';
+
+  @override
+  String get pauseLesson => 'Dakata';
+
+  @override
+  String get practiseNow => 'Gwada yanzu';
+
+  @override
+  String get lessonDone => 'An gama';
+
+  @override
+  String lessonStepOf(int step, int total) {
+    return 'Mataki na $step cikin $total';
+  }
+
+  @override
+  String get lessonNotStarted => 'Ba a fara ba';
+
+  @override
+  String get allLessonsDone => 'Ka gama duk darussan. Madalla!';
+
+  @override
+  String get practiseWithChampion => 'Gwada tare da Gwarzon Magana';
+
+  @override
+  String get skillsNote =>
+      'Darussan misali ne da ƙungiyar Magana ta rubuta; masu horar da gyaran rayuwa za su duba su. Darussan da Turanci suke a yanzu.';
+
+  @override
+  String get previousStep => 'Mataki na baya';
+
+  @override
+  String get nextStep => 'Mataki na gaba';
+
+  @override
+  String get lessonFinished => 'An gama darasi.';
+
+  @override
+  String get scoreTitle => 'Makin \'Yancina';
+
+  @override
+  String get scoreSubtitle => 'Ayyukan da ka gama a Magana';
+
+  @override
+  String scoreOutOf(int score) {
+    return '$score cikin 100';
+  }
+
+  @override
+  String get scoreByArea => 'Ta fanni';
+
+  @override
+  String get areaLearning => 'Karatu';
+
+  @override
+  String get areaHealth => 'Takardun lafiya';
+
+  @override
+  String get areaMoney => 'Kuɗi';
+
+  @override
+  String get areaSkills => 'Ƙwarewa';
+
+  @override
+  String areaScoreLabel(String area, int score) {
+    return '$area: $score cikin 100';
+  }
+
+  @override
+  String get scoreThisWeek => 'Wannan makon';
+
+  @override
+  String get scoreNothingThisWeek =>
+      'Babu aiki tukuna a wannan makon. Karanta shafi ko ka yi gwaji don farawa.';
+
+  @override
+  String weekReadSchool(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'An karanta shafukan aikin makaranta $count',
+      one: 'An karanta shafin aikin makaranta 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekReadMedicine(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'An karanta alamun magani $count',
+      one: 'An karanta alamar magani 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekReadReport(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'An karanta rahotannin lafiya $count',
+      one: 'An karanta rahoton lafiya 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekReadStatement(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'An karanta bayanan banki ko rasidi $count',
+      one: 'An karanta bayanin banki ko rasidi 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekQuiz(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'An gama gwaje-gwaje $count',
+      one: 'An gama gwaji 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekLesson(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'An gama darussa $count',
+      one: 'An gama darasi 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get scoreHow =>
+      'Makinka yana ƙidaya ayyukan gaske da ka gama a Magana cikin kwanaki 30 da suka wuce. Yana nan a wannan wayar; kai kaɗai kake gani.';
+
+  @override
+  String get championsTitle => 'Gwarzayen Magana';
+
+  @override
+  String get championsSubtitle => 'Koyi daga waɗanda suka taɓa fuskantar haka';
+
+  @override
+  String get championSample => 'Misalin bayanan mutum';
+
+  @override
+  String get championDetail =>
+      'Makaho tun yana shekara 12 · Kano · Hausa, Turanci';
+
+  @override
+  String get championNotYet =>
+      'Wannan misali ne kawai. Za a haɗa ka da Gwarzo ta ƙungiyoyin abokan hulɗa. Ba a iya kira tukuna ba.';
+
+  @override
+  String get becomeChampion => 'Zama Gwarzo';
+
+  @override
+  String get becomeChampionBody =>
+      'Taimaka wa wasu a cikin al\'ummarka kuma ka sami takardar shaida.';
+
+  @override
+  String get champStepBasics => 'Gama darasin Asalin waya';
+
+  @override
+  String get champStepPhotos => 'Gama darasin Ɗaukar hoto mai kyau';
+
+  @override
+  String get champStepScore => 'Kai makin \'Yanci na 60';
+
+  @override
+  String get champStepTraining => 'Halarci horon Gwarzo na awa 2';
+
+  @override
+  String get champStepHelp => 'Taimaki mutanenka 3 na farko';
+
+  @override
+  String get stepDone => 'an gama';
+
+  @override
+  String get stepNotDone => 'ba a gama ba tukuna';
+
+  @override
+  String get championsPartnerNote =>
+      'Za a yi horon Gwarzo tare da ƙungiyoyin abokan hulɗa. Ba a buɗe ba tukuna.';
 }

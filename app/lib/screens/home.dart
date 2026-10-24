@@ -9,6 +9,8 @@ import '../theme.dart';
 import 'capture.dart';
 import 'everyday.dart';
 import 'quiz.dart';
+import 'score.dart';
+import 'skills.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -95,7 +97,11 @@ class HomeScreen extends StatelessWidget {
                             child: _Chip(
                               Icons.school_outlined,
                               l.skills,
-                              () => _comingSoon(context, l.skills),
+                              () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const SkillsScreen(),
+                                ),
+                              ),
                             ),
                           ),
                         if (can(Feature.skills) && can(Feature.score))
@@ -105,7 +111,11 @@ class HomeScreen extends StatelessWidget {
                             child: _Chip(
                               Icons.trending_up,
                               l.myScore,
-                              () => _comingSoon(context, l.myScore),
+                              () => Navigator.of(context).push(
+                                MaterialPageRoute(
+                                  builder: (_) => const ScoreScreen(),
+                                ),
+                              ),
                             ),
                           ),
                       ],
@@ -434,7 +444,6 @@ class _Chip extends StatelessWidget {
     return Semantics(
       button: true,
       label: label,
-      hint: AppLocalizations.of(context).comingSoonHint,
       excludeSemantics: true,
       onTap: onPressed,
       child: FilledButton(

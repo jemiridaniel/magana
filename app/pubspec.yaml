@@ -75,6 +75,7 @@ flutter:
     - assets/brand/magana_lockup_stacked.svg
     - assets/sounds/
     - assets/quiz/
+    - assets/lessons/
 
   fonts:
     - family: AtkinsonHyperlegible

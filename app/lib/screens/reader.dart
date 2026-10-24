@@ -120,11 +120,17 @@ class _ReaderScreenState extends State<ReaderScreen> {
       _index = from;
       _playing = true;
     });
-    if (intro) await _speaker.say(_intro());
+    // If TalkBack speaks over a line (the learner touched the screen), stop
+    // on that line: never skip a line, a dose or an amount unheard.
+    void pause() {
+      if (run == _run && mounted) setState(() => _playing = false);
+    }
+
+    if (intro && !await _speaker.say(_intro())) return pause();
     for (var i = from; i < _items.length; i++) {
       if (run != _run || !mounted) return;
       setState(() => _index = i);
-      await _speaker.say(_spoken(_items[i]));
+      if (!await _speaker.say(_spoken(_items[i]))) return pause();
     }
     if (run != _run || !mounted) return;
     setState(() => _playing = false);

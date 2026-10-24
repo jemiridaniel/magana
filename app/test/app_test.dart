@@ -24,7 +24,13 @@ class FakeSpeaker extends Speaker {
   final said = <String>[];
   String language = 'en';
   @override
-  Future<void> say(String text) async => said.add(text);
+  Future<bool> say(String text) async {
+    said.add(text);
+    return !interrupt.contains(text);
+  }
+
+  /// Utterances that TalkBack "speaks over" in tests.
+  final interrupt = <String>{};
   @override
   Future<void> stop() async {}
   @override
@@ -218,6 +224,24 @@ void main() {
       expect(speaker.said.single, startsWith('Take 2 tablets'));
     },
   );
+
+  testWidgets('TalkBack speaking over a line pauses there, never skips it', (
+    tester,
+  ) async {
+    final speaker = FakeSpeaker()..interrupt.add('Food tests');
+    await pumpApp(tester, speaker);
+    await captureToReader(tester);
+    expect(speaker.said.last, 'Food tests');
+    expect(speaker.said, isNot(contains(startsWith('Take 2 tablets'))));
+    expect(find.text('Food tests'), findsOneWidget);
+    expect(find.bySemanticsLabel(en.playLabel), findsOneWidget);
+    // Play carries on from the line that was cut off.
+    speaker.interrupt.clear();
+    await tester.tap(find.bySemanticsLabel(en.playLabel));
+    await tester.pump();
+    expect(speaker.said.reversed.skip(2).first, 'Food tests');
+    expect(speaker.said, contains(startsWith('Take 2 tablets')));
+  });
 
   testWidgets('table rows are read with column names and a row warning', (
     tester,

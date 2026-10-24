@@ -770,4 +770,208 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get quizSource =>
       'Ẹgbẹ́ Magana ló kọ àwọn ìbéèrè náà bíi ti WAEC Biology. Wọn kì í ṣe ìbéèrè àtijọ́. Èdè Gẹ̀ẹ́sì ni àwọn ìbéèrè wà.';
+
+  @override
+  String get skillsSubtitle => 'Àwọn ẹ̀kọ́ kúkúrú tí a ń sọ, bí o ṣe fẹ́';
+
+  @override
+  String nextLesson(int minutes) {
+    return 'Ẹ̀kọ́ tó kàn · ìṣẹ́jú $minutes';
+  }
+
+  @override
+  String get playLesson => 'Gbọ́ ẹ̀kọ́';
+
+  @override
+  String get pauseLesson => 'Dúró díẹ̀';
+
+  @override
+  String get practiseNow => 'Ṣe é báyìí';
+
+  @override
+  String get lessonDone => 'Ó ti parí';
+
+  @override
+  String lessonStepOf(int step, int total) {
+    return 'Ìgbésẹ̀ $step nínú $total';
+  }
+
+  @override
+  String get lessonNotStarted => 'Kò tíì bẹ̀rẹ̀';
+
+  @override
+  String get allLessonsDone => 'O ti parí gbogbo ẹ̀kọ́. O ṣe dáadáa!';
+
+  @override
+  String get practiseWithChampion => 'Ṣe ìdánrawò pẹ̀lú Akọni Magana';
+
+  @override
+  String get skillsNote =>
+      'Ẹ̀kọ́ àpẹẹrẹ tí ẹgbẹ́ Magana kọ ni, àwọn olùkọ́ ìmúpadàbọ̀sípò yóò yẹ̀ wọ́n wò. Èdè Gẹ̀ẹ́sì ni ẹ̀kọ́ wà fún báyìí.';
+
+  @override
+  String get previousStep => 'Ìgbésẹ̀ tó ṣáájú';
+
+  @override
+  String get nextStep => 'Ìgbésẹ̀ tó kàn';
+
+  @override
+  String get lessonFinished => 'Ẹ̀kọ́ ti parí.';
+
+  @override
+  String get scoreTitle => 'Ìwọ̀n Òmìnira Mi';
+
+  @override
+  String get scoreSubtitle => 'Àwọn iṣẹ́ tí o parí nínú Magana';
+
+  @override
+  String scoreOutOf(int score) {
+    return '$score nínú 100';
+  }
+
+  @override
+  String get scoreByArea => 'Ní ẹ̀ka kọ̀ọ̀kan';
+
+  @override
+  String get areaLearning => 'Ẹ̀kọ́';
+
+  @override
+  String get areaHealth => 'Ìwé ìlera';
+
+  @override
+  String get areaMoney => 'Owó';
+
+  @override
+  String get areaSkills => 'Ọgbọ́n';
+
+  @override
+  String areaScoreLabel(String area, int score) {
+    return '$area: $score nínú 100';
+  }
+
+  @override
+  String get scoreThisWeek => 'Ọ̀sẹ̀ yìí';
+
+  @override
+  String get scoreNothingThisWeek =>
+      'Kò sí iṣẹ́ kankan ní ọ̀sẹ̀ yìí. Ka ojú-ìwé kan tàbí ṣe ìdánrawò láti bẹ̀rẹ̀.';
+
+  @override
+  String weekReadSchool(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ojú-ìwé iṣẹ́ ilé-ìwé $count ni a kà',
+      one: 'Ojú-ìwé iṣẹ́ ilé-ìwé 1 ni a kà',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekReadMedicine(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Àmì oògùn $count ni a kà',
+      one: 'Àmì oògùn 1 ni a kà',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekReadReport(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ìròyìn ìlera $count ni a kà',
+      one: 'Ìròyìn ìlera 1 ni a kà',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekReadStatement(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ìwé bánkì tàbí rìsíìtì $count ni a kà',
+      one: 'Ìwé bánkì tàbí rìsíìtì 1 ni a kà',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekQuiz(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ìdánrawò $count ti parí',
+      one: 'Ìdánrawò 1 ti parí',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String weekLesson(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ẹ̀kọ́ $count ti parí',
+      one: 'Ẹ̀kọ́ 1 ti parí',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get scoreHow =>
+      'Ìwọ̀n rẹ ń ka àwọn iṣẹ́ gidi tí o parí nínú Magana ní ọgbọ̀n ọjọ́ sẹ́yìn. Ó wà lórí fóònù yìí nìkan; ìwọ nìkan ló ń rí i.';
+
+  @override
+  String get championsTitle => 'Àwọn Akọni Magana';
+
+  @override
+  String get championsSubtitle => 'Kọ́ láti ọ̀dọ̀ àwọn tó ti là á kọjá';
+
+  @override
+  String get championSample => 'Àpẹẹrẹ àkọsílẹ̀';
+
+  @override
+  String get championDetail =>
+      'Afọ́jú láti ọmọ ọdún 12 · Kano · Hausa, Gẹ̀ẹ́sì';
+
+  @override
+  String get championNotYet =>
+      'Àpẹẹrẹ ni èyí. A ó so ọ́ pọ̀ mọ́ Akọni nípasẹ̀ àwọn àjọ alábàáṣiṣẹ́pọ̀. Ìpè kò tíì ṣeé ṣe.';
+
+  @override
+  String get becomeChampion => 'Di Akọni';
+
+  @override
+  String get becomeChampionBody =>
+      'Ran àwọn mìíràn lọ́wọ́ ní àdúgbò rẹ kí o sì gba ìwé-ẹ̀rí.';
+
+  @override
+  String get champStepBasics => 'Parí ẹ̀kọ́ Ìpìlẹ̀ fóònù';
+
+  @override
+  String get champStepPhotos => 'Parí ẹ̀kọ́ Yíya fọ́tò tó mọ́';
+
+  @override
+  String get champStepScore => 'Dé Ìwọ̀n Òmìnira 60';
+
+  @override
+  String get champStepTraining => 'Darapọ̀ mọ́ ìdálẹ́kọ̀ọ́ Akọni wákàtí 2';
+
+  @override
+  String get champStepHelp => 'Ran ènìyàn mẹ́ta àkọ́kọ́ lọ́wọ́';
+
+  @override
+  String get stepDone => 'ó ti parí';
+
+  @override
+  String get stepNotDone => 'kò tíì parí';
+
+  @override
+  String get championsPartnerNote =>
+      'Ìdálẹ́kọ̀ọ́ Akọni yóò wáyé pẹ̀lú àwọn àjọ alábàáṣiṣẹ́pọ̀. Kò tíì ṣí sílẹ̀.';
 }

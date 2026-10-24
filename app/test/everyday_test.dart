@@ -8,6 +8,7 @@ import 'package:app/policy.dart';
 import 'package:app/profile.dart';
 import 'package:app/screens/capture.dart';
 import 'package:app/screens/everyday.dart';
+import 'package:app/tasks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -100,6 +101,8 @@ void main() {
       await takePhoto(tester);
 
       expect(mode(bodies.single), 'health');
+      // A finished reading counts towards the Independence Score.
+      expect((await TaskLog.load()).single.kind, TaskKind.readMedicine);
       expect(find.text('Medicine label'), findsOneWidget);
       expect(find.textContaining(en.readExactly), findsOneWidget);
       expect(find.text(en.noteMedicine), findsOneWidget);

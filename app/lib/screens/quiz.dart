@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
 import '../quiz.dart';
+import '../tasks.dart';
 import '../theme.dart';
 import '../voice_input.dart';
 import '../widgets.dart';
@@ -92,6 +93,7 @@ class _QuizScreenState extends State<QuizScreen> {
   void _next() {
     if (_index + 1 >= _quiz!.questions.length) {
       setState(() => _finished = true);
+      if (_answered > 0) TaskLog.record(TaskKind.quiz);
       _say(_l.quizResult(_right, _quiz!.questions.length));
       return;
     }

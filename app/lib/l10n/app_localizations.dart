@@ -1355,6 +1355,288 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Questions written by the Magana team in the style of WAEC Biology. They are not past questions. The questions are in English.'**
   String get quizSource;
+
+  /// No description provided for @skillsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Short spoken lessons, at your pace'**
+  String get skillsSubtitle;
+
+  /// No description provided for @nextLesson.
+  ///
+  /// In en, this message translates to:
+  /// **'Next lesson · {minutes} min'**
+  String nextLesson(int minutes);
+
+  /// No description provided for @playLesson.
+  ///
+  /// In en, this message translates to:
+  /// **'Play lesson'**
+  String get playLesson;
+
+  /// No description provided for @pauseLesson.
+  ///
+  /// In en, this message translates to:
+  /// **'Pause'**
+  String get pauseLesson;
+
+  /// No description provided for @practiseNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Practise now'**
+  String get practiseNow;
+
+  /// No description provided for @lessonDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Done'**
+  String get lessonDone;
+
+  /// No description provided for @lessonStepOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {step} of {total}'**
+  String lessonStepOf(int step, int total);
+
+  /// No description provided for @lessonNotStarted.
+  ///
+  /// In en, this message translates to:
+  /// **'Not started'**
+  String get lessonNotStarted;
+
+  /// No description provided for @allLessonsDone.
+  ///
+  /// In en, this message translates to:
+  /// **'You have finished every lesson. Well done!'**
+  String get allLessonsDone;
+
+  /// No description provided for @practiseWithChampion.
+  ///
+  /// In en, this message translates to:
+  /// **'Practise with a Magana Champion'**
+  String get practiseWithChampion;
+
+  /// No description provided for @skillsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample lessons written by the Magana team, to be reviewed by rehabilitation trainers. Lessons are in English for now.'**
+  String get skillsNote;
+
+  /// No description provided for @previousStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Previous step'**
+  String get previousStep;
+
+  /// No description provided for @nextStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Next step'**
+  String get nextStep;
+
+  /// No description provided for @lessonFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Lesson finished.'**
+  String get lessonFinished;
+
+  /// No description provided for @scoreTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'My Independence Score'**
+  String get scoreTitle;
+
+  /// No description provided for @scoreSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tasks you finished in Magana'**
+  String get scoreSubtitle;
+
+  /// No description provided for @scoreOutOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{score} out of 100'**
+  String scoreOutOf(int score);
+
+  /// No description provided for @scoreByArea.
+  ///
+  /// In en, this message translates to:
+  /// **'By area'**
+  String get scoreByArea;
+
+  /// No description provided for @areaLearning.
+  ///
+  /// In en, this message translates to:
+  /// **'Learning'**
+  String get areaLearning;
+
+  /// No description provided for @areaHealth.
+  ///
+  /// In en, this message translates to:
+  /// **'Health papers'**
+  String get areaHealth;
+
+  /// No description provided for @areaMoney.
+  ///
+  /// In en, this message translates to:
+  /// **'Money'**
+  String get areaMoney;
+
+  /// No description provided for @areaSkills.
+  ///
+  /// In en, this message translates to:
+  /// **'Skills'**
+  String get areaSkills;
+
+  /// No description provided for @areaScoreLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{area}: {score} out of 100'**
+  String areaScoreLabel(String area, int score);
+
+  /// No description provided for @scoreThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'This week'**
+  String get scoreThisWeek;
+
+  /// No description provided for @scoreNothingThisWeek.
+  ///
+  /// In en, this message translates to:
+  /// **'No tasks yet this week. Read a page or take a quiz to start.'**
+  String get scoreNothingThisWeek;
+
+  /// No description provided for @weekReadSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 page of schoolwork read} other{{count} pages of schoolwork read}}'**
+  String weekReadSchool(num count);
+
+  /// No description provided for @weekReadMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 medicine label read} other{{count} medicine labels read}}'**
+  String weekReadMedicine(num count);
+
+  /// No description provided for @weekReadReport.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 medical report read} other{{count} medical reports read}}'**
+  String weekReadReport(num count);
+
+  /// No description provided for @weekReadStatement.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 bank statement or receipt read} other{{count} bank statements or receipts read}}'**
+  String weekReadStatement(num count);
+
+  /// No description provided for @weekQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 quiz finished} other{{count} quizzes finished}}'**
+  String weekQuiz(num count);
+
+  /// No description provided for @weekLesson.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 lesson finished} other{{count} lessons finished}}'**
+  String weekLesson(num count);
+
+  /// No description provided for @scoreHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Your score counts real tasks you finished in Magana in the last 30 days. It stays on this phone; only you see it.'**
+  String get scoreHow;
+
+  /// No description provided for @championsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana Champions'**
+  String get championsTitle;
+
+  /// No description provided for @championsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn from people who have been there'**
+  String get championsSubtitle;
+
+  /// No description provided for @championSample.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample profile'**
+  String get championSample;
+
+  /// No description provided for @championDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Blind since age 12 · Kano · Hausa, English'**
+  String get championDetail;
+
+  /// No description provided for @championNotYet.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a sample profile. Champions will be matched to you through partner organisations. Calls are not available yet.'**
+  String get championNotYet;
+
+  /// No description provided for @becomeChampion.
+  ///
+  /// In en, this message translates to:
+  /// **'Become a Champion'**
+  String get becomeChampion;
+
+  /// No description provided for @becomeChampionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Help others in your community and earn a certificate.'**
+  String get becomeChampionBody;
+
+  /// No description provided for @champStepBasics.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish Phone basics'**
+  String get champStepBasics;
+
+  /// No description provided for @champStepPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish Taking clear photos'**
+  String get champStepPhotos;
+
+  /// No description provided for @champStepScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Reach an Independence Score of 60'**
+  String get champStepScore;
+
+  /// No description provided for @champStepTraining.
+  ///
+  /// In en, this message translates to:
+  /// **'Join a 2-hour Champion training'**
+  String get champStepTraining;
+
+  /// No description provided for @champStepHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Help your first 3 people'**
+  String get champStepHelp;
+
+  /// No description provided for @stepDone.
+  ///
+  /// In en, this message translates to:
+  /// **'done'**
+  String get stepDone;
+
+  /// No description provided for @stepNotDone.
+  ///
+  /// In en, this message translates to:
+  /// **'not done yet'**
+  String get stepNotDone;
+
+  /// No description provided for @championsPartnerNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Champion training will be run with partner organisations. It is not open yet.'**
+  String get championsPartnerNote;
 }
 
 class _AppLocalizationsDelegate
