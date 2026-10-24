@@ -18,6 +18,7 @@ String weekLine(AppLocalizations l, TaskKind kind, int n) => switch (kind) {
   TaskKind.readMedicine => l.weekReadMedicine(n),
   TaskKind.readReport => l.weekReadReport(n),
   TaskKind.readStatement => l.weekReadStatement(n),
+  TaskKind.readLetter => l.weekReadLetter(n),
   TaskKind.quiz => l.weekQuiz(n),
   TaskKind.lesson => l.weekLesson(n),
 };

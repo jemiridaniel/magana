@@ -35,6 +35,18 @@ class _EverydayScreenState extends State<EverydayScreen> {
     return PageScaffold(
       body: [
         ScreenHeader(title: l.everydayPapers, subtitle: l.everydaySubtitle),
+        if (profile.can(Feature.everydayLetters))
+          ChoiceCard(
+            title: l.readAnyPaper,
+            detail: l.readAnyPaperDetail,
+            selected: true, // the design's highlighted first choice
+            leading: const Icon(Icons.document_scanner_outlined, size: 34),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(
+                builder: (_) => const CaptureScreen(detect: true),
+              ),
+            ),
+          ),
         for (final paper in Paper.values)
           if (profile.can(paper.feature))
             ChoiceCard(

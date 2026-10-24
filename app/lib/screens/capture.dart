@@ -27,10 +27,14 @@ class CaptureScreen extends StatefulWidget {
     this.findCameras = availableCameras,
     this.feedback,
     this.paper,
+    this.detect = false,
   });
 
   /// An everyday paper (health or money mode); null for schoolwork and other pages.
   final Paper? paper;
+
+  /// "Read any paper": read in the strict letter mode, then work out the kind.
+  final bool detect;
 
   /// Gallery (and fallback camera) picker; injectable for tests.
   final Future<XFile?> Function(ImageSource source)? picker;
@@ -306,7 +310,9 @@ class _CaptureScreenState extends State<CaptureScreen>
       final result = await scope.api.read(
         bytes,
         filename: filename,
-        mode: widget.paper?.mode ?? 'school',
+        mode: widget.detect
+            ? Paper.letter.mode
+            : widget.paper?.mode ?? 'school',
       );
       if (!mounted) return;
       if (result.readableCount == 0) {
@@ -321,12 +327,17 @@ class _CaptureScreenState extends State<CaptureScreen>
         _resume();
         return;
       }
-      await TaskLog.record(TaskKind.forPaper(widget.paper));
+      final paper = widget.detect ? detectPaper(result) : widget.paper;
+      await TaskLog.record(TaskKind.forPaper(paper));
       await _stopCamera();
       if (!mounted) return;
       await Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (_) => ReaderScreen(result: result, paper: widget.paper),
+          builder: (_) => ReaderScreen(
+            result: result,
+            paper: paper,
+            detected: widget.detect,
+          ),
         ),
       );
     } on ApiException catch (e) {
@@ -397,7 +408,9 @@ class _CaptureScreenState extends State<CaptureScreen>
                     child: Semantics(
                       header: true,
                       child: Text(
-                        widget.paper?.title(l) ?? l.readPage,
+                        widget.detect
+                            ? l.readAnyPaper
+                            : widget.paper?.title(l) ?? l.readPage,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,

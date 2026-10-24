@@ -10,6 +10,7 @@ enum TaskKind {
   readMedicine,
   readReport,
   readStatement,
+  readLetter,
   quiz,
   lesson;
 
@@ -18,6 +19,7 @@ enum TaskKind {
     Paper.medicine => readMedicine,
     Paper.report => readReport,
     Paper.statement => readStatement,
+    Paper.letter => readLetter,
   };
 }
 
@@ -29,7 +31,10 @@ enum Area {
     TaskKind.readMedicine,
     TaskKind.readReport,
   }),
-  money(Feature.everydayMoney, 4, {TaskKind.readStatement}),
+  money(Feature.everydayMoney, 4, {
+    TaskKind.readStatement,
+    TaskKind.readLetter,
+  }),
   skills(Feature.skills, 3, {TaskKind.lesson});
 
   const Area(this.feature, this.target, this.kinds);

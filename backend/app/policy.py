@@ -24,6 +24,7 @@ class Feature(str, Enum):
     SKILLS = "skills"
     EVERYDAY_HEALTH = "everyday_health"
     EVERYDAY_MONEY = "everyday_money"
+    EVERYDAY_LETTERS = "everyday_letters"  # letters, forms and notices (18+)
     HEALTH_CALLBACK = "health_callback"
     WHATSAPP = "whatsapp"
     OPEN_CHAT = "open_chat"

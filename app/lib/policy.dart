@@ -13,6 +13,7 @@ enum Feature {
   skills,
   everydayHealth,
   everydayMoney,
+  everydayLetters, // letters, forms and notices (18+)
   healthCallback,
   openChat,
   // App-only features (no backend endpoint yet).

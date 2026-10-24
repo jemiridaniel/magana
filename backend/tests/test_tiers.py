@@ -68,3 +68,22 @@ def test_check_request_rules():
     assert policy.check_request(policy.Tier.STANDARD, False, False) is policy.Tier.STANDARD
     with pytest.raises(policy.CodedError):
         policy.check_request(policy.Tier.GUIDED, False, False)
+
+
+def test_letter_mode_is_adults_only_and_gets_the_second_pass(monkeypatch):
+    import app.main as main
+    from tests.test_core import _page_png  # noqa: F401  (renderer shared with test_core)
+
+    calls = []
+
+    def fake_read_page(image, engine, second_pass=False):
+        calls.append(second_pass)
+        return {"tips": [], "lines": [], "tables": [], "faint_regions": []}
+
+    monkeypatch.setattr(main, "read_page", fake_read_page)
+    png = _page_png(["Dear customer"])
+    ok = client.post("/read", files={"file": ("p.png", png)}, data={"mode": "letter"})
+    assert ok.status_code == 200 and calls == [True]
+    teen = client.post("/read", files={"file": ("p.png", png)}, data={"mode": "letter"},
+                       headers={"X-Magana-Tier": "guided", "X-Magana-Guardian-Consent": "yes"})
+    assert teen.status_code == 403 and teen.json()["detail"] == {"code": "not_allowed_for_tier"}

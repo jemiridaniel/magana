@@ -7,6 +7,10 @@ import '../l10n/app_localizations.dart';
 import '../language.dart';
 import '../messages.dart';
 import '../policy.dart';
+import '../theme.dart';
+import '../voice_answers.dart' as voice_answers;
+import '../voice_input.dart';
+import '../questions.dart';
 import '../widgets.dart';
 import 'everyday.dart';
 
@@ -63,12 +67,16 @@ class _HealthWorkerScreenState extends State<HealthWorkerScreen> {
   String? _priority; // from the Ibà quick check, if done
   String? _status;
   bool _busy = false;
+  List<String> _questions = const []; // saved from medical reports (E2)
 
   AppLocalizations get _l => AppLocalizations.of(context);
 
   @override
   void initState() {
     super.initState();
+    SavedQuestions.load().then((q) {
+      if (mounted) setState(() => _questions = q);
+    });
     speakOnOpen(
       context,
       () =>
@@ -167,6 +175,27 @@ class _HealthWorkerScreenState extends State<HealthWorkerScreen> {
           ),
         if (_priority == null)
           SecondaryButton(label: l.answerIbaFirst, onTap: _quickCheck),
+        if (_questions.isNotEmpty) ...[
+          Semantics(
+            header: true,
+            child: Text(
+              l.savedQuestionsTitle,
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            ),
+          ),
+          for (final q in _questions) ...[
+            NoteBox(text: q),
+            SecondaryButton(
+              label: l.removeQuestion(q),
+              semanticLabel: l.removeQuestion(q),
+              onTap: () async {
+                await SavedQuestions.remove(q);
+                final left = await SavedQuestions.load();
+                if (mounted) setState(() => _questions = left);
+              },
+            ),
+          ],
+        ],
       ],
       bottom: [
         PrimaryButton(label: l.requestCallback, onTap: _busy ? null : _request),
@@ -185,6 +214,9 @@ class QuickCheckScreen extends StatefulWidget {
 }
 
 class _QuickCheckScreenState extends State<QuickCheckScreen> {
+  final VoiceInput _voice = voiceInput();
+  bool? _voiceWorks;
+  bool _listening = false;
   List<TriageQuestion>? _questions;
   bool _fromIba = true;
   final Map<String, Object> _answers = {};
@@ -255,6 +287,47 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
   }
 
   @override
+  void dispose() {
+    if (_listening) _voice.stop();
+    super.dispose();
+  }
+
+  /// E6 "Or say yes or no": a spoken answer, by fixed word rules.
+  Future<void> _listen() async {
+    if (_listening) {
+      await _voice.stop();
+      return;
+    }
+    final speaker = AppScope.of(context).speaker;
+    _voiceWorks ??= await _voice.init();
+    if (!mounted) return;
+    if (_voiceWorks != true) {
+      speaker.say(_l.voiceCommandsUnavailable);
+      return;
+    }
+    await speaker.stop();
+    setState(() => _listening = true);
+    final heard = await _voice.listen();
+    if (!mounted) return;
+    setState(() => _listening = false);
+    final q = _asked[_index];
+    final answer = heard.isEmpty
+        ? null
+        : q.type == 'number'
+        ? voice_answers.days(heard.first)
+        : voice_answers.yesNo(heard.first);
+    if (answer == null) {
+      speaker.say(
+        heard.isEmpty
+            ? _l.commandNothingHeard
+            : _l.voiceAnswerUnclear(heard.first),
+      );
+      return;
+    }
+    _answer(answer);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final l = _l;
     if (!AppScope.of(context).profile.can(Feature.healthCallback)) {
@@ -287,6 +360,18 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
                 fontSize: 25,
                 height: 1.3,
                 fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          Labelled(
+            label: _listening ? l.listeningCommand : l.sayYesOrNo,
+            onTap: _listen,
+            child: OutlinedButton.icon(
+              onPressed: _listen,
+              icon: Icon(_listening ? Icons.stop : Icons.mic_none, size: 28),
+              label: Text(_listening ? l.listeningCommand : l.sayYesOrNo),
+              style: outlinedTile(radius: 32, bg: MaganaColors.amber).copyWith(
+                minimumSize: const WidgetStatePropertyAll(Size.fromHeight(64)),
               ),
             ),
           ),

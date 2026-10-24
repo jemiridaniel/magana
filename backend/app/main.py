@@ -64,12 +64,14 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-SECOND_PASS_MODES = {"health", "money"}
+# Letters and "read any paper" may hold doses or amounts, so they get the strict checks too.
+SECOND_PASS_MODES = {"health", "money", "letter"}
 
 MODE_FEATURE = {
     "school": policy.Feature.READ_SCHOOLWORK,
     "health": policy.Feature.EVERYDAY_HEALTH,
     "money": policy.Feature.EVERYDAY_MONEY,
+    "letter": policy.Feature.EVERYDAY_LETTERS,
 }
 
 

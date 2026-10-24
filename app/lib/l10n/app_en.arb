@@ -606,7 +606,7 @@
   "scoreByArea": "By area",
   "areaLearning": "Learning",
   "areaHealth": "Health papers",
-  "areaMoney": "Money",
+  "areaMoney": "Money and letters",
   "areaSkills": "Skills",
   "areaScoreLabel": "{area}: {score} out of 100",
   "@areaScoreLabel": {
@@ -896,5 +896,83 @@
     }
   },
   "jumpWarnings": "Next thing I'm not sure about",
-  "jumpNotYet": "Jumping to headings and diagrams is not available yet."
+  "jumpNotYet": "Jumping to headings and diagrams is not available yet.",
+  "paperLetter": "Letters & forms",
+  "paperLetterDetail": "Notices, forms, religious texts",
+  "noteLetter": "Magana reads what is printed. It does not give legal or financial advice, and never asks for your PIN or password.",
+  "readAnyPaper": "Read any paper",
+  "readAnyPaperDetail": "Magana works out what kind of paper it is",
+  "detectedPaper": "Paper type: {paper}.",
+  "@detectedPaper": {
+    "placeholders": {
+      "paper": {
+        "type": "String"
+      }
+    }
+  },
+  "weekReadLetter": "{count, plural, =1{1 letter or form read} other{{count} letters or forms read}}",
+  "@weekReadLetter": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "readAgain": "Read again",
+  "askAboutResult": "What does this mean?",
+  "resultAnswer": "Only your health worker can explain what this result means for you. I can save your question for your next visit, or ask a nurse to call you.",
+  "youAsked": "You asked: “{question}”",
+  "@youAsked": {
+    "placeholders": {
+      "question": {
+        "type": "String"
+      }
+    }
+  },
+  "saveQuestion": "Save question",
+  "questionSaved": "Saved. You will find it in Talk to a health worker.",
+  "askANurse": "Ask a nurse",
+  "savedQuestionsTitle": "Questions for your next visit",
+  "removeQuestion": "Remove: {question}",
+  "@removeQuestion": {
+    "placeholders": {
+      "question": {
+        "type": "String"
+      }
+    }
+  },
+  "questionAbout": "{question} (about {where})",
+  "@questionAbout": {
+    "placeholders": {
+      "question": {
+        "type": "String"
+      },
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "fromTheStatement": "From the statement, exactly as printed",
+  "findTransaction": "Find a transaction",
+  "findPrompt": "Say or type a word, date or amount from the transaction.",
+  "findField": "Word, date or amount",
+  "findSearch": "Find",
+  "findSpeak": "Speak instead",
+  "findNoMatch": "No row has “{query}”.",
+  "@findNoMatch": {
+    "placeholders": {
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "sayYesOrNo": "Say yes, no, or I can't tell",
+  "voiceAnswerUnclear": "I heard “{heard}”. Please say yes, no, or I can't tell.",
+  "@voiceAnswerUnclear": {
+    "placeholders": {
+      "heard": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -843,7 +843,7 @@ class AppLocalizationsIg extends AppLocalizations {
   String get areaHealth => 'Akwụkwọ ahụike';
 
   @override
-  String get areaMoney => 'Ego';
+  String get areaMoney => 'Ego na akwụkwọ ozi';
 
   @override
   String get areaSkills => 'Nka';
@@ -1312,4 +1312,107 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get jumpNotYet => 'Enweghị ike ịwụga n\'isiokwu na eserese ugbu a.';
+
+  @override
+  String get paperLetter => 'Akwụkwọ ozi na fọm';
+
+  @override
+  String get paperLetterDetail => 'Ọkwa, fọm, ederede okpukpe';
+
+  @override
+  String get noteLetter =>
+      'Magana na-agụ ihe e biri ebi. Ọ naghị enye ndụmọdụ iwu ma ọ bụ ego, ọ naghịkwa ajụ PIN ma ọ bụ okwuntughe gị.';
+
+  @override
+  String get readAnyPaper => 'Gụọ akwụkwọ ọ bụla';
+
+  @override
+  String get readAnyPaperDetail => 'Magana ga-achọpụta ụdị akwụkwọ ọ bụ';
+
+  @override
+  String detectedPaper(String paper) {
+    return 'Ụdị akwụkwọ: $paper.';
+  }
+
+  @override
+  String weekReadLetter(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Agụrụ akwụkwọ ozi ma ọ bụ fọm $count',
+      one: 'Agụrụ akwụkwọ ozi ma ọ bụ fọm 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readAgain => 'Gụọ ya ọzọ';
+
+  @override
+  String get askAboutResult => 'Gịnị ka nke a pụtara?';
+
+  @override
+  String get resultAnswer =>
+      'Naanị onye ọrụ ahụike gị nwere ike ịkọwa ihe nsonaazụ a pụtara maka gị. Enwere m ike ichekwa ajụjụ gị maka nleta gị ọzọ, ma ọ bụ rịọ nọọsụ ka ọ kpọọ gị.';
+
+  @override
+  String youAsked(String question) {
+    return 'Ị jụrụ: “$question”';
+  }
+
+  @override
+  String get saveQuestion => 'Chekwaa ajụjụ';
+
+  @override
+  String get questionSaved =>
+      'Echekwala ya. Ị ga-ahụ ya na Gwa onye ọrụ ahụike okwu.';
+
+  @override
+  String get askANurse => 'Jụọ nọọsụ';
+
+  @override
+  String get savedQuestionsTitle => 'Ajụjụ maka nleta gị ọzọ';
+
+  @override
+  String removeQuestion(String question) {
+    return 'Wepụ: $question';
+  }
+
+  @override
+  String questionAbout(String question, String where) {
+    return '$question (maka $where)';
+  }
+
+  @override
+  String get fromTheStatement =>
+      'Site na akwụkwọ ụlọ akụ, kpọmkwem ka e si bipụta ya';
+
+  @override
+  String get findTransaction => 'Chọta azụmahịa';
+
+  @override
+  String get findPrompt =>
+      'Kwuo ma ọ bụ dee okwu, ụbọchị ma ọ bụ ego site na azụmahịa ahụ.';
+
+  @override
+  String get findField => 'Okwu, ụbọchị ma ọ bụ ego';
+
+  @override
+  String get findSearch => 'Chọta';
+
+  @override
+  String get findSpeak => 'Kwuo ya kama';
+
+  @override
+  String findNoMatch(String query) {
+    return 'Enweghị ahịrị nwere “$query”.';
+  }
+
+  @override
+  String get sayYesOrNo => 'Kwuo ee, mba, ma ọ bụ amaghị m';
+
+  @override
+  String voiceAnswerUnclear(String heard) {
+    return 'Anụrụ m “$heard”. Biko kwuo ee, mba, ma ọ bụ amaghị m.';
+  }
 }

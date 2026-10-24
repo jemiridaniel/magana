@@ -844,7 +844,7 @@ class AppLocalizationsHa extends AppLocalizations {
   String get areaHealth => 'Takardun lafiya';
 
   @override
-  String get areaMoney => 'Kuɗi';
+  String get areaMoney => 'Kuɗi da wasiƙu';
 
   @override
   String get areaSkills => 'Ƙwarewa';
@@ -1316,4 +1316,106 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get jumpNotYet =>
       'Ba a iya tsallaka zuwa kanun labarai da zane-zane ba tukuna.';
+
+  @override
+  String get paperLetter => 'Wasiƙu da fom';
+
+  @override
+  String get paperLetterDetail => 'Sanarwa, fom, rubuce-rubucen addini';
+
+  @override
+  String get noteLetter =>
+      'Magana tana karanta abin da aka buga. Ba ta ba da shawarar shari\'a ko ta kuɗi, kuma ba ta taɓa neman PIN ko kalmar sirrinka ba.';
+
+  @override
+  String get readAnyPaper => 'Karanta kowace takarda';
+
+  @override
+  String get readAnyPaperDetail => 'Magana za ta gane irin takardar';
+
+  @override
+  String detectedPaper(String paper) {
+    return 'Irin takarda: $paper.';
+  }
+
+  @override
+  String weekReadLetter(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'An karanta wasiƙu ko fom $count',
+      one: 'An karanta wasiƙa ko fom 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readAgain => 'Sake karantawa';
+
+  @override
+  String get askAboutResult => 'Me wannan yake nufi?';
+
+  @override
+  String get resultAnswer =>
+      'Ma\'aikacin lafiyarka ne kaɗai zai iya bayyana abin da wannan sakamakon yake nufi a gare ka. Zan iya adana tambayarka don ziyararka ta gaba, ko in roƙi ma\'aikaciyar jinya ta kira ka.';
+
+  @override
+  String youAsked(String question) {
+    return 'Ka tambaya: “$question”';
+  }
+
+  @override
+  String get saveQuestion => 'Adana tambaya';
+
+  @override
+  String get questionSaved =>
+      'An adana. Za ka same shi a Yi magana da ma\'aikacin lafiya.';
+
+  @override
+  String get askANurse => 'Tambayi ma\'aikaciyar jinya';
+
+  @override
+  String get savedQuestionsTitle => 'Tambayoyi don ziyararka ta gaba';
+
+  @override
+  String removeQuestion(String question) {
+    return 'Cire: $question';
+  }
+
+  @override
+  String questionAbout(String question, String where) {
+    return '$question (game da $where)';
+  }
+
+  @override
+  String get fromTheStatement => 'Daga bayanin banki, daidai yadda aka buga';
+
+  @override
+  String get findTransaction => 'Nemo ma\'amala';
+
+  @override
+  String get findPrompt =>
+      'Faɗi ko rubuta kalma, kwanan wata ko adadin kuɗi daga ma\'amalar.';
+
+  @override
+  String get findField => 'Kalma, kwanan wata ko adadi';
+
+  @override
+  String get findSearch => 'Nemo';
+
+  @override
+  String get findSpeak => 'Faɗa maimakon haka';
+
+  @override
+  String findNoMatch(String query) {
+    return 'Babu layin da ke da “$query”.';
+  }
+
+  @override
+  String get sayYesOrNo => 'Faɗi i, a\'a, ko ban sani ba';
+
+  @override
+  String voiceAnswerUnclear(String heard) {
+    return 'Na ji “$heard”. Don Allah ka ce i, a\'a, ko ban sani ba.';
+  }
 }

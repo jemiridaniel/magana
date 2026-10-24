@@ -13,6 +13,26 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Safety, accessibility: Everyday papers built to the design (E0–E3, E6)
+
+- **What we tested and how:** app tests in `everyday_more_test.dart`, 11 in all:
+  - the read-any-paper word rules;
+  - the spoken-answer word rules;
+  - one test each for E0, letters, E1, E2, E3 and E6, plus the under-18 refusal.
+
+  Backend test: `test_letter_mode_is_adults_only_and_gets_the_second_pass`.
+- **Result:**
+  - "Read any paper" always reads in the strict letter mode (second pass and every number rule). It then picks the paper type by fixed word rules: at least two signs and no tie, otherwise "letter". It never changes what is read.
+  - "What does this mean?" on a medical report never interprets the result. It says only a health worker can, then offers Save question (the question is shown in Talk to a health worker) and Ask a nurse.
+  - The statement summary shows the balance lines exactly as printed.
+  - "Find a transaction" ignores commas: "6450" found "N6,450.00", and a word that isn't on the page is said back.
+  - Spoken quick-check answers accept only fixed words. "maybe" is said back and the question is asked again.
+- **Bug found by the tests and fixed:** the "Find a transaction" dialog disposed its text controller while the dialog was still closing. That threw and overflowed the layout by 99,674 px in the test. The dialog now owns its controller.
+- **What we changed:** this commit.
+- **Status:** fixed in tests; not yet checked with TalkBack on a device.
+  - Not built, by choice: E1's separate label fields ("Directions", "Expiry date", "Prescribed for"). Labelling parts of a label means guessing what each line is. The Reader reads the lines exactly as printed instead.
+  - The spoken-answer words in Hausa, Yorùbá and Igbo need native-speaker checks, and recognising them depends on the phone's recogniser.
+
 ## 2026-10-24 · Safety: in PaddleOCR mode, numbers are not re-read from crops
 
 - **What we tested and how:** reading the code while preparing the production deploy: `reader.reread_numbers` and `PaddleStructureEngine`. Not yet measured on a device or a real page.

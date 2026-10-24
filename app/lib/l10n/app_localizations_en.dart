@@ -840,7 +840,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get areaHealth => 'Health papers';
 
   @override
-  String get areaMoney => 'Money';
+  String get areaMoney => 'Money and letters';
 
   @override
   String get areaSkills => 'Skills';
@@ -1311,4 +1311,106 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get jumpNotYet =>
       'Jumping to headings and diagrams is not available yet.';
+
+  @override
+  String get paperLetter => 'Letters & forms';
+
+  @override
+  String get paperLetterDetail => 'Notices, forms, religious texts';
+
+  @override
+  String get noteLetter =>
+      'Magana reads what is printed. It does not give legal or financial advice, and never asks for your PIN or password.';
+
+  @override
+  String get readAnyPaper => 'Read any paper';
+
+  @override
+  String get readAnyPaperDetail => 'Magana works out what kind of paper it is';
+
+  @override
+  String detectedPaper(String paper) {
+    return 'Paper type: $paper.';
+  }
+
+  @override
+  String weekReadLetter(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count letters or forms read',
+      one: '1 letter or form read',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readAgain => 'Read again';
+
+  @override
+  String get askAboutResult => 'What does this mean?';
+
+  @override
+  String get resultAnswer =>
+      'Only your health worker can explain what this result means for you. I can save your question for your next visit, or ask a nurse to call you.';
+
+  @override
+  String youAsked(String question) {
+    return 'You asked: “$question”';
+  }
+
+  @override
+  String get saveQuestion => 'Save question';
+
+  @override
+  String get questionSaved =>
+      'Saved. You will find it in Talk to a health worker.';
+
+  @override
+  String get askANurse => 'Ask a nurse';
+
+  @override
+  String get savedQuestionsTitle => 'Questions for your next visit';
+
+  @override
+  String removeQuestion(String question) {
+    return 'Remove: $question';
+  }
+
+  @override
+  String questionAbout(String question, String where) {
+    return '$question (about $where)';
+  }
+
+  @override
+  String get fromTheStatement => 'From the statement, exactly as printed';
+
+  @override
+  String get findTransaction => 'Find a transaction';
+
+  @override
+  String get findPrompt =>
+      'Say or type a word, date or amount from the transaction.';
+
+  @override
+  String get findField => 'Word, date or amount';
+
+  @override
+  String get findSearch => 'Find';
+
+  @override
+  String get findSpeak => 'Speak instead';
+
+  @override
+  String findNoMatch(String query) {
+    return 'No row has “$query”.';
+  }
+
+  @override
+  String get sayYesOrNo => 'Say yes, no, or I can\'t tell';
+
+  @override
+  String voiceAnswerUnclear(String heard) {
+    return 'I heard “$heard”. Please say yes, no, or I can\'t tell.';
+  }
 }

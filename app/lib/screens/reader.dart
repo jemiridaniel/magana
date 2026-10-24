@@ -7,6 +7,8 @@ import '../library.dart';
 import '../papers.dart';
 import '../policy.dart';
 import '../widgets.dart';
+import '../questions.dart';
+import '../voice_input.dart';
 import 'explain.dart';
 import 'health_worker.dart';
 import 'reminders.dart';
@@ -24,7 +26,11 @@ class ReaderScreen extends StatefulWidget {
     required this.result,
     this.paper,
     this.savedId,
+    this.detected = false,
   });
+
+  /// "Read any paper": [paper] was worked out from the page's words.
+  final bool detected;
   final ReadResult result;
 
   /// Set when opened from My library: offers Delete instead of Save.
@@ -43,6 +49,9 @@ class _ReaderScreenState extends State<ReaderScreen> {
   int _index = 0;
   bool _playing = false;
   bool _saved = false;
+  bool _askedAboutResult = false; // E2: "What does this mean?"
+  String? _resultQuestion;
+  bool _questionSaved = false;
   int _run = 0; // bumps on every command so an old reading loop stops
   int _speed = 1;
 
@@ -110,6 +119,77 @@ class _ReaderScreenState extends State<ReaderScreen> {
       ItemKind.row =>
         '${_position(item)}. ${[for (final c in item.cells) (c.header.isEmpty ? '' : '${c.header}: ') + (c.unclear ? _l.unclearNumber : c.value)].join('. ')}',
     };
+  }
+
+  /// E2 "What does this mean?": Magana never interprets a result. It says so,
+  /// and offers to save the question for the next visit or ask a nurse.
+  Future<void> _askAboutResult() async {
+    _run++;
+    setState(() => _playing = false);
+    await _speaker.stop();
+    final voice = voiceInput();
+    String? question;
+    if (await voice.init()) {
+      final heard = await voice.listen();
+      if (heard.isNotEmpty) question = heard.first;
+    }
+    if (!mounted) return;
+    setState(() {
+      _askedAboutResult = true;
+      _resultQuestion = question;
+      _questionSaved = false;
+    });
+    _speaker.say(
+      [if (question != null) _l.youAsked(question), _l.resultAnswer].join(' '),
+    );
+  }
+
+  Future<void> _saveQuestion() async {
+    final question = _resultQuestion ?? _l.askAboutResult;
+    await SavedQuestions.add(
+      _l.questionAbout(question, _position(_items[_index])),
+    );
+    if (!mounted) return;
+    setState(() => _questionSaved = true);
+    _speaker.say(_l.questionSaved);
+  }
+
+  /// E3: the balance lines of a statement, read exactly as printed.
+  List<String> get _balances => [
+    for (final item in _items)
+      if (!item.isRow &&
+          !item.isFaint &&
+          item.text.toLowerCase().contains('balance'))
+        _body(item),
+  ];
+
+  /// E3 "Find a transaction": the next row (or line) holding the words, date or
+  /// amount the learner says or types. Commas are ignored ("6,450" = "6450").
+  Future<void> _find() async {
+    final l = _l;
+    _run++;
+    setState(() => _playing = false);
+    await _speaker.stop();
+    if (!mounted) return;
+    _speaker.say(l.findPrompt);
+    final query = await showDialog<String>(
+      context: context,
+      builder: (_) => const _FindDialog(),
+    );
+    final q = query?.trim() ?? '';
+    if (q.isEmpty || !mounted) return;
+    String norm(String t) => t.toLowerCase().replaceAll(',', '');
+    final target = norm(q);
+    final n = _items.length;
+    for (var step = 1; step <= n; step++) {
+      final i = (_index + step) % n;
+      final item = _items[i];
+      final text = item.isRow
+          ? item.cells.map((c) => c.value).join(' ')
+          : item.text;
+      if (norm(text).contains(target)) return _go(i);
+    }
+    _speaker.say(l.findNoMatch(q));
   }
 
   /// Explain this (a preview until N-ATLAS is hosted): the page as Magana read
@@ -197,6 +277,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
   String _intro() {
     final unsure = widget.result.unsureCount;
     return [
+      if (widget.detected && widget.paper != null)
+        _l.detectedPaper(widget.paper!.title(_l)),
       for (final tip in widget.result.tips) messageFor(_l, tip),
       _l.pageRead,
       '${_counts()}.',
@@ -427,6 +509,61 @@ class _ReaderScreenState extends State<ReaderScreen> {
                       if (widget.paper case final paper?) ...[
                         const SizedBox(height: 16),
                         NoteBox(text: paper.note(l)),
+                        const SizedBox(height: 12),
+                        SecondaryButton(
+                          label: l.readAgain,
+                          onTap: () => _play(0),
+                        ),
+                        if (paper == Paper.statement) ...[
+                          if (_balances.isNotEmpty) ...[
+                            const SizedBox(height: 12),
+                            NoteBox(
+                              bold: '${l.fromTheStatement}:',
+                              text: _balances.join('. '),
+                            ),
+                          ],
+                          const SizedBox(height: 12),
+                          SecondaryButton(
+                            label: l.findTransaction,
+                            onTap: _find,
+                          ),
+                        ],
+                        if (paper == Paper.report) ...[
+                          const SizedBox(height: 12),
+                          SecondaryButton(
+                            label: l.askAboutResult,
+                            onTap: _askAboutResult,
+                          ),
+                          if (_askedAboutResult) ...[
+                            const SizedBox(height: 12),
+                            Semantics(
+                              liveRegion: true,
+                              child: NoteBox(
+                                bold: _resultQuestion == null
+                                    ? null
+                                    : l.youAsked(_resultQuestion!),
+                                text: l.resultAnswer,
+                              ),
+                            ),
+                            const SizedBox(height: 12),
+                            if (_questionSaved)
+                              NoteBox(
+                                text: l.questionSaved,
+                                kind: NoteKind.success,
+                              )
+                            else
+                              SecondaryButton(
+                                label: l.saveQuestion,
+                                onTap: _saveQuestion,
+                              ),
+                            const SizedBox(height: 12),
+                            SecondaryButton(
+                              label: l.askANurse,
+                              onTap: () =>
+                                  openHealthWorker(context, reason: 'results'),
+                            ),
+                          ],
+                        ],
                         if (paper.isHealth) ...[
                           const SizedBox(height: 12),
                           if (paper == Paper.medicine &&
@@ -692,6 +829,76 @@ class _ControlButton extends StatelessWidget {
         style: outlinedTile(),
         child: Text(label),
       ),
+    );
+  }
+}
+
+/// "Find a transaction": type, or speak, a word, date or amount. Owns its text
+/// field's controller so it lives as long as the dialog (closing animates).
+class _FindDialog extends StatefulWidget {
+  const _FindDialog();
+
+  @override
+  State<_FindDialog> createState() => _FindDialogState();
+}
+
+class _FindDialogState extends State<_FindDialog> {
+  final _field = TextEditingController();
+
+  @override
+  void dispose() {
+    _field.dispose();
+    super.dispose();
+  }
+
+  Future<void> _speak() async {
+    final l = AppLocalizations.of(context);
+    final speaker = AppScope.of(context).speaker;
+    final voice = voiceInput();
+    if (!await voice.init()) {
+      speaker.say(l.voiceCommandsUnavailable);
+      return;
+    }
+    final heard = await voice.listen();
+    if (heard.isNotEmpty && mounted) Navigator.of(context).pop(heard.first);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return AlertDialog(
+      title: Text(
+        l.findTransaction,
+        style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+      ),
+      content: SingleChildScrollView(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Text(l.findPrompt, style: const TextStyle(fontSize: 18)),
+            const SizedBox(height: 12),
+            TextField(
+              controller: _field,
+              autofocus: true,
+              style: const TextStyle(fontSize: 22),
+              decoration: InputDecoration(
+                labelText: l.findField,
+                border: const OutlineInputBorder(),
+              ),
+              onSubmitted: (v) => Navigator.of(context).pop(v),
+            ),
+          ],
+        ),
+      ),
+      actions: [
+        SecondaryButton(label: l.findSpeak, onTap: _speak),
+        const SizedBox(height: 8),
+        PrimaryButton(
+          label: l.findSearch,
+          onTap: () => Navigator.of(context).pop(_field.text),
+        ),
+      ],
     );
   }
 }

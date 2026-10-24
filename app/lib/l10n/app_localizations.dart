@@ -1479,7 +1479,7 @@ abstract class AppLocalizations {
   /// No description provided for @areaMoney.
   ///
   /// In en, this message translates to:
-  /// **'Money'**
+  /// **'Money and letters'**
   String get areaMoney;
 
   /// No description provided for @areaSkills.
@@ -2177,6 +2177,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Jumping to headings and diagrams is not available yet.'**
   String get jumpNotYet;
+
+  /// No description provided for @paperLetter.
+  ///
+  /// In en, this message translates to:
+  /// **'Letters & forms'**
+  String get paperLetter;
+
+  /// No description provided for @paperLetterDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Notices, forms, religious texts'**
+  String get paperLetterDetail;
+
+  /// No description provided for @noteLetter.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana reads what is printed. It does not give legal or financial advice, and never asks for your PIN or password.'**
+  String get noteLetter;
+
+  /// No description provided for @readAnyPaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Read any paper'**
+  String get readAnyPaper;
+
+  /// No description provided for @readAnyPaperDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana works out what kind of paper it is'**
+  String get readAnyPaperDetail;
+
+  /// No description provided for @detectedPaper.
+  ///
+  /// In en, this message translates to:
+  /// **'Paper type: {paper}.'**
+  String detectedPaper(String paper);
+
+  /// No description provided for @weekReadLetter.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 letter or form read} other{{count} letters or forms read}}'**
+  String weekReadLetter(num count);
+
+  /// No description provided for @readAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Read again'**
+  String get readAgain;
+
+  /// No description provided for @askAboutResult.
+  ///
+  /// In en, this message translates to:
+  /// **'What does this mean?'**
+  String get askAboutResult;
+
+  /// No description provided for @resultAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Only your health worker can explain what this result means for you. I can save your question for your next visit, or ask a nurse to call you.'**
+  String get resultAnswer;
+
+  /// No description provided for @youAsked.
+  ///
+  /// In en, this message translates to:
+  /// **'You asked: “{question}”'**
+  String youAsked(String question);
+
+  /// No description provided for @saveQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Save question'**
+  String get saveQuestion;
+
+  /// No description provided for @questionSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved. You will find it in Talk to a health worker.'**
+  String get questionSaved;
+
+  /// No description provided for @askANurse.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a nurse'**
+  String get askANurse;
+
+  /// No description provided for @savedQuestionsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions for your next visit'**
+  String get savedQuestionsTitle;
+
+  /// No description provided for @removeQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove: {question}'**
+  String removeQuestion(String question);
+
+  /// No description provided for @questionAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'{question} (about {where})'**
+  String questionAbout(String question, String where);
+
+  /// No description provided for @fromTheStatement.
+  ///
+  /// In en, this message translates to:
+  /// **'From the statement, exactly as printed'**
+  String get fromTheStatement;
+
+  /// No description provided for @findTransaction.
+  ///
+  /// In en, this message translates to:
+  /// **'Find a transaction'**
+  String get findTransaction;
+
+  /// No description provided for @findPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Say or type a word, date or amount from the transaction.'**
+  String get findPrompt;
+
+  /// No description provided for @findField.
+  ///
+  /// In en, this message translates to:
+  /// **'Word, date or amount'**
+  String get findField;
+
+  /// No description provided for @findSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Find'**
+  String get findSearch;
+
+  /// No description provided for @findSpeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Speak instead'**
+  String get findSpeak;
+
+  /// No description provided for @findNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No row has “{query}”.'**
+  String findNoMatch(String query);
+
+  /// No description provided for @sayYesOrNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Say yes, no, or I can\'t tell'**
+  String get sayYesOrNo;
+
+  /// No description provided for @voiceAnswerUnclear.
+  ///
+  /// In en, this message translates to:
+  /// **'I heard “{heard}”. Please say yes, no, or I can\'t tell.'**
+  String voiceAnswerUnclear(String heard);
 }
 
 class _AppLocalizationsDelegate
