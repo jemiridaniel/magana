@@ -8,3 +8,11 @@ app/assets/brand/
 app/web/
   favicon.png                 replaces web/favicon.png
   icons/Icon-192.png, Icon-512.png, Icon-maskable-192.png, Icon-maskable-512.png
+
+Braille lockups (wordmark outlined from Atkinson Hyperlegible Bold, SIL OFL; Braille ⠍⠁⠛⠁⠝⠁ = m-a-g-a-n-a, uncontracted)
+  magana_lockup_horizontal.svg/.png       main logo, light backgrounds
+  magana_lockup_horizontal_dark.svg/.png  on ink background
+  magana_lockup_stacked.svg/.png          splash screen, social, square spaces
+  magana_lockup_mono.svg/.png             one colour (print, stamps)
+Use: app icons keep only the single Braille m. Use the full Braille name in lockups, splash, website, slides.
+On printed materials, emboss the Braille for real; printed dots alone cannot be felt.

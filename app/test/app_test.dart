@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
@@ -5,6 +6,7 @@ import 'package:app/api.dart';
 import 'package:app/l10n/app_localizations.dart';
 import 'package:app/language.dart';
 import 'package:app/main.dart';
+import 'package:app/screens/splash.dart';
 import 'package:app/messages.dart';
 import 'package:app/screens/capture.dart';
 import 'package:app/speech.dart';
@@ -429,5 +431,32 @@ void main() {
     await tester.pumpAndSettle();
     expectActionable('Reader');
     handle.dispose();
+  });
+
+  testWidgets('the stacked lockup shows until start-up work is done', (
+    tester,
+  ) async {
+    SharedPreferences.setMockInitialValues({});
+    final ready = Completer<void>();
+    await tester.pumpWidget(
+      MaganaApp(
+        api: fakeApi(readJson),
+        speaker: FakeSpeaker(),
+        language: LanguageController(),
+        ready: ready.future,
+        firstFrameShown: () async {},
+      ),
+    );
+    expect(find.byType(SplashScreen), findsOneWidget);
+    expect(find.bySemanticsLabel('Magana'), findsOneWidget);
+    expect(find.text('Hello'), findsNothing);
+    ready.complete();
+    await tester.pump(const Duration(milliseconds: 100));
+    // Start-up is done, but the lockup stays for its short minimum.
+    expect(find.byType(SplashScreen), findsOneWidget);
+    await tester.pump(splashMinimum);
+    await tester.pumpAndSettle();
+    expect(find.byType(SplashScreen), findsNothing);
+    expect(find.text('Hello'), findsOneWidget);
   });
 }

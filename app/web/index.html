@@ -33,7 +33,14 @@
   <title>Magana</title>
   <link rel="manifest" href="manifest.json">
 </head>
-<body>
+<body style="margin:0;background:#FBFAF6">
+  <!-- Shown while Flutter loads; removed on its first frame. Same size as the in-app splash. -->
+  <div id="splash" style="position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#FBFAF6">
+    <img src="splash_lockup.svg" alt="Magana" width="237">
+  </div>
+  <script>
+    window.addEventListener('flutter-first-frame', () => document.getElementById('splash')?.remove());
+  </script>
   <!--
     You can customize the "flutter_bootstrap.js" script.
     This is useful to provide a custom configuration to the Flutter loader

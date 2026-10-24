@@ -33,7 +33,8 @@ If the emulator stalls ("System isn't responding"), the AVD probably has one CPU
 | `lib/speech.dart` | `flutter_tts` wrapper whose `say()` completes when speech ends (Android, iOS, web) |
 | `lib/capture/` | Frame analysis for live framing (page found, cut edge, too far, dark, steady), pure Dart and unit-tested |
 | `lib/screens/` | Home, Capture, Reader |
-| `assets/brand/` | Logo and icon sources; launcher icons via `dart run flutter_launcher_icons` |
+| `assets/brand/` | Brand kit v2: Braille-m mark and icons, plus Braille lockups (horizontal, dark, stacked, mono). Launcher icons via `dart run flutter_launcher_icons` |
+| `lib/screens/splash.dart` | Splash with the stacked lockup (`magana_lockup_stacked.svg`) |
 
 The layout is a centred column of at most 480 px on tablets and the web.
 
@@ -63,3 +64,10 @@ Every package used (`camera`, `image_picker`, `flutter_tts`, `http`, `flutter_sv
 Voice commands, and the Home tiles other than Read a page (they announce "coming soon").
 
 Fonts: Atkinson Hyperlegible, with a bundled Noto Sans subset as the fallback for letters Atkinson lacks (Hausa ɓ ɗ ƙ, Yorùbá and Igbo ẹ ọ ṣ ị ụ, ₦). Both are SIL Open Font License; see `assets/fonts/README.md`.
+
+## Splash
+
+- Android 11 and older: the native launch screen shows the stacked lockup (`android/app/src/main/res/drawable-xxxhdpi/launch_lockup.png`, from the brand kit) on paper colour.
+- Android 12 and newer: the system splash can only show the round app icon (on paper colour); the Flutter splash then shows `magana_lockup_stacked.svg` at the same size and place.
+- The lockup stays at least `splashMinimum` (800 ms) after the first frame is on screen, and until the saved language and voice are loaded. Set `splashMinimum` to zero to show it only while start-up work runs.
+- Web: `web/index.html` shows the same lockup until Flutter's first frame.

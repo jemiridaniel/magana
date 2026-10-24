@@ -6,6 +6,7 @@ import 'app_scope.dart';
 import 'l10n/app_localizations.dart';
 import 'language.dart';
 import 'screens/home.dart';
+import 'screens/splash.dart';
 import 'speech.dart';
 import 'theme.dart';
 
@@ -15,10 +16,22 @@ const double maxContentWidth = 480;
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final language = LanguageController();
-  await language.load();
   final speaker = Speaker();
-  await speaker.setLanguage(language.value.languageCode);
-  runApp(MaganaApp(api: MaganaApi(), speaker: speaker, language: language));
+  // The splash shows while the saved language and its voice load.
+  // The splash shows while the saved language and its voice load.
+  final ready = () async {
+    await language.load();
+    await speaker.setLanguage(language.value.languageCode);
+  }();
+  await precacheSplash();
+  runApp(
+    MaganaApp(
+      api: MaganaApi(),
+      speaker: speaker,
+      language: language,
+      ready: ready,
+    ),
+  );
 }
 
 class MaganaApp extends StatelessWidget {
@@ -27,11 +40,19 @@ class MaganaApp extends StatelessWidget {
     required this.api,
     required this.speaker,
     required this.language,
+    this.ready,
+    this.firstFrameShown,
   });
 
   final MaganaApi api;
   final Speaker speaker;
   final LanguageController language;
+
+  /// Start-up work the splash waits for; null (tests) goes straight to Home.
+  final Future<void>? ready;
+
+  /// When the first frame is on screen (see [SplashGate]); replaceable in tests.
+  final Future<void> Function()? firstFrameShown;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +85,13 @@ class MaganaApp extends StatelessWidget {
               ),
             ),
           ),
-          home: const HomeScreen(),
+          home: firstFrameShown == null
+              ? SplashGate(ready: ready, child: const HomeScreen())
+              : SplashGate(
+                  ready: ready,
+                  firstFrameShown: firstFrameShown!,
+                  child: const HomeScreen(),
+                ),
         ),
       ),
     );

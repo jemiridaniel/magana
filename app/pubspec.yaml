@@ -69,6 +69,7 @@ flutter:
 
   assets:
     - assets/brand/magana_mark.svg
+    - assets/brand/magana_lockup_stacked.svg
 
   fonts:
     - family: AtkinsonHyperlegible
