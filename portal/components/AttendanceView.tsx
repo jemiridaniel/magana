@@ -2,7 +2,7 @@
 
 import { useMemo, useState, type KeyboardEvent } from "react";
 import { saveRegister } from "@/lib/api";
-import { classes, FOLLOW_UP_BELOW, marks, register, sessions, type Learner, type Mark } from "@/lib/data";
+import { classes, FOLLOW_UP_BELOW, marks, registers as initialRegisters, sessions, type Learner, type Mark } from "@/lib/data";
 
 type SessionType = "in-class" | "remote";
 
@@ -24,15 +24,25 @@ function Ring({ value }: { value: number }) {
 }
 
 export default function AttendanceView() {
+  const firstSession = (id: string) => sessions.find((s) => s.classId === id)?.id ?? "";
   const [classId, setClassId] = useState(classes[0].id);
-  const [sessionId, setSessionId] = useState(sessions[0].id);
+  const [sessionId, setSessionId] = useState(firstSession(classes[0].id));
   const [type, setType] = useState<SessionType>("in-class");
-  const [learners, setLearners] = useState<Learner[]>(register);
+  const [registers, setRegisters] = useState<Record<string, Learner[]>>(initialRegisters);
   const [message, setMessage] = useState("");
   const [saving, setSaving] = useState(false);
 
   const cls = classes.find((c) => c.id === classId)!;
   const classSessions = sessions.filter((s) => s.classId === classId);
+  const learners = useMemo(() => registers[classId] ?? [], [registers, classId]);
+  const setLearners = (update: (ls: Learner[]) => Learner[]) =>
+    setRegisters((r) => ({ ...r, [classId]: update(r[classId] ?? []) }));
+
+  function changeClass(id: string) {
+    setClassId(id);
+    setSessionId(firstSession(id));
+    setMessage("");
+  }
 
   const counts = useMemo(() => {
     const out: Record<Mark, number> = { present: 0, late: 0, absent: 0, excused: 0 };
@@ -54,6 +64,8 @@ export default function AttendanceView() {
     e.preventDefault();
     setMark(l.id, m.id);
     setMessage(`${l.name}: ${m.label}`);
+    // Keep keyboard focus on the option that is now selected, so arrow keys continue from there.
+    e.currentTarget.querySelector<HTMLInputElement>(`input[value="${m.id}"]`)?.focus();
   }
 
   function markAllPresent() {
@@ -91,7 +103,7 @@ export default function AttendanceView() {
     a.href = url;
     a.download = `${cls.name} term report.csv`;
     a.click();
-    URL.revokeObjectURL(url);
+    setTimeout(() => URL.revokeObjectURL(url), 1000); // some browsers read the blob after click() returns
     setMessage("Term report downloaded.");
   }
 
@@ -113,15 +125,24 @@ export default function AttendanceView() {
       <section className="card session-bar" aria-label="Session">
         <div className="field">
           <label htmlFor="att-class">Class</label>
-          <select id="att-class" className="select" value={classId} onChange={(e) => setClassId(e.target.value)}>
+          <select id="att-class" className="select" value={classId} onChange={(e) => changeClass(e.target.value)}>
             {classes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
         <div className="field">
-          <label htmlFor="att-session">Session</label>
-          <select id="att-session" className="select" value={sessionId} onChange={(e) => setSessionId(e.target.value)}>
-            {(classSessions.length ? classSessions : sessions).map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
-          </select>
+          {classSessions.length ? (
+            <>
+              <label htmlFor="att-session">Session</label>
+              <select id="att-session" className="select" value={sessionId} onChange={(e) => setSessionId(e.target.value)}>
+                {classSessions.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
+              </select>
+            </>
+          ) : (
+            <>
+              <span className="field-label">Session</span>
+              <p className="field-empty note">No sessions yet</p>
+            </>
+          )}
         </div>
         <div className="field">
           <label htmlFor="att-type">Type</label>
@@ -133,6 +154,15 @@ export default function AttendanceView() {
         <p className="seats">Seats used {attended} of {cls.seats}</p>
       </section>
 
+      {learners.length === 0 ? (
+        <section className="card" aria-labelledby="empty-head">
+          <h2 id="empty-head">No register yet</h2>
+          <p className="note" style={{ marginTop: 8 }}>
+            {cls.name} has no sessions yet. Use &lsquo;+ New session&rsquo; to start its register.
+          </p>
+        </section>
+      ) : (
+        <>
       <section className="card summary" aria-labelledby="summary-head">
         <h2 id="summary-head" className="visually-hidden">This session</h2>
         <div className="ring-block">
@@ -157,8 +187,8 @@ export default function AttendanceView() {
           <h2 id="register-head">Register</h2>
           <button type="button" className="btn no-print" onClick={markAllPresent}>Mark all present</button>
         </div>
-        <div className="table-wrap">
-          <table aria-describedby="register-help">
+        <div className="table-wrap" role="region" aria-label="Register table" tabIndex={0}>
+          <table className="register-table" aria-describedby="register-help">
             <thead>
               <tr>
                 <th scope="col">Learner</th>
@@ -215,8 +245,12 @@ export default function AttendanceView() {
         </p>
       </section>
 
+        </>
+      )}
+
       <p className="status-msg" role="status" aria-live="polite">{message}</p>
 
+      {learners.length > 0 && (
       <div className="footer-actions no-print">
         <button type="button" className="btn" onClick={exportCsv}>Export term report (CSV)</button>
         <button type="button" className="btn" onClick={() => window.print()}>Print register</button>
@@ -224,6 +258,7 @@ export default function AttendanceView() {
           {saving ? "Saving…" : "Save register"}
         </button>
       </div>
+      )}
     </>
   );
 }

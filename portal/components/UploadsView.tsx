@@ -123,7 +123,7 @@ export default function UploadsView() {
         <div className="card-head">
           <h2 id="recent">Recent uploads</h2>
         </div>
-        <div className="table-wrap">
+        <div className="table-wrap" role="region" aria-label="Recent uploads table" tabIndex={0}>
           <table>
             <thead>
               <tr>
@@ -149,13 +149,20 @@ export default function UploadsView() {
                       <span className="note">Not ready yet</span>
                     ) : (
                       <ul className="download-list">
-                        {u.versions.map((v) => (
-                          <li key={v}>
-                            <a className="link-target" href={downloadUrl(u.id, v)} aria-label={`Download ${versionLabel(v)} of ${u.name}`}>
-                              {versionLabel(v)}
-                            </a>
-                          </li>
-                        ))}
+                        {u.versions.map((v) => {
+                          const href = downloadUrl(u.id, v);
+                          return (
+                            <li key={v}>
+                              {href ? (
+                                <a className="link-target" href={href} download aria-label={`Download ${versionLabel(v)} of ${u.name}`}>
+                                  {versionLabel(v)}
+                                </a>
+                              ) : (
+                                <span className="note">{versionLabel(v)}</span>
+                              )}
+                            </li>
+                          );
+                        })}
                       </ul>
                     )}
                   </td>
@@ -164,6 +171,11 @@ export default function UploadsView() {
             </tbody>
           </table>
         </div>
+        {!downloadUrl("preview", "brf") && (
+          <p className="note" style={{ marginTop: 16 }}>
+            Preview mode: downloads appear here once the portal is connected to the Magana server.
+          </p>
+        )}
         <p className="note" style={{ marginTop: 16 }}>
           Items marked &lsquo;Check&rsquo; have parts Magana was unsure about. Review them before sharing with learners.
         </p>

@@ -96,7 +96,8 @@ a { color: var(--green-ink); }
 
 .main { flex: 1; min-width: 0; padding: 48px 32px 64px; }
 .main:focus { outline: none; }
-.content { max-width: 1100px; margin: 0 auto; display: grid; gap: 32px; }
+.content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
+/* minmax(0, 1fr): wide tables scroll inside .table-wrap instead of stretching the page on phones. */
 
 .page-head { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between; }
 .page-head p { color: var(--ink-soft); margin-top: 8px; max-width: 60ch; }
@@ -124,6 +125,8 @@ a { color: var(--green-ink); }
 .field label, .field-label { font-weight: 700; }
 .select {
   min-height: var(--target);
+  width: 100%;
+  max-width: 100%;
   padding: 0 16px;
   border: 2px solid var(--line);
   border-radius: var(--radius);
@@ -173,7 +176,7 @@ a { color: var(--green-ink); }
 .check:has(input:focus-visible) { outline: 3px solid var(--ink); outline-offset: 3px; box-shadow: 0 0 0 6px var(--amber); }
 .check input:focus-visible { outline: none; box-shadow: none; }
 
-.table-wrap { overflow-x: auto; }
+.table-wrap { overflow-x: auto; position: relative; } /* relative: hidden screen-reader text inside stays clipped */
 table { width: 100%; border-collapse: collapse; }
 caption { text-align: left; }
 th, td { text-align: left; padding: 12px; border-bottom: 1px solid var(--line); vertical-align: middle; }
@@ -201,6 +204,13 @@ thead th { font-size: 1rem; color: var(--ink-soft); }
 
 /* ---------- attendance */
 .session-bar { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; align-items: end; }
+/* Session names are long ("Tue 18 Nov 2026 · Biology · Food tests"): give that picker the most room. */
+@media (min-width: 901px) {
+  .session-bar { grid-template-columns: minmax(0, 1fr) minmax(0, 2fr) minmax(0, 1.2fr); }
+  .session-bar .seats { grid-column: 1 / -1; min-height: 0; }
+}
+.register-table td:nth-child(4), .register-table td:nth-child(5) { white-space: nowrap; }
+.field-empty { min-height: var(--target); display: flex; align-items: center; }
 .seats { font-weight: 700; min-height: var(--target); display: flex; align-items: center; }
 
 .summary { display: grid; grid-template-columns: minmax(260px, 1fr) 2fr; gap: 24px; align-items: center; }
@@ -211,8 +221,9 @@ thead th { font-size: 1rem; color: var(--ink-soft); }
 .tile-num { display: block; font-size: 2rem; font-weight: 700; }
 .tile-label { font-weight: 700; }
 
-.marks { border: 0; margin: 0; padding: 0; display: flex; gap: 6px; flex-wrap: wrap; }
+.marks { border: 0; margin: 0; padding: 0; display: flex; gap: 6px; flex-wrap: nowrap; }
 .mark {
+  position: relative; /* anchors the hidden radio so it never widens the page */
   display: inline-flex; align-items: center; justify-content: center;
   min-height: var(--target); min-width: 96px;
   padding: 0 12px;
@@ -222,7 +233,7 @@ thead th { font-size: 1rem; color: var(--ink-soft); }
   font-weight: 700;
   cursor: pointer;
 }
-.mark input { position: absolute; opacity: 0; width: 1px; height: 1px; }
+.mark input { position: absolute; inset: 0; opacity: 0; width: 1px; height: 1px; margin: 0; }
 .mark:has(input:checked) { border-color: var(--ink); }
 .mark-present:has(input:checked) { background: var(--green-ink); color: #fff; border-color: var(--green-ink); }
 .mark-late:has(input:checked) { background: var(--check-bg); color: var(--check-ink); }
@@ -243,8 +254,14 @@ thead th { font-size: 1rem; color: var(--ink-soft); }
   .tiles { grid-template-columns: repeat(2, 1fr); }
 }
 
+@media (max-width: 600px) {
+  /* Four options in a 2x2 grid instead of a column of four: halves each register row. */
+  .marks { display: grid; grid-template-columns: repeat(2, minmax(96px, 1fr)); }
+  .register-table { min-width: 520px; }
+}
+
 @media print {
-  .sidebar, .skip-link, .no-print { display: none !important; }
+  .sidebar, .skip-link, .no-print, .status-msg { display: none !important; }
   .main { padding: 0; }
   .card { border: 0; padding: 0; }
 }

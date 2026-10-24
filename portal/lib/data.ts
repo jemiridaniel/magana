@@ -98,7 +98,7 @@ const l = (id: string, name: string, mark: Mark, usedMagana: boolean, termAttend
   id, name, mark, usedMagana, termAttended, termSessions,
 });
 
-export const register: Learner[] = [
+const ss2Science: Learner[] = [
   l("1", "Abdullahi Musa", "present", true, 23),
   l("2", "Adaeze Okafor", "present", true, 22),
   l("3", "Aisha Bello", "late", true, 20),
@@ -118,5 +118,8 @@ export const register: Learner[] = [
   l("17", "Zainab Garba", "present", true, 23),
   l("18", "Babatunde Olatunji", "present", true, 22),
 ];
+
+/** Each class's register for its current session. Classes with no sessions yet have no entry. */
+export const registers: Record<string, Learner[]> = { "ss2-sci": ss2Science };
 
 export const FOLLOW_UP_BELOW = 0.65;

@@ -21,7 +21,9 @@ export async function uploadMaterial(file: File, classId: string, versions: Vers
   return r.json();
 }
 
-export function downloadUrl(uploadId: string, version: Version): string {
+/** Where a finished version can be downloaded, or null in the offline preview (no files exist yet). */
+export function downloadUrl(uploadId: string, version: Version): string | null {
+  if (useMock) return null;
   return `${API_URL}/materials/${encodeURIComponent(uploadId)}/${version}`;
 }
 
