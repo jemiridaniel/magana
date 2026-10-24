@@ -76,3 +76,20 @@ def test_no_english_sentences_in_responses():
     for body in bodies:
         for s in _strings(body):
             assert s.count(" ") < 3, f"looks like a sentence: {s!r}"
+
+
+def test_fallback_triage_wording_exists_in_all_four_languages():
+    """Magana answers on its own when Ibà is down, so its triage strings must be in every language."""
+    from app import triage
+
+    codes = [f"q_{q}" for q in triage.DANGER_SIGNS] + ["q_fever", "q_fever_days",
+             "go_to_clinic_now", "nurse_call_within_2_hours", "nurse_call_working_hours"]
+    english = json.loads(ARB.read_text())
+    for lang in ("ha", "yo", "ig"):
+        arb = json.loads(ARB.with_name(f"app_{lang}.arb").read_text())
+        assert arb.get("@@x-review", "").startswith("DRAFT")
+        for code in codes:
+            text = arb.get(f"msg_{code}", "")
+            assert text.strip() and text != english[f"msg_{code}"], f"{lang}: msg_{code}"
+    for code in codes:
+        assert "CLINICAL DRAFT" in english[f"@msg_{code}"]["description"]

@@ -321,15 +321,15 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get msg_go_to_clinic_now =>
-      'This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.';
+      'Èyí lè le. Jọ̀wọ́ lọ sí ilé-ìwòsàn tó súnmọ́ ọ jù lọ báyìí, tàbí pe 112. Má ṣe dúró kí wọ́n pè ọ́ padà.';
 
   @override
   String get msg_nurse_call_within_2_hours =>
-      'Thank you. A nurse will call you within 2 hours.';
+      'A dúpẹ́. Nọ́ọ̀sì kan yóò pè ọ́ láàrin wákàtí 2.';
 
   @override
   String get msg_nurse_call_working_hours =>
-      'Thank you. A nurse will call you back during working hours.';
+      'A dúpẹ́. Nọ́ọ̀sì kan yóò pè ọ́ padà ní àkókò iṣẹ́.';
 
   @override
   String get autoCapture => 'Ya fọ́tò fúnra rẹ̀';
@@ -348,49 +348,49 @@ class AppLocalizationsYo extends AppLocalizations {
       'Mi ò lè lo kámẹ́rà. Fún kámẹ́rà láṣẹ nínú Ètò, tàbí yan fọ́tò láti inú àwọn fọ́tò.';
 
   @override
-  String get msg_q_fever =>
-      'Do you have a fever, or does your body feel very hot?';
+  String get msg_q_fever => 'Ṣé o ní ibà, tàbí ara rẹ gbóná gan-an?';
 
   @override
-  String get msg_q_fever_days => 'For how many days have you had the fever?';
+  String get msg_q_fever_days => 'Ọjọ́ mélòó ni o ti ní ibà náà?';
 
   @override
   String get msg_q_fits =>
-      'Have you had fits, or shaking of the body you could not stop?';
+      'Ṣé gìrì ti mú ọ, tàbí ara rẹ gbọ̀n tí o kò lè dá dúró?';
 
   @override
   String get msg_q_cannot_drink =>
-      'Are you unable to drink anything, or is the baby unable to breastfeed?';
+      'Ṣé o kò lè mu ohunkóhun, tàbí ọmọ ọwọ́ kò lè mu ọmú?';
 
   @override
   String get msg_q_vomits_everything =>
-      'Are you vomiting everything you eat or drink?';
+      'Ṣé o ń bì gbogbo ohun tí o jẹ tàbí tí o mu?';
 
   @override
   String get msg_q_very_sleepy =>
-      'Are you very sleepy, confused, or hard to wake?';
+      'Ṣé oorun ń kùn ọ́ gan-an, ṣé ọkàn rẹ dàrú, tàbí ṣé ó ṣòro láti jí ọ?';
 
   @override
   String get msg_q_bleeding =>
-      'Are you bleeding without a clear reason, from the nose or gums, or in vomit or stool?';
+      'Ṣé ẹ̀jẹ̀ ń jáde lára rẹ láìnídìí, láti imú tàbí èrìgì, tàbí nínú èébì tàbí ìgbẹ́?';
 
   @override
-  String get msg_q_yellow_eyes => 'Have your eyes or skin turned yellow?';
+  String get msg_q_yellow_eyes => 'Ṣé ojú rẹ tàbí awọ ara rẹ ti pọ́n?';
 
   @override
   String get msg_q_hard_breathing =>
-      'Are you breathing very fast, or struggling to breathe?';
+      'Ṣé o ń mí kíákíá gan-an, tàbí ó ń ṣòro fún ọ láti mí?';
 
   @override
   String get msg_q_very_pale =>
-      'Are your palms, lips or inner eyelids very pale?';
+      'Ṣé àtẹ́lẹwọ́ rẹ, ètè rẹ tàbí inú ìpéǹpéjú rẹ funfun gan-an?';
 
   @override
-  String get msg_q_dark_urine => 'Is your urine very dark, like cola or tea?';
+  String get msg_q_dark_urine =>
+      'Ṣé ìtọ̀ rẹ ṣókùnkùn gan-an, bíi kóòkì tàbí tíì?';
 
   @override
   String get msg_q_too_weak =>
-      'Are you too weak to sit up or stand without help?';
+      'Ṣé ara rẹ ti rẹ̀ débi pé o kò lè jókòó tàbí dìde láìsí ìrànlọ́wọ́?';
 
   @override
   String msg_line_end_unclear(String where) {

@@ -95,5 +95,20 @@
   "cueCloser": "Súnmọ́",
   "cueFurther": "Sẹ́yìn",
   "cueMoreLight": "Ìmọ́lẹ̀ sí i",
-  "cueNoPage": "Kò sí ojú-ìwé"
+  "cueNoPage": "Kò sí ojú-ìwé",
+  "msg_q_fever": "Ṣé o ní ibà, tàbí ara rẹ gbóná gan-an?",
+  "msg_q_fever_days": "Ọjọ́ mélòó ni o ti ní ibà náà?",
+  "msg_q_fits": "Ṣé gìrì ti mú ọ, tàbí ara rẹ gbọ̀n tí o kò lè dá dúró?",
+  "msg_q_cannot_drink": "Ṣé o kò lè mu ohunkóhun, tàbí ọmọ ọwọ́ kò lè mu ọmú?",
+  "msg_q_vomits_everything": "Ṣé o ń bì gbogbo ohun tí o jẹ tàbí tí o mu?",
+  "msg_q_very_sleepy": "Ṣé oorun ń kùn ọ́ gan-an, ṣé ọkàn rẹ dàrú, tàbí ṣé ó ṣòro láti jí ọ?",
+  "msg_q_bleeding": "Ṣé ẹ̀jẹ̀ ń jáde lára rẹ láìnídìí, láti imú tàbí èrìgì, tàbí nínú èébì tàbí ìgbẹ́?",
+  "msg_q_yellow_eyes": "Ṣé ojú rẹ tàbí awọ ara rẹ ti pọ́n?",
+  "msg_q_hard_breathing": "Ṣé o ń mí kíákíá gan-an, tàbí ó ń ṣòro fún ọ láti mí?",
+  "msg_q_very_pale": "Ṣé àtẹ́lẹwọ́ rẹ, ètè rẹ tàbí inú ìpéǹpéjú rẹ funfun gan-an?",
+  "msg_q_dark_urine": "Ṣé ìtọ̀ rẹ ṣókùnkùn gan-an, bíi kóòkì tàbí tíì?",
+  "msg_q_too_weak": "Ṣé ara rẹ ti rẹ̀ débi pé o kò lè jókòó tàbí dìde láìsí ìrànlọ́wọ́?",
+  "msg_go_to_clinic_now": "Èyí lè le. Jọ̀wọ́ lọ sí ilé-ìwòsàn tó súnmọ́ ọ jù lọ báyìí, tàbí pe 112. Má ṣe dúró kí wọ́n pè ọ́ padà.",
+  "msg_nurse_call_within_2_hours": "A dúpẹ́. Nọ́ọ̀sì kan yóò pè ọ́ láàrin wákàtí 2.",
+  "msg_nurse_call_working_hours": "A dúpẹ́. Nọ́ọ̀sì kan yóò pè ọ́ padà ní àkókò iṣẹ́."
 }

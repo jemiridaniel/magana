@@ -95,5 +95,20 @@
   "cueCloser": "Bịaruo nso",
   "cueFurther": "Pụọ azụ",
   "cueMoreLight": "Ìhè karịa",
-  "cueNoPage": "Enweghị peeji"
+  "cueNoPage": "Enweghị peeji",
+  "msg_q_fever": "Ị nwere ahụ ọkụ, ka ahụ gị na-ekpo ọkụ nke ukwuu?",
+  "msg_q_fever_days": "Ụbọchị ole ka ahụ ọkụ ahụ jịdere gị?",
+  "msg_q_fits": "Ị nwere akwụkwụ, ma ọ bụ ahụ ịma jijiji ị na-enweghị ike ịkwụsị?",
+  "msg_q_cannot_drink": "Ị nweghị ike ịṅụ ihe ọ bụla, ka nwa ọhụrụ enweghị ike ịṅụ ara?",
+  "msg_q_vomits_everything": "Ị na-agbọpụta ihe niile i riri ma ọ bụ ṅụọ?",
+  "msg_q_very_sleepy": "Ụra ọ na-atụ gị nke ukwuu, uche gị ọ gbagwojuru anya, ka ọ na-esiri ike ịkpọte gị?",
+  "msg_q_bleeding": "Ọbara ọ na-esi gị n'enweghị ihe kpatara ya, site n'imi ma ọ bụ ọnụ eze, ma ọ bụ n'agbọ ma ọ bụ nsị?",
+  "msg_q_yellow_eyes": "Anya gị ma ọ bụ akpụkpọ ahụ gị ọ ghọrọ odo odo?",
+  "msg_q_hard_breathing": "Ị na-eku ume ọsọ ọsọ nke ukwuu, ka ọ na-esiri gị ike iku ume?",
+  "msg_q_very_pale": "Ọbụ aka gị, egbugbere ọnụ gị ma ọ bụ ime akpụkpọ anya gị ọ chachara nke ukwuu?",
+  "msg_q_dark_urine": "Mamịrị gị ọ gbara oji nke ukwuu, dịka kola ma ọ bụ tii?",
+  "msg_q_too_weak": "Ahụ ọ gwụrụ gị nke na ị nweghị ike ịnọdụ ala ma ọ bụ iguzo n'enweghị enyemaka?",
+  "msg_go_to_clinic_now": "Nke a nwere ike ịdị njọ. Biko gaa n'ụlọ ọgwụ kacha nso ugbu a, ma ọ bụ kpọọ 112. Echerela ka a kpọọ gị.",
+  "msg_nurse_call_within_2_hours": "Daalụ. Otu nọọsụ ga-akpọ gị n'ime awa 2.",
+  "msg_nurse_call_working_hours": "Daalụ. Otu nọọsụ ga-akpọghachi gị n'oge ọrụ."
 }

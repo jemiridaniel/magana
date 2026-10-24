@@ -322,15 +322,15 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get msg_go_to_clinic_now =>
-      'This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.';
+      'Wannan zai iya zama mai tsanani. Don Allah ka je asibiti mafi kusa yanzu, ko ka kira 112. Kada ka jira a kira ka.';
 
   @override
   String get msg_nurse_call_within_2_hours =>
-      'Thank you. A nurse will call you within 2 hours.';
+      'Na gode. Wata ma\'aikaciyar jinya za ta kira ka cikin awa 2.';
 
   @override
   String get msg_nurse_call_working_hours =>
-      'Thank you. A nurse will call you back during working hours.';
+      'Na gode. Wata ma\'aikaciyar jinya za ta kira ka a lokacin aiki.';
 
   @override
   String get autoCapture => 'Ɗauka da kanta';
@@ -349,49 +349,49 @@ class AppLocalizationsHa extends AppLocalizations {
       'Ba zan iya amfani da kyamara ba. Ba da izinin kyamara a Saituna, ko ka zaɓi hoto daga cikin hotuna.';
 
   @override
-  String get msg_q_fever =>
-      'Do you have a fever, or does your body feel very hot?';
+  String get msg_q_fever => 'Kana da zazzaɓi, ko jikinka yana da zafi sosai?';
 
   @override
-  String get msg_q_fever_days => 'For how many days have you had the fever?';
+  String get msg_q_fever_days => 'Kwana nawa kake da zazzaɓin?';
 
   @override
   String get msg_q_fits =>
-      'Have you had fits, or shaking of the body you could not stop?';
+      'Ka yi farfaɗiya, ko girgizar jiki da ba ka iya tsayarwa ba?';
 
   @override
   String get msg_q_cannot_drink =>
-      'Are you unable to drink anything, or is the baby unable to breastfeed?';
+      'Ba ka iya shan komai, ko jariri ba ya iya shan nono?';
 
   @override
   String get msg_q_vomits_everything =>
-      'Are you vomiting everything you eat or drink?';
+      'Kana amai duk abin da ka ci ko ka sha?';
 
   @override
   String get msg_q_very_sleepy =>
-      'Are you very sleepy, confused, or hard to wake?';
+      'Kana yawan barci sosai, ko ruɗewa, ko yana da wuya a tashe ka?';
 
   @override
   String get msg_q_bleeding =>
-      'Are you bleeding without a clear reason, from the nose or gums, or in vomit or stool?';
+      'Kana zubar da jini ba tare da dalili ba, daga hanci ko dasashi, ko cikin amai ko bayan gida?';
 
   @override
-  String get msg_q_yellow_eyes => 'Have your eyes or skin turned yellow?';
+  String get msg_q_yellow_eyes => 'Idanunka ko fatarka sun koma rawaya?';
 
   @override
   String get msg_q_hard_breathing =>
-      'Are you breathing very fast, or struggling to breathe?';
+      'Kana numfashi da sauri sosai, ko kana fama wajen numfashi?';
 
   @override
   String get msg_q_very_pale =>
-      'Are your palms, lips or inner eyelids very pale?';
+      'Tafin hannunka, leɓunanka ko cikin fatar idonka sun yi fari sosai?';
 
   @override
-  String get msg_q_dark_urine => 'Is your urine very dark, like cola or tea?';
+  String get msg_q_dark_urine =>
+      'Fitsarinka ya yi duhu sosai, kamar kola ko shayi?';
 
   @override
   String get msg_q_too_weak =>
-      'Are you too weak to sit up or stand without help?';
+      'Ka raunana sosai har ba ka iya zama ko tsayawa ba tare da taimako ba?';
 
   @override
   String msg_line_end_unclear(String where) {

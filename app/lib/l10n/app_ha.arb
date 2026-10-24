@@ -95,5 +95,20 @@
   "cueCloser": "Kusa",
   "cueFurther": "Nesa",
   "cueMoreLight": "Ƙarin haske",
-  "cueNoPage": "Babu shafi"
+  "cueNoPage": "Babu shafi",
+  "msg_q_fever": "Kana da zazzaɓi, ko jikinka yana da zafi sosai?",
+  "msg_q_fever_days": "Kwana nawa kake da zazzaɓin?",
+  "msg_q_fits": "Ka yi farfaɗiya, ko girgizar jiki da ba ka iya tsayarwa ba?",
+  "msg_q_cannot_drink": "Ba ka iya shan komai, ko jariri ba ya iya shan nono?",
+  "msg_q_vomits_everything": "Kana amai duk abin da ka ci ko ka sha?",
+  "msg_q_very_sleepy": "Kana yawan barci sosai, ko ruɗewa, ko yana da wuya a tashe ka?",
+  "msg_q_bleeding": "Kana zubar da jini ba tare da dalili ba, daga hanci ko dasashi, ko cikin amai ko bayan gida?",
+  "msg_q_yellow_eyes": "Idanunka ko fatarka sun koma rawaya?",
+  "msg_q_hard_breathing": "Kana numfashi da sauri sosai, ko kana fama wajen numfashi?",
+  "msg_q_very_pale": "Tafin hannunka, leɓunanka ko cikin fatar idonka sun yi fari sosai?",
+  "msg_q_dark_urine": "Fitsarinka ya yi duhu sosai, kamar kola ko shayi?",
+  "msg_q_too_weak": "Ka raunana sosai har ba ka iya zama ko tsayawa ba tare da taimako ba?",
+  "msg_go_to_clinic_now": "Wannan zai iya zama mai tsanani. Don Allah ka je asibiti mafi kusa yanzu, ko ka kira 112. Kada ka jira a kira ka.",
+  "msg_nurse_call_within_2_hours": "Na gode. Wata ma'aikaciyar jinya za ta kira ka cikin awa 2.",
+  "msg_nurse_call_working_hours": "Na gode. Wata ma'aikaciyar jinya za ta kira ka a lokacin aiki."
 }
