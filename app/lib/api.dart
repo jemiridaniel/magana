@@ -10,6 +10,10 @@ const _configured = String.fromEnvironment('MAGANA_API');
 
 String get apiBase => _configured.isNotEmpty ? _configured : defaultApiBase;
 
+/// The backend's API key, set at build time: --dart-define=MAGANA_API_KEY=...
+/// (the server's MAGANA_API_KEY). Empty for local development.
+const apiKey = String.fromEnvironment('MAGANA_API_KEY');
+
 enum ItemKind { line, row, faint }
 
 /// Number warnings: the flagged word is never spoken as if it were certain.
@@ -240,7 +244,10 @@ class ApiException implements Exception {
 class MaganaApi {
   MaganaApi({http.Client? client, Map<String, String> Function()? headers})
     : _client = client ?? http.Client(),
-      _headers = headers ?? (() => const {});
+      _headers = (() => {
+        ...?headers?.call(),
+        if (apiKey.isNotEmpty) 'X-Magana-Key': apiKey,
+      });
   final http.Client _client;
 
   /// Age tier and consent headers, sent with every request (see ProfileController).

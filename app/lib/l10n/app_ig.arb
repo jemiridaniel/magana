@@ -380,5 +380,6 @@
   "sayNameWhenLocked": "Kwuo aha ọgwụ mgbe ekwentị kpọchiri",
   "sayNameNote": "Agbanyụọ: ihuenyo mkpọchi ga-ekwu naanị “Ihe ncheta Magana”. Agbanyere: ihuenyo mkpọchi ga-egosi ọgwụ na ole, Magana ga-ekwukwa ha n'oke olu n'oge ọ bụla, ya mere ndị nọ gị nso nwere ike ịhụ ma ọ bụ nụ ha.",
   "reminderGenericTitle": "Ihe ncheta Magana",
-  "reminderGenericBody": "Mepee Magana ka ị nụ ọgwụ ole."
+  "reminderGenericBody": "Mepee Magana ka ị nụ ọgwụ ole.",
+  "msg_bad_api_key": "Mbipụta Magana a enweghị ike iru ọrụ ịgụ ihe. Biko melite ngwa ahụ."
 }

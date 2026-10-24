@@ -1005,5 +1005,6 @@
   },
   "sayNameNote": "Off: the lock screen says only “Magana reminder”. On: the lock screen shows the medicine and how much, and Magana says them aloud at each time, so people near you may see or hear them.",
   "reminderGenericTitle": "Magana reminder",
-  "reminderGenericBody": "Open Magana to hear which medicine."
+  "reminderGenericBody": "Open Magana to hear which medicine.",
+  "msg_bad_api_key": "This copy of Magana can't reach the reading service. Please update the app."
 }

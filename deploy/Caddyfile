@@ -1,0 +1,14 @@
+# Automatic HTTPS for the Magana API (certificates from Let's Encrypt).
+{$MAGANA_DOMAIN} {
+	encode gzip
+	# Page photos only: Magana never stores them.
+	request_body {
+		max_size 15MB
+	}
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		-Server
+	}
+	reverse_proxy magana:8000
+}

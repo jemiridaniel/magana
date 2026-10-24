@@ -21,6 +21,7 @@ ENGLISH = {
     "faint_region": "There is faint print {where} that I can't read. Try more light, or retake the photo.",
     # Request errors (HTTP detail)
     "unknown_mode": "Choose schoolwork, health or money.",
+    "bad_api_key": "This copy of Magana can't reach the reading service. Please update the app.",
     "unknown_tier": "Please set up Magana again: your age group wasn't recognised.",
     "not_allowed_for_tier": "This isn't available on this account.",
     "consent_required": "Learners aged 13 to 17 need a parent's or guardian's consent first.",

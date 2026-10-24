@@ -1457,4 +1457,8 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get reminderGenericBody => 'Mepee Magana ka ị nụ ọgwụ ole.';
+
+  @override
+  String get msg_bad_api_key =>
+      'Mbipụta Magana a enweghị ike iru ọrụ ịgụ ihe. Biko melite ngwa ahụ.';
 }

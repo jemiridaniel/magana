@@ -1460,4 +1460,8 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get reminderGenericBody => 'Buɗe Magana don jin wane magani.';
+
+  @override
+  String get msg_bad_api_key =>
+      'Wannan kwafin Magana ba zai iya kaiwa ga sabis ɗin karatu ba. Don Allah ka sabunta manhajar.';
 }

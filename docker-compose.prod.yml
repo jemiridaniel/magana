@@ -1,0 +1,57 @@
+# Production on one AWS EC2 instance (docs/DEPLOY_AWS.md): Caddy gives automatic HTTPS
+# and is the only thing listening on ports 80 and 443; Magana and Ibà are internal.
+#
+#   cp deploy/.env.example .env   # then fill it in (secrets stay on the server)
+#   docker compose -f docker-compose.prod.yml up -d --build
+#
+# Switching OCR: set OCR_ENGINE=paddle in .env (and use a c7i-flex.large), then run the
+# same command again; the image is rebuilt with PaddleOCR.
+services:
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      MAGANA_DOMAIN: ${MAGANA_DOMAIN:?set MAGANA_DOMAIN in .env, e.g. 18-130-12-34.sslip.io}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - magana
+
+  magana:
+    build:
+      context: ./backend
+      args:
+        OCR_ENGINE: ${OCR_ENGINE:-tesseract}
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      MAGANA_OCR: ${OCR_ENGINE:-tesseract}
+      IBA_API_URL: http://iba:8000
+    expose:
+      - "8000"
+    depends_on:
+      iba:
+        # Magana starts even if Ibà doesn't: it falls back to its danger-sign rules.
+        condition: service_started
+
+  iba:
+    build: ${IBA_NATLAS_DIR:-../iba-natlas/app}
+    restart: unless-stopped
+    expose:
+      - "8000"
+    environment:
+      APP_ENV: prod
+      IBA_API_KEYS: ${IBA_API_KEY:?set IBA_API_KEY in .env}
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.cache
+
+volumes:
+  caddy_data:   # HTTPS certificates: keep across restarts (Let's Encrypt rate limits)
+  caddy_config:

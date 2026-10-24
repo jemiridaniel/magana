@@ -1454,4 +1454,8 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get reminderGenericBody => 'Ṣí Magana láti gbọ́ oògùn wo.';
+
+  @override
+  String get msg_bad_api_key =>
+      'Ẹ̀dà Magana yìí kò lè dé iṣẹ́ kíkà. Jọ̀wọ́ ṣe àtúnṣe áàpù náà.';
 }

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import hmac
 import io
 from contextlib import asynccontextmanager
 from functools import lru_cache
@@ -9,6 +10,7 @@ import os
 
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 from PIL import Image
 import logging
 from typing import Literal
@@ -65,6 +67,20 @@ app.add_middleware(
 )
 
 # Letters and "read any paper" may hold doses or amounts, so they get the strict checks too.
+@app.middleware("http")
+async def require_api_key(request, call_next):
+    """MAGANA_API_KEY (set on the server) must come with every request as X-Magana-Key.
+    /health stays open for the load balancer and uptime checks; CORS preflights pass.
+    Unset (local development): no key needed. The key ships inside the app, so it keeps
+    out casual callers and bots, not a determined attacker."""
+    key = os.environ.get("MAGANA_API_KEY", "")
+    if key and request.method != "OPTIONS" and request.url.path != "/health":
+        sent = request.headers.get("x-magana-key", "")
+        if not hmac.compare_digest(sent.encode(), key.encode()):
+            return JSONResponse({"detail": {"code": "bad_api_key"}}, status_code=401)
+    return await call_next(request)
+
+
 SECOND_PASS_MODES = {"health", "money", "letter"}
 
 MODE_FEATURE = {

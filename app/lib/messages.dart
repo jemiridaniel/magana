@@ -22,6 +22,7 @@ String messageFor(AppLocalizations l, String code, {String where = ''}) =>
       'callback_unavailable' => l.msg_callback_unavailable,
       'unknown_tier' => l.msg_unknown_tier,
       'go_to_clinic_now' => l.msg_go_to_clinic_now,
+      'bad_api_key' => l.msg_bad_api_key,
       'explain_preview' => l.msg_explain_preview,
       'explained' => l.msg_explained,
       'explain_bad_source' => l.msg_explain_bad_source,

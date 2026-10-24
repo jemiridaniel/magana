@@ -1455,4 +1455,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get reminderGenericBody => 'Open Magana to hear which medicine.';
+
+  @override
+  String get msg_bad_api_key =>
+      'This copy of Magana can\'t reach the reading service. Please update the app.';
 }

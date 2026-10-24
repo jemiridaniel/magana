@@ -13,6 +13,30 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Release build: signed APK size, and the API key
+
+- **What we tested and how:**
+  - `flutter build apk --release --split-per-abi`, through `scripts/build-apk.sh`, on the Mac, pointed at a placeholder server. This was a verification build, not for testers.
+  - The same build without `android/key.properties`.
+  - Backend tests in `test_api_key.py`.
+- **Result:**
+  - Release APKs, version 0.1.0 (build 1):
+
+    | APK | Size |
+    |---|---|
+    | arm64-v8a | 21,321,568 bytes (the build tool says 21.3 MB) |
+    | armeabi-v7a | 19.0 MB |
+    | x86_64 | 22.8 MB |
+
+  - The arm64 APK is signed with the upload key: CN=Magana, O=Magana, C=NG, certificate SHA-256 `84d9da5d8ae21de37d97db79800cafaaa3992374a01e3c76980a72f5b2df92c6`.
+  - Without `key.properties`, the release build stopped after 11 s with "No android/key.properties…" instead of signing with the debug key.
+  - With `MAGANA_API_KEY` set on the backend, a missing or wrong `X-Magana-Key` gets 401 `bad_api_key`, and the right key gets 200. `/health` and CORS preflights stay open.
+- **What we changed:** this commit.
+- **Status:** working.
+  - Not yet installed on a real phone.
+  - The key is built into the app, so it keeps out casual callers, not a determined attacker who unpacks the APK.
+  - The deployed-backend entry comes once the server is running.
+
 ## 2026-10-24 · Safety, accessibility: "Say the medicine name when locked" (DRAFT)
 
 - **What we tested and how:** `reminders_test.dart`: `say the medicine name when locked: off by default, DRAFT`, plus the existing reminders tests now expecting the private wording.

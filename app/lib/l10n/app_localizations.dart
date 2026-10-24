@@ -2381,6 +2381,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open Magana to hear which medicine.'**
   String get reminderGenericBody;
+
+  /// No description provided for @msg_bad_api_key.
+  ///
+  /// In en, this message translates to:
+  /// **'This copy of Magana can\'t reach the reading service. Please update the app.'**
+  String get msg_bad_api_key;
 }
 
 class _AppLocalizationsDelegate

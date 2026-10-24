@@ -380,5 +380,6 @@
   "sayNameWhenLocked": "Sọ orúkọ oògùn nígbà tí fóònù bá wà ní títì",
   "sayNameNote": "Ní pípa: ojú títì yóò sọ “Ìrántí Magana” nìkan. Ní títàn: ojú títì yóò fi oògùn àti iye rẹ̀ hàn, Magana yóò sì sọ wọ́n jáde ní àkókò kọ̀ọ̀kan, nítorí náà àwọn tó wà nítòsí rẹ lè rí tàbí gbọ́ wọn.",
   "reminderGenericTitle": "Ìrántí Magana",
-  "reminderGenericBody": "Ṣí Magana láti gbọ́ oògùn wo."
+  "reminderGenericBody": "Ṣí Magana láti gbọ́ oògùn wo.",
+  "msg_bad_api_key": "Ẹ̀dà Magana yìí kò lè dé iṣẹ́ kíkà. Jọ̀wọ́ ṣe àtúnṣe áàpù náà."
 }

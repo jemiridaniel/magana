@@ -380,5 +380,6 @@
   "sayNameWhenLocked": "Faɗi sunan magani idan waya a kulle take",
   "sayNameNote": "A kashe: allon kulle zai ce “Tunatarwar Magana” kawai. A kunne: allon kulle zai nuna maganin da yawansa, kuma Magana za ta faɗa da ƙarfi a kowane lokaci, don haka mutanen da ke kusa da kai za su iya gani ko ji.",
   "reminderGenericTitle": "Tunatarwar Magana",
-  "reminderGenericBody": "Buɗe Magana don jin wane magani."
+  "reminderGenericBody": "Buɗe Magana don jin wane magani.",
+  "msg_bad_api_key": "Wannan kwafin Magana ba zai iya kaiwa ga sabis ɗin karatu ba. Don Allah ka sabunta manhajar."
 }
