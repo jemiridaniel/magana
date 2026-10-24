@@ -541,7 +541,6 @@
     }
   },
   "quizNothingHeard": "I did not hear an answer. Say A, B, C or D, or double tap an answer.",
-  "quizNoVoice": "Spoken answers are not available on this phone. Double tap an answer instead.",
   "quizRepeat": "Repeat question",
   "quizNext": "Next question",
   "quizFinish": "See my result",
@@ -1048,5 +1047,14 @@
   "quizTapInstead": "I'm having trouble hearing you. Please double tap your answer instead.",
   "quizSayTrueFalse": "Say true or false",
   "msg_too_many_requests": "Magana is busy right now. Please wait a minute and try again.",
-  "remindersNeedApp": "Reminders need the Android or iPhone app. In a web browser Magana can't ring at the right time."
+  "remindersNeedApp": "Reminders need the Android or iPhone app. In a web browser Magana can't ring at the right time.",
+  "quizVoiceUnavailable": "Voice answers aren't available on this device yet. Tap an answer instead.",
+  "quizVoiceUnavailableWeb": "Voice answers aren't available on this device yet. Tap or click an answer, or press A, B, C or D on your keyboard.",
+  "quizKeysHint": "Tap or click an answer, or press A, B, C or D on your keyboard.",
+  "quizKeysHintTrueFalse": "Tap or click true or false, or press A for true or B for false.",
+  "quizTapAnswer": "Tap an answer.",
+  "startMagana": "Start Magana",
+  "@startMagana": {
+    "description": "Web only: the one full-screen button shown until the first press, because browsers won't speak before it."
+  }
 }

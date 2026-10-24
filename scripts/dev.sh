@@ -88,7 +88,7 @@ echo "backend refuses calls without the key: HTTP $code (expect 401)"
 
 # ---- app
 cd "$ROOT/app"
-args=(-d "$DEVICE" --dart-define=MAGANA_API="$API" --dart-define=MAGANA_API_KEY="$KEY")
+args=(-d "$DEVICE" --dart-define=MAGANA_API="$API" --dart-define=MAGANA_API_KEY="$KEY" --dart-define=MAGANA_ENV=development)
 [ "$DEVICE" = chrome ] && args+=(--web-port 5173)
 echo "flutter run ${args[*]/MAGANA_API_KEY=*/MAGANA_API_KEY=<dev key>}"
 flutter run "${args[@]}"

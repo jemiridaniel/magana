@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
+import '../platform.dart';
 import '../quiz.dart';
 import '../tasks.dart';
 import '../theme.dart';
@@ -10,7 +12,8 @@ import '../voice_input.dart';
 import '../widgets.dart';
 
 /// Voice quiz: each question and its options are read aloud; the learner says
-/// A, B, C or D (or double taps an option) and fixed rules mark the answer.
+/// A, B, C or D, taps an option, or presses A to D on a keyboard, and fixed rules
+/// mark the answer. Whether voice can work is checked before the Say button shows.
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key, this.load = Quiz.load});
   final Future<Quiz> Function() load;
@@ -21,7 +24,8 @@ class QuizScreen extends StatefulWidget {
 
 class _QuizScreenState extends State<QuizScreen> {
   late final VoiceInput _voice = voiceInputFor(context);
-  bool? _voiceWorks; // null until first tried
+  bool? _voiceWorks; // checked when the quiz opens
+  bool _toldNoVoice = false;
   Quiz? _quiz;
   int _index = 0;
   int? _chosen;
@@ -41,8 +45,12 @@ class _QuizScreenState extends State<QuizScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final quiz = await widget.load();
+      final works = await _voice.init().catchError((_) => false);
       if (!mounted) return;
-      setState(() => _quiz = quiz);
+      setState(() {
+        _quiz = quiz;
+        _voiceWorks = works;
+      });
       _askCurrent();
     });
   }
@@ -61,15 +69,31 @@ class _QuizScreenState extends State<QuizScreen> {
     [
       _progress,
       _q.question,
-      if (_q.trueFalse)
-        _l.quizSayTrueFalse
-      else ...[
+      if (!_q.trueFalse)
         for (var i = 0; i < _q.options.length; i++)
           '${letters[i]}, ${_q.options[i]}.',
-        _l.quizSayAnswer,
-      ],
+      _howToAnswer(),
     ].join(' '),
   );
+
+  String get _noVoice =>
+      runningOnWeb ? _l.quizVoiceUnavailableWeb : _l.quizVoiceUnavailable;
+
+  /// Say it, tap it, or (on the web) press its key. When voice can't work the
+  /// first question says so; later ones just say how to answer.
+  String _howToAnswer() {
+    final tf = _q.trueFalse;
+    final keys = tf ? _l.quizKeysHintTrueFalse : _l.quizKeysHint;
+    if (_voiceWorks == true) {
+      final say = tf ? _l.quizSayTrueFalse : _l.quizSayAnswer;
+      return runningOnWeb ? '$say. $keys' : say;
+    }
+    if (!_toldNoVoice) {
+      _toldNoVoice = true;
+      return _noVoice;
+    }
+    return runningOnWeb ? keys : _l.quizTapAnswer;
+  }
 
   String _verdict(int i) {
     final q = _q;
@@ -143,10 +167,8 @@ class _QuizScreenState extends State<QuizScreen> {
       return;
     }
     final speaker = AppScope.of(context).speaker;
-    _voiceWorks ??= await _voice.init();
-    if (!mounted) return;
     if (_voiceWorks != true) {
-      _warn(_l.quizNoVoice);
+      _warn(_noVoice);
       return;
     }
     await speaker.stop(); // the microphone must not hear the question
@@ -158,13 +180,14 @@ class _QuizScreenState extends State<QuizScreen> {
     try {
       heard = await _voice.listen(language: 'en'); // the quiz is in English
     } on VoiceStepFailed {
-      // No recogniser this account may use: tapping still works.
+      // Every recogniser this account may use failed: tapping still works, and
+      // the Say button goes. Never "I did not hear an answer": nothing listened.
       if (!mounted) return;
       setState(() {
         _listening = false;
         _voiceWorks = false;
       });
-      _warn(_l.quizNoVoice);
+      _warn(_noVoice);
       return;
     }
     if (!mounted) return;
@@ -226,98 +249,123 @@ class _QuizScreenState extends State<QuizScreen> {
     }
     if (_finished) return _result(l, quiz);
     final q = _q;
-    return PageScaffold(
-      body: [
-        ScreenHeader(
-          title: l.quizTitle,
-          subtitle: _progress,
-          trailing: Semantics(
-            label: l.quizScoreLabel(_right, _answered),
-            excludeSemantics: true,
-            child: Text(
-              '$_right / $_answered',
-              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
-            ),
-          ),
-        ),
-        ExcludeSemantics(
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(5),
-            child: LinearProgressIndicator(
-              value: (_index + 1) / quiz.questions.length,
-              minHeight: 10,
-              color: MaganaColors.green,
-              backgroundColor: const Color(0xFFE2DED4),
-            ),
-          ),
-        ),
-        Semantics(
-          header: true,
-          liveRegion: true,
-          child: Text(
-            q.question,
-            style: const TextStyle(
-              fontSize: 25,
-              height: 1.3,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-        ),
-        for (var i = 0; i < q.options.length; i++)
-          _OptionTile(
-            letter: letters[i],
-            text: q.options[i],
-            chosen: _chosen == i,
-            revealed: _chosen != null,
-            right: i == q.answer,
-            onTap: () => _choose(i),
-          ),
-        if (_pending case final p?) ...[
-          Semantics(
-            liveRegion: true,
-            child: NoteBox(text: l.quizConfirm(q.spokenAnswer(p))),
-          ),
-          PrimaryButton(
-            label: l.quizConfirmYes(q.spokenAnswer(p)),
-            onTap: () => _choose(p),
-          ),
-          SecondaryButton(label: l.quizConfirmNo, onTap: _rejectPending),
-        ] else if (_feedback case final f?)
-          Semantics(
-            liveRegion: true,
-            child: NoteBox(text: f.text, kind: f.kind),
-          ),
-        NoteBox(text: l.quizSource),
-      ],
-      bottom: [
-        Row(
-          children: [
-            Expanded(
-              child: SecondaryButton(label: l.quizRepeat, onTap: _askCurrent),
-            ),
-            const SizedBox(width: 10),
-            Expanded(
-              child: PrimaryButton(
-                label: _index + 1 < quiz.questions.length
-                    ? l.quizNext
-                    : l.quizFinish,
-                onTap: _next,
+    return _answerKeys(
+      q,
+      PageScaffold(
+        body: [
+          ScreenHeader(
+            title: l.quizTitle,
+            subtitle: _progress,
+            trailing: Semantics(
+              label: l.quizScoreLabel(_right, _answered),
+              excludeSemantics: true,
+              child: Text(
+                '$_right / $_answered',
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
-          ],
-        ),
-        _MicButton(
-          listening: _listening,
-          onTap: _listen,
-          label: _pending != null
-              ? l.quizSayYesOrNo
-              : q.trueFalse
-              ? l.quizSayTrueFalse
-              : l.quizSayAnswer,
-        ),
-      ],
+          ),
+          ExcludeSemantics(
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(5),
+              child: LinearProgressIndicator(
+                value: (_index + 1) / quiz.questions.length,
+                minHeight: 10,
+                color: MaganaColors.green,
+                backgroundColor: const Color(0xFFE2DED4),
+              ),
+            ),
+          ),
+          Semantics(
+            header: true,
+            liveRegion: true,
+            child: Text(
+              q.question,
+              style: const TextStyle(
+                fontSize: 25,
+                height: 1.3,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+          for (var i = 0; i < q.options.length; i++)
+            _OptionTile(
+              letter: letters[i],
+              text: q.options[i],
+              chosen: _chosen == i,
+              revealed: _chosen != null,
+              right: i == q.answer,
+              onTap: () => _choose(i),
+            ),
+          if (_pending case final p?) ...[
+            Semantics(
+              liveRegion: true,
+              child: NoteBox(text: l.quizConfirm(q.spokenAnswer(p))),
+            ),
+            PrimaryButton(
+              label: l.quizConfirmYes(q.spokenAnswer(p)),
+              onTap: () => _choose(p),
+            ),
+            SecondaryButton(label: l.quizConfirmNo, onTap: _rejectPending),
+          ] else if (_feedback case final f?)
+            Semantics(
+              liveRegion: true,
+              child: NoteBox(text: f.text, kind: f.kind),
+            ),
+          NoteBox(text: l.quizSource),
+        ],
+        bottom: [
+          Row(
+            children: [
+              Expanded(
+                child: SecondaryButton(label: l.quizRepeat, onTap: _askCurrent),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: PrimaryButton(
+                  label: _index + 1 < quiz.questions.length
+                      ? l.quizNext
+                      : l.quizFinish,
+                  onTap: _next,
+                ),
+              ),
+            ],
+          ),
+          if (_voiceWorks == true)
+            _MicButton(
+              listening: _listening,
+              onTap: _listen,
+              label: _pending != null
+                  ? l.quizSayYesOrNo
+                  : q.trueFalse
+                  ? l.quizSayTrueFalse
+                  : l.quizSayAnswer,
+            )
+          else
+            NoteBox(text: _noVoice),
+        ],
+      ),
     );
   }
+
+  static const _keys = [
+    LogicalKeyboardKey.keyA,
+    LogicalKeyboardKey.keyB,
+    LogicalKeyboardKey.keyC,
+    LogicalKeyboardKey.keyD,
+  ];
+
+  /// A to D on a keyboard answer like tapping the option.
+  Widget _answerKeys(QuizQuestion q, Widget child) => CallbackShortcuts(
+    bindings: {
+      for (var i = 0; i < q.options.length && i < _keys.length; i++)
+        SingleActivator(_keys[i]): () => _choose(i),
+    },
+    child: Focus(autofocus: true, child: child),
+  );
 
   Widget _result(AppLocalizations l, Quiz quiz) => PageScaffold(
     body: [

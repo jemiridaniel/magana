@@ -60,16 +60,6 @@ app = FastAPI(
     version="0.2.0",
     description="Responses carry message codes, never sentences; see app/messages.py for the English reference.",
 )
-# Browsers (Flutter web, teacher portal) need CORS. Dev allows any localhost port;
-# production sets MAGANA_CORS_ORIGIN_REGEX to its own domains.
-app.add_middleware(
-    CORSMiddleware,
-    allow_origin_regex=os.environ.get("MAGANA_CORS_ORIGIN_REGEX", r"http://(localhost|127\.0\.0\.1)(:\d+)?"),
-    allow_methods=["GET", "POST"],
-    allow_headers=["*"],
-)
-
-# Letters and "read any paper" may hold doses or amounts, so they get the strict checks too.
 @app.middleware("http")
 async def rate_limit(request, call_next):
     """Per-IP and per-device limits (app/ratelimit.py): the web app's key is public."""
@@ -96,6 +86,18 @@ async def require_api_key(request, call_next):
     return await call_next(request)
 
 
+# Browsers (Flutter web, teacher portal) need CORS. Dev allows any localhost port;
+# production sets MAGANA_CORS_ORIGIN_REGEX to its own domains. Added last, so it is the
+# outermost layer: a 401 or 429 from the checks above still carries CORS headers, and
+# the web app can read "too many requests" instead of seeing a network error.
+app.add_middleware(
+    CORSMiddleware,
+    allow_origin_regex=os.environ.get("MAGANA_CORS_ORIGIN_REGEX", r"http://(localhost|127\.0\.0\.1)(:\d+)?"),
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
+
+# Letters and "read any paper" may hold doses or amounts, so they get the strict checks too.
 SECOND_PASS_MODES = {"health", "money", "letter"}
 
 MODE_FEATURE = {
@@ -221,6 +223,12 @@ def explain_page(body: ExplainRequest, tier: policy.Tier = Depends(caller_tier),
 @lru_cache(maxsize=1)
 def get_asr_engine() -> asr.ASREngine:
     return asr.default_engine()
+
+
+@app.get("/asr/available")
+def asr_available(engine: asr.ASREngine = Depends(get_asr_engine)) -> dict:
+    """Whether this server recognises speech, so the app can skip it without recording."""
+    return {"available": not isinstance(engine, asr.DeviceOnly), "engine": engine.name}
 
 
 @app.post("/asr")

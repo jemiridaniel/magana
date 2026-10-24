@@ -13,6 +13,45 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Accessibility: voice answers in Chrome, speech errors, and "Start Magana"
+
+- **Reported:** in Chrome, "Say A, B, C or D" didn't pick up speech. The console showed `[object SpeechSynthesisErrorEvent]`, and after the server's 503 it logged "trying the next" with nothing after.
+- **What we found** (reading the plugins' code, then in Chrome):
+  - **The recognition order on the web:**
+    1. On-device: skipped, because browsers have none.
+    2. Magana server ASR: it recorded, then got **503**, because the development server has no ASR (`ASR_ENGINE=device`).
+    3. Chrome's online recogniser: **18+ accounts only**.
+  - **Step 3 threw away what Chrome heard.** `speech_to_text`'s web plugin marks every browser result as partial. With `partialResults: false`, its main class drops partial results. Chrome could hear "B" and Magana would still say "I did not hear an answer".
+  - **Chrome's "no-speech" error** was treated as a broken recogniser instead of silence.
+  - **The speech errors:** `flutter_tts`'s web code prints the whole event itself (`[object SpeechSynthesisErrorEvent]`). It passes `.error` on, but Magana ignored it.
+  - **Found while testing: the web app couldn't read a 401 or 429.** CORS was the innermost middleware, so the API-key and rate-limit replies carried no CORS headers. The browser hid them, and the web app would say "couldn't reach Magana" instead of "Magana is busy". Fixed: CORS is now the outermost layer (`test_a_browser_can_read_the_429_and_the_401`).
+- **What we changed:**
+  - **Speech recognition:**
+    - On the web, the online recogniser takes the browser's results and uses the latest when it stops. "no-speech" and "aborted" count as heard nothing.
+    - Every step has a name and, when it can't be used, a reason. Development builds (`flutter run`, or `MAGANA_ENV=development` from scripts/dev.sh) log every step and its outcome, including skipped ones, e.g. "online recogniser skipped: Guided account (13 to 17)", "Magana server ASR skipped: the server has no speech recognition (ASR_ENGINE=device)", "online recogniser listened (en): heard [B]". The recogniser's own status and error events are logged too.
+    - The server step asks `GET /asr/available` first, so nothing is recorded for a server that can't recognise it.
+  - **The quiz:**
+    - It checks for a recogniser before showing **Say**. With none, the button is hidden and the app says "Voice answers aren't available on this device yet. Tap an answer instead." On the web it says "…Tap or click an answer, or press A, B, C or D on your keyboard."
+    - "I did not hear an answer" now only follows a real listen that heard nothing.
+    - Keys A–D answer, like tapping.
+  - **Speech errors:** each is logged with its `.error` value and the text being spoken.
+    - "interrupted" or "canceled" is normal when Magana stopped speaking itself (logged as "(normal)"). Otherwise the text is said once more, the same rule as the TalkBack fix.
+    - "not-allowed" (Chrome's autoplay rule) brings up **Start Magana**.
+  - **Start Magana** (web only): a full-screen button whose label screen readers read. It has keyboard focus, so Enter or Space presses it. It appears when the page hasn't been pressed yet (`navigator.userActivation`) or the browser refuses to speak. Speech starts with that press, and the screen underneath is hidden from screen readers and the keyboard until then. It never appears on Android or iOS.
+  - The old viewport meta tag was already gone from `web/index.html` (removed in the PWA commit; Flutter adds its own).
+- **Tests:**
+  - `voice_input_test.dart`: the log of every step, skipped steps and their reasons, and what was heard by which step.
+  - `quiz_test.dart`: Say is hidden when no recogniser is available; "not available" rather than "did not hear" when every step fails; "did not hear" only after a real listen; keys A–D; the web wording.
+  - `speech_test.dart`, the real `Speaker` on a fake engine: retry once after "interrupted" or "canceled" from elsewhere; no retry when Magana stopped it; "not-allowed" waits for Start and then says the latest text; "synthesis-failed" is logged, not retried.
+  - `web_test.dart`: Start Magana covers the screen, is accessible, starts with Enter or Space, and never shows on phones.
+  - `test_asr.py`: `/asr/available`.
+- **Checked in Chrome** (Playwright, release build with `MAGANA_ENV=development`, fake microphone, autoplay policy on):
+  - Start Magana covered the whole 412×915 screen, and Enter dismissed it.
+  - 18+: the log showed each step as above. Pressing B marked "1 right out of 1 answered", "Correct! You chose B."
+  - Guided: the online recogniser was skipped "Guided account (13 to 17)", there was no Say button, and the web "not available" message was shown and spoken.
+- **Could not test:** that Chrome's recogniser now returns words. Under automation (headless and headed), Chrome listened to a recording of "B" and returned no result and no error, so Google's speech service seems unavailable to automated Chrome. Please try it by hand in your own Chrome with an 18+ account.
+- **Status:** fixed in tests and in automated Chrome. Untested: real Chrome speech recognition, Safari, and VoiceOver.
+
 ## 2026-10-24 · Safety, languages: N-ATLaS explanations in four languages; what the number guard misses (UNREVIEWED)
 
 > **Unreviewed.** These readings of the Hausa, Yorùbá and Igbo outputs are by the developer, not a native speaker. Native speakers must rate `benchmark/explain/results/2026-10-24-q4km-m2pro/ratings_<lang>.csv` (fluency, faithfulness, numbers kept, harmful or advice).

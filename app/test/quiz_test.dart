@@ -2,11 +2,13 @@ import 'package:app/api.dart';
 import 'package:app/l10n/app_localizations.dart';
 import 'package:app/language.dart';
 import 'package:app/main.dart';
+import 'package:app/platform.dart';
 import 'package:app/policy.dart';
 import 'package:app/profile.dart';
 import 'package:app/quiz.dart';
 import 'package:app/voice_input.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -16,21 +18,32 @@ import 'app_test.dart' show FakeSpeaker;
 final en = lookupAppLocalizations(const Locale('en'));
 
 /// Plays back what the learner "says", one reply per listen.
-class FakeVoice implements VoiceInput {
+class FakeVoice extends VoiceInput {
   FakeVoice({this.works = true});
   final bool works;
+  int inits = 0;
+
+  /// Every recogniser failed while listening (not "heard nothing").
+  bool fails = false;
+
+  @override
+  String get name => 'fake';
   final replies = <List<String>>[];
   int listens = 0;
   final languages = <String>[];
   final tiers = <Tier>[]; // which account asked for a recogniser
 
   @override
-  Future<bool> init() async => works;
+  Future<bool> init() async {
+    inits++;
+    return works;
+  }
 
   @override
   Future<List<String>> listen({String language = 'en'}) async {
     listens++;
     languages.add(language);
+    if (fails) throw VoiceStepFailed('every step failed');
     return replies.isEmpty ? const [] : replies.removeAt(0);
   }
 
@@ -357,15 +370,74 @@ void main() {
     expect(find.text(en.quizProgress(2, 10)), findsOneWidget);
   });
 
-  testWidgets('no recogniser: says so, double tap still answers', (
+  testWidgets(
+    'no recogniser: checked before the Say button shows; it never appears',
+    (tester) async {
+      final (speaker, voice) = await openQuiz(tester, voiceWorks: false);
+      expect(voice.inits, 1);
+      expect(find.bySemanticsLabel(en.quizSayAnswer), findsNothing);
+      // Said once, with the first question, and shown; never "I did not hear".
+      expect(speaker.said.first, endsWith(en.quizVoiceUnavailable));
+      expect(find.text(en.quizVoiceUnavailable), findsOneWidget);
+      expect(speaker.said, isNot(contains(en.quizNothingHeard)));
+      expect(voice.listens, 0);
+      await tap(tester, 'B. Iodine solution');
+      expect(find.bySemanticsLabel(en.quizScoreLabel(1, 1)), findsOneWidget);
+      await tap(tester, en.quizNext);
+      expect(speaker.said.last, endsWith(en.quizTapAnswer));
+    },
+  );
+
+  testWidgets(
+    'every recogniser fails while listening: "not available", not "did not hear"',
+    (tester) async {
+      final (speaker, voice) = await openQuiz(tester);
+      voice.fails = true;
+      await tap(tester, en.quizSayAnswer);
+      expect(speaker.said.last, en.quizVoiceUnavailable);
+      expect(speaker.said, isNot(contains(en.quizNothingHeard)));
+      expect(find.bySemanticsLabel(en.quizSayAnswer), findsNothing);
+      await tap(tester, 'B. Iodine solution');
+      expect(find.bySemanticsLabel(en.quizScoreLabel(1, 1)), findsOneWidget);
+    },
+  );
+
+  testWidgets('"I did not hear an answer" only after really listening', (
     tester,
   ) async {
-    final (speaker, voice) = await openQuiz(tester, voiceWorks: false);
-    await tap(tester, en.quizSayAnswer);
-    expect(speaker.said.last, en.quizNoVoice);
-    expect(voice.listens, 0);
-    await tap(tester, 'B. Iodine solution');
-    expect(find.bySemanticsLabel(en.quizScoreLabel(1, 1)), findsOneWidget);
+    final (speaker, voice) = await openQuiz(tester);
+    await say(tester, voice, const []);
+    expect(voice.listens, 1);
+    expect(speaker.said.last, en.quizNothingHeard);
+  });
+
+  group('on the web', () {
+    setUp(() => runningOnWeb = true);
+    tearDown(() => runningOnWeb = false);
+
+    testWidgets('keys A to D answer, like tapping', (tester) async {
+      final (speaker, _) = await openQuiz(tester);
+      expect(
+        speaker.said.first,
+        endsWith('${en.quizSayAnswer}. ${en.quizKeysHint}'),
+      );
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyB);
+      await tester.pumpAndSettle();
+      expect(find.bySemanticsLabel(en.quizScoreLabel(1, 1)), findsOneWidget);
+      expect(speaker.said.last, startsWith(en.quizCorrect('B')));
+    });
+
+    testWidgets('no voice: "tap or click, or press A, B, C or D"', (
+      tester,
+    ) async {
+      final (speaker, _) = await openQuiz(tester, voiceWorks: false);
+      expect(speaker.said.first, endsWith(en.quizVoiceUnavailableWeb));
+      await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
+      await tester.pumpAndSettle();
+      expect(find.bySemanticsLabel(en.quizScoreLabel(0, 1)), findsOneWidget);
+      await tap(tester, en.quizNext);
+      expect(speaker.said.last, endsWith(en.quizKeysHint));
+    });
   });
 
   testWidgets('ten questions, then the result', (tester) async {

@@ -739,10 +739,6 @@ class AppLocalizationsIg extends AppLocalizations {
       'Anụghị m azịza. Kwuo A, B, C ma ọ bụ D, ma ọ bụ pịa azịza ugboro abụọ.';
 
   @override
-  String get quizNoVoice =>
-      'Enweghị ike ịza n\'olu na ekwentị a. Pịa azịza ugboro abụọ kama.';
-
-  @override
   String get quizRepeat => 'Kwughachi ajụjụ';
 
   @override
@@ -1538,4 +1534,26 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get remindersNeedApp =>
       'Ihe ncheta chọrọ ngwa Android ma ọ bụ iPhone. Na ihe nchọgharị, Magana enweghị ike ịda n\'oge kwesịrị ekwesị.';
+
+  @override
+  String get quizVoiceUnavailable =>
+      'Ịza n\'olu adịbeghị na ngwaọrụ a. Pịa azịza kama.';
+
+  @override
+  String get quizVoiceUnavailableWeb =>
+      'Ịza n\'olu adịbeghị na ngwaọrụ a. Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa A, B, C ma ọ bụ D na kiiboodu gị.';
+
+  @override
+  String get quizKeysHint =>
+      'Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa A, B, C ma ọ bụ D na kiiboodu gị.';
+
+  @override
+  String get quizKeysHintTrueFalse =>
+      'Pịa ma ọ bụ kpịa eziokwu ma ọ bụ ụgha, ma ọ bụ pịa A maka eziokwu ma ọ bụ B maka ụgha.';
+
+  @override
+  String get quizTapAnswer => 'Pịa azịza.';
+
+  @override
+  String get startMagana => 'Malite Magana';
 }

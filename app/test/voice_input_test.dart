@@ -1,16 +1,23 @@
+import 'package:app/platform.dart';
 import 'package:app/platform/speech_support.dart';
 import 'package:app/policy.dart';
 import 'package:app/voice_input.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// A recogniser step with a scripted outcome.
-class Scripted implements VoiceInput {
+class Scripted extends VoiceInput {
   Scripted(
     this.name, {
     this.works = true,
     this.fails = false,
     this.reply = const [],
+    this.why,
   });
+  final String? why;
+
+  @override
+  String? get unavailableReason => why;
+  @override
   final String name;
   final bool works;
   final bool fails;
@@ -129,5 +136,56 @@ void main() {
         expect(network.languages, isEmpty);
       },
     );
+  });
+
+  group('development logs: every step and its outcome', () {
+    final logs = <String>[];
+    late void Function(String) original;
+    setUp(() {
+      original = devLog;
+      logs.clear();
+      devLog = logs.add;
+    });
+    tearDown(() => devLog = original);
+
+    test('skipped steps say why, a failure names the next step', () async {
+      final v = ChainVoiceInput([
+        Scripted(
+          'on-device recogniser',
+          works: false,
+          why: 'browsers have no on-device recogniser',
+        ),
+        Scripted('Magana server ASR', fails: true),
+      ], skipped: voiceStepsSkipped(Tier.guided));
+      await expectLater(v.listen(), throwsA(isA<VoiceStepFailed>()));
+      expect(logs, [
+        'voice: online recogniser skipped: Guided account (13 to 17)',
+        'voice: on-device recogniser skipped: browsers have no on-device recogniser',
+        'voice: Magana server ASR available',
+        'voice: Magana server ASR failed: Magana server ASR failed; trying the next step',
+        'voice: no recogniser left; tap answers instead',
+      ]);
+    });
+
+    test('what was heard, and by which step', () async {
+      final v = ChainVoiceInput([
+        Scripted('Magana server ASR', fails: true),
+        Scripted('online recogniser', reply: ['B']),
+      ]);
+      expect(await v.listen(), ['B']);
+      expect(logs.last, "voice: online recogniser listened (en): heard [B]");
+      logs.clear();
+      await v.listen();
+      // The failed step is not tried again, and the log says so.
+      expect(
+        logs.first,
+        startsWith('voice: Magana server ASR skipped: failed earlier'),
+      );
+    });
+
+    test('18+ skips nothing; under-18 accounts skip the online recogniser', () {
+      expect(voiceStepsSkipped(Tier.standard), isEmpty);
+      expect(voiceStepsSkipped(Tier.classroom).keys, ['online recogniser']);
+    });
   });
 }

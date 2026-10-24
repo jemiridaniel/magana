@@ -104,3 +104,10 @@ def test_a_transcript_that_loops_counts_as_heard_nothing(engine):
 ])
 def test_looped(text, loops):
     assert asr.looped(text) is loops
+
+
+def test_the_app_can_ask_first_whether_the_server_recognises_speech(engine):
+    r = client.get("/asr/available")
+    assert r.json() == {"available": False, "engine": "device"}
+    engine(Echo())
+    assert client.get("/asr/available").json() == {"available": True, "engine": "fake"}

@@ -199,7 +199,6 @@
   "quizWrong": "Kò tọ̀nà. O yan {letter}. Ìdáhùn ni {answer}.",
   "quizUnclear": "Mo gbọ́ “{heard}”. Jọ̀wọ́ sọ A, B, C tàbí D.",
   "quizNothingHeard": "Mi ò gbọ́ ìdáhùn kankan. Sọ A, B, C tàbí D, tàbí tẹ ìdáhùn kan lẹ́ẹ̀mejì.",
-  "quizNoVoice": "A kò lè dáhùn pẹ̀lú ohùn lórí fóònù yìí. Tẹ ìdáhùn kan lẹ́ẹ̀mejì dípò rẹ̀.",
   "quizRepeat": "Tún ìbéèrè sọ",
   "quizNext": "Ìbéèrè tó kàn",
   "quizFinish": "Wo èsì mi",
@@ -402,5 +401,11 @@
   "quizTapInstead": "Ó ṣòro fún mi láti gbọ́ ọ. Jọ̀wọ́ tẹ ìdáhùn rẹ lẹ́ẹ̀mejì dípò rẹ̀.",
   "quizSayTrueFalse": "Sọ òótọ́ tàbí irọ́",
   "msg_too_many_requests": "Magana ń ṣiṣẹ́ lọ́wọ́ báyìí. Jọ̀wọ́ dúró fún ìṣẹ́jú kan kí o tún gbìyànjú.",
-  "remindersNeedApp": "Ìrántí nílò áàpù Android tàbí iPhone. Nínú aṣàwákiri, Magana kò lè dún ní àkókò tó tọ́."
+  "remindersNeedApp": "Ìrántí nílò áàpù Android tàbí iPhone. Nínú aṣàwákiri, Magana kò lè dún ní àkókò tó tọ́.",
+  "quizVoiceUnavailable": "Ìdáhùn pẹ̀lú ohùn kò tíì ṣiṣẹ́ lórí ẹ̀rọ yìí. Tẹ ìdáhùn kan dípò rẹ̀.",
+  "quizVoiceUnavailableWeb": "Ìdáhùn pẹ̀lú ohùn kò tíì ṣiṣẹ́ lórí ẹ̀rọ yìí. Tẹ tàbí kílíkì ìdáhùn kan, tàbí tẹ A, B, C tàbí D lórí kíbọ́ọ̀dù rẹ.",
+  "quizKeysHint": "Tẹ tàbí kílíkì ìdáhùn kan, tàbí tẹ A, B, C tàbí D lórí kíbọ́ọ̀dù rẹ.",
+  "quizKeysHintTrueFalse": "Tẹ tàbí kílíkì òótọ́ tàbí irọ́, tàbí tẹ A fún òótọ́ tàbí B fún irọ́.",
+  "quizTapAnswer": "Tẹ ìdáhùn kan.",
+  "startMagana": "Bẹ̀rẹ̀ Magana"
 }

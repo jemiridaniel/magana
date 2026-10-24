@@ -735,10 +735,6 @@ class AppLocalizationsYo extends AppLocalizations {
       'Mi ò gbọ́ ìdáhùn kankan. Sọ A, B, C tàbí D, tàbí tẹ ìdáhùn kan lẹ́ẹ̀mejì.';
 
   @override
-  String get quizNoVoice =>
-      'A kò lè dáhùn pẹ̀lú ohùn lórí fóònù yìí. Tẹ ìdáhùn kan lẹ́ẹ̀mejì dípò rẹ̀.';
-
-  @override
   String get quizRepeat => 'Tún ìbéèrè sọ';
 
   @override
@@ -1536,4 +1532,26 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get remindersNeedApp =>
       'Ìrántí nílò áàpù Android tàbí iPhone. Nínú aṣàwákiri, Magana kò lè dún ní àkókò tó tọ́.';
+
+  @override
+  String get quizVoiceUnavailable =>
+      'Ìdáhùn pẹ̀lú ohùn kò tíì ṣiṣẹ́ lórí ẹ̀rọ yìí. Tẹ ìdáhùn kan dípò rẹ̀.';
+
+  @override
+  String get quizVoiceUnavailableWeb =>
+      'Ìdáhùn pẹ̀lú ohùn kò tíì ṣiṣẹ́ lórí ẹ̀rọ yìí. Tẹ tàbí kílíkì ìdáhùn kan, tàbí tẹ A, B, C tàbí D lórí kíbọ́ọ̀dù rẹ.';
+
+  @override
+  String get quizKeysHint =>
+      'Tẹ tàbí kílíkì ìdáhùn kan, tàbí tẹ A, B, C tàbí D lórí kíbọ́ọ̀dù rẹ.';
+
+  @override
+  String get quizKeysHintTrueFalse =>
+      'Tẹ tàbí kílíkì òótọ́ tàbí irọ́, tàbí tẹ A fún òótọ́ tàbí B fún irọ́.';
+
+  @override
+  String get quizTapAnswer => 'Tẹ ìdáhùn kan.';
+
+  @override
+  String get startMagana => 'Bẹ̀rẹ̀ Magana';
 }

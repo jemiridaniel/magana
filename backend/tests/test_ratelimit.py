@@ -84,3 +84,18 @@ def test_a_refusal_costs_nothing_elsewhere(clock):
         assert check(DEV).status_code == 429
     # The IP bucket was refunded for the refused calls: 5 of 10 used.
     assert [check(f"other-{i:08d}").status_code for i in range(6)] == [200] * 5 + [429]
+
+
+def test_a_browser_can_read_the_429_and_the_401(clock, monkeypatch):
+    # Without CORS headers the browser hides the response, and the web app would
+    # say "couldn't reach Magana" instead of "Magana is busy".
+    origin = {"Origin": "http://localhost:5173", "X-Magana-Device": DEV}
+    for _ in range(5):
+        client.post("/explain/check", json={"source_text": "a", "explanation": "a"}, headers=origin)
+    r = client.post("/explain/check", json={"source_text": "a", "explanation": "a"}, headers=origin)
+    assert r.status_code == 429
+    assert r.headers["access-control-allow-origin"] == "http://localhost:5173"
+    monkeypatch.setenv("MAGANA_API_KEY", "secret")
+    r = client.get("/asr/available", headers={"Origin": "http://localhost:5173"})
+    assert r.status_code == 401
+    assert r.headers["access-control-allow-origin"] == "http://localhost:5173"

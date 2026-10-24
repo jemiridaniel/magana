@@ -7,10 +7,12 @@ import 'api.dart';
 import 'app_scope.dart';
 import 'l10n/app_localizations.dart';
 import 'language.dart';
+import 'platform.dart';
 import 'profile.dart';
 import 'screens/home.dart';
 import 'screens/onboarding.dart';
 import 'screens/splash.dart';
+import 'screens/start.dart';
 import 'speech.dart';
 import 'theme.dart';
 
@@ -27,6 +29,8 @@ Future<void> main() async {
   if (kIsWeb) webSemantics = SemanticsBinding.instance.ensureSemantics();
   final language = LanguageController();
   final speaker = Speaker();
+  // Before the first press the browser refuses to speak: show "Start Magana".
+  if (kIsWeb && !pageHasBeenActivated()) speaker.needsStart.value = true;
   final profile = ProfileController();
   // The splash shows while the saved profile, language and voice load.
   final ready = () async {
@@ -97,7 +101,28 @@ class MaganaApp extends StatelessWidget {
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: maxContentWidth),
-                child: child,
+                child: ValueListenableBuilder<bool>(
+                  valueListenable: speaker.needsStart,
+                  builder: (context, needsStart, _) {
+                    final cover = needsStart && runningOnWeb;
+                    return Stack(
+                      children: [
+                        // Out of reach of screen readers and the keyboard while covered.
+                        ExcludeFocus(
+                          excluding: cover,
+                          child: ExcludeSemantics(
+                            excluding: cover,
+                            child: child,
+                          ),
+                        ),
+                        if (cover)
+                          Positioned.fill(
+                            child: StartMagana(onStart: speaker.start),
+                          ),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ),

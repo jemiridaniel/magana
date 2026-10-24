@@ -199,7 +199,6 @@
   "quizWrong": "Ọ bụghị ya. Ị họọrọ {letter}. Azịza ya bụ {answer}.",
   "quizUnclear": "Anụrụ m “{heard}”. Biko kwuo A, B, C ma ọ bụ D.",
   "quizNothingHeard": "Anụghị m azịza. Kwuo A, B, C ma ọ bụ D, ma ọ bụ pịa azịza ugboro abụọ.",
-  "quizNoVoice": "Enweghị ike ịza n'olu na ekwentị a. Pịa azịza ugboro abụọ kama.",
   "quizRepeat": "Kwughachi ajụjụ",
   "quizNext": "Ajụjụ ọzọ",
   "quizFinish": "Hụ nsonaazụ m",
@@ -402,5 +401,11 @@
   "quizTapInstead": "O siri m ike ịnụ gị. Biko pịa azịza gị ugboro abụọ kama.",
   "quizSayTrueFalse": "Kwuo eziokwu ma ọ bụ ụgha",
   "msg_too_many_requests": "Magana na-arụsi ọrụ ike ugbu a. Biko chere otu nkeji wee nwaa ọzọ.",
-  "remindersNeedApp": "Ihe ncheta chọrọ ngwa Android ma ọ bụ iPhone. Na ihe nchọgharị, Magana enweghị ike ịda n'oge kwesịrị ekwesị."
+  "remindersNeedApp": "Ihe ncheta chọrọ ngwa Android ma ọ bụ iPhone. Na ihe nchọgharị, Magana enweghị ike ịda n'oge kwesịrị ekwesị.",
+  "quizVoiceUnavailable": "Ịza n'olu adịbeghị na ngwaọrụ a. Pịa azịza kama.",
+  "quizVoiceUnavailableWeb": "Ịza n'olu adịbeghị na ngwaọrụ a. Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa A, B, C ma ọ bụ D na kiiboodu gị.",
+  "quizKeysHint": "Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa A, B, C ma ọ bụ D na kiiboodu gị.",
+  "quizKeysHintTrueFalse": "Pịa ma ọ bụ kpịa eziokwu ma ọ bụ ụgha, ma ọ bụ pịa A maka eziokwu ma ọ bụ B maka ụgha.",
+  "quizTapAnswer": "Pịa azịza.",
+  "startMagana": "Malite Magana"
 }

@@ -199,7 +199,6 @@
   "quizWrong": "Ba haka ba. Ka zaɓi {letter}. Amsar ita ce {answer}.",
   "quizUnclear": "Na ji “{heard}”. Don Allah faɗi A, B, C ko D.",
   "quizNothingHeard": "Ban ji amsa ba. Faɗi A, B, C ko D, ko ka taɓa amsa sau biyu.",
-  "quizNoVoice": "Ba a iya amsa da murya a wannan wayar ba. Taɓa amsa sau biyu maimakon haka.",
   "quizRepeat": "Maimaita tambaya",
   "quizNext": "Tambaya ta gaba",
   "quizFinish": "Duba sakamakona",
@@ -402,5 +401,11 @@
   "quizTapInstead": "Ina da wahalar jin ka. Don Allah ka taɓa amsarka sau biyu maimakon haka.",
   "quizSayTrueFalse": "Faɗi gaskiya ko ƙarya",
   "msg_too_many_requests": "Magana tana da aiki sosai yanzu. Don Allah ka jira minti ɗaya ka sake gwadawa.",
-  "remindersNeedApp": "Tunatarwa na buƙatar manhajar Android ko iPhone. A cikin burauza Magana ba za ta iya yin ƙara a daidai lokaci ba."
+  "remindersNeedApp": "Tunatarwa na buƙatar manhajar Android ko iPhone. A cikin burauza Magana ba za ta iya yin ƙara a daidai lokaci ba.",
+  "quizVoiceUnavailable": "Har yanzu ba a iya amsa da murya a wannan na'urar ba. Taɓa amsa maimakon haka.",
+  "quizVoiceUnavailableWeb": "Har yanzu ba a iya amsa da murya a wannan na'urar ba. Taɓa ko danna amsa, ko ka danna A, B, C ko D a kan madannai.",
+  "quizKeysHint": "Taɓa ko danna amsa, ko ka danna A, B, C ko D a kan madannai.",
+  "quizKeysHintTrueFalse": "Taɓa ko danna gaskiya ko ƙarya, ko ka danna A don gaskiya ko B don ƙarya.",
+  "quizTapAnswer": "Taɓa amsa.",
+  "startMagana": "Fara Magana"
 }

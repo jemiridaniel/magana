@@ -1,6 +1,8 @@
 import 'package:camera/camera.dart' show ImageFormatGroup, XFile;
 import 'package:flutter/foundation.dart';
 
+import 'platform/activation_stub.dart'
+    if (dart.library.js_interop) 'platform/activation_web.dart';
 import 'platform/discard_stub.dart'
     if (dart.library.io) 'platform/discard_io.dart';
 
@@ -11,6 +13,26 @@ import 'platform/discard_stub.dart'
 /// True in a browser (the PWA). A variable rather than kIsWeb so tests can check
 /// the web-only behaviour.
 bool runningOnWeb = kIsWeb;
+
+/// MAGANA_ENV passed by scripts/dev.sh (`--dart-define=MAGANA_ENV=development`);
+/// tester and production builds leave it unset.
+const maganaEnv = String.fromEnvironment(
+  'MAGANA_ENV',
+  defaultValue: 'production',
+);
+
+/// A development build: `flutter run` in debug mode, or MAGANA_ENV=development.
+bool get devBuild => kDebugMode || maganaEnv == 'development';
+
+/// A console line for development builds only (Chrome's console on the web);
+/// tester and production builds log nothing. Replaceable in tests.
+void Function(String message) devLog = (message) {
+  if (devBuild) debugPrint('magana: $message');
+};
+
+/// Whether the person has pressed or typed anything on this page yet. Browsers
+/// refuse to speak until they have (Chrome's autoplay rule). Always true on phones.
+bool pageHasBeenActivated() => hasUserActivation();
 
 /// Backend address when no --dart-define=MAGANA_API is given (development only;
 /// real phones always get the deployed URL through MAGANA_API).

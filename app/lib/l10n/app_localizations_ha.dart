@@ -740,10 +740,6 @@ class AppLocalizationsHa extends AppLocalizations {
       'Ban ji amsa ba. Faɗi A, B, C ko D, ko ka taɓa amsa sau biyu.';
 
   @override
-  String get quizNoVoice =>
-      'Ba a iya amsa da murya a wannan wayar ba. Taɓa amsa sau biyu maimakon haka.';
-
-  @override
   String get quizRepeat => 'Maimaita tambaya';
 
   @override
@@ -1542,4 +1538,26 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get remindersNeedApp =>
       'Tunatarwa na buƙatar manhajar Android ko iPhone. A cikin burauza Magana ba za ta iya yin ƙara a daidai lokaci ba.';
+
+  @override
+  String get quizVoiceUnavailable =>
+      'Har yanzu ba a iya amsa da murya a wannan na\'urar ba. Taɓa amsa maimakon haka.';
+
+  @override
+  String get quizVoiceUnavailableWeb =>
+      'Har yanzu ba a iya amsa da murya a wannan na\'urar ba. Taɓa ko danna amsa, ko ka danna A, B, C ko D a kan madannai.';
+
+  @override
+  String get quizKeysHint =>
+      'Taɓa ko danna amsa, ko ka danna A, B, C ko D a kan madannai.';
+
+  @override
+  String get quizKeysHintTrueFalse =>
+      'Taɓa ko danna gaskiya ko ƙarya, ko ka danna A don gaskiya ko B don ƙarya.';
+
+  @override
+  String get quizTapAnswer => 'Taɓa amsa.';
+
+  @override
+  String get startMagana => 'Fara Magana';
 }

@@ -1,48 +1,101 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
 import 'platform.dart';
 
+/// How one utterance ended.
+enum Spoken {
+  finished,
+
+  /// Magana stopped it (a new utterance, or the person pressed something).
+  stoppedByMagana,
+
+  /// Something else cut it off: TalkBack announcing a screen, or the browser
+  /// reporting "interrupted" or "canceled" when Magana didn't stop it.
+  cutOff,
+
+  /// The browser refused to speak before the first press (Chrome's autoplay
+  /// rule, "not-allowed"); it is said after "Start Magana".
+  blocked,
+
+  /// Any other engine error ("synthesis-failed", "audio-busy", ...).
+  failed,
+}
+
 /// Text-to-speech wrapper. [say] completes when the utterance finishes or is
 /// interrupted, so callers can read items one after another. It returns false
-/// when it was cut off (by [stop], or by TalkBack speaking over it), so reading
-/// loops pause there instead of skipping ahead.
+/// when it was cut off, so reading loops pause there instead of skipping ahead.
+/// Something other than Magana cutting it off gets one more try (see [say]).
 class Speaker {
+  Speaker({FlutterTts? tts}) : _ttsInstance = tts {
+    if (tts != null) _listen(tts);
+  }
+
   FlutterTts? _ttsInstance;
-  FlutterTts get _tts => _ttsInstance ??= _create();
-  Completer<bool>? _pending;
+  FlutterTts get _tts => _ttsInstance ??= _listen(FlutterTts());
+  Completer<Spoken>? _pending;
+  String _text = '';
   bool _started = false;
   bool _active =
       false; // the engine is speaking (or has not yet reported a stop)
+  int _turn = 0; // goes up with every say() and stop()
   double _rate = 1.0;
   String _languageCode = 'en';
+
+  /// Web only: true until the first press, while the browser won't speak. The
+  /// app then covers the screen with "Start Magana" (see [start]).
+  final needsStart = ValueNotifier<bool>(false);
+  String? _waiting; // the latest text that couldn't be spoken yet
 
   double get rate => _rate;
 
   /// True while an utterance is playing or about to.
   bool get speaking => _pending != null;
 
-  FlutterTts _create() {
-    final tts = FlutterTts();
+  FlutterTts _listen(FlutterTts tts) {
     tts.setStartHandler(() => _started = _active = true);
     // A stop() can deliver the old utterance's cancel event late; only finish
     // the current utterance once it has actually started.
     tts.setCompletionHandler(() {
       _active = false;
-      _finish(true, onlyIfStarted: true);
+      _finish(Spoken.finished, onlyIfStarted: true);
     });
     tts.setCancelHandler(() {
       _active = false;
-      _finish(false, onlyIfStarted: true);
+      _finish(Spoken.cutOff, onlyIfStarted: true);
     });
-    // On the web a cancelled utterance reports an "interrupted" error.
-    tts.setErrorHandler((_) {
+    // On the web the plugin passes SpeechSynthesisErrorEvent.error.
+    tts.setErrorHandler((error) {
       _active = false;
-      _finish(false);
+      _onError('$error');
     });
     unawaited(_pickVoice(tts));
     return tts;
+  }
+
+  void _onError(String error) {
+    // Magana's own stop finished the utterance already: the engine's report is normal.
+    final ours =
+        _pending == null && (error == 'interrupted' || error == 'canceled');
+    devLog(
+      ours
+          ? 'speech "$error" after Magana stopped "$_text" (normal)'
+          : 'speech error "$error" while saying "$_text"',
+    );
+    switch (error) {
+      case 'not-allowed' when runningOnWeb:
+        _waiting = _text;
+        needsStart.value = true;
+        _finish(Spoken.blocked);
+      // Magana's own stops finish the utterance before the engine reports them,
+      // so an interruption that reaches a started utterance came from elsewhere.
+      case 'interrupted' || 'canceled':
+        _finish(Spoken.cutOff, onlyIfStarted: true);
+      default:
+        _finish(Spoken.failed);
+    }
   }
 
   /// Use a voice for the app language when the device has one (Nigerian
@@ -80,35 +133,63 @@ class Speaker {
     await _applyRate(_tts);
   }
 
-  Future<bool> say(String text) async {
-    await stop();
-    final done = _pending = Completer<bool>();
+  /// Says [text]. If something other than Magana cuts it off (TalkBack
+  /// announcing a new screen, say), waits [retryDelay] and says it once more,
+  /// unless Magana has moved on or [wanted] turned false. True if it was heard
+  /// to the end.
+  Future<bool> say(String text, {bool Function()? wanted}) async {
+    final turn = ++_turn;
+    if (needsStart.value) {
+      _waiting = text; // said after "Start Magana"
+      devLog('speech waits for Start Magana: "$text"');
+      return false;
+    }
+    final first = await utter(text);
+    if (first != Spoken.cutOff) return first == Spoken.finished;
+    devLog('speech cut off by something else; saying it once more: "$text"');
+    await Future<void>.delayed(retryDelay);
+    if (turn != _turn || !(wanted?.call() ?? true)) return false;
+    return await utter(text) == Spoken.finished;
+  }
+
+  /// For reading loops: [say], stopping if [wanted] turns false (the learner
+  /// pressed something) before the second try.
+  Future<bool> sayThrough(String text, {required bool Function() wanted}) =>
+      say(text, wanted: wanted);
+
+  static const retryDelay = Duration(milliseconds: 1500);
+
+  /// One utterance, no retry. Replaceable in tests.
+  @protected
+  Future<Spoken> utter(String text) async {
+    await _halt();
+    _text = text;
+    final done = _pending = Completer<Spoken>();
     _started = false;
     await _tts.speak(text);
     // Never hang a reading loop on an utterance the engine silently dropped.
     Timer(const Duration(seconds: 3), () {
-      if (identical(_pending, done) && !_started) _finish(true);
+      if (identical(_pending, done) && !_started) _finish(Spoken.finished);
     });
     return done.future;
   }
 
-  /// For reading loops: if something else cut [text] off (TalkBack announcing
-  /// a new screen, say), wait a moment and say it once more. False if it was
-  /// cut off again, or [wanted] turned false (the learner pressed something).
-  Future<bool> sayThrough(
-    String text, {
-    required bool Function() wanted,
-  }) async {
-    if (await say(text)) return true;
-    await Future<void>.delayed(retryDelay);
-    if (!wanted()) return false;
-    return say(text);
+  /// The first press on the web: speech is allowed from now on, and the text
+  /// that was waiting is said.
+  Future<void> start() async {
+    needsStart.value = false;
+    final text = _waiting;
+    _waiting = null;
+    if (text != null) await say(text);
   }
 
-  static const retryDelay = Duration(milliseconds: 1500);
-
   Future<void> stop() async {
-    _finish(false);
+    _turn++;
+    await _halt();
+  }
+
+  Future<void> _halt() async {
+    _finish(Spoken.stoppedByMagana);
     await _tts.stop();
     // The web engine ignores speak() until the cancelled utterance reports
     // back, so wait briefly for that before the next say().
@@ -118,10 +199,10 @@ class Speaker {
     _active = false;
   }
 
-  void _finish(bool finished, {bool onlyIfStarted = false}) {
+  void _finish(Spoken how, {bool onlyIfStarted = false}) {
     if (onlyIfStarted && !_started) return;
     final c = _pending;
     _pending = null;
-    if (c != null && !c.isCompleted) c.complete(finished);
+    if (c != null && !c.isCompleted) c.complete(how);
   }
 }

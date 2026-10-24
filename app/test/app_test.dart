@@ -25,9 +25,11 @@ class FakeSpeaker extends Speaker {
   final said = <String>[];
   String language = 'en';
   @override
-  Future<bool> say(String text) async {
+  Future<Spoken> utter(String text) async {
     said.add(text);
-    return !interrupt.contains(text) && !interruptOnce.remove(text);
+    return interrupt.contains(text) || interruptOnce.remove(text)
+        ? Spoken.cutOff
+        : Spoken.finished;
   }
 
   /// Cut off the first time only, like TalkBack announcing a new screen.

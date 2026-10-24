@@ -736,10 +736,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'I did not hear an answer. Say A, B, C or D, or double tap an answer.';
 
   @override
-  String get quizNoVoice =>
-      'Spoken answers are not available on this phone. Double tap an answer instead.';
-
-  @override
   String get quizRepeat => 'Repeat question';
 
   @override
@@ -1537,4 +1533,26 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get remindersNeedApp =>
       'Reminders need the Android or iPhone app. In a web browser Magana can\'t ring at the right time.';
+
+  @override
+  String get quizVoiceUnavailable =>
+      'Voice answers aren\'t available on this device yet. Tap an answer instead.';
+
+  @override
+  String get quizVoiceUnavailableWeb =>
+      'Voice answers aren\'t available on this device yet. Tap or click an answer, or press A, B, C or D on your keyboard.';
+
+  @override
+  String get quizKeysHint =>
+      'Tap or click an answer, or press A, B, C or D on your keyboard.';
+
+  @override
+  String get quizKeysHintTrueFalse =>
+      'Tap or click true or false, or press A for true or B for false.';
+
+  @override
+  String get quizTapAnswer => 'Tap an answer.';
+
+  @override
+  String get startMagana => 'Start Magana';
 }

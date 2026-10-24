@@ -14,17 +14,27 @@ import 'package:flutter/widgets.dart' show BuildContext;
 
 import 'api.dart';
 import 'app_scope.dart';
+import 'platform.dart';
 import 'platform/speech_support.dart';
 import 'policy.dart';
 
 /// Short spoken answers and commands (docs/PRIVACY.md, "Spoken answers"). Tried in order:
 /// 1. the phone's **on-device** recogniser, where Android has one: audio stays on the phone;
 /// 2. Magana's own server ASR (NCAIR1's Hausa, Yorùbá, Igbo and Nigerian-English models);
-/// 3. for adults (18+) only, the phone's usual recogniser, which may send audio to Google
-///    or the phone maker. Guided and Classroom (under-18) accounts never use it;
-/// then nothing: the screen offers tapping the answer instead.
+/// 3. for adults (18+) only, the phone's or browser's usual (online) recogniser, which may
+///    send audio to Google, Apple or the phone maker. Guided and Classroom (under-18)
+///    accounts never use it;
+/// then nothing: the screen offers tapping the answer instead. Development builds log
+/// every step and its outcome to the console ([devLog]).
 abstract class VoiceInput {
-  /// False when no recogniser can be used or the microphone was refused.
+  /// For logs: "on-device recogniser", "Magana server ASR", "online recogniser".
+  String get name;
+
+  /// Why [init] said no, for logs.
+  String? get unavailableReason => null;
+
+  /// False when this recogniser can't be used here (see [unavailableReason]).
+  /// Doesn't listen.
   Future<bool> init();
 
   /// Listens until the person pauses. Returns what was heard, best guess
@@ -50,46 +60,102 @@ List<VoiceInput> voiceSteps(Tier tier) => [
   if (tier == Tier.standard) SpeechVoiceInput(onDevice: false),
 ];
 
+/// The steps a tier may not use, and why, for logs.
+Map<String, String> voiceStepsSkipped(Tier tier) => switch (tier) {
+  Tier.standard => const {},
+  Tier.guided => const {'online recogniser': 'Guided account (13 to 17)'},
+  Tier.classroom => const {'online recogniser': 'Classroom account (under 13)'},
+};
+
 /// Replaceable in tests.
 VoiceInput Function(Tier tier) voiceInput = (tier) =>
-    ChainVoiceInput(voiceSteps(tier));
+    ChainVoiceInput(voiceSteps(tier), skipped: voiceStepsSkipped(tier));
 
 /// The voice input for whoever is using the app now (most restrictive until a
 /// tier is chosen).
 VoiceInput voiceInputFor(BuildContext context) =>
     voiceInput(AppScope.of(context).profile.tier ?? Tier.classroom);
 
-class ChainVoiceInput implements VoiceInput {
-  ChainVoiceInput(this.steps);
+class ChainVoiceInput extends VoiceInput {
+  ChainVoiceInput(this.steps, {this.skipped = const {}});
   final List<VoiceInput> steps;
+
+  /// Steps left out for this account, and why (logged, never tried).
+  final Map<String, String> skipped;
   final _usable = <VoiceInput, bool>{};
+  final _why = <VoiceInput, String>{};
   VoiceInput? _current;
 
-  Future<bool> _ready(VoiceInput step) async =>
-      _usable[step] ??= await step.init().catchError((_) => false);
+  @override
+  String get name => 'voice';
+
+  @override
+  String? get unavailableReason => steps.isEmpty
+      ? 'no recogniser for this account'
+      : [for (final s in steps) '${s.name}: ${_why[s] ?? 'not checked'}']
+            .join('; ');
+
+  Future<bool> _ready(VoiceInput step) async {
+    if (_usable[step] case final known?) return known;
+    bool ok;
+    try {
+      ok = await step.init();
+    } catch (e) {
+      ok = false;
+      _why[step] = 'error: $e';
+    }
+    if (!ok) _why[step] ??= step.unavailableReason ?? 'not available';
+    devLog(
+      ok
+          ? 'voice: ${step.name} available'
+          : 'voice: ${step.name} skipped: ${_why[step]}',
+    );
+    return _usable[step] = ok;
+  }
+
+  void _logSkipped() {
+    for (final MapEntry(:key, :value) in skipped.entries) {
+      devLog('voice: $key skipped: $value');
+    }
+  }
 
   @override
   Future<bool> init() async {
+    _logSkipped();
     for (final step in steps) {
       if (await _ready(step)) return true;
     }
+    devLog('voice: no recogniser available; tap answers instead');
     return false;
   }
 
   @override
   Future<List<String>> listen({String language = 'en'}) async {
+    _logSkipped();
     for (final step in steps) {
+      if (_usable[step] == false) {
+        devLog('voice: ${step.name} skipped: ${_why[step]}');
+        continue;
+      }
       if (!await _ready(step)) continue;
       try {
         _current = step;
-        return await step.listen(language: language);
+        final heard = await step.listen(language: language);
+        devLog(
+          'voice: ${step.name} listened ($language): '
+          '${heard.isEmpty ? 'heard nothing' : 'heard $heard'}',
+        );
+        return heard;
       } catch (e) {
-        debugPrint('voice: ${step.runtimeType} failed ($e), trying the next');
+        final why = e is VoiceStepFailed ? e.reason : '$e';
+        devLog('voice: ${step.name} failed: $why; trying the next step');
         _usable[step] = false; // not again this session
+        _why[step] = 'failed earlier: $why';
       } finally {
         _current = null;
       }
     }
+    devLog('voice: no recogniser left; tap answers instead');
     throw VoiceStepFailed('no recogniser');
   }
 
@@ -97,7 +163,7 @@ class ChainVoiceInput implements VoiceInput {
   Future<void> stop() async => _current?.stop();
 }
 
-class SpeechVoiceInput implements VoiceInput {
+class SpeechVoiceInput extends VoiceInput {
   SpeechVoiceInput({required this.onDevice});
 
   /// Only the phone's on-device recogniser, checked first: speech_to_text quietly
@@ -105,34 +171,78 @@ class SpeechVoiceInput implements VoiceInput {
   final bool onDevice;
   final _stt = SpeechToText();
   Completer<List<String>>? _pending;
+  List<String> _heard = const []; // the latest result, final or not
   List<LocaleName> _locales = const [];
+  String? _why;
+
+  @override
+  String get name => onDevice ? 'on-device recogniser' : 'online recogniser';
+
+  @override
+  String? get unavailableReason => _why;
+
+  /// Errors that mean "heard nothing", not a broken recogniser: Android's, and
+  /// the browser's ("no-speech"; "aborted" when Magana stopped listening).
+  static const _heardNothing = {
+    'error_no_match',
+    'error_speech_timeout',
+    'no-speech',
+    'aborted',
+  };
 
   @override
   Future<bool> init() async {
     try {
-      if (onDevice && !await onDeviceSpeechAvailable()) return false;
+      if (onDevice && !await onDeviceSpeechAvailable()) {
+        _why = kIsWeb
+            ? 'browsers have no on-device recogniser'
+            : 'this phone has no on-device recogniser';
+        return false;
+      }
+      String? error;
       final ok = await _stt.initialize(
         onStatus: (status) {
+          devLog('voice: $name status "$status"');
           if (status != SpeechToText.doneStatus) return;
           // "done" can arrive just before the final result; give it a moment.
           final waiting = _pending;
           Timer(const Duration(milliseconds: 500), () {
-            if (identical(_pending, waiting)) _finish(const []);
+            if (identical(_pending, waiting)) _finish(_heard);
           });
         },
-        onError: (e) =>
-            e.errorMsg == 'error_no_match' ||
-                e.errorMsg == 'error_speech_timeout'
-            ? _finish(const []) // heard nothing: not a failure
-            : _fail(e.errorMsg),
+        onError: (e) {
+          devLog('voice: $name error "${e.errorMsg}"');
+          error = e.errorMsg;
+          _heardNothing.contains(e.errorMsg)
+              ? _finish(_heard) // heard nothing: not a failure
+              : _fail(_explain(e.errorMsg));
+        },
       );
-      if (!ok) return false;
+      if (!ok) {
+        _why = kIsWeb
+            ? 'this browser has no speech recognition${error == null ? '' : ' ($error)'}'
+            : 'no speech recogniser on this phone${error == null ? '' : ' ($error)'}';
+        return false;
+      }
       _locales = await _stt.locales();
       return true;
-    } catch (_) {
+    } catch (e) {
+      _why = 'error: $e';
       return false;
     }
   }
+
+  static String _explain(String error) => switch (error) {
+    'not-allowed' => 'microphone not allowed in this browser (not-allowed)',
+    'service-not-allowed' =>
+      'the browser refused speech recognition (service-not-allowed)',
+    'network' =>
+      "the browser's online recogniser could not be reached (network)",
+    'audio-capture' => 'no microphone found (audio-capture)',
+    'language-not-supported' =>
+      'language not supported (language-not-supported)',
+    _ => error,
+  };
 
   /// Nigerian variant first, then any of the language; null means the default
   /// (English only: another language without a model is a failure).
@@ -153,13 +263,17 @@ class SpeechVoiceInput implements VoiceInput {
   Future<List<String>> listen({String language = 'en'}) async {
     _finish(const []);
     final locale = _localeFor(language);
+    _heard = const [];
     final done = _pending = Completer<List<String>>();
     await _stt.listen(
       onResult: _onResult,
       listenOptions: SpeechListenOptions(
         localeId: locale,
         onDevice: onDevice,
-        partialResults: false,
+        // speech_to_text's web plugin marks every browser result as partial, and
+        // drops partial results unless asked for them: Chrome heard "B" and Magana
+        // got nothing. On the web, take them and use the latest when it stops.
+        partialResults: kIsWeb,
         cancelOnError: true,
         listenMode: ListenMode.confirmation,
         listenFor: const Duration(seconds: 10),
@@ -170,11 +284,11 @@ class SpeechVoiceInput implements VoiceInput {
   }
 
   void _onResult(SpeechRecognitionResult r) {
-    if (!r.finalResult) return;
-    _finish([
+    _heard = [
       for (final a in r.alternates)
         if (a.recognizedWords.trim().isNotEmpty) a.recognizedWords,
-    ]);
+    ];
+    if (r.finalResult) _finish(_heard);
   }
 
   void _finish(List<String> heard) {
@@ -195,7 +309,7 @@ class SpeechVoiceInput implements VoiceInput {
 
 /// Records a short answer (16 kHz mono WAV, until about 1.5 s of silence after
 /// speech, at most 8 s), sends it to the server's /asr and deletes it at once.
-class ServerVoiceInput implements VoiceInput {
+class ServerVoiceInput extends VoiceInput {
   ServerVoiceInput({AudioRecorder? recorder, http.Client? client})
     : _given = recorder,
       _client = client ?? http.Client();
@@ -207,8 +321,43 @@ class ServerVoiceInput implements VoiceInput {
   final http.Client _client;
   Completer<void>? _stopped;
 
+  String? _why;
+
   @override
-  Future<bool> init() => _recorder.hasPermission();
+  String get name => 'Magana server ASR';
+
+  @override
+  String? get unavailableReason => _why;
+
+  /// The server must have speech recognition (ASR_ENGINE=local), and the
+  /// microphone must be allowed. Asking the server first means nothing is
+  /// recorded for a server that can't recognise it.
+  @override
+  Future<bool> init() async {
+    try {
+      final res = await _client
+          .get(Uri.parse('$apiBase/asr/available'), headers: serverHeaders)
+          .timeout(const Duration(seconds: 5));
+      if (res.statusCode != 200) {
+        _why = 'the server answered ${res.statusCode}';
+        return false;
+      }
+      final body = jsonDecode(utf8.decode(res.bodyBytes)) as Map;
+      if (body['available'] != true) {
+        _why =
+            'the server has no speech recognition (ASR_ENGINE=${body['engine']})';
+        return false;
+      }
+    } catch (e) {
+      _why = 'the server could not be reached ($e)';
+      return false;
+    }
+    if (!await _recorder.hasPermission()) {
+      _why = 'microphone not allowed';
+      return false;
+    }
+    return true;
+  }
 
   @override
   Future<List<String>> listen({String language = 'en'}) async {
@@ -261,7 +410,7 @@ class ServerVoiceInput implements VoiceInput {
       final res = await http.Response.fromStream(await _client.send(req))
           .timeout(const Duration(seconds: 15));
       if (res.statusCode != 200) {
-        throw VoiceStepFailed('server ASR ${res.statusCode}');
+        throw VoiceStepFailed('server answered ${res.statusCode} ${res.body}');
       }
       final text =
           (jsonDecode(utf8.decode(res.bodyBytes)) as Map)['text'] as String? ??

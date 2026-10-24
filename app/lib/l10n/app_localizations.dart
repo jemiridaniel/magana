@@ -1290,12 +1290,6 @@ abstract class AppLocalizations {
   /// **'I did not hear an answer. Say A, B, C or D, or double tap an answer.'**
   String get quizNothingHeard;
 
-  /// No description provided for @quizNoVoice.
-  ///
-  /// In en, this message translates to:
-  /// **'Spoken answers are not available on this phone. Double tap an answer instead.'**
-  String get quizNoVoice;
-
   /// No description provided for @quizRepeat.
   ///
   /// In en, this message translates to:
@@ -2513,6 +2507,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Reminders need the Android or iPhone app. In a web browser Magana can\'t ring at the right time.'**
   String get remindersNeedApp;
+
+  /// No description provided for @quizVoiceUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice answers aren\'t available on this device yet. Tap an answer instead.'**
+  String get quizVoiceUnavailable;
+
+  /// No description provided for @quizVoiceUnavailableWeb.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice answers aren\'t available on this device yet. Tap or click an answer, or press A, B, C or D on your keyboard.'**
+  String get quizVoiceUnavailableWeb;
+
+  /// No description provided for @quizKeysHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap or click an answer, or press A, B, C or D on your keyboard.'**
+  String get quizKeysHint;
+
+  /// No description provided for @quizKeysHintTrueFalse.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap or click true or false, or press A for true or B for false.'**
+  String get quizKeysHintTrueFalse;
+
+  /// No description provided for @quizTapAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap an answer.'**
+  String get quizTapAnswer;
+
+  /// Web only: the one full-screen button shown until the first press, because browsers won't speak before it.
+  ///
+  /// In en, this message translates to:
+  /// **'Start Magana'**
+  String get startMagana;
 }
 
 class _AppLocalizationsDelegate
