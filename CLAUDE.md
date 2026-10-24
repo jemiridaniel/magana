@@ -32,6 +32,10 @@ Pitch frame: **Learn. Live. Lead.** — one reading engine that takes users from
 ## Data rules
 Only open-licence (CC BY / CC BY-SA), team-made, or written-permission materials go in the published benchmark. No scraped past-question sites. Credit every source (see the data sources tracker).
 
+## Working rules
+- Push to origin/main after each set of commits, without asking, as long as all tests pass (backend `pytest -q`, app `flutter analyze` and `flutter test`).
+- After any test, bug fix or measurement that changes what we know about accuracy, safety or accessibility, add an entry to docs/FINDINGS.md in the same commit.
+
 ## Commands
 ```bash
 cd backend && pip install -r requirements.txt && pytest -q
