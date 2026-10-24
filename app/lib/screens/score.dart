@@ -38,24 +38,46 @@ class ScoreScreen extends StatefulWidget {
 
 class _ScoreScreenState extends State<ScoreScreen> {
   IndependenceScore? _score;
+  ({int start, int weeks})? _since;
+  bool _sharing = false;
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final score = await loadScore(context);
+      final since = await ScoreHistory.since(score.overall);
+      final sharing = await ScoreHistory.sharing();
       if (!mounted) return;
-      setState(() => _score = score);
+      setState(() {
+        _score = score;
+        _since = since;
+        _sharing = sharing;
+      });
       final l = AppLocalizations.of(context);
       AppScope.of(context).speaker.say(
         [
           '${l.scoreTitle}: ${l.scoreOutOf(score.overall)}.',
+          if (since != null) '${_sinceText(l, score.overall, since)}.',
           for (final MapEntry(key: area, value: v) in score.byArea.entries)
             '${l.areaScoreLabel(areaName(l, area), v)}.',
         ].join(' '),
       );
     });
   }
+
+  Future<void> _share(bool on) async {
+    await ScoreHistory.setSharing(on);
+    if (mounted) setState(() => _sharing = on);
+  }
+
+  String _sinceText(
+    AppLocalizations l,
+    int now,
+    ({int start, int weeks}) since,
+  ) => now > since.start
+      ? l.scoreUpSince(since.start, since.weeks)
+      : l.scoreSince(since.start, since.weeks);
 
   @override
   Widget build(BuildContext context) {
@@ -122,6 +144,11 @@ class _ScoreScreenState extends State<ScoreScreen> {
             ),
           ),
         ),
+        if (_since case final since?)
+          Text(
+            _sinceText(l, score.overall, since),
+            style: const TextStyle(fontSize: 18, height: 1.4),
+          ),
         Semantics(
           header: true,
           child: Text(
@@ -178,6 +205,45 @@ class _ScoreScreenState extends State<ScoreScreen> {
         else
           for (final MapEntry(key: kind, value: n) in score.thisWeek.entries)
             NoteBox(text: weekLine(l, kind, n), kind: NoteKind.success),
+        Semantics(
+          toggled: _sharing,
+          label: l.shareScore,
+          excludeSemantics: true,
+          onTap: () => _share(!_sharing),
+          // The whole row toggles it, not just the small switch.
+          child: InkWell(
+            onTap: () => _share(!_sharing),
+            borderRadius: BorderRadius.circular(16),
+            child: Container(
+              constraints: const BoxConstraints(minHeight: 64),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: MaganaColors.ink, width: 2),
+              ),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      l.shareScore,
+                      style: const TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ),
+                  Switch(
+                    value: _sharing,
+                    activeThumbColor: MaganaColors.green,
+                    onChanged: _share,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        NoteBox(text: l.shareScoreNote),
         NoteBox(text: l.scoreHow, kind: NoteKind.privacy),
       ],
     );

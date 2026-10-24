@@ -372,5 +372,9 @@
   "findSpeak": "Faɗa maimakon haka",
   "findNoMatch": "Babu layin da ke da “{query}”.",
   "sayYesOrNo": "Faɗi i, a'a, ko ban sani ba",
-  "voiceAnswerUnclear": "Na ji “{heard}”. Don Allah ka ce i, a'a, ko ban sani ba."
+  "voiceAnswerUnclear": "Na ji “{heard}”. Don Allah ka ce i, a'a, ko ban sani ba.",
+  "scoreUpSince": "Ya tashi daga {start} lokacin da ka fara, {weeks, plural, =1{mako 1 da ya wuce} other{makonni {weeks} da suka wuce}}",
+  "scoreSince": "{start} lokacin da ka fara, {weeks, plural, =1{mako 1 da ya wuce} other{makonni {weeks} da suka wuce}}",
+  "shareScore": "Raba makina da malamina",
+  "shareScoreNote": "Malaminka zai ga makinka, ba shafukanka ko tambayoyinka ba, da zarar an haɗa ajinku da shafin malamai na Magana."
 }

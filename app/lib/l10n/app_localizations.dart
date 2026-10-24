@@ -2333,6 +2333,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I heard “{heard}”. Please say yes, no, or I can\'t tell.'**
   String voiceAnswerUnclear(String heard);
+
+  /// No description provided for @scoreUpSince.
+  ///
+  /// In en, this message translates to:
+  /// **'Up from {start} when you started, {weeks, plural, =1{1 week ago} other{{weeks} weeks ago}}'**
+  String scoreUpSince(int start, num weeks);
+
+  /// No description provided for @scoreSince.
+  ///
+  /// In en, this message translates to:
+  /// **'{start} when you started, {weeks, plural, =1{1 week ago} other{{weeks} weeks ago}}'**
+  String scoreSince(int start, num weeks);
+
+  /// No description provided for @shareScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Share my score with my teacher'**
+  String get shareScore;
+
+  /// No description provided for @shareScoreNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your teacher will see your score, never your pages or questions, once your class is connected to the Magana teacher portal.'**
+  String get shareScoreNote;
 }
 
 class _AppLocalizationsDelegate

@@ -1418,4 +1418,33 @@ class AppLocalizationsHa extends AppLocalizations {
   String voiceAnswerUnclear(String heard) {
     return 'Na ji “$heard”. Don Allah ka ce i, a\'a, ko ban sani ba.';
   }
+
+  @override
+  String scoreUpSince(int start, num weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: 'makonni $weeks da suka wuce',
+      one: 'mako 1 da ya wuce',
+    );
+    return 'Ya tashi daga $start lokacin da ka fara, $_temp0';
+  }
+
+  @override
+  String scoreSince(int start, num weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: 'makonni $weeks da suka wuce',
+      one: 'mako 1 da ya wuce',
+    );
+    return '$start lokacin da ka fara, $_temp0';
+  }
+
+  @override
+  String get shareScore => 'Raba makina da malamina';
+
+  @override
+  String get shareScoreNote =>
+      'Malaminka zai ga makinka, ba shafukanka ko tambayoyinka ba, da zarar an haɗa ajinku da shafin malamai na Magana.';
 }

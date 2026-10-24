@@ -13,6 +13,18 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Accessibility: Independence Score history and sharing (L3)
+
+- **What we tested and how:** `skills_score_test.dart`: `L3: the starting score is remembered, shown after a week` and `L3: up from where you started; share with my teacher` (with `expectAccessible`).
+- **Result:**
+  - The first score is remembered on the phone. "Up from 10 when you started, 2 weeks ago" is shown and spoken once at least a week has passed; before that, nothing is claimed.
+  - "Share my score with my teacher" is the learner's choice. Nothing is sent until the class is connected to the teacher portal, and the screen says so.
+- **Bug found by the test and fixed:** tapping the share row's text did nothing; only the small switch reacted. The whole 64 px row now toggles it.
+- **What we changed:** this commit.
+- **Status:** fixed.
+  - L1 Skills has 3 sample lessons instead of the board's 5 tracks, as decided earlier.
+  - L2 Champions stays a static sample profile, without the board's Call, Voice message and Book training buttons, because no Champion programme exists yet.
+
 ## 2026-10-24 · Safety, accessibility: Everyday papers built to the design (E0–E3, E6)
 
 - **What we tested and how:** app tests in `everyday_more_test.dart`, 11 in all:

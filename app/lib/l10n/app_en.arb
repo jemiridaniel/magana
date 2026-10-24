@@ -974,5 +974,29 @@
         "type": "String"
       }
     }
-  }
+  },
+  "scoreUpSince": "Up from {start} when you started, {weeks, plural, =1{1 week ago} other{{weeks} weeks ago}}",
+  "@scoreUpSince": {
+    "placeholders": {
+      "start": {
+        "type": "int"
+      },
+      "weeks": {
+        "type": "num"
+      }
+    }
+  },
+  "scoreSince": "{start} when you started, {weeks, plural, =1{1 week ago} other{{weeks} weeks ago}}",
+  "@scoreSince": {
+    "placeholders": {
+      "start": {
+        "type": "int"
+      },
+      "weeks": {
+        "type": "num"
+      }
+    }
+  },
+  "shareScore": "Share my score with my teacher",
+  "shareScoreNote": "Your teacher will see your score, never your pages or questions, once your class is connected to the Magana teacher portal."
 }

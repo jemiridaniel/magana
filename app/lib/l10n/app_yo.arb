@@ -372,5 +372,9 @@
   "findSpeak": "Sọ ọ́ dípò rẹ̀",
   "findNoMatch": "Kò sí ìlà tó ní “{query}”.",
   "sayYesOrNo": "Sọ bẹ́ẹ̀ni, rárá, tàbí mi ò mọ̀",
-  "voiceAnswerUnclear": "Mo gbọ́ “{heard}”. Jọ̀wọ́ sọ bẹ́ẹ̀ni, rárá, tàbí mi ò mọ̀."
+  "voiceAnswerUnclear": "Mo gbọ́ “{heard}”. Jọ̀wọ́ sọ bẹ́ẹ̀ni, rárá, tàbí mi ò mọ̀.",
+  "scoreUpSince": "Ó ti gòkè láti {start} nígbà tí o bẹ̀rẹ̀, {weeks, plural, =1{ọ̀sẹ̀ 1 sẹ́yìn} other{ọ̀sẹ̀ {weeks} sẹ́yìn}}",
+  "scoreSince": "{start} nígbà tí o bẹ̀rẹ̀, {weeks, plural, =1{ọ̀sẹ̀ 1 sẹ́yìn} other{ọ̀sẹ̀ {weeks} sẹ́yìn}}",
+  "shareScore": "Pín ìwọ̀n mi pẹ̀lú olùkọ́ mi",
+  "shareScoreNote": "Olùkọ́ rẹ yóò rí ìwọ̀n rẹ, kì í ṣe ojú-ìwé tàbí ìbéèrè rẹ, nígbà tí a bá so kíláàsì rẹ pọ̀ mọ́ ojú-òpó olùkọ́ Magana."
 }

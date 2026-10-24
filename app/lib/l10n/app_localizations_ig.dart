@@ -1415,4 +1415,33 @@ class AppLocalizationsIg extends AppLocalizations {
   String voiceAnswerUnclear(String heard) {
     return 'Anụrụ m “$heard”. Biko kwuo ee, mba, ma ọ bụ amaghị m.';
   }
+
+  @override
+  String scoreUpSince(int start, num weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: 'izu $weeks gara aga',
+      one: 'izu 1 gara aga',
+    );
+    return 'Ọ rịgoro site na $start mgbe ị malitere, $_temp0';
+  }
+
+  @override
+  String scoreSince(int start, num weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: 'izu $weeks gara aga',
+      one: 'izu 1 gara aga',
+    );
+    return '$start mgbe ị malitere, $_temp0';
+  }
+
+  @override
+  String get shareScore => 'Kekọrịta akara m na onye nkuzi m';
+
+  @override
+  String get shareScoreNote =>
+      'Onye nkuzi gị ga-ahụ akara gị, ọ bụghị peeji ma ọ bụ ajụjụ gị, ozugbo ejikọrọ klaasị gị na ọnụ ụzọ ndị nkuzi Magana.';
 }

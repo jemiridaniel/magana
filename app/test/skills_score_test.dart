@@ -295,4 +295,44 @@ void main() {
     expectAccessible(tester, 'Champions');
     handle.dispose();
   });
+
+  test('L3: the starting score is remembered, shown after a week', () async {
+    SharedPreferences.setMockInitialValues({});
+    final day0 = DateTime(2026, 10, 1);
+    expect(await ScoreHistory.since(12, now: day0), isNull); // remembered
+    expect(
+      await ScoreHistory.since(30, now: day0.add(const Duration(days: 6))),
+      isNull,
+    );
+    expect(
+      await ScoreHistory.since(30, now: day0.add(const Duration(days: 15))),
+      (start: 12, weeks: 2),
+    );
+  });
+
+  testWidgets('L3: up from where you started; share with my teacher', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    final speaker = await openApp(
+      tester,
+      prefs: {
+        'score_start': 10,
+        'score_start_at': DateTime.now()
+            .subtract(const Duration(days: 15))
+            .toIso8601String(),
+        'tasks': [for (var i = 0; i < 5; i++) stored(TaskKind.readSchool, 1)],
+      },
+    );
+    await tap(tester, en.myScore);
+    // learning 50 of 4 areas -> 13
+    final since = en.scoreUpSince(10, 2);
+    expect(find.text(since), findsOneWidget);
+    expect(speaker.said.last, contains('$since.'));
+    expect(find.text(en.shareScoreNote), findsOneWidget);
+    expectAccessible(tester, 'Score with history');
+    await tap(tester, en.shareScore);
+    expect(await ScoreHistory.sharing(), isTrue);
+    handle.dispose();
+  });
 }

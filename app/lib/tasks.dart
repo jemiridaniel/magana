@@ -121,3 +121,36 @@ class IndependenceScore {
       ? 0
       : (byArea.values.reduce((a, b) => a + b) / byArea.length).round();
 }
+
+/// The score when the learner first opened My score, kept on this phone, so the
+/// screen can say how far they have come (design L3). Shown after a week.
+class ScoreHistory {
+  static const _score = 'score_start';
+  static const _at = 'score_start_at';
+
+  /// Remembers [overall] the first time; returns the starting point and how many
+  /// whole weeks ago it was, or null until a week has passed.
+  static Future<({int start, int weeks})?> since(
+    int overall, {
+    DateTime? now,
+  }) async {
+    final prefs = await SharedPreferences.getInstance();
+    final today = now ?? DateTime.now();
+    final at = DateTime.tryParse(prefs.getString(_at) ?? '');
+    if (at == null) {
+      await prefs.setInt(_score, overall);
+      await prefs.setString(_at, today.toIso8601String());
+      return null;
+    }
+    final weeks = today.difference(at).inDays ~/ 7;
+    return weeks < 1 ? null : (start: prefs.getInt(_score) ?? 0, weeks: weeks);
+  }
+
+  /// "Share my score with my teacher": the learner's choice, nothing is sent
+  /// until the class is connected to the teacher portal.
+  static Future<bool> sharing() async =>
+      (await SharedPreferences.getInstance()).getBool('share_score') ?? false;
+
+  static Future<void> setSharing(bool on) async =>
+      (await SharedPreferences.getInstance()).setBool('share_score', on);
+}

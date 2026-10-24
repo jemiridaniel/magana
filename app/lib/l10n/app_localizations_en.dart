@@ -1413,4 +1413,33 @@ class AppLocalizationsEn extends AppLocalizations {
   String voiceAnswerUnclear(String heard) {
     return 'I heard “$heard”. Please say yes, no, or I can\'t tell.';
   }
+
+  @override
+  String scoreUpSince(int start, num weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: '$weeks weeks ago',
+      one: '1 week ago',
+    );
+    return 'Up from $start when you started, $_temp0';
+  }
+
+  @override
+  String scoreSince(int start, num weeks) {
+    String _temp0 = intl.Intl.pluralLogic(
+      weeks,
+      locale: localeName,
+      other: '$weeks weeks ago',
+      one: '1 week ago',
+    );
+    return '$start when you started, $_temp0';
+  }
+
+  @override
+  String get shareScore => 'Share my score with my teacher';
+
+  @override
+  String get shareScoreNote =>
+      'Your teacher will see your score, never your pages or questions, once your class is connected to the Magana teacher portal.';
 }

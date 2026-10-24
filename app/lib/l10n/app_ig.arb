@@ -372,5 +372,9 @@
   "findSpeak": "Kwuo ya kama",
   "findNoMatch": "Enweghị ahịrị nwere “{query}”.",
   "sayYesOrNo": "Kwuo ee, mba, ma ọ bụ amaghị m",
-  "voiceAnswerUnclear": "Anụrụ m “{heard}”. Biko kwuo ee, mba, ma ọ bụ amaghị m."
+  "voiceAnswerUnclear": "Anụrụ m “{heard}”. Biko kwuo ee, mba, ma ọ bụ amaghị m.",
+  "scoreUpSince": "Ọ rịgoro site na {start} mgbe ị malitere, {weeks, plural, =1{izu 1 gara aga} other{izu {weeks} gara aga}}",
+  "scoreSince": "{start} mgbe ị malitere, {weeks, plural, =1{izu 1 gara aga} other{izu {weeks} gara aga}}",
+  "shareScore": "Kekọrịta akara m na onye nkuzi m",
+  "shareScoreNote": "Onye nkuzi gị ga-ahụ akara gị, ọ bụghị peeji ma ọ bụ ajụjụ gị, ozugbo ejikọrọ klaasị gị na ọnụ ụzọ ndị nkuzi Magana."
 }
