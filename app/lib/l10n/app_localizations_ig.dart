@@ -699,4 +699,79 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get resultRoutine =>
       'Nọọsụ nwere ike ịkpọghachi gị n\'oge ọrụ. Rịọ ka a kpọghachi gị. Ọ bụrụ na ọ ka njọ, gaa n\'ụlọ ọgwụ ma ọ bụ kpọọ 112.';
+
+  @override
+  String get quizTitle => 'Omume Biology';
+
+  @override
+  String quizProgress(int n, int total) {
+    return 'Ụdị WAEC · Ajụjụ $n n\'ime $total';
+  }
+
+  @override
+  String quizScoreLabel(int correct, int answered) {
+    return '$correct ziri ezi n\'ime $answered ị zara';
+  }
+
+  @override
+  String get quizSayAnswer => 'Kwuo A, B, C ma ọ bụ D';
+
+  @override
+  String get quizListening => 'Ana m ege ntị… Pịa ka ọ kwụsị';
+
+  @override
+  String quizCorrect(String letter) {
+    return 'Ọ ziri ezi! Ị họọrọ $letter.';
+  }
+
+  @override
+  String quizWrong(String letter, String answer) {
+    return 'Ọ bụghị ya. Ị họọrọ $letter. Azịza ya bụ $answer.';
+  }
+
+  @override
+  String quizUnclear(String heard) {
+    return 'Anụrụ m “$heard”. Biko kwuo A, B, C ma ọ bụ D.';
+  }
+
+  @override
+  String get quizNothingHeard =>
+      'Anụghị m azịza. Kwuo A, B, C ma ọ bụ D, ma ọ bụ pịa azịza ugboro abụọ.';
+
+  @override
+  String get quizNoVoice =>
+      'Enweghị ike ịza n\'olu na ekwentị a. Pịa azịza ugboro abụọ kama.';
+
+  @override
+  String get quizRepeat => 'Kwughachi ajụjụ';
+
+  @override
+  String get quizNext => 'Ajụjụ ọzọ';
+
+  @override
+  String get quizFinish => 'Hụ nsonaazụ m';
+
+  @override
+  String get quizYourAnswerRight => 'azịza gị, ọ ziri ezi';
+
+  @override
+  String get quizYourAnswerWrong => 'azịza gị, o zighị ezi';
+
+  @override
+  String get quizRightAnswer => 'azịza ziri ezi';
+
+  @override
+  String get quizResultTitle => 'Omume agwụla';
+
+  @override
+  String quizResult(int correct, int total) {
+    return 'Ị nwetara $correct ziri ezi n\'ime $total.';
+  }
+
+  @override
+  String get quizAgain => 'Mee omume ọzọ';
+
+  @override
+  String get quizSource =>
+      'Ndị otu Magana dere ajụjụ ndị a n\'ụdị WAEC Biology. Ha abụghị ajụjụ ochie. Ajụjụ ndị a dị n\'asụsụ Bekee.';
 }

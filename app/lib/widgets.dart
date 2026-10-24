@@ -45,11 +45,13 @@ class ScreenHeader extends StatelessWidget {
     required this.title,
     this.subtitle,
     this.onBack,
+    this.trailing,
   });
 
   final String title;
   final String? subtitle;
   final VoidCallback? onBack;
+  final Widget? trailing; // e.g. the quiz score
 
   @override
   Widget build(BuildContext context) {
@@ -96,6 +98,7 @@ class ScreenHeader extends StatelessWidget {
             ),
           ),
         ),
+        ?trailing,
       ],
     );
   }
@@ -244,7 +247,7 @@ class SecondaryButton extends StatelessWidget {
   );
 }
 
-enum NoteKind { info, privacy, warning, emergency }
+enum NoteKind { info, privacy, success, warning, emergency }
 
 /// Coloured note boxes from the designs: privacy (green), info (sand), warning
 /// (amber) and the dark emergency banner.
@@ -268,6 +271,13 @@ class NoteBox extends StatelessWidget {
         MaganaColors.ink,
         MaganaColors.green,
         Icons.shield_outlined,
+        MaganaColors.green,
+      ),
+      NoteKind.success => (
+        const Color(0xFFE3F1EA),
+        MaganaColors.ink,
+        MaganaColors.green,
+        Icons.check_circle_outline,
         MaganaColors.green,
       ),
       NoteKind.warning => (

@@ -1235,6 +1235,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A nurse can call you back during working hours. Request a call back. If you get worse, go to a clinic or call 112.'**
   String get resultRoutine;
+
+  /// No description provided for @quizTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Biology practice'**
+  String get quizTitle;
+
+  /// No description provided for @quizProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'WAEC-style · Question {n} of {total}'**
+  String quizProgress(int n, int total);
+
+  /// No description provided for @quizScoreLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'{correct} right out of {answered} answered'**
+  String quizScoreLabel(int correct, int answered);
+
+  /// No description provided for @quizSayAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'Say A, B, C or D'**
+  String get quizSayAnswer;
+
+  /// No description provided for @quizListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening… Tap to stop'**
+  String get quizListening;
+
+  /// No description provided for @quizCorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Correct! You chose {letter}.'**
+  String quizCorrect(String letter);
+
+  /// answer is the letter and option text, e.g. 'B, Iodine solution'
+  ///
+  /// In en, this message translates to:
+  /// **'Not quite. You chose {letter}. The answer is {answer}.'**
+  String quizWrong(String letter, String answer);
+
+  /// Never guess: repeat what was heard and ask again
+  ///
+  /// In en, this message translates to:
+  /// **'I heard “{heard}”. Please say A, B, C or D.'**
+  String quizUnclear(String heard);
+
+  /// No description provided for @quizNothingHeard.
+  ///
+  /// In en, this message translates to:
+  /// **'I did not hear an answer. Say A, B, C or D, or double tap an answer.'**
+  String get quizNothingHeard;
+
+  /// No description provided for @quizNoVoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Spoken answers are not available on this phone. Double tap an answer instead.'**
+  String get quizNoVoice;
+
+  /// No description provided for @quizRepeat.
+  ///
+  /// In en, this message translates to:
+  /// **'Repeat question'**
+  String get quizRepeat;
+
+  /// No description provided for @quizNext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next question'**
+  String get quizNext;
+
+  /// No description provided for @quizFinish.
+  ///
+  /// In en, this message translates to:
+  /// **'See my result'**
+  String get quizFinish;
+
+  /// No description provided for @quizYourAnswerRight.
+  ///
+  /// In en, this message translates to:
+  /// **'your answer, correct'**
+  String get quizYourAnswerRight;
+
+  /// No description provided for @quizYourAnswerWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'your answer, not correct'**
+  String get quizYourAnswerWrong;
+
+  /// No description provided for @quizRightAnswer.
+  ///
+  /// In en, this message translates to:
+  /// **'correct answer'**
+  String get quizRightAnswer;
+
+  /// No description provided for @quizResultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice finished'**
+  String get quizResultTitle;
+
+  /// No description provided for @quizResult.
+  ///
+  /// In en, this message translates to:
+  /// **'You got {correct} out of {total} right.'**
+  String quizResult(int correct, int total);
+
+  /// No description provided for @quizAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Practise again'**
+  String get quizAgain;
+
+  /// No description provided for @quizSource.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions written by the Magana team in the style of WAEC Biology. They are not past questions. The questions are in English.'**
+  String get quizSource;
 }
 
 class _AppLocalizationsDelegate

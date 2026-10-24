@@ -695,4 +695,79 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get resultRoutine =>
       'Nọ́ọ̀sì lè pè ọ́ padà ní àkókò iṣẹ́. Béèrè kí wọ́n pè ọ́ padà. Bí ara rẹ bá burú sí i, lọ sí ilé-ìwòsàn tàbí pe 112.';
+
+  @override
+  String get quizTitle => 'Ìdánrawò Biology';
+
+  @override
+  String quizProgress(int n, int total) {
+    return 'Bíi WAEC · Ìbéèrè $n nínú $total';
+  }
+
+  @override
+  String quizScoreLabel(int correct, int answered) {
+    return '$correct tó tọ̀nà nínú $answered tí o ti dáhùn';
+  }
+
+  @override
+  String get quizSayAnswer => 'Sọ A, B, C tàbí D';
+
+  @override
+  String get quizListening => 'Mo ń gbọ́… Tẹ̀ láti dúró';
+
+  @override
+  String quizCorrect(String letter) {
+    return 'Ó tọ̀nà! O yan $letter.';
+  }
+
+  @override
+  String quizWrong(String letter, String answer) {
+    return 'Kò tọ̀nà. O yan $letter. Ìdáhùn ni $answer.';
+  }
+
+  @override
+  String quizUnclear(String heard) {
+    return 'Mo gbọ́ “$heard”. Jọ̀wọ́ sọ A, B, C tàbí D.';
+  }
+
+  @override
+  String get quizNothingHeard =>
+      'Mi ò gbọ́ ìdáhùn kankan. Sọ A, B, C tàbí D, tàbí tẹ ìdáhùn kan lẹ́ẹ̀mejì.';
+
+  @override
+  String get quizNoVoice =>
+      'A kò lè dáhùn pẹ̀lú ohùn lórí fóònù yìí. Tẹ ìdáhùn kan lẹ́ẹ̀mejì dípò rẹ̀.';
+
+  @override
+  String get quizRepeat => 'Tún ìbéèrè sọ';
+
+  @override
+  String get quizNext => 'Ìbéèrè tó kàn';
+
+  @override
+  String get quizFinish => 'Wo èsì mi';
+
+  @override
+  String get quizYourAnswerRight => 'ìdáhùn rẹ, ó tọ̀nà';
+
+  @override
+  String get quizYourAnswerWrong => 'ìdáhùn rẹ, kò tọ̀nà';
+
+  @override
+  String get quizRightAnswer => 'ìdáhùn tó tọ̀nà';
+
+  @override
+  String get quizResultTitle => 'Ìdánrawò ti parí';
+
+  @override
+  String quizResult(int correct, int total) {
+    return 'O gba $correct tó tọ̀nà nínú $total.';
+  }
+
+  @override
+  String get quizAgain => 'Tún ṣe ìdánrawò';
+
+  @override
+  String get quizSource =>
+      'Ẹgbẹ́ Magana ló kọ àwọn ìbéèrè náà bíi ti WAEC Biology. Wọn kì í ṣe ìbéèrè àtijọ́. Èdè Gẹ̀ẹ́sì ni àwọn ìbéèrè wà.';
 }

@@ -700,4 +700,79 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get resultRoutine =>
       'Ma\'aikaciyar jinya za ta iya kiran ka a lokacin aiki. Nemi a kira ka. Idan ka ƙara rashin lafiya, je asibiti ko ka kira 112.';
+
+  @override
+  String get quizTitle => 'Gwajin Biology';
+
+  @override
+  String quizProgress(int n, int total) {
+    return 'Irin WAEC · Tambaya ta $n cikin $total';
+  }
+
+  @override
+  String quizScoreLabel(int correct, int answered) {
+    return '$correct daidai cikin $answered da ka amsa';
+  }
+
+  @override
+  String get quizSayAnswer => 'Faɗi A, B, C ko D';
+
+  @override
+  String get quizListening => 'Ina saurare… Taɓa don tsayawa';
+
+  @override
+  String quizCorrect(String letter) {
+    return 'Daidai ne! Ka zaɓi $letter.';
+  }
+
+  @override
+  String quizWrong(String letter, String answer) {
+    return 'Ba haka ba. Ka zaɓi $letter. Amsar ita ce $answer.';
+  }
+
+  @override
+  String quizUnclear(String heard) {
+    return 'Na ji “$heard”. Don Allah faɗi A, B, C ko D.';
+  }
+
+  @override
+  String get quizNothingHeard =>
+      'Ban ji amsa ba. Faɗi A, B, C ko D, ko ka taɓa amsa sau biyu.';
+
+  @override
+  String get quizNoVoice =>
+      'Ba a iya amsa da murya a wannan wayar ba. Taɓa amsa sau biyu maimakon haka.';
+
+  @override
+  String get quizRepeat => 'Maimaita tambaya';
+
+  @override
+  String get quizNext => 'Tambaya ta gaba';
+
+  @override
+  String get quizFinish => 'Duba sakamakona';
+
+  @override
+  String get quizYourAnswerRight => 'amsarka, daidai ne';
+
+  @override
+  String get quizYourAnswerWrong => 'amsarka, ba daidai ba';
+
+  @override
+  String get quizRightAnswer => 'amsar da ta dace';
+
+  @override
+  String get quizResultTitle => 'An gama gwaji';
+
+  @override
+  String quizResult(int correct, int total) {
+    return 'Ka samu $correct daidai cikin $total.';
+  }
+
+  @override
+  String get quizAgain => 'Sake gwadawa';
+
+  @override
+  String get quizSource =>
+      'Ƙungiyar Magana ce ta rubuta tambayoyin irin na WAEC Biology. Ba tsofaffin tambayoyi ba ne. Tambayoyin da Turanci suke.';
 }

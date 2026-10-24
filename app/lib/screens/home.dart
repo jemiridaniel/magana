@@ -8,6 +8,7 @@ import '../policy.dart';
 import '../theme.dart';
 import 'capture.dart';
 import 'everyday.dart';
+import 'quiz.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -60,7 +61,12 @@ class HomeScreen extends StatelessWidget {
                           _Tile(
                             Icons.task_alt,
                             l.practiceQuiz,
-                            () => _comingSoon(context, l.practiceQuiz),
+                            () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const QuizScreen(),
+                              ),
+                            ),
+                            soon: false,
                           ),
                         if (can(Feature.library))
                           _Tile(

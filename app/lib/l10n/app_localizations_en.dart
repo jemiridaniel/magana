@@ -696,4 +696,79 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get resultRoutine =>
       'A nurse can call you back during working hours. Request a call back. If you get worse, go to a clinic or call 112.';
+
+  @override
+  String get quizTitle => 'Biology practice';
+
+  @override
+  String quizProgress(int n, int total) {
+    return 'WAEC-style · Question $n of $total';
+  }
+
+  @override
+  String quizScoreLabel(int correct, int answered) {
+    return '$correct right out of $answered answered';
+  }
+
+  @override
+  String get quizSayAnswer => 'Say A, B, C or D';
+
+  @override
+  String get quizListening => 'Listening… Tap to stop';
+
+  @override
+  String quizCorrect(String letter) {
+    return 'Correct! You chose $letter.';
+  }
+
+  @override
+  String quizWrong(String letter, String answer) {
+    return 'Not quite. You chose $letter. The answer is $answer.';
+  }
+
+  @override
+  String quizUnclear(String heard) {
+    return 'I heard “$heard”. Please say A, B, C or D.';
+  }
+
+  @override
+  String get quizNothingHeard =>
+      'I did not hear an answer. Say A, B, C or D, or double tap an answer.';
+
+  @override
+  String get quizNoVoice =>
+      'Spoken answers are not available on this phone. Double tap an answer instead.';
+
+  @override
+  String get quizRepeat => 'Repeat question';
+
+  @override
+  String get quizNext => 'Next question';
+
+  @override
+  String get quizFinish => 'See my result';
+
+  @override
+  String get quizYourAnswerRight => 'your answer, correct';
+
+  @override
+  String get quizYourAnswerWrong => 'your answer, not correct';
+
+  @override
+  String get quizRightAnswer => 'correct answer';
+
+  @override
+  String get quizResultTitle => 'Practice finished';
+
+  @override
+  String quizResult(int correct, int total) {
+    return 'You got $correct out of $total right.';
+  }
+
+  @override
+  String get quizAgain => 'Practise again';
+
+  @override
+  String get quizSource =>
+      'Questions written by the Magana team in the style of WAEC Biology. They are not past questions. The questions are in English.';
 }

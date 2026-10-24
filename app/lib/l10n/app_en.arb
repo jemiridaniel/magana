@@ -485,5 +485,81 @@
   "resultRoutine": "A nurse can call you back during working hours. Request a call back. If you get worse, go to a clinic or call 112.",
   "@resultRoutine": {
     "description": "CLINICAL DRAFT. Quick-check result before any call is booked: never says a call is coming."
-  }
+  },
+  "quizTitle": "Biology practice",
+  "quizProgress": "WAEC-style · Question {n} of {total}",
+  "@quizProgress": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "quizScoreLabel": "{correct} right out of {answered} answered",
+  "@quizScoreLabel": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "answered": {
+        "type": "int"
+      }
+    }
+  },
+  "quizSayAnswer": "Say A, B, C or D",
+  "quizListening": "Listening… Tap to stop",
+  "quizCorrect": "Correct! You chose {letter}.",
+  "@quizCorrect": {
+    "placeholders": {
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "quizWrong": "Not quite. You chose {letter}. The answer is {answer}.",
+  "@quizWrong": {
+    "description": "answer is the letter and option text, e.g. 'B, Iodine solution'",
+    "placeholders": {
+      "letter": {
+        "type": "String"
+      },
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "quizUnclear": "I heard “{heard}”. Please say A, B, C or D.",
+  "@quizUnclear": {
+    "description": "Never guess: repeat what was heard and ask again",
+    "placeholders": {
+      "heard": {
+        "type": "String"
+      }
+    }
+  },
+  "quizNothingHeard": "I did not hear an answer. Say A, B, C or D, or double tap an answer.",
+  "quizNoVoice": "Spoken answers are not available on this phone. Double tap an answer instead.",
+  "quizRepeat": "Repeat question",
+  "quizNext": "Next question",
+  "quizFinish": "See my result",
+  "quizYourAnswerRight": "your answer, correct",
+  "quizYourAnswerWrong": "your answer, not correct",
+  "quizRightAnswer": "correct answer",
+  "quizResultTitle": "Practice finished",
+  "quizResult": "You got {correct} out of {total} right.",
+  "@quizResult": {
+    "placeholders": {
+      "correct": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "quizAgain": "Practise again",
+  "quizSource": "Questions written by the Magana team in the style of WAEC Biology. They are not past questions. The questions are in English."
 }

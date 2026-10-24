@@ -45,6 +45,7 @@ dependencies:
   camera: ^0.12.1
   audioplayers: ^6.8.1
   url_launcher: ^6.3.3
+  speech_to_text: ^7.5.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -73,6 +74,7 @@ flutter:
     - assets/brand/magana_mark.svg
     - assets/brand/magana_lockup_stacked.svg
     - assets/sounds/
+    - assets/quiz/
 
   fonts:
     - family: AtkinsonHyperlegible
