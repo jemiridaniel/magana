@@ -237,3 +237,56 @@ def test_numbers_are_reread_in_every_mode():
         body = client.post("/read", files={"file": ("p.png", _render(LABEL, 40))}, data={"mode": mode}).json()
         numbers = [w for l in body["lines"] for w in l["words"] if any(c.isdigit() for c in w["text"])]
         assert numbers and all(w["reread_text"] is not None for w in numbers), mode
+
+
+# ---------- two agreeing readings at 0.80 (pending clinical sign-off)
+
+def pair(conf, reread, reread_conf, text="N12,000.00"):
+    return {"text": f"Transfer {text}", "confidence": 0.9,
+            "words": [{"text": "Transfer", "confidence": .96},
+                      {"text": text, "confidence": conf, "reread_text": reread, "reread_confidence": reread_conf}]}
+
+
+def test_n12000_two_agreeing_readings_are_accepted():
+    # Real readings of "N12,000.00" in 28 px print: 0.88 on the page, 0.90 re-read.
+    assert safety.number_warnings([pair(.88, "N12,000.00", .90)]) == []
+
+
+def test_n12000_a_single_088_reading_is_still_flagged():
+    [w] = safety.number_warnings([pair(.88, None, None)])
+    assert w.code == "low_confidence_number"
+
+
+@pytest.mark.parametrize("conf, reread_conf, flagged", [
+    (.80, .80, False),   # both at the floor: accepted
+    (.79, .95, True),    # page reading too weak
+    (.95, .79, False),   # page reading alone reaches 0.90
+    (.85, .79, True),    # re-read too weak, page reading below 0.90
+    (.89, .89, False),
+])
+def test_two_reading_thresholds(conf, reread_conf, flagged):
+    warnings = safety.number_warnings([pair(conf, "N12,000.00", reread_conf)])
+    assert bool(warnings) == flagged
+
+
+def test_agreement_at_any_confidence_never_overrides_a_disagreement():
+    [w] = safety.number_warnings([pair(.99, "N12,600.00", .99)])
+    assert w.code == "number_mismatch"
+
+
+def test_thresholds_are_the_documented_ones():
+    assert (safety.CRITICAL_WORD_THRESHOLD, safety.TWO_READING_THRESHOLD) == (0.90, 0.80)
+
+
+STATEMENT = ["POS purchase 14/10/2026  N6,450.00", "Transfer to Amina Bello  N12,000.00", "Balance N38,750.00"]
+
+
+def test_n12000_in_small_print_is_not_flagged_end_to_end():
+    """The real case: 28 px statement, where N12,000.00 reads 0.88 alone."""
+    body = client.post("/read", files={"file": ("p.png", _render(STATEMENT, 28))}, data={"mode": "money"}).json()
+    line = next(i for i, l in enumerate(body["lines"]) if "12,000" in l["text"])
+    word = next(w for w in body["lines"][line]["words"] if "12,000" in w["text"])
+    if word["confidence"] >= safety.CRITICAL_WORD_THRESHOLD:
+        pytest.skip("this Tesseract build reads it at 0.90+ already")
+    assert safety._digits(word["reread_text"]) == safety._digits(word["text"])
+    assert not [w for w in body["warnings"] if w["block_index"] == line and w["code"] == "low_confidence_number"]

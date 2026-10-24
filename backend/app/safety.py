@@ -105,6 +105,9 @@ def table_warnings(tables: list[dict], threshold: float = 0.75) -> list[CellWarn
 # Each critical word must reach this on its own; a line average can hide one bad digit.
 # PENDING CLINICAL SIGN-OFF (see CLAUDE.md).
 CRITICAL_WORD_THRESHOLD = 0.90
+# ...or two independent readings (the page and a re-read crop) agree and both reach this.
+# PENDING CLINICAL SIGN-OFF (see CLAUDE.md).
+TWO_READING_THRESHOLD = 0.80
 
 # Characters OCR produces when it half-reads a digit.
 _LOOKALIKES = "OoQDlI|SsBZG@§&"
@@ -150,15 +153,26 @@ def number_problem(words: list[str], i: int) -> str | None:
 def _line_words(line: dict) -> list[dict]:
     words = line.get("words") or []
     if words:
-        return [{"text": w["text"], "confidence": w.get("confidence", 1.0), "reread_text": w.get("reread_text")}
-                for w in words]
-    return [{"text": w, "confidence": line.get("confidence", 1.0), "reread_text": None}
+        return [{"text": w["text"], "confidence": w.get("confidence", 1.0), "reread_text": w.get("reread_text"),
+                 "reread_confidence": w.get("reread_confidence")} for w in words]
+    return [{"text": w, "confidence": line.get("confidence", 1.0), "reread_text": None, "reread_confidence": None}
             for w in line.get("text", "").split()]
+
+
+def number_accepted(w: dict, threshold: float = CRITICAL_WORD_THRESHOLD,
+                    pair_threshold: float = TWO_READING_THRESHOLD) -> bool:
+    """One reading at `threshold`, or two agreeing independent readings at `pair_threshold`."""
+    if w["confidence"] >= threshold:
+        return True
+    reread = w.get("reread_text")
+    return (reread is not None and _digits(reread) == _digits(w["text"])
+            and w["confidence"] >= pair_threshold and (w.get("reread_confidence") or 0) >= pair_threshold)
 
 
 def number_warnings(lines: list[dict], threshold: float = CRITICAL_WORD_THRESHOLD) -> list[Warning]:
     """One warning per critical word that is unreadable, read differently by its second
-    (cropped) reading, or low-confidence."""
+    (cropped) reading, or not confident enough: below 0.90, unless both readings agree and
+    each reaches 0.80."""
     out = []
     for i, line in enumerate(lines):
         words = _line_words(line)
@@ -168,7 +182,7 @@ def number_warnings(lines: list[dict], threshold: float = CRITICAL_WORD_THRESHOL
             if problem is None and _has_digit(w["text"]):
                 if w["reread_text"] is not None and _digits(w["reread_text"]) != _digits(w["text"]):
                     problem = "number_mismatch"  # the two readings disagree: never pick one
-                elif w["confidence"] < threshold:
+                elif not number_accepted(w, threshold):
                     problem = "low_confidence_number"
             if problem:
                 out.append(Warning(i, code=problem, word_index=j))
