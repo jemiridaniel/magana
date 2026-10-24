@@ -594,4 +594,109 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get adultsOnly => 'Nke a bụ maka ndị okenye (afọ 18 gaa n\'ihu).';
+
+  @override
+  String get healthWorkerTitle => 'Gwa onye ọrụ ahụike okwu';
+
+  @override
+  String get healthWorkerSubtitle =>
+      'Nọọsụ ma ọ bụ onye na-ere ọgwụ ga-akpọghachi gị';
+
+  @override
+  String get helpWithTitle => 'Gịnị ka ị chọrọ enyemaka na ya?';
+
+  @override
+  String get reasonMedicine => 'Ịghọta ọgwụ m';
+
+  @override
+  String get reasonResults => 'Ịghọta nsonaazụ m';
+
+  @override
+  String get reasonOther => 'Ihe ọzọ';
+
+  @override
+  String get callLanguage => 'Asụsụ maka oku ahụ';
+
+  @override
+  String get answerIbaFirst => 'Buru ụzọ zaa ajụjụ ole na ole (Ibà)';
+
+  @override
+  String get requestCallback => 'Rịọ ka a kpọghachi gị';
+
+  @override
+  String get emergencyBold => 'Ihe mberede?';
+
+  @override
+  String get emergencyText => 'Echerela ka a kpọghachi gị. Kpọọ 112 ugbu a.';
+
+  @override
+  String get call112 => 'Kpọọ 112';
+
+  @override
+  String get quickCheckTitle => 'Nyocha ahụike ọsọ ọsọ';
+
+  @override
+  String quickCheckProgress(int n, int total) {
+    return 'Ibà · ajụjụ $n n\'ime $total';
+  }
+
+  @override
+  String get yes => 'Ee';
+
+  @override
+  String get no => 'Mba';
+
+  @override
+  String daysCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ụbọchị $count',
+      one: 'ụbọchị 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get moreDays => 'Otu ụbọchị ọzọ';
+
+  @override
+  String get fewerDays => 'Otu ụbọchị belata';
+
+  @override
+  String get nextLabel => 'Na-esote';
+
+  @override
+  String get quickCheckNote =>
+      'Azịza gị na-enyere nọọsụ aka ịkpebi otú ọ ga-esi kpọọ gị ọsọ ọsọ. Ibà anaghị achọpụta ọrịa. Ọ bụrụ na ị nwere ihe ịrịba ama ihe ize ndụ, Magana ga-agwa gị ka ị gaa n\'ụlọ ọgwụ ugbu a.';
+
+  @override
+  String get resultTitle => 'Nsonaazụ gị';
+
+  @override
+  String get checkingAnswers => 'Ana m enyocha azịza gị.';
+
+  @override
+  String get backHome => 'Laghachi n\'ụlọ';
+
+  @override
+  String get msg_callback_booked =>
+      'E debela oku gị. Nọọsụ ma ọ bụ onye na-ere ọgwụ ga-akpọ gị.';
+
+  @override
+  String get msg_callback_unavailable =>
+      'Enweghị oku nkpọghachi ugbu a. Ọ bụrụ na ịchọrọ enyemaka ugbu a, gaa n\'ụlọ ọgwụ ma ọ bụ kpọọ 112.';
+
+  @override
+  String quickCheckProgressFallback(int n, int total) {
+    return 'Nyocha nchekwa dị n\'ime · ajụjụ $n n\'ime $total';
+  }
+
+  @override
+  String get resultUrgent =>
+      'Nọọsụ kwesịrị ịkpọ gị n\'ime awa 2. Rịọ ka a kpọghachi gị ugbu a. Ọ bụrụ na ọ ka njọ, gaa n\'ụlọ ọgwụ ma ọ bụ kpọọ 112.';
+
+  @override
+  String get resultRoutine =>
+      'Nọọsụ nwere ike ịkpọghachi gị n\'oge ọrụ. Rịọ ka a kpọghachi gị. Ọ bụrụ na ọ ka njọ, gaa n\'ụlọ ọgwụ ma ọ bụ kpọọ 112.';
 }

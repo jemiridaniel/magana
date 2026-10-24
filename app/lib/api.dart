@@ -190,6 +190,22 @@ class ReadResult {
   }
 }
 
+class TriageQuestion {
+  const TriageQuestion({
+    required this.id,
+    required this.type,
+    required this.message,
+    this.text,
+    this.askIf,
+  });
+
+  final String id;
+  final String type; // yes_no | number
+  final String? text; // Ibà's wording in the app language, when Ibà answered
+  final String message; // fallback message code (q_<id>), worded by the app
+  final String? askIf; // only asked when this question was answered yes
+}
+
 class ApiException implements Exception {
   ApiException(this.code);
 
@@ -208,6 +224,92 @@ class MaganaApi {
 
   /// Age tier and consent headers, sent with every request (see ProfileController).
   final Map<String, String> Function() _headers;
+
+  Future<Map<String, dynamic>> _json(
+    String method,
+    String path, {
+    Object? body,
+  }) async {
+    final req = http.Request(method, Uri.parse('$apiBase$path'))
+      ..headers.addAll(_headers());
+    if (body != null) {
+      req.headers['Content-Type'] = 'application/json';
+      req.body = jsonEncode(body);
+    }
+    final http.Response res;
+    try {
+      res = await http.Response.fromStream(await _client.send(req))
+          .timeout(const Duration(seconds: 15));
+    } catch (_) {
+      throw ApiException('unreachable');
+    }
+    final decoded = () {
+      try {
+        return jsonDecode(utf8.decode(res.bodyBytes));
+      } catch (_) {
+        return null;
+      }
+    }();
+    if (res.statusCode != 200) {
+      final detail = decoded is Map ? decoded['detail'] : null;
+      throw ApiException(
+        detail is Map && detail['code'] is String
+            ? detail['code'] as String
+            : 'failed',
+      );
+    }
+    return decoded is Map<String, dynamic>
+        ? decoded
+        : throw ApiException('failed');
+  }
+
+  /// Ibà quick-check questions in [lang], and whether they came from Ibà or from
+  /// Magana's built-in fallback set.
+  Future<({List<TriageQuestion> questions, bool fromIba})> triageQuestions(
+    String lang,
+  ) async {
+    final body = await _json('GET', '/triage/questions?lang=$lang');
+    return (
+      fromIba: body['source'] == 'iba',
+      questions: [
+        for (final q
+            in (body['questions'] as List? ?? const [])
+                .cast<Map<String, dynamic>>())
+          TriageQuestion(
+            id: q['id'] as String,
+            type: q['type'] as String? ?? 'yes_no',
+            text: q['text'] as String?,
+            message: q['message'] as String? ?? 'q_${q['id']}',
+            askIf: q['ask_if'] as String?,
+          ),
+      ],
+    );
+  }
+
+  /// Priority and message code for the answers (danger signs are always an emergency).
+  Future<({String priority, String message})> triageAssess(
+    Map<String, Object> answers,
+  ) async {
+    final body = await _json('POST', '/triage/assess', body: answers);
+    return (
+      priority: body['priority'] as String,
+      message: body['message'] as String,
+    );
+  }
+
+  /// Asks the nurse desk for a call back; returns a message code.
+  Future<String> requestCallback({
+    required String reason,
+    required String language,
+    String? priority,
+  }) async {
+    final body = await _json(
+      'POST',
+      '/callback',
+      body: {'reason': reason, 'language': language, 'priority': ?priority},
+    );
+    return body['code'] as String? ?? 'callback_booked';
+  }
 
   /// Sends the photo to /read. The photo is only held in memory for the request.
   Future<ReadResult> read(

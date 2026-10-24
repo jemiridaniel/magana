@@ -595,4 +595,109 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get adultsOnly => 'Wannan na manya ne (shekara 18 zuwa sama).';
+
+  @override
+  String get healthWorkerTitle => 'Yi magana da ma\'aikacin lafiya';
+
+  @override
+  String get healthWorkerSubtitle =>
+      'Ma\'aikaciyar jinya ko mai sayar da magani za ta kira ka';
+
+  @override
+  String get helpWithTitle => 'Me kake buƙatar taimako a kai?';
+
+  @override
+  String get reasonMedicine => 'Fahimtar maganina';
+
+  @override
+  String get reasonResults => 'Fahimtar sakamakona';
+
+  @override
+  String get reasonOther => 'Wani abu daban';
+
+  @override
+  String get callLanguage => 'Harshen kiran';
+
+  @override
+  String get answerIbaFirst => 'Amsa \'yan tambayoyi na gaggawa tukuna (Ibà)';
+
+  @override
+  String get requestCallback => 'Nemi a kira ka';
+
+  @override
+  String get emergencyBold => 'Gaggawa?';
+
+  @override
+  String get emergencyText => 'Kada ka jira a kira ka. Kira 112 yanzu.';
+
+  @override
+  String get call112 => 'Kira 112';
+
+  @override
+  String get quickCheckTitle => 'Gwajin lafiya na gaggawa';
+
+  @override
+  String quickCheckProgress(int n, int total) {
+    return 'Ibà · tambaya ta $n cikin $total';
+  }
+
+  @override
+  String get yes => 'Eh';
+
+  @override
+  String get no => 'A\'a';
+
+  @override
+  String daysCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'kwanaki $count',
+      one: 'kwana 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get moreDays => 'Ƙara kwana ɗaya';
+
+  @override
+  String get fewerDays => 'Rage kwana ɗaya';
+
+  @override
+  String get nextLabel => 'Na gaba';
+
+  @override
+  String get quickCheckNote =>
+      'Amsoshinka suna taimaka wa ma\'aikaciyar jinya ta yanke yadda za ta kira ka da sauri. Ibà ba ta gano cuta. Idan kana da alamun haɗari, Magana za ta ce ka je asibiti yanzu.';
+
+  @override
+  String get resultTitle => 'Sakamakonka';
+
+  @override
+  String get checkingAnswers => 'Ina duba amsoshinka.';
+
+  @override
+  String get backHome => 'Koma gida';
+
+  @override
+  String get msg_callback_booked =>
+      'An tsara kiran. Ma\'aikaciyar jinya ko mai sayar da magani za ta kira ka.';
+
+  @override
+  String get msg_callback_unavailable =>
+      'Ba a fara kiran dawowa ba tukuna. Idan kana buƙatar taimako yanzu, je asibiti ko ka kira 112.';
+
+  @override
+  String quickCheckProgressFallback(int n, int total) {
+    return 'Gwajin tsaro na ciki · tambaya ta $n cikin $total';
+  }
+
+  @override
+  String get resultUrgent =>
+      'Ya kamata ma\'aikaciyar jinya ta kira ka cikin awa 2. Nemi a kira ka yanzu. Idan ka ƙara rashin lafiya, je asibiti ko ka kira 112.';
+
+  @override
+  String get resultRoutine =>
+      'Ma\'aikaciyar jinya za ta iya kiran ka a lokacin aiki. Nemi a kira ka. Idan ka ƙara rashin lafiya, je asibiti ko ka kira 112.';
 }

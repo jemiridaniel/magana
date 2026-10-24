@@ -1061,6 +1061,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This is for adults (18 and over).'**
   String get adultsOnly;
+
+  /// No description provided for @healthWorkerTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to a health worker'**
+  String get healthWorkerTitle;
+
+  /// No description provided for @healthWorkerSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A nurse or pharmacist calls you back'**
+  String get healthWorkerSubtitle;
+
+  /// No description provided for @helpWithTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you need help with?'**
+  String get helpWithTitle;
+
+  /// No description provided for @reasonMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Understanding my medicine'**
+  String get reasonMedicine;
+
+  /// No description provided for @reasonResults.
+  ///
+  /// In en, this message translates to:
+  /// **'Understanding my results'**
+  String get reasonResults;
+
+  /// No description provided for @reasonOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get reasonOther;
+
+  /// No description provided for @callLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Language for the call'**
+  String get callLanguage;
+
+  /// No description provided for @answerIbaFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer a few quick questions first (Ibà)'**
+  String get answerIbaFirst;
+
+  /// No description provided for @requestCallback.
+  ///
+  /// In en, this message translates to:
+  /// **'Request a call back'**
+  String get requestCallback;
+
+  /// No description provided for @emergencyBold.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency?'**
+  String get emergencyBold;
+
+  /// No description provided for @emergencyText.
+  ///
+  /// In en, this message translates to:
+  /// **'Do not wait for a call back. Call 112 now.'**
+  String get emergencyText;
+
+  /// No description provided for @call112.
+  ///
+  /// In en, this message translates to:
+  /// **'Call 112'**
+  String get call112;
+
+  /// No description provided for @quickCheckTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Quick health check'**
+  String get quickCheckTitle;
+
+  /// No description provided for @quickCheckProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'Powered by Ibà · question {n} of {total}'**
+  String quickCheckProgress(int n, int total);
+
+  /// No description provided for @yes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes'**
+  String get yes;
+
+  /// No description provided for @no.
+  ///
+  /// In en, this message translates to:
+  /// **'No'**
+  String get no;
+
+  /// No description provided for @daysCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 day} other{{count} days}}'**
+  String daysCount(int count);
+
+  /// No description provided for @moreDays.
+  ///
+  /// In en, this message translates to:
+  /// **'One more day'**
+  String get moreDays;
+
+  /// No description provided for @fewerDays.
+  ///
+  /// In en, this message translates to:
+  /// **'One day fewer'**
+  String get fewerDays;
+
+  /// No description provided for @nextLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get nextLabel;
+
+  /// No description provided for @quickCheckNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your answers help the nurse decide how soon to call you. Ibà does not diagnose. If you have danger signs, Magana tells you to go to a clinic now.'**
+  String get quickCheckNote;
+
+  /// No description provided for @resultTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your result'**
+  String get resultTitle;
+
+  /// No description provided for @checkingAnswers.
+  ///
+  /// In en, this message translates to:
+  /// **'Checking your answers.'**
+  String get checkingAnswers;
+
+  /// No description provided for @backHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to home'**
+  String get backHome;
+
+  /// No description provided for @msg_callback_booked.
+  ///
+  /// In en, this message translates to:
+  /// **'Your call back is booked. A nurse or pharmacist will call you.'**
+  String get msg_callback_booked;
+
+  /// Said when no nurse desk is connected: never promise a call nobody will make.
+  ///
+  /// In en, this message translates to:
+  /// **'Call backs are not available yet. If you need help now, go to a clinic or call 112.'**
+  String get msg_callback_unavailable;
+
+  /// Shown when Ibà is unreachable and Magana asks its own danger-sign questions.
+  ///
+  /// In en, this message translates to:
+  /// **'Built-in safety check · question {n} of {total}'**
+  String quickCheckProgressFallback(int n, int total);
+
+  /// CLINICAL DRAFT. Quick-check result before any call is booked: never says a call is coming.
+  ///
+  /// In en, this message translates to:
+  /// **'A nurse should call you within 2 hours. Request a call back now. If you get worse, go to a clinic or call 112.'**
+  String get resultUrgent;
+
+  /// CLINICAL DRAFT. Quick-check result before any call is booked: never says a call is coming.
+  ///
+  /// In en, this message translates to:
+  /// **'A nurse can call you back during working hours. Request a call back. If you get worse, go to a clinic or call 112.'**
+  String get resultRoutine;
 }
 
 class _AppLocalizationsDelegate

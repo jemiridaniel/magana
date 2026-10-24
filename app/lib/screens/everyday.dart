@@ -6,6 +6,7 @@ import '../papers.dart';
 import '../policy.dart';
 import '../widgets.dart';
 import 'capture.dart';
+import 'health_worker.dart';
 
 /// Everyday papers hub (18+): medicine labels, medical reports, bank statements.
 class EverydayScreen extends StatefulWidget {
@@ -43,7 +44,15 @@ class _EverydayScreenState extends State<EverydayScreen> {
                 MaterialPageRoute(builder: (_) => CaptureScreen(paper: paper)),
               ),
             ),
+        if (profile.can(Feature.healthCallback))
+          ChoiceCard(
+            title: l.talkToNurse,
+            detail: l.talkToNurseDetail,
+            leading: const Icon(Icons.support_agent, size: 34),
+            onTap: () => openHealthWorker(context),
+          ),
         NoteBox(text: l.everydayPrivacy, kind: NoteKind.privacy),
+        const EmergencyBanner(),
       ],
     );
   }

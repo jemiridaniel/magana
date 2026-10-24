@@ -77,6 +77,7 @@ class HomeScreen extends StatelessWidget {
                                 builder: (_) => const EverydayScreen(),
                               ),
                             ),
+                            soon: false,
                           ),
                       ],
                     ),
@@ -346,10 +347,11 @@ class _ReadPageButton extends StatelessWidget {
 }
 
 class _Tile {
-  const _Tile(this.icon, this.label, this.onPressed);
+  const _Tile(this.icon, this.label, this.onPressed, {this.soon = true});
   final IconData icon;
   final String label;
   final VoidCallback onPressed;
+  final bool soon; // not built yet: TalkBack says "Coming soon"
 }
 
 class _TileGrid extends StatelessWidget {
@@ -363,7 +365,7 @@ class _TileGrid extends StatelessWidget {
       child: Semantics(
         button: true,
         label: t.label,
-        hint: hint,
+        hint: t.soon ? hint : null,
         excludeSemantics: true,
         onTap: t.onPressed,
         child: OutlinedButton(

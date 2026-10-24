@@ -590,4 +590,109 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get adultsOnly => 'Èyí wà fún àgbàlagbà (ọdún 18 sókè).';
+
+  @override
+  String get healthWorkerTitle => 'Bá òṣìṣẹ́ ìlera sọ̀rọ̀';
+
+  @override
+  String get healthWorkerSubtitle =>
+      'Nọ́ọ̀sì tàbí oníṣègùn òògùn yóò pè ọ́ padà';
+
+  @override
+  String get helpWithTitle => 'Kí ni o nílò ìrànlọ́wọ́ fún?';
+
+  @override
+  String get reasonMedicine => 'Òye òògùn mi';
+
+  @override
+  String get reasonResults => 'Òye àbájáde mi';
+
+  @override
+  String get reasonOther => 'Nǹkan mìíràn';
+
+  @override
+  String get callLanguage => 'Èdè fún ìpè náà';
+
+  @override
+  String get answerIbaFirst => 'Kọ́kọ́ dáhùn ìbéèrè kíákíá díẹ̀ (Ibà)';
+
+  @override
+  String get requestCallback => 'Béèrè kí wọ́n pè ọ́ padà';
+
+  @override
+  String get emergencyBold => 'Pàjáwìrì?';
+
+  @override
+  String get emergencyText => 'Má ṣe dúró kí wọ́n pè ọ́ padà. Pe 112 báyìí.';
+
+  @override
+  String get call112 => 'Pe 112';
+
+  @override
+  String get quickCheckTitle => 'Àyẹ̀wò ìlera kíákíá';
+
+  @override
+  String quickCheckProgress(int n, int total) {
+    return 'Ibà · ìbéèrè $n nínú $total';
+  }
+
+  @override
+  String get yes => 'Bẹ́ẹ̀ ni';
+
+  @override
+  String get no => 'Rárá';
+
+  @override
+  String daysCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'ọjọ́ $count',
+      one: 'ọjọ́ 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get moreDays => 'Ọjọ́ kan sí i';
+
+  @override
+  String get fewerDays => 'Ọjọ́ kan dín';
+
+  @override
+  String get nextLabel => 'Èyí tó kàn';
+
+  @override
+  String get quickCheckNote =>
+      'Ìdáhùn rẹ ń ran nọ́ọ̀sì lọ́wọ́ láti mọ bí ó ṣe yára tó láti pè ọ́. Ibà kì í ṣe àyẹ̀wò àìsàn. Bí o bá ní àmì ewu, Magana yóò sọ fún ọ pé kí o lọ sí ilé-ìwòsàn báyìí.';
+
+  @override
+  String get resultTitle => 'Àbájáde rẹ';
+
+  @override
+  String get checkingAnswers => 'Mo ń ṣàyẹ̀wò ìdáhùn rẹ.';
+
+  @override
+  String get backHome => 'Padà sí ilé';
+
+  @override
+  String get msg_callback_booked =>
+      'A ti ṣètò ìpè rẹ. Nọ́ọ̀sì tàbí oníṣègùn òògùn yóò pè ọ́.';
+
+  @override
+  String get msg_callback_unavailable =>
+      'Ìpè padà kò tíì sí. Bí o bá nílò ìrànlọ́wọ́ báyìí, lọ sí ilé-ìwòsàn tàbí pe 112.';
+
+  @override
+  String quickCheckProgressFallback(int n, int total) {
+    return 'Àyẹ̀wò ààbò inú áàpù · ìbéèrè $n nínú $total';
+  }
+
+  @override
+  String get resultUrgent =>
+      'Ó yẹ kí nọ́ọ̀sì pè ọ́ láàrin wákàtí 2. Béèrè kí wọ́n pè ọ́ padà báyìí. Bí ara rẹ bá burú sí i, lọ sí ilé-ìwòsàn tàbí pe 112.';
+
+  @override
+  String get resultRoutine =>
+      'Nọ́ọ̀sì lè pè ọ́ padà ní àkókò iṣẹ́. Béèrè kí wọ́n pè ọ́ padà. Bí ara rẹ bá burú sí i, lọ sí ilé-ìwòsàn tàbí pe 112.';
 }

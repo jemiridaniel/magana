@@ -419,5 +419,71 @@
   "noteReport": "Numbers and ranges are read exactly as printed. Magana does not interpret results: only your health worker can explain what they mean for you.",
   "noteStatement": "Amounts are read exactly as printed. This statement is not saved. Magana never asks for your PIN or password. If an amount is unclear, check it with your bank or a trusted person.",
   "askPharmacistOrNurse": "Ask a pharmacist or nurse",
-  "adultsOnly": "This is for adults (18 and over)."
+  "adultsOnly": "This is for adults (18 and over).",
+  "healthWorkerTitle": "Talk to a health worker",
+  "healthWorkerSubtitle": "A nurse or pharmacist calls you back",
+  "helpWithTitle": "What do you need help with?",
+  "reasonMedicine": "Understanding my medicine",
+  "reasonResults": "Understanding my results",
+  "reasonOther": "Something else",
+  "callLanguage": "Language for the call",
+  "answerIbaFirst": "Answer a few quick questions first (Ibà)",
+  "requestCallback": "Request a call back",
+  "emergencyBold": "Emergency?",
+  "emergencyText": "Do not wait for a call back. Call 112 now.",
+  "call112": "Call 112",
+  "quickCheckTitle": "Quick health check",
+  "quickCheckProgress": "Powered by Ibà · question {n} of {total}",
+  "@quickCheckProgress": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "yes": "Yes",
+  "no": "No",
+  "daysCount": "{count, plural, =1{1 day} other{{count} days}}",
+  "@daysCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "moreDays": "One more day",
+  "fewerDays": "One day fewer",
+  "nextLabel": "Next",
+  "quickCheckNote": "Your answers help the nurse decide how soon to call you. Ibà does not diagnose. If you have danger signs, Magana tells you to go to a clinic now.",
+  "resultTitle": "Your result",
+  "checkingAnswers": "Checking your answers.",
+  "backHome": "Back to home",
+  "msg_callback_booked": "Your call back is booked. A nurse or pharmacist will call you.",
+  "msg_callback_unavailable": "Call backs are not available yet. If you need help now, go to a clinic or call 112.",
+  "@msg_callback_unavailable": {
+    "description": "Said when no nurse desk is connected: never promise a call nobody will make."
+  },
+  "quickCheckProgressFallback": "Built-in safety check · question {n} of {total}",
+  "@quickCheckProgressFallback": {
+    "description": "Shown when Ibà is unreachable and Magana asks its own danger-sign questions.",
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "resultUrgent": "A nurse should call you within 2 hours. Request a call back now. If you get worse, go to a clinic or call 112.",
+  "@resultUrgent": {
+    "description": "CLINICAL DRAFT. Quick-check result before any call is booked: never says a call is coming."
+  },
+  "resultRoutine": "A nurse can call you back during working hours. Request a call back. If you get worse, go to a clinic or call 112.",
+  "@resultRoutine": {
+    "description": "CLINICAL DRAFT. Quick-check result before any call is booked: never says a call is coming."
+  }
 }

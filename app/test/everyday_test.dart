@@ -87,6 +87,11 @@ void main() {
     (tester) async {
       final handle = tester.ensureSemantics();
       final (speaker, bodies) = await start(tester, Tier.standard);
+      // Built now, so TalkBack must not call the tile "Coming soon".
+      expect(
+        tester.getSemantics(find.bySemanticsLabel('Everyday papers')).hint,
+        isEmpty,
+      );
       await tap(tester, RegExp('^Everyday papers'));
       expect(find.text(en.everydaySubtitle), findsOneWidget);
       expectAccessible(tester, 'Everyday hub');
@@ -101,7 +106,7 @@ void main() {
       expect(speaker.said.last, contains(en.noteMedicine));
       expectAccessible(tester, 'Medicine reader');
       await tap(tester, en.askPharmacistOrNurse);
-      expect(speaker.said.last, en.comingSoon(en.talkToNurse));
+      expect(find.text(en.healthWorkerTitle), findsOneWidget);
       handle.dispose();
     },
   );

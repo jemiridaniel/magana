@@ -44,6 +44,8 @@ ENGLISH = {
     "q_too_weak": "Are you too weak to sit up or stand without help?",
     "go_to_clinic_now": "This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.",
     "nurse_call_within_2_hours": "Thank you. A nurse will call you within 2 hours.",
+    "callback_booked": "Your call back is booked. A nurse or pharmacist will call you.",
+    "callback_unavailable": "Call backs are not available yet. If you need help now, go to a clinic or call 112.",
     "nurse_call_working_hours": "Thank you. A nurse will call you back during working hours.",
 }
 

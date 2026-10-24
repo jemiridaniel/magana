@@ -248,8 +248,15 @@ class _ReaderScreenState extends State<ReaderScreen> {
                           const SizedBox(height: 12),
                           SecondaryButton(
                             label: l.askPharmacistOrNurse,
-                            onTap: () => openHealthWorker(context),
+                            onTap: () => openHealthWorker(
+                              context,
+                              reason: paper == Paper.report
+                                  ? 'results'
+                                  : 'medicine',
+                            ),
                           ),
+                          const SizedBox(height: 12),
+                          const EmergencyBanner(),
                         ],
                       ],
                     ],

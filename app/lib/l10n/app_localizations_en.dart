@@ -592,4 +592,108 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get adultsOnly => 'This is for adults (18 and over).';
+
+  @override
+  String get healthWorkerTitle => 'Talk to a health worker';
+
+  @override
+  String get healthWorkerSubtitle => 'A nurse or pharmacist calls you back';
+
+  @override
+  String get helpWithTitle => 'What do you need help with?';
+
+  @override
+  String get reasonMedicine => 'Understanding my medicine';
+
+  @override
+  String get reasonResults => 'Understanding my results';
+
+  @override
+  String get reasonOther => 'Something else';
+
+  @override
+  String get callLanguage => 'Language for the call';
+
+  @override
+  String get answerIbaFirst => 'Answer a few quick questions first (Ibà)';
+
+  @override
+  String get requestCallback => 'Request a call back';
+
+  @override
+  String get emergencyBold => 'Emergency?';
+
+  @override
+  String get emergencyText => 'Do not wait for a call back. Call 112 now.';
+
+  @override
+  String get call112 => 'Call 112';
+
+  @override
+  String get quickCheckTitle => 'Quick health check';
+
+  @override
+  String quickCheckProgress(int n, int total) {
+    return 'Powered by Ibà · question $n of $total';
+  }
+
+  @override
+  String get yes => 'Yes';
+
+  @override
+  String get no => 'No';
+
+  @override
+  String daysCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days',
+      one: '1 day',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get moreDays => 'One more day';
+
+  @override
+  String get fewerDays => 'One day fewer';
+
+  @override
+  String get nextLabel => 'Next';
+
+  @override
+  String get quickCheckNote =>
+      'Your answers help the nurse decide how soon to call you. Ibà does not diagnose. If you have danger signs, Magana tells you to go to a clinic now.';
+
+  @override
+  String get resultTitle => 'Your result';
+
+  @override
+  String get checkingAnswers => 'Checking your answers.';
+
+  @override
+  String get backHome => 'Back to home';
+
+  @override
+  String get msg_callback_booked =>
+      'Your call back is booked. A nurse or pharmacist will call you.';
+
+  @override
+  String get msg_callback_unavailable =>
+      'Call backs are not available yet. If you need help now, go to a clinic or call 112.';
+
+  @override
+  String quickCheckProgressFallback(int n, int total) {
+    return 'Built-in safety check · question $n of $total';
+  }
+
+  @override
+  String get resultUrgent =>
+      'A nurse should call you within 2 hours. Request a call back now. If you get worse, go to a clinic or call 112.';
+
+  @override
+  String get resultRoutine =>
+      'A nurse can call you back during working hours. Request a call back. If you get worse, go to a clinic or call 112.';
 }

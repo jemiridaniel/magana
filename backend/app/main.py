@@ -10,7 +10,11 @@ import os
 from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
-from pydantic import BaseModel
+import logging
+from typing import Literal
+
+import httpx
+from pydantic import BaseModel, ConfigDict
 
 from . import policy, safety, triage
 from .iba_client import IbaClient, IbaUnavailable
@@ -42,6 +46,8 @@ async def _probe_iba(interval: float) -> None:
                 iba_monitor.failure(str(e))
         await asyncio.sleep(interval)
 
+
+log = logging.getLogger("magana.api")
 
 app = FastAPI(
     lifespan=lifespan,
@@ -163,3 +169,34 @@ async def triage_assess(answers: dict, iba: IbaClient | None = Depends(get_iba))
     # Answers are health information: they are passed to Ibà and never logged or stored.
     r = await triage.assess(answers, iba)
     return {"priority": r.priority.value, "message": r.message, "rule_version": r.rule_version, "source": r.source}
+
+
+
+class CallbackRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    reason: Literal["medicine", "results", "other"]
+    language: Literal["en", "ha", "yo", "ig"]
+    priority: Literal["emergency", "urgent", "routine"] | None = None  # from the Ibà quick check
+
+
+@app.post("/callback", dependencies=[Depends(health_caller)])
+async def request_callback(body: CallbackRequest) -> dict:
+    """Ask a nurse or pharmacist to call back.
+
+    Forwarded to the nurse desk at MAGANA_CALLBACK_URL. Until one is connected this
+    says so (callback_unavailable) instead of promising a call nobody will make.
+    No personal details are logged.
+    """
+    url = os.environ.get("MAGANA_CALLBACK_URL", "").strip()
+    if not url:
+        raise HTTPException(503, {"code": "callback_unavailable"})
+    try:
+        async with httpx.AsyncClient(timeout=3) as client:
+            r = await client.post(url, json=body.model_dump())
+            r.raise_for_status()
+    except httpx.HTTPError as e:
+        log.error("callback desk failed: %s", type(e).__name__)
+        raise HTTPException(503, {"code": "callback_unavailable"})
+    log.info("callback booked reason=%s priority=%s", body.reason, body.priority)
+    return {"code": "callback_booked"}
