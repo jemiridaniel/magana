@@ -1671,4 +1671,16 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get msg_session_code_invalid =>
       'Koodu nnọkọ ahụ ezighi ezi. Lelee ya na ọdụ ndị nkuzi.';
+
+  @override
+  String get msg_paper_lines =>
+      'Anaghị eji AI akọwa akwụkwọ ahụike na nke ego. A na-agụ ahịrị ọ bụla kpọmkwem, n\'asụsụ gị naanị ebe enwere ntụgharị a lelere.';
+
+  @override
+  String get msg_cant_translate_line_health =>
+      'Enweghị m ike ịtụgharị ahịrị a n\'enweghị nsogbu. Biko jụọ onye na-ere ọgwụ (pharmacist).';
+
+  @override
+  String get msg_cant_translate_line_money =>
+      'Enweghị m ike ịtụgharị ahịrị a n\'enweghị nsogbu. Biko jụọ mmadụ n\'ụlọ akụ gị.';
 }

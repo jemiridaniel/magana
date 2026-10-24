@@ -1675,4 +1675,16 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get msg_session_code_invalid =>
       'Wannan lambar zaman ba daidai ba ce. Duba ta a shafin malamai.';
+
+  @override
+  String get msg_paper_lines =>
+      'Ba a bayyana takardun lafiya da na kuɗi da AI. Ana karanta kowane layi daidai yadda yake, da harshenka kawai inda aka tabbatar da fassara.';
+
+  @override
+  String get msg_cant_translate_line_health =>
+      'Ba zan iya fassara wannan layin lafiya ba. Don Allah ka tambayi mai harhaɗa magani.';
+
+  @override
+  String get msg_cant_translate_line_money =>
+      'Ba zan iya fassara wannan layin lafiya ba. Don Allah ka tambayi wani a bankinka.';
 }

@@ -18,7 +18,7 @@ from typing import Literal
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import asr, curriculum, explain, policy, quizzes, ratelimit, safety, triage
+from . import asr, curriculum, explain, policy, quizzes, ratelimit, safety, templates, triage
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
 from .messages import CodedError
@@ -193,6 +193,17 @@ class ExplainRequest(BaseModel):
     question: str | None = None
     lang: Literal["en", "ha", "yo", "ig"] = "en"
     style: Literal["explain", "simpler", "example"] = "explain"
+    # school: N-ATLaS, numbers as placeholders. health, money, letter: never a model,
+    # only approved phrase templates (templates.py).
+    mode: Literal["school", "health", "money", "letter"] = "school"
+
+
+EXPLAIN_FEATURE = {
+    "school": policy.Feature.EXPLAIN,
+    "health": policy.Feature.EVERYDAY_HEALTH,
+    "money": policy.Feature.EVERYDAY_MONEY,
+    "letter": policy.Feature.EVERYDAY_LETTERS,
+}
 
 
 @lru_cache(maxsize=1)
@@ -207,13 +218,19 @@ def explain_page(body: ExplainRequest, tier: policy.Tier = Depends(caller_tier),
     """An explanation of page text, always through the verbatim-number guard (CLAUDE.md
     rule 1). If the guard fails or the model is unavailable, the app reads the page instead.
     Guided learners (13-17) get a curriculum-only prompt."""
-    require(tier, policy.Feature.EXPLAIN)
+    require(tier, EXPLAIN_FEATURE[body.mode])
     if not body.source_text.strip() or len(body.source_text) > explain.MAX_SOURCE_CHARS:
         raise HTTPException(400, {"code": "explain_bad_source"})
     if not explain.allowed(engine):
-        # Tester and production builds: no page text leaves for an unapproved host.
+        # Tester and production builds: Explain stays off (no page text leaves for an
+        # unapproved host, and the templates are not yet approved either).
         return {"code": "explain_not_available", "explanation": None, "read_instead": body.source_text,
                 "preview": False}
+    if body.mode != "school":
+        # Health and money papers: no model, ever. Approved templates or English as printed.
+        t = templates.translate(body.source_text, body.lang, body.mode)
+        return {"code": "paper_lines", "explanation": None, "read_instead": None, "preview": False,
+                "lines": t["lines"], "fallback": t["fallback"]}
     r = explain.explain(engine, body.source_text, body.question, body.lang, body.style,
                         guided=tier is policy.Tier.GUIDED)
     return {"code": r.code, "explanation": r.explanation, "read_instead": r.read_instead,

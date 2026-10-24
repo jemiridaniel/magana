@@ -2723,6 +2723,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That session code isn\'t right. Check it in the teacher portal.'**
   String get msg_session_code_invalid;
+
+  /// No description provided for @msg_paper_lines.
+  ///
+  /// In en, this message translates to:
+  /// **'Health and money papers aren\'t explained by AI. Each line is read exactly, in your language only where a checked translation exists.'**
+  String get msg_paper_lines;
+
+  /// CLINICAL DRAFT, pending Dr. Amos: said after a health-paper line read in English because no clinically approved template matched.
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t translate this line safely. Please ask a pharmacist.'**
+  String get msg_cant_translate_line_health;
+
+  /// No description provided for @msg_cant_translate_line_money.
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t translate this line safely. Please ask someone at your bank.'**
+  String get msg_cant_translate_line_money;
 }
 
 class _AppLocalizationsDelegate

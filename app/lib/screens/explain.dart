@@ -15,7 +15,16 @@ import 'capture.dart';
 /// answer comes through the backend's number guard; when the guard fails, the
 /// page text is read instead (CLAUDE.md rule 1).
 class ExplainScreen extends StatefulWidget {
-  const ExplainScreen({super.key, required this.lines, required this.source});
+  const ExplainScreen({
+    super.key,
+    required this.lines,
+    required this.source,
+    this.mode = 'school',
+  });
+
+  /// school, or health / money / letter: those papers are never explained by a
+  /// model; each line is read as printed or from an approved translation.
+  final String mode;
 
   /// The page as Magana read it, one line or row each, with unclear numbers
   /// already said as "unclear number". Empty when opened from Home.
@@ -70,6 +79,7 @@ class _ExplainScreenState extends State<ExplainScreen> {
         language: _language,
         question: _question,
         style: style,
+        mode: widget.mode,
       );
       if (!mounted) return;
       setState(() => _answer = a);
@@ -77,7 +87,7 @@ class _ExplainScreenState extends State<ExplainScreen> {
         [
           if (_question != null && a.preview) _l.explainQuestionPreview,
           messageFor(_l, a.code),
-          a.spoken,
+          a.spoken((code) => messageFor(_l, code)),
         ].join(' '),
       );
     } on ApiException catch (e) {
@@ -260,7 +270,7 @@ class _ExplainScreenState extends State<ExplainScreen> {
                   ),
                   const SizedBox(height: 10),
                   Text(
-                    answer.spoken,
+                    answer.spoken((code) => messageFor(l, code)),
                     style: const TextStyle(fontSize: 19, height: 1.45),
                   ),
                   const Divider(height: 24),

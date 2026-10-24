@@ -23,7 +23,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "backend"))
 
-from app import explain, safety  # noqa: E402
+from app import explain, placeholders, safety, templates  # noqa: E402
 
 
 def engine_from(args) -> explain.Engine:
@@ -36,6 +36,16 @@ def engine_from(args) -> explain.Engine:
     raise SystemExit(f"unknown engine {args.engine}")
 
 
+# Which pages are health or money papers: those never reach the model (templates.py).
+PAGE_MODE = {
+    "04_medicine_label": "health",
+    "05_malaria_leaflet": "health",
+    "06_bank_statement": "money",
+    "08_electricity_bill": "money",
+    "09_vaccination_card": "health",
+}
+
+
 def run(args) -> None:
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
@@ -46,28 +56,53 @@ def run(args) -> None:
     for lang in langs:
         for page in pages:
             text = page.read_text().strip()
+            mode = PAGE_MODE.get(page.stem, "school")
+            if mode != "school":
+                used = templates.translate(text, lang, mode)
+                drafts = templates.translate(text, lang, mode, statuses=set(templates.STATUSES))
+                row = {
+                    "page": page.stem, "lang": lang, "mode": mode, "model_called": False,
+                    "sentences": len(used["lines"]),
+                    "translated_approved": sum(l["text"] is not None for l in used["lines"]),
+                    "would_match_drafts": sum(l["text"] is not None for l in drafts["lines"]) if lang != "en" else None,
+                    "lines": used["lines"], "fallback": used["fallback"], "blocked": False, "problems": [],
+                    "seconds": 0.0, "error": None, "source": text, "raw_answer": "", "explanation": "",
+                }
+                rows.append(row)
+                print(f"{lang} {page.stem:22} paper ({mode}): model not called; "
+                      f"{row['translated_approved']}/{row['sentences']} approved, drafts would cover "
+                      f"{row['would_match_drafts']}", flush=True)
+                continue
             parts = explain.sections(text)
             system = explain.system_prompt(lang, guided=False)
-            answers, unsupported, t0, error = [], [], time.monotonic(), None
+            raws, finals, problems, t0, error = [], [], [], time.monotonic(), None
             for n, section in enumerate(parts, 1):
+                masked = placeholders.mask(section)
+                markers = [f"⟦N{k}⟧" for k in range(1, len(masked.slots) + 1)]
                 try:
-                    answer = engine.complete(
-                        system, explain.user_prompt(section, None, "explain", (n, len(parts))), args.timeout
+                    raw = engine.complete(
+                        system, explain.user_prompt(masked.text, None, "explain", (n, len(parts)), markers),
+                        args.timeout,
                     ).strip()
                 except explain.ExplainUnavailable as e:
                     error = str(e)
                     break
-                answers.append(answer)
-                unsupported += safety.guard_explanation(section, answer).unsupported
+                final, found = explain.check_answer(raw, masked, None, lang)
+                if not found and not safety.guard_explanation(section, final).ok:
+                    found = [placeholders.Problem("old_guard")]
+                raws.append(raw)
+                finals.append(final)
+                problems += [{"code": p.code, "detail": p.detail} for p in found]
             seconds = round(time.monotonic() - t0, 2)
             row = {
-                "page": page.stem, "lang": lang, "engine": args.engine, "model": args.model,
-                "explanation": "\n\n".join(answers), "rejected_by_guard": bool(unsupported),
-                "numbers_not_on_page": unsupported, "error": error, "seconds": seconds,
+                "page": page.stem, "lang": lang, "mode": "school", "model_called": True,
+                "raw_answer": "\n\n".join(raws), "explanation": "" if problems else "\n\n".join(finals),
+                "blocked": bool(problems), "problems": problems, "error": error, "seconds": seconds,
                 "sections": len(parts), "source": text,
             }
             rows.append(row)
-            flag = "ERROR" if error else ("REJECTED " + ",".join(unsupported) if unsupported else "ok")
+            flag = "ERROR" if error else ("BLOCKED " + ", ".join(sorted({p["code"] for p in problems}))
+                                          if problems else "ok")
             print(f"{lang} {page.stem:22} {seconds:6.1f}s  {flag}", flush=True)
 
     with open(out / "outputs.jsonl", "w") as f:
@@ -77,37 +112,52 @@ def run(args) -> None:
     summary = {}
     for lang in langs:
         mine = [r for r in rows if r["lang"] == lang]
-        answered = [r for r in mine if not r["error"]]
-        rejected = [r for r in answered if r["rejected_by_guard"]]
+        school = [r for r in mine if r["mode"] == "school" and not r["error"]]
+        papers = [r for r in mine if r["mode"] != "school"]
+        blocked = [r for r in school if r["blocked"]]
+        reasons: dict[str, int] = {}
+        for r in blocked:
+            for code in {p["code"] for p in r["problems"]}:
+                reasons[code] = reasons.get(code, 0) + 1
         summary[lang] = {
-            "pages": len(mine),
-            "answered": len(answered),
-            "errors": len(mine) - len(answered),
-            "rejected_by_guard": len(rejected),
-            "number_change_rate": round(len(rejected) / len(answered), 3) if answered else None,
-            "median_seconds": statistics.median([r["seconds"] for r in answered]) if answered else None,
-            "rejected_pages": [r["page"] for r in rejected],
+            "school_pages": len(school),
+            "blocked": len(blocked),
+            "passed": len(school) - len(blocked),
+            "blocked_pages": [r["page"] for r in blocked],
+            "block_reasons": dict(sorted(reasons.items())),
+            "paper_pages": len(papers),
+            "paper_model_calls": sum(r["model_called"] for r in papers),
+            "paper_sentences": sum(r["sentences"] for r in papers),
+            "paper_translated_approved": sum(r["translated_approved"] for r in papers),
+            "paper_would_match_drafts": (sum(r["would_match_drafts"] for r in papers) if lang != "en" else None),
+            "median_seconds": statistics.median([r["seconds"] for r in school]) if school else None,
+            "errors": sum(1 for r in mine if r["error"]),
         }
         with open(out / f"ratings_{lang}.csv", "w", newline="") as f:
             w = csv.writer(f)
-            w.writerow(["page", "source_page", "explanation", "rejected_by_guard",
-                        "fluency_1_5", "faithful_to_page_1_5", "numbers_kept_yes_no",
+            w.writerow(["page", "mode", "source_page", "model_answer_with_placeholders", "explanation_spoken",
+                        "blocked", "block_reasons", "fluency_1_5", "faithful_to_page_1_5",
                         "harmful_or_advice_yes_no", "rater_id", "notes"])
             for r in mine:
-                w.writerow([r["page"], r["source"], r["explanation"], r["rejected_by_guard"],
-                            "", "", "", "", "", ""])
+                w.writerow([r["page"], r["mode"], r["source"], r["raw_answer"], r["explanation"], r["blocked"],
+                            " ".join(sorted({p["code"] for p in r["problems"]})), "", "", "", "", ""])
 
-    meta = {"engine": args.engine, "model": args.model, "url_kind": args.engine,
+    meta = {"engine": args.engine, "model": args.model, "design": "placeholders + templates",
             "temperature": explain.TEMPERATURE, "repetition_penalty": explain.REPETITION_PENALTY,
             "note": args.note}
     (out / "summary.json").write_text(json.dumps({"run": meta, "by_language": summary}, indent=2,
                                                  ensure_ascii=False))
-    lines = [f"# Explanation benchmark: {args.engine} {args.model}", "", args.note or "", "",
-             "| Language | Pages | Answered | Rejected by guard | Number-change rate | Median s |",
-             "|---|---|---|---|---|---|"]
+    lines = [f"# Explanation benchmark: {args.engine} {args.model} (placeholders + templates)", "",
+             args.note or "", "",
+             "| Language | School pages | Blocked | Passed | Block reasons | Paper pages: model calls | "
+             "Paper sentences: approved / drafts would cover / total |",
+             "|---|---|---|---|---|---|---|"]
     for lang, s in summary.items():
-        lines.append(f"| {lang} | {s['pages']} | {s['answered']} | {s['rejected_by_guard']} | "
-                     f"{s['number_change_rate']} | {s['median_seconds']} |")
+        reasons = ", ".join(f"{k} {v}" for k, v in s["block_reasons"].items()) or "—"
+        lines.append(f"| {lang} | {s['school_pages']} | {s['blocked']} | {s['passed']} | {reasons} | "
+                     f"{s['paper_model_calls']} | {s['paper_translated_approved']} / "
+                     f"{s['paper_would_match_drafts'] if s['paper_would_match_drafts'] is not None else '—'} / "
+                     f"{s['paper_sentences']} |")
     lines += ["", "Unreviewed: fluency and faithfulness need native-speaker ratings (ratings_<lang>.csv)."]
     (out / "summary.md").write_text("\n".join(lines) + "\n")
     print("\n".join(lines))

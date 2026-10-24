@@ -1669,4 +1669,16 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get msg_session_code_invalid =>
       'Kóòdù ìpàdé yẹn kò tọ̀nà. Ṣàyẹ̀wò rẹ̀ ní ojú-òpó olùkọ́.';
+
+  @override
+  String get msg_paper_lines =>
+      'A kì í fi AI ṣàlàyé ìwé ìlera àti ti owó. A ń ka ìlà kọ̀ọ̀kan gẹ́lẹ́, ní èdè rẹ níbi tí ìtumọ̀ tí a ti yẹ̀wò bá wà nìkan.';
+
+  @override
+  String get msg_cant_translate_line_health =>
+      'Mi ò lè túmọ̀ ìlà yìí láìléwu. Jọ̀wọ́ bi oníṣègùn òyìnbó (pharmacist) léèrè.';
+
+  @override
+  String get msg_cant_translate_line_money =>
+      'Mi ò lè túmọ̀ ìlà yìí láìléwu. Jọ̀wọ́ bi ẹnìkan ní báǹkì rẹ léèrè.';
 }

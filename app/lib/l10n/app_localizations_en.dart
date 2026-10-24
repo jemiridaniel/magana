@@ -1671,4 +1671,16 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get msg_session_code_invalid =>
       'That session code isn\'t right. Check it in the teacher portal.';
+
+  @override
+  String get msg_paper_lines =>
+      'Health and money papers aren\'t explained by AI. Each line is read exactly, in your language only where a checked translation exists.';
+
+  @override
+  String get msg_cant_translate_line_health =>
+      'I can\'t translate this line safely. Please ask a pharmacist.';
+
+  @override
+  String get msg_cant_translate_line_money =>
+      'I can\'t translate this line safely. Please ask someone at your bank.';
 }

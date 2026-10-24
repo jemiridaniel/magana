@@ -211,6 +211,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
               if (!item.isFaint) _body(item),
           ],
           source: widget.paper?.title(_l) ?? _l.yourPage,
+          mode: widget.paper?.mode ?? 'school',
         ),
       ),
     );

@@ -39,6 +39,10 @@ ENGLISH = {
     "explain_not_available": "Explain isn't available yet. Here is the page, read exactly as printed.",
     "explain_unavailable": "Explanations aren't available right now. Here is the page, read exactly as printed.",
     "explain_bad_source": "There is no page text to explain. Please read a page first.",
+    # Health and money papers are never explained by a model (templates.py).
+    "paper_lines": "Health and money papers aren't explained by AI. Each line is read exactly, in your language only where a checked translation exists.",
+    "cant_translate_line_health": "I can't translate this line safely. Please ask a pharmacist.",
+    "cant_translate_line_money": "I can't translate this line safely. Please ask someone at your bank.",
     # Ibà quick check. The Ibà service owns this wording (iba-natlas, backend/app/questions.py,
     # pending clinical sign-off by Dr. Amos); these are the fallback copies, kept identical.
     "q_fever": "Do you have a fever, or does your body feel very hot?",

@@ -1,0 +1,321 @@
+{
+  "domain": "health",
+  "kind": "medicine_label",
+  "review": "DRAFT. Hausa, Yorùbá and Igbo written by the developer: every phrase needs a native speaker's review, then Dr. Oluba Amos's clinical approval, before Magana uses it. Until a translation's status is clinically_approved it is never used.",
+  "templates": [
+    {
+      "id": "take_times_a_day",
+      "en": [
+        "Take {a} tablets {b} times a day",
+        "Take {a} tablet {b} times a day",
+        "Take {a} tablets {b} times daily"
+      ],
+      "translations": {
+        "ha": {
+          "text": "Sha ƙwaya {a} sau {b} a rana.",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Lo tábúlẹ́ẹ̀tì {a} ní ìgbà {b} lójúmọ́.",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Ṅụọ mkpụrụ ọgwụ {a} ugboro {b} n'ụbọchị.",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "take_range_every_range_hours_as_needed",
+      "en": [
+        "Take {a} to {b} tablets every {c} to {d} hours as needed"
+      ],
+      "translations": {
+        "ha": {
+          "text": "Sha ƙwaya {a} zuwa {b} duk bayan sa'o'i {c} zuwa {d} gwargwadon bukata.",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Lo tábúlẹ́ẹ̀tì {a} sí {b} ní gbogbo wákàtí {c} sí {d} bí ó bá ṣe pọn dandan.",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Ṅụọ mkpụrụ ọgwụ {a} ruo {b} kwa awa {c} ruo {d} dịka achọrọ.",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "take_every_hours",
+      "en": [
+        "Take {a} tablets every {b} hours",
+        "Take {a} tablet every {b} hours"
+      ],
+      "translations": {
+        "ha": {
+          "text": "Sha ƙwaya {a} duk bayan sa'o'i {b}.",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Lo tábúlẹ́ẹ̀tì {a} ní gbogbo wákàtí {b}.",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Ṅụọ mkpụrụ ọgwụ {a} kwa awa {b}.",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "not_more_than_in_hours",
+      "en": [
+        "Do not take more than {a} tablets in {b} hours"
+      ],
+      "translations": {
+        "ha": {
+          "text": "Kada ka sha fiye da ƙwaya {a} cikin sa'o'i {b}.",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Má ṣe lo ju tábúlẹ́ẹ̀tì {a} lọ láàrin wákàtí {b}.",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Ewerela karịa mkpụrụ ọgwụ {a} n'ime awa {b}.",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "after_meals",
+      "en": [
+        "Take after meals",
+        "Take after food"
+      ],
+      "translations": {
+        "ha": {
+          "text": "A sha bayan cin abinci.",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Lò ó lẹ́yìn oúnjẹ.",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Ṅụọ ya mgbe i richara nri.",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "before_meals",
+      "en": [
+        "Take before meals",
+        "Take before food"
+      ],
+      "translations": {
+        "ha": {
+          "text": "A sha kafin cin abinci.",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Lò ó ṣáájú oúnjẹ.",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Ṅụọ ya tupu i rie nri.",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "swallow_whole_with_water",
+      "en": [
+        "Swallow whole with water"
+      ],
+      "translations": {
+        "ha": {
+          "text": "A haɗiye shi duka da ruwa.",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Gbé e mì lódidi pẹ̀lú omi.",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Loo ya dum na mmiri.",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "do_not_chew_or_crush",
+      "en": [
+        "Do not chew or crush"
+      ],
+      "translations": {
+        "ha": {
+          "text": "Kada a tauna shi ko a niƙa shi.",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Má ṣe jẹ ẹ́ tàbí lọ̀ ọ́.",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Atala ya, egwerekwala ya.",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "shake_well",
+      "en": [
+        "Shake well before use"
+      ],
+      "translations": {
+        "ha": {
+          "text": "A girgiza shi sosai kafin amfani.",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Mì ín dáadáa kí o tó lò ó.",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Kpatụọ ya nke ọma tupu i jiri ya.",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "keep_from_children",
+      "en": [
+        "Keep out of the reach of children",
+        "Keep out of reach of children"
+      ],
+      "translations": {
+        "ha": {
+          "text": "A ajiye shi nesa da hannun yara.",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Fi pamọ́ sí ibi tí ọwọ́ àwọn ọmọdé kò ti lè tó o.",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Debe ya ebe aka ụmụaka na-agaghị eru.",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "store_below_degrees",
+      "en": [
+        "Store below {a} degrees C",
+        "Store below {a}°C",
+        "Store below {a} °C",
+        "Store below {a} degrees Celsius"
+      ],
+      "translations": {
+        "ha": {
+          "text": "A ajiye shi ƙasa da digiri {a} na Celsius.",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Tọ́jú rẹ̀ ní ìsàlẹ̀ ìwọ̀n {a} Celsius.",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Chekwaa ya n'okpuru ogo {a} Celsius.",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "store_cool_dry",
+      "en": [
+        "Store in a cool dry place",
+        "Store in a cool, dry place"
+      ],
+      "translations": {
+        "ha": {
+          "text": "A ajiye shi a wuri mai sanyi da bushewa.",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Tọ́jú rẹ̀ sí ibi tí ó tutù tí ó sì gbẹ.",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Chekwaa ya n'ebe dị jụụ ma kpọọ nkụ.",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "expiry_date",
+      "en": [
+        "Expiry date: {a}",
+        "Expiry date {a}",
+        "Exp: {a}",
+        "Exp {a}",
+        "Expiry: {a}"
+      ],
+      "translations": {
+        "ha": {
+          "text": "Ranar ƙarewa: {a}",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Ọjọ́ tí yóò parí: {a}",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Ụbọchị ọ ga-agwụ: {a}",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "adults_and_children_over_years",
+      "en": [
+        "Adults and children over {a} years"
+      ],
+      "translations": {
+        "ha": {
+          "text": "Manya da yara sama da shekara {a}",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Àwọn àgbàlagbà àti ọmọdé tí ó ju ọdún {a} lọ",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Ndị okenye na ụmụaka karịrị afọ {a}",
+          "status": "draft"
+        }
+      }
+    },
+    {
+      "id": "external_use_only",
+      "en": [
+        "For external use only"
+      ],
+      "translations": {
+        "ha": {
+          "text": "Don amfani a waje kawai.",
+          "status": "draft"
+        },
+        "yo": {
+          "text": "Fún lílò ní ara òde nìkan.",
+          "status": "draft"
+        },
+        "ig": {
+          "text": "Maka iji n'akpụkpọ ahụ naanị.",
+          "status": "draft"
+        }
+      }
+    }
+  ]
+}

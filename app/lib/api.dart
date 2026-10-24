@@ -242,20 +242,42 @@ class TriageQuestion {
   final String? askIf; // only asked when this question was answered yes
 }
 
+/// One sentence of a health or money paper: its translation from an approved
+/// template, or null (then it is read in English, as printed, with a warning).
+class PaperLine {
+  const PaperLine(this.source, this.text);
+  final String source; // as printed
+  final String? text;
+}
+
 class Explanation {
   const Explanation({
     required this.code,
     required this.text,
     required this.readInstead,
     required this.preview,
+    this.lines = const [],
+    this.fallback,
   });
-  final String code; // explain_preview | explained | numbers_unconfirmed
+  final String
+  code; // explain_preview | explained | numbers_unconfirmed | paper_lines
   final String? text; // the explanation, when it passed the guard
   final String? readInstead; // the page text, when it did not
   final bool preview; // no model yet: the page text itself
 
-  /// What to show and say: never an explanation the guard rejected.
-  String get spoken => text ?? readInstead ?? '';
+  /// Health and money papers (never a model): sentence by sentence.
+  final List<PaperLine> lines;
+
+  /// The code said after a line with no approved translation.
+  final String? fallback;
+
+  /// What to show and say: never an explanation the guard rejected. For papers,
+  /// [word] turns the fallback code into the user's language.
+  String spoken([String Function(String code)? word]) {
+    if (lines.isEmpty) return text ?? readInstead ?? '';
+    final warn = fallback == null || word == null ? '' : ' ${word(fallback!)}';
+    return [for (final l in lines) l.text ?? '${l.source}$warn'].join('\n');
+  }
 }
 
 class ApiException implements Exception {
@@ -384,6 +406,8 @@ class MaganaApi {
     required String language,
     String? question,
     String style = 'explain',
+    String mode =
+        'school', // health, money, letter: templates only, never a model
   }) async {
     final body = await _json(
       'POST',
@@ -393,12 +417,18 @@ class MaganaApi {
         'lang': language,
         'question': ?question,
         'style': style,
+        'mode': mode,
       },
     );
     return Explanation(
       code: body['code'] as String,
       text: body['explanation'] as String?,
       readInstead: body['read_instead'] as String?,
+      lines: [
+        for (final l in (body['lines'] as List? ?? const []).cast<Map>())
+          PaperLine(l['source'] as String, l['text'] as String?),
+      ],
+      fallback: body['fallback'] as String?,
       preview: body['preview'] == true,
     );
   }
