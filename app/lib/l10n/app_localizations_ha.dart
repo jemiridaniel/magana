@@ -702,11 +702,8 @@ class AppLocalizationsHa extends AppLocalizations {
       'Ma\'aikaciyar jinya za ta iya kiran ka a lokacin aiki. Nemi a kira ka. Idan ka ƙara rashin lafiya, je asibiti ko ka kira 112.';
 
   @override
-  String get quizTitle => 'Gwajin Biology';
-
-  @override
   String quizProgress(int n, int total) {
-    return 'Irin WAEC · Tambaya ta $n cikin $total';
+    return 'Tambaya ta $n cikin $total';
   }
 
   @override
@@ -715,7 +712,9 @@ class AppLocalizationsHa extends AppLocalizations {
   }
 
   @override
-  String get quizSayAnswer => 'Faɗi A, B, C ko D';
+  String quizSayAnswer(String letters) {
+    return 'Faɗi $letters';
+  }
 
   @override
   String get quizListening => 'Ina saurare… Taɓa don tsayawa';
@@ -731,13 +730,14 @@ class AppLocalizationsHa extends AppLocalizations {
   }
 
   @override
-  String quizUnclear(String heard) {
-    return 'Na ji “$heard”. Don Allah faɗi A, B, C ko D.';
+  String quizUnclear(String heard, String letters) {
+    return 'Na ji “$heard”. Don Allah faɗi $letters.';
   }
 
   @override
-  String get quizNothingHeard =>
-      'Ban ji amsa ba. Faɗi A, B, C ko D, ko ka taɓa amsa sau biyu.';
+  String quizNothingHeard(String letters) {
+    return 'Ban ji amsa ba. Faɗi $letters, ko ka taɓa amsa sau biyu.';
+  }
 
   @override
   String get quizRepeat => 'Maimaita tambaya';
@@ -767,10 +767,6 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get quizAgain => 'Sake gwadawa';
-
-  @override
-  String get quizSource =>
-      'Ƙungiyar Magana ce ta rubuta tambayoyin irin na WAEC Biology. Ba tsofaffin tambayoyi ba ne. Tambayoyin da Turanci suke.';
 
   @override
   String get skillsSubtitle => 'Gajerun darussa na murya, a saurinka';
@@ -1544,12 +1540,14 @@ class AppLocalizationsHa extends AppLocalizations {
       'Har yanzu ba a iya amsa da murya a wannan na\'urar ba. Taɓa amsa maimakon haka.';
 
   @override
-  String get quizVoiceUnavailableWeb =>
-      'Har yanzu ba a iya amsa da murya a wannan na\'urar ba. Taɓa ko danna amsa, ko ka danna A, B, C ko D a kan madannai.';
+  String quizVoiceUnavailableWeb(String letters) {
+    return 'Har yanzu ba a iya amsa da murya a wannan na\'urar ba. Taɓa ko danna amsa, ko ka danna $letters a kan madannai.';
+  }
 
   @override
-  String get quizKeysHint =>
-      'Taɓa ko danna amsa, ko ka danna A, B, C ko D a kan madannai.';
+  String quizKeysHint(String letters) {
+    return 'Taɓa ko danna amsa, ko ka danna $letters a kan madannai.';
+  }
 
   @override
   String get quizKeysHintTrueFalse =>
@@ -1560,4 +1558,95 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get startMagana => 'Fara Magana';
+
+  @override
+  String get classTitle => 'A wane aji kake?';
+
+  @override
+  String get classBody =>
+      'Magana za ta zaɓi tambayoyin gwaji na ajinka. Malami zai iya canza shi daga baya.';
+
+  @override
+  String get classNotInSchool => 'Ba na makaranta';
+
+  @override
+  String get classGroupPrimary => 'Makarantar firamare';
+
+  @override
+  String get classGroupJss => 'Ƙaramar sakandare';
+
+  @override
+  String get classGroupSss => 'Babbar sakandare';
+
+  @override
+  String get classroomChooseClass => 'Malami: zaɓi ajin wannan zaman';
+
+  @override
+  String get classroomNeedsClass => 'Zaɓi ajin tukuna.';
+
+  @override
+  String get settingsClass => 'Ajina';
+
+  @override
+  String get settingsChangeClass => 'Canza aji (malami)';
+
+  @override
+  String get changeClassConfirmTitle =>
+      'Malami ne kaɗai ya kamata ya canza aji. Kai malami ne?';
+
+  @override
+  String get changeClassYes => 'Ee, ni malami ne';
+
+  @override
+  String quizYourClass(String name) {
+    return 'Ajinka: $name';
+  }
+
+  @override
+  String get quizFromTeacher => 'Daga malaminka';
+
+  @override
+  String get quizSamples => 'Tambayoyin misali';
+
+  @override
+  String quizCount(int n) {
+    return 'Tambayoyi $n';
+  }
+
+  @override
+  String get quizChooseClassHint =>
+      'Zaɓi ajinka don samun tambayoyinsa. Malami zai iya saita shi a Saituna.';
+
+  @override
+  String get quizSampleNote =>
+      'Tambayoyin misali da ƙungiyar Magana ta rubuta. Ba tsofaffin tambayoyi ba ne, kuma malami zai duba su. Tambayoyin da Turanci suke.';
+
+  @override
+  String get quizTeacherNote => 'Malaminka ne ya yi shi.';
+
+  @override
+  String quizSubjectTitle(String subject) {
+    return 'Gwajin $subject';
+  }
+
+  @override
+  String quizCorrectPrimary(String letter) {
+    return 'Madalla! Ka zaɓi $letter.';
+  }
+
+  @override
+  String quizWrongPrimary(String answer) {
+    return 'Ka yi ƙoƙari! Amsar ita ce $answer.';
+  }
+
+  @override
+  String quizPicture(String description) {
+    return 'Hoto: $description';
+  }
+
+  @override
+  String get msg_unknown_level => 'Don Allah ka sake zaɓar ajinka a Saituna.';
+
+  @override
+  String get quizOr => 'ko';
 }

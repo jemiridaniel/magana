@@ -1,0 +1,122 @@
+{
+  "id": "primary_4_6-mathematics-sample",
+  "title": "Mathematics practice",
+  "band": "primary_4_6",
+  "subject": "mathematics",
+  "sample": true,
+  "language": "en",
+  "source": "Written by the Magana team. Our own wording; not past questions. CC BY 4.0.",
+  "review": "Sample: to be reviewed by a Mathematics teacher before testing with learners.",
+  "questions": [
+    {
+      "id": "primary_4_6-mathematics-1",
+      "question": "What is 9 times 7?",
+      "options": [
+        "63",
+        "56",
+        "72"
+      ],
+      "answer": 0,
+      "explanation": "9 times 7 is 63."
+    },
+    {
+      "id": "primary_4_6-mathematics-2",
+      "question": "What is 100 minus 45?",
+      "options": [
+        "65",
+        "55",
+        "45"
+      ],
+      "answer": 1,
+      "explanation": "100 minus 45 is 55."
+    },
+    {
+      "id": "primary_4_6-mathematics-3",
+      "question": "What is half of 50?",
+      "options": [
+        "20",
+        "30",
+        "25"
+      ],
+      "answer": 2,
+      "explanation": "Half of 50 is 25."
+    },
+    {
+      "id": "primary_4_6-mathematics-4",
+      "question": "How many minutes are in one hour?",
+      "options": [
+        "60",
+        "100",
+        "30"
+      ],
+      "answer": 0,
+      "explanation": "One hour has 60 minutes."
+    },
+    {
+      "id": "primary_4_6-mathematics-5",
+      "question": "What is three quarters as a decimal?",
+      "options": [
+        "0.5",
+        "0.75",
+        "0.25"
+      ],
+      "answer": 1,
+      "explanation": "Three quarters is 0.75."
+    },
+    {
+      "id": "primary_4_6-mathematics-6",
+      "question": "A square has sides of 4 centimetres. What is its perimeter?",
+      "options": [
+        "8 centimetres",
+        "12 centimetres",
+        "16 centimetres"
+      ],
+      "answer": 2,
+      "explanation": "Four sides of 4 centimetres make 16 centimetres."
+    },
+    {
+      "id": "primary_4_6-mathematics-7",
+      "question": "Which of these is a prime number?",
+      "options": [
+        "7",
+        "9",
+        "12"
+      ],
+      "answer": 0,
+      "explanation": "7 can only be divided by 1 and by 7."
+    },
+    {
+      "id": "primary_4_6-mathematics-8",
+      "question": "What is 25 percent of 100?",
+      "options": [
+        "50",
+        "25",
+        "75"
+      ],
+      "answer": 1,
+      "explanation": "25 percent of 100 is 25."
+    },
+    {
+      "id": "primary_4_6-mathematics-9",
+      "question": "Round 48 to the nearest ten.",
+      "options": [
+        "40",
+        "45",
+        "50"
+      ],
+      "answer": 2,
+      "explanation": "48 is nearer to 50 than to 40."
+    },
+    {
+      "id": "primary_4_6-mathematics-10",
+      "question": "Ada has 500 naira. She spends 200 naira. How much is left?",
+      "options": [
+        "300 naira",
+        "200 naira",
+        "700 naira"
+      ],
+      "answer": 0,
+      "explanation": "500 minus 200 is 300."
+    }
+  ]
+}

@@ -16,9 +16,9 @@ import logging
 from typing import Literal
 
 import httpx
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, Field
 
-from . import asr, explain, policy, ratelimit, safety, triage
+from . import asr, curriculum, explain, policy, quizzes, ratelimit, safety, triage
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
 from .messages import CodedError
@@ -93,7 +93,7 @@ async def require_api_key(request, call_next):
 app.add_middleware(
     CORSMiddleware,
     allow_origin_regex=os.environ.get("MAGANA_CORS_ORIGIN_REGEX", r"http://(localhost|127\.0\.0\.1)(:\d+)?"),
-    allow_methods=["GET", "POST"],
+    allow_methods=["GET", "POST", "PUT"],  # PUT: the portal saves changes to a quiz
     allow_headers=["*"],
 )
 
@@ -249,6 +249,92 @@ async def transcribe(file: UploadFile = File(...), lang: Literal["en", "ha", "yo
     if asr.looped(text):
         text = ""  # treated as heard nothing: the app asks again, then offers tapping
     return {"text": text.strip(), "engine": engine.name}
+
+
+# ---------- quizzes: teacher-made, assigned to a class, read by learners at that level
+
+@lru_cache(maxsize=1)
+def get_quiz_store() -> quizzes.QuizStore:
+    return quizzes.default_store()
+
+
+def teacher(x_magana_teacher_key: str = Header("")) -> None:
+    """Quiz writes reach children, and the app's API key is public, so the portal also sends
+    MAGANA_TEACHER_KEY (until teachers sign in). Unset: only development servers accept writes."""
+    key = os.environ.get("MAGANA_TEACHER_KEY", "")
+    if not key:
+        if explain.deployment() != "development":
+            raise HTTPException(503, {"code": "teacher_portal_off"})
+        return
+    if not hmac.compare_digest(x_magana_teacher_key.encode(), key.encode()):
+        raise HTTPException(401, {"code": "teacher_key_required"})
+
+
+def _with_problems(quiz: quizzes.Quiz) -> dict:
+    return {"quiz": quiz.model_dump(), "problems": [p.model_dump() for p in quizzes.check(quiz)]}
+
+
+def _quiz(store: quizzes.QuizStore, quiz_id: str) -> quizzes.Quiz:
+    try:
+        return store.get(quiz_id)
+    except KeyError:
+        raise HTTPException(404, {"code": "quiz_not_found"})
+
+
+class Assign(BaseModel):
+    session: str = Field(..., min_length=1, max_length=120)
+
+
+@app.get("/curriculum")
+def get_curriculum() -> dict:
+    """Class levels and subjects (the app and portal carry copies; a test compares them)."""
+    return curriculum.as_json()
+
+
+@app.get("/quizzes", dependencies=[Depends(teacher)])
+def list_quizzes(class_id: str | None = None, store: quizzes.QuizStore = Depends(get_quiz_store)) -> list[dict]:
+    return [_with_problems(q) for q in store.all() if class_id in (None, q.class_id)]
+
+
+@app.post("/quizzes", dependencies=[Depends(teacher)], status_code=201)
+def create_quiz(body: quizzes.QuizIn, store: quizzes.QuizStore = Depends(get_quiz_store)) -> dict:
+    """Saved as a draft whatever its problems; only assigning needs it ready."""
+    return _with_problems(store.create(body))
+
+
+@app.get("/quizzes/{quiz_id}", dependencies=[Depends(teacher)])
+def get_quiz(quiz_id: str, store: quizzes.QuizStore = Depends(get_quiz_store)) -> dict:
+    return _with_problems(_quiz(store, quiz_id))
+
+
+@app.put("/quizzes/{quiz_id}", dependencies=[Depends(teacher)])
+def update_quiz(quiz_id: str, body: quizzes.QuizIn, store: quizzes.QuizStore = Depends(get_quiz_store)) -> dict:
+    _quiz(store, quiz_id)
+    return _with_problems(store.update(quiz_id, body))
+
+
+@app.post("/quizzes/{quiz_id}/assign", dependencies=[Depends(teacher)])
+def assign_quiz(quiz_id: str, body: Assign, store: quizzes.QuizStore = Depends(get_quiz_store)) -> dict:
+    """Refused while any blocking problem is left: no right answer, a picture without a
+    description, too few or too many options."""
+    quiz = _quiz(store, quiz_id)
+    problems = quizzes.check(quiz)
+    if any(p.blocking for p in problems):
+        raise HTTPException(422, {"code": "quiz_not_ready", "problems": [p.model_dump() for p in problems]})
+    return _with_problems(store.assign(quiz_id, body.session))
+
+
+@app.get("/learner/quizzes")
+def learner_quizzes(level: str, tier: policy.Tier = Depends(caller_tier),
+                    store: quizzes.QuizStore = Depends(get_quiz_store)) -> dict:
+    """Assigned quizzes for this class level. Until learners join a class with a code, every
+    learner at the level sees them; quizzes hold no learner data. Under 13: only in a
+    teacher-run session (caller_tier checks it)."""
+    require(tier, policy.Feature.QUIZ)
+    if not curriculum.is_level(level):
+        raise HTTPException(422, {"code": "unknown_level"})
+    return {"quizzes": [quizzes.for_learner(q) for q in store.all()
+                        if q.status == "assigned" and q.level == level and quizzes.ready(q)]}
 
 
 def get_iba() -> IbaClient | None:

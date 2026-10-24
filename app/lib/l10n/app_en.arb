@@ -486,8 +486,7 @@
   "@resultRoutine": {
     "description": "CLINICAL DRAFT. Quick-check result before any call is booked: never says a call is coming."
   },
-  "quizTitle": "Biology practice",
-  "quizProgress": "WAEC-style · Question {n} of {total}",
+  "quizProgress": "Question {n} of {total}",
   "@quizProgress": {
     "placeholders": {
       "n": {
@@ -509,7 +508,7 @@
       }
     }
   },
-  "quizSayAnswer": "Say A, B, C or D",
+  "quizSayAnswer": "Say {letters}",
   "quizListening": "Listening… Tap to stop",
   "quizCorrect": "Correct! You chose {letter}.",
   "@quizCorrect": {
@@ -531,16 +530,18 @@
       }
     }
   },
-  "quizUnclear": "I heard “{heard}”. Please say A, B, C or D.",
+  "quizUnclear": "I heard “{heard}”. Please say {letters}.",
   "@quizUnclear": {
-    "description": "Never guess: repeat what was heard and ask again",
     "placeholders": {
       "heard": {
+        "type": "String"
+      },
+      "letters": {
         "type": "String"
       }
     }
   },
-  "quizNothingHeard": "I did not hear an answer. Say A, B, C or D, or double tap an answer.",
+  "quizNothingHeard": "I did not hear an answer. Say {letters}, or double tap an answer.",
   "quizRepeat": "Repeat question",
   "quizNext": "Next question",
   "quizFinish": "See my result",
@@ -560,7 +561,6 @@
     }
   },
   "quizAgain": "Practise again",
-  "quizSource": "Questions written by the Magana team in the style of WAEC Biology. They are not past questions. The questions are in English.",
   "skillsSubtitle": "Short spoken lessons, at your pace",
   "nextLesson": "Next lesson · {minutes} min",
   "@nextLesson": {
@@ -1049,12 +1049,113 @@
   "msg_too_many_requests": "Magana is busy right now. Please wait a minute and try again.",
   "remindersNeedApp": "Reminders need the Android or iPhone app. In a web browser Magana can't ring at the right time.",
   "quizVoiceUnavailable": "Voice answers aren't available on this device yet. Tap an answer instead.",
-  "quizVoiceUnavailableWeb": "Voice answers aren't available on this device yet. Tap or click an answer, or press A, B, C or D on your keyboard.",
-  "quizKeysHint": "Tap or click an answer, or press A, B, C or D on your keyboard.",
+  "quizVoiceUnavailableWeb": "Voice answers aren't available on this device yet. Tap or click an answer, or press {letters} on your keyboard.",
+  "quizKeysHint": "Tap or click an answer, or press {letters} on your keyboard.",
   "quizKeysHintTrueFalse": "Tap or click true or false, or press A for true or B for false.",
   "quizTapAnswer": "Tap an answer.",
   "startMagana": "Start Magana",
   "@startMagana": {
     "description": "Web only: the one full-screen button shown until the first press, because browsers won't speak before it."
+  },
+  "classTitle": "Which class are you in?",
+  "classBody": "Magana picks practice questions for your class. A teacher can change it later.",
+  "classNotInSchool": "I'm not in school",
+  "classGroupPrimary": "Primary school",
+  "classGroupJss": "Junior secondary",
+  "classGroupSss": "Senior secondary",
+  "classroomChooseClass": "Teacher: choose the class for this session",
+  "classroomNeedsClass": "Choose the class first.",
+  "settingsClass": "My class",
+  "settingsChangeClass": "Change class (teacher)",
+  "changeClassConfirmTitle": "Only a teacher should change the class. Are you a teacher?",
+  "changeClassYes": "Yes, I'm a teacher",
+  "quizYourClass": "Your class: {name}",
+  "@quizYourClass": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "quizFromTeacher": "From your teacher",
+  "quizSamples": "Sample questions",
+  "quizCount": "{n} questions",
+  "@quizCount": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      }
+    }
+  },
+  "quizChooseClassHint": "Choose your class to get questions for it. A teacher can set it in Settings.",
+  "quizSampleNote": "Sample questions written by the Magana team. They are not past questions, and a teacher will check them. The questions are in English.",
+  "quizTeacherNote": "Made by your teacher.",
+  "quizSubjectTitle": "{subject} practice",
+  "@quizSubjectTitle": {
+    "placeholders": {
+      "subject": {
+        "type": "String"
+      }
+    }
+  },
+  "quizCorrectPrimary": "Well done! You chose {letter}.",
+  "@quizCorrectPrimary": {
+    "description": "Primary 1–6: encouraging",
+    "placeholders": {
+      "letter": {
+        "type": "String"
+      }
+    }
+  },
+  "quizWrongPrimary": "Good try! The answer is {answer}.",
+  "@quizWrongPrimary": {
+    "description": "Primary 1–6: encouraging; answer is the letter and option text",
+    "placeholders": {
+      "answer": {
+        "type": "String"
+      }
+    }
+  },
+  "quizPicture": "Picture: {description}",
+  "@quizPicture": {
+    "placeholders": {
+      "description": {
+        "type": "String"
+      }
+    }
+  },
+  "msg_unknown_level": "Please choose your class again in Settings.",
+  "quizOr": "or",
+  "@quizOr": {
+    "description": "Joins the last two answer letters: A, B or C"
+  },
+  "@quizSayAnswer": {
+    "description": "letters is this question's letters, e.g. 'A, B or C' (two or three for primary classes)",
+    "placeholders": {
+      "letters": {
+        "type": "String"
+      }
+    }
+  },
+  "@quizKeysHint": {
+    "placeholders": {
+      "letters": {
+        "type": "String"
+      }
+    }
+  },
+  "@quizVoiceUnavailableWeb": {
+    "placeholders": {
+      "letters": {
+        "type": "String"
+      }
+    }
+  },
+  "@quizNothingHeard": {
+    "placeholders": {
+      "letters": {
+        "type": "String"
+      }
+    }
   }
 }

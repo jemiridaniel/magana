@@ -3,6 +3,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'curriculum.dart';
 import 'policy.dart';
 
 /// Who is using Magana: their age tier, and (for 13–17) when a guardian agreed.
@@ -13,11 +14,14 @@ class ProfileController extends ChangeNotifier {
     Tier? tier,
     DateTime? consentAt,
     bool teacherSession = false,
+    String? classLevel,
   }) : _tier = tier,
        _consentAt = consentAt,
-       _teacherSession = teacherSession;
+       _teacherSession = teacherSession,
+       _classLevel = classLevel;
 
   Tier? _tier;
+  String? _classLevel;
   DateTime? _consentAt;
   bool _teacherSession;
 
@@ -25,6 +29,13 @@ class ProfileController extends ChangeNotifier {
   bool get onboarded => _tier != null;
   bool get guardianConsent => _consentAt != null;
   bool get teacherSession => _teacherSession;
+
+  /// The learner's class (a curriculum level id such as p5 or jss2), or
+  /// [notInSchool]; null until chosen. Chosen once in onboarding; a teacher
+  /// can change it in Settings. Classroom sessions keep it for the session only.
+  String? get classLevel => _classLevel;
+  ClassLevel? get level => levelById(_classLevel);
+  static const notInSchool = 'none';
 
   /// The tier can be used now: Guided needs consent, Classroom a teacher session.
   bool get active => switch (_tier) {
@@ -45,6 +56,7 @@ class ProfileController extends ChangeNotifier {
 
   static const _tierKey = 'age_tier';
   static const _consentKey = 'guardian_consent_at';
+  static const _classKey = 'class_level';
 
   Future<void> load() async {
     try {
@@ -53,6 +65,7 @@ class ProfileController extends ChangeNotifier {
           .where((t) => t.name == prefs.getString(_tierKey))
           .firstOrNull;
       _consentAt = DateTime.tryParse(prefs.getString(_consentKey) ?? '');
+      _classLevel = prefs.getString(_classKey);
     } catch (_) {
       // Storage unavailable: onboarding runs again.
     }
@@ -71,6 +84,15 @@ class ProfileController extends ChangeNotifier {
       } else {
         await prefs.remove(_consentKey);
       }
+    } catch (_) {}
+  }
+
+  Future<void> setClassLevel(String level) async {
+    _classLevel = level;
+    notifyListeners();
+    if (_tier == Tier.classroom) return; // never saved (CLAUDE.md rule 4)
+    try {
+      await (await SharedPreferences.getInstance()).setString(_classKey, level);
     } catch (_) {}
   }
 

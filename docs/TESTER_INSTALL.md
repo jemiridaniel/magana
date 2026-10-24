@@ -43,7 +43,7 @@ To turn TalkBack off, hold both volume buttons again.
 
 ## 4. First start
 
-1. Open **Magana**. Choose your language, then your age group.
+1. Open **Magana**. Choose your language, your age group, then your class (for example Primary 5 or JSS 2). Adults can choose "I'm not in school". If you chose the wrong class, a teacher can change it in Settings → My class.
 2. When Magana asks for the camera, microphone or notifications, tap **Allow**. Magana does not keep your photos: each page is read and then deleted.
 
 ## 5. What to try
@@ -55,7 +55,7 @@ Please try these, without help from a sighted person if you can:
 3. **A page of schoolwork.** Home → **Read a page**. Try a page with a table if you have one. Use **Previous**, **Repeat** and **Next** to move line by line.
 
 If you have time, also try:
-- **Practice quiz** (answer by voice);
+- **Practice quiz**: choose a subject for your class and answer by voice or by tapping. Questions marked "Sample questions" were written by the Magana team and are waiting for a teacher's check;
 - **Talk to a health worker** → the quick health check;
 - **Settings**.
 

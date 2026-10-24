@@ -5,6 +5,7 @@ import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
 import '../platform.dart';
 import '../quiz.dart';
+import '../speech.dart';
 import '../tasks.dart';
 import '../theme.dart';
 import '../voice_answers.dart' as voice_answers;
@@ -14,6 +15,9 @@ import '../widgets.dart';
 /// Voice quiz: each question and its options are read aloud; the learner says
 /// A, B, C or D, taps an option, or presses A to D on a keyboard, and fixed rules
 /// mark the answer. Whether voice can work is checked before the Say button shows.
+/// Primary 1–6 hear questions a little slower than the learner's own speed.
+const primaryQuizRate = 0.8;
+
 class QuizScreen extends StatefulWidget {
   const QuizScreen({super.key, this.load = Quiz.load});
   final Future<Quiz> Function() load;
@@ -26,6 +30,7 @@ class _QuizScreenState extends State<QuizScreen> {
   late final VoiceInput _voice = voiceInputFor(context);
   bool? _voiceWorks; // checked when the quiz opens
   bool _toldNoVoice = false;
+  double? _rateBefore; // primary mode slows the voice; restored on leaving
   Quiz? _quiz;
   int _index = 0;
   int? _chosen;
@@ -51,24 +56,45 @@ class _QuizScreenState extends State<QuizScreen> {
         _quiz = quiz;
         _voiceWorks = works;
       });
+      if (quiz.primary) {
+        _rateBefore = _speaker.rate;
+        await _speaker.setRate(_speaker.rate * primaryQuizRate);
+      }
       _askCurrent();
     });
   }
 
+  late final Speaker _speaker = AppScope.of(context).speaker;
+
   @override
   void dispose() {
     if (_listening) _voice.stop();
+    if (_rateBefore case final rate?) _speaker.setRate(rate);
     super.dispose();
   }
 
-  String get _progress => _l.quizProgress(_index + 1, _quiz!.questions.length);
+  String get _language => Localizations.localeOf(context).languageCode;
+
+  String get _title {
+    final quiz = _quiz;
+    if (quiz == null) return _l.practiceQuiz;
+    return quiz.teacherMade
+        ? quiz.title
+        : _l.quizSubjectTitle(quiz.subjectName);
+  }
+
+  String get _progress => [
+    if (_quiz!.sample) _l.quizSamples,
+    _l.quizProgress(_index + 1, _quiz!.questions.length),
+  ].join(' · ');
 
   void _say(String text) => AppScope.of(context).speaker.say(text);
 
   void _askCurrent() => _say(
     [
       _progress,
-      _q.question,
+      _q.questionIn(_language),
+      if (_q.picture case final picture?) _l.quizPicture(picture),
       if (!_q.trueFalse)
         for (var i = 0; i < _q.options.length; i++)
           '${letters[i]}, ${_q.options[i]}.',
@@ -76,16 +102,25 @@ class _QuizScreenState extends State<QuizScreen> {
     ].join(' '),
   );
 
-  String get _noVoice =>
-      runningOnWeb ? _l.quizVoiceUnavailableWeb : _l.quizVoiceUnavailable;
+  String get _noVoice => runningOnWeb
+      ? _l.quizVoiceUnavailableWeb(_letters)
+      : _l.quizVoiceUnavailable;
+
+  /// This question's letters: "A or B", "A, B or C", "A, B, C or D".
+  String get _letters {
+    final mine = letters.take(_q.options.length).toList();
+    return mine.length < 2
+        ? mine.join()
+        : '${mine.take(mine.length - 1).join(', ')} ${_l.quizOr} ${mine.last}';
+  }
 
   /// Say it, tap it, or (on the web) press its key. When voice can't work the
   /// first question says so; later ones just say how to answer.
   String _howToAnswer() {
     final tf = _q.trueFalse;
-    final keys = tf ? _l.quizKeysHintTrueFalse : _l.quizKeysHint;
+    final keys = tf ? _l.quizKeysHintTrueFalse : _l.quizKeysHint(_letters);
     if (_voiceWorks == true) {
-      final say = tf ? _l.quizSayTrueFalse : _l.quizSayAnswer;
+      final say = tf ? _l.quizSayTrueFalse : _l.quizSayAnswer(_letters);
       return runningOnWeb ? '$say. $keys' : say;
     }
     if (!_toldNoVoice) {
@@ -95,12 +130,21 @@ class _QuizScreenState extends State<QuizScreen> {
     return runningOnWeb ? keys : _l.quizTapAnswer;
   }
 
+  /// Primary classes hear encouraging words: "Well done!", "Good try!".
   String _verdict(int i) {
     final q = _q;
-    return i == q.answer
-        ? '${_l.quizCorrect(q.spokenAnswer(i))} ${q.explanation}'
-        : '${_l.quizWrong(q.spokenAnswer(i), q.trueFalse ? q.options[q.answer] : '${letters[q.answer]}, ${q.options[q.answer]}')} '
-              '${q.explanation}';
+    final answer = q.trueFalse
+        ? q.options[q.answer]
+        : '${letters[q.answer]}, ${q.options[q.answer]}';
+    final primary = _quiz!.primary;
+    final verdict = i == q.answer
+        ? (primary
+              ? _l.quizCorrectPrimary(q.spokenAnswer(i))
+              : _l.quizCorrect(q.spokenAnswer(i)))
+        : (primary
+              ? _l.quizWrongPrimary(answer)
+              : _l.quizWrong(q.spokenAnswer(i), answer));
+    return [verdict, q.explanation].where((t) => t.isNotEmpty).join(' ');
   }
 
   void _choose(int i) {
@@ -218,7 +262,9 @@ class _QuizScreenState extends State<QuizScreen> {
         _next();
       case Unclear():
         _failed(
-          heard.isEmpty ? _l.quizNothingHeard : _l.quizUnclear(heard.first),
+          heard.isEmpty
+              ? _l.quizNothingHeard(_letters)
+              : _l.quizUnclear(heard.first, _letters),
         );
     }
   }
@@ -242,7 +288,7 @@ class _QuizScreenState extends State<QuizScreen> {
     if (quiz == null) {
       return PageScaffold(
         body: [
-          ScreenHeader(title: l.quizTitle),
+          ScreenHeader(title: _title),
           const Center(child: CircularProgressIndicator()),
         ],
       );
@@ -254,7 +300,7 @@ class _QuizScreenState extends State<QuizScreen> {
       PageScaffold(
         body: [
           ScreenHeader(
-            title: l.quizTitle,
+            title: _title,
             subtitle: _progress,
             trailing: Semantics(
               label: l.quizScoreLabel(_right, _answered),
@@ -283,7 +329,7 @@ class _QuizScreenState extends State<QuizScreen> {
             header: true,
             liveRegion: true,
             child: Text(
-              q.question,
+              q.questionIn(_language),
               style: const TextStyle(
                 fontSize: 25,
                 height: 1.3,
@@ -291,6 +337,8 @@ class _QuizScreenState extends State<QuizScreen> {
               ),
             ),
           ),
+          if (q.picture case final picture?)
+            NoteBox(text: l.quizPicture(picture)),
           for (var i = 0; i < q.options.length; i++)
             _OptionTile(
               letter: letters[i],
@@ -315,7 +363,9 @@ class _QuizScreenState extends State<QuizScreen> {
               liveRegion: true,
               child: NoteBox(text: f.text, kind: f.kind),
             ),
-          NoteBox(text: l.quizSource),
+          NoteBox(
+            text: quiz.teacherMade ? l.quizTeacherNote : l.quizSampleNote,
+          ),
         ],
         bottom: [
           Row(
@@ -342,7 +392,7 @@ class _QuizScreenState extends State<QuizScreen> {
                   ? l.quizSayYesOrNo
                   : q.trueFalse
                   ? l.quizSayTrueFalse
-                  : l.quizSayAnswer,
+                  : l.quizSayAnswer(_letters),
             )
           else
             NoteBox(text: _noVoice),

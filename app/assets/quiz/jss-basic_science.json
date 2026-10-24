@@ -1,0 +1,132 @@
+{
+  "id": "jss-basic_science-sample",
+  "title": "Basic Science practice",
+  "band": "jss",
+  "subject": "basic_science",
+  "sample": true,
+  "language": "en",
+  "source": "Written by the Magana team. Our own wording; not past questions. CC BY 4.0.",
+  "review": "Sample: to be reviewed by a Basic Science teacher before testing with learners.",
+  "questions": [
+    {
+      "id": "jss-basic_science-1",
+      "question": "What is the basic unit of life?",
+      "options": [
+        "The atom",
+        "The organ",
+        "The tissue",
+        "The cell"
+      ],
+      "answer": 3,
+      "explanation": "All living things are made of cells."
+    },
+    {
+      "id": "jss-basic_science-2",
+      "question": "Which part of a cell controls its activities?",
+      "options": [
+        "The cell membrane",
+        "The cytoplasm",
+        "The nucleus",
+        "The vacuole"
+      ],
+      "answer": 2,
+      "explanation": "The nucleus controls the cell's activities."
+    },
+    {
+      "id": "jss-basic_science-3",
+      "question": "At what temperature does pure water boil at sea level?",
+      "options": [
+        "0 degrees Celsius",
+        "100 degrees Celsius",
+        "50 degrees Celsius",
+        "212 degrees Celsius"
+      ],
+      "answer": 1,
+      "explanation": "Pure water boils at 100 degrees Celsius at sea level."
+    },
+    {
+      "id": "jss-basic_science-4",
+      "question": "Which of these is a renewable source of energy?",
+      "options": [
+        "Solar energy",
+        "Coal",
+        "Petrol",
+        "Natural gas"
+      ],
+      "answer": 0,
+      "explanation": "Sunlight does not run out, so solar energy is renewable."
+    },
+    {
+      "id": "jss-basic_science-5",
+      "question": "What is the chemical formula of water?",
+      "options": [
+        "CO2",
+        "O2",
+        "NaCl",
+        "H2O"
+      ],
+      "answer": 3,
+      "explanation": "Water is H2O: two hydrogen atoms and one oxygen atom."
+    },
+    {
+      "id": "jss-basic_science-6",
+      "question": "Which blood vessels carry blood away from the heart?",
+      "options": [
+        "Veins",
+        "Capillaries",
+        "Arteries",
+        "Nerves"
+      ],
+      "answer": 2,
+      "explanation": "Arteries carry blood away from the heart."
+    },
+    {
+      "id": "jss-basic_science-7",
+      "question": "Which force pulls objects towards the earth?",
+      "options": [
+        "Friction",
+        "Gravity",
+        "Magnetism",
+        "Tension"
+      ],
+      "answer": 1,
+      "explanation": "Gravity pulls objects towards the earth."
+    },
+    {
+      "id": "jss-basic_science-8",
+      "question": "In which part of a plant does most photosynthesis happen?",
+      "options": [
+        "The leaf",
+        "The root",
+        "The stem",
+        "The flower"
+      ],
+      "answer": 0,
+      "explanation": "Most photosynthesis happens in the leaves."
+    },
+    {
+      "id": "jss-basic_science-9",
+      "question": "Which of these is a mixture?",
+      "options": [
+        "Oxygen",
+        "Water",
+        "Gold",
+        "Air"
+      ],
+      "answer": 3,
+      "explanation": "Air is a mixture of gases. Water is a compound."
+    },
+    {
+      "id": "jss-basic_science-10",
+      "question": "Which state of matter has a fixed shape?",
+      "options": [
+        "Liquid",
+        "Gas",
+        "Solid",
+        "Vapour"
+      ],
+      "answer": 2,
+      "explanation": "A solid keeps its shape."
+    }
+  ]
+}

@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 const links = [
   { href: "/uploads", label: "Uploads" },
   { href: "/classes", label: "My classes" },
+  { href: "/quizzes/new", label: "Quizzes", section: "/quizzes" },
   { href: "/attendance", label: "Attendance" },
   { href: "/progress", label: "Learner progress" },
   { href: "/consent", label: "Consent records" },
@@ -16,19 +17,27 @@ export default function Sidebar() {
   const pathname = usePathname();
   return (
     <header className="sidebar">
-      <div className="brand">
-        <span className="brand-name">Magana</span>
-        <span className="brand-sub">Teachers</span>
-      </div>
+      <Link className="brand" href="/uploads" aria-label="Magana for Teachers, home">
+        {/* The Magana mark (brand kit, on-ink colours): decorative, the link has its own name. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="brand-mark" src="/brand/magana_mark_on_ink.svg" alt="" width={44} height={44} />
+        <span className="brand-text">
+          <span className="brand-name">Magana</span>
+          <span className="brand-sub">Teachers</span>
+        </span>
+      </Link>
       <nav aria-label="Main">
         <ul className="nav-list">
-          {links.map((l) => (
-            <li key={l.href}>
-              <Link className="nav-link" href={l.href} aria-current={pathname === l.href ? "page" : undefined}>
-                {l.label}
-              </Link>
-            </li>
-          ))}
+          {links.map((l) => {
+            const current = l.section ? pathname.startsWith(l.section) : pathname === l.href;
+            return (
+              <li key={l.href}>
+                <Link className="nav-link" href={l.href} aria-current={current ? "page" : undefined}>
+                  {l.label}
+                </Link>
+              </li>
+            );
+          })}
         </ul>
       </nav>
     </header>

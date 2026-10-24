@@ -1,0 +1,120 @@
+{
+  "id": "primary_1_3-basic_science-sample",
+  "title": "Basic Science practice",
+  "band": "primary_1_3",
+  "subject": "basic_science",
+  "sample": true,
+  "language": "en",
+  "source": "Written by the Magana team. Our own wording; not past questions. CC BY 4.0.",
+  "review": "Sample: to be reviewed by a Basic Science teacher before testing with learners.",
+  "questions": [
+    {
+      "id": "primary_1_3-basic_science-1",
+      "question": "Which part of the body do we use to smell?",
+      "options": [
+        "The nose",
+        "The ear",
+        "The knee"
+      ],
+      "answer": 0,
+      "explanation": "We smell with our nose."
+    },
+    {
+      "id": "primary_1_3-basic_science-2",
+      "question": "Which of these is a living thing?",
+      "options": [
+        "A stone",
+        "A goat",
+        "A spoon"
+      ],
+      "answer": 1,
+      "explanation": "A goat is alive. It eats, grows and breathes."
+    },
+    {
+      "id": "primary_1_3-basic_science-3",
+      "question": "What do plants need to grow?",
+      "options": [
+        "Sand only",
+        "Darkness",
+        "Water and sunlight"
+      ],
+      "answer": 2,
+      "explanation": "Plants need water and sunlight to grow."
+    },
+    {
+      "id": "primary_1_3-basic_science-4",
+      "question": "Which animal lives in water?",
+      "options": [
+        "A fish",
+        "A goat",
+        "A hen"
+      ],
+      "answer": 0,
+      "explanation": "A fish lives in water."
+    },
+    {
+      "id": "primary_1_3-basic_science-5",
+      "question": "What gives us light and heat in the day?",
+      "options": [
+        "The moon",
+        "The sun"
+      ],
+      "answer": 1,
+      "explanation": "The sun gives us light and heat."
+    },
+    {
+      "id": "primary_1_3-basic_science-6",
+      "question": "Which part of the body do we use to hear?",
+      "options": [
+        "The eyes",
+        "The hands",
+        "The ears"
+      ],
+      "answer": 2,
+      "explanation": "We hear with our ears."
+    },
+    {
+      "id": "primary_1_3-basic_science-7",
+      "question": "Which of these can we eat?",
+      "options": [
+        "Rice",
+        "Sand",
+        "Paper"
+      ],
+      "answer": 0,
+      "explanation": "Rice is food. We can eat it."
+    },
+    {
+      "id": "primary_1_3-basic_science-8",
+      "question": "What falls from the clouds when it rains?",
+      "options": [
+        "Sand",
+        "Water",
+        "Leaves"
+      ],
+      "answer": 1,
+      "explanation": "Rain is water falling from the clouds."
+    },
+    {
+      "id": "primary_1_3-basic_science-9",
+      "question": "Which animal gives us milk?",
+      "options": [
+        "A hen",
+        "A fish",
+        "A cow"
+      ],
+      "answer": 2,
+      "explanation": "A cow gives us milk."
+    },
+    {
+      "id": "primary_1_3-basic_science-10",
+      "question": "Why do we wash our hands before we eat?",
+      "options": [
+        "To remove germs",
+        "To make them cold"
+      ],
+      "answer": 0,
+      "explanation": "Washing our hands removes germs that can make us sick."
+    }
+  ]
+}

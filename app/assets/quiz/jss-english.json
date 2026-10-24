@@ -1,0 +1,132 @@
+{
+  "id": "jss-english-sample",
+  "title": "English practice",
+  "band": "jss",
+  "subject": "english",
+  "sample": true,
+  "language": "en",
+  "source": "Written by the Magana team. Our own wording; not past questions. CC BY 4.0.",
+  "review": "Sample: to be reviewed by a English teacher before testing with learners.",
+  "questions": [
+    {
+      "id": "jss-english-1",
+      "question": "Choose the word nearest in meaning to rapid.",
+      "options": [
+        "Slow",
+        "Heavy",
+        "Careful",
+        "Fast"
+      ],
+      "answer": 3,
+      "explanation": "Rapid means fast."
+    },
+    {
+      "id": "jss-english-2",
+      "question": "Neither the teacher nor the pupils blank late. Which word fits?",
+      "options": [
+        "Was",
+        "Is",
+        "Were",
+        "Has"
+      ],
+      "answer": 2,
+      "explanation": "With neither and nor, the verb agrees with the nearer subject, the pupils: were."
+    },
+    {
+      "id": "jss-english-3",
+      "question": "What is the plural of phenomenon?",
+      "options": [
+        "Phenomenons",
+        "Phenomena",
+        "Phenomenas",
+        "Phenomenon"
+      ],
+      "answer": 1,
+      "explanation": "One phenomenon, many phenomena."
+    },
+    {
+      "id": "jss-english-4",
+      "question": "Which of these words is a preposition?",
+      "options": [
+        "Under",
+        "Quickly",
+        "Beautiful",
+        "Sing"
+      ],
+      "answer": 0,
+      "explanation": "Under is a preposition. It shows position."
+    },
+    {
+      "id": "jss-english-5",
+      "question": "Choose the word opposite in meaning to generous.",
+      "options": [
+        "Kind",
+        "Rich",
+        "Polite",
+        "Stingy"
+      ],
+      "answer": 3,
+      "explanation": "Generous and stingy are opposites."
+    },
+    {
+      "id": "jss-english-6",
+      "question": "The wind whispered through the trees. What figure of speech is this?",
+      "options": [
+        "Simile",
+        "Hyperbole",
+        "Personification",
+        "Alliteration"
+      ],
+      "answer": 2,
+      "explanation": "The wind is given a human action, whispering. That is personification."
+    },
+    {
+      "id": "jss-english-7",
+      "question": "What is the past tense of go?",
+      "options": [
+        "Goed",
+        "Went",
+        "Gone",
+        "Going"
+      ],
+      "answer": 1,
+      "explanation": "Today I go. Yesterday I went."
+    },
+    {
+      "id": "jss-english-8",
+      "question": "She has lived here blank 2020. Which word fits?",
+      "options": [
+        "Since",
+        "For",
+        "From",
+        "At"
+      ],
+      "answer": 0,
+      "explanation": "We use since with a point in time, like 2020."
+    },
+    {
+      "id": "jss-english-9",
+      "question": "Which sentence is in the passive voice?",
+      "options": [
+        "Musa kicked the ball.",
+        "Musa is kicking the ball.",
+        "Musa will kick the ball.",
+        "The ball was kicked by Musa."
+      ],
+      "answer": 3,
+      "explanation": "In the passive voice the thing acted on comes first: the ball was kicked by Musa."
+    },
+    {
+      "id": "jss-english-10",
+      "question": "He apologised blank coming late. Which word fits?",
+      "options": [
+        "Of",
+        "On",
+        "For",
+        "With"
+      ],
+      "answer": 2,
+      "explanation": "We apologise for something."
+    }
+  ]
+}

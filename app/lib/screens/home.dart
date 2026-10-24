@@ -17,7 +17,7 @@ import 'reminders.dart';
 import 'settings.dart';
 import 'everyday.dart';
 import 'library.dart';
-import 'quiz.dart';
+import 'quiz_list.dart';
 import 'score.dart';
 import 'skills.dart';
 
@@ -75,7 +75,7 @@ class HomeScreen extends StatelessWidget {
                             l.practiceQuiz,
                             () => Navigator.of(context).push(
                               MaterialPageRoute(
-                                builder: (_) => const QuizScreen(),
+                                builder: (_) => const QuizListScreen(),
                               ),
                             ),
                           ),
@@ -647,7 +647,7 @@ void runCommand(BuildContext context, String transcript) {
     case VoiceCommand.nurse:
       openHealthWorker(context);
     case VoiceCommand.quiz:
-      open(const QuizScreen());
+      open(const QuizListScreen());
     case VoiceCommand.library:
       open(const LibraryScreen());
     case VoiceCommand.skills:

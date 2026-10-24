@@ -1,0 +1,125 @@
+{
+  "levels": [
+    {
+      "id": "p1",
+      "name": "Primary 1",
+      "band": "primary_1_3"
+    },
+    {
+      "id": "p2",
+      "name": "Primary 2",
+      "band": "primary_1_3"
+    },
+    {
+      "id": "p3",
+      "name": "Primary 3",
+      "band": "primary_1_3"
+    },
+    {
+      "id": "p4",
+      "name": "Primary 4",
+      "band": "primary_4_6"
+    },
+    {
+      "id": "p5",
+      "name": "Primary 5",
+      "band": "primary_4_6"
+    },
+    {
+      "id": "p6",
+      "name": "Primary 6",
+      "band": "primary_4_6"
+    },
+    {
+      "id": "jss1",
+      "name": "JSS 1",
+      "band": "jss"
+    },
+    {
+      "id": "jss2",
+      "name": "JSS 2",
+      "band": "jss"
+    },
+    {
+      "id": "jss3",
+      "name": "JSS 3",
+      "band": "jss"
+    },
+    {
+      "id": "sss1",
+      "name": "SSS 1",
+      "band": "sss"
+    },
+    {
+      "id": "sss2",
+      "name": "SSS 2",
+      "band": "sss"
+    },
+    {
+      "id": "sss3",
+      "name": "SSS 3",
+      "band": "sss"
+    }
+  ],
+  "bands": {
+    "primary_1_3": "Primary 1–3",
+    "primary_4_6": "Primary 4–6",
+    "jss": "JSS 1–3",
+    "sss": "SSS 1–3"
+  },
+  "subjects": {
+    "english": "English",
+    "mathematics": "Mathematics",
+    "basic_science": "Basic Science",
+    "social_studies": "Social Studies",
+    "hausa": "Hausa",
+    "yoruba": "Yorùbá",
+    "igbo": "Igbo",
+    "biology": "Biology",
+    "chemistry": "Chemistry",
+    "physics": "Physics"
+  },
+  "band_subjects": {
+    "primary_1_3": [
+      "english",
+      "mathematics",
+      "basic_science",
+      "social_studies",
+      "hausa",
+      "yoruba",
+      "igbo"
+    ],
+    "primary_4_6": [
+      "english",
+      "mathematics",
+      "basic_science",
+      "social_studies",
+      "hausa",
+      "yoruba",
+      "igbo"
+    ],
+    "jss": [
+      "english",
+      "mathematics",
+      "basic_science",
+      "social_studies",
+      "hausa",
+      "yoruba",
+      "igbo"
+    ],
+    "sss": [
+      "english",
+      "mathematics",
+      "biology",
+      "chemistry",
+      "physics",
+      "hausa",
+      "yoruba",
+      "igbo"
+    ]
+  },
+  "primary_word_hint": 15,
+  "primary_max_options": 3,
+  "max_options": 4,
+  "min_options": 2
+}

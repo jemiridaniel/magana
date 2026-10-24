@@ -1,0 +1,132 @@
+{
+  "id": "sss-english-sample",
+  "title": "English practice",
+  "band": "sss",
+  "subject": "english",
+  "sample": true,
+  "language": "en",
+  "source": "Written by the Magana team. Our own wording; not past questions. CC BY 4.0.",
+  "review": "Sample: to be reviewed by a English teacher before testing with learners.",
+  "questions": [
+    {
+      "id": "sss-english-1",
+      "question": "Choose the word nearest in meaning to candid.",
+      "options": [
+        "Secretive",
+        "Angry",
+        "Lazy",
+        "Frank"
+      ],
+      "answer": 3,
+      "explanation": "Candid means frank and honest."
+    },
+    {
+      "id": "sss-english-2",
+      "question": "Hardly had he arrived blank the rain started. Which word fits?",
+      "options": [
+        "Than",
+        "Then",
+        "When",
+        "That"
+      ],
+      "answer": 2,
+      "explanation": "Hardly is followed by when."
+    },
+    {
+      "id": "sss-english-3",
+      "question": "Choose the word opposite in meaning to obscure.",
+      "options": [
+        "Hidden",
+        "Clear",
+        "Vague",
+        "Dark"
+      ],
+      "answer": 1,
+      "explanation": "Obscure means unclear, so its opposite is clear."
+    },
+    {
+      "id": "sss-english-4",
+      "question": "Life is a journey. What figure of speech is this?",
+      "options": [
+        "Metaphor",
+        "Simile",
+        "Irony",
+        "Onomatopoeia"
+      ],
+      "answer": 0,
+      "explanation": "It says life is a journey without using like or as. That is a metaphor."
+    },
+    {
+      "id": "sss-english-5",
+      "question": "If I blank you, I would apologise. Which word fits?",
+      "options": [
+        "Was",
+        "Am",
+        "Be",
+        "Were"
+      ],
+      "answer": 3,
+      "explanation": "In a wish or an imagined situation we say if I were you."
+    },
+    {
+      "id": "sss-english-6",
+      "question": "What does the idiom to bury the hatchet mean?",
+      "options": [
+        "To dig a hole",
+        "To hide a weapon",
+        "To make peace",
+        "To start a fight"
+      ],
+      "answer": 2,
+      "explanation": "To bury the hatchet means to make peace."
+    },
+    {
+      "id": "sss-english-7",
+      "question": "In she spoke softly, which word is the adverb?",
+      "options": [
+        "Spoke",
+        "Softly",
+        "She",
+        "None of them"
+      ],
+      "answer": 1,
+      "explanation": "Softly tells us how she spoke. It is an adverb."
+    },
+    {
+      "id": "sss-english-8",
+      "question": "Each of the students blank a book. Which word fits?",
+      "options": [
+        "Has",
+        "Have",
+        "Are having",
+        "Were having"
+      ],
+      "answer": 0,
+      "explanation": "Each takes a singular verb: each of the students has a book."
+    },
+    {
+      "id": "sss-english-9",
+      "question": "What is the plural of criterion?",
+      "options": [
+        "Criterions",
+        "Criterias",
+        "Criterion",
+        "Criteria"
+      ],
+      "answer": 3,
+      "explanation": "One criterion, many criteria."
+    },
+    {
+      "id": "sss-english-10",
+      "question": "He is good blank mathematics. Which word fits?",
+      "options": [
+        "In",
+        "On",
+        "At",
+        "With"
+      ],
+      "answer": 2,
+      "explanation": "We are good at a subject."
+    }
+  ]
+}

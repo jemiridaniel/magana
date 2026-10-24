@@ -1236,16 +1236,10 @@ abstract class AppLocalizations {
   /// **'A nurse can call you back during working hours. Request a call back. If you get worse, go to a clinic or call 112.'**
   String get resultRoutine;
 
-  /// No description provided for @quizTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Biology practice'**
-  String get quizTitle;
-
   /// No description provided for @quizProgress.
   ///
   /// In en, this message translates to:
-  /// **'WAEC-style · Question {n} of {total}'**
+  /// **'Question {n} of {total}'**
   String quizProgress(int n, int total);
 
   /// No description provided for @quizScoreLabel.
@@ -1254,11 +1248,11 @@ abstract class AppLocalizations {
   /// **'{correct} right out of {answered} answered'**
   String quizScoreLabel(int correct, int answered);
 
-  /// No description provided for @quizSayAnswer.
+  /// letters is this question's letters, e.g. 'A, B or C' (two or three for primary classes)
   ///
   /// In en, this message translates to:
-  /// **'Say A, B, C or D'**
-  String get quizSayAnswer;
+  /// **'Say {letters}'**
+  String quizSayAnswer(String letters);
 
   /// No description provided for @quizListening.
   ///
@@ -1278,17 +1272,17 @@ abstract class AppLocalizations {
   /// **'Not quite. You chose {letter}. The answer is {answer}.'**
   String quizWrong(String letter, String answer);
 
-  /// Never guess: repeat what was heard and ask again
+  /// No description provided for @quizUnclear.
   ///
   /// In en, this message translates to:
-  /// **'I heard “{heard}”. Please say A, B, C or D.'**
-  String quizUnclear(String heard);
+  /// **'I heard “{heard}”. Please say {letters}.'**
+  String quizUnclear(String heard, String letters);
 
   /// No description provided for @quizNothingHeard.
   ///
   /// In en, this message translates to:
-  /// **'I did not hear an answer. Say A, B, C or D, or double tap an answer.'**
-  String get quizNothingHeard;
+  /// **'I did not hear an answer. Say {letters}, or double tap an answer.'**
+  String quizNothingHeard(String letters);
 
   /// No description provided for @quizRepeat.
   ///
@@ -1343,12 +1337,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Practise again'**
   String get quizAgain;
-
-  /// No description provided for @quizSource.
-  ///
-  /// In en, this message translates to:
-  /// **'Questions written by the Magana team in the style of WAEC Biology. They are not past questions. The questions are in English.'**
-  String get quizSource;
 
   /// No description provided for @skillsSubtitle.
   ///
@@ -2517,14 +2505,14 @@ abstract class AppLocalizations {
   /// No description provided for @quizVoiceUnavailableWeb.
   ///
   /// In en, this message translates to:
-  /// **'Voice answers aren\'t available on this device yet. Tap or click an answer, or press A, B, C or D on your keyboard.'**
-  String get quizVoiceUnavailableWeb;
+  /// **'Voice answers aren\'t available on this device yet. Tap or click an answer, or press {letters} on your keyboard.'**
+  String quizVoiceUnavailableWeb(String letters);
 
   /// No description provided for @quizKeysHint.
   ///
   /// In en, this message translates to:
-  /// **'Tap or click an answer, or press A, B, C or D on your keyboard.'**
-  String get quizKeysHint;
+  /// **'Tap or click an answer, or press {letters} on your keyboard.'**
+  String quizKeysHint(String letters);
 
   /// No description provided for @quizKeysHintTrueFalse.
   ///
@@ -2543,6 +2531,156 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Start Magana'**
   String get startMagana;
+
+  /// No description provided for @classTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Which class are you in?'**
+  String get classTitle;
+
+  /// No description provided for @classBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana picks practice questions for your class. A teacher can change it later.'**
+  String get classBody;
+
+  /// No description provided for @classNotInSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m not in school'**
+  String get classNotInSchool;
+
+  /// No description provided for @classGroupPrimary.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary school'**
+  String get classGroupPrimary;
+
+  /// No description provided for @classGroupJss.
+  ///
+  /// In en, this message translates to:
+  /// **'Junior secondary'**
+  String get classGroupJss;
+
+  /// No description provided for @classGroupSss.
+  ///
+  /// In en, this message translates to:
+  /// **'Senior secondary'**
+  String get classGroupSss;
+
+  /// No description provided for @classroomChooseClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Teacher: choose the class for this session'**
+  String get classroomChooseClass;
+
+  /// No description provided for @classroomNeedsClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose the class first.'**
+  String get classroomNeedsClass;
+
+  /// No description provided for @settingsClass.
+  ///
+  /// In en, this message translates to:
+  /// **'My class'**
+  String get settingsClass;
+
+  /// No description provided for @settingsChangeClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Change class (teacher)'**
+  String get settingsChangeClass;
+
+  /// No description provided for @changeClassConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Only a teacher should change the class. Are you a teacher?'**
+  String get changeClassConfirmTitle;
+
+  /// No description provided for @changeClassYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, I\'m a teacher'**
+  String get changeClassYes;
+
+  /// No description provided for @quizYourClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Your class: {name}'**
+  String quizYourClass(String name);
+
+  /// No description provided for @quizFromTeacher.
+  ///
+  /// In en, this message translates to:
+  /// **'From your teacher'**
+  String get quizFromTeacher;
+
+  /// No description provided for @quizSamples.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample questions'**
+  String get quizSamples;
+
+  /// No description provided for @quizCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} questions'**
+  String quizCount(int n);
+
+  /// No description provided for @quizChooseClassHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your class to get questions for it. A teacher can set it in Settings.'**
+  String get quizChooseClassHint;
+
+  /// No description provided for @quizSampleNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample questions written by the Magana team. They are not past questions, and a teacher will check them. The questions are in English.'**
+  String get quizSampleNote;
+
+  /// No description provided for @quizTeacherNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Made by your teacher.'**
+  String get quizTeacherNote;
+
+  /// No description provided for @quizSubjectTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{subject} practice'**
+  String quizSubjectTitle(String subject);
+
+  /// Primary 1–6: encouraging
+  ///
+  /// In en, this message translates to:
+  /// **'Well done! You chose {letter}.'**
+  String quizCorrectPrimary(String letter);
+
+  /// Primary 1–6: encouraging; answer is the letter and option text
+  ///
+  /// In en, this message translates to:
+  /// **'Good try! The answer is {answer}.'**
+  String quizWrongPrimary(String answer);
+
+  /// No description provided for @quizPicture.
+  ///
+  /// In en, this message translates to:
+  /// **'Picture: {description}'**
+  String quizPicture(String description);
+
+  /// No description provided for @msg_unknown_level.
+  ///
+  /// In en, this message translates to:
+  /// **'Please choose your class again in Settings.'**
+  String get msg_unknown_level;
+
+  /// Joins the last two answer letters: A, B or C
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get quizOr;
 }
 
 class _AppLocalizationsDelegate

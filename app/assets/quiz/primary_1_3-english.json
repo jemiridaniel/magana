@@ -1,0 +1,122 @@
+{
+  "id": "primary_1_3-english-sample",
+  "title": "English practice",
+  "band": "primary_1_3",
+  "subject": "english",
+  "sample": true,
+  "language": "en",
+  "source": "Written by the Magana team. Our own wording; not past questions. CC BY 4.0.",
+  "review": "Sample: to be reviewed by a English teacher before testing with learners.",
+  "questions": [
+    {
+      "id": "primary_1_3-english-1",
+      "question": "Which word is a colour?",
+      "options": [
+        "Red",
+        "Run",
+        "Ten"
+      ],
+      "answer": 0,
+      "explanation": "Red is a colour."
+    },
+    {
+      "id": "primary_1_3-english-2",
+      "question": "Which word rhymes with cat?",
+      "options": [
+        "Dog",
+        "Hat",
+        "Cup"
+      ],
+      "answer": 1,
+      "explanation": "Cat and hat sound the same at the end."
+    },
+    {
+      "id": "primary_1_3-english-3",
+      "question": "What do we call a baby cat?",
+      "options": [
+        "A puppy",
+        "A calf",
+        "A kitten"
+      ],
+      "answer": 2,
+      "explanation": "A baby cat is a kitten."
+    },
+    {
+      "id": "primary_1_3-english-4",
+      "question": "Which word is the opposite of big?",
+      "options": [
+        "Small",
+        "Tall",
+        "Long"
+      ],
+      "answer": 0,
+      "explanation": "Big and small are opposites."
+    },
+    {
+      "id": "primary_1_3-english-5",
+      "question": "Which letter does the word ball start with?",
+      "options": [
+        "D",
+        "B",
+        "P"
+      ],
+      "answer": 1,
+      "explanation": "Ball starts with the letter B."
+    },
+    {
+      "id": "primary_1_3-english-6",
+      "question": "Which word names an animal?",
+      "options": [
+        "Chair",
+        "Spoon",
+        "Goat"
+      ],
+      "answer": 2,
+      "explanation": "A goat is an animal."
+    },
+    {
+      "id": "primary_1_3-english-7",
+      "question": "How many letters are in the word sun?",
+      "options": [
+        "Three",
+        "Two",
+        "Four"
+      ],
+      "answer": 0,
+      "explanation": "S, U, N. Sun has three letters."
+    },
+    {
+      "id": "primary_1_3-english-8",
+      "question": "One book, two what?",
+      "options": [
+        "Book",
+        "Books",
+        "Bookies"
+      ],
+      "answer": 1,
+      "explanation": "One book, two books."
+    },
+    {
+      "id": "primary_1_3-english-9",
+      "question": "Which word is something you do?",
+      "options": [
+        "Table",
+        "Green",
+        "Jump"
+      ],
+      "answer": 2,
+      "explanation": "Jump is something you do. It is an action."
+    },
+    {
+      "id": "primary_1_3-english-10",
+      "question": "What do you say when someone gives you a gift?",
+      "options": [
+        "Thank you",
+        "Goodbye",
+        "Sorry"
+      ],
+      "answer": 0,
+      "explanation": "We say thank you when we get a gift."
+    }
+  ]
+}

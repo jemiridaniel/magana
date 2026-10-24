@@ -697,11 +697,8 @@ class AppLocalizationsYo extends AppLocalizations {
       'Nọ́ọ̀sì lè pè ọ́ padà ní àkókò iṣẹ́. Béèrè kí wọ́n pè ọ́ padà. Bí ara rẹ bá burú sí i, lọ sí ilé-ìwòsàn tàbí pe 112.';
 
   @override
-  String get quizTitle => 'Ìdánrawò Biology';
-
-  @override
   String quizProgress(int n, int total) {
-    return 'Bíi WAEC · Ìbéèrè $n nínú $total';
+    return 'Ìbéèrè $n nínú $total';
   }
 
   @override
@@ -710,7 +707,9 @@ class AppLocalizationsYo extends AppLocalizations {
   }
 
   @override
-  String get quizSayAnswer => 'Sọ A, B, C tàbí D';
+  String quizSayAnswer(String letters) {
+    return 'Sọ $letters';
+  }
 
   @override
   String get quizListening => 'Mo ń gbọ́… Tẹ̀ láti dúró';
@@ -726,13 +725,14 @@ class AppLocalizationsYo extends AppLocalizations {
   }
 
   @override
-  String quizUnclear(String heard) {
-    return 'Mo gbọ́ “$heard”. Jọ̀wọ́ sọ A, B, C tàbí D.';
+  String quizUnclear(String heard, String letters) {
+    return 'Mo gbọ́ “$heard”. Jọ̀wọ́ sọ $letters.';
   }
 
   @override
-  String get quizNothingHeard =>
-      'Mi ò gbọ́ ìdáhùn kankan. Sọ A, B, C tàbí D, tàbí tẹ ìdáhùn kan lẹ́ẹ̀mejì.';
+  String quizNothingHeard(String letters) {
+    return 'Mi ò gbọ́ ìdáhùn kankan. Sọ $letters, tàbí tẹ ìdáhùn kan lẹ́ẹ̀mejì.';
+  }
 
   @override
   String get quizRepeat => 'Tún ìbéèrè sọ';
@@ -762,10 +762,6 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get quizAgain => 'Tún ṣe ìdánrawò';
-
-  @override
-  String get quizSource =>
-      'Ẹgbẹ́ Magana ló kọ àwọn ìbéèrè náà bíi ti WAEC Biology. Wọn kì í ṣe ìbéèrè àtijọ́. Èdè Gẹ̀ẹ́sì ni àwọn ìbéèrè wà.';
 
   @override
   String get skillsSubtitle => 'Àwọn ẹ̀kọ́ kúkúrú tí a ń sọ, bí o ṣe fẹ́';
@@ -1538,12 +1534,14 @@ class AppLocalizationsYo extends AppLocalizations {
       'Ìdáhùn pẹ̀lú ohùn kò tíì ṣiṣẹ́ lórí ẹ̀rọ yìí. Tẹ ìdáhùn kan dípò rẹ̀.';
 
   @override
-  String get quizVoiceUnavailableWeb =>
-      'Ìdáhùn pẹ̀lú ohùn kò tíì ṣiṣẹ́ lórí ẹ̀rọ yìí. Tẹ tàbí kílíkì ìdáhùn kan, tàbí tẹ A, B, C tàbí D lórí kíbọ́ọ̀dù rẹ.';
+  String quizVoiceUnavailableWeb(String letters) {
+    return 'Ìdáhùn pẹ̀lú ohùn kò tíì ṣiṣẹ́ lórí ẹ̀rọ yìí. Tẹ tàbí kílíkì ìdáhùn kan, tàbí tẹ $letters lórí kíbọ́ọ̀dù rẹ.';
+  }
 
   @override
-  String get quizKeysHint =>
-      'Tẹ tàbí kílíkì ìdáhùn kan, tàbí tẹ A, B, C tàbí D lórí kíbọ́ọ̀dù rẹ.';
+  String quizKeysHint(String letters) {
+    return 'Tẹ tàbí kílíkì ìdáhùn kan, tàbí tẹ $letters lórí kíbọ́ọ̀dù rẹ.';
+  }
 
   @override
   String get quizKeysHintTrueFalse =>
@@ -1554,4 +1552,95 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get startMagana => 'Bẹ̀rẹ̀ Magana';
+
+  @override
+  String get classTitle => 'Kíláàsì wo lo wà?';
+
+  @override
+  String get classBody =>
+      'Magana yóò yan àwọn ìbéèrè ìdánrawò fún kíláàsì rẹ. Olùkọ́ lè yí i padà lẹ́yìn náà.';
+
+  @override
+  String get classNotInSchool => 'Èmi kò sí ní ilé-ìwé';
+
+  @override
+  String get classGroupPrimary => 'Ilé-ìwé alákọ̀ọ́bẹ̀rẹ̀';
+
+  @override
+  String get classGroupJss => 'Ilé-ìwé girama kékeré';
+
+  @override
+  String get classGroupSss => 'Ilé-ìwé girama àgbà';
+
+  @override
+  String get classroomChooseClass => 'Olùkọ́: yan kíláàsì fún ìpàdé yìí';
+
+  @override
+  String get classroomNeedsClass => 'Kọ́kọ́ yan kíláàsì.';
+
+  @override
+  String get settingsClass => 'Kíláàsì mi';
+
+  @override
+  String get settingsChangeClass => 'Yí kíláàsì padà (olùkọ́)';
+
+  @override
+  String get changeClassConfirmTitle =>
+      'Olùkọ́ nìkan ló yẹ kó yí kíláàsì padà. Ṣé olùkọ́ ni ọ́?';
+
+  @override
+  String get changeClassYes => 'Bẹ́ẹ̀ni, olùkọ́ ni mí';
+
+  @override
+  String quizYourClass(String name) {
+    return 'Kíláàsì rẹ: $name';
+  }
+
+  @override
+  String get quizFromTeacher => 'Láti ọ̀dọ̀ olùkọ́ rẹ';
+
+  @override
+  String get quizSamples => 'Àwọn ìbéèrè àpẹẹrẹ';
+
+  @override
+  String quizCount(int n) {
+    return 'Ìbéèrè $n';
+  }
+
+  @override
+  String get quizChooseClassHint =>
+      'Yan kíláàsì rẹ láti gba àwọn ìbéèrè rẹ̀. Olùkọ́ lè ṣètò rẹ̀ nínú Ètò.';
+
+  @override
+  String get quizSampleNote =>
+      'Àwọn ìbéèrè àpẹẹrẹ tí ẹgbẹ́ Magana kọ. Wọn kì í ṣe ìbéèrè àtijọ́, olùkọ́ yóò sì yẹ̀ wọ́n wò. Èdè Gẹ̀ẹ́sì ni àwọn ìbéèrè wà.';
+
+  @override
+  String get quizTeacherNote => 'Olùkọ́ rẹ ló ṣe é.';
+
+  @override
+  String quizSubjectTitle(String subject) {
+    return 'Ìdánrawò $subject';
+  }
+
+  @override
+  String quizCorrectPrimary(String letter) {
+    return 'O ṣeun gan-an! O yan $letter.';
+  }
+
+  @override
+  String quizWrongPrimary(String answer) {
+    return 'O gbìyànjú dáadáa! Ìdáhùn ni $answer.';
+  }
+
+  @override
+  String quizPicture(String description) {
+    return 'Àwòrán: $description';
+  }
+
+  @override
+  String get msg_unknown_level => 'Jọ̀wọ́ tún yan kíláàsì rẹ nínú Ètò.';
+
+  @override
+  String get quizOr => 'tàbí';
 }

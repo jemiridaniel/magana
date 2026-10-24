@@ -91,6 +91,9 @@ Future<(FakeSpeaker, FakeVoice)> openQuiz(
   WidgetTester tester, {
   Tier tier = Tier.standard,
   bool voiceWorks = true,
+  String classLevel = 'sss2',
+  String pack = 'Biology practice',
+  MaganaApi? api,
 }) async {
   SharedPreferences.setMockInitialValues({});
   tester.view.physicalSize = const Size(390 * 3, 844 * 3);
@@ -102,11 +105,12 @@ Future<(FakeSpeaker, FakeVoice)> openQuiz(
     tier: tier,
     consentAt: tier == Tier.guided ? DateTime(2026) : null,
     teacherSession: true,
+    classLevel: classLevel,
   );
   final speaker = FakeSpeaker();
   await tester.pumpWidget(
     MaganaApp(
-      api: MaganaApi(headers: () => profile.headers),
+      api: api ?? MaganaApi(headers: () => profile.headers),
       speaker: speaker,
       language: LanguageController(),
       profile: profile,
@@ -114,10 +118,16 @@ Future<(FakeSpeaker, FakeVoice)> openQuiz(
   );
   await tester.pumpAndSettle();
   await tester.tap(find.bySemanticsLabel(RegExp('^${en.practiceQuiz}')));
+  await tester.pumpAndSettle();
+  speaker.said.clear(); // the list's own announcement
+  final card = find.bySemanticsLabel(RegExp('^$pack'));
+  await tester.ensureVisible(card.first);
+  await tester.pumpAndSettle();
+  await tester.tap(card.first);
   // The questions load from the app's assets while a spinner shows.
   for (
     var i = 0;
-    i < 20 && find.text(en.quizProgress(1, 10)).evaluate().isEmpty;
+    i < 20 && find.textContaining(en.quizProgress(1, 10)).evaluate().isEmpty;
     i++
   ) {
     await tester.runAsync(
@@ -143,7 +153,7 @@ Future<void> say(
   String? button,
 }) async {
   voice.replies.add(words);
-  await tap(tester, button ?? en.quizSayAnswer);
+  await tap(tester, button ?? en.quizSayAnswer('A, B, C or D'));
 }
 
 void main() {
@@ -269,10 +279,10 @@ void main() {
   ) async {
     final handle = tester.ensureSemantics();
     final (speaker, voice) = await openQuiz(tester);
-    expect(find.text(en.quizProgress(1, 10)), findsOneWidget);
+    expect(find.textContaining(en.quizProgress(1, 10)), findsOneWidget);
     expect(speaker.said.last, contains('Question 1 of 10'));
     expect(speaker.said.last, contains('B, Iodine solution.'));
-    expect(speaker.said.last, endsWith(en.quizSayAnswer));
+    expect(speaker.said.last, endsWith(en.quizSayAnswer('A, B, C or D')));
     expectAccessible(tester, 'Quiz');
 
     await say(tester, voice, ['bee']);
@@ -351,7 +361,7 @@ void main() {
   ) async {
     final (speaker, voice) = await openQuiz(tester);
     await say(tester, voice, ['banana bread']);
-    expect(speaker.said.last, en.quizUnclear('banana bread'));
+    expect(speaker.said.last, en.quizUnclear('banana bread', 'A, B, C or D'));
     await say(tester, voice, []);
     expect(speaker.said.last, en.quizTapInstead); // second failed try
     expect(find.bySemanticsLabel(en.quizScoreLabel(0, 0)), findsOneWidget);
@@ -367,7 +377,7 @@ void main() {
     await say(tester, voice, ['repeat']);
     expect(speaker.said.last, question);
     await say(tester, voice, ['next']);
-    expect(find.text(en.quizProgress(2, 10)), findsOneWidget);
+    expect(find.textContaining(en.quizProgress(2, 10)), findsOneWidget);
   });
 
   testWidgets(
@@ -375,11 +385,17 @@ void main() {
     (tester) async {
       final (speaker, voice) = await openQuiz(tester, voiceWorks: false);
       expect(voice.inits, 1);
-      expect(find.bySemanticsLabel(en.quizSayAnswer), findsNothing);
+      expect(
+        find.bySemanticsLabel(en.quizSayAnswer('A, B, C or D')),
+        findsNothing,
+      );
       // Said once, with the first question, and shown; never "I did not hear".
       expect(speaker.said.first, endsWith(en.quizVoiceUnavailable));
       expect(find.text(en.quizVoiceUnavailable), findsOneWidget);
-      expect(speaker.said, isNot(contains(en.quizNothingHeard)));
+      expect(
+        speaker.said,
+        isNot(contains(en.quizNothingHeard('A, B, C or D'))),
+      );
       expect(voice.listens, 0);
       await tap(tester, 'B. Iodine solution');
       expect(find.bySemanticsLabel(en.quizScoreLabel(1, 1)), findsOneWidget);
@@ -393,10 +409,16 @@ void main() {
     (tester) async {
       final (speaker, voice) = await openQuiz(tester);
       voice.fails = true;
-      await tap(tester, en.quizSayAnswer);
+      await tap(tester, en.quizSayAnswer('A, B, C or D'));
       expect(speaker.said.last, en.quizVoiceUnavailable);
-      expect(speaker.said, isNot(contains(en.quizNothingHeard)));
-      expect(find.bySemanticsLabel(en.quizSayAnswer), findsNothing);
+      expect(
+        speaker.said,
+        isNot(contains(en.quizNothingHeard('A, B, C or D'))),
+      );
+      expect(
+        find.bySemanticsLabel(en.quizSayAnswer('A, B, C or D')),
+        findsNothing,
+      );
       await tap(tester, 'B. Iodine solution');
       expect(find.bySemanticsLabel(en.quizScoreLabel(1, 1)), findsOneWidget);
     },
@@ -408,7 +430,7 @@ void main() {
     final (speaker, voice) = await openQuiz(tester);
     await say(tester, voice, const []);
     expect(voice.listens, 1);
-    expect(speaker.said.last, en.quizNothingHeard);
+    expect(speaker.said.last, en.quizNothingHeard('A, B, C or D'));
   });
 
   group('on the web', () {
@@ -419,7 +441,9 @@ void main() {
       final (speaker, _) = await openQuiz(tester);
       expect(
         speaker.said.first,
-        endsWith('${en.quizSayAnswer}. ${en.quizKeysHint}'),
+        endsWith(
+          '${en.quizSayAnswer('A, B, C or D')}. ${en.quizKeysHint('A, B, C or D')}',
+        ),
       );
       await tester.sendKeyEvent(LogicalKeyboardKey.keyB);
       await tester.pumpAndSettle();
@@ -431,12 +455,15 @@ void main() {
       tester,
     ) async {
       final (speaker, _) = await openQuiz(tester, voiceWorks: false);
-      expect(speaker.said.first, endsWith(en.quizVoiceUnavailableWeb));
+      expect(
+        speaker.said.first,
+        endsWith(en.quizVoiceUnavailableWeb('A, B, C or D')),
+      );
       await tester.sendKeyEvent(LogicalKeyboardKey.keyA);
       await tester.pumpAndSettle();
       expect(find.bySemanticsLabel(en.quizScoreLabel(0, 1)), findsOneWidget);
       await tap(tester, en.quizNext);
-      expect(speaker.said.last, endsWith(en.quizKeysHint));
+      expect(speaker.said.last, endsWith(en.quizKeysHint('A, B, C or D')));
     });
   });
 
@@ -451,7 +478,7 @@ void main() {
     expect(find.text(en.quizResult(1, 10)), findsOneWidget);
     expect(speaker.said.last, en.quizResult(1, 10));
     await tap(tester, en.quizAgain);
-    expect(find.text(en.quizProgress(1, 10)), findsOneWidget);
+    expect(find.textContaining(en.quizProgress(1, 10)), findsOneWidget);
     expect(find.bySemanticsLabel(en.quizScoreLabel(0, 0)), findsOneWidget);
   });
 
@@ -460,7 +487,7 @@ void main() {
       tester,
     ) async {
       final (_, voice) = await openQuiz(tester, tier: tier);
-      expect(find.text(en.quizProgress(1, 10)), findsOneWidget);
+      expect(find.textContaining(en.quizProgress(1, 10)), findsOneWidget);
       await say(tester, voice, ['B']);
       expect(voice.tiers.toSet(), {tier});
     });

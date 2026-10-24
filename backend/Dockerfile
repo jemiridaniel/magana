@@ -20,6 +20,8 @@ RUN pip install --no-cache-dir -r requirements.txt \
  && if [ "$OCR_ENGINE" = "paddle" ]; then pip install --no-cache-dir -r requirements-paddle.txt; fi
 
 COPY app ./app
+# Teachers' quizzes (MAGANA_DATA_DIR): a volume, owned by the app user.
+RUN mkdir -p /data && chown magana /data
 USER magana
 RUN if [ "$OCR_ENGINE" = "paddle" ]; then \
       python -c "from app.reader import PaddleStructureEngine as P; P().pipeline"; fi

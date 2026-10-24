@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
 import '../app_scope.dart';
+import '../curriculum.dart';
 import '../l10n/app_localizations.dart';
 import '../language.dart';
 import '../policy.dart';
+import '../profile.dart';
 import '../widgets.dart';
 
 /// Shows onboarding until an age tier is chosen, the consent or classroom step
@@ -74,6 +76,7 @@ class _LanguageStepState extends State<LanguageStep> {
       body: [
         _StepTitle(
           step: 1,
+          total: 4,
           title: l.chooseLanguageTitle,
           body: l.chooseLanguageBody,
         ),
@@ -136,16 +139,16 @@ class _AgeStepState extends State<AgeStep> {
     final l = AppLocalizations.of(context);
     return PageScaffold(
       body: [
-        _StepTitle(step: 2, title: l.ageTitle, body: l.ageBody),
+        _StepTitle(step: 2, total: 4, title: l.ageTitle, body: l.ageBody),
         ChoiceCard(
           title: l.ageAdult,
           detail: l.ageAdultDetail,
-          onTap: () => _next(const ReadyStep()),
+          onTap: () => _next(const ClassStep(adult: true, next: ReadyStep())),
         ),
         ChoiceCard(
           title: l.ageTeen,
           detail: l.ageTeenDetail,
-          onTap: () => _next(const ConsentStep()),
+          onTap: () => _next(const ClassStep(next: ConsentStep())),
         ),
         ChoiceCard(
           title: l.ageChild,
@@ -188,7 +191,7 @@ class _ReadyStepState extends State<ReadyStep> {
     final l = AppLocalizations.of(context);
     return PageScaffold(
       body: [
-        _StepTitle(step: 3, title: l.readyTitle, body: l.readyBody),
+        _StepTitle(step: 4, total: 4, title: l.readyTitle, body: l.readyBody),
         NoteBox(text: l.privacyNote, kind: NoteKind.privacy),
       ],
       bottom: [
@@ -200,6 +203,86 @@ class _ReadyStepState extends State<ReadyStep> {
     );
   }
 }
+
+// ---------- Step 3 (18+ and 13–17): class
+
+/// Chosen once; a teacher can change it in Settings. Picks the quiz packs and
+/// the teacher's quizzes for that level.
+class ClassStep extends StatefulWidget {
+  const ClassStep({super.key, required this.next, this.adult = false});
+  final Widget next;
+
+  /// 18+ may not be in school.
+  final bool adult;
+
+  @override
+  State<ClassStep> createState() => _ClassStepState();
+}
+
+class _ClassStepState extends State<ClassStep> {
+  @override
+  void initState() {
+    super.initState();
+    speakOnOpen(context, () {
+      final l = AppLocalizations.of(context);
+      return '${l.classTitle} ${l.classBody}';
+    });
+  }
+
+  Future<void> _choose(String level) async {
+    await AppScope.of(context).profile.setClassLevel(level);
+    if (!mounted) return;
+    Navigator.of(context).push(MaterialPageRoute(builder: (_) => widget.next));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return PageScaffold(
+      body: [
+        _StepTitle(step: 3, total: 4, title: l.classTitle, body: l.classBody),
+        if (widget.adult)
+          ChoiceCard(
+            title: l.classNotInSchool,
+            onTap: () => _choose(ProfileController.notInSchool),
+          ),
+        ...classLevelChoices(l, onTap: _choose),
+      ],
+    );
+  }
+}
+
+/// The levels as choices under "Primary school", "Junior secondary" and
+/// "Senior secondary" headings (onboarding and Settings).
+List<Widget> classLevelChoices(
+  AppLocalizations l, {
+  required void Function(String level) onTap,
+  String? selected,
+}) => [
+  for (final (heading, band) in [
+    (l.classGroupPrimary, null),
+    (l.classGroupJss, Band.jss),
+    (l.classGroupSss, Band.sss),
+  ]) ...[
+    Semantics(
+      header: true,
+      child: Text(
+        heading,
+        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+      ),
+    ),
+    for (final level in classLevels.where(
+      (lv) => band == null ? lv.band.primary : lv.band == band,
+    ))
+      ChoiceCard(
+        title: level.name,
+        // In Settings the current class reads as selected.
+        selected: selected == level.id,
+        inGroup: selected != null,
+        onTap: () => onTap(level.id),
+      ),
+  ],
+];
 
 class ConsentStep extends StatefulWidget {
   const ConsentStep({super.key});
@@ -228,7 +311,12 @@ class _ConsentStepState extends State<ConsentStep> {
     final l = AppLocalizations.of(context);
     return PageScaffold(
       body: [
-        _StepTitle(step: 3, title: l.consentTitle, body: l.consentBody),
+        _StepTitle(
+          step: 4,
+          total: 4,
+          title: l.consentTitle,
+          body: l.consentBody,
+        ),
         for (final point in [l.consentPoint1, l.consentPoint2, l.consentPoint3])
           NoteBox(text: point),
       ],
@@ -256,6 +344,8 @@ class ClassroomStep extends StatefulWidget {
 }
 
 class _ClassroomStepState extends State<ClassroomStep> {
+  String? _level;
+
   @override
   void initState() {
     super.initState();
@@ -268,6 +358,13 @@ class _ClassroomStepState extends State<ClassroomStep> {
   Future<void> _start() async {
     final l = AppLocalizations.of(context);
     final profile = AppScope.of(context).profile;
+    final level = _level;
+    if (level == null) {
+      AppScope.of(context).speaker.say(l.classroomNeedsClass);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(l.classroomNeedsClass)));
+      return;
+    }
     final ok = await showDialog<bool>(
       context: context,
       builder: (dialog) => AlertDialog(
@@ -290,6 +387,7 @@ class _ClassroomStepState extends State<ClassroomStep> {
     );
     if (ok == true) {
       if (profile.tier != Tier.classroom) await profile.setTier(Tier.classroom);
+      await profile.setClassLevel(level); // never saved for Classroom
       profile.startTeacherSession(); // this launch only: never saved
     }
   }
@@ -302,9 +400,34 @@ class _ClassroomStepState extends State<ClassroomStep> {
       body: [
         _StepTitle(
           step: onboarding ? 3 : null,
+          total: 3,
           title: l.classroomTitle,
           body: l.classroomBody,
         ),
+        // Kept for this session only, like the session itself.
+        Semantics(
+          header: true,
+          child: Text(
+            l.classroomChooseClass,
+            style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+          ),
+        ),
+        for (final level in classLevels.take(7)) // Primary 1 to JSS 1
+          ChoiceCard(
+            title: level.name,
+            selected: _level == level.id,
+            inGroup: true,
+            leading: Icon(
+              _level == level.id
+                  ? Icons.radio_button_checked
+                  : Icons.radio_button_off,
+              size: 28,
+            ),
+            onTap: () {
+              setState(() => _level = level.id);
+              AppScope.of(context).speaker.say(level.name);
+            },
+          ),
       ],
       bottom: [PrimaryButton(label: l.classroomStart, onTap: _start)],
     );
@@ -314,10 +437,12 @@ class _ClassroomStepState extends State<ClassroomStep> {
 class _StepTitle extends StatelessWidget {
   const _StepTitle({
     required this.step,
+    required this.total,
     required this.title,
     required this.body,
   });
   final int? step;
+  final int total;
   final String title;
   final String body;
 
@@ -330,11 +455,13 @@ class _StepTitle extends StatelessWidget {
         if (Navigator.of(context).canPop())
           Padding(
             padding: const EdgeInsets.only(bottom: 12),
-            child: ScreenHeader(title: step == null ? '' : l.stepOf(step!, 3)),
+            child: ScreenHeader(
+              title: step == null ? '' : l.stepOf(step!, total),
+            ),
           ),
         if (!Navigator.of(context).canPop() && step != null)
           Text(
-            l.stepOf(step!, 3),
+            l.stepOf(step!, total),
             style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
           ),
         Semantics(

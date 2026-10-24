@@ -13,6 +13,59 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Accessibility: teacher portal Quizzes, checked with axe at 1280×900 and 390×844
+
+- **What we built:**
+  - The sidebar now starts with the Magana mark (marked decorative), above "Magana / Teachers", linking to Uploads. The mark is the brand kit's in its on-ink colours, amber bubble and ink Braille "m", as in `magana_lockup_horizontal_dark.svg`.
+  - Our favicon and app icons replace Next.js's, and every page title is "<Page> · Magana for Teachers".
+  - **Quizzes** comes after My classes in the sidebar and opens **Create a quiz** (the "Teacher portal · Create a quiz" board). An **All quizzes** list sits beside it.
+  - Help has a "Installing the learner app" guide linking to a new install page. The learner app has no link to the portal, and a test checks that.
+- **What we tested and how:** `portal/e2e/quizzes.spec.ts`, Playwright in Chrome against a real backend (`npm run test:e2e`), at 1280×900 and at 390×844. 8 tests at each size, all passing. On every page checked (Create a quiz, All quizzes, Uploads, My classes, Help, Install the learner app):
+  - **axe** with WCAG 2 A, AA and **AAA** rules, which include the 7:1 contrast check, plus best practice: no violations;
+  - **every target at least 64 px**, except links inside a sentence (WCAG's inline exception);
+  - no sideways scrolling.
+- **The quiz flow, end to end:**
+  - A Primary 5 quiz shows "2 or 3 options", the Classroom-mode note and the word count ("This one has 10").
+  - "+ Add option" stops at 3: "3 is the most for Primary 5".
+  - With no right answer, or a picture with no description, **Assign** is refused and focus moves to "Before you assign".
+  - "Listen as a learner" says the app's words at 0.8 speed: "… A, A seed. B, A stone. Say A or B".
+  - Once assigned, the quiz comes back from `/learner/quizzes?level=p5` with Classroom session headers, and not for `p4`.
+  - The Yorùbá version only reaches learners after "A Yorùbá-speaking teacher checked it" is ticked.
+  - A JSS class allows 4 options.
+- **Bugs found and fixed:**
+  - **Saving changes to a quiz failed in the browser:** CORS allowed only GET and POST, and saving an existing quiz uses PUT. The portal said "Can't reach the Magana server". Fixed, with a test.
+  - **The editor made a random question id while rendering,** which Next.js refuses. Ids are now made only when a teacher adds a question.
+  - **Targets under 64 px:** the "‹ Help" back link and the "Edit" links in the quiz table were 64 px tall but narrower. Both now have a 64 px minimum width.
+- **Status:** fixed in tests at both sizes. Untested: VoiceOver or NVDA reading the editor; teachers using it.
+
+## 2026-10-24 · Accessibility, languages: quizzes by class level, Primary mode, and sample packs
+
+- **What we changed:**
+  - Quizzes and lessons follow class levels (Primary 1–6, JSS 1–3, SSS 1–3) and the national curriculum's subject names (docs/CURRICULUM.md).
+  - Learners choose their class once in onboarding (step 3 of 4). Under 13, the teacher picks it when starting the session, and it is never saved. Changing it later in Settings asks "Are you a teacher?" first.
+  - Practice quiz lists the teacher's quizzes for the class, then the sample packs.
+  - 12 sample packs of 10 questions each, 120 in all, in our own wording: English, Mathematics and Basic Science for Primary 1–3, Primary 4–6 and JSS, plus English and Mathematics for SSS beside the existing SSS Biology pack. They are marked `sample: true`, the app shows "Sample questions", and they are listed in docs/DATA_SOURCES.md, to be reviewed by a teacher.
+  - **Primary mode (Primary 1–6):**
+    - two or three options, and 15 words or fewer per question;
+    - the voice at 0.8 of the learner's speed, put back on leaving;
+    - "Well done! You chose A." and "Good try! The answer is A, 5.";
+    - the prompt names only the question's own letters ("Say A, B or C"). It used to always say "A, B, C or D", even for two or three options.
+  - A teacher's quiz reads a picture's description before the options, and uses a translation only once a teacher marked it checked.
+- **Tests:**
+  - `curriculum_test.dart` (21):
+    - every pack: 10 questions, valid answers, sample flag, 2–3 options and 15 words or fewer for primary, 4 options otherwise, the right answer not always on the same letter;
+    - Primary mode; JSS at normal speed; a teacher's quiz from the API (with the session header); a checked Yorùbá translation; all bands for an adult not in school; the quiz list's accessibility; Settings needing a teacher; no portal links in the app.
+  - `onboarding_test.dart`: the class step for each age group, and that a Classroom class is never saved.
+  - Backend:
+    - `test_quizzes.py` (11): drafts, the teacher key, assigning, primary limits, the curriculum, learners at a level, editing an assigned quiz into a broken one, under-13 only in a session, path safety, and CORS for PUT;
+    - `test_curriculum.py`: the app and portal copies match the backend.
+- **Not done:**
+  - A teacher has reviewed none of the 120 sample questions.
+  - Hausa, Yorùbá and Igbo screen wording for the class step is drafted, not checked by native speakers.
+  - Learners don't yet join a specific class: every learner at a level sees that level's assigned quizzes.
+  - Picture files aren't sent to learners: only the description.
+- **Status:** built and tested. Open until the teacher review.
+
 ## 2026-10-24 · Accessibility: voice answers in Chrome, speech errors, and "Start Magana"
 
 - **Reported:** in Chrome, "Say A, B, C or D" didn't pick up speech. The console showed `[object SpeechSynthesisErrorEvent]`, and after the server's 503 it logged "trying the next" with nothing after.

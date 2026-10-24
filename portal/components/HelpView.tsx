@@ -27,6 +27,17 @@ const guides: Guide[] = [
     link: { href: "/classes", label: "Open My classes" },
   },
   {
+    id: "learner-app",
+    title: "Installing the learner app",
+    summary: "Help a learner put Magana on an Android phone or an iPhone.",
+    steps: [
+      "On Android, install the Magana APK that the Magana team sends you, then turn on TalkBack.",
+      "On iPhone, or while the APK isn't available, add the web version to the home screen from Safari or Chrome.",
+      "On first start the learner chooses a language, their age group and their class.",
+    ],
+    link: { href: "/help/install-app", label: "Open the install instructions" },
+  },
+  {
     id: "versions",
     title: "Making Braille and audio versions",
     summary: "Upload notes and print BRF files on an embosser.",

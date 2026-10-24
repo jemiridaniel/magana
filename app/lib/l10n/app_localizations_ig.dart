@@ -701,11 +701,8 @@ class AppLocalizationsIg extends AppLocalizations {
       'Nọọsụ nwere ike ịkpọghachi gị n\'oge ọrụ. Rịọ ka a kpọghachi gị. Ọ bụrụ na ọ ka njọ, gaa n\'ụlọ ọgwụ ma ọ bụ kpọọ 112.';
 
   @override
-  String get quizTitle => 'Omume Biology';
-
-  @override
   String quizProgress(int n, int total) {
-    return 'Ụdị WAEC · Ajụjụ $n n\'ime $total';
+    return 'Ajụjụ $n n\'ime $total';
   }
 
   @override
@@ -714,7 +711,9 @@ class AppLocalizationsIg extends AppLocalizations {
   }
 
   @override
-  String get quizSayAnswer => 'Kwuo A, B, C ma ọ bụ D';
+  String quizSayAnswer(String letters) {
+    return 'Kwuo $letters';
+  }
 
   @override
   String get quizListening => 'Ana m ege ntị… Pịa ka ọ kwụsị';
@@ -730,13 +729,14 @@ class AppLocalizationsIg extends AppLocalizations {
   }
 
   @override
-  String quizUnclear(String heard) {
-    return 'Anụrụ m “$heard”. Biko kwuo A, B, C ma ọ bụ D.';
+  String quizUnclear(String heard, String letters) {
+    return 'Anụrụ m “$heard”. Biko kwuo $letters.';
   }
 
   @override
-  String get quizNothingHeard =>
-      'Anụghị m azịza. Kwuo A, B, C ma ọ bụ D, ma ọ bụ pịa azịza ugboro abụọ.';
+  String quizNothingHeard(String letters) {
+    return 'Anụghị m azịza. Kwuo $letters, ma ọ bụ pịa azịza ugboro abụọ.';
+  }
 
   @override
   String get quizRepeat => 'Kwughachi ajụjụ';
@@ -766,10 +766,6 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get quizAgain => 'Mee omume ọzọ';
-
-  @override
-  String get quizSource =>
-      'Ndị otu Magana dere ajụjụ ndị a n\'ụdị WAEC Biology. Ha abụghị ajụjụ ochie. Ajụjụ ndị a dị n\'asụsụ Bekee.';
 
   @override
   String get skillsSubtitle => 'Nkuzi dị mkpụmkpụ a na-ekwu, n\'oge gị';
@@ -1540,12 +1536,14 @@ class AppLocalizationsIg extends AppLocalizations {
       'Ịza n\'olu adịbeghị na ngwaọrụ a. Pịa azịza kama.';
 
   @override
-  String get quizVoiceUnavailableWeb =>
-      'Ịza n\'olu adịbeghị na ngwaọrụ a. Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa A, B, C ma ọ bụ D na kiiboodu gị.';
+  String quizVoiceUnavailableWeb(String letters) {
+    return 'Ịza n\'olu adịbeghị na ngwaọrụ a. Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa $letters na kiiboodu gị.';
+  }
 
   @override
-  String get quizKeysHint =>
-      'Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa A, B, C ma ọ bụ D na kiiboodu gị.';
+  String quizKeysHint(String letters) {
+    return 'Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa $letters na kiiboodu gị.';
+  }
 
   @override
   String get quizKeysHintTrueFalse =>
@@ -1556,4 +1554,95 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get startMagana => 'Malite Magana';
+
+  @override
+  String get classTitle => 'Klaasị ole ka ị nọ?';
+
+  @override
+  String get classBody =>
+      'Magana ga-ahọrọ ajụjụ omume maka klaasị gị. Onye nkuzi nwere ike ịgbanwe ya ma emechaa.';
+
+  @override
+  String get classNotInSchool => 'Anọghị m n\'ụlọ akwụkwọ';
+
+  @override
+  String get classGroupPrimary => 'Ụlọ akwụkwọ praịmarị';
+
+  @override
+  String get classGroupJss => 'Sekọndrị nta';
+
+  @override
+  String get classGroupSss => 'Sekọndrị ukwu';
+
+  @override
+  String get classroomChooseClass => 'Onye nkuzi: họrọ klaasị maka nnọkọ a';
+
+  @override
+  String get classroomNeedsClass => 'Buru ụzọ họrọ klaasị.';
+
+  @override
+  String get settingsClass => 'Klaasị m';
+
+  @override
+  String get settingsChangeClass => 'Gbanwee klaasị (onye nkuzi)';
+
+  @override
+  String get changeClassConfirmTitle =>
+      'Ọ bụ naanị onye nkuzi kwesịrị ịgbanwe klaasị. Ị bụ onye nkuzi?';
+
+  @override
+  String get changeClassYes => 'Ee, abụ m onye nkuzi';
+
+  @override
+  String quizYourClass(String name) {
+    return 'Klaasị gị: $name';
+  }
+
+  @override
+  String get quizFromTeacher => 'Site n\'aka onye nkuzi gị';
+
+  @override
+  String get quizSamples => 'Ajụjụ ihe atụ';
+
+  @override
+  String quizCount(int n) {
+    return 'Ajụjụ $n';
+  }
+
+  @override
+  String get quizChooseClassHint =>
+      'Họrọ klaasị gị iji nweta ajụjụ ya. Onye nkuzi nwere ike idozi ya na Ntọala.';
+
+  @override
+  String get quizSampleNote =>
+      'Ajụjụ ihe atụ ndị otu Magana dere. Ha abụghị ajụjụ ochie, onye nkuzi ga-elele ha. Ajụjụ ndị a dị n\'asụsụ Bekee.';
+
+  @override
+  String get quizTeacherNote => 'Onye nkuzi gị mere ya.';
+
+  @override
+  String quizSubjectTitle(String subject) {
+    return 'Omume $subject';
+  }
+
+  @override
+  String quizCorrectPrimary(String letter) {
+    return 'Ị mere nke ọma! Ị họọrọ $letter.';
+  }
+
+  @override
+  String quizWrongPrimary(String answer) {
+    return 'Ị nwalere nke ọma! Azịza ya bụ $answer.';
+  }
+
+  @override
+  String quizPicture(String description) {
+    return 'Foto: $description';
+  }
+
+  @override
+  String get msg_unknown_level => 'Biko họrọ klaasị gị ọzọ na Ntọala.';
+
+  @override
+  String get quizOr => 'ma ọ bụ';
 }

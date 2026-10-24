@@ -1,4 +1,5 @@
 // Mock data for the hackathon portal. Replace with API calls in lib/api.ts.
+import type { LevelId } from "./curriculum";
 
 export type Mode = "Standard" | "Guided" | "Classroom";
 
@@ -7,12 +8,13 @@ export interface SchoolClass {
   name: string;
   mode: Mode; // policy tier: Guided 13–17, Classroom under 13 (teacher-run sessions only)
   seats: number;
+  level: LevelId; // the curriculum class level (lib/curriculum.ts)
 }
 
 export const classes: SchoolClass[] = [
-  { id: "ss2-sci", name: "SS2 Science", mode: "Guided", seats: 20 },
-  { id: "ss3-eng", name: "SS3 English", mode: "Guided", seats: 20 },
-  { id: "pri5", name: "Primary 5", mode: "Classroom", seats: 30 },
+  { id: "ss2-sci", name: "SS2 Science", mode: "Guided", seats: 20, level: "sss2" },
+  { id: "ss3-eng", name: "SS3 English", mode: "Guided", seats: 20, level: "sss3" },
+  { id: "pri5", name: "Primary 5", mode: "Classroom", seats: 30, level: "p5" },
 ];
 
 export type Version = "en-audio" | "brf" | "large-print" | "ha-audio" | "yo-audio" | "ig-audio";
@@ -92,6 +94,9 @@ export interface Session {
 export const sessions: Session[] = [
   { id: "s-2026-11-18", classId: "ss2-sci", label: "Tue 18 Nov 2026 · Biology · Food tests" },
   { id: "s-2026-11-13", classId: "ss2-sci", label: "Thu 13 Nov 2026 · Chemistry · Separating mixtures" },
+  { id: "s-2026-10-30", classId: "pri5", label: "Thu 30 Oct 2026 · 10:00" },
+  { id: "s-2026-11-06", classId: "pri5", label: "Thu 6 Nov 2026 · 10:00" },
+  { id: "s-2026-11-20", classId: "ss3-eng", label: "Thu 20 Nov 2026 · English · Comprehension" },
 ];
 
 const l = (id: string, name: string, mark: Mark, usedMagana: boolean, termAttended: number, termSessions = 24): Learner => ({

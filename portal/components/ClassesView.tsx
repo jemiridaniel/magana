@@ -5,6 +5,7 @@ import {
   classes as initialClasses, consentLabel, consentRecords, formats, hasAccounts, languages, modeInfo, needsConsent, pupils as initialPupils,
   type ConsentStatus, type Format, type Language, type Mode, type Pupil, type SchoolClass,
 } from "@/lib/data";
+import { levels, type LevelId } from "@/lib/curriculum";
 
 const NOT_CONNECTED = "It is kept on this page only until the portal is connected to the Magana server.";
 
@@ -51,12 +52,13 @@ export default function ClassesView() {
     const data = new FormData(e.currentTarget);
     const name = String(data.get("name") ?? "").trim();
     const mode = data.get("mode") as Mode | null;
-    if (!name || !mode) {
+    const level = data.get("level") as LevelId | null;
+    if (!name || !mode || !level) {
       setMessage("Give the class a name and choose the learners' age.");
       return;
     }
     const id = `local-class-${classes.length + 1}`;
-    setClasses((cs) => [...cs, { id, name, mode, seats: 0 }]);
+    setClasses((cs) => [...cs, { id, name, mode, seats: 0, level }]);
     setClassId(id);
     setForm("none");
     setMessage(`${name} added in ${modeInfo[mode].label}. ${NOT_CONNECTED}`);
@@ -108,6 +110,15 @@ export default function ClassesView() {
             <div className="field" style={{ maxWidth: 420 }}>
               <label htmlFor="class-name">Class name</label>
               <input id="class-name" name="name" className="input" required autoComplete="off" placeholder="For example: JSS1 Maths" autoFocus />
+            </div>
+            <div className="field" style={{ maxWidth: 420 }}>
+              <label htmlFor="class-level">Class level</label>
+              <select id="class-level" name="level" className="select" defaultValue="jss1" aria-describedby="class-level-hint">
+                {levels.map((lv) => (
+                  <option key={lv.id} value={lv.id}>{lv.name}</option>
+                ))}
+              </select>
+              <span id="class-level-hint" className="hint">Picks the subjects and the sample questions. Primary classes get short questions with two or three options.</span>
             </div>
             <fieldset className="checks">
               <legend>How old are the learners?</legend>

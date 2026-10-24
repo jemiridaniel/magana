@@ -39,8 +39,14 @@ class FakeSpeaker extends Speaker {
   final interrupt = <String>{};
   @override
   Future<void> stop() async {}
+
+  /// Speech rates set, in order (primary quizzes slow the voice).
+  final rates = <double>[];
+  double _rate = 1.0;
   @override
-  Future<void> setRate(double rate) async {}
+  double get rate => _rate;
+  @override
+  Future<void> setRate(double rate) async => rates.add(_rate = rate);
   @override
   Future<void> setLanguage(String code) async => language = code;
 }

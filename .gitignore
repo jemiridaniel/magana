@@ -12,3 +12,6 @@ kaggle.json
 
 # The built PWA copied to the server (scripts/deploy-web.sh)
 deploy/web/
+
+# Quizzes saved by a local backend (MAGANA_DATA_DIR); the server keeps its own
+backend/data/

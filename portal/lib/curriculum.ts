@@ -1,0 +1,22 @@
+// Class levels and subjects. curriculum.json is a copy of the backend's
+// (backend/app/curriculum.py); backend/tests/test_curriculum.py fails if it drifts.
+import data from "./curriculum.json";
+
+export type LevelId = "p1" | "p2" | "p3" | "p4" | "p5" | "p6" | "jss1" | "jss2" | "jss3" | "sss1" | "sss2" | "sss3";
+export type BandId = "primary_1_3" | "primary_4_6" | "jss" | "sss";
+
+export interface Level {
+  id: LevelId;
+  name: string;
+  band: BandId;
+}
+
+export const levels = data.levels as Level[];
+export const subjectNames = data.subjects as Record<string, string>;
+export const PRIMARY_WORD_HINT = data.primary_word_hint;
+export const MIN_OPTIONS = data.min_options;
+
+export const level = (id: LevelId) => levels.find((l) => l.id === id)!;
+export const isPrimary = (id: LevelId) => level(id).band.startsWith("primary");
+export const maxOptions = (id: LevelId) => (isPrimary(id) ? data.primary_max_options : data.max_options);
+export const subjectsFor = (id: LevelId) => (data.band_subjects as Record<BandId, string[]>)[level(id).band];

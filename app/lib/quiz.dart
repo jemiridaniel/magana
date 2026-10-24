@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter/services.dart';
 
+import 'curriculum.dart';
+
 const letters = ['A', 'B', 'C', 'D'];
 
 class QuizQuestion {
@@ -12,6 +14,8 @@ class QuizQuestion {
     required this.answer,
     required this.explanation,
     this.type = 'choice',
+    this.picture,
+    this.translations = const {},
   });
 
   factory QuizQuestion.fromJson(Map<String, dynamic> j) => QuizQuestion(
@@ -19,8 +23,12 @@ class QuizQuestion {
     question: j['question'] as String,
     options: List<String>.from(j['options'] as List),
     answer: j['answer'] as int,
-    explanation: j['explanation'] as String,
+    explanation: j['explanation'] as String? ?? '',
     type: j['type'] as String? ?? 'choice',
+    picture: j['picture'] as String?,
+    translations: Map<String, String>.from(
+      j['translations'] as Map? ?? const {},
+    ),
   );
 
   final String id;
@@ -33,26 +41,73 @@ class QuizQuestion {
   final String type;
   bool get trueFalse => type == 'true_false';
 
+  /// A teacher's description of a picture or diagram: read before the options.
+  final String? picture;
+
+  /// The question in another app language, only when a teacher checked it.
+  final Map<String, String> translations;
+
+  /// The question in [language] if a checked translation exists, else English.
+  String questionIn(String language) => translations[language] ?? question;
+
   /// What the learner says for option [i]: "B", or "true"/"false".
   String spokenAnswer(int i) => trueFalse ? options[i] : letters[i];
 }
 
 class Quiz {
-  const Quiz({required this.subject, required this.questions});
-  final String subject;
-  final List<QuizQuestion> questions;
+  const Quiz({
+    required this.subject,
+    required this.questions,
+    this.id = '',
+    this.title = '',
+    this.band,
+    this.sample = false,
+    this.teacherMade = false,
+  });
 
-  /// Team-written practice questions bundled with the app (works offline).
-  static Future<Quiz> load([String asset = 'assets/quiz/biology.json']) async {
-    final j = jsonDecode(await rootBundle.loadString(asset)) as Map;
+  factory Quiz.fromJson(Map<String, dynamic> j, {Band? band}) {
+    final level = levelById(j['level'] as String?);
     return Quiz(
+      id: j['id'] as String? ?? '',
+      title: j['title'] as String? ?? '',
       subject: j['subject'] as String,
+      band:
+          band ??
+          level?.band ??
+          Band.values.where((b) => b.id == j['band']).firstOrNull,
+      sample: j['sample'] as bool? ?? false,
+      teacherMade: j['teacher_made'] as bool? ?? false,
       questions: [
         for (final q in j['questions'] as List)
           QuizQuestion.fromJson(q as Map<String, dynamic>),
       ],
     );
   }
+
+  final String id;
+  final String title;
+  final String subject; // a curriculum subject id: mathematics, basic_science…
+  final List<QuizQuestion> questions;
+  final Band? band;
+
+  /// Team-made sample questions: the app says "Sample questions".
+  final bool sample;
+
+  /// Written by the learner's teacher in the portal.
+  final bool teacherMade;
+
+  /// Primary 1–6: two or three options, short sentences, a slower voice and
+  /// encouraging feedback.
+  bool get primary => band?.primary ?? false;
+
+  String get subjectName => subjectNames[subject] ?? subject;
+
+  /// A team-made pack bundled with the app (works offline).
+  static Future<Quiz> load([
+    String asset = 'assets/quiz/sss-biology.json',
+  ]) async => Quiz.fromJson(
+    jsonDecode(await rootBundle.loadString(asset)) as Map<String, dynamic>,
+  );
 }
 
 /// What a spoken reply meant: an option, a command, or nothing we can be sure of.

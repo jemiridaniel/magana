@@ -1,76 +1,130 @@
 {
-  "id": "biology-practice-1",
-  "subject": "Biology",
+  "id": "sss-biology-sample",
+  "title": "Biology practice",
+  "band": "sss",
+  "subject": "biology",
+  "sample": true,
+  "language": "en",
   "source": "Written by the Magana team in the style of WAEC SSCE Biology. Not past questions. CC BY 4.0.",
-  "review": "Draft: needs a check by a Biology teacher before testing with learners.",
+  "review": "Sample: to be reviewed by a Biology teacher before testing with learners.",
   "questions": [
     {
       "id": "starch-test",
       "question": "Which reagent is used to test for starch?",
-      "options": ["Benedict's solution", "Iodine solution", "Biuret reagent", "Ethanol"],
+      "options": [
+        "Benedict's solution",
+        "Iodine solution",
+        "Biuret reagent",
+        "Ethanol"
+      ],
       "answer": 1,
       "explanation": "Iodine solution turns blue-black when starch is present."
     },
     {
       "id": "respiration-site",
       "question": "In which part of the cell does aerobic respiration mainly take place?",
-      "options": ["Nucleus", "Ribosome", "Mitochondrion", "Cell wall"],
+      "options": [
+        "Nucleus",
+        "Ribosome",
+        "Mitochondrion",
+        "Cell wall"
+      ],
       "answer": 2,
       "explanation": "The mitochondrion releases energy from food during aerobic respiration."
     },
     {
       "id": "pulmonary-vein",
       "question": "Which blood vessel carries blood from the lungs to the heart?",
-      "options": ["Pulmonary artery", "Pulmonary vein", "Aorta", "Vena cava"],
+      "options": [
+        "Pulmonary artery",
+        "Pulmonary vein",
+        "Aorta",
+        "Vena cava"
+      ],
       "answer": 1,
       "explanation": "The pulmonary vein carries oxygenated blood from the lungs to the left atrium."
     },
     {
       "id": "photosynthesis",
       "question": "What is the process by which green plants make their own food using light energy?",
-      "options": ["Transpiration", "Respiration", "Photosynthesis", "Osmosis"],
+      "options": [
+        "Transpiration",
+        "Respiration",
+        "Photosynthesis",
+        "Osmosis"
+      ],
       "answer": 2,
       "explanation": "In photosynthesis, chlorophyll traps light energy to make glucose from carbon dioxide and water."
     },
     {
       "id": "malaria-vector",
       "question": "Which organism carries the malaria parasite from person to person?",
-      "options": ["Female Anopheles mosquito", "Housefly", "Tsetse fly", "Male Culex mosquito"],
+      "options": [
+        "Female Anopheles mosquito",
+        "Housefly",
+        "Tsetse fly",
+        "Male Culex mosquito"
+      ],
       "answer": 0,
       "explanation": "The female Anopheles mosquito carries Plasmodium, the parasite that causes malaria."
     },
     {
       "id": "anther",
       "question": "Which part of a flower produces pollen grains?",
-      "options": ["Stigma", "Ovary", "Anther", "Sepal"],
+      "options": [
+        "Stigma",
+        "Ovary",
+        "Anther",
+        "Sepal"
+      ],
       "answer": 2,
       "explanation": "Pollen grains are made in the anther, at the top of the stamen."
     },
     {
       "id": "osmosis",
       "question": "The movement of water molecules from a dilute solution to a concentrated solution through a semi-permeable membrane is called what?",
-      "options": ["Diffusion", "Osmosis", "Active transport", "Plasmolysis"],
+      "options": [
+        "Diffusion",
+        "Osmosis",
+        "Active transport",
+        "Plasmolysis"
+      ],
       "answer": 1,
       "explanation": "Osmosis is the movement of water across a semi-permeable membrane, from a dilute to a more concentrated solution."
     },
     {
       "id": "scurvy",
       "question": "Lack of which vitamin causes scurvy?",
-      "options": ["Vitamin A", "Vitamin B1", "Vitamin C", "Vitamin D"],
+      "options": [
+        "Vitamin A",
+        "Vitamin B1",
+        "Vitamin C",
+        "Vitamin D"
+      ],
       "answer": 2,
       "explanation": "Scurvy, with bleeding gums, is caused by lack of vitamin C, found in oranges and fresh vegetables."
     },
     {
       "id": "bile",
       "question": "Which organ produces bile?",
-      "options": ["Gall bladder", "Liver", "Pancreas", "Stomach"],
+      "options": [
+        "Gall bladder",
+        "Liver",
+        "Pancreas",
+        "Stomach"
+      ],
       "answer": 1,
       "explanation": "Bile is made in the liver and stored in the gall bladder."
     },
     {
       "id": "monohybrid",
       "question": "Two plants that are both heterozygous for tallness are crossed. Tall is dominant. What ratio of tall to short offspring is expected?",
-      "options": ["1 tall to 1 short", "2 tall to 1 short", "3 tall to 1 short", "All tall"],
+      "options": [
+        "1 tall to 1 short",
+        "2 tall to 1 short",
+        "3 tall to 1 short",
+        "All tall"
+      ],
       "answer": 2,
       "explanation": "Crossing Tt with Tt gives TT, Tt, Tt and tt: three tall to one short."
     }

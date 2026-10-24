@@ -1,0 +1,132 @@
+{
+  "id": "jss-mathematics-sample",
+  "title": "Mathematics practice",
+  "band": "jss",
+  "subject": "mathematics",
+  "sample": true,
+  "language": "en",
+  "source": "Written by the Magana team. Our own wording; not past questions. CC BY 4.0.",
+  "review": "Sample: to be reviewed by a Mathematics teacher before testing with learners.",
+  "questions": [
+    {
+      "id": "jss-mathematics-1",
+      "question": "Simplify 3x plus 5x.",
+      "options": [
+        "15x",
+        "8x squared",
+        "2x",
+        "8x"
+      ],
+      "answer": 3,
+      "explanation": "Add like terms: 3x plus 5x is 8x."
+    },
+    {
+      "id": "jss-mathematics-2",
+      "question": "Solve 2x plus 3 equals 11.",
+      "options": [
+        "x equals 7",
+        "x equals 5",
+        "x equals 4",
+        "x equals 3"
+      ],
+      "answer": 2,
+      "explanation": "2x equals 8, so x equals 4."
+    },
+    {
+      "id": "jss-mathematics-3",
+      "question": "What is the highest common factor of 12 and 18?",
+      "options": [
+        "3",
+        "6",
+        "2",
+        "36"
+      ],
+      "answer": 1,
+      "explanation": "6 is the largest number that divides both 12 and 18."
+    },
+    {
+      "id": "jss-mathematics-4",
+      "question": "Express 0.25 as a percentage.",
+      "options": [
+        "25 percent",
+        "2.5 percent",
+        "0.25 percent",
+        "250 percent"
+      ],
+      "answer": 0,
+      "explanation": "0.25 times 100 is 25 percent."
+    },
+    {
+      "id": "jss-mathematics-5",
+      "question": "A rectangle is 8 centimetres by 5 centimetres. What is its area?",
+      "options": [
+        "13 square centimetres",
+        "26 square centimetres",
+        "45 square centimetres",
+        "40 square centimetres"
+      ],
+      "answer": 3,
+      "explanation": "Area is length times width: 8 times 5 is 40."
+    },
+    {
+      "id": "jss-mathematics-6",
+      "question": "What do the angles in a triangle add up to?",
+      "options": [
+        "90 degrees",
+        "360 degrees",
+        "180 degrees",
+        "270 degrees"
+      ],
+      "answer": 2,
+      "explanation": "The angles in a triangle add up to 180 degrees."
+    },
+    {
+      "id": "jss-mathematics-7",
+      "question": "What is minus 3 plus 7?",
+      "options": [
+        "Minus 4",
+        "4",
+        "10",
+        "Minus 10"
+      ],
+      "answer": 1,
+      "explanation": "Start at minus 3 and count up 7: you reach 4."
+    },
+    {
+      "id": "jss-mathematics-8",
+      "question": "What is the lowest common multiple of 4 and 6?",
+      "options": [
+        "12",
+        "24",
+        "2",
+        "10"
+      ],
+      "answer": 0,
+      "explanation": "12 is the smallest number that both 4 and 6 divide."
+    },
+    {
+      "id": "jss-mathematics-9",
+      "question": "What is 2 cubed?",
+      "options": [
+        "6",
+        "9",
+        "5",
+        "8"
+      ],
+      "answer": 3,
+      "explanation": "2 times 2 times 2 is 8."
+    },
+    {
+      "id": "jss-mathematics-10",
+      "question": "A shirt costs 2,000 naira. The price is cut by 10 percent. What is the new price?",
+      "options": [
+        "1,900 naira",
+        "1,000 naira",
+        "1,800 naira",
+        "2,200 naira"
+      ],
+      "answer": 2,
+      "explanation": "10 percent of 2,000 is 200, and 2,000 minus 200 is 1,800."
+    }
+  ]
+}

@@ -48,6 +48,8 @@ Future<(ProfileController, FakeSpeaker, List<http.BaseRequest>)> start(
 }
 
 Future<void> tap(WidgetTester tester, Pattern label) async {
+  await tester.ensureVisible(find.bySemanticsLabel(label));
+  await tester.pumpAndSettle();
   await tester.tap(find.bySemanticsLabel(label));
   await tester.pumpAndSettle();
 }
@@ -89,8 +91,11 @@ void main() {
     await tap(tester, 'Continue');
     expect(find.text('How old are you?'), findsOneWidget);
     await tap(tester, RegExp('^I am 18 or older'));
+    expect(find.text('Which class are you in?'), findsOneWidget);
+    await tap(tester, "I'm not in school");
     await tap(tester, 'Start');
     expect(profile.tier, Tier.standard);
+    expect(profile.classLevel, ProfileController.notInSchool);
     expect(
       (await SharedPreferences.getInstance()).getString('age_tier'),
       'standard',
@@ -111,10 +116,19 @@ void main() {
     final (profile, _, _) = await start(tester);
     await tap(tester, 'Continue');
     await tap(tester, RegExp('^I am 13 to 17'));
+    expect(find.text('Which class are you in?'), findsOneWidget);
+    // Learners aged 13 to 17 are in school: no "not in school" choice.
+    expect(find.bySemanticsLabel("I'm not in school"), findsNothing);
+    await tap(tester, 'SSS 2');
     expect(find.text('Ask a parent, guardian or teacher'), findsOneWidget);
     expect(profile.tier, isNull); // nothing until the guardian agrees
     await tap(tester, 'I am the parent, guardian or teacher, and I agree');
     expect((profile.tier, profile.guardianConsent), (Tier.guided, true));
+    expect(profile.level?.name, 'SSS 2');
+    expect(
+      (await SharedPreferences.getInstance()).getString('class_level'),
+      'sss2',
+    );
     expect(homeTiles(tester), {
       'Practice quiz',
       'My library',
@@ -130,13 +144,19 @@ void main() {
   testWidgets('under 13: only a teacher-started session, never saved', (
     tester,
   ) async {
-    final (profile, _, _) = await start(tester);
+    final (profile, speaker, _) = await start(tester);
     await tap(tester, 'Continue');
     await tap(tester, RegExp('^I am under 13'));
+    // The teacher chooses the class for the session first.
+    await tap(tester, 'Teacher: start the class session');
+    expect(find.text('Are you the teacher?'), findsNothing);
+    expect(speaker.said.last, 'Choose the class first.');
+    await tap(tester, 'Primary 5');
     await tap(tester, 'Teacher: start the class session');
     expect(find.text('Are you the teacher?'), findsOneWidget);
     await tap(tester, 'Yes, start the session');
     expect((profile.tier, profile.teacherSession), (Tier.classroom, true));
+    expect(profile.classLevel, 'p5');
     expect(homeTiles(tester), {'Practice quiz'});
     expect(profile.headers, {
       'X-Magana-Tier': 'classroom',
@@ -150,6 +170,7 @@ void main() {
       (relaunch.tier, relaunch.teacherSession, relaunch.active),
       (Tier.classroom, false, false),
     );
+    expect(relaunch.classLevel, isNull); // the session's class isn't kept
   });
 
   testWidgets('a returning Classroom user sees only the class screen', (
@@ -157,7 +178,7 @@ void main() {
   ) async {
     await start(tester, profile: ProfileController(tier: Tier.classroom));
     expect(find.text('Magana in class'), findsOneWidget);
-    expect(find.text('Step 3 of 3'), findsNothing);
+    expect(find.textContaining('Step 3 of'), findsNothing);
     expect(homeTiles(tester), isEmpty);
   });
 
@@ -210,12 +231,16 @@ void main() {
     await tap(tester, 'Continue');
     expectAccessible(tester, 'Age');
     await tap(tester, RegExp('^I am 13 to 17'));
+    expectAccessible(tester, 'Class');
+    await tap(tester, 'JSS 1');
     expectAccessible(tester, 'Consent');
+    await tap(tester, 'Back');
     await tap(tester, 'Back');
     await tap(tester, RegExp('^I am under 13'));
     expectAccessible(tester, 'Classroom');
     await tap(tester, 'Back');
     await tap(tester, RegExp('^I am 18 or older'));
+    await tap(tester, "I'm not in school");
     expectAccessible(tester, 'Ready');
     handle.dispose();
   });

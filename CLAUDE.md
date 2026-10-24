@@ -30,7 +30,7 @@ Pitch frame: **Learn. Live. Lead.** — one reading engine that takes users from
 7. The Ibà quick check's questions and rules live in the Ibà service (iba-natlas repo, `/v1` self-report mode; pending clinical sign-off by Dr. Amos). Magana only calls it (`iba_client.py`, `IBA_API_URL` / `IBA_API_KEY`) and keeps the danger signs in `triage.py` as the fallback when Ibà fails or takes more than 3 s, and as a floor: a danger sign is always an emergency. Every question offers "I can't tell" (`triage.CANT_TELL`): sent to Ibà as unanswered, never as "no"; on a danger sign it gives at least urgent and "Please ask someone near you to check, or go to a clinic"; elsewhere it is never left at routine. Questions that need sight (`triage.SIGHT_BASED`) are worded so a blind user can answer. All draft, pending Dr. Amos's sign-off. Never log or store triage answers.
 
 ## Data rules
-Only open-licence (CC BY / CC BY-SA), team-made, or written-permission materials go in the published benchmark. No scraped past-question sites. Credit every source (see the data sources tracker).
+Only open-licence (CC BY / CC BY-SA), team-made, or written-permission materials go in the published benchmark. No scraped past-question sites. Credit every source in docs/DATA_SOURCES.md (the data sources tracker).
 
 ## Working rules
 - Push to origin/main after each set of commits, without asking, as long as all tests pass (backend `pytest -q`, app `flutter analyze` and `flutter test`).

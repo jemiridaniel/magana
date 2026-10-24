@@ -1,0 +1,132 @@
+{
+  "id": "sss-mathematics-sample",
+  "title": "Mathematics practice",
+  "band": "sss",
+  "subject": "mathematics",
+  "sample": true,
+  "language": "en",
+  "source": "Written by the Magana team. Our own wording; not past questions. CC BY 4.0.",
+  "review": "Sample: to be reviewed by a Mathematics teacher before testing with learners.",
+  "questions": [
+    {
+      "id": "sss-mathematics-1",
+      "question": "Solve x squared minus 5x plus 6 equals 0.",
+      "options": [
+        "x equals minus 2 or x equals minus 3",
+        "x equals 1 or x equals 6",
+        "x equals minus 1 or x equals 6",
+        "x equals 2 or x equals 3"
+      ],
+      "answer": 3,
+      "explanation": "It factorises as x minus 2, times x minus 3."
+    },
+    {
+      "id": "sss-mathematics-2",
+      "question": "What is log to base 10 of 1,000?",
+      "options": [
+        "2",
+        "10",
+        "3",
+        "100"
+      ],
+      "answer": 2,
+      "explanation": "10 to the power 3 is 1,000."
+    },
+    {
+      "id": "sss-mathematics-3",
+      "question": "Simplify 2 to the power 3, times 2 to the power 2.",
+      "options": [
+        "2 to the power 6",
+        "2 to the power 5",
+        "4 to the power 5",
+        "2"
+      ],
+      "answer": 1,
+      "explanation": "When multiplying, add the powers: 3 plus 2 is 5."
+    },
+    {
+      "id": "sss-mathematics-4",
+      "question": "What is the 10th term of the sequence 3, 7, 11, 15?",
+      "options": [
+        "39",
+        "40",
+        "43",
+        "35"
+      ],
+      "answer": 0,
+      "explanation": "The first term is 3 and each term adds 4: 3 plus 9 times 4 is 39."
+    },
+    {
+      "id": "sss-mathematics-5",
+      "question": "What is the sine of 30 degrees?",
+      "options": [
+        "1",
+        "0",
+        "One third",
+        "One half"
+      ],
+      "answer": 3,
+      "explanation": "Sine 30 degrees is one half."
+    },
+    {
+      "id": "sss-mathematics-6",
+      "question": "A fair coin is tossed once. What is the probability of a head?",
+      "options": [
+        "One quarter",
+        "1",
+        "One half",
+        "0"
+      ],
+      "answer": 2,
+      "explanation": "There are two equally likely outcomes, so the probability is one half."
+    },
+    {
+      "id": "sss-mathematics-7",
+      "question": "What is the mean of 4, 6, 8 and 10?",
+      "options": [
+        "6",
+        "7",
+        "8",
+        "28"
+      ],
+      "answer": 1,
+      "explanation": "They add up to 28, and 28 divided by 4 is 7."
+    },
+    {
+      "id": "sss-mathematics-8",
+      "question": "Convert one, zero, one, one in base two to base ten.",
+      "options": [
+        "11",
+        "13",
+        "9",
+        "1,011"
+      ],
+      "answer": 0,
+      "explanation": "8 plus 0 plus 2 plus 1 is 11."
+    },
+    {
+      "id": "sss-mathematics-9",
+      "question": "What is the simple interest on 10,000 naira at 5 percent a year for 2 years?",
+      "options": [
+        "500 naira",
+        "2,000 naira",
+        "10,500 naira",
+        "1,000 naira"
+      ],
+      "answer": 3,
+      "explanation": "10,000 times 5 times 2, divided by 100, is 1,000."
+    },
+    {
+      "id": "sss-mathematics-10",
+      "question": "What is the gradient of the line y equals 3x plus 2?",
+      "options": [
+        "2",
+        "5",
+        "3",
+        "One third"
+      ],
+      "answer": 2,
+      "explanation": "In y equals mx plus c, the gradient is m, which is 3."
+    }
+  ]
+}

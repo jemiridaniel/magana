@@ -698,11 +698,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'A nurse can call you back during working hours. Request a call back. If you get worse, go to a clinic or call 112.';
 
   @override
-  String get quizTitle => 'Biology practice';
-
-  @override
   String quizProgress(int n, int total) {
-    return 'WAEC-style · Question $n of $total';
+    return 'Question $n of $total';
   }
 
   @override
@@ -711,7 +708,9 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get quizSayAnswer => 'Say A, B, C or D';
+  String quizSayAnswer(String letters) {
+    return 'Say $letters';
+  }
 
   @override
   String get quizListening => 'Listening… Tap to stop';
@@ -727,13 +726,14 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String quizUnclear(String heard) {
-    return 'I heard “$heard”. Please say A, B, C or D.';
+  String quizUnclear(String heard, String letters) {
+    return 'I heard “$heard”. Please say $letters.';
   }
 
   @override
-  String get quizNothingHeard =>
-      'I did not hear an answer. Say A, B, C or D, or double tap an answer.';
+  String quizNothingHeard(String letters) {
+    return 'I did not hear an answer. Say $letters, or double tap an answer.';
+  }
 
   @override
   String get quizRepeat => 'Repeat question';
@@ -763,10 +763,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quizAgain => 'Practise again';
-
-  @override
-  String get quizSource =>
-      'Questions written by the Magana team in the style of WAEC Biology. They are not past questions. The questions are in English.';
 
   @override
   String get skillsSubtitle => 'Short spoken lessons, at your pace';
@@ -1539,12 +1535,14 @@ class AppLocalizationsEn extends AppLocalizations {
       'Voice answers aren\'t available on this device yet. Tap an answer instead.';
 
   @override
-  String get quizVoiceUnavailableWeb =>
-      'Voice answers aren\'t available on this device yet. Tap or click an answer, or press A, B, C or D on your keyboard.';
+  String quizVoiceUnavailableWeb(String letters) {
+    return 'Voice answers aren\'t available on this device yet. Tap or click an answer, or press $letters on your keyboard.';
+  }
 
   @override
-  String get quizKeysHint =>
-      'Tap or click an answer, or press A, B, C or D on your keyboard.';
+  String quizKeysHint(String letters) {
+    return 'Tap or click an answer, or press $letters on your keyboard.';
+  }
 
   @override
   String get quizKeysHintTrueFalse =>
@@ -1555,4 +1553,96 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get startMagana => 'Start Magana';
+
+  @override
+  String get classTitle => 'Which class are you in?';
+
+  @override
+  String get classBody =>
+      'Magana picks practice questions for your class. A teacher can change it later.';
+
+  @override
+  String get classNotInSchool => 'I\'m not in school';
+
+  @override
+  String get classGroupPrimary => 'Primary school';
+
+  @override
+  String get classGroupJss => 'Junior secondary';
+
+  @override
+  String get classGroupSss => 'Senior secondary';
+
+  @override
+  String get classroomChooseClass =>
+      'Teacher: choose the class for this session';
+
+  @override
+  String get classroomNeedsClass => 'Choose the class first.';
+
+  @override
+  String get settingsClass => 'My class';
+
+  @override
+  String get settingsChangeClass => 'Change class (teacher)';
+
+  @override
+  String get changeClassConfirmTitle =>
+      'Only a teacher should change the class. Are you a teacher?';
+
+  @override
+  String get changeClassYes => 'Yes, I\'m a teacher';
+
+  @override
+  String quizYourClass(String name) {
+    return 'Your class: $name';
+  }
+
+  @override
+  String get quizFromTeacher => 'From your teacher';
+
+  @override
+  String get quizSamples => 'Sample questions';
+
+  @override
+  String quizCount(int n) {
+    return '$n questions';
+  }
+
+  @override
+  String get quizChooseClassHint =>
+      'Choose your class to get questions for it. A teacher can set it in Settings.';
+
+  @override
+  String get quizSampleNote =>
+      'Sample questions written by the Magana team. They are not past questions, and a teacher will check them. The questions are in English.';
+
+  @override
+  String get quizTeacherNote => 'Made by your teacher.';
+
+  @override
+  String quizSubjectTitle(String subject) {
+    return '$subject practice';
+  }
+
+  @override
+  String quizCorrectPrimary(String letter) {
+    return 'Well done! You chose $letter.';
+  }
+
+  @override
+  String quizWrongPrimary(String answer) {
+    return 'Good try! The answer is $answer.';
+  }
+
+  @override
+  String quizPicture(String description) {
+    return 'Picture: $description';
+  }
+
+  @override
+  String get msg_unknown_level => 'Please choose your class again in Settings.';
+
+  @override
+  String get quizOr => 'or';
 }

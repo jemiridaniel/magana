@@ -1,0 +1,122 @@
+{
+  "id": "primary_4_6-basic_science-sample",
+  "title": "Basic Science practice",
+  "band": "primary_4_6",
+  "subject": "basic_science",
+  "sample": true,
+  "language": "en",
+  "source": "Written by the Magana team. Our own wording; not past questions. CC BY 4.0.",
+  "review": "Sample: to be reviewed by a Basic Science teacher before testing with learners.",
+  "questions": [
+    {
+      "id": "primary_4_6-basic_science-1",
+      "question": "Which part of a plant takes in water from the soil?",
+      "options": [
+        "The root",
+        "The leaf",
+        "The flower"
+      ],
+      "answer": 0,
+      "explanation": "Roots take in water from the soil."
+    },
+    {
+      "id": "primary_4_6-basic_science-2",
+      "question": "What do we call animals that eat only plants?",
+      "options": [
+        "Carnivores",
+        "Herbivores",
+        "Omnivores"
+      ],
+      "answer": 1,
+      "explanation": "Herbivores eat only plants, like goats and cows."
+    },
+    {
+      "id": "primary_4_6-basic_science-3",
+      "question": "Which organ pumps blood around the body?",
+      "options": [
+        "The lungs",
+        "The stomach",
+        "The heart"
+      ],
+      "answer": 2,
+      "explanation": "The heart pumps blood around the body."
+    },
+    {
+      "id": "primary_4_6-basic_science-4",
+      "question": "What happens to water when it gets very cold?",
+      "options": [
+        "It freezes into ice",
+        "It boils",
+        "It burns"
+      ],
+      "answer": 0,
+      "explanation": "Very cold water freezes into ice."
+    },
+    {
+      "id": "primary_4_6-basic_science-5",
+      "question": "Which gas do we breathe in to stay alive?",
+      "options": [
+        "Carbon dioxide",
+        "Oxygen",
+        "Smoke"
+      ],
+      "answer": 1,
+      "explanation": "We breathe in oxygen."
+    },
+    {
+      "id": "primary_4_6-basic_science-6",
+      "question": "Which of these gives us energy as light and heat?",
+      "options": [
+        "A shadow",
+        "A stone",
+        "The sun"
+      ],
+      "answer": 2,
+      "explanation": "The sun gives us light and heat."
+    },
+    {
+      "id": "primary_4_6-basic_science-7",
+      "question": "Which insect can spread malaria?",
+      "options": [
+        "The mosquito",
+        "The butterfly",
+        "The ant"
+      ],
+      "answer": 0,
+      "explanation": "Some mosquitoes can spread malaria."
+    },
+    {
+      "id": "primary_4_6-basic_science-8",
+      "question": "Which of these does a magnet pull?",
+      "options": [
+        "Wood",
+        "Iron",
+        "Plastic"
+      ],
+      "answer": 1,
+      "explanation": "A magnet pulls iron."
+    },
+    {
+      "id": "primary_4_6-basic_science-9",
+      "question": "How many planets go around the sun?",
+      "options": [
+        "Five",
+        "Ten",
+        "Eight"
+      ],
+      "answer": 2,
+      "explanation": "Eight planets go around the sun."
+    },
+    {
+      "id": "primary_4_6-basic_science-10",
+      "question": "Yam and rice are rich in which food class?",
+      "options": [
+        "Carbohydrates",
+        "Proteins",
+        "Vitamins"
+      ],
+      "answer": 0,
+      "explanation": "Yam and rice give us carbohydrates for energy."
+    }
+  ]
+}

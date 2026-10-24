@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'platform.dart';
+import 'quiz.dart';
 
 /// Backend address. Override with --dart-define=MAGANA_API=http://host:8000.
 const _configured = String.fromEnvironment('MAGANA_API');
@@ -312,6 +313,19 @@ class MaganaApi {
     return decoded is Map<String, dynamic>
         ? decoded
         : throw ApiException('failed');
+  }
+
+  /// Quizzes a teacher assigned in the portal for this class [level] (p5, jss2…).
+  /// Under 13 only in a teacher-run session; the backend checks the headers.
+  Future<List<Quiz>> learnerQuizzes(String level) async {
+    final body = await _json(
+      'GET',
+      '/learner/quizzes?level=${Uri.encodeQueryComponent(level)}',
+    );
+    return [
+      for (final q in (body['quizzes'] as List? ?? const []))
+        Quiz.fromJson(q as Map<String, dynamic>),
+    ];
   }
 
   /// Ibà quick-check questions in [lang], and whether they came from Ibà or from

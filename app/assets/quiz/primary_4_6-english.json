@@ -1,0 +1,121 @@
+{
+  "id": "primary_4_6-english-sample",
+  "title": "English practice",
+  "band": "primary_4_6",
+  "subject": "english",
+  "sample": true,
+  "language": "en",
+  "source": "Written by the Magana team. Our own wording; not past questions. CC BY 4.0.",
+  "review": "Sample: to be reviewed by a English teacher before testing with learners.",
+  "questions": [
+    {
+      "id": "primary_4_6-english-1",
+      "question": "What is the plural of child?",
+      "options": [
+        "Children",
+        "Childs",
+        "Childes"
+      ],
+      "answer": 0,
+      "explanation": "One child, many children."
+    },
+    {
+      "id": "primary_4_6-english-2",
+      "question": "Which word is a noun?",
+      "options": [
+        "Quickly",
+        "Market",
+        "Happy"
+      ],
+      "answer": 1,
+      "explanation": "A noun names a person, place or thing. A market is a place."
+    },
+    {
+      "id": "primary_4_6-english-3",
+      "question": "Which word is the opposite of early?",
+      "options": [
+        "Soon",
+        "Fast",
+        "Late"
+      ],
+      "answer": 2,
+      "explanation": "Early and late are opposites."
+    },
+    {
+      "id": "primary_4_6-english-4",
+      "question": "She blank to school every day. Which word fits?",
+      "options": [
+        "Goes",
+        "Go",
+        "Going"
+      ],
+      "answer": 0,
+      "explanation": "She goes to school every day."
+    },
+    {
+      "id": "primary_4_6-english-5",
+      "question": "In the tall tree, which word describes the tree?",
+      "options": [
+        "Tree",
+        "Tall",
+        "The"
+      ],
+      "answer": 1,
+      "explanation": "Tall describes the tree. It is an adjective."
+    },
+    {
+      "id": "primary_4_6-english-6",
+      "question": "Today I eat. Yesterday I what?",
+      "options": [
+        "Eated",
+        "Eats",
+        "Ate"
+      ],
+      "answer": 2,
+      "explanation": "Today I eat. Yesterday I ate."
+    },
+    {
+      "id": "primary_4_6-english-7",
+      "question": "Which word means the same as big?",
+      "options": [
+        "Large",
+        "Tiny",
+        "Thin"
+      ],
+      "answer": 0,
+      "explanation": "Big and large mean the same."
+    },
+    {
+      "id": "primary_4_6-english-8",
+      "question": "Which of these asks a question?",
+      "options": [
+        "Where is the pen?",
+        "The pen is here."
+      ],
+      "answer": 0,
+      "explanation": "Where is the pen? asks a question."
+    },
+    {
+      "id": "primary_4_6-english-9",
+      "question": "What is the plural of box?",
+      "options": [
+        "Boxs",
+        "Boxen",
+        "Boxes"
+      ],
+      "answer": 2,
+      "explanation": "We add e s to box: boxes."
+    },
+    {
+      "id": "primary_4_6-english-10",
+      "question": "In Ada sings well, which word is the action?",
+      "options": [
+        "Sings",
+        "Ada",
+        "Well"
+      ],
+      "answer": 0,
+      "explanation": "Sings is the action. It is a verb."
+    }
+  ]
+}

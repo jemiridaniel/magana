@@ -189,6 +189,16 @@ It builds with `--base-href /app/`, fills in the service worker's file list and 
 
 A school's testers may share one IP behind a router. If they hit the limit, raise the two IP settings. `/health` is never limited. The limits are kept in memory, so a restart resets them.
 
+## 10b. Teacher portal quizzes
+
+Quizzes teachers write in the portal are saved in the `magana_data` volume (`MAGANA_DATA_DIR=/data`). They are teacher content, never learner data. Back it up with the server:
+
+```bash
+sudo docker run --rm -v magana_magana_data:/data -v "$PWD":/backup alpine tar czf /backup/quizzes.tgz -C /data .
+```
+
+Saving and assigning quizzes needs `MAGANA_TEACHER_KEY` in `.env` (`openssl rand -hex 24`), sent by the portal as `X-Magana-Teacher-Key`. The app's API key can't be used: it is public. Without the key, a production server refuses quiz writes (`teacher_portal_off`). Learners read assigned quizzes with the ordinary app key.
+
 ## 11. Logs and troubleshooting
 
 ```bash

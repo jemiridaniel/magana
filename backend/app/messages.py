@@ -31,6 +31,7 @@ ENGLISH = {
     "consent_required": "Learners aged 13 to 17 need a parent's or guardian's consent first.",
     "teacher_session_required": "Learners under 13 can only use Magana in a teacher-run session.",
     "unreadable_image": "I couldn't open that photo. Please try again.",
+    "unknown_level": "Please choose your class again in Settings.",
     # Explanations
     "numbers_unconfirmed": "I can't confirm some numbers in this explanation, so I'll read the page exactly instead.",
     "explain_preview": "This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",
@@ -67,6 +68,24 @@ ENGLISH = {
 }
 
 CODES = frozenset(ENGLISH)
+
+# Codes only the teacher portal sees (portal/lib/messages.ts words each one; a test checks).
+PORTAL = {
+    "teacher_key_required": "This portal isn't signed in to Magana. Ask the Magana team for access.",
+    "teacher_portal_off": "Saving quizzes isn't set up on this server yet.",
+    "quiz_not_found": "That quiz wasn't found. It may have been removed.",
+    "quiz_not_ready": "Fix the problems in “Before you assign” first.",
+    "quiz_no_questions": "Add at least one question.",
+    "quiz_empty_question": "Type the question.",
+    "quiz_too_few_options": "Give at least two options.",
+    "quiz_too_many_options": "Too many options for this class.",
+    "quiz_empty_option": "An option is empty.",
+    "quiz_no_right_answer": "Mark the right answer.",
+    "quiz_picture_needs_description": "Describe the picture in words. Magana reads the description.",
+    "quiz_question_long": "Long for a primary class: 15 words or fewer is easier to hear.",
+    "quiz_translation_unchecked": "The translation is not yet checked.",
+}
+PORTAL_CODES = frozenset(PORTAL)
 
 
 class CodedError(PermissionError):

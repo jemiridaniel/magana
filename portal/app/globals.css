@@ -76,7 +76,10 @@ a { color: var(--green-ink); }
   color: #fff;
   padding: 32px 16px;
 }
-.brand { padding: 0 16px 32px; }
+.brand { display: flex; align-items: center; gap: 12px; min-height: var(--target); padding: 0 16px 32px; color: #fff; text-decoration: none; }
+.brand:hover .brand-name { text-decoration: underline; }
+.brand-mark { flex: none; width: 44px; height: 44px; }
+.brand-text { display: flex; flex-direction: column; line-height: 1.15; }
 .brand-name { display: block; font-size: 1.75rem; font-weight: 700; }
 .brand-sub { display: block; color: var(--sidebar-muted); font-size: 1rem; }
 
@@ -197,8 +200,8 @@ thead th { font-size: 1rem; color: var(--ink-soft); }
 
 .download-list { display: flex; flex-wrap: wrap; gap: 8px; list-style: none; margin: 0; padding: 0; }
 .link-target {
-  display: inline-flex; align-items: center;
-  min-height: var(--target);
+  display: inline-flex; align-items: center; justify-content: center;
+  min-height: var(--target); min-width: var(--target);
   padding: 0 12px;
   font-weight: 700;
 }
@@ -385,6 +388,59 @@ textarea.input { padding: 12px 16px; min-height: 144px; resize: vertical; }
 .contact { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 16px; background: var(--ready-bg); border: 2px solid var(--green); }
 .placeholder-text { font-style: italic; }
 
+/* ---------- quizzes */
+.steps { margin: 0; padding-left: 24px; display: grid; gap: 12px; line-height: 1.5; }
+.back-link { display: inline-flex; align-items: center; min-height: var(--target); min-width: var(--target); font-weight: 700; }
+.field-fixed {
+  min-height: var(--target); display: flex; align-items: center;
+  padding: 0 16px; margin: 0;
+  border: 2px solid var(--line); border-radius: var(--radius);
+  background: var(--processing-bg); color: var(--ink);
+}
+.textarea { min-height: 96px; padding-top: 14px; padding-bottom: 14px; line-height: 1.4; resize: vertical; font: inherit; }
+.hint-warn { color: var(--check-ink); font-weight: 700; }
+.quiz-layout { display: grid; grid-template-columns: minmax(0, 3fr) minmax(280px, 1.2fr); gap: 24px; align-items: start; }
+.quiz-aside { display: grid; gap: 24px; }
+.options { border: 0; margin: 0; padding: 0; display: grid; gap: 12px; }
+.options legend { font-weight: 700; padding: 0 0 8px; }
+.option-row {
+  display: flex; flex-wrap: wrap; align-items: center; gap: 12px;
+  padding: 8px 12px; border-radius: 14px;
+  border: 2px solid var(--line); background: var(--surface);
+}
+.option-row.is-right { border: 3px solid var(--green-ink); }
+.option-letter { font-size: 1.25rem; font-weight: 700; width: 1.5em; }
+.option-input { flex: 1 1 200px; }
+.right-pill { gap: 8px; min-height: var(--target); }
+.btn-small { padding: 0 16px; }
+.btn-icon { width: var(--target); padding: 0; font-size: 1.75rem; border-color: var(--line); color: var(--ink); }
+.btn-dashed { justify-self: start; border-style: dashed; }
+.btn-dashed[disabled] { opacity: 1; border-color: var(--line); color: var(--ink-soft); }
+.btn-dark { background: var(--ink); border-color: var(--ink); color: #fff; }
+.btn-dark:hover { background: var(--green-ink); border-color: var(--green-ink); }
+.btn svg { margin-right: 8px; }
+.question-nav { justify-content: space-between; }
+.translation-check { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.check-inline { min-height: var(--target); }
+.file-input { padding: 14px 12px; }
+.q-list { list-style: none; margin: 8px 0 0; padding: 0; display: grid; gap: 8px; }
+.q-link {
+  display: flex; align-items: center; gap: 10px; width: 100%;
+  min-height: var(--target); padding: 6px 12px;
+  border-radius: var(--radius); border: 1px solid var(--line);
+  background: var(--surface); color: var(--ink); font: inherit; text-align: left; cursor: pointer;
+}
+.q-link[aria-current="step"] { border: 3px solid var(--green-ink); }
+.q-num { font-weight: 700; width: 1.25em; }
+.q-text { flex: 1; overflow-wrap: anywhere; }
+.checks-card { background: var(--check-bg); border-color: var(--check-ink); color: var(--ink); }
+.checks-card.is-ready { background: var(--ready-bg); border-color: var(--green-ink); }
+.check-list { margin: 8px 0 0; padding-left: 20px; display: grid; gap: 8px; line-height: 1.4; }
+.check-block { color: var(--absent-ink); }
+.check-warn { color: var(--check-ink); }
+h2[tabindex="-1"]:focus { outline: none; }
+h2[tabindex="-1"]:focus-visible { outline: 3px solid var(--ink); }
+
 @media (max-width: 900px) {
   .shell { flex-direction: column; }
   .sidebar { flex: none; padding: 16px; }
@@ -394,6 +450,7 @@ textarea.input { padding: 12px 16px; min-height: 144px; resize: vertical; }
   .summary { grid-template-columns: 1fr; }
   .tiles { grid-template-columns: repeat(2, 1fr); }
   .consent-layout { grid-template-columns: minmax(0, 1fr); }
+  .quiz-layout { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 600px) {

@@ -1,0 +1,121 @@
+{
+  "id": "primary_1_3-mathematics-sample",
+  "title": "Mathematics practice",
+  "band": "primary_1_3",
+  "subject": "mathematics",
+  "sample": true,
+  "language": "en",
+  "source": "Written by the Magana team. Our own wording; not past questions. CC BY 4.0.",
+  "review": "Sample: to be reviewed by a Mathematics teacher before testing with learners.",
+  "questions": [
+    {
+      "id": "primary_1_3-mathematics-1",
+      "question": "What is 2 plus 3?",
+      "options": [
+        "5",
+        "6",
+        "4"
+      ],
+      "answer": 0,
+      "explanation": "2 plus 3 is 5."
+    },
+    {
+      "id": "primary_1_3-mathematics-2",
+      "question": "What is 7 take away 2?",
+      "options": [
+        "4",
+        "5",
+        "9"
+      ],
+      "answer": 1,
+      "explanation": "7 take away 2 is 5."
+    },
+    {
+      "id": "primary_1_3-mathematics-3",
+      "question": "How many legs does a hen have?",
+      "options": [
+        "Four",
+        "Six",
+        "Two"
+      ],
+      "answer": 2,
+      "explanation": "A hen has two legs."
+    },
+    {
+      "id": "primary_1_3-mathematics-4",
+      "question": "Which number comes after 9?",
+      "options": [
+        "10",
+        "8",
+        "11"
+      ],
+      "answer": 0,
+      "explanation": "After 9 comes 10."
+    },
+    {
+      "id": "primary_1_3-mathematics-5",
+      "question": "What is 4 plus 4?",
+      "options": [
+        "6",
+        "8",
+        "9"
+      ],
+      "answer": 1,
+      "explanation": "4 plus 4 is 8."
+    },
+    {
+      "id": "primary_1_3-mathematics-6",
+      "question": "Which number is bigger, 12 or 21?",
+      "options": [
+        "21",
+        "12"
+      ],
+      "answer": 0,
+      "explanation": "21 is bigger than 12."
+    },
+    {
+      "id": "primary_1_3-mathematics-7",
+      "question": "How many days are in a week?",
+      "options": [
+        "Seven",
+        "Five",
+        "Ten"
+      ],
+      "answer": 0,
+      "explanation": "A week has seven days."
+    },
+    {
+      "id": "primary_1_3-mathematics-8",
+      "question": "What is half of 10?",
+      "options": [
+        "2",
+        "5",
+        "10"
+      ],
+      "answer": 1,
+      "explanation": "Half of 10 is 5."
+    },
+    {
+      "id": "primary_1_3-mathematics-9",
+      "question": "How many sides does a triangle have?",
+      "options": [
+        "Four",
+        "Five",
+        "Three"
+      ],
+      "answer": 2,
+      "explanation": "A triangle has three sides."
+    },
+    {
+      "id": "primary_1_3-mathematics-10",
+      "question": "What is 3 times 2?",
+      "options": [
+        "6",
+        "5",
+        "9"
+      ],
+      "answer": 0,
+      "explanation": "3 times 2 is 6."
+    }
+  ]
+}
