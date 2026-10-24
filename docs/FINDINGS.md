@@ -13,6 +13,18 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Accessibility: the new app screens with TalkBack on the Emulator
+
+- **What we tested and how:** on the Emulator with TalkBack, using `tools/talkback/`, we walked through Home, Settings, the app-language sheet, Ask a question (Explain without a page) and the Everyday hub. We then ran "Read any paper" on the photographed label `medicine_label.png` from the gallery.
+- **Result:**
+  - Every control on these screens was announced with its label.
+  - Home no longer announces anything as "Coming soon".
+  - The language sheet reads each language with its own welcome word ("Hausa. Barka da zuwa", "Yorùbá. Ẹ káàbọ̀", "Igbo. Nnọọ").
+  - Settings shows "Version 1.0.0 (build 1)".
+  - "Read any paper" identified the real photo as a medicine label: it showed the medicine note, and `/read` returned 200 in the strict letter mode. Line 2's dose stayed "[unclear number]" with its spoken warning.
+- **What we changed:** nothing; this is a check of the previous commits.
+- **Status:** passed on the Emulator. Not yet tried on a real phone or by a blind user. Voice commands, spoken answers and Explain questions are untested with real speech, because the Emulator has no microphone input.
+
 ## 2026-10-24 · Portal: My classes, Learner progress, Consent records and Help built
 
 - **What we tested and how:** Chrome with Playwright and axe-core (wcag2a/aa, 21a/aa, 22aa, best-practice) at 1280×900 and 390×844 on all six portal pages. The script used every control on the four new pages and did a keyboard Tab walk on every page. Also `npm run lint` and `npm run build`.
