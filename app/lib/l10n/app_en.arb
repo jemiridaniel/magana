@@ -780,22 +780,25 @@
   "notNow": "Not now",
   "remindersMayBeLate": "On this phone, reminders may ring up to an hour late. To ring on time, allow alarms and reminders for Magana.",
   "allowOnTime": "Allow on-time reminders",
-  "msg_q_bleeding_no_sight": "Are you bleeding without a clear reason? For example a nosebleed, blood you can taste from your gums, or has anyone told you there is blood in your vomit or stool?",
+  "msg_q_bleeding_no_sight": "Have you felt or tasted blood, or has anyone told you that you are bleeding, from your nose, gums, vomit or stool?",
   "@msg_q_bleeding_no_sight": {
     "description": "CLINICAL DRAFT, pending Dr. Amos: asked so a blind user can answer"
   },
   "msg_q_yellow_eyes_no_sight": "Has anyone told you that your eyes or skin look yellow?",
-  "msg_q_very_pale_no_sight": "Has anyone told you that your palms, lips or the inside of your eyelids look very pale?",
-  "msg_q_dark_urine_no_sight": "Has anyone told you that your urine is very dark, like cola or tea?",
-  "cantCheck": "I can't check",
-  "quickCheckSightNote": "This question is about how something looks. If someone you trust is with you, you can ask them. If you can't check, choose I can't check.",
-  "couldNotCheck": "{count, plural, =1{You could not check 1 sign. Tell the nurse when they call.} other{You could not check {count} signs. Tell the nurse when they call.}}",
-  "@couldNotCheck": {
-    "description": "CLINICAL DRAFT",
-    "placeholders": {
-      "count": {
-        "type": "num"
-      }
-    }
+  "msg_q_very_pale_no_sight": "Has anyone told you that you look very pale? Do you feel very weak, dizzy or out of breath when you stand?",
+  "msg_q_dark_urine_no_sight": "Has someone near you seen that your urine is very dark, like cola or tea?",
+  "@msg_q_dark_urine_no_sight": {
+    "description": "CLINICAL DRAFT, pending Dr. Amos"
+  },
+  "@msg_q_very_pale_no_sight": {
+    "description": "CLINICAL DRAFT, pending Dr. Amos"
+  },
+  "msg_ask_someone_to_check": "Please ask someone near you to check, or go to a clinic.",
+  "@msg_ask_someone_to_check": {
+    "description": "CLINICAL DRAFT, pending Dr. Amos: a danger sign answered I can't tell"
+  },
+  "cantTell": "I can't tell",
+  "@cantTell": {
+    "description": "CLINICAL DRAFT, pending Dr. Amos: never counts as No"
   }
 }

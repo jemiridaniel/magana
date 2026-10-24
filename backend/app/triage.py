@@ -34,26 +34,36 @@ DANGER_SIGNS = (
 
 FALLBACK_RULE_VERSION = "magana-danger-signs-1"
 
-# Signs a blind user can't check by looking. Magana asks about them in words that don't
-# need sight ("has anyone told you ...", "q_<id>_no_sight") and accepts "I can't check".
-# "I can't check" is never a yes, so never an emergency on its own, but it never leaves the
-# result at routine either: the learner gets the faster call-back and is told to mention it.
-# DRAFT wording and rule, pending clinical sign-off (Dr. Amos).
+# DRAFT, pending clinical sign-off (Dr. Amos): "I can't tell".
+# Every quick-check question can be answered "I can't tell" (CANT_TELL). It never counts as
+# "no": it is sent to the rules as unanswered (null), and Magana sets a floor afterwards:
+# - on a danger-sign question: at least urgent, with "Please ask someone near you to check,
+#   or go to a clinic" (ask_someone_to_check);
+# - on any other question: at least urgent, because the rule that needed the answer could
+#   not be applied.
+# A danger sign answered "yes" is still always an emergency.
+CANT_TELL = "cant_tell"
+
+# Danger signs normally checked by looking. Magana words them so a blind user can answer
+# ("q_<id>_no_sight"); Ibà's own wording assumes sight. DRAFT, pending Dr. Amos.
 SIGHT_BASED = ("bleeding", "yellow_eyes", "very_pale", "dark_urine")
-CANT_CHECK = "cant_check"
 
 
-def _without_sight(q: dict) -> dict:
-    """A question as Magana asks it: sight-based signs get wording a blind user can answer."""
-    if q["id"] not in SIGHT_BASED:
-        return q
-    q = {k: v for k, v in q.items() if k != "text"}  # Ibà's wording assumes sight
-    return {**q, "message": f"q_{q['id']}_no_sight", "cant_check": True}
+def _as_magana_asks(q: dict) -> dict:
+    """A question as Magana asks it: every question offers "I can't tell"; danger signs are
+    marked; sight-based ones get wording a blind user can answer."""
+    q = {**q, "cant_tell": True}
+    if q["id"] in DANGER_SIGNS:
+        q["danger_sign"] = True
+    if q["id"] in SIGHT_BASED:
+        q = {k: v for k, v in q.items() if k != "text"}  # Ibà's wording assumes sight
+        q["message"] = f"q_{q['id']}_no_sight"
+    return q
 
 
 # Asked when Ibà is unreachable: the danger signs only. Wording: messages.ENGLISH "q_<id>".
 FALLBACK_QUESTIONS = [
-    _without_sight({"id": q, "type": "yes_no", "message": f"q_{q}"}) for q in DANGER_SIGNS
+    _as_magana_asks({"id": q, "type": "yes_no", "message": f"q_{q}"}) for q in DANGER_SIGNS
 ]
 
 
@@ -90,13 +100,18 @@ def _fallback(answers: dict, reason: str, monitor: IbaMonitor) -> TriageResult:
 
 
 async def assess(answers: dict, client: IbaClient | None, monitor: IbaMonitor = iba_monitor) -> TriageResult:
-    # "I can't check" goes to the rules as "not seen" (never a yes); see SIGHT_BASED.
-    unchecked = [k for k, v in answers.items() if v == CANT_CHECK]
-    answers = {k: (False if v == CANT_CHECK else v) for k, v in answers.items()}
+    # "I can't tell" is never "no": the rules get it as unanswered, then the floor below.
+    unknown = [k for k, v in answers.items() if v == CANT_TELL]
+    answers = {k: (None if v == CANT_TELL else v) for k, v in answers.items()}
     result = await _assess(answers, client, monitor)
-    if unchecked and result.priority is Priority.ROUTINE:
-        result = TriageResult(Priority.URGENT, "nurse_call_within_2_hours", result.rule_version,
-                              f"{result.source}+unchecked_floor")
+    if not unknown or result.priority is Priority.EMERGENCY:
+        return result
+    if any(k in DANGER_SIGNS for k in unknown):
+        return TriageResult(Priority.URGENT, "ask_someone_to_check", result.rule_version,
+                            f"{result.source}+cant_tell_floor")
+    if result.priority is Priority.ROUTINE:
+        return TriageResult(Priority.URGENT, "nurse_call_within_2_hours", result.rule_version,
+                            f"{result.source}+cant_tell_floor")
     return result
 
 
@@ -127,7 +142,7 @@ async def questions(lang: str, client: IbaClient | None, monitor: IbaMonitor = i
         try:
             qs = await client.questions(lang)
             monitor.success()
-            return [_without_sight({**q, "message": f"q_{q['id']}"}) for q in qs], "iba"
+            return [_as_magana_asks({**q, "message": f"q_{q['id']}"}) for q in qs], "iba"
         except IbaUnavailable as e:
             monitor.failure(str(e))
             log.warning("triage questions source=fallback reason=%s", e)

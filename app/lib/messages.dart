@@ -22,6 +22,7 @@ String messageFor(AppLocalizations l, String code, {String where = ''}) =>
       'callback_unavailable' => l.msg_callback_unavailable,
       'unknown_tier' => l.msg_unknown_tier,
       'go_to_clinic_now' => l.msg_go_to_clinic_now,
+      'ask_someone_to_check' => l.msg_ask_someone_to_check,
       'nurse_call_within_2_hours' => l.msg_nurse_call_within_2_hours,
       'nurse_call_working_hours' => l.msg_nurse_call_working_hours,
       'q_fever' => l.msg_q_fever,

@@ -58,6 +58,16 @@ class Backend {
         );
       case '/triage/assess':
         final a = jsonDecode(req.body) as Map;
+        if (a.values.contains('cant_tell')) {
+          // What Magana's backend answers when a danger sign is unknown.
+          return http.Response(
+            jsonEncode({
+              'priority': 'urgent',
+              'message': 'ask_someone_to_check',
+            }),
+            200,
+          );
+        }
         final emergency = a['fits'] == true;
         final urgent =
             a['fever'] == true && (a['fever_days'] as int? ?? 0) >= 2;
@@ -267,14 +277,13 @@ void main() {
           'dark_urine',
           'too_weak',
         ])
-          sight.contains(id)
-              ? {
-                  'id': id,
-                  'type': 'yes_no',
-                  'message': 'q_${id}_no_sight',
-                  'cant_check': true,
-                }
-              : {'id': id, 'type': 'yes_no', 'message': 'q_$id'},
+          {
+            'id': id,
+            'type': 'yes_no',
+            'message': sight.contains(id) ? 'q_${id}_no_sight' : 'q_$id',
+            'cant_tell': true,
+            'danger_sign': true,
+          },
       ];
       tester
           .state<NavigatorState>(find.byType(Navigator).last)
@@ -304,13 +313,7 @@ void main() {
       }
 
       for (var i = 1; i <= 10; i++) {
-        final sightBased = [5, 6, 8, 9].contains(i);
-        expect(
-          find.bySemanticsLabel(en.cantCheck),
-          sightBased ? findsOneWidget : findsNothing,
-          reason: 'question $i',
-        );
-        expectOnScreen([en.yes, en.no, if (sightBased) en.cantCheck], i);
+        expectOnScreen([en.yes, en.no, en.cantTell], i);
         if (i == 10) break;
         await tester.tap(find.bySemanticsLabel(en.no));
         await tester.pumpAndSettle();
@@ -320,7 +323,7 @@ void main() {
   );
 
   testWidgets(
-    'a sign you need sight for: worded for a blind user, cannot check',
+    'a danger sign you cannot tell: never a no, ask someone to check',
     (tester) async {
       final handle = tester.ensureSemantics();
       final (speaker, backend, _) = await open(
@@ -332,7 +335,8 @@ void main() {
           'id': 'very_pale',
           'type': 'yes_no',
           'message': 'q_very_pale_no_sight',
-          'cant_check': true,
+          'cant_tell': true,
+          'danger_sign': true,
         },
       ];
       tester
@@ -340,17 +344,33 @@ void main() {
           .push(MaterialPageRoute(builder: (_) => const QuickCheckScreen()));
       await tester.pumpAndSettle();
       expect(find.text(en.msg_q_very_pale_no_sight), findsOneWidget);
-      expect(find.text(en.quickCheckSightNote), findsOneWidget);
-      expect(
-        speaker.said.last,
-        '${en.msg_q_very_pale_no_sight} ${en.quickCheckSightNote}',
-      );
+      expect(speaker.said.last, en.msg_q_very_pale_no_sight);
       expectAccessible(tester, 'Sight-based question');
-      await tap(tester, en.cantCheck);
-      expect(backend.body('/triage/assess'), {'very_pale': 'cant_check'});
-      expect(find.text(en.couldNotCheck(1)), findsOneWidget);
-      expect(speaker.said.last, endsWith(en.couldNotCheck(1)));
+      await tap(tester, en.cantTell);
+      expect(backend.body('/triage/assess'), {'very_pale': 'cant_tell'});
+      final result = '${en.msg_ask_someone_to_check} ${en.resultUrgent}';
+      expect(find.text(result), findsOneWidget);
+      expect(speaker.said.last, result);
       handle.dispose();
     },
   );
+
+  testWidgets('"I can\'t tell" is offered for the number of fever days too', (
+    tester,
+  ) async {
+    final (_, backend, _) = await open(tester, screen: const SizedBox());
+    tester
+        .state<NavigatorState>(find.byType(Navigator).last)
+        .push(MaterialPageRoute(builder: (_) => const QuickCheckScreen()));
+    await tester.pumpAndSettle();
+    await tap(tester, en.yes); // fever
+    expect(find.text(en.daysCount(1)), findsOneWidget);
+    await tap(tester, en.cantTell);
+    await tap(tester, en.no); // fits
+    expect(backend.body('/triage/assess'), {
+      'fever': true,
+      'fever_days': 'cant_tell',
+      'fits': false,
+    });
+  });
 }

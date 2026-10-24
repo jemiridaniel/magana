@@ -62,7 +62,8 @@ def test_iba_questions_are_relayed_in_the_users_language(use_iba):
     body = client.get("/triage/questions?lang=yo").json()
     assert body["source"] == "iba"
     assert [q["id"] for q in body["questions"]] == ["fever", "fits"]
-    assert body["questions"][1] == {"id": "fits", "type": "yes_no", "text": "Ṣé gìrì ti mú ọ?", "message": "q_fits"}
+    assert body["questions"][1] == {"id": "fits", "type": "yes_no", "text": "Ṣé gìrì ti mú ọ?", "message": "q_fits",
+                                    "cant_tell": True, "danger_sign": True}
     assert dict(seen[0].url.params) == {"mode": "self_report", "lang": "yo"}
 
 
@@ -164,50 +165,84 @@ def test_danger_signs_match_iba():
     assert tuple(re.findall(r'"(\w+)":', block)) == triage.DANGER_SIGNS
 
 
-# ---------- sight-based danger signs (DRAFT wording and rule, pending Dr. Amos)
+# ---------- "I can't tell" and sight-based wording (DRAFT, pending Dr. Amos)
 
-def sight_iba(priority: str, message: str, seen: list):
+def asking(priority: str, message: str, seen: list):
     def handler(request: httpx.Request) -> httpx.Response:
         seen.append(request)
         if request.url.path == "/v1/questions":
-            qs = [{"id": "fits", "type": "yes_no", "text": "Have you had fits?"},
+            qs = [{"id": "fever", "type": "yes_no", "text": "Do you have a fever?"},
+                  {"id": "fits", "type": "yes_no", "text": "Have you had fits?"},
                   {"id": "very_pale", "type": "yes_no", "text": "Are your palms, lips or inner eyelids very pale?"}]
             return httpx.Response(200, json={"questions": qs})
         return httpx.Response(200, json={"priority": priority, "message": message, "rule_version": "self-report-0.1.0"})
     return handler
 
 
-def test_sight_based_questions_are_asked_without_needing_sight(use_iba):
-    use_iba(iba(sight_iba("routine", "nurse_call_working_hours", [])))
-    fits, pale = client.get("/triage/questions?lang=en").json()["questions"]
-    assert fits == {"id": "fits", "type": "yes_no", "text": "Have you had fits?", "message": "q_fits"}
-    # Ibà's wording assumes sight, so Magana words it and allows "I can't check".
-    assert pale == {"id": "very_pale", "type": "yes_no", "message": "q_very_pale_no_sight", "cant_check": True}
+def test_every_question_offers_cant_tell_and_sight_based_ones_are_reworded(use_iba):
+    use_iba(iba(asking("routine", "nurse_call_working_hours", [])))
+    fever, fits, pale = client.get("/triage/questions?lang=en").json()["questions"]
+    assert fever == {"id": "fever", "type": "yes_no", "text": "Do you have a fever?",
+                     "message": "q_fever", "cant_tell": True}
+    assert fits == {"id": "fits", "type": "yes_no", "text": "Have you had fits?",
+                    "message": "q_fits", "cant_tell": True, "danger_sign": True}
+    # Ibà's wording assumes sight, so Magana words it.
+    assert pale == {"id": "very_pale", "type": "yes_no", "message": "q_very_pale_no_sight",
+                    "cant_tell": True, "danger_sign": True}
 
 
-def test_fallback_questions_are_asked_without_needing_sight():
+def test_fallback_questions_offer_cant_tell():
     qs = {q["id"]: q for q in client.get("/triage/questions").json()["questions"]}
+    assert all(q["cant_tell"] and q["danger_sign"] for q in qs.values())
     for sign in triage.SIGHT_BASED:
-        assert qs[sign]["message"] == f"q_{sign}_no_sight" and qs[sign]["cant_check"] is True
-    assert "cant_check" not in qs["fits"]
+        assert qs[sign]["message"] == f"q_{sign}_no_sight"
+    assert qs["fits"]["message"] == "q_fits"
 
 
-def test_cant_check_is_never_a_yes_and_ibà_sees_false(use_iba):
+def test_cant_tell_is_sent_as_unanswered_never_as_no(use_iba):
     seen: list[httpx.Request] = []
-    use_iba(iba(sight_iba("routine", "nurse_call_working_hours", seen)))
-    body = client.post("/triage/assess", json={"fits": False, "very_pale": "cant_check"}).json()
-    assert json.loads(seen[-1].content)["answers"] == {"fits": False, "very_pale": False}
-    # Not an emergency, but never left at routine: the faster call-back instead.
+    use_iba(iba(asking("routine", "nurse_call_working_hours", seen)))
+    client.post("/triage/assess", json={"fits": False, "very_pale": "cant_tell"})
+    assert json.loads(seen[-1].content)["answers"] == {"fits": False, "very_pale": None}
+
+
+def test_cant_tell_on_a_danger_sign_is_at_least_urgent_and_asks_someone_to_check(use_iba):
+    use_iba(iba(asking("routine", "nurse_call_working_hours", [])))
+    body = client.post("/triage/assess", json={"fits": False, "very_pale": "cant_tell"}).json()
     assert (body["priority"], body["message"], body["source"]) == (
-        "urgent", "nurse_call_within_2_hours", "iba+unchecked_floor")
+        "urgent", "ask_someone_to_check", "iba+cant_tell_floor")
 
 
-def test_cant_check_never_lowers_a_higher_priority(use_iba):
-    use_iba(iba(sight_iba("routine", "nurse_call_working_hours", [])))
-    body = client.post("/triage/assess", json={"fits": True, "very_pale": "cant_check"}).json()
-    assert body["priority"] == "emergency"
+def test_cant_tell_on_a_danger_sign_beats_an_urgent_fever(use_iba):
+    use_iba(iba(asking("urgent", "nurse_call_within_2_hours", [])))
+    body = client.post("/triage/assess", json={"fever": True, "fever_days": 3, "bleeding": "cant_tell"}).json()
+    assert (body["priority"], body["message"]) == ("urgent", "ask_someone_to_check")
 
 
-def test_cant_check_without_iba():
-    body = client.post("/triage/assess", json={"dark_urine": "cant_check"}).json()
-    assert (body["priority"], body["source"]) == ("urgent", "fallback")
+def test_cant_tell_elsewhere_is_never_left_at_routine(use_iba):
+    use_iba(iba(asking("routine", "nurse_call_working_hours", [])))
+    body = client.post("/triage/assess", json={"fever": True, "fever_days": "cant_tell"}).json()
+    assert (body["priority"], body["message"]) == ("urgent", "nurse_call_within_2_hours")
+
+
+def test_a_yes_is_still_an_emergency_whatever_else_is_unknown(use_iba):
+    use_iba(iba(asking("routine", "nurse_call_working_hours", [])))
+    body = client.post("/triage/assess", json={"fits": True, "very_pale": "cant_tell"}).json()
+    assert (body["priority"], body["message"]) == ("emergency", "go_to_clinic_now")
+
+
+def test_cant_tell_without_iba():
+    body = client.post("/triage/assess", json={"dark_urine": "cant_tell"}).json()
+    assert (body["priority"], body["message"], body["source"]) == (
+        "urgent", "ask_someone_to_check", "fallback+cant_tell_floor")
+
+
+def test_reworded_sight_based_questions_are_the_drafted_ones():
+    from app.messages import ENGLISH
+    assert ENGLISH["q_bleeding_no_sight"] == (
+        "Have you felt or tasted blood, or has anyone told you that you are bleeding, "
+        "from your nose, gums, vomit or stool?")
+    assert ENGLISH["q_dark_urine_no_sight"] == "Has someone near you seen that your urine is very dark, like cola or tea?"
+    assert ENGLISH["q_very_pale_no_sight"] == (
+        "Has anyone told you that you look very pale? Do you feel very weak, dizzy or out of "
+        "breath when you stand?")

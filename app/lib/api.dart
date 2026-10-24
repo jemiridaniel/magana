@@ -202,7 +202,6 @@ class TriageQuestion {
     required this.message,
     this.text,
     this.askIf,
-    this.cantCheck = false,
   });
 
   final String id;
@@ -210,9 +209,6 @@ class TriageQuestion {
   final String? text; // Ibà's wording in the app language, when Ibà answered
   final String message; // fallback message code (q_<id>), worded by the app
   final String? askIf; // only asked when this question was answered yes
-
-  /// A sign you would normally check by looking: "I can't check" is offered.
-  final bool cantCheck;
 }
 
 class ApiException implements Exception {
@@ -290,7 +286,6 @@ class MaganaApi {
             text: q['text'] as String?,
             message: q['message'] as String? ?? 'q_${q['id']}',
             askIf: q['ask_if'] as String?,
-            cantCheck: q['cant_check'] == true,
           ),
       ],
     );

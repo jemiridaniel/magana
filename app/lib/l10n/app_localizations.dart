@@ -1923,7 +1923,7 @@ abstract class AppLocalizations {
   /// CLINICAL DRAFT, pending Dr. Amos: asked so a blind user can answer
   ///
   /// In en, this message translates to:
-  /// **'Are you bleeding without a clear reason? For example a nosebleed, blood you can taste from your gums, or has anyone told you there is blood in your vomit or stool?'**
+  /// **'Have you felt or tasted blood, or has anyone told you that you are bleeding, from your nose, gums, vomit or stool?'**
   String get msg_q_bleeding_no_sight;
 
   /// No description provided for @msg_q_yellow_eyes_no_sight.
@@ -1932,35 +1932,29 @@ abstract class AppLocalizations {
   /// **'Has anyone told you that your eyes or skin look yellow?'**
   String get msg_q_yellow_eyes_no_sight;
 
-  /// No description provided for @msg_q_very_pale_no_sight.
+  /// CLINICAL DRAFT, pending Dr. Amos
   ///
   /// In en, this message translates to:
-  /// **'Has anyone told you that your palms, lips or the inside of your eyelids look very pale?'**
+  /// **'Has anyone told you that you look very pale? Do you feel very weak, dizzy or out of breath when you stand?'**
   String get msg_q_very_pale_no_sight;
 
-  /// No description provided for @msg_q_dark_urine_no_sight.
+  /// CLINICAL DRAFT, pending Dr. Amos
   ///
   /// In en, this message translates to:
-  /// **'Has anyone told you that your urine is very dark, like cola or tea?'**
+  /// **'Has someone near you seen that your urine is very dark, like cola or tea?'**
   String get msg_q_dark_urine_no_sight;
 
-  /// No description provided for @cantCheck.
+  /// CLINICAL DRAFT, pending Dr. Amos: a danger sign answered I can't tell
   ///
   /// In en, this message translates to:
-  /// **'I can\'t check'**
-  String get cantCheck;
+  /// **'Please ask someone near you to check, or go to a clinic.'**
+  String get msg_ask_someone_to_check;
 
-  /// No description provided for @quickCheckSightNote.
+  /// CLINICAL DRAFT, pending Dr. Amos: never counts as No
   ///
   /// In en, this message translates to:
-  /// **'This question is about how something looks. If someone you trust is with you, you can ask them. If you can\'t check, choose I can\'t check.'**
-  String get quickCheckSightNote;
-
-  /// CLINICAL DRAFT
-  ///
-  /// In en, this message translates to:
-  /// **'{count, plural, =1{You could not check 1 sign. Tell the nurse when they call.} other{You could not check {count} signs. Tell the nurse when they call.}}'**
-  String couldNotCheck(num count);
+  /// **'I can\'t tell'**
+  String get cantTell;
 }
 
 class _AppLocalizationsDelegate

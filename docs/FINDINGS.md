@@ -13,6 +13,47 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Triage/Ibà, accessibility: "I can't tell" on every quick-check question
+
+- **What we tested and how:**
+  - Backend tests in `test_triage.py`:
+    - `test_every_question_offers_cant_tell_and_sight_based_ones_are_reworded`
+    - `test_fallback_questions_offer_cant_tell`
+    - `test_cant_tell_is_sent_as_unanswered_never_as_no`
+    - `test_cant_tell_on_a_danger_sign_is_at_least_urgent_and_asks_someone_to_check`
+    - `test_cant_tell_on_a_danger_sign_beats_an_urgent_fever`
+    - `test_cant_tell_elsewhere_is_never_left_at_routine`
+    - `test_a_yes_is_still_an_emergency_whatever_else_is_unknown`
+    - `test_cant_tell_without_iba`
+    - `test_reworded_sight_based_questions_are_the_drafted_ones`
+  - App tests in `health_worker_test.dart`: `Iba down: built-in questions, labelled honestly, buttons stay on screen`, `a danger sign you cannot tell: never a no, ask someone to check`, `"I can't tell" is offered for the number of fever days too`.
+  - On the Emulator with TalkBack, using `tools/talkback/quick_check.py`: all 10 built-in questions, with "I can't tell" on question 5 (bleeding).
+- **Result:**
+  - Every question now offers "I can't tell", including the number of fever days.
+  - Magana sends it to Ibà as unanswered (`null`), never as `false`. Ibà's `assess_self_report` currently counts unanswered as "no", so Magana sets its own floor:
+    - "I can't tell" on a danger sign gives at least urgent, with "Please ask someone near you to check, or go to a clinic."
+    - "I can't tell" on any other question never leaves the result at routine, because the rule that needed the answer couldn't be applied.
+    - A "Yes" is still always an emergency.
+  - On the Emulator the result screen read: "Please ask someone near you to check, or go to a clinic. A nurse should call you within 2 hours. Request a call back now. If you get worse, go to a clinic or call 112." The backend logged `priority=urgent`, with no answers.
+  - The three sight-dependent questions were reworded as drafted:
+    - bleeding: felt or tasted blood, or someone told you;
+    - dark urine: someone near you has seen it;
+    - pallor: someone told you, or weak, dizzy or out of breath on standing.
+
+    The yellow-eyes wording from the previous entry stays. This replaces the previous entry's "I can't check" answer, which applied only to the four sight-based questions and was sent to Ibà as `false`.
+- **What we changed:** this commit, plus the iba-natlas issue https://github.com/jemiridaniel/iba-natlas/issues/1, so that Ibà's `/v1` self-report mode makes the same change.
+- **Status:** fixed in Magana, but the whole rule is a DRAFT pending Dr. Amos's sign-off. That covers the "never No" floor, raising unknown non-danger answers to urgent (our choice, since the user asked only about danger signs), the wording, and the Hausa, Yorùbá and Igbo drafts. The pallor question now also asks about symptoms (weak, dizzy, breathless), which widens the sign; Dr. Amos should confirm. Ibà itself still counts unanswered as "no" (iba-natlas issue). Not yet tried by a blind user.
+
+## 2026-10-24 · Reading accuracy: words around the dose garbled on a photographed label
+
+- **What we tested and how:** the photographed medicine label `medicine_label.png`, chosen from the gallery on the Emulator and read in health mode (Tesseract on the Mac backend).
+- **Result:**
+  - Line 1, "Paracetamol 500 mg tablets", was read correctly.
+  - Line 2, "Do not take more than 8 in 24 hours", came back as "Mo notiake more inan [unclear number] in 24 hours".
+  - The dose number was flagged, not guessed, but the words around it were garbled, so a user hears a sentence that doesn't make sense.
+- **What we changed:** nothing yet.
+- **Status:** open. Untested with PaddleOCR, the production engine, on this photo.
+
 ## 2026-10-24 · Triage/Ibà, accessibility: the quick check asks about things you need sight to check
 
 - **What we tested and how:** the Ibà quick check on the Emulator, reviewed by Jemiri Daniel Taiwo from screenshots of the answered questions.
@@ -57,7 +98,8 @@ No real phone and no blind or low-vision tester has been used yet.
   - Right after a dump, the touch reached the app as a plain click and answered the question (seen 3 times).
   - 2.5 s later, the same touch only moved TalkBack focus.
   - Polling the screen with dumps also cut off app speech, which made lessons appear to skip steps.
-- **What we changed:** the test helper waits 2.5 s between locating a control and touching it, and speech checks avoid polling. These are scratch test tools, not committed.
+- **What we changed:** the test helper waits 2.5 s between locating a control and touching it, and speech checks avoid polling. The helpers are committed in `tools/talkback/`.
+- **Also measured later the same day:** a script that dumped the screen between TalkBack swipes, to look for a control below the fold, never reached it. It ran for more than 10 minutes until we stopped it, because each dump resets TalkBack focus. `scroll_to()` now focuses the lowest item in the scrolling area and swipes 3 times between dumps; with it, the quick-check walk-through reached the button.
 - **Status:** limitation of our test method. Results from dump-heavy runs before this date may include such artefacts.
 
 ## 2026-10-24 · Accessibility: answered quiz options turned grey
@@ -182,7 +224,7 @@ No real phone and no blind or low-vision tester has been used yet.
   - At blur 4.0 the line still can't be read, and it is now reported as a faint region instead of silently missing.
   - Shaded paper and a dark table edge are not mistaken for ink.
 - **What we changed:** 409fa5a.
-- **Status:** fixed for the rendered cases. On the Emulator, the photographed label `medicine_label.png` read line 2 as "Mo notiake more inan [unclear number] in 24 hours": the dose was flagged, not guessed, but the words around it were garbled (open).
+- **Status:** fixed for the rendered cases. A real photographed label is still open: see "Words around the dose garbled on a photographed label".
 
 ## 2026-10-24 · Safety: "8 in 24 hours" misread as "6" and as "@"
 

@@ -1149,7 +1149,7 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get msg_q_bleeding_no_sight =>
-      'Kana zubar da jini ba tare da dalili ba? Misali jini daga hanci, jinin da kake ji a bakinka daga dasashi, ko wani ya gaya maka akwai jini a amai ko bayan gidanka?';
+      'Ka ji ko ka ɗanɗana jini, ko wani ya gaya maka cewa kana zubar da jini, daga hanci, dasashi, amai ko bayan gida?';
 
   @override
   String get msg_q_yellow_eyes_no_sight =>
@@ -1157,28 +1157,16 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get msg_q_very_pale_no_sight =>
-      'Wani ya gaya maka cewa tafin hannunka, leɓunanka ko cikin fatar idonka sun yi fari sosai?';
+      'Wani ya gaya maka cewa ka yi fari sosai? Kana jin rauni sosai, jiri ko ƙarancin numfashi idan ka tashi tsaye?';
 
   @override
   String get msg_q_dark_urine_no_sight =>
-      'Wani ya gaya maka cewa fitsarinka ya yi duhu sosai, kamar kola ko shayi?';
+      'Wani da ke kusa da kai ya ga cewa fitsarinka ya yi duhu sosai, kamar kola ko shayi?';
 
   @override
-  String get cantCheck => 'Ba zan iya dubawa ba';
+  String get msg_ask_someone_to_check =>
+      'Don Allah ka roƙi wani da ke kusa da kai ya duba, ko ka je asibiti.';
 
   @override
-  String get quickCheckSightNote =>
-      'Wannan tambaya game da yadda wani abu yake kama ne. Idan akwai wanda ka amince da shi tare da kai, za ka iya tambayarsa. Idan ba za ka iya dubawa ba, zaɓi Ba zan iya dubawa ba.';
-
-  @override
-  String couldNotCheck(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other:
-          'Ba ka iya duba alamu $count ba. Gaya wa ma\'aikaciyar jinya idan ta kira.',
-      one: 'Ba ka iya duba alama 1 ba. Gaya wa ma\'aikaciyar jinya idan ta kira.',
-    );
-    return '$_temp0';
-  }
+  String get cantTell => 'Ban sani ba';
 }

@@ -1144,7 +1144,7 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get msg_q_bleeding_no_sight =>
-      'Ṣé ẹ̀jẹ̀ ń jáde lára rẹ láìnídìí? Fún àpẹẹrẹ ẹ̀jẹ̀ láti imú, ẹ̀jẹ̀ tí o ń tọ́ wò láti èrìgì, tàbí ṣé ẹnìkan ti sọ fún ọ pé ẹ̀jẹ̀ wà nínú èébì tàbí ìgbẹ́ rẹ?';
+      'Ṣé o ti ní ìmọ̀lára tàbí tọ́ ẹ̀jẹ̀ wò, tàbí ṣé ẹnìkan ti sọ fún ọ pé ẹ̀jẹ̀ ń jáde lára rẹ, láti imú, èrìgì, èébì tàbí ìgbẹ́?';
 
   @override
   String get msg_q_yellow_eyes_no_sight =>
@@ -1152,27 +1152,16 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get msg_q_very_pale_no_sight =>
-      'Ṣé ẹnìkan ti sọ fún ọ pé àtẹ́lẹwọ́ rẹ, ètè rẹ tàbí inú ìpéǹpéjú rẹ funfun gan-an?';
+      'Ṣé ẹnìkan ti sọ fún ọ pé o funfun gan-an? Ṣé o ń rẹ̀wẹ̀sì gan-an, ṣé òòyì ń kọ́ ọ tàbí ṣé èémí ń já ọ nígbà tí o bá dìde dúró?';
 
   @override
   String get msg_q_dark_urine_no_sight =>
-      'Ṣé ẹnìkan ti sọ fún ọ pé ìtọ̀ rẹ ṣókùnkùn gan-an, bíi kóòkì tàbí tíì?';
+      'Ṣé ẹnìkan tó wà nítòsí rẹ ti rí i pé ìtọ̀ rẹ ṣókùnkùn gan-an, bíi kóòkì tàbí tíì?';
 
   @override
-  String get cantCheck => 'Mi ò lè yẹ̀ ẹ́ wò';
+  String get msg_ask_someone_to_check =>
+      'Jọ̀wọ́ ní kí ẹnìkan tó wà nítòsí rẹ yẹ̀ ẹ́ wò, tàbí lọ sí ilé-ìwòsàn.';
 
   @override
-  String get quickCheckSightNote =>
-      'Ìbéèrè yìí jẹ́ nípa bí nǹkan ṣe rí. Bí ẹnìkan tí o fọkàn tán bá wà pẹ̀lú rẹ, o lè bi í. Bí o kò bá lè yẹ̀ ẹ́ wò, yan Mi ò lè yẹ̀ ẹ́ wò.';
-
-  @override
-  String couldNotCheck(num count) {
-    String _temp0 = intl.Intl.pluralLogic(
-      count,
-      locale: localeName,
-      other: 'O kò lè yẹ àmì $count wò. Sọ fún nọ́ọ̀sì nígbà tí wọ́n bá pè ọ́.',
-      one: 'O kò lè yẹ àmì 1 wò. Sọ fún nọ́ọ̀sì nígbà tí wọ́n bá pè ọ́.',
-    );
-    return '$_temp0';
-  }
+  String get cantTell => 'Mi ò mọ̀';
 }

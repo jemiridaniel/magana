@@ -10,8 +10,10 @@ import '../policy.dart';
 import '../widgets.dart';
 import 'everyday.dart';
 
-/// The answer sent for "I can't check" (see backend triage.SIGHT_BASED).
-const cantCheck = 'cant_check';
+/// "I can't tell", offered on every quick-check question. It never counts as
+/// "no": the backend treats it as unanswered and raises the priority (DRAFT,
+/// pending Dr. Amos; see backend triage.CANT_TELL).
+const cantTell = 'cant_tell';
 
 /// Opens the phone dialler on a number; replaceable in tests.
 Future<void> Function(String number) dial = (number) =>
@@ -226,11 +228,8 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
 
   void _askCurrent() {
     final q = _asked[_index];
-    AppScope.of(context).speaker
-        .say(q.cantCheck ? '${_text(q)} ${_l.quickCheckSightNote}' : _text(q));
+    AppScope.of(context).speaker.say(_text(q));
   }
-
-  int get _unchecked => _answers.values.where((v) => v == cantCheck).length;
 
   Future<void> _answer(Object value) async {
     final q = _asked[_index];
@@ -249,12 +248,7 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
       final r = await scope.api.triageAssess(_answers);
       if (!mounted) return;
       setState(() => _result = r);
-      scope.speaker.say(
-        [
-          _resultText(_l, r),
-          if (_unchecked > 0) _l.couldNotCheck(_unchecked),
-        ].join(' '),
-      );
+      scope.speaker.say(_resultText(_l, r));
     } on ApiException catch (e) {
       if (mounted) setState(() => _error = messageFor(_l, e.code));
     }
@@ -331,7 +325,6 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
           // Signs normally checked by looking (DRAFT, pending Dr. Amos):
           // "I can't check" is never a yes, and never leaves the result at
           // routine (the backend raises it to the faster call-back).
-          if (q.cantCheck) NoteBox(text: l.quickCheckSightNote),
           // Only the last two answers: with ten questions a full list was long.
           for (final done in asked.take(_index).toList().reversed.take(2))
             NoteBox(
@@ -360,12 +353,9 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
               ),
             ],
           ),
-          if (q.cantCheck)
-            SecondaryButton(
-              label: l.cantCheck,
-              onTap: () => _answer(cantCheck),
-            ),
         ],
+        if (q != null)
+          SecondaryButton(label: l.cantTell, onTap: () => _answer(cantTell)),
         const EmergencyBanner(),
       ],
     );
@@ -374,7 +364,7 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
   String _answerText(AppLocalizations l, Object? v) => switch (v) {
     true => l.yes,
     false => l.no,
-    cantCheck => l.cantCheck,
+    cantTell => l.cantTell,
     int days => l.daysCount(days),
     _ => '',
   };
@@ -387,6 +377,9 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
     ({String priority, String message}) r,
   ) => switch (r.priority) {
     'emergency' => messageFor(l, r.message),
+    // A danger sign answered "I can't tell": ask someone to check first.
+    'urgent' when r.message == 'ask_someone_to_check' =>
+      '${messageFor(l, r.message)} ${l.resultUrgent}',
     'urgent' => l.resultUrgent,
     _ => l.resultRoutine,
   };
@@ -403,11 +396,11 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
           liveRegion: true,
           child: NoteBox(
             text: _resultText(l, r),
-            kind: emergency ? NoteKind.warning : NoteKind.info,
+            kind: emergency || r.message == 'ask_someone_to_check'
+                ? NoteKind.warning
+                : NoteKind.info,
           ),
         ),
-        if (_unchecked > 0)
-          NoteBox(text: l.couldNotCheck(_unchecked), kind: NoteKind.warning),
       ],
       bottom: [
         if (emergency)
