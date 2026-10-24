@@ -13,6 +13,17 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Accessibility: every app screen has an expectAccessible test
+
+- **What we tested and how:**
+  - The older screen-reader test in `app_test.dart` checked Capture and the Reader with its own copy of the tap-action check, but not the 64 px target size. It now uses the shared `expectAccessible`.
+  - New test: `5 Reader (table): every control labelled, actionable, 64 px`.
+- **Result:**
+  - Home, the language sheet, Capture, the Reader and the Reader with a table all pass: every control has a tap action, and every visible button is at least 64×64 px.
+  - All 18 app screens on the design canvas now have an `expectAccessible` test (1, 2, 3, 3b, 4, 5, 6, 7, E0–E6, L1–L3). The six portal pages are covered by axe.
+- **What we changed:** this commit (tests only).
+- **Status:** passed in tests.
+
 ## 2026-10-24 · Accessibility: the new app screens with TalkBack on the Emulator
 
 - **What we tested and how:** on the Emulator with TalkBack, using `tools/talkback/`, we walked through Home, Settings, the app-language sheet, Ask a question (Explain without a page) and the Everyday hub. We then ran "Read any paper" on the photographed label `medicine_label.png` from the gallery.

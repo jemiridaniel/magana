@@ -13,12 +13,13 @@ import 'package:app/messages.dart';
 import 'package:app/screens/capture.dart';
 import 'package:app/speech.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'a11y.dart';
 
 class FakeSpeaker extends Speaker {
   final said = <String>[];
@@ -435,39 +436,12 @@ void main() {
     final speaker = FakeSpeaker();
     await pumpApp(tester, speaker);
 
-    void expectActionable(String screen) {
-      final missing = <String>[];
-      void visit(SemanticsNode node) {
-        final data = node.getSemanticsData();
-        // ignore: deprecated_member_use
-        bool has(SemanticsFlag f) => data.hasFlag(f);
-        final control =
-            has(SemanticsFlag.isButton) || has(SemanticsFlag.hasToggledState);
-        final disabled =
-            has(SemanticsFlag.hasEnabledState) && !has(SemanticsFlag.isEnabled);
-        if (control && !disabled && !data.hasAction(SemanticsAction.tap)) {
-          missing.add(data.label);
-        }
-        node.visitChildren((child) {
-          visit(child);
-          return true;
-        });
-      }
-
-      var root = tester.getSemantics(find.byType(Scaffold).last);
-      while (root.parent != null) {
-        root = root.parent!;
-      }
-      visit(root);
-      expect(missing, isEmpty, reason: '$screen controls without a tap action');
-    }
-
-    expectActionable('Home');
+    expectAccessible(tester, 'Home');
     await tester.tap(
       find.bySemanticsLabel('App language: English. Change language'),
     );
     await tester.pumpAndSettle();
-    expectActionable('Language sheet');
+    expectAccessible(tester, 'Language sheet');
     await tester.tapAt(const Offset(10, 10)); // close the sheet
     await tester.pumpAndSettle();
 
@@ -482,10 +456,20 @@ void main() {
       ),
     );
     await tester.pumpAndSettle();
-    expectActionable('Capture');
+    expectAccessible(tester, 'Capture');
     await tester.tap(find.bySemanticsLabel('Take photo'));
     await tester.pumpAndSettle();
-    expectActionable('Reader');
+    expectAccessible(tester, 'Reader');
+    handle.dispose();
+  });
+
+  testWidgets('5 Reader (table): every control labelled, actionable, 64 px', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    await pumpApp(tester, FakeSpeaker(), body: tableJson);
+    await captureToReader(tester);
+    expectAccessible(tester, 'Reader (table)');
     handle.dispose();
   });
 
