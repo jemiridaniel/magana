@@ -170,7 +170,7 @@ void main() {
       );
     }
     expect(find.bySemanticsLabel(RegExp('^Read a page')), findsOneWidget);
-    expect(find.bySemanticsLabel('Hold to speak a command'), findsOneWidget);
+    expect(find.bySemanticsLabel('Speak a command'), findsOneWidget);
     expect(
       find.bySemanticsLabel('Magana'),
       findsOneWidget,
@@ -287,7 +287,11 @@ void main() {
       find.bySemanticsLabel('App language: English. Change language'),
     );
     await tester.pumpAndSettle();
-    await tester.tap(find.bySemanticsLabel('Hausa'));
+    // Design 3b: touching a language lets you hear it; "Use Hausa" applies it.
+    await tester.tap(find.bySemanticsLabel(RegExp('^Hausa')));
+    await tester.pumpAndSettle();
+    expect(language.value, const Locale('en'));
+    await tester.tap(find.bySemanticsLabel('Use Hausa'));
     await tester.pumpAndSettle();
 
     final ha = lookupAppLocalizations(const Locale('ha'));

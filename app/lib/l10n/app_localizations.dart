@@ -1955,6 +1955,228 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I can\'t tell'**
   String get cantTell;
+
+  /// No description provided for @appLanguageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'App language'**
+  String get appLanguageTitle;
+
+  /// No description provided for @languageSheetBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Menus, buttons, help and Magana\'s voice all switch to the language you choose.'**
+  String get languageSheetBody;
+
+  /// No description provided for @languageVoiceTip.
+  ///
+  /// In en, this message translates to:
+  /// **'You can also say “change language to Igbo” after pressing Speak a command on Home.'**
+  String get languageVoiceTip;
+
+  /// No description provided for @useLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Use {language}'**
+  String useLanguage(String language);
+
+  /// No description provided for @settingsVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'Version {version} (build {build})'**
+  String settingsVersion(String version, String build);
+
+  /// No description provided for @settingsVersionNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell the Magana team this version when you report a problem.'**
+  String get settingsVersionNote;
+
+  /// No description provided for @reportProblem.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a problem'**
+  String get reportProblem;
+
+  /// No description provided for @reportHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell the Magana team three things: the name of the screen, what you did, and what Magana said.'**
+  String get reportHow;
+
+  /// No description provided for @speakCommand.
+  ///
+  /// In en, this message translates to:
+  /// **'Speak a command'**
+  String get speakCommand;
+
+  /// No description provided for @listeningCommand.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening… Tap to stop'**
+  String get listeningCommand;
+
+  /// No description provided for @commandNotUnderstood.
+  ///
+  /// In en, this message translates to:
+  /// **'I heard “{heard}”, but I don\'t know that command. Say help to hear what you can say.'**
+  String commandNotUnderstood(String heard);
+
+  /// No description provided for @commandNothingHeard.
+  ///
+  /// In en, this message translates to:
+  /// **'I didn\'t hear a command. Try again, or say help.'**
+  String get commandNothingHeard;
+
+  /// No description provided for @commandHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'You can say: {commands}. Say commands in English for now.'**
+  String commandHelp(String commands);
+
+  /// No description provided for @changeLanguageCommand.
+  ///
+  /// In en, this message translates to:
+  /// **'change language'**
+  String get changeLanguageCommand;
+
+  /// No description provided for @voiceCommandsUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice commands are not available on this phone. Use the buttons instead.'**
+  String get voiceCommandsUnavailable;
+
+  /// No description provided for @explainTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain'**
+  String get explainTitle;
+
+  /// No description provided for @explainFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'From: {source}'**
+  String explainFrom(String source);
+
+  /// No description provided for @explainPreviewBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.'**
+  String get explainPreviewBanner;
+
+  /// No description provided for @answerLanguage.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer language, currently {language}'**
+  String answerLanguage(String language);
+
+  /// No description provided for @youSaid.
+  ///
+  /// In en, this message translates to:
+  /// **'You said'**
+  String get youSaid;
+
+  /// No description provided for @basedOnPage.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Based on: 1 line of your page} other{Based on: {count} lines and rows of your page}}'**
+  String basedOnPage(num count);
+
+  /// No description provided for @readExactlyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Numbers and words from the page are read exactly as printed.'**
+  String get readExactlyNote;
+
+  /// No description provided for @saySimpler.
+  ///
+  /// In en, this message translates to:
+  /// **'Say it simpler'**
+  String get saySimpler;
+
+  /// No description provided for @giveExample.
+  ///
+  /// In en, this message translates to:
+  /// **'Give an example'**
+  String get giveExample;
+
+  /// No description provided for @explainDisclaimer.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana can make mistakes. Check important answers with your teacher.'**
+  String get explainDisclaimer;
+
+  /// No description provided for @askAQuestion.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a question'**
+  String get askAQuestion;
+
+  /// No description provided for @explainNoPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Explanations are about a page. Read a page first, then choose Explain this.'**
+  String get explainNoPage;
+
+  /// No description provided for @explainThis.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain this'**
+  String get explainThis;
+
+  /// No description provided for @explainQuestionPreview.
+  ///
+  /// In en, this message translates to:
+  /// **'When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.'**
+  String get explainQuestionPreview;
+
+  /// No description provided for @msg_explain_preview.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.'**
+  String get msg_explain_preview;
+
+  /// No description provided for @msg_explained.
+  ///
+  /// In en, this message translates to:
+  /// **'Here is the explanation.'**
+  String get msg_explained;
+
+  /// No description provided for @msg_explain_bad_source.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no page text to explain. Please read a page first.'**
+  String get msg_explain_bad_source;
+
+  /// No description provided for @jumpWithinPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Jump within page'**
+  String get jumpWithinPage;
+
+  /// No description provided for @jumpStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Start of the page'**
+  String get jumpStart;
+
+  /// No description provided for @jumpTable.
+  ///
+  /// In en, this message translates to:
+  /// **'Table {number}'**
+  String jumpTable(int number);
+
+  /// No description provided for @jumpWarnings.
+  ///
+  /// In en, this message translates to:
+  /// **'Next thing I\'m not sure about'**
+  String get jumpWarnings;
+
+  /// No description provided for @jumpNotYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Jumping to headings and diagrams is not available yet.'**
+  String get jumpNotYet;
 }
 
 class _AppLocalizationsDelegate

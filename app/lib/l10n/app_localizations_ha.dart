@@ -1169,4 +1169,151 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get cantTell => 'Ban sani ba';
+
+  @override
+  String get appLanguageTitle => 'Harshen manhaja';
+
+  @override
+  String get languageSheetBody =>
+      'Menu, maɓallai, taimako da muryar Magana duk za su koma harshen da ka zaɓa.';
+
+  @override
+  String get languageVoiceTip =>
+      'Za ka iya cewa “change language to Hausa” bayan ka danna Faɗi umarni a shafin farko.';
+
+  @override
+  String useLanguage(String language) {
+    return 'Yi amfani da $language';
+  }
+
+  @override
+  String settingsVersion(String version, String build) {
+    return 'Siga $version (gini $build)';
+  }
+
+  @override
+  String get settingsVersionNote =>
+      'Gaya wa ƙungiyar Magana wannan siga idan kana bayar da rahoton matsala.';
+
+  @override
+  String get reportProblem => 'Bayar da rahoton matsala';
+
+  @override
+  String get reportHow =>
+      'Gaya wa ƙungiyar Magana abubuwa uku: sunan shafin, abin da ka yi, da abin da Magana ta ce.';
+
+  @override
+  String get speakCommand => 'Faɗi umarni';
+
+  @override
+  String get listeningCommand => 'Ina saurare… Taɓa don tsayawa';
+
+  @override
+  String commandNotUnderstood(String heard) {
+    return 'Na ji “$heard”, amma ban san wannan umarnin ba. Ka ce help don jin abin da za ka iya faɗi.';
+  }
+
+  @override
+  String get commandNothingHeard =>
+      'Ban ji umarni ba. Sake gwadawa, ko ka ce help.';
+
+  @override
+  String commandHelp(String commands) {
+    return 'Za ka iya cewa: $commands. Faɗi umarni da Turanci a yanzu.';
+  }
+
+  @override
+  String get changeLanguageCommand => 'change language';
+
+  @override
+  String get voiceCommandsUnavailable =>
+      'Ba a iya amfani da umarnin murya a wannan wayar ba. Yi amfani da maɓallai maimakon haka.';
+
+  @override
+  String get explainTitle => 'Bayani';
+
+  @override
+  String explainFrom(String source) {
+    return 'Daga: $source';
+  }
+
+  @override
+  String get explainPreviewBanner =>
+      'Gwaji. N-ATLAS, wanda zai yi bayanin shafuka a harshenka, ba a haɗa shi ba tukuna. A yanzu Magana tana karanta rubutun shafin daidai yadda aka buga.';
+
+  @override
+  String answerLanguage(String language) {
+    return 'Harshen amsa, yanzu $language';
+  }
+
+  @override
+  String get youSaid => 'Ka ce';
+
+  @override
+  String basedOnPage(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Bisa: layuka $count na shafinka',
+      one: 'Bisa: layi 1 na shafinka',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readExactlyNote =>
+      'Ana karanta lambobi da kalmomi daga shafin daidai yadda aka buga.';
+
+  @override
+  String get saySimpler => 'Faɗa a sauƙaƙe';
+
+  @override
+  String get giveExample => 'Ba da misali';
+
+  @override
+  String get explainDisclaimer =>
+      'Magana na iya yin kuskure. Duba muhimman amsoshi tare da malaminka.';
+
+  @override
+  String get askAQuestion => 'Yi tambaya';
+
+  @override
+  String get explainNoPage =>
+      'Bayani game da shafi ne. Karanta shafi da farko, sannan ka zaɓi Yi bayanin wannan.';
+
+  @override
+  String get explainThis => 'Yi bayanin wannan';
+
+  @override
+  String get explainQuestionPreview =>
+      'Idan an haɗa N-ATLAS, Magana za ta amsa tambayarka daga wannan shafin. A yanzu, ga shafin.';
+
+  @override
+  String get msg_explain_preview =>
+      'Wannan gwaji ne. Bayani a harshenka zai zo idan an haɗa N-ATLAS. Ga shafin, an karanta shi daidai yadda aka buga.';
+
+  @override
+  String get msg_explained => 'Ga bayanin.';
+
+  @override
+  String get msg_explain_bad_source =>
+      'Babu rubutun shafi da za a yi bayani. Don Allah ka karanta shafi da farko.';
+
+  @override
+  String get jumpWithinPage => 'Tsallaka cikin shafi';
+
+  @override
+  String get jumpStart => 'Farkon shafin';
+
+  @override
+  String jumpTable(int number) {
+    return 'Tebur $number';
+  }
+
+  @override
+  String get jumpWarnings => 'Abu na gaba da ban tabbata ba';
+
+  @override
+  String get jumpNotYet =>
+      'Ba a iya tsallaka zuwa kanun labarai da zane-zane ba tukuna.';
 }

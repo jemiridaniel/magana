@@ -7,6 +7,7 @@ import '../library.dart';
 import '../papers.dart';
 import '../policy.dart';
 import '../widgets.dart';
+import 'explain.dart';
 import 'health_worker.dart';
 import 'reminders.dart';
 import '../messages.dart';
@@ -92,7 +93,15 @@ class _ReaderScreenState extends State<ReaderScreen> {
   /// Text exactly as printed, except that a number the backend could not read
   /// reliably is said as "unclear number", never as the digit OCR guessed.
   String _spoken(ReadItem item) {
-    final body = switch (item.kind) {
+    final body = _body(item);
+    final warning = _warning(item);
+    final spoken = [if (body.isNotEmpty) body, ?warning].join('. ');
+    return item.isRow && warning == null ? '$spoken.' : spoken;
+  }
+
+  /// An item's text without its warning; unclear numbers stay "unclear number".
+  String _body(ReadItem item) {
+    return switch (item.kind) {
       ItemKind.faint => '',
       ItemKind.line => [
         for (final (i, w) in item.words.indexed)
@@ -101,9 +110,79 @@ class _ReaderScreenState extends State<ReaderScreen> {
       ItemKind.row =>
         '${_position(item)}. ${[for (final c in item.cells) (c.header.isEmpty ? '' : '${c.header}: ') + (c.unclear ? _l.unclearNumber : c.value)].join('. ')}',
     };
-    final warning = _warning(item);
-    final spoken = [if (body.isNotEmpty) body, ?warning].join('. ');
-    return item.isRow && warning == null ? '$spoken.' : spoken;
+  }
+
+  /// Explain this (a preview until N-ATLAS is hosted): the page as Magana read
+  /// it, so an explanation can only build on what was read reliably.
+  void _explain() {
+    _run++;
+    setState(() => _playing = false);
+    _speaker.stop();
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (_) => ExplainScreen(
+          lines: [
+            for (final item in _items)
+              if (!item.isFaint) _body(item),
+          ],
+          source: widget.paper?.title(_l) ?? _l.yourPage,
+        ),
+      ),
+    );
+  }
+
+  /// Jump within page: the start, each table, or the next thing Magana is unsure
+  /// about. Headings and diagrams need layout the backend doesn't send yet.
+  Future<void> _jump() async {
+    final l = _l;
+    final tables = <int, int>{}; // table number -> first row index
+    for (final (i, item) in _items.indexed) {
+      if (item.isRow && item.number == 1) tables[item.table ?? 1] = i;
+    }
+    final unsure = _items.indexed
+        .where((e) => e.$1 > _index && e.$2.unsure)
+        .map((e) => e.$1)
+        .firstOrNull;
+    final target = await showModalBottomSheet<int>(
+      context: context,
+      showDragHandle: true,
+      backgroundColor: MaganaColors.ground,
+      builder: (sheet) => SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Semantics(
+                header: true,
+                child: Text(
+                  l.jumpWithinPage,
+                  style: const TextStyle(
+                    fontSize: 22,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              const SizedBox(height: 12),
+              for (final (label, index) in [
+                (l.jumpStart, 0),
+                for (final MapEntry(key: n, value: i) in tables.entries)
+                  (l.jumpTable(n), i),
+                if (unsure != null) (l.jumpWarnings, unsure),
+              ]) ...[
+                SecondaryButton(
+                  label: label,
+                  onTap: () => Navigator.of(sheet).pop(index),
+                ),
+                const SizedBox(height: 10),
+              ],
+              NoteBox(text: l.jumpNotYet),
+            ],
+          ),
+        ),
+      ),
+    );
+    if (target != null && mounted) _go(target);
   }
 
   String _counts() {
@@ -296,6 +375,20 @@ class _ReaderScreenState extends State<ReaderScreen> {
                       ),
                     ),
                   ),
+                  const SizedBox(width: 8),
+                  Semantics(
+                    button: true,
+                    label: l.jumpWithinPage,
+                    excludeSemantics: true,
+                    onTap: _jump,
+                    child: OutlinedButton(
+                      onPressed: _jump,
+                      style: outlinedTile(radius: 32).copyWith(
+                        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+                      ),
+                      child: const Icon(Icons.list, size: 30),
+                    ),
+                  ),
                 ],
               ),
               const SizedBox(height: 16),
@@ -396,6 +489,10 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 semantics: l.speedLabel(_speedValue()),
                 onPressed: _cycleSpeed,
               ),
+              if (AppScope.of(context).profile.can(Feature.explain)) ...[
+                const SizedBox(height: 10),
+                SecondaryButton(label: l.explainThis, onTap: _explain),
+              ],
               const SizedBox(height: 10),
               Semantics(
                 button: true,

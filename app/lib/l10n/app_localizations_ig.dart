@@ -1166,4 +1166,150 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get cantTell => 'Amaghị m';
+
+  @override
+  String get appLanguageTitle => 'Asụsụ ngwa';
+
+  @override
+  String get languageSheetBody =>
+      'Menu, bọtịnụ, enyemaka na olu Magana ga-agbanwe gaa n\'asụsụ ị họọrọ.';
+
+  @override
+  String get languageVoiceTip =>
+      'Ị nwekwara ike ikwu “change language to Igbo” mgbe ị pịrị Kwuo iwu na ihuenyo mbụ.';
+
+  @override
+  String useLanguage(String language) {
+    return 'Jiri $language';
+  }
+
+  @override
+  String settingsVersion(String version, String build) {
+    return 'Ụdị $version (nke $build)';
+  }
+
+  @override
+  String get settingsVersionNote =>
+      'Gwa ndị otu Magana ụdị a mgbe ị na-akọ nsogbu.';
+
+  @override
+  String get reportProblem => 'Kọọ nsogbu';
+
+  @override
+  String get reportHow =>
+      'Gwa ndị otu Magana ihe atọ: aha ihuenyo ahụ, ihe ị mere, na ihe Magana kwuru.';
+
+  @override
+  String get speakCommand => 'Kwuo iwu';
+
+  @override
+  String get listeningCommand => 'Ana m ege ntị… Pịa ka ọ kwụsị';
+
+  @override
+  String commandNotUnderstood(String heard) {
+    return 'Anụrụ m “$heard”, mana amaghị m iwu ahụ. Kwuo help ka ị nụ ihe ị nwere ike ikwu.';
+  }
+
+  @override
+  String get commandNothingHeard =>
+      'Anụghị m iwu ọ bụla. Nwaa ọzọ, ma ọ bụ kwuo help.';
+
+  @override
+  String commandHelp(String commands) {
+    return 'Ị nwere ike ikwu: $commands. Kwuo iwu n\'asụsụ Bekee ugbu a.';
+  }
+
+  @override
+  String get changeLanguageCommand => 'change language';
+
+  @override
+  String get voiceCommandsUnavailable =>
+      'Enweghị ike iji iwu olu na ekwentị a. Jiri bọtịnụ kama.';
+
+  @override
+  String get explainTitle => 'Nkọwa';
+
+  @override
+  String explainFrom(String source) {
+    return 'Site na: $source';
+  }
+
+  @override
+  String get explainPreviewBanner =>
+      'Nlele. N-ATLAS, nke ga-akọwa peeji n\'asụsụ gị, ejikọbeghị. Ugbu a Magana na-agụ ederede peeji ahụ kpọmkwem ka e si bipụta ya.';
+
+  @override
+  String answerLanguage(String language) {
+    return 'Asụsụ azịza, ugbu a $language';
+  }
+
+  @override
+  String get youSaid => 'Ị kwuru';
+
+  @override
+  String basedOnPage(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Dabere na: ahịrị $count nke peeji gị',
+      one: 'Dabere na: ahịrị 1 nke peeji gị',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readExactlyNote =>
+      'A na-agụ nọmba na okwu sitere na peeji ahụ kpọmkwem ka e si bipụta ha.';
+
+  @override
+  String get saySimpler => 'Kwuo ya n\'ụzọ dị mfe';
+
+  @override
+  String get giveExample => 'Nye ihe atụ';
+
+  @override
+  String get explainDisclaimer =>
+      'Magana nwere ike imehie. Lelee azịza ndị dị mkpa na onye nkuzi gị.';
+
+  @override
+  String get askAQuestion => 'Jụọ ajụjụ';
+
+  @override
+  String get explainNoPage =>
+      'Nkọwa bụ maka peeji. Buru ụzọ gụọ peeji, wee họrọ Kọwaa nke a.';
+
+  @override
+  String get explainThis => 'Kọwaa nke a';
+
+  @override
+  String get explainQuestionPreview =>
+      'Mgbe ejikọrọ N-ATLAS, Magana ga-aza ajụjụ gị site na peeji a. Ugbu a, lee peeji ahụ.';
+
+  @override
+  String get msg_explain_preview =>
+      'Nke a bụ nlele. Nkọwa n\'asụsụ gị ga-abịa mgbe ejikọrọ N-ATLAS. Lee peeji ahụ, a gụrụ ya kpọmkwem ka e si bipụta ya.';
+
+  @override
+  String get msg_explained => 'Lee nkọwa ahụ.';
+
+  @override
+  String get msg_explain_bad_source =>
+      'Enweghị ederede peeji a ga-akọwa. Biko buru ụzọ gụọ peeji.';
+
+  @override
+  String get jumpWithinPage => 'Wụga n\'ime peeji';
+
+  @override
+  String get jumpStart => 'Mmalite peeji';
+
+  @override
+  String jumpTable(int number) {
+    return 'Tebụl $number';
+  }
+
+  @override
+  String get jumpWarnings => 'Ihe na-esote m na-ejighị n\'aka';
+
+  @override
+  String get jumpNotYet => 'Enweghị ike ịwụga n\'isiokwu na eserese ugbu a.';
 }

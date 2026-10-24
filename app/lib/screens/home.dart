@@ -5,8 +5,16 @@ import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
 import '../language.dart';
 import '../policy.dart';
+import '../speech.dart';
 import '../theme.dart';
+import '../widgets.dart';
+import '../commands.dart';
+import '../voice_input.dart';
 import 'capture.dart';
+import 'explain.dart';
+import 'health_worker.dart';
+import 'reminders.dart';
+import 'settings.dart';
 import 'everyday.dart';
 import 'library.dart';
 import 'quiz.dart';
@@ -19,16 +27,6 @@ class HomeScreen extends StatelessWidget {
   void _openCapture(BuildContext context) {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => const CaptureScreen()));
-  }
-
-  void _comingSoon(BuildContext context, String feature) {
-    final msg = AppLocalizations.of(context).comingSoon(feature);
-    AppScope.of(context).speaker.say(msg);
-    ScaffoldMessenger.of(context)
-      ..hideCurrentSnackBar()
-      ..showSnackBar(
-        SnackBar(content: Text(msg, style: const TextStyle(fontSize: 18))),
-      );
   }
 
   @override
@@ -46,7 +44,13 @@ class HomeScreen extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _Header(onSettings: () => _comingSoon(context, l.settings)),
+                    _Header(
+                      onSettings: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => const SettingsScreen(),
+                        ),
+                      ),
+                    ),
                     const SizedBox(height: 20),
                     _ReadPageButton(onPressed: () => _openCapture(context)),
                     const SizedBox(height: 14),
@@ -58,7 +62,12 @@ class HomeScreen extends StatelessWidget {
                           _Tile(
                             Icons.help_outline,
                             l.askQuestion,
-                            () => _comingSoon(context, l.askQuestion),
+                            () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) =>
+                                    const ExplainScreen(lines: [], source: ''),
+                              ),
+                            ),
                           ),
                         if (can(Feature.quiz))
                           _Tile(
@@ -69,7 +78,6 @@ class HomeScreen extends StatelessWidget {
                                 builder: (_) => const QuizScreen(),
                               ),
                             ),
-                            soon: false,
                           ),
                         if (can(Feature.library))
                           _Tile(
@@ -80,7 +88,6 @@ class HomeScreen extends StatelessWidget {
                                 builder: (_) => const LibraryScreen(),
                               ),
                             ),
-                            soon: false,
                           ),
                         if (can(Feature.everydayHealth))
                           _Tile(
@@ -91,7 +98,6 @@ class HomeScreen extends StatelessWidget {
                                 builder: (_) => const EverydayScreen(),
                               ),
                             ),
-                            soon: false,
                           ),
                       ],
                     ),
@@ -128,9 +134,7 @@ class HomeScreen extends StatelessWidget {
                     ),
                     const Spacer(),
                     const SizedBox(height: 20),
-                    _SpeakButton(
-                      onPressed: () => _comingSoon(context, l.voiceCommands),
-                    ),
+                    const _SpeakButton(),
                   ],
                 ),
               ),
@@ -218,7 +222,6 @@ class _Header extends StatelessWidget {
         Semantics(
           button: true,
           label: l.settings,
-          hint: l.comingSoonHint,
           excludeSemantics: true,
           onTap: onSettings,
           child: OutlinedButton(
@@ -234,11 +237,64 @@ class _Header extends StatelessWidget {
   }
 }
 
-/// Bottom sheet with one large option per language; the choice is saved and spoken in the new language.
-Future<void> showLanguagePicker(BuildContext context) {
-  final scope = AppScope.of(context);
-  final current = Localizations.localeOf(context).languageCode;
-  Future<void> choose(AppLanguage lang) async {
+/// The app-language sheet (design 3b): each option says its own welcome word and
+/// is heard in its own language; "Use [language]" applies the choice.
+Future<void> showLanguagePicker(BuildContext context) =>
+    showModalBottomSheet<void>(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: MaganaColors.ground,
+      showDragHandle: true,
+      builder: (_) => const LanguageSheet(),
+    );
+
+class LanguageSheet extends StatefulWidget {
+  const LanguageSheet({super.key});
+
+  @override
+  State<LanguageSheet> createState() => _LanguageSheetState();
+}
+
+class _LanguageSheetState extends State<LanguageSheet> {
+  late final String _current = Localizations.localeOf(context).languageCode;
+  late String _chosen = _current;
+  bool _applied = false;
+  late Speaker _speaker;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _speaker = AppScope.of(context).speaker;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    speakOnOpen(context, () {
+      final l = AppLocalizations.of(context);
+      return '${l.appLanguageTitle}. ${l.languageSheetBody}';
+    });
+  }
+
+  @override
+  void dispose() {
+    // Closed without "Use": the voice goes back to the app language.
+    if (!_applied) _speaker.setLanguage(_current);
+    super.dispose();
+  }
+
+  Future<void> _hear(AppLanguage lang) async {
+    setState(() => _chosen = lang.code);
+    await _speaker.setLanguage(lang.code);
+    await _speaker.say(
+      '${lang.name}. ${lookupAppLocalizations(Locale(lang.code)).welcome}',
+    );
+  }
+
+  Future<void> _use() async {
+    final scope = AppScope.of(context);
+    final lang = appLanguages.firstWhere((a) => a.code == _chosen);
+    _applied = true;
     Navigator.of(context).pop();
     await scope.language.select(lang.code);
     await scope.speaker.setLanguage(lang.code);
@@ -247,63 +303,67 @@ Future<void> showLanguagePicker(BuildContext context) {
     );
   }
 
-  return showModalBottomSheet<void>(
-    context: context,
-    backgroundColor: MaganaColors.ground,
-    showDragHandle: true,
-    builder: (sheet) => SafeArea(
-      child: Padding(
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final chosen = appLanguages.firstWhere((a) => a.code == _chosen);
+    return SafeArea(
+      child: SingleChildScrollView(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Semantics(
               header: true,
               child: Text(
-                AppLocalizations.of(sheet).chooseLanguage,
+                l.appLanguageTitle,
                 style: const TextStyle(
-                  fontSize: 22,
+                  fontSize: 24,
                   fontWeight: FontWeight.w700,
                 ),
               ),
             ),
-            const SizedBox(height: 12),
-            for (final lang in appLanguages) ...[
-              Semantics(
-                button: true,
-                selected: lang.code == current,
-                inMutuallyExclusiveGroup: true,
-                label: lang.name,
-                excludeSemantics: true,
-                onTap: () => choose(lang),
-                child: OutlinedButton(
-                  onPressed: () => choose(lang),
-                  style: outlinedTile(
-                    bg: lang.code == current ? MaganaColors.ink : Colors.white,
-                    fg: lang.code == current ? Colors.white : MaganaColors.ink,
-                  ).copyWith(alignment: Alignment.centerLeft),
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Text(
-                          lang.name,
-                          style: const TextStyle(fontSize: 20),
-                        ),
-                      ),
-                      if (lang.code == current)
-                        const Icon(Icons.check, size: 28),
-                    ],
-                  ),
+            const SizedBox(height: 6),
+            Text(
+              l.languageSheetBody,
+              style: const TextStyle(fontSize: 17, height: 1.4),
+            ),
+            const SizedBox(height: 14),
+            Semantics(
+              header: true,
+              child: Text(
+                l.chooseLanguage,
+                style: const TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w700,
                 ),
+              ),
+            ),
+            const SizedBox(height: 10),
+            for (final lang in appLanguages) ...[
+              ChoiceCard(
+                title: lang.name,
+                detail: lookupAppLocalizations(Locale(lang.code)).welcome,
+                selected: lang.code == _chosen,
+                inGroup: true,
+                leading: Icon(
+                  lang.code == _chosen
+                      ? Icons.radio_button_checked
+                      : Icons.radio_button_off,
+                  size: 28,
+                ),
+                onTap: () => _hear(lang),
               ),
               const SizedBox(height: 10),
             ],
+            NoteBox(text: l.languageVoiceTip),
+            const SizedBox(height: 14),
+            PrimaryButton(label: l.useLanguage(chosen.name), onTap: _use),
           ],
         ),
       ),
-    ),
-  );
+    );
+  }
 }
 
 class _ReadPageButton extends StatelessWidget {
@@ -369,11 +429,10 @@ class _ReadPageButton extends StatelessWidget {
 }
 
 class _Tile {
-  const _Tile(this.icon, this.label, this.onPressed, {this.soon = true});
+  const _Tile(this.icon, this.label, this.onPressed);
   final IconData icon;
   final String label;
   final VoidCallback onPressed;
-  final bool soon; // not built yet: TalkBack says "Coming soon"
 }
 
 class _TileGrid extends StatelessWidget {
@@ -382,12 +441,10 @@ class _TileGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final hint = AppLocalizations.of(context).comingSoonHint;
     Widget tile(_Tile t) => Expanded(
       child: Semantics(
         button: true,
         label: t.label,
-        hint: t.soon ? hint : null,
         excludeSemantics: true,
         onTap: t.onPressed,
         child: OutlinedButton(
@@ -483,23 +540,65 @@ class _Chip extends StatelessWidget {
   }
 }
 
-class _SpeakButton extends StatelessWidget {
-  const _SpeakButton({required this.onPressed});
-  final VoidCallback onPressed;
+/// "Speak a command": one spoken command reaches every main action (fixed
+/// keyword rules in commands.dart; English for now). Tap, not hold, so it works
+/// with TalkBack's double tap.
+class _SpeakButton extends StatefulWidget {
+  const _SpeakButton();
+
+  @override
+  State<_SpeakButton> createState() => _SpeakButtonState();
+}
+
+class _SpeakButtonState extends State<_SpeakButton> {
+  final VoiceInput _voice = voiceInput();
+  bool? _works;
+  bool _listening = false;
+
+  @override
+  void dispose() {
+    if (_listening) _voice.stop();
+    super.dispose();
+  }
+
+  Future<void> _tap() async {
+    if (_listening) {
+      await _voice.stop();
+      return;
+    }
+    final l = AppLocalizations.of(context);
+    final speaker = AppScope.of(context).speaker;
+    _works ??= await _voice.init();
+    if (!mounted) return;
+    if (_works != true) {
+      speaker.say(l.voiceCommandsUnavailable);
+      return;
+    }
+    await speaker.stop();
+    setState(() => _listening = true);
+    final heard = await _voice.listen();
+    if (!mounted) return;
+    setState(() => _listening = false);
+    if (heard.isEmpty) {
+      speaker.say(l.commandNothingHeard);
+      return;
+    }
+    runCommand(context, heard.first);
+  }
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final label = _listening ? l.listeningCommand : l.speakCommand;
     return Semantics(
       button: true,
-      label: l.holdToSpeakLabel,
-      hint: l.comingSoonHint,
+      label: label,
       excludeSemantics: true,
-      onTap: onPressed,
+      onTap: _tap,
       child: OutlinedButton.icon(
-        onPressed: onPressed,
-        icon: const Icon(Icons.mic_none, size: 30),
-        label: Text(l.holdToSpeak),
+        onPressed: _tap,
+        icon: Icon(_listening ? Icons.stop : Icons.mic_none, size: 30),
+        label: Text(label),
         style: outlinedTile(radius: 38, bg: MaganaColors.amber).copyWith(
           minimumSize: const WidgetStatePropertyAll(Size.fromHeight(76)),
           side: const WidgetStatePropertyAll(
@@ -516,5 +615,75 @@ class _SpeakButton extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Carries out a spoken command; unknown or not-allowed ones are said back.
+void runCommand(BuildContext context, String transcript) {
+  final l = AppLocalizations.of(context);
+  final scope = AppScope.of(context);
+  final can = scope.profile.can;
+  void open(Widget screen) =>
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+  switch (matchCommand(transcript, can)) {
+    case null:
+      scope.speaker.say(l.commandNotUnderstood(transcript));
+    case VoiceCommand.readPage:
+      open(const CaptureScreen());
+    case VoiceCommand.everyday:
+      open(const EverydayScreen());
+    case VoiceCommand.reminders:
+      openReminders(context);
+    case VoiceCommand.nurse:
+      openHealthWorker(context);
+    case VoiceCommand.quiz:
+      open(const QuizScreen());
+    case VoiceCommand.library:
+      open(const LibraryScreen());
+    case VoiceCommand.skills:
+      open(const SkillsScreen());
+    case VoiceCommand.score:
+      open(const ScoreScreen());
+    case VoiceCommand.ask:
+      open(const ExplainScreen(lines: [], source: ''));
+    case VoiceCommand.settings:
+      open(const SettingsScreen());
+    case VoiceCommand.language:
+      final lang = namedLanguage(transcript);
+      if (lang == null) {
+        showLanguagePicker(context);
+      } else {
+        scope.language.select(lang.code);
+        scope.speaker
+            .setLanguage(lang.code)
+            .then(
+              (_) => scope.speaker.say(
+                lookupAppLocalizations(Locale(lang.code))
+                    .languageChanged(lang.name),
+              ),
+            );
+      }
+    case VoiceCommand.help:
+      final names = <VoiceCommand, String>{
+        VoiceCommand.readPage: l.readPage,
+        VoiceCommand.everyday: l.everydayPapers,
+        VoiceCommand.reminders: l.remindersCard,
+        VoiceCommand.nurse: l.talkToNurse,
+        VoiceCommand.quiz: l.practiceQuiz,
+        VoiceCommand.library: l.myLibrary,
+        VoiceCommand.skills: l.skills,
+        VoiceCommand.score: l.myScore,
+        VoiceCommand.ask: l.askQuestion,
+        VoiceCommand.language: l.changeLanguageCommand,
+        VoiceCommand.settings: l.settings,
+      };
+      scope.speaker.say(
+        l.commandHelp(
+          [
+            for (final MapEntry(key: c, value: name) in names.entries)
+              if (c.feature == null || can(c.feature!)) name,
+          ].join(', '),
+        ),
+      );
   }
 }

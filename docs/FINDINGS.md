@@ -13,6 +13,35 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Safety: in PaddleOCR mode, numbers are not re-read from crops
+
+- **What we tested and how:** reading the code while preparing the production deploy: `reader.reread_numbers` and `PaddleStructureEngine`. Not yet measured on a device or a real page.
+- **Result:**
+  - `reread_numbers` only re-reads words that have a box (`w.width and w.height`). PaddleOCR's words carry no boxes (PP-OCR scores whole lines), so in Paddle mode the crop re-read finds no work and silently does nothing.
+  - Paddle has no `snippet_engine` either.
+  - So with `MAGANA_OCR=paddle`, the check that caught the "6" read at 92% (see "Re-reading every number from its own crop") does not run. Numbers fall back to the 0.90 rule, and in health and money modes also to the whole-page second pass.
+- **What we changed:** nothing yet. Production stays on Tesseract until this is fixed and measured.
+- **Status:** open, and it blocks using PaddleOCR in production.
+
+## 2026-10-24 · Safety: the Explain preview and the number guard
+
+- **What we tested and how:**
+  - Backend tests in `test_explain.py`:
+    - `test_preview_gives_back_the_page_text_unchanged`
+    - `test_an_explanation_with_a_number_not_on_the_page_is_never_given`
+    - `test_guided_learners_may_use_explain_but_classroom_may_not`
+    - `test_empty_or_too_long_source_is_refused`
+    - `test_unknown_language_or_style_is_refused`
+    - `test_only_the_preview_engine_exists_until_natlas_is_hosted`
+  - App tests in `learner_test.dart`: `6 explain (preview): page text through the guard, unclear stays unclear` and `explain: when the guard fails, the page is read instead`.
+- **Result:**
+  - The new `/explain` endpoint runs every explanation through `guard_explanation`. A fake model that answered "Take 3 tablets" for a page saying "Take 2" got no explanation through; the page text was returned to read instead (`numbers_unconfirmed`).
+  - The app hands Explain the page as it was read, with flagged numbers already said as "unclear number". On a label whose "500" was flagged, the text sent to `/explain` contained "Amoxicillin unclear number mg" and never "500".
+  - We checked the test can fail: with the unmasked text sent, it failed.
+  - Until N-ATLAS is hosted, the preview engine returns the page text unchanged, and the screen says it is a preview.
+- **What we changed:** this commit.
+- **Status:** fixed for the preview. N-ATLAS's real explanations, and their quality in Hausa, Yorùbá and Igbo, are untested.
+
 ## 2026-10-24 · Triage/Ibà, accessibility: "I can't tell" on every quick-check question
 
 - **What we tested and how:**

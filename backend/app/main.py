@@ -16,7 +16,7 @@ from typing import Literal
 import httpx
 from pydantic import BaseModel, ConfigDict
 
-from . import policy, safety, triage
+from . import explain, policy, safety, triage
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
 from .messages import CodedError
@@ -149,6 +149,37 @@ def explain_check(body: ExplainCheck) -> dict:
     """Run a model explanation through the verbatim-number guard before it is spoken."""
     r = safety.guard_explanation(body.source_text, body.explanation)
     return {"ok": r.ok, "unsupported": r.unsupported, "message": r.message}
+
+
+class ExplainRequest(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    source_text: str  # the page (or part of it) the learner is asking about: data, never instructions
+    question: str | None = None
+    lang: Literal["en", "ha", "yo", "ig"] = "en"
+    style: Literal["explain", "simpler", "example"] = "explain"
+
+
+@lru_cache(maxsize=1)
+def get_explainer() -> explain.Explainer:
+    return explain.default_explainer()
+
+
+@app.post("/explain")
+def explain_page(body: ExplainRequest, tier: policy.Tier = Depends(caller_tier),
+                 explainer: explain.Explainer = Depends(get_explainer)) -> dict:
+    """An explanation of page text, always through the verbatim-number guard (CLAUDE.md
+    rule 1). If the guard fails, the app reads the page text instead."""
+    require(tier, policy.Feature.EXPLAIN)
+    if not body.source_text.strip() or len(body.source_text) > explain.MAX_SOURCE_CHARS:
+        raise HTTPException(400, {"code": "explain_bad_source"})
+    text = explainer.explain(body.source_text, body.question, body.lang, body.style)
+    guard = safety.guard_explanation(body.source_text, text)
+    if not guard.ok:
+        return {"code": guard.message, "explanation": None, "read_instead": body.source_text,
+                "preview": explainer.preview}
+    return {"code": "explain_preview" if explainer.preview else "explained", "explanation": text,
+            "read_instead": None, "preview": explainer.preview}
 
 
 def get_iba() -> IbaClient | None:

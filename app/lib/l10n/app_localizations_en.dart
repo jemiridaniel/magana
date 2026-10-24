@@ -1164,4 +1164,151 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cantTell => 'I can\'t tell';
+
+  @override
+  String get appLanguageTitle => 'App language';
+
+  @override
+  String get languageSheetBody =>
+      'Menus, buttons, help and Magana\'s voice all switch to the language you choose.';
+
+  @override
+  String get languageVoiceTip =>
+      'You can also say “change language to Igbo” after pressing Speak a command on Home.';
+
+  @override
+  String useLanguage(String language) {
+    return 'Use $language';
+  }
+
+  @override
+  String settingsVersion(String version, String build) {
+    return 'Version $version (build $build)';
+  }
+
+  @override
+  String get settingsVersionNote =>
+      'Tell the Magana team this version when you report a problem.';
+
+  @override
+  String get reportProblem => 'Report a problem';
+
+  @override
+  String get reportHow =>
+      'Tell the Magana team three things: the name of the screen, what you did, and what Magana said.';
+
+  @override
+  String get speakCommand => 'Speak a command';
+
+  @override
+  String get listeningCommand => 'Listening… Tap to stop';
+
+  @override
+  String commandNotUnderstood(String heard) {
+    return 'I heard “$heard”, but I don\'t know that command. Say help to hear what you can say.';
+  }
+
+  @override
+  String get commandNothingHeard =>
+      'I didn\'t hear a command. Try again, or say help.';
+
+  @override
+  String commandHelp(String commands) {
+    return 'You can say: $commands. Say commands in English for now.';
+  }
+
+  @override
+  String get changeLanguageCommand => 'change language';
+
+  @override
+  String get voiceCommandsUnavailable =>
+      'Voice commands are not available on this phone. Use the buttons instead.';
+
+  @override
+  String get explainTitle => 'Explain';
+
+  @override
+  String explainFrom(String source) {
+    return 'From: $source';
+  }
+
+  @override
+  String get explainPreviewBanner =>
+      'Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.';
+
+  @override
+  String answerLanguage(String language) {
+    return 'Answer language, currently $language';
+  }
+
+  @override
+  String get youSaid => 'You said';
+
+  @override
+  String basedOnPage(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Based on: $count lines and rows of your page',
+      one: 'Based on: 1 line of your page',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readExactlyNote =>
+      'Numbers and words from the page are read exactly as printed.';
+
+  @override
+  String get saySimpler => 'Say it simpler';
+
+  @override
+  String get giveExample => 'Give an example';
+
+  @override
+  String get explainDisclaimer =>
+      'Magana can make mistakes. Check important answers with your teacher.';
+
+  @override
+  String get askAQuestion => 'Ask a question';
+
+  @override
+  String get explainNoPage =>
+      'Explanations are about a page. Read a page first, then choose Explain this.';
+
+  @override
+  String get explainThis => 'Explain this';
+
+  @override
+  String get explainQuestionPreview =>
+      'When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.';
+
+  @override
+  String get msg_explain_preview =>
+      'This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.';
+
+  @override
+  String get msg_explained => 'Here is the explanation.';
+
+  @override
+  String get msg_explain_bad_source =>
+      'There is no page text to explain. Please read a page first.';
+
+  @override
+  String get jumpWithinPage => 'Jump within page';
+
+  @override
+  String get jumpStart => 'Start of the page';
+
+  @override
+  String jumpTable(int number) {
+    return 'Table $number';
+  }
+
+  @override
+  String get jumpWarnings => 'Next thing I\'m not sure about';
+
+  @override
+  String get jumpNotYet =>
+      'Jumping to headings and diagrams is not available yet.';
 }

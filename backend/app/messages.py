@@ -28,6 +28,9 @@ ENGLISH = {
     "unreadable_image": "I couldn't open that photo. Please try again.",
     # Explanations
     "numbers_unconfirmed": "I can't confirm some numbers in this explanation, so I'll read the page exactly instead.",
+    "explain_preview": "This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",
+    "explained": "Here is the explanation.",
+    "explain_bad_source": "There is no page text to explain. Please read a page first.",
     # Ibà quick check. The Ibà service owns this wording (iba-natlas, backend/app/questions.py,
     # pending clinical sign-off by Dr. Amos); these are the fallback copies, kept identical.
     "q_fever": "Do you have a fever, or does your body feel very hot?",

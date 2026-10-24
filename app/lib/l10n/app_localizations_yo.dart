@@ -1164,4 +1164,150 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get cantTell => 'Mi ò mọ̀';
+
+  @override
+  String get appLanguageTitle => 'Èdè áàpù';
+
+  @override
+  String get languageSheetBody =>
+      'Àwọn àkójọ, bọ́tìnnì, ìrànlọ́wọ́ àti ohùn Magana yóò yí padà sí èdè tí o yàn.';
+
+  @override
+  String get languageVoiceTip =>
+      'O tún lè sọ “change language to Yoruba” lẹ́yìn tí o bá tẹ Sọ àṣẹ kan ní ojú-ìwé àkọ́kọ́.';
+
+  @override
+  String useLanguage(String language) {
+    return 'Lo $language';
+  }
+
+  @override
+  String settingsVersion(String version, String build) {
+    return 'Ẹ̀yà $version (kíkọ́ $build)';
+  }
+
+  @override
+  String get settingsVersionNote =>
+      'Sọ ẹ̀yà yìí fún ẹgbẹ́ Magana nígbà tí o bá ń ròyìn ìṣòro kan.';
+
+  @override
+  String get reportProblem => 'Ròyìn ìṣòro kan';
+
+  @override
+  String get reportHow =>
+      'Sọ nǹkan mẹ́ta fún ẹgbẹ́ Magana: orúkọ ojú-ìwé náà, ohun tí o ṣe, àti ohun tí Magana sọ.';
+
+  @override
+  String get speakCommand => 'Sọ àṣẹ kan';
+
+  @override
+  String get listeningCommand => 'Mo ń gbọ́… Tẹ̀ láti dúró';
+
+  @override
+  String commandNotUnderstood(String heard) {
+    return 'Mo gbọ́ “$heard”, ṣùgbọ́n mi ò mọ àṣẹ yẹn. Sọ help láti gbọ́ ohun tí o lè sọ.';
+  }
+
+  @override
+  String get commandNothingHeard =>
+      'Mi ò gbọ́ àṣẹ kankan. Tún gbìyànjú, tàbí sọ help.';
+
+  @override
+  String commandHelp(String commands) {
+    return 'O lè sọ pé: $commands. Sọ àwọn àṣẹ ní èdè Gẹ̀ẹ́sì fún báyìí.';
+  }
+
+  @override
+  String get changeLanguageCommand => 'change language';
+
+  @override
+  String get voiceCommandsUnavailable =>
+      'A kò lè lo àṣẹ ohùn lórí fóònù yìí. Lo àwọn bọ́tìnnì dípò rẹ̀.';
+
+  @override
+  String get explainTitle => 'Àlàyé';
+
+  @override
+  String explainFrom(String source) {
+    return 'Láti: $source';
+  }
+
+  @override
+  String get explainPreviewBanner =>
+      'Àyẹ̀wò. N-ATLAS, tí yóò ṣàlàyé ojú-ìwé ní èdè rẹ, kò tíì so pọ̀. Fún báyìí Magana ń ka ọ̀rọ̀ ojú-ìwé náà gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́.';
+
+  @override
+  String answerLanguage(String language) {
+    return 'Èdè ìdáhùn, lọ́wọ́lọ́wọ́ $language';
+  }
+
+  @override
+  String get youSaid => 'O sọ pé';
+
+  @override
+  String basedOnPage(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ó dá lórí: ìlà $count nínú ojú-ìwé rẹ',
+      one: 'Ó dá lórí: ìlà 1 nínú ojú-ìwé rẹ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get readExactlyNote =>
+      'A ń ka àwọn nọ́ńbà àti ọ̀rọ̀ láti ojú-ìwé náà gẹ́gẹ́ bí a ṣe tẹ̀ wọ́n.';
+
+  @override
+  String get saySimpler => 'Sọ ọ́ ní ìrọ̀rùn';
+
+  @override
+  String get giveExample => 'Fún mi ní àpẹẹrẹ';
+
+  @override
+  String get explainDisclaimer =>
+      'Magana lè ṣe àṣìṣe. Yẹ àwọn ìdáhùn pàtàkì wò pẹ̀lú olùkọ́ rẹ.';
+
+  @override
+  String get askAQuestion => 'Béèrè ìbéèrè';
+
+  @override
+  String get explainNoPage =>
+      'Àlàyé jẹ́ nípa ojú-ìwé kan. Ka ojú-ìwé kan kọ́kọ́, lẹ́yìn náà yan Ṣàlàyé èyí.';
+
+  @override
+  String get explainThis => 'Ṣàlàyé èyí';
+
+  @override
+  String get explainQuestionPreview =>
+      'Nígbà tí N-ATLAS bá so pọ̀, Magana yóò dáhùn ìbéèrè rẹ láti ojú-ìwé yìí. Fún báyìí, ojú-ìwé náà nìyí.';
+
+  @override
+  String get msg_explain_preview =>
+      'Àyẹ̀wò ni èyí. Àlàyé ní èdè rẹ yóò dé nígbà tí N-ATLAS bá so pọ̀. Ojú-ìwé náà nìyí, a kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́.';
+
+  @override
+  String get msg_explained => 'Àlàyé náà nìyí.';
+
+  @override
+  String get msg_explain_bad_source =>
+      'Kò sí ọ̀rọ̀ ojú-ìwé láti ṣàlàyé. Jọ̀wọ́ ka ojú-ìwé kan kọ́kọ́.';
+
+  @override
+  String get jumpWithinPage => 'Fò sí ibòmíràn nínú ojú-ìwé';
+
+  @override
+  String get jumpStart => 'Ìbẹ̀rẹ̀ ojú-ìwé';
+
+  @override
+  String jumpTable(int number) {
+    return 'Tábìlì $number';
+  }
+
+  @override
+  String get jumpWarnings => 'Ohun tó kàn tí mi ò dá lójú';
+
+  @override
+  String get jumpNotYet => 'A kò tíì lè fò sí àwọn àkọlé àti àwòrán.';
 }

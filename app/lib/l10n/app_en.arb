@@ -800,5 +800,101 @@
   "cantTell": "I can't tell",
   "@cantTell": {
     "description": "CLINICAL DRAFT, pending Dr. Amos: never counts as No"
-  }
+  },
+  "appLanguageTitle": "App language",
+  "languageSheetBody": "Menus, buttons, help and Magana's voice all switch to the language you choose.",
+  "languageVoiceTip": "You can also say “change language to Igbo” after pressing Speak a command on Home.",
+  "useLanguage": "Use {language}",
+  "@useLanguage": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsVersion": "Version {version} (build {build})",
+  "@settingsVersion": {
+    "placeholders": {
+      "version": {
+        "type": "String"
+      },
+      "build": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsVersionNote": "Tell the Magana team this version when you report a problem.",
+  "reportProblem": "Report a problem",
+  "reportHow": "Tell the Magana team three things: the name of the screen, what you did, and what Magana said.",
+  "speakCommand": "Speak a command",
+  "listeningCommand": "Listening… Tap to stop",
+  "commandNotUnderstood": "I heard “{heard}”, but I don't know that command. Say help to hear what you can say.",
+  "@commandNotUnderstood": {
+    "placeholders": {
+      "heard": {
+        "type": "String"
+      }
+    }
+  },
+  "commandNothingHeard": "I didn't hear a command. Try again, or say help.",
+  "commandHelp": "You can say: {commands}. Say commands in English for now.",
+  "@commandHelp": {
+    "placeholders": {
+      "commands": {
+        "type": "String"
+      }
+    }
+  },
+  "changeLanguageCommand": "change language",
+  "voiceCommandsUnavailable": "Voice commands are not available on this phone. Use the buttons instead.",
+  "explainTitle": "Explain",
+  "explainFrom": "From: {source}",
+  "@explainFrom": {
+    "placeholders": {
+      "source": {
+        "type": "String"
+      }
+    }
+  },
+  "explainPreviewBanner": "Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.",
+  "answerLanguage": "Answer language, currently {language}",
+  "@answerLanguage": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "youSaid": "You said",
+  "basedOnPage": "{count, plural, =1{Based on: 1 line of your page} other{Based on: {count} lines and rows of your page}}",
+  "@basedOnPage": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "readExactlyNote": "Numbers and words from the page are read exactly as printed.",
+  "saySimpler": "Say it simpler",
+  "giveExample": "Give an example",
+  "explainDisclaimer": "Magana can make mistakes. Check important answers with your teacher.",
+  "askAQuestion": "Ask a question",
+  "explainNoPage": "Explanations are about a page. Read a page first, then choose Explain this.",
+  "explainThis": "Explain this",
+  "explainQuestionPreview": "When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.",
+  "msg_explain_preview": "This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",
+  "msg_explained": "Here is the explanation.",
+  "msg_explain_bad_source": "There is no page text to explain. Please read a page first.",
+  "jumpWithinPage": "Jump within page",
+  "jumpStart": "Start of the page",
+  "jumpTable": "Table {number}",
+  "@jumpTable": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "jumpWarnings": "Next thing I'm not sure about",
+  "jumpNotYet": "Jumping to headings and diagrams is not available yet."
 }

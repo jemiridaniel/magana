@@ -211,6 +211,22 @@ class TriageQuestion {
   final String? askIf; // only asked when this question was answered yes
 }
 
+class Explanation {
+  const Explanation({
+    required this.code,
+    required this.text,
+    required this.readInstead,
+    required this.preview,
+  });
+  final String code; // explain_preview | explained | numbers_unconfirmed
+  final String? text; // the explanation, when it passed the guard
+  final String? readInstead; // the page text, when it did not
+  final bool preview; // no model yet: the page text itself
+
+  /// What to show and say: never an explanation the guard rejected.
+  String get spoken => text ?? readInstead ?? '';
+}
+
 class ApiException implements Exception {
   ApiException(this.code);
 
@@ -314,6 +330,32 @@ class MaganaApi {
       body: {'reason': reason, 'language': language, 'priority': ?priority},
     );
     return body['code'] as String? ?? 'callback_booked';
+  }
+
+  /// An explanation of page text, already through the backend's number guard.
+  /// When the guard fails, [readInstead] holds the page text to read instead.
+  Future<Explanation> explain({
+    required String sourceText,
+    required String language,
+    String? question,
+    String style = 'explain',
+  }) async {
+    final body = await _json(
+      'POST',
+      '/explain',
+      body: {
+        'source_text': sourceText,
+        'lang': language,
+        'question': ?question,
+        'style': style,
+      },
+    );
+    return Explanation(
+      code: body['code'] as String,
+      text: body['explanation'] as String?,
+      readInstead: body['read_instead'] as String?,
+      preview: body['preview'] == true,
+    );
   }
 
   /// Sends the photo to /read. The photo is only held in memory for the request.
