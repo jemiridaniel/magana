@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Placeholder from "@/components/Placeholder";
+import ConsentView from "@/components/ConsentView";
 
 export const metadata: Metadata = { title: "Consent records" };
 
-export default function Page() {
-  return <Placeholder title="Consent records" summary="Guardian consent for learners under 18, kept in one place." />;
+export default function ConsentPage() {
+  return <ConsentView />;
 }

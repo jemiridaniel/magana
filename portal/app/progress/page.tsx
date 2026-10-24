@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import Placeholder from "@/components/Placeholder";
+import ProgressView from "@/components/ProgressView";
 
 export const metadata: Metadata = { title: "Learner progress" };
 
-export default function Page() {
-  return <Placeholder title="Learner progress" summary="Follow each learner's reading and quiz progress over the term." />;
+export default function ProgressPage() {
+  return <ProgressView />;
 }

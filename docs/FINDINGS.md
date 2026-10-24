@@ -13,6 +13,55 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Portal: My classes, Learner progress, Consent records and Help built
+
+- **What we tested and how:** Chrome with Playwright and axe-core (wcag2a/aa, 21a/aa, 22aa, best-practice) at 1280×900 and 390×844 on all six portal pages. The script used every control on the four new pages and did a keyboard Tab walk on every page. Also `npm run lint` and `npm run build`.
+- **Result:**
+  - axe: 0 violations on all six pages at both sizes.
+  - Page sideways scroll: 0 px in all 12 page/width combinations.
+  - Smallest tap target: 64 px.
+  - At 390 px, tables scroll inside their own focusable region: Uploads 219 px, Classes 207 px, Attendance 364 px, Progress 311 px, Consent 217 px.
+  - The Progress chart, its "Show as table" view and its text alternative give the same numbers. The SS2 Science sample data averages to the board's 71% (done without sighted help) and 72% (quiz).
+- **Bugs found and fixed during the click-through:**
+  1. After "View record", focus stayed on the button; it now moves to the record.
+  2. Consent at 1280 px squeezed names and cut the learner select off at "Chiamaka Okafor (pen".
+  3. A fix for item 2 made the table overflow its scroll area at 1280 px; after the correction, 0 px of sideways scroll with a record open.
+  4. An empty gap above the class cards.
+  5. Help guides were laid out 3+1 instead of 2×2.
+  6. On phones, the Progress suggestion pill wrapped into a very narrow column; the tallest row is now 85 px.
+- **Deliberate differences from the boards:**
+  - Learners waiting for guardian consent show no progress, because their accounts are locked.
+  - The Progress chart uses HTML and CSS instead of SVG, because SVG text shrank to about 5 px at 390 px.
+  - "Works with NVDA, JAWS" became "designed for screen readers such as NVDA and JAWS", because that hasn't been tested.
+  - The support contact details are marked "to be added", not invented.
+- **What we changed:** this commit.
+- **Status:**
+  - New classes, invites, reminders, consent requests and problem reports stay on the page only, and every one says nothing was sent. Each needs a server endpoint.
+  - The guide steps, guardian names and consent dates are sample text.
+  - NVDA and JAWS are untested.
+
+## 2026-10-24 · Accessibility: the app and portal compared with every design board
+
+- **What we tested and how:** each of the 25 screens on the design canvas compared with the app and portal code, before and after this round of building.
+- **Result before this round:**
+  - Built and matching: 1 Choose language, 2 Age check, 4 Capture, 7 Voice quiz, E4 Reminders, E5 Talk to a health worker, L1 Skills, Uploads, Attendance.
+  - Built but different: 3 Home (Settings, Ask a question and Hold to speak were "coming soon"), 3b Change app language, 5 Reader, E0, E1, E2, E3, E6, L2, L3.
+  - Placeholder: 6 Explain (app), My classes, Learner progress, Consent records, Help (portal).
+- **After this round:** every screen is built. What still differs, and why:
+  - **Not built, by choice:**
+    - Learner names in the Home greeting: there are no accounts.
+    - "Use Magana on WhatsApp" on the age check: WhatsApp isn't built.
+    - E1's separate label fields: that would mean guessing what each line is.
+    - L2's Call and Book training: there's no Champion programme yet.
+  - **Behaves differently:**
+    - "Hold to speak" became tap to speak, because a hold is awkward with TalkBack.
+    - Reminders are a phone notification; they are not spoken on a locked phone.
+    - L1 has 3 sample lessons instead of 5 tracks.
+  - **Waiting on other work:**
+    - Explain is a preview until N-ATLAS is hosted.
+    - Jumping to headings and diagrams needs layout data from the backend.
+- **Status:** the tests for each screen use `expectAccessible` (app) or axe (portal). A TalkBack check on a device for the new app screens is listed separately.
+
 ## 2026-10-24 · Accessibility: Independence Score history and sharing (L3)
 
 - **What we tested and how:** `skills_score_test.dart`: `L3: the starting score is remembered, shown after a week` and `L3: up from where you started; share with my teacher` (with `expectAccessible`).
