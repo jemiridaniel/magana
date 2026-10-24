@@ -979,4 +979,51 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get championsPartnerNote =>
       'Za a yi horon Gwarzo tare da ƙungiyoyin abokan hulɗa. Ba a buɗe ba tukuna.';
+
+  @override
+  String get librarySubtitle => 'Karatun da aka adana, na kwanaki 30';
+
+  @override
+  String get libraryEmpty =>
+      'Babu abin da aka adana tukuna. Bayan Magana ta karanta shafi, zaɓi Adana a laburarena.';
+
+  @override
+  String libraryDeletesIn(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'za a goge cikin kwanaki $count',
+      one: 'za a goge gobe',
+      zero: 'za a goge yau',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String librarySavedOn(String date) {
+    return 'An adana $date';
+  }
+
+  @override
+  String get libraryPrivacy =>
+      'Karatun da aka adana suna nan a wannan wayar kuma ana goge su bayan kwanaki 30. Ba a taɓa adana hotuna ba.';
+
+  @override
+  String get saveToLibrary => 'Adana a laburarena';
+
+  @override
+  String get savedToLibrary =>
+      'An adana a laburarena. Zai kasance a wannan wayar na kwanaki 30.';
+
+  @override
+  String get deleteFromLibrary => 'Goge daga laburarena';
+
+  @override
+  String get deleteConfirm => 'A goge wannan karatun daga laburarenka?';
+
+  @override
+  String get deleteYes => 'Goge';
+
+  @override
+  String get deletedFromLibrary => 'An goge daga laburarenka.';
 }

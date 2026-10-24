@@ -5,6 +5,7 @@ import 'package:app/lessons.dart';
 import 'package:app/main.dart';
 import 'package:app/policy.dart';
 import 'package:app/profile.dart';
+import 'package:app/speech.dart';
 import 'package:app/tasks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -204,6 +205,9 @@ void main() {
     speaker.interrupt.add(step3);
     await tap(tester, en.skills);
     await tap(tester, en.playLesson);
+    await tester.pump(Speaker.retryDelay);
+    await tester.pumpAndSettle();
+    expect(speaker.said.where((s) => s == step3), hasLength(2));
     expect(speaker.said.last, step3);
     expect(find.text(en.lessonStepOf(3, 6)), findsOne);
     expect(find.bySemanticsLabel(en.playLesson), findsOne); // paused

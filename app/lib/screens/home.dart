@@ -8,6 +8,7 @@ import '../policy.dart';
 import '../theme.dart';
 import 'capture.dart';
 import 'everyday.dart';
+import 'library.dart';
 import 'quiz.dart';
 import 'score.dart';
 import 'skills.dart';
@@ -74,7 +75,12 @@ class HomeScreen extends StatelessWidget {
                           _Tile(
                             Icons.menu_book_outlined,
                             l.myLibrary,
-                            () => _comingSoon(context, l.myLibrary),
+                            () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const LibraryScreen(),
+                              ),
+                            ),
+                            soon: false,
                           ),
                         if (can(Feature.everydayHealth))
                           _Tile(

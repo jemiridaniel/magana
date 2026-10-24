@@ -269,9 +269,12 @@ class _LessonScreenState extends State<LessonScreen> {
     setState(() => _playing = true);
     for (var i = _step; i < _lesson.steps.length; i++) {
       await _goTo(i);
-      final heard = await speaker.say(_lesson.steps[i]);
+      final heard = await speaker.sayThrough(
+        _lesson.steps[i],
+        wanted: () => mounted && run == _run,
+      );
       if (!mounted || run != _run) return;
-      // TalkBack spoke over the step: pause here rather than skip it.
+      // TalkBack spoke over the step twice: pause here rather than skip it.
       if (!heard) return setState(() => _playing = false);
     }
     setState(() => _playing = false);

@@ -1637,6 +1637,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Champion training will be run with partner organisations. It is not open yet.'**
   String get championsPartnerNote;
+
+  /// No description provided for @librarySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved readings, kept for 30 days'**
+  String get librarySubtitle;
+
+  /// No description provided for @libraryEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing saved yet. After Magana reads a page, choose Save to my library.'**
+  String get libraryEmpty;
+
+  /// No description provided for @libraryDeletesIn.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{deleted today} =1{deleted tomorrow} other{deleted in {count} days}}'**
+  String libraryDeletesIn(num count);
+
+  /// No description provided for @librarySavedOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved {date}'**
+  String librarySavedOn(String date);
+
+  /// No description provided for @libraryPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved readings stay on this phone and are deleted after 30 days. Photos are never saved.'**
+  String get libraryPrivacy;
+
+  /// No description provided for @saveToLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Save to my library'**
+  String get saveToLibrary;
+
+  /// No description provided for @savedToLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved to my library. It stays on this phone for 30 days.'**
+  String get savedToLibrary;
+
+  /// No description provided for @deleteFromLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete from my library'**
+  String get deleteFromLibrary;
+
+  /// No description provided for @deleteConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this reading from your library?'**
+  String get deleteConfirm;
+
+  /// No description provided for @deleteYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get deleteYes;
+
+  /// No description provided for @deletedFromLibrary.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleted from your library.'**
+  String get deletedFromLibrary;
 }
 
 class _AppLocalizationsDelegate

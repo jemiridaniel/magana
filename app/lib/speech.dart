@@ -92,6 +92,21 @@ class Speaker {
     return done.future;
   }
 
+  /// For reading loops: if something else cut [text] off (TalkBack announcing
+  /// a new screen, say), wait a moment and say it once more. False if it was
+  /// cut off again, or [wanted] turned false (the learner pressed something).
+  Future<bool> sayThrough(
+    String text, {
+    required bool Function() wanted,
+  }) async {
+    if (await say(text)) return true;
+    await Future<void>.delayed(retryDelay);
+    if (!wanted()) return false;
+    return say(text);
+  }
+
+  static const retryDelay = Duration(milliseconds: 1500);
+
   Future<void> stop() async {
     _finish(false);
     await _tts.stop();

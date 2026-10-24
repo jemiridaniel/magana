@@ -974,4 +974,51 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get championsPartnerNote =>
       'Champion training will be run with partner organisations. It is not open yet.';
+
+  @override
+  String get librarySubtitle => 'Saved readings, kept for 30 days';
+
+  @override
+  String get libraryEmpty =>
+      'Nothing saved yet. After Magana reads a page, choose Save to my library.';
+
+  @override
+  String libraryDeletesIn(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'deleted in $count days',
+      one: 'deleted tomorrow',
+      zero: 'deleted today',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String librarySavedOn(String date) {
+    return 'Saved $date';
+  }
+
+  @override
+  String get libraryPrivacy =>
+      'Saved readings stay on this phone and are deleted after 30 days. Photos are never saved.';
+
+  @override
+  String get saveToLibrary => 'Save to my library';
+
+  @override
+  String get savedToLibrary =>
+      'Saved to my library. It stays on this phone for 30 days.';
+
+  @override
+  String get deleteFromLibrary => 'Delete from my library';
+
+  @override
+  String get deleteConfirm => 'Delete this reading from your library?';
+
+  @override
+  String get deleteYes => 'Delete';
+
+  @override
+  String get deletedFromLibrary => 'Deleted from your library.';
 }

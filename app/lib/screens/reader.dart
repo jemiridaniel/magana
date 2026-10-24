@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../api.dart';
 import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
+import '../library.dart';
 import '../papers.dart';
+import '../policy.dart';
 import '../widgets.dart';
 import 'health_worker.dart';
 import '../messages.dart';
@@ -15,8 +17,16 @@ const _speeds = [0.75, 1.0, 1.25, 1.5];
 /// Reads a page aloud item by item (lines, or table rows) with Repeat,
 /// Previous and Next. Low-confidence items carry a spoken warning.
 class ReaderScreen extends StatefulWidget {
-  const ReaderScreen({super.key, required this.result, this.paper});
+  const ReaderScreen({
+    super.key,
+    required this.result,
+    this.paper,
+    this.savedId,
+  });
   final ReadResult result;
+
+  /// Set when opened from My library: offers Delete instead of Save.
+  final String? savedId;
 
   /// An everyday paper: adds its "read exactly as printed" note and, for health
   /// papers, the "Ask a pharmacist or nurse" button.
@@ -30,6 +40,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
   late Speaker _speaker;
   int _index = 0;
   bool _playing = false;
+  bool _saved = false;
   int _run = 0; // bumps on every command so an old reading loop stops
   int _speed = 1;
 
@@ -120,17 +131,23 @@ class _ReaderScreenState extends State<ReaderScreen> {
       _index = from;
       _playing = true;
     });
-    // If TalkBack speaks over a line (the learner touched the screen), stop
-    // on that line: never skip a line, a dose or an amount unheard.
+    // If TalkBack speaks over a line, say it again; if it is cut off again
+    // (the learner is exploring), stop on that line. Never skip a line, a
+    // dose or an amount unheard.
     void pause() {
       if (run == _run && mounted) setState(() => _playing = false);
     }
 
-    if (intro && !await _speaker.say(_intro())) return pause();
+    bool wanted() => run == _run && mounted;
+    if (intro && !await _speaker.sayThrough(_intro(), wanted: wanted)) {
+      return pause();
+    }
     for (var i = from; i < _items.length; i++) {
-      if (run != _run || !mounted) return;
+      if (!wanted()) return;
       setState(() => _index = i);
-      if (!await _speaker.say(_spoken(_items[i]))) return pause();
+      if (!await _speaker.sayThrough(_spoken(_items[i]), wanted: wanted)) {
+        return pause();
+      }
     }
     if (run != _run || !mounted) return;
     setState(() => _playing = false);
@@ -170,6 +187,54 @@ class _ReaderScreenState extends State<ReaderScreen> {
     await _speaker.setRate(_speeds[_speed]);
     await _speaker.say(_l.speed(_speedValue()));
     if (_playing) _play(_index);
+  }
+
+  bool get _canSave =>
+      AppScope.of(context).profile.can(Feature.library) &&
+      widget.result.json != null;
+
+  /// Keeps the page text (never the photo) on the phone for 30 days.
+  Future<void> _save() async {
+    _run++;
+    await Library.save(widget.result, widget.paper);
+    if (!mounted) return;
+    setState(() {
+      _saved = true;
+      _playing = false;
+    });
+    _speaker.say(_l.savedToLibrary);
+  }
+
+  Future<void> _delete() async {
+    final l = _l;
+    _run++;
+    setState(() => _playing = false);
+    await _speaker.stop();
+    if (!mounted) return;
+    final ok = await showDialog<bool>(
+      context: context,
+      builder: (dialog) => AlertDialog(
+        title: Text(
+          l.deleteConfirm,
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+        ),
+        actions: [
+          SecondaryButton(
+            label: l.cancel,
+            onTap: () => Navigator.of(dialog).pop(false),
+          ),
+          const SizedBox(height: 8),
+          PrimaryButton(
+            label: l.deleteYes,
+            onTap: () => Navigator.of(dialog).pop(true),
+          ),
+        ],
+      ),
+    );
+    if (ok != true || !mounted) return;
+    await Library.delete(widget.savedId!);
+    _speaker.say(l.deletedFromLibrary);
+    if (mounted) Navigator.of(context).pop();
   }
 
   // "1×" not "1.0×", the same on web and Android.
@@ -246,6 +311,24 @@ class _ReaderScreenState extends State<ReaderScreen> {
                       if (warning != null) ...[
                         const SizedBox(height: 16),
                         _WarningNote(text: warning),
+                      ],
+                      if (_canSave) ...[
+                        const SizedBox(height: 16),
+                        if (widget.savedId != null)
+                          SecondaryButton(
+                            label: l.deleteFromLibrary,
+                            onTap: _delete,
+                          )
+                        else if (_saved)
+                          Semantics(
+                            liveRegion: true,
+                            child: NoteBox(
+                              text: l.savedToLibrary,
+                              kind: NoteKind.privacy,
+                            ),
+                          )
+                        else
+                          SecondaryButton(label: l.saveToLibrary, onTap: _save),
                       ],
                       if (widget.paper case final paper?) ...[
                         const SizedBox(height: 16),

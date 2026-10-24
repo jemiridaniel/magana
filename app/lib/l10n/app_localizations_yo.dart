@@ -974,4 +974,51 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get championsPartnerNote =>
       'Ìdálẹ́kọ̀ọ́ Akọni yóò wáyé pẹ̀lú àwọn àjọ alábàáṣiṣẹ́pọ̀. Kò tíì ṣí sílẹ̀.';
+
+  @override
+  String get librarySubtitle => 'Àwọn ìwé tí a fi pamọ́, fún ọgbọ̀n ọjọ́';
+
+  @override
+  String get libraryEmpty =>
+      'Kò sí ohun tí a fi pamọ́ síbẹ̀. Lẹ́yìn tí Magana bá ka ojú-ìwé kan, yan Fi pamọ́ sí ilé-ìkàwé mi.';
+
+  @override
+  String libraryDeletesIn(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'a ó pa á rẹ́ ní ọjọ́ $count',
+      one: 'a ó pa á rẹ́ lọ́la',
+      zero: 'a ó pa á rẹ́ lónìí',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String librarySavedOn(String date) {
+    return 'A fi pamọ́ ní $date';
+  }
+
+  @override
+  String get libraryPrivacy =>
+      'Àwọn ìwé tí a fi pamọ́ wà lórí fóònù yìí, a sì ń pa wọ́n rẹ́ lẹ́yìn ọgbọ̀n ọjọ́. A kì í fi fọ́tò pamọ́ rárá.';
+
+  @override
+  String get saveToLibrary => 'Fi pamọ́ sí ilé-ìkàwé mi';
+
+  @override
+  String get savedToLibrary =>
+      'A ti fi pamọ́ sí ilé-ìkàwé rẹ. Yóò wà lórí fóònù yìí fún ọgbọ̀n ọjọ́.';
+
+  @override
+  String get deleteFromLibrary => 'Pa á rẹ́ kúrò ní ilé-ìkàwé mi';
+
+  @override
+  String get deleteConfirm => 'Ṣé kí a pa ìwé yìí rẹ́ kúrò ní ilé-ìkàwé rẹ?';
+
+  @override
+  String get deleteYes => 'Pa á rẹ́';
+
+  @override
+  String get deletedFromLibrary => 'A ti pa á rẹ́ kúrò ní ilé-ìkàwé rẹ.';
 }

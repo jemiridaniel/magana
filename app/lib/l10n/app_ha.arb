@@ -256,5 +256,16 @@
   "champStepHelp": "Taimaki mutanenka 3 na farko",
   "stepDone": "an gama",
   "stepNotDone": "ba a gama ba tukuna",
-  "championsPartnerNote": "Za a yi horon Gwarzo tare da ƙungiyoyin abokan hulɗa. Ba a buɗe ba tukuna."
+  "championsPartnerNote": "Za a yi horon Gwarzo tare da ƙungiyoyin abokan hulɗa. Ba a buɗe ba tukuna.",
+  "librarySubtitle": "Karatun da aka adana, na kwanaki 30",
+  "libraryEmpty": "Babu abin da aka adana tukuna. Bayan Magana ta karanta shafi, zaɓi Adana a laburarena.",
+  "libraryDeletesIn": "{count, plural, =0{za a goge yau} =1{za a goge gobe} other{za a goge cikin kwanaki {count}}}",
+  "librarySavedOn": "An adana {date}",
+  "libraryPrivacy": "Karatun da aka adana suna nan a wannan wayar kuma ana goge su bayan kwanaki 30. Ba a taɓa adana hotuna ba.",
+  "saveToLibrary": "Adana a laburarena",
+  "savedToLibrary": "An adana a laburarena. Zai kasance a wannan wayar na kwanaki 30.",
+  "deleteFromLibrary": "Goge daga laburarena",
+  "deleteConfirm": "A goge wannan karatun daga laburarenka?",
+  "deleteYes": "Goge",
+  "deletedFromLibrary": "An goge daga laburarenka."
 }

@@ -67,10 +67,14 @@ class Cell {
 }
 
 class ReadResult {
-  ReadResult({required this.tips, required this.items});
+  ReadResult({required this.tips, required this.items, this.json});
 
   final List<String> tips; // capture tip codes: too_dark, blurry
   final List<ReadItem> items;
+
+  /// The backend's text-only response, kept so a reading can be saved to the
+  /// library and reopened. Photos are never part of it.
+  final Map<String, dynamic>? json;
 
   int get unsureCount => items.where((i) => i.unsure).length;
   int get readableCount => items.where((i) => !i.isFaint).length;
@@ -186,6 +190,7 @@ class ReadResult {
     return ReadResult(
       tips: (json['tips'] as List? ?? const []).cast<String>(),
       items: [for (final e in indexed) e.$2],
+      json: json,
     );
   }
 }

@@ -256,5 +256,16 @@
   "champStepHelp": "Ran ènìyàn mẹ́ta àkọ́kọ́ lọ́wọ́",
   "stepDone": "ó ti parí",
   "stepNotDone": "kò tíì parí",
-  "championsPartnerNote": "Ìdálẹ́kọ̀ọ́ Akọni yóò wáyé pẹ̀lú àwọn àjọ alábàáṣiṣẹ́pọ̀. Kò tíì ṣí sílẹ̀."
+  "championsPartnerNote": "Ìdálẹ́kọ̀ọ́ Akọni yóò wáyé pẹ̀lú àwọn àjọ alábàáṣiṣẹ́pọ̀. Kò tíì ṣí sílẹ̀.",
+  "librarySubtitle": "Àwọn ìwé tí a fi pamọ́, fún ọgbọ̀n ọjọ́",
+  "libraryEmpty": "Kò sí ohun tí a fi pamọ́ síbẹ̀. Lẹ́yìn tí Magana bá ka ojú-ìwé kan, yan Fi pamọ́ sí ilé-ìkàwé mi.",
+  "libraryDeletesIn": "{count, plural, =0{a ó pa á rẹ́ lónìí} =1{a ó pa á rẹ́ lọ́la} other{a ó pa á rẹ́ ní ọjọ́ {count}}}",
+  "librarySavedOn": "A fi pamọ́ ní {date}",
+  "libraryPrivacy": "Àwọn ìwé tí a fi pamọ́ wà lórí fóònù yìí, a sì ń pa wọ́n rẹ́ lẹ́yìn ọgbọ̀n ọjọ́. A kì í fi fọ́tò pamọ́ rárá.",
+  "saveToLibrary": "Fi pamọ́ sí ilé-ìkàwé mi",
+  "savedToLibrary": "A ti fi pamọ́ sí ilé-ìkàwé rẹ. Yóò wà lórí fóònù yìí fún ọgbọ̀n ọjọ́.",
+  "deleteFromLibrary": "Pa á rẹ́ kúrò ní ilé-ìkàwé mi",
+  "deleteConfirm": "Ṣé kí a pa ìwé yìí rẹ́ kúrò ní ilé-ìkàwé rẹ?",
+  "deleteYes": "Pa á rẹ́",
+  "deletedFromLibrary": "A ti pa á rẹ́ kúrò ní ilé-ìkàwé rẹ."
 }

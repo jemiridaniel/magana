@@ -684,5 +684,30 @@
   "champStepHelp": "Help your first 3 people",
   "stepDone": "done",
   "stepNotDone": "not done yet",
-  "championsPartnerNote": "Champion training will be run with partner organisations. It is not open yet."
+  "championsPartnerNote": "Champion training will be run with partner organisations. It is not open yet.",
+  "librarySubtitle": "Saved readings, kept for 30 days",
+  "libraryEmpty": "Nothing saved yet. After Magana reads a page, choose Save to my library.",
+  "libraryDeletesIn": "{count, plural, =0{deleted today} =1{deleted tomorrow} other{deleted in {count} days}}",
+  "@libraryDeletesIn": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "librarySavedOn": "Saved {date}",
+  "@librarySavedOn": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "libraryPrivacy": "Saved readings stay on this phone and are deleted after 30 days. Photos are never saved.",
+  "saveToLibrary": "Save to my library",
+  "savedToLibrary": "Saved to my library. It stays on this phone for 30 days.",
+  "deleteFromLibrary": "Delete from my library",
+  "deleteConfirm": "Delete this reading from your library?",
+  "deleteYes": "Delete",
+  "deletedFromLibrary": "Deleted from your library."
 }

@@ -256,5 +256,16 @@
   "champStepHelp": "Nyere mmadụ 3 mbụ aka",
   "stepDone": "emechara",
   "stepNotDone": "emechabeghị",
-  "championsPartnerNote": "A ga-eme ọzụzụ Onye mmeri na òtù ndị mmekọ. Emepebeghị ya."
+  "championsPartnerNote": "A ga-eme ọzụzụ Onye mmeri na òtù ndị mmekọ. Emepebeghị ya.",
+  "librarySubtitle": "Ihe agụrụ e chekwara, ruo ụbọchị 30",
+  "libraryEmpty": "Enweghị ihe echekwara ugbu a. Mgbe Magana gụchara peeji, họrọ Chekwaa n'ọbá akwụkwọ m.",
+  "libraryDeletesIn": "{count, plural, =0{a ga-ehichapụ ya taa} =1{a ga-ehichapụ ya echi} other{a ga-ehichapụ ya n'ụbọchị {count}}}",
+  "librarySavedOn": "Echekwara na {date}",
+  "libraryPrivacy": "Ihe agụrụ e chekwara na-anọ na ekwentị a, a na-ehichapụkwa ha mgbe ụbọchị 30 gachara. Anaghị echekwa foto.",
+  "saveToLibrary": "Chekwaa n'ọbá akwụkwọ m",
+  "savedToLibrary": "Echekwala ya n'ọbá akwụkwọ gị. Ọ ga-anọ na ekwentị a ruo ụbọchị 30.",
+  "deleteFromLibrary": "Hichapụ ya n'ọbá akwụkwọ m",
+  "deleteConfirm": "Ị chọrọ ihichapụ ihe a agụrụ n'ọbá akwụkwọ gị?",
+  "deleteYes": "Hichapụ",
+  "deletedFromLibrary": "Ehichapụla ya n'ọbá akwụkwọ gị."
 }

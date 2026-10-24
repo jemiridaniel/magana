@@ -977,4 +977,51 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get championsPartnerNote =>
       'A ga-eme ọzụzụ Onye mmeri na òtù ndị mmekọ. Emepebeghị ya.';
+
+  @override
+  String get librarySubtitle => 'Ihe agụrụ e chekwara, ruo ụbọchị 30';
+
+  @override
+  String get libraryEmpty =>
+      'Enweghị ihe echekwara ugbu a. Mgbe Magana gụchara peeji, họrọ Chekwaa n\'ọbá akwụkwọ m.';
+
+  @override
+  String libraryDeletesIn(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'a ga-ehichapụ ya n\'ụbọchị $count',
+      one: 'a ga-ehichapụ ya echi',
+      zero: 'a ga-ehichapụ ya taa',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String librarySavedOn(String date) {
+    return 'Echekwara na $date';
+  }
+
+  @override
+  String get libraryPrivacy =>
+      'Ihe agụrụ e chekwara na-anọ na ekwentị a, a na-ehichapụkwa ha mgbe ụbọchị 30 gachara. Anaghị echekwa foto.';
+
+  @override
+  String get saveToLibrary => 'Chekwaa n\'ọbá akwụkwọ m';
+
+  @override
+  String get savedToLibrary =>
+      'Echekwala ya n\'ọbá akwụkwọ gị. Ọ ga-anọ na ekwentị a ruo ụbọchị 30.';
+
+  @override
+  String get deleteFromLibrary => 'Hichapụ ya n\'ọbá akwụkwọ m';
+
+  @override
+  String get deleteConfirm => 'Ị chọrọ ihichapụ ihe a agụrụ n\'ọbá akwụkwọ gị?';
+
+  @override
+  String get deleteYes => 'Hichapụ';
+
+  @override
+  String get deletedFromLibrary => 'Ehichapụla ya n\'ọbá akwụkwọ gị.';
 }

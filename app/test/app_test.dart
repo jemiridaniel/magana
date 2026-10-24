@@ -26,8 +26,11 @@ class FakeSpeaker extends Speaker {
   @override
   Future<bool> say(String text) async {
     said.add(text);
-    return !interrupt.contains(text);
+    return !interrupt.contains(text) && !interruptOnce.remove(text);
   }
+
+  /// Cut off the first time only, like TalkBack announcing a new screen.
+  final interruptOnce = <String>{};
 
   /// Utterances that TalkBack "speaks over" in tests.
   final interrupt = <String>{};
@@ -225,12 +228,29 @@ void main() {
     },
   );
 
+  testWidgets('a line cut off once is said again, then reading goes on', (
+    tester,
+  ) async {
+    final speaker = FakeSpeaker()..interruptOnce.add('Food tests');
+    await pumpApp(tester, speaker);
+    await captureToReader(tester);
+    await tester.pump(Speaker.retryDelay);
+    await tester.pumpAndSettle();
+    expect(speaker.said.where((s) => s == 'Food tests'), hasLength(2));
+    expect(speaker.said, contains(startsWith('Take 2 tablets')));
+    expect(speaker.said.last, en.endOfPageHint);
+  });
+
   testWidgets('TalkBack speaking over a line pauses there, never skips it', (
     tester,
   ) async {
     final speaker = FakeSpeaker()..interrupt.add('Food tests');
     await pumpApp(tester, speaker);
     await captureToReader(tester);
+    await tester.pump(Speaker.retryDelay);
+    await tester.pumpAndSettle();
+    // Said twice (TalkBack cut it off twice), then paused there.
+    expect(speaker.said.where((s) => s == 'Food tests'), hasLength(2));
     expect(speaker.said.last, 'Food tests');
     expect(speaker.said, isNot(contains(startsWith('Take 2 tablets'))));
     expect(find.text('Food tests'), findsOneWidget);
