@@ -1,0 +1,101 @@
+{
+  "note": "NCAIR1 Whisper Small models, transformers fp32 on an Apple M2 Pro CPU (16 GB), FLEURS test clips 1-10 per language (read speech; English is en_us), white noise added at 10 and 5 dB SNR.",
+  "by_condition": {
+    "ha/clean": {
+      "clips": 10,
+      "wer": 0.291,
+      "wer_no_marks": 0.291,
+      "runaway_clips": 0,
+      "median_seconds": 3.4,
+      "median_audio_seconds": 14.16
+    },
+    "ha/snr10": {
+      "clips": 10,
+      "wer": 0.563,
+      "wer_no_marks": 0.563,
+      "runaway_clips": 0,
+      "median_seconds": 3.34,
+      "median_audio_seconds": 14.16
+    },
+    "ha/snr5": {
+      "clips": 10,
+      "wer": 0.665,
+      "wer_no_marks": 0.665,
+      "runaway_clips": 0,
+      "median_seconds": 3.39,
+      "median_audio_seconds": 14.16
+    },
+    "yo/clean": {
+      "clips": 10,
+      "wer": 0.566,
+      "wer_no_marks": 0.358,
+      "runaway_clips": 0,
+      "median_seconds": 9.32,
+      "median_audio_seconds": 15.09
+    },
+    "yo/snr10": {
+      "clips": 10,
+      "wer": 0.701,
+      "wer_no_marks": 0.474,
+      "runaway_clips": 0,
+      "median_seconds": 10.3,
+      "median_audio_seconds": 15.09
+    },
+    "yo/snr5": {
+      "clips": 10,
+      "wer": 1.028,
+      "wer_no_marks": 0.741,
+      "runaway_clips": 0,
+      "median_seconds": 8.3,
+      "median_audio_seconds": 15.09
+    },
+    "ig/clean": {
+      "clips": 10,
+      "wer": 0.413,
+      "wer_no_marks": 0.346,
+      "runaway_clips": 0,
+      "median_seconds": 6.8,
+      "median_audio_seconds": 14.52
+    },
+    "ig/snr10": {
+      "clips": 10,
+      "wer": 1.145,
+      "wer_no_marks": 1.112,
+      "runaway_clips": 1,
+      "median_seconds": 8.53,
+      "median_audio_seconds": 14.52
+    },
+    "ig/snr5": {
+      "clips": 10,
+      "wer": 1.476,
+      "wer_no_marks": 1.457,
+      "runaway_clips": 2,
+      "median_seconds": 6.64,
+      "median_audio_seconds": 14.52
+    },
+    "en/clean": {
+      "clips": 10,
+      "wer": 0.085,
+      "wer_no_marks": 0.085,
+      "runaway_clips": 0,
+      "median_seconds": 1.74,
+      "median_audio_seconds": 10.23
+    },
+    "en/snr10": {
+      "clips": 10,
+      "wer": 0.232,
+      "wer_no_marks": 0.232,
+      "runaway_clips": 0,
+      "median_seconds": 1.87,
+      "median_audio_seconds": 10.23
+    },
+    "en/snr5": {
+      "clips": 10,
+      "wer": 0.284,
+      "wer_no_marks": 0.284,
+      "runaway_clips": 0,
+      "median_seconds": 1.65,
+      "median_audio_seconds": 10.23
+    }
+  }
+}

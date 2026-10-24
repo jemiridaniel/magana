@@ -81,3 +81,26 @@ def test_engine_selection(monkeypatch):
     monkeypatch.setenv("ASR_ENGINE", "cloud")
     with pytest.raises(RuntimeError):
         asr.default_engine()
+
+
+class Looping(Echo):
+    def transcribe(self, audio, lang):
+        return "ụgbọ n'akụkụ eti, ụgbọ nwere ụlọ ụlọ ụlọ ụlọ ụlọ ụlọ ụlọ ụlọ"
+
+
+def test_a_transcript_that_loops_counts_as_heard_nothing(engine):
+    engine(Looping())
+    r = client.post("/asr", files={"file": ("a.wav", wav())}, data={"lang": "ig"})
+    assert r.json() == {"text": "", "engine": "fake"}
+
+
+@pytest.mark.parametrize("text, loops", [
+    ("ndị ahụrụma mere ka ndị ahụrụma mere ka ndị ahụrụma mere ka ndị ahụrụma mere ka", True),
+    ("akụkọ akụkọ akụkọ akụkọ", True),
+    ("B", False),
+    ("bẹ́ẹ̀ni bẹ́ẹ̀ni", False),  # said twice is still an answer
+    ("no no no", False),
+    ("the hospital has followed protocols for infection control", False),
+])
+def test_looped(text, loops):
+    assert asr.looped(text) is loops

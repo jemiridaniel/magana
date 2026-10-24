@@ -27,6 +27,18 @@ SAMPLE_RATE = 16_000
 MAX_SECONDS = 30  # Whisper's window; answers and commands are a few seconds
 
 
+def looped(text: str, times: int = 4, longest: int = 6) -> bool:
+    """Whisper sometimes repeats itself in noise ("ụlọ ụlọ ụlọ ụlọ ..."): the same run of up to
+    `longest` words `times` times in a row. On the 120 benchmark clips this caught all 5
+    loops and nothing else (docs/FINDINGS.md). Such a transcript is not an answer."""
+    w = text.lower().split()
+    for n in range(1, longest + 1):
+        for i in range(len(w) - n * times + 1):
+            if all(w[i + k * n:i + (k + 1) * n] == w[i:i + n] for k in range(1, times)):
+                return True
+    return False
+
+
 class ASRUnavailable(Exception):
     pass
 

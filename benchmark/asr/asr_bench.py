@@ -81,7 +81,9 @@ def wav_bytes(samples: np.ndarray, rate: int) -> bytes:
 
 
 def words(text: str, strip_marks: bool = False) -> list[str]:
-    text = unicodedata.normalize("NFC", text.lower())
+    # Yorùbá under-dots: the model often writes a vertical line below (U+0329, "o̩"), FLEURS a
+    # dot below (U+0323, "ọ"). Both are in use for the same letter, so they count as equal.
+    text = unicodedata.normalize("NFC", unicodedata.normalize("NFD", text.lower()).replace("\u0329", "\u0323"))
     if strip_marks:
         text = "".join(c for c in unicodedata.normalize("NFD", text) if unicodedata.category(c) != "Mn")
     text = "".join(c if c.isalnum() or c.isspace() or c == "'" else " " for c in text)
@@ -126,34 +128,42 @@ def run(args) -> None:
     with open(out / "outputs.jsonl", "w") as f:
         for r in rows:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
+    summarize(rows, args.note, out)
+
+
+def runaway(r: dict) -> bool:
+    """The model looped: more than twice as many words as the reference."""
+    return len(r["hypothesis"].split()) > 2 * r["ref_words"]
+
+
+def summarize(rows: list[dict], note: str, out: Path) -> None:
     summary = {}
-    for lang in args.langs.split(","):
-        for name, _ in conditions:
-            mine = [r for r in rows if r["lang"] == lang and r["condition"] == name]
-            if not mine:
-                continue
-            summary[f"{lang}/{name}"] = {
-                "clips": len(mine),
-                "wer": round(sum(r["edits"] for r in mine) / sum(r["ref_words"] for r in mine), 3),
-                "wer_no_marks": round(sum(r["edits_no_marks"] for r in mine)
-                                      / sum(r["ref_words_no_marks"] for r in mine), 3),
-                "median_seconds": statistics.median(r["seconds"] for r in mine),
-                "median_audio_seconds": statistics.median(r["audio_seconds"] for r in mine),
-            }
-    (out / "summary.json").write_text(json.dumps({"note": args.note, "by_condition": summary}, indent=2))
+    for key in dict.fromkeys(f"{r['lang']}/{r['condition']}" for r in rows):
+        mine = [r for r in rows if f"{r['lang']}/{r['condition']}" == key]
+        summary[key] = {
+            "clips": len(mine),
+            "wer": round(sum(r["edits"] for r in mine) / sum(r["ref_words"] for r in mine), 3),
+            "wer_no_marks": round(sum(r["edits_no_marks"] for r in mine)
+                                  / sum(r["ref_words_no_marks"] for r in mine), 3),
+            "runaway_clips": sum(runaway(r) for r in mine),
+            "median_seconds": round(statistics.median(r["seconds"] for r in mine), 2),
+            "median_audio_seconds": round(statistics.median(r["audio_seconds"] for r in mine), 2),
+        }
+    (out / "summary.json").write_text(json.dumps({"note": note, "by_condition": summary}, indent=2))
     with open(out / "transcripts_for_review.csv", "w", newline="") as f:
         w = csv.writer(f)
         w.writerow(["lang", "clip", "condition", "reference", "hypothesis", "reviewer_notes"])
         for r in rows:
             w.writerow([r["lang"], r["clip"], r["condition"], r["reference"], r["hypothesis"], ""])
-    lines = ["| Language / condition | Clips | WER | WER without tone marks | Median s (audio s) |",
-             "|---|---|---|---|---|"]
+    lines = ["| Language / condition | Clips | WER | WER without tone marks | Runaway clips | Median s (audio s) |",
+             "|---|---|---|---|---|---|"]
     for k, s in summary.items():
-        lines.append(f"| {k} | {s['clips']} | {s['wer']} | {s['wer_no_marks']} | "
+        lines.append(f"| {k} | {s['clips']} | {s['wer']} | {s['wer_no_marks']} | {s['runaway_clips']} | "
                      f"{s['median_seconds']} ({s['median_audio_seconds']}) |")
-    (out / "summary.md").write_text(f"# ASR benchmark\n\n{args.note}\n\n" + "\n".join(lines) + "\n")
+    (out / "summary.md").write_text(
+        f"# ASR benchmark\n\n{note}\n\nRunaway clips: the model repeated itself, giving more than twice as "
+        "many words as the reference.\n\n" + "\n".join(lines) + "\n")
     print("\n".join(lines))
-
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
@@ -161,4 +171,20 @@ if __name__ == "__main__":
     p.add_argument("--clips", type=int, default=10)
     p.add_argument("--out", required=True)
     p.add_argument("--note", default="")
-    run(p.parse_args())
+    p.add_argument("--resummarize", action="store_true",
+                   help="rebuild the summary from --out/outputs.jsonl without running the models")
+    a = p.parse_args()
+    if a.resummarize:
+        out = Path(a.out)
+        rows = [json.loads(line) for line in open(out / "outputs.jsonl")]
+        for r in rows:  # re-score from the saved text, with the current normalisation
+            r["edits"], r["ref_words"] = wer(words(r["reference"]), words(r["hypothesis"]))
+            r["edits_no_marks"], r["ref_words_no_marks"] = wer(words(r["reference"], True),
+                                                               words(r["hypothesis"], True))
+        with open(out / "outputs.jsonl", "w") as f:
+            for r in rows:
+                f.write(json.dumps(r, ensure_ascii=False) + "\n")
+        note = json.loads((out / "summary.json").read_text())["note"] if not a.note else a.note
+        summarize(rows, note, out)
+    else:
+        run(a)

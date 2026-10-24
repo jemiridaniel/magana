@@ -13,6 +13,37 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Languages: ASR word error rate in four languages, clean and noisy (UNREVIEWED)
+
+> **Unreviewed.** Native speakers of Hausa, Yorùbá and Igbo have not yet checked the transcripts (`benchmark/asr/results/2026-10-24-cpu-m2pro/transcripts_for_review.csv`).
+
+- **What we tested and how:** `benchmark/asr/asr_bench.py`.
+  - **Models:** the NCAIR1 Whisper Small models that Magana's server uses (`ASR_ENGINE=local`): Hausa-ASR, Yoruba-ASR, Igbo-ASR and NigerianAccentedEnglish. transformers fp32 on the Mac's M2 Pro CPU.
+  - **Audio:** the first 10 test clips per language of FLEURS (CC BY 4.0). These are read sentences of 10 to 15 s; English is `en_us`, because FLEURS has no Nigerian English.
+  - **Noise:** each clip clean and with white noise at 10 dB and 5 dB SNR.
+- **Result** (word error rate, lower is better; in brackets, without tone marks and under-dots):
+
+  | Language | Clean | 10 dB | 5 dB | Median time per clip |
+  |---|---|---|---|---|
+  | Hausa | 29.1% | 56.3% | 66.5% | 3.4 s |
+  | Yorùbá | 56.6% (35.8%) | 70.1% (47.4%) | 102.8% (74.1%) | 8.3–10.3 s |
+  | Igbo | 41.3% (34.6%) | 114.5% (111.2%) | 147.6% (145.7%) | 6.6–8.5 s |
+  | English (US) | 8.5% | 23.2% | 28.4% | 1.7–1.9 s |
+
+  - **Above 100%** means more wrong words than the clip had. The model **looped**, repeating a word or phrase ("ụlọ ụlọ ụlọ …", 113 to 130 words for a 20 to 44-word sentence).
+    - 5 of the 120 transcripts looped: 4 Igbo (10 dB and 5 dB) and 1 Yorùbá (5 dB). Without the loops, Igbo at 5 dB is 56%, from only 8 clips.
+    - Whisper has no Igbo language token, so Igbo isn't forced to a language, which may contribute.
+  - **Yorùbá:** most of the gap between the two figures is tone marks. The model often writes under-dots as a vertical line ("o̩"), which we now count as equal to "ọ". That changed clean WER from 60.6% to 56.6%.
+  - **Speed:** the times are for 10 to 15 s clips on the Mac's CPU. Answers of a few seconds have not been timed.
+- **What this means:** free speech in Hausa, Yorùbá and Igbo will often be misheard, especially with noise, as in a classroom or market. This supports the quiz's confirm-before-marking design and the tap fallback (entry "quiz answers that survive bad recognition"). Short answers ("B", "bẹ́ẹ̀ni") are not measured yet and may do better or worse.
+- **What we changed:**
+  - `asr.looped` (6 tests) turns a looping transcript into "heard nothing". The app asks again, then offers tapping. On these 120 clips it caught all 5 loops and nothing else.
+  - The benchmark counts "o̩" and "ọ" as the same letter, and `--resummarize` re-scores a run from its saved text.
+- **Status:** **unreviewed**. Still to do:
+  - native speakers check the transcripts;
+  - record our own quiz answers and commands (with consent) in quiet and noisy rooms;
+  - measure on the AWS server's CPU.
+
 ## 2026-10-24 · Security: rate limits for the public web API key
 
 - **What we tested and how:** `test_ratelimit.py` (8 tests):
@@ -84,7 +115,7 @@ No real phone and no blind or low-vision tester has been used yet.
     - `wrong answer, confirmed by tapping Yes: says the right one`;
     - `unclear, then silent: tap instead; marks nothing`;
     - one test per tier that the recogniser is chosen for that account.
-- **Why:** the early ASR result for Hausa (see "ASR word error rate" when complete). On 10 FLEURS clips, NCAIR1/Hausa-ASR got **29.1%** of words wrong clean, **56.3%** with noise at 10 dB SNR, and **66.5%** at 5 dB. At that error rate a spoken answer is often misheard, so a mishearing must never cost the learner a mark.
+- **Why:** the ASR result for Hausa (see "ASR word error rate in four languages"). On 10 FLEURS clips, NCAIR1/Hausa-ASR got **29.1%** of words wrong clean, **56.3%** with noise at 10 dB SNR, and **66.5%** at 5 dB. At that error rate a spoken answer is often misheard, so a mishearing must never cost the learner a mark.
 - **Result:**
   - A spoken answer is only marked after "You said B. Is that right?" and a yes, spoken or tapped.
   - A "no", or a misheard letter that is rejected, leaves the score unchanged ("0 right out of 0 answered") and asks again.

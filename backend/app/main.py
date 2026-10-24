@@ -238,6 +238,8 @@ async def transcribe(file: UploadFile = File(...), lang: Literal["en", "ha", "yo
     except Exception:
         log.exception("asr failed")
         raise HTTPException(400, {"code": "unreadable_audio"})
+    if asr.looped(text):
+        text = ""  # treated as heard nothing: the app asks again, then offers tapping
     return {"text": text.strip(), "engine": engine.name}
 
 

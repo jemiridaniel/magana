@@ -14,8 +14,13 @@ WER is reported on FLEURS's normalised transcription and, for Hausa, Yorùbá an
 tone marks and under-dots removed. Every transcript is saved in `transcripts_for_review.csv` for
 native speakers. Results are **unreviewed** until they check them.
 
+Yorùbá under-dots written with a vertical line (U+0329, "o̩", as the model often does) and with a
+dot (U+0323, "ọ", as FLEURS does) count as the same letter. **Runaway clips** are those where the
+model repeated itself and gave more than twice as many words as the reference.
+
 ```bash
 HF_TOKEN=... backend/.venv/bin/python benchmark/asr/asr_bench.py --langs ha,yo,ig,en --clips 10 \
   --out benchmark/asr/results/<run> --note "<hardware and settings>"
 ```
+Add `--resummarize` to re-score a finished run from its `outputs.jsonl` without the models.
 Needs `backend/requirements-asr.txt` and a Hugging Face token that accepted the N-ATLaS terms.
