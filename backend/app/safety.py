@@ -69,6 +69,8 @@ def guard_explanation(source_text: str, explanation: str) -> GuardResult:
 class Warning:
     block_index: int
     spoken: str
+    code: str = "low_confidence"
+    word_index: int | None = None  # the word in the line, for number warnings
 
 
 def confidence_warnings(blocks: list[dict], threshold: float = 0.75) -> list[Warning]:
@@ -87,6 +89,7 @@ class CellWarning:
     row: int
     col: int
     spoken: str
+    code: str = "low_confidence"
 
 
 def table_warnings(tables: list[dict], threshold: float = 0.75) -> list[CellWarning]:
@@ -100,3 +103,148 @@ def table_warnings(tables: list[dict], threshold: float = 0.75) -> list[CellWarn
                     where = f"row {c['row'] + 1}, column {c['col'] + 1} of {label}"
                     out.append(CellWarning(t_i, c["row"], c["col"], f"I'm not sure about {where}. Please check it or retake the photo."))
     return out
+
+
+# ---------- Critical words: numbers, doses, amounts, dates
+
+# Each critical word must reach this on its own; a line average can hide one bad digit.
+# PENDING CLINICAL SIGN-OFF (see CLAUDE.md).
+CRITICAL_WORD_THRESHOLD = 0.90
+
+# Characters OCR produces when it half-reads a digit.
+_LOOKALIKES = "OoQDlI|SsBZG@§&"
+# At the end of a number fewer count: "5l" (litres) and "2B" (pencil) are real.
+_TRAILING = "OoQI|@§&"
+_BROKEN_NUMBER_RE = re.compile(
+    rf"\d[{re.escape(_LOOKALIKES)}]+\d"        # 5O0, 1l2
+    rf"|\d[.,]?[{re.escape(_TRAILING)}]+$"      # 50O, 12.O, 38,75O
+    r"|^[@§&]\d"                                # @5 (letters before digits are often real: B12, O2)
+)
+# A lone symbol where a number belongs ("more than @ in 24 hours").
+_NUMBER_SYMBOLS = set("@§#&?*~")
+_DOSE_WORDS = {
+    "than", "every", "take", "times", "x", "daily", "per", "hour", "hours", "hrs", "day", "days", "week", "weeks",
+    "tablet", "tablets", "tabs", "capsule", "capsules", "caps", "mg", "mcg", "ml", "g", "kg", "iu", "units", "drops",
+    "spoon", "spoons", "teaspoon", "teaspoons", "naira", "kobo",
+}
+
+
+def _core(token: str) -> str:
+    return token.strip("()[]{},.;:!\"'")
+
+
+def _has_digit(token: str) -> bool:
+    return any(ch.isdigit() for ch in token)
+
+
+def number_problem(words: list[str], i: int) -> str | None:
+    """'unreadable_number' when a word sits where a number belongs but holds non-digit
+    characters (8 read as @, 500 as 5O0); never try to repair it."""
+    core = _core(words[i]) or words[i].strip()
+    if not core:
+        return None
+    if _has_digit(core) and _BROKEN_NUMBER_RE.search(core):
+        return "unreadable_number"
+    if len(core) <= 2 and all(ch in _NUMBER_SYMBOLS for ch in core):
+        near = words[max(0, i - 2):i] + words[i + 1:i + 3]
+        if any(_has_digit(n) or _core(n).lower() in _DOSE_WORDS for n in near):
+            return "unreadable_number"
+    return None
+
+
+def _line_words(line: dict) -> list[tuple[str, float]]:
+    words = line.get("words") or []
+    if words:
+        return [(w["text"], w.get("confidence", 1.0)) for w in words]
+    return [(w, line.get("confidence", 1.0)) for w in line.get("text", "").split()]
+
+
+def _number_message(label: str) -> str:
+    return f"I can't read a number on {label} clearly. Please check it or retake the photo."
+
+
+def number_warnings(lines: list[dict], threshold: float = CRITICAL_WORD_THRESHOLD) -> list[Warning]:
+    """One warning per critical word that is low-confidence or unreadable."""
+    out = []
+    for i, line in enumerate(lines):
+        words = _line_words(line)
+        texts = [w for w, _ in words]
+        label = line.get("label") or f"line {i + 1}"
+        for j, (word, conf) in enumerate(words):
+            problem = number_problem(texts, j)
+            if problem is None and _has_digit(word) and conf < threshold:
+                problem = "low_confidence_number"
+            if problem:
+                out.append(Warning(i, _number_message(label), code=problem, word_index=j))
+    return out
+
+
+def cell_number_warnings(tables: list[dict], threshold: float = CRITICAL_WORD_THRESHOLD) -> list[CellWarning]:
+    out = []
+    for t_i, t in enumerate(tables):
+        label = t.get("label") or f"table {t_i + 1}"
+        for row in t.get("rows", []):
+            for c in row:
+                texts = c.get("text", "").split()
+                problem = next((p for j in range(len(texts)) if (p := number_problem(texts, j))), None)
+                if problem is None and any(_has_digit(w) for w in texts) and c.get("confidence", 1.0) < threshold:
+                    problem = "low_confidence_number"
+                if problem:
+                    where = f"row {c['row'] + 1}, column {c['col'] + 1} of {label}"
+                    out.append(CellWarning(t_i, c["row"], c["col"], _number_message(where), code=problem))
+    return out
+
+
+def _digits(token: str) -> str:
+    return re.sub(r"\D", "", token)
+
+
+def number_mismatches(first: dict, second: dict, scale: float = 1.5) -> tuple[list[Warning], list[CellWarning]]:
+    """Compare every number between two OCR passes of the same photo. A number that
+    the passes disagree on is flagged; the first reading is never replaced."""
+    found: list[tuple[str, tuple]] = []  # (digits, where) from the first pass
+    for i, line in enumerate(first.get("lines", [])):
+        found += [(_digits(w), ("line", i)) for w in line.get("text", "").split() if _has_digit(w)]
+    for t_i, t in enumerate(first.get("tables", [])):
+        for row in t.get("rows", []):
+            for c in row:
+                found += [(_digits(w), ("cell", t_i, c["row"], c["col"])) for w in c.get("text", "").split() if _has_digit(w)]
+
+    others: dict[str, list[int]] = {}  # digits -> tops (first-pass scale) in the second pass
+    for line in second.get("lines", []):
+        for w in line.get("text", "").split():
+            if _has_digit(w):
+                others.setdefault(_digits(w), []).append(int(line.get("top", 0) / scale))
+    for t in second.get("tables", []):
+        for row in t.get("rows", []):
+            for c in row:
+                for w in c.get("text", "").split():
+                    if _has_digit(w):
+                        others.setdefault(_digits(w), []).append(int(t.get("top", 0) / scale))
+
+    flagged: set[tuple] = set()
+    for digits, where in found:
+        if others.get(digits):
+            others[digits].pop()
+        else:
+            flagged.add(where)
+    # Numbers only the second pass saw belong to the nearest first-pass line.
+    lines = first.get("lines", [])
+    for tops in others.values():
+        for top in tops:
+            if lines:
+                nearest = min(range(len(lines)), key=lambda i: abs(lines[i].get("top", 0) - top))
+                flagged.add(("line", nearest))
+
+    line_out, cell_out = [], []
+    tables = first.get("tables", [])
+    for where in sorted(flagged, key=str):
+        if where[0] == "line":
+            label = lines[where[1]].get("label") or f"line {where[1] + 1}"
+            line_out.append(Warning(where[1], _number_message(label), code="number_mismatch"))
+        else:
+            _, t_i, r, c = where
+            label = tables[t_i].get("label") or f"table {t_i + 1}"
+            cell_out.append(CellWarning(t_i, r, c, _number_message(f"row {r + 1}, column {c + 1} of {label}"),
+                                        code="number_mismatch"))
+    return line_out, cell_out

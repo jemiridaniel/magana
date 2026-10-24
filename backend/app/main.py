@@ -11,7 +11,7 @@ from PIL import Image
 from pydantic import BaseModel
 
 from . import policy, safety, triage
-from .reader import OCREngine, default_engine, read_page
+from .reader import SECOND_PASS_SCALE, OCREngine, default_engine, read_page
 
 app = FastAPI(title="Magana API", version="0.1.0")
 # Browsers (Flutter web, teacher portal) need CORS. Dev allows any localhost port;
@@ -22,6 +22,8 @@ app.add_middleware(
     allow_methods=["GET", "POST"],
     allow_headers=["*"],
 )
+
+SECOND_PASS_MODES = {"health", "money"}
 
 MODE_FEATURE = {
     "school": policy.Feature.READ_SCHOOLWORK,
@@ -55,10 +57,15 @@ async def read(file: UploadFile = File(...), tier: policy.Tier = Form(policy.Tie
         image = Image.open(io.BytesIO(await file.read()))
     except Exception:
         raise HTTPException(400, "Could not open that image.")
-    result = read_page(image, engine)
+    # Health and money papers get a second OCR pass so every number is read twice.
+    result = read_page(image, engine, second_pass=mode in SECOND_PASS_MODES)
     # The uploaded photo is never stored: it only lives in memory for this request.
-    warnings = safety.confidence_warnings(result["lines"])
-    cell_warnings = safety.table_warnings(result["tables"])
+    warnings = safety.confidence_warnings(result["lines"]) + safety.number_warnings(result["lines"])
+    cell_warnings = safety.table_warnings(result["tables"]) + safety.cell_number_warnings(result["tables"])
+    if "second_pass" in result:
+        line_mm, cell_mm = safety.number_mismatches(result, result.pop("second_pass"), scale=SECOND_PASS_SCALE)
+        warnings += line_mm
+        cell_warnings += cell_mm
     return {**result, "warnings": [w.__dict__ for w in warnings], "cell_warnings": [w.__dict__ for w in cell_warnings]}
 
 

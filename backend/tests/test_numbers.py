@@ -1,0 +1,171 @@
+"""Critical numbers: per-word scoring, unreadable digits, and the two-pass cross-check.
+
+The fixtures under fixtures/misreads are the pages where the dose "8 in 24 hours"
+was really misread on the Android emulator and in development: as "6" (with 92%
+and 64% word confidence) and as "@" or "&".
+"""
+from pathlib import Path
+
+import pytest
+from fastapi.testclient import TestClient
+
+from app import safety
+from app.main import app
+
+client = TestClient(app)
+MISREADS = Path(__file__).parent / "fixtures" / "misreads"
+
+
+def words(*pairs):
+    return [{"text": t, "confidence": c} for t, c in pairs]
+
+
+# ---------- unreadable numbers: non-digit characters where a number belongs
+
+@pytest.mark.parametrize("text, index", [
+    ("Do not lake more than @ in 24 hours", 5),   # real misread of 8
+    ("Do not lake more than & in 24 hours", 5),   # real misread of 8
+    ("Paracetamol 5O0 mg tablets", 1),
+    ("Take 1l2 tablets", 1),
+    ("Balance ₦38,75O", 1),
+])
+def test_non_digit_in_a_number_is_unreadable(text, index):
+    assert safety.number_problem(text.split(), index) == "unreadable_number"
+
+
+@pytest.mark.parametrize("text", [
+    "COVID-19 vaccine card",
+    "Vitamin B12 tablets",
+    "Salt & sugar solution",
+    "Questions & answers",
+    "Discount 50 % today",
+    "Expiry 08/2027",
+])
+def test_ordinary_words_and_numbers_are_not_flagged(text):
+    tokens = text.split()
+    assert all(safety.number_problem(tokens, i) is None for i in range(len(tokens)))
+
+
+# ---------- per-word confidence: one shaky digit is not hidden by its line
+
+def test_real_misread_6_at_64_percent_is_flagged_even_though_the_line_looks_fine():
+    # Word confidences from the emulator photo (JPEG q88) that read 8 as 6.
+    line = {"text": "Mo notiake more inan 6 in 24 hours", "confidence": 0.766, "label": "line 2",
+            "words": words(("Mo", .87), ("notiake", .30), ("more", .93), ("inan", .76), ("6", .64),
+                           ("in", .94), ("24", .95), ("hours", .74))}
+    assert safety.confidence_warnings([line]) == []  # the old line-average rule missed it
+    [w] = safety.number_warnings([line])
+    assert (w.code, w.block_index, w.word_index) == ("low_confidence_number", 0, 4)
+
+
+def test_real_misread_at_sign_is_flagged():
+    line = {"text": "Do not lake more than @ in 24 hours", "confidence": 0.81,
+            "words": words(("Do", .92), ("not", .88), ("lake", .87), ("more", .96), ("than", .70), ("@", .26),
+                           ("in", .95), ("24", .95), ("hours", .83))}
+    [w] = safety.number_warnings([line])
+    assert (w.code, w.word_index) == ("unreadable_number", 5)
+
+
+def test_confident_numbers_pass():
+    line = {"text": "Take 2 tablets every 4 to 6 hours", "confidence": 0.95,
+            "words": words(("Take", .95), ("2", .96), ("tablets", .95), ("every", .96), ("4", .93), ("to", .96),
+                           ("6", .95), ("hours", .96))}
+    assert safety.number_warnings([line]) == []
+
+
+def test_threshold_is_090_per_word():
+    line = {"text": "Take 2 tablets", "words": words(("Take", .99), ("2", .89), ("tablets", .99))}
+    assert [w.code for w in safety.number_warnings([line])] == ["low_confidence_number"]
+    line["words"][1]["confidence"] = 0.90
+    assert safety.number_warnings([line]) == []
+
+
+def test_table_cells_use_the_number_rules():
+    tables = [{"label": "table 1", "rows": [[
+        {"text": "Haemoglobin", "confidence": 0.80, "row": 1, "col": 0},
+        {"text": "11.2 g/dL", "confidence": 0.85, "row": 1, "col": 1},
+        {"text": "12.O - 16.0", "confidence": 0.99, "row": 1, "col": 2},
+    ]]}]
+    got = [(w.col, w.code) for w in safety.cell_number_warnings(tables)]
+    assert got == [(1, "low_confidence_number"), (2, "unreadable_number")]
+
+
+# ---------- second pass: the two readings must agree on every number
+
+def test_real_misread_6_at_92_percent_is_caught_by_the_second_pass():
+    # The original faint page: "6" at 92% passes the per-word threshold on its own.
+    first = {"lines": [{"text": "Paracetamol 500 mg tablets", "top": 69, "label": "line 1"},
+                       {"text": "o not take more inan 6 in 24 pours", "top": 216, "label": "line 2"}]}
+    second = {"lines": [{"text": "Paracetamol 500 mg tablets", "top": 103},
+                        {"text": "Do not take more than 8 in 24 hours", "top": 324}]}
+    lines, cells = safety.number_mismatches(first, second, scale=1.5)
+    assert [(w.block_index, w.code) for w in lines] == [(1, "number_mismatch")]
+    assert cells == []
+
+
+def test_matching_passes_raise_nothing():
+    page = {"lines": [{"text": "Take 2 tablets every 4 to 6 hours", "top": 10}]}
+    assert safety.number_mismatches(page, page) == ([], [])
+
+
+def test_a_number_only_the_second_pass_saw_flags_the_nearest_line():
+    first = {"lines": [{"text": "Balance", "top": 10}, {"text": "Amount due", "top": 100}]}
+    second = {"lines": [{"text": "Amount due 6,450.00", "top": 150}]}
+    lines, _ = safety.number_mismatches(first, second, scale=1.5)
+    assert [w.block_index for w in lines] == [1]
+
+
+def test_cells_are_cross_checked():
+    first = {"lines": [], "tables": [{"top": 0, "rows": [[{"text": "11.2", "row": 1, "col": 1}]]}]}
+    second = {"lines": [], "tables": [{"top": 0, "rows": [[{"text": "17.2", "row": 1, "col": 1}]]}]}
+    _, cells = safety.number_mismatches(first, second)
+    assert [(c.row, c.col, c.code) for c in cells] == [(1, 1, "number_mismatch")]
+
+
+# ---------- regression: the real misread photos through /read
+
+def _dose_line_flagged(body: dict) -> bool:
+    flagged = {w["block_index"] for w in body["warnings"]}
+    return any(i in flagged for i, l in enumerate(body["lines"]) if "24" in l["text"])
+
+
+@pytest.mark.parametrize("name", ["dose_faint.png", "dose_faint_q88.jpg", "dose_broken_q88.jpg", "dose_broken_q85.jpg"])
+def test_misread_dose_photos_never_pass_silently_in_health_mode(name):
+    """Whatever this Tesseract build reads, the dose line is either exactly right or flagged."""
+    data = (MISREADS / name).read_bytes()
+    body = client.post("/read", files={"file": (name, data)}, data={"mode": "health"}).json()
+    dose = next((l for l in body["lines"] if "24" in l["text"]), None)
+    if dose is None:
+        pytest.skip("this Tesseract build dropped the dose line entirely (covered by faint-text checks)")
+    read_correctly = " 8 in 24 " in f" {dose['text']} " and all(
+        w["confidence"] >= safety.CRITICAL_WORD_THRESHOLD for w in dose["words"] if any(ch.isdigit() for ch in w["text"]))
+    assert read_correctly or _dose_line_flagged(body), dose
+
+
+@pytest.mark.parametrize("name", ["dose_faint_q88.jpg", "dose_broken_q88.jpg", "dose_broken_q85.jpg"])
+def test_misread_dose_photos_are_flagged_in_school_mode_without_a_second_pass(name):
+    data = (MISREADS / name).read_bytes()
+    body = client.post("/read", files={"file": (name, data)}, data={"mode": "school"}).json()
+    dose = next(l for l in body["lines"] if "24" in l["text"])
+    assert " 8 in 24 " in f" {dose['text']} " or _dose_line_flagged(body), dose
+
+
+def test_second_pass_only_runs_for_health_and_money(monkeypatch):
+    calls = []
+    import app.main as main
+
+    class Engine:
+        def read(self, image):
+            from app.reader import Line, Page
+            calls.append(image.size)
+            return Page(lines=[Line("Take 2 tablets", 0.99, 0)])
+
+    app.dependency_overrides[main.get_engine] = lambda: Engine()
+    try:
+        data = (MISREADS / "dose_faint.png").read_bytes()
+        for mode, expected in [("school", 1), ("health", 2), ("money", 2)]:
+            calls.clear()
+            client.post("/read", files={"file": ("p.png", data)}, data={"mode": mode})
+            assert len(calls) == expected, mode
+    finally:
+        app.dependency_overrides.clear()

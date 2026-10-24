@@ -15,11 +15,20 @@ from PIL import Image, ImageFilter, ImageStat
 
 
 @dataclass
+class Word:
+    text: str
+    confidence: float  # 0-1
+
+
+@dataclass
 class Line:
     text: str
     confidence: float  # 0-1
     top: int
     label: str = ""
+    height: int = 0
+    # Per-word confidence, so one shaky number is not hidden by confident words around it.
+    words: list[Word] = field(default_factory=list)
 
 
 @dataclass
@@ -67,13 +76,16 @@ class TesseractEngine:
             if not word.strip():
                 continue
             key = (data["block_num"][i], data["par_num"][i], data["line_num"][i])
-            entry = lines.setdefault(key, {"words": [], "confs": [], "top": data["top"][i]})
+            entry = lines.setdefault(key, {"words": [], "confs": [], "top": data["top"][i], "bottom": 0})
             entry["words"].append(word)
             entry["confs"].append(max(float(data["conf"][i]), 0.0) / 100)
+            entry["bottom"] = max(entry["bottom"], data["top"][i] + data["height"][i])
         out = []
         for n, (_, e) in enumerate(sorted(lines.items(), key=lambda kv: kv[1]["top"])):
             conf = sum(e["confs"]) / len(e["confs"])
-            out.append(Line(" ".join(e["words"]), round(conf, 3), e["top"], label=f"line {n + 1}"))
+            words = [Word(w, round(c, 3)) for w, c in zip(e["words"], e["confs"])]
+            out.append(Line(" ".join(e["words"]), round(conf, 3), e["top"], label=f"line {n + 1}",
+                            height=e["bottom"] - e["top"], words=words))
         return Page(lines=out)
 
 
@@ -243,7 +255,10 @@ def page_from_structure(result: Any) -> Page:
     for text, score, box in zip(texts, scores, boxes):
         if not text.strip() or any(_boxes_overlap(r, box) > 0.5 for r in regions):
             continue
-        lines.append(Line(text.strip(), round(score, 3), _top(box)))
+        # PP-OCR scores whole text lines, so each word carries its line's score.
+        words = [Word(w, round(score, 3)) for w in text.split()]
+        x1y1x2y2 = _xyxy(box)
+        lines.append(Line(text.strip(), round(score, 3), _top(box), height=int(x1y1x2y2[3] - x1y1x2y2[1]), words=words))
     lines.sort(key=lambda l: l.top)
     for i, l in enumerate(lines):
         l.label = f"line {i + 1}"
@@ -283,10 +298,27 @@ def capture_check(image: Image.Image) -> list[str]:
     return tips
 
 
-def read_page(image: Image.Image, engine: OCREngine | None = None) -> dict:
-    page = (engine or default_engine()).read(image)
-    return {
-        "tips": capture_check(image),
-        "lines": [asdict(l) for l in page.lines],
-        "tables": [asdict(t) for t in page.tables],
-    }
+SECOND_PASS_SCALE = 1.5
+
+
+def second_pass_image(image: Image.Image) -> Image.Image:
+    """A differently prepared copy for the number cross-check: upscaled with
+    thickened strokes, which recovers digits that faint or broken print turns
+    into look-alikes (8 read as 6 or @)."""
+    gray = image.convert("L")
+    size = (int(gray.width * SECOND_PASS_SCALE), int(gray.height * SECOND_PASS_SCALE))
+    return gray.resize(size, Image.LANCZOS).filter(ImageFilter.MinFilter(3))
+
+
+def _page_dict(page: Page) -> dict:
+    return {"lines": [asdict(l) for l in page.lines], "tables": [asdict(t) for t in page.tables]}
+
+
+def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: bool = False) -> dict:
+    """OCR one photo. With second_pass, also read a differently prepared copy so the
+    safety layer can compare every number between the two readings."""
+    engine = engine or default_engine()
+    result = {"tips": capture_check(image), **_page_dict(engine.read(image))}
+    if second_pass:
+        result["second_pass"] = _page_dict(engine.read(second_pass_image(image)))
+    return result

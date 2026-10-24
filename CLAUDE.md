@@ -21,7 +21,7 @@ Pitch frame: **Learn. Live. Lead.** — one reading engine that takes users from
 
 ## Non-negotiable safety rules
 1. Numbers, doses, money amounts, dates and ranges are read verbatim. Every model explanation goes through `safety.guard_explanation`; if it fails, read the page text instead.
-2. Low-confidence text gets a spoken warning (`safety.confidence_warnings`); never guess.
+2. Low-confidence text gets a spoken warning (`safety.confidence_warnings`); never guess. Critical words (numbers, doses, amounts, dates) are scored one by one (`safety.number_warnings`) with a threshold of **0.90 — pending clinical sign-off** (Dr. Amos, Nurse Balogun); non-digit characters where a number belongs ("8" read as "@") are unreadable, never repaired. Health and money pages get a second OCR pass and any number the two passes disagree on is flagged (`safety.number_mismatches`); the first reading is never replaced. Regression photos of real misreads live in `backend/tests/fixtures/misreads/`.
 3. No diagnosis, no financial advice. Health questions hand off to a nurse/pharmacist; Ibà quick check only sets call-back priority; danger signs → clinic now / 112.
 4. Age tiers (`policy.py`): Standard 18+; Guided 13–17 (guardian consent, curriculum only — no health, money, WhatsApp, open chat, or describing people); Classroom under 13 (teacher-run sessions only).
 5. Photos are processed in memory and not stored. Never ask for a PIN or password.
