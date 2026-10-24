@@ -95,5 +95,6 @@
   "torchOn": "Tan iná fóònù",
   "torchOff": "Pa iná fóònù",
   "cameraView": "Ìwòye kámẹ́rà",
-  "cameraUnavailable": "Mi ò lè lo kámẹ́rà. Fún kámẹ́rà láṣẹ nínú Ètò, tàbí yan fọ́tò láti inú àwọn fọ́tò."
+  "cameraUnavailable": "Mi ò lè lo kámẹ́rà. Fún kámẹ́rà láṣẹ nínú Ètò, tàbí yan fọ́tò láti inú àwọn fọ́tò.",
+  "msg_line_end_unclear": "Mi ò lè ka òpin {where}. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà."
 }

@@ -95,5 +95,6 @@
   "torchOn": "Gbanye ọkụ ekwentị",
   "torchOff": "Gbanyụọ ọkụ ekwentị",
   "cameraView": "Ihe igwefoto na-ahụ",
-  "cameraUnavailable": "Enweghị m ike iji igwefoto. Nye ikike igwefoto na Ntọala, ma ọ bụ họrọ foto site na foto gị."
+  "cameraUnavailable": "Enweghị m ike iji igwefoto. Nye ikike igwefoto na Ntọala, ma ọ bụ họrọ foto site na foto gị.",
+  "msg_line_end_unclear": "Enweghị m ike ịgụ njedebe {where}. Biko lelee ya ma ọ bụ see foto ọzọ."
 }

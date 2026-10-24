@@ -17,6 +17,7 @@ ENGLISH = {
     "low_confidence_number": "I can't read a number on {where} clearly. Please check it or retake the photo.",
     "unreadable_number": "I can't read a number on {where} clearly. Please check it or retake the photo.",
     "number_mismatch": "I can't read a number on {where} clearly. Please check it or retake the photo.",
+    "line_end_unclear": "I can't read the end of {where}. Please check it or retake the photo.",
     "faint_region": "There is faint print {where} that I can't read. Try more light, or retake the photo.",
     # Request errors (HTTP detail)
     "unknown_mode": "Choose schoolwork, health or money.",

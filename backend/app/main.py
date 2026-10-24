@@ -67,7 +67,8 @@ async def read(file: UploadFile = File(...), tier: policy.Tier = Form(policy.Tie
     # Health and money papers get a second OCR pass so every number is read twice.
     result = read_page(image, engine, second_pass=mode in SECOND_PASS_MODES)
     # The uploaded photo is never stored: it only lives in memory for this request.
-    warnings = safety.confidence_warnings(result["lines"]) + safety.number_warnings(result["lines"])
+    warnings = (safety.confidence_warnings(result["lines"]) + safety.number_warnings(result["lines"])
+                + safety.line_end_warnings(result["lines"]))
     cell_warnings = safety.table_warnings(result["tables"]) + safety.cell_number_warnings(result["tables"])
     if "second_pass" in result:
         line_mm, cell_mm = safety.number_mismatches(result, result.pop("second_pass"), scale=SECOND_PASS_SCALE)

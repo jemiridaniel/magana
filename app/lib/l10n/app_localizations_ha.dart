@@ -428,4 +428,9 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get msg_q_too_weak =>
       'Are you too weak to sit up or stand without help?';
+
+  @override
+  String msg_line_end_unclear(String where) {
+    return 'Ban iya karanta ƙarshen $where ba. Don Allah ka duba shi ko ka sake ɗaukar hoto.';
+  }
 }

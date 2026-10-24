@@ -430,4 +430,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get msg_q_too_weak =>
       'Are you too weak to sit up or stand without help?';
+
+  @override
+  String msg_line_end_unclear(String where) {
+    return 'I can\'t read the end of $where. Please check it or retake the photo.';
+  }
 }

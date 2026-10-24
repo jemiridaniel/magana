@@ -761,6 +761,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Are you too weak to sit up or stand without help?'**
   String get msg_q_too_weak;
+
+  /// Ink carries on past the text the app could read on this line.
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t read the end of {where}. Please check it or retake the photo.'**
+  String msg_line_end_unclear(String where);
 }
 
 class _AppLocalizationsDelegate

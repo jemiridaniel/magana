@@ -95,5 +95,6 @@
   "torchOn": "Kunna fitila",
   "torchOff": "Kashe fitila",
   "cameraView": "Kallon kyamara",
-  "cameraUnavailable": "Ba zan iya amfani da kyamara ba. Ba da izinin kyamara a Saituna, ko ka zaɓi hoto daga cikin hotuna."
+  "cameraUnavailable": "Ba zan iya amfani da kyamara ba. Ba da izinin kyamara a Saituna, ko ka zaɓi hoto daga cikin hotuna.",
+  "msg_line_end_unclear": "Ban iya karanta ƙarshen {where} ba. Don Allah ka duba shi ko ka sake ɗaukar hoto."
 }

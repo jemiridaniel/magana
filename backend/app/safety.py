@@ -252,3 +252,8 @@ def number_mismatches(first: dict, second: dict, scale: float = 1.5) -> tuple[li
             _, t_i, r, c = where
             cell_out.append(CellWarning(t_i, r, c, code="number_mismatch"))
     return line_out, cell_out
+
+
+def line_end_warnings(lines: list[dict]) -> list[Warning]:
+    """Lines whose ink carries on past the recognised text: the end was not read."""
+    return [Warning(i, code="line_end_unclear") for i, l in enumerate(lines) if l.get("end_unclear")]

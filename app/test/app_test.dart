@@ -459,4 +459,26 @@ void main() {
     expect(find.byType(SplashScreen), findsNothing);
     expect(find.text('Hello'), findsOneWidget);
   });
+
+  testWidgets('an unread line end is said after the line', (tester) async {
+    final speaker = FakeSpeaker();
+    await pumpApp(
+      tester,
+      speaker,
+      body: {
+        'tips': <String>[],
+        'lines': [
+          {'text': 'Do not take more', 'top': 10},
+        ],
+        'warnings': [
+          {'block_index': 0, 'code': 'line_end_unclear'},
+        ],
+      },
+    );
+    await captureToReader(tester);
+    expect(
+      speaker.said,
+      contains('Do not take more. ${en.msg_line_end_unclear(en.whereLine(1))}'),
+    );
+  });
 }

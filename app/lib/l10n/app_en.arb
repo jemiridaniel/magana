@@ -324,5 +324,14 @@
   "msg_q_too_weak": "Are you too weak to sit up or stand without help?",
   "@msg_q_too_weak": {
     "description": "CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off."
+  },
+  "msg_line_end_unclear": "I can't read the end of {where}. Please check it or retake the photo.",
+  "@msg_line_end_unclear": {
+    "description": "Ink carries on past the text the app could read on this line.",
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
   }
 }

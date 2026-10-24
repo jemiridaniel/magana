@@ -426,4 +426,9 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get msg_q_too_weak =>
       'Are you too weak to sit up or stand without help?';
+
+  @override
+  String msg_line_end_unclear(String where) {
+    return 'Mi ò lè ka òpin $where. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà.';
+  }
 }

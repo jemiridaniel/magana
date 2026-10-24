@@ -11,6 +11,7 @@ String messageFor(AppLocalizations l, String code, {String where = ''}) =>
       'unreadable_number' => l.msg_unreadable_number(where),
       'number_mismatch' => l.msg_number_mismatch(where),
       'faint_region' => l.msg_faint_region(where),
+      'line_end_unclear' => l.msg_line_end_unclear(where),
       'unknown_mode' => l.msg_unknown_mode,
       'not_allowed_for_tier' => l.msg_not_allowed_for_tier,
       'consent_required' => l.msg_consent_required,

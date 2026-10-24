@@ -39,6 +39,8 @@ class Line:
     words: list[Word] = field(default_factory=list)
     left: int = 0
     width: int = 0  # horizontal extent of the recognised text; 0 if unknown
+    # Ink carries on past the last recognised word: the end of this line was not read.
+    end_unclear: bool = False
 
 
 @dataclass
@@ -399,6 +401,40 @@ def recover_faint(image: Image.Image, page: Page, engine: OCREngine) -> list[dic
     return faint
 
 
+# ---------- Line ends: ink that carries on past the recognised text
+
+END_GAP = 1.5  # ink this many line-heights past the last word still belongs to the line
+END_MIN_WIDTH = 0.6  # unread ink at least this many line-heights wide flags the line
+
+
+def mark_unclear_line_ends(image: Image.Image, page: Page) -> None:
+    """Flag lines whose ink continues to the right of the recognised text, e.g. a damaged
+    or faint end of line the OCR silently dropped ("Do not take more than ... ")."""
+    import numpy as np
+
+    ink = np.asarray(ink_map(image)) > INK_DELTA
+    boxes = [(w.left, w.top, w.left + w.width, w.top + w.height) for l in page.lines for w in l.words if w.width]
+    for line in page.lines:
+        if not (line.width and line.height):
+            continue
+        top, bottom = line.top, line.top + line.height
+        # Columns already explained by a recognised word on this text row (any line).
+        covered = np.zeros(ink.shape[1], dtype=bool)
+        for x0, y0, x1, y1 in boxes:
+            if min(bottom, y1) - max(top, y0) >= 0.5 * (y1 - y0):
+                covered[max(0, x0 - 2): x1 + 2] = True
+        # Ignore specks: a column counts as ink when a tenth of the line's height is inked.
+        inked = ink[top:bottom].sum(axis=0) >= max(2, line.height // 10)
+        end = line.left + line.width
+        window = slice(end, min(ink.shape[1], end + int(line.height * (END_GAP + 4))))
+        unread = inked[window] & ~covered[window]
+        if not unread.any():
+            continue
+        first = int(np.argmax(unread))
+        if first <= line.height * END_GAP and int(unread[first:].sum()) >= line.height * END_MIN_WIDTH:
+            line.end_unclear = True
+
+
 # ---------- Numbers: a second, independent reading of every number
 
 REREAD_HEIGHT = 36  # crops are scaled so text is about this tall (Tesseract misreads larger, e.g. 5 as 9)
@@ -481,6 +517,7 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     engine = engine or default_engine()
     page = engine.read(image)
     faint = recover_faint(image, page, engine)
+    mark_unclear_line_ends(image, page)
     reread_numbers(image, page, engine)
     result = {"tips": capture_check(image), **_page_dict(page), "faint_regions": faint}
     if second_pass:

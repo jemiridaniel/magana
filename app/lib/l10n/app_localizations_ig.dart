@@ -429,4 +429,9 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get msg_q_too_weak =>
       'Are you too weak to sit up or stand without help?';
+
+  @override
+  String msg_line_end_unclear(String where) {
+    return 'Enweghị m ike ịgụ njedebe $where. Biko lelee ya ma ọ bụ see foto ọzọ.';
+  }
 }
