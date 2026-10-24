@@ -244,26 +244,6 @@
   "msg_teacher_session_required": "Learners under 13 can only use Magana in a teacher-run session.",
   "msg_unreadable_image": "I couldn't open that photo. Please try again.",
   "msg_numbers_unconfirmed": "I can't confirm some numbers in this explanation, so I'll read the page exactly instead.",
-  "msg_q_fever": "Do you have a fever or feel very hot?",
-  "@msg_q_fever": {
-    "description": "CLINICAL DRAFT: needs sign-off by Dr. Amos and Nurse Balogun before translation."
-  },
-  "msg_q_fever_days": "For how many days?",
-  "@msg_q_fever_days": {
-    "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
-  },
-  "msg_q_danger_vomit_weak": "Have you been vomiting everything, or are you too weak to stand?",
-  "@msg_q_danger_vomit_weak": {
-    "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
-  },
-  "msg_q_danger_breathing": "Are you having trouble breathing?",
-  "@msg_q_danger_breathing": {
-    "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
-  },
-  "msg_q_danger_confused": "Have you had a fit, fainted, or felt confused?",
-  "@msg_q_danger_confused": {
-    "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
-  },
   "msg_go_to_clinic_now": "This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.",
   "@msg_go_to_clinic_now": {
     "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
@@ -296,5 +276,53 @@
   "torchOn": "Turn on torch",
   "torchOff": "Turn off torch",
   "cameraView": "Camera view",
-  "cameraUnavailable": "I can't use the camera. Allow camera access in Settings, or choose a photo from the gallery."
+  "cameraUnavailable": "I can't use the camera. Allow camera access in Settings, or choose a photo from the gallery.",
+  "msg_q_fever": "Do you have a fever, or does your body feel very hot?",
+  "@msg_q_fever": {
+    "description": "CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off."
+  },
+  "msg_q_fever_days": "For how many days have you had the fever?",
+  "@msg_q_fever_days": {
+    "description": "CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off."
+  },
+  "msg_q_fits": "Have you had fits, or shaking of the body you could not stop?",
+  "@msg_q_fits": {
+    "description": "CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off."
+  },
+  "msg_q_cannot_drink": "Are you unable to drink anything, or is the baby unable to breastfeed?",
+  "@msg_q_cannot_drink": {
+    "description": "CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off."
+  },
+  "msg_q_vomits_everything": "Are you vomiting everything you eat or drink?",
+  "@msg_q_vomits_everything": {
+    "description": "CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off."
+  },
+  "msg_q_very_sleepy": "Are you very sleepy, confused, or hard to wake?",
+  "@msg_q_very_sleepy": {
+    "description": "CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off."
+  },
+  "msg_q_bleeding": "Are you bleeding without a clear reason, from the nose or gums, or in vomit or stool?",
+  "@msg_q_bleeding": {
+    "description": "CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off."
+  },
+  "msg_q_yellow_eyes": "Have your eyes or skin turned yellow?",
+  "@msg_q_yellow_eyes": {
+    "description": "CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off."
+  },
+  "msg_q_hard_breathing": "Are you breathing very fast, or struggling to breathe?",
+  "@msg_q_hard_breathing": {
+    "description": "CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off."
+  },
+  "msg_q_very_pale": "Are your palms, lips or inner eyelids very pale?",
+  "@msg_q_very_pale": {
+    "description": "CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off."
+  },
+  "msg_q_dark_urine": "Is your urine very dark, like cola or tea?",
+  "@msg_q_dark_urine": {
+    "description": "CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off."
+  },
+  "msg_q_too_weak": "Are you too weak to sit up or stand without help?",
+  "@msg_q_too_weak": {
+    "description": "CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off."
+  }
 }

@@ -322,23 +322,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'I can\'t confirm some numbers in this explanation, so I\'ll read the page exactly instead.';
 
   @override
-  String get msg_q_fever => 'Do you have a fever or feel very hot?';
-
-  @override
-  String get msg_q_fever_days => 'For how many days?';
-
-  @override
-  String get msg_q_danger_vomit_weak =>
-      'Have you been vomiting everything, or are you too weak to stand?';
-
-  @override
-  String get msg_q_danger_breathing => 'Are you having trouble breathing?';
-
-  @override
-  String get msg_q_danger_confused =>
-      'Have you had a fit, fainted, or felt confused?';
-
-  @override
   String get msg_go_to_clinic_now =>
       'This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.';
 
@@ -402,4 +385,49 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get cameraUnavailable =>
       'I can\'t use the camera. Allow camera access in Settings, or choose a photo from the gallery.';
+
+  @override
+  String get msg_q_fever =>
+      'Do you have a fever, or does your body feel very hot?';
+
+  @override
+  String get msg_q_fever_days => 'For how many days have you had the fever?';
+
+  @override
+  String get msg_q_fits =>
+      'Have you had fits, or shaking of the body you could not stop?';
+
+  @override
+  String get msg_q_cannot_drink =>
+      'Are you unable to drink anything, or is the baby unable to breastfeed?';
+
+  @override
+  String get msg_q_vomits_everything =>
+      'Are you vomiting everything you eat or drink?';
+
+  @override
+  String get msg_q_very_sleepy =>
+      'Are you very sleepy, confused, or hard to wake?';
+
+  @override
+  String get msg_q_bleeding =>
+      'Are you bleeding without a clear reason, from the nose or gums, or in vomit or stool?';
+
+  @override
+  String get msg_q_yellow_eyes => 'Have your eyes or skin turned yellow?';
+
+  @override
+  String get msg_q_hard_breathing =>
+      'Are you breathing very fast, or struggling to breathe?';
+
+  @override
+  String get msg_q_very_pale =>
+      'Are your palms, lips or inner eyelids very pale?';
+
+  @override
+  String get msg_q_dark_urine => 'Is your urine very dark, like cola or tea?';
+
+  @override
+  String get msg_q_too_weak =>
+      'Are you too weak to sit up or stand without help?';
 }

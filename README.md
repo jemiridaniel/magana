@@ -13,10 +13,16 @@ Team: Jemiri Daniel Taiwo (AI/ML and full-stack), Dr. Oluba Amos (clinical pharm
 | `app/reader.py` | OCR into lines and tables (rows of cells, each with confidence) + capture check (too dark / blurry). Tesseract for dev; `MAGANA_OCR=paddle` uses PaddleOCR PP-StructureV3 for layout and tables (`pip install -r requirements-paddle.txt`). |
 | `app/safety.py` | Verbatim-number guard (rejects explanations that invent doses, amounts, dates) and low-confidence spoken warnings, for lines and for table cells ("row 2, column 3 of table 1"). |
 | `app/policy.py` | Age tiers: Standard 18+, Guided 13–17 (guardian consent, curriculum only), Classroom under 13. |
-| `app/triage.py` | Ibà quick check: sets nurse call-back priority, danger signs → clinic / 112. Draft rules — clinical sign-off required. |
+| `app/triage.py`, `app/iba_client.py` | Ibà quick check: questions and rules come from the Ibà service (iba-natlas `/v1`, self-report mode, pending clinical sign-off by Dr. Amos). If Ibà is not configured, fails or takes more than 3 s, Magana's built-in danger-sign rules answer; a danger sign is always an emergency. |
 | `app/main.py` | `/read`, `/explain/check`, `/triage/questions`, `/triage/assess`, `/health`. |
 
-Run it:
+Run Magana and Ibà together (needs the iba-natlas repo next to this one):
+
+```bash
+IBA_API_KEY=$(openssl rand -hex 24) docker compose up --build   # Magana on :8000
+```
+
+Or run the backend alone:
 
 ```bash
 cd backend

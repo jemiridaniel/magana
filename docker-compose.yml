@@ -1,0 +1,35 @@
+# Magana + the Ibà triage service, side by side.
+#
+#   IBA_API_KEY=$(openssl rand -hex 24) docker compose up --build
+#   -> Magana API on http://localhost:8000 (Ibà is reachable only from Magana)
+#
+# Ibà is built from the iba-natlas repo, expected next to this one; override with
+# IBA_NATLAS_DIR=/path/to/iba-natlas/app. Only Ibà's deterministic /v1 rules are used here,
+# so it needs no model server or API credits.
+services:
+  magana:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    environment:
+      IBA_API_URL: http://iba:8000
+      IBA_API_KEY: ${IBA_API_KEY:?set IBA_API_KEY (any long random string)}
+      MAGANA_OCR: ${MAGANA_OCR:-tesseract}
+    depends_on:
+      iba:
+        # Magana starts even if Ibà doesn't: it falls back to its danger-sign rules.
+        condition: service_started
+    restart: unless-stopped
+
+  iba:
+    build: ${IBA_NATLAS_DIR:-../iba-natlas/app}
+    expose:
+      - "8000"
+    environment:
+      APP_ENV: prod
+      IBA_API_KEYS: ${IBA_API_KEY:?set IBA_API_KEY (any long random string)}
+    read_only: true
+    tmpfs:
+      - /tmp
+      - /app/.cache
+    restart: unless-stopped

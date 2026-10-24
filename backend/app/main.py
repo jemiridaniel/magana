@@ -11,6 +11,7 @@ from PIL import Image
 from pydantic import BaseModel
 
 from . import policy, safety, triage
+from .iba_client import IbaClient
 from .messages import CodedError
 from .reader import SECOND_PASS_SCALE, OCREngine, default_engine, read_page
 
@@ -87,12 +88,21 @@ def explain_check(body: ExplainCheck) -> dict:
     return {"ok": r.ok, "unsupported": r.unsupported, "message": r.message}
 
 
+def get_iba() -> IbaClient | None:
+    """The Ibà triage service, from IBA_API_URL / IBA_API_KEY; None when not configured."""
+    return IbaClient.from_env()
+
+
 @app.get("/triage/questions")
-def triage_questions() -> list[dict]:
-    return triage.QUESTIONS
+async def triage_questions(lang: str = "en", iba: IbaClient | None = Depends(get_iba)) -> dict:
+    # Question wording comes from Ibà, where it is signed off clinically; the fallback set
+    # carries message codes only (messages.ENGLISH "q_<id>").
+    qs, source = await triage.questions(lang, iba)
+    return {"source": source, "questions": qs}
 
 
 @app.post("/triage/assess")
-def triage_assess(answers: dict) -> dict:
-    r = triage.assess(answers)
-    return {"priority": r.priority.value, "message": r.message}
+async def triage_assess(answers: dict, iba: IbaClient | None = Depends(get_iba)) -> dict:
+    # Answers are health information: they are passed to Ibà and never logged or stored.
+    r = await triage.assess(answers, iba)
+    return {"priority": r.priority.value, "message": r.message, "rule_version": r.rule_version, "source": r.source}

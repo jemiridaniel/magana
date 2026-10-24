@@ -582,36 +582,6 @@ abstract class AppLocalizations {
   /// **'I can\'t confirm some numbers in this explanation, so I\'ll read the page exactly instead.'**
   String get msg_numbers_unconfirmed;
 
-  /// CLINICAL DRAFT: needs sign-off by Dr. Amos and Nurse Balogun before translation.
-  ///
-  /// In en, this message translates to:
-  /// **'Do you have a fever or feel very hot?'**
-  String get msg_q_fever;
-
-  /// CLINICAL DRAFT: needs clinical sign-off before translation.
-  ///
-  /// In en, this message translates to:
-  /// **'For how many days?'**
-  String get msg_q_fever_days;
-
-  /// CLINICAL DRAFT: needs clinical sign-off before translation.
-  ///
-  /// In en, this message translates to:
-  /// **'Have you been vomiting everything, or are you too weak to stand?'**
-  String get msg_q_danger_vomit_weak;
-
-  /// CLINICAL DRAFT: needs clinical sign-off before translation.
-  ///
-  /// In en, this message translates to:
-  /// **'Are you having trouble breathing?'**
-  String get msg_q_danger_breathing;
-
-  /// CLINICAL DRAFT: needs clinical sign-off before translation.
-  ///
-  /// In en, this message translates to:
-  /// **'Have you had a fit, fainted, or felt confused?'**
-  String get msg_q_danger_confused;
-
   /// CLINICAL DRAFT: needs clinical sign-off before translation.
   ///
   /// In en, this message translates to:
@@ -719,6 +689,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I can\'t use the camera. Allow camera access in Settings, or choose a photo from the gallery.'**
   String get cameraUnavailable;
+
+  /// CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you have a fever, or does your body feel very hot?'**
+  String get msg_q_fever;
+
+  /// CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off.
+  ///
+  /// In en, this message translates to:
+  /// **'For how many days have you had the fever?'**
+  String get msg_q_fever_days;
+
+  /// CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off.
+  ///
+  /// In en, this message translates to:
+  /// **'Have you had fits, or shaking of the body you could not stop?'**
+  String get msg_q_fits;
+
+  /// CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you unable to drink anything, or is the baby unable to breastfeed?'**
+  String get msg_q_cannot_drink;
+
+  /// CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you vomiting everything you eat or drink?'**
+  String get msg_q_vomits_everything;
+
+  /// CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you very sleepy, confused, or hard to wake?'**
+  String get msg_q_very_sleepy;
+
+  /// CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you bleeding without a clear reason, from the nose or gums, or in vomit or stool?'**
+  String get msg_q_bleeding;
+
+  /// CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off.
+  ///
+  /// In en, this message translates to:
+  /// **'Have your eyes or skin turned yellow?'**
+  String get msg_q_yellow_eyes;
+
+  /// CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you breathing very fast, or struggling to breathe?'**
+  String get msg_q_hard_breathing;
+
+  /// CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off.
+  ///
+  /// In en, this message translates to:
+  /// **'Are your palms, lips or inner eyelids very pale?'**
+  String get msg_q_very_pale;
+
+  /// CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off.
+  ///
+  /// In en, this message translates to:
+  /// **'Is your urine very dark, like cola or tea?'**
+  String get msg_q_dark_urine;
+
+  /// CLINICAL DRAFT from the Ibà service: English only until Dr. Amos signs off.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you too weak to sit up or stand without help?'**
+  String get msg_q_too_weak;
 }
 
 class _AppLocalizationsDelegate

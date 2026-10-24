@@ -3,7 +3,7 @@ from fastapi.testclient import TestClient
 import io
 import pytest
 
-from app import policy, safety, triage
+from app import policy, safety
 from app.main import app
 
 client = TestClient(app)
@@ -49,19 +49,6 @@ def test_minors_cannot_use_health_money_or_whatsapp():
     assert policy.allowed(policy.Tier.STANDARD, policy.Feature.EVERYDAY_HEALTH)
 
 
-# ---------- triage
-def test_danger_sign_means_emergency():
-    assert triage.assess({"danger_breathing": True}).priority == triage.Priority.EMERGENCY
-
-
-def test_fever_two_days_is_urgent():
-    assert triage.assess({"fever": True, "fever_days": 2}).priority == triage.Priority.URGENT
-
-
-def test_otherwise_routine():
-    assert triage.assess({"fever": False}).priority == triage.Priority.ROUTINE
-
-
 # ---------- API + real OCR on a generated page
 def _page_png(text_lines):
     img = Image.new("RGB", (1200, 120 + 70 * len(text_lines)), "white")
@@ -94,8 +81,3 @@ def test_minor_blocked_from_health_mode():
     png = _page_png(["Paracetamol 500 mg"])
     r = client.post("/read", files={"file": ("p.png", png, "image/png")}, data={"mode": "health", "tier": "guided"})
     assert r.status_code == 403
-
-
-def test_triage_api():
-    r = client.post("/triage/assess", json={"danger_vomit_weak": True})
-    assert r.json()["priority"] == "emergency"

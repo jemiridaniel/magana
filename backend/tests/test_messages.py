@@ -60,9 +60,9 @@ def test_warning_codes_are_registered():
 
 
 def test_triage_and_explain_are_codes():
-    assert all(q["message"] in messages.CODES and "text" not in q for q in triage.QUESTIONS)
-    r = client.post("/triage/assess", json={"danger_breathing": True}).json()
-    assert r == {"priority": "emergency", "message": "go_to_clinic_now"}
+    assert all(q["message"] in messages.CODES and "text" not in q for q in triage.FALLBACK_QUESTIONS)
+    r = client.post("/triage/assess", json={"fits": True}).json()
+    assert (r["priority"], r["message"]) == ("emergency", "go_to_clinic_now")
     r = client.post("/explain/check", json={"source_text": "Take 2", "explanation": "Take 3"}).json()
     assert r["message"] == "numbers_unconfirmed"
 

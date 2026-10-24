@@ -5,6 +5,6 @@ pillow>=10.0
 numpy>=1.26
 pytesseract>=0.3.10
 pydantic>=2.6
+httpx>=0.27  # Ibà triage API client
 # dev
 pytest>=8.0
-httpx>=0.27
