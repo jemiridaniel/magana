@@ -27,7 +27,7 @@ export default function QuizList() {
       <header className="page-head">
         <div>
           <h1>All quizzes</h1>
-          <p>Quizzes you wrote for your classes. Learners hear each question and answer by voice or touch.</p>
+          <p>Quizzes you wrote for your class sessions. Learners get a quiz only inside its session, which you open on their phone with the session code.</p>
         </div>
         <Link className="btn btn-primary" href="/quizzes/new">+ Create a quiz</Link>
       </header>
@@ -66,7 +66,7 @@ export default function QuizList() {
                     <td>{q.questions.length}</td>
                     <td>
                       {q.status === "assigned" ? (
-                        <span className="pill pill-ready pill-wrap">Assigned · {q.session}</span>
+                        <span className="pill pill-ready pill-wrap">Assigned · {q.session} · code {q.session_code}</span>
                       ) : (
                         <span className={`pill ${ready ? "pill-processing" : "pill-check"}`}>{ready ? "Draft, ready to assign" : "Draft"}</span>
                       )}

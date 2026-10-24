@@ -1,5 +1,6 @@
-"""Teacher-made quizzes: saved by the teacher portal, assigned to a class, and read by the
-learner app for that class's level. Bundled sample packs use the same question shape
+"""Teacher-made quizzes: saved by the teacher portal and assigned to one class session.
+A teacher's quiz reaches only that session: the teacher opens it on a learner's phone with
+the session's code (shown in the portal when assigning). Never everyone at a class level. Bundled sample packs use the same question shape
 (app/assets/quiz/).
 
 Quizzes are teacher content, never learner data: no names, answers or scores are stored
@@ -7,6 +8,7 @@ here. Each quiz is one JSON file in MAGANA_DATA_DIR/quizzes/.
 """
 from __future__ import annotations
 
+import json
 import os
 import re
 import secrets
@@ -83,7 +85,17 @@ class Quiz(QuizIn):
     id: str
     status: Literal["draft", "assigned"] = "draft"
     session: str | None = None
+    session_code: str | None = None  # the code that opens this class session in the app
     updated_at: str
+
+
+# Session codes: 6 characters without look-alikes (no 0/O, 1/I/L), easy to read aloud.
+CODE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
+CODE_RE = re.compile(rf"^[{CODE_ALPHABET}]{{6}}$")
+
+
+def new_code() -> str:
+    return "".join(secrets.choice(CODE_ALPHABET) for _ in range(6))
 
 
 class Problem(BaseModel):
@@ -199,14 +211,40 @@ class QuizStore:
         with self._lock:
             old = self.get(quiz_id)
             quiz = Quiz(**data.model_dump(), id=quiz_id, updated_at=self._now(), status=old.status, session=old.session)
+            quiz.session_code = old.session_code
             if quiz.status == "assigned" and not ready(quiz):
-                quiz.status, quiz.session = "draft", None  # an assigned quiz must stay ready
+                # An assigned quiz must stay ready: a broken edit takes it out of the session.
+                quiz.status, quiz.session, quiz.session_code = "draft", None, None
             return self._write(quiz)
+
+    def _codes(self) -> dict[str, str]:
+        path = self.root / "session_codes.json"
+        try:
+            return json.loads(path.read_text(encoding="utf-8"))
+        except FileNotFoundError:
+            return {}
+
+    def session_code(self, class_id: str, session: str) -> str:
+        """One code per class session, the same for every quiz assigned to it."""
+        codes = self._codes()
+        key = f"{class_id}|{session}"
+        if key not in codes:
+            taken = set(codes.values())
+            code = new_code()
+            while code in taken:
+                code = new_code()
+            codes[key] = code
+            self.root.mkdir(parents=True, exist_ok=True)
+            tmp = self.root / "session_codes.tmp"
+            tmp.write_text(json.dumps(codes, indent=2), encoding="utf-8")
+            tmp.replace(self.root / "session_codes.json")
+        return codes[key]
 
     def assign(self, quiz_id: str, session: str) -> Quiz:
         with self._lock:
             quiz = self.get(quiz_id)
             quiz.status, quiz.session, quiz.updated_at = "assigned", session, self._now()
+            quiz.session_code = self.session_code(quiz.class_id, session)
             return self._write(quiz)
 
     def all(self) -> list[Quiz]:
@@ -214,6 +252,8 @@ class QuizStore:
             return []
         quizzes = []
         for p in self.root.glob("*.json"):
+            if p.name == "session_codes.json":
+                continue
             try:
                 quizzes.append(Quiz.model_validate_json(p.read_text(encoding="utf-8")))
             except (ValueError, OSError):

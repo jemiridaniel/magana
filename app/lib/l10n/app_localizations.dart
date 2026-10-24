@@ -2670,17 +2670,59 @@ abstract class AppLocalizations {
   /// **'Picture: {description}'**
   String quizPicture(String description);
 
-  /// No description provided for @msg_unknown_level.
-  ///
-  /// In en, this message translates to:
-  /// **'Please choose your class again in Settings.'**
-  String get msg_unknown_level;
-
   /// Joins the last two answer letters: A, B or C
   ///
   /// In en, this message translates to:
   /// **'or'**
   String get quizOr;
+
+  /// No description provided for @quizSessionOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Teacher: open your class session'**
+  String get quizSessionOpen;
+
+  /// No description provided for @quizSessionPrompt.
+  ///
+  /// In en, this message translates to:
+  /// **'Only the teacher should open a class session. Type the session code from the teacher portal.'**
+  String get quizSessionPrompt;
+
+  /// No description provided for @quizSessionCodeLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Session code'**
+  String get quizSessionCodeLabel;
+
+  /// No description provided for @quizSessionStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Open session'**
+  String get quizSessionStart;
+
+  /// No description provided for @quizSessionActive.
+  ///
+  /// In en, this message translates to:
+  /// **'Class session {code}'**
+  String quizSessionActive(String code);
+
+  /// No description provided for @quizSessionEnd.
+  ///
+  /// In en, this message translates to:
+  /// **'End class session'**
+  String get quizSessionEnd;
+
+  /// No description provided for @quizSessionEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No quizzes from your teacher in this session yet.'**
+  String get quizSessionEmpty;
+
+  /// No description provided for @msg_session_code_invalid.
+  ///
+  /// In en, this message translates to:
+  /// **'That session code isn\'t right. Check it in the teacher portal.'**
+  String get msg_session_code_invalid;
 }
 
 class _AppLocalizationsDelegate

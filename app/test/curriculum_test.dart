@@ -162,23 +162,95 @@ void main() {
     expect(find.bySemanticsLabel(RegExp(r'^D\. ')), findsOneWidget);
   });
 
-  testWidgets("a teacher's quiz from the portal appears for the class", (
+  Future<FakeSpeaker> openList(
+    WidgetTester tester, {
+    required MaganaApi api,
+    required ProfileController profile,
+  }) async {
+    SharedPreferences.setMockInitialValues({});
+    tester.view.physicalSize = const Size(390 * 3, 844 * 3);
+    tester.view.devicePixelRatio = 3;
+    addTearDown(tester.view.reset);
+    voiceInput = (_) => FakeVoice();
+    final speaker = FakeSpeaker();
+    await tester.pumpWidget(
+      MaganaApp(
+        api: api,
+        speaker: speaker,
+        language: LanguageController(),
+        profile: profile,
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel(RegExp('^${en.practiceQuiz}')));
+    await tester.pumpAndSettle();
+    return speaker;
+  }
+
+  Future<void> openSession(WidgetTester tester, String code) async {
+    await tester.tap(find.bySemanticsLabel(en.quizSessionOpen));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField), code);
+    await tester.tap(find.bySemanticsLabel(en.quizSessionStart));
+    await tester.pumpAndSettle();
+  }
+
+  for (final tier in Tier.values) {
+    testWidgets(
+      "${tier.name}: on their own, sample packs only; the server isn't asked",
+      (tester) async {
+        final sent = <http.Request>[];
+        await openList(
+          tester,
+          api: teacherApi(sent),
+          profile: ProfileController(
+            tier: tier,
+            consentAt: DateTime(2026),
+            teacherSession:
+                tier == Tier.classroom, // Classroom needs one to open
+            classLevel: 'p5',
+          ),
+        );
+        expect(sent, isEmpty);
+        expect(find.text('Parts of a plant'), findsNothing);
+        expect(find.bySemanticsLabel(en.quizSessionOpen), findsOneWidget);
+        expect(
+          find.bySemanticsLabel(RegExp('^${en.quizSubjectTitle('English')}')),
+          findsOneWidget,
+        );
+      },
+    );
+  }
+
+  testWidgets("a teacher's session code opens that session's quizzes only", (
     tester,
   ) async {
     final sent = <http.Request>[];
-    final (speaker, _) = await openQuiz(
-      tester,
-      tier: Tier.classroom,
+    final profile = ProfileController(
+      tier: Tier.guided,
+      consentAt: DateTime(2026),
       classLevel: 'p5',
-      pack: 'Parts of a plant',
-      api: teacherApi(sent),
     );
+    final speaker = await openList(
+      tester,
+      api: teacherApi(sent),
+      profile: profile,
+    );
+    await openSession(tester, 'k7qm 2p');
     expect(sent.single.url.path, '/learner/quizzes');
-    expect(sent.single.url.queryParameters['level'], 'p5');
-    // Under 13: only inside the teacher-run session.
+    expect(sent.single.url.queryParameters, {'session_code': 'K7QM2P'});
     expect(sent.single.headers['X-Magana-Teacher-Session'], 'yes');
+    expect(sent.single.url.queryParameters.containsKey('level'), isFalse);
     expect(find.text('Parts of a plant'), findsOneWidget);
-    // The picture is described before the options; primary feedback.
+    expect(find.textContaining(en.quizSessionActive('K7QM2P')), findsOneWidget);
+
+    // Open it: the picture is described before the options; primary feedback.
+    speaker.said.clear();
+    await tester.tap(find.bySemanticsLabel(RegExp('^Parts of a plant')));
+    for (var i = 0; i < 10; i++) {
+      await tester.pump(const Duration(milliseconds: 100));
+    }
+    await tester.pumpAndSettle();
     expect(
       speaker.said.first,
       contains('Picture: A drawing of a plant with its leaf, stem and root.'),
@@ -190,6 +262,38 @@ void main() {
       speaker.said.last,
       'Well done! You chose A. Well done! Leaves make food using sunlight.',
     );
+
+    // Ending the session: back to sample packs only, never saved.
+    Navigator.of(tester.element(find.byType(QuizScreen))).pop();
+    await tester.pumpAndSettle();
+    await tester.tap(find.bySemanticsLabel(en.quizSessionEnd));
+    await tester.pumpAndSettle();
+    expect(find.text('Parts of a plant'), findsNothing);
+    expect((profile.sessionCode, profile.teacherSession), (null, false));
+  });
+
+  testWidgets('a wrong session code is said, and the session closes', (
+    tester,
+  ) async {
+    final profile = ProfileController(tier: Tier.standard, classLevel: 'p5');
+    final speaker = await openList(
+      tester,
+      api: MaganaApi(
+        client: MockClient(
+          (_) async => http.Response(
+            jsonEncode({
+              'detail': {'code': 'session_code_invalid'},
+            }),
+            422,
+          ),
+        ),
+      ),
+      profile: profile,
+    );
+    await openSession(tester, 'nope');
+    expect(speaker.said.last, en.msg_session_code_invalid);
+    expect(find.text(en.msg_session_code_invalid), findsOneWidget);
+    expect(profile.sessionCode, isNull);
   });
 
   testWidgets('a checked translation is read in the app language', (

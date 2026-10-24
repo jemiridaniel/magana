@@ -315,12 +315,13 @@ class MaganaApi {
         : throw ApiException('failed');
   }
 
-  /// Quizzes a teacher assigned in the portal for this class [level] (p5, jss2…).
-  /// Under 13 only in a teacher-run session; the backend checks the headers.
-  Future<List<Quiz>> learnerQuizzes(String level) async {
+  /// The quizzes a teacher assigned to one class session, opened with the
+  /// session's [code] inside a teacher-started session (the backend checks the
+  /// X-Magana-Teacher-Session header). Never by class level.
+  Future<List<Quiz>> sessionQuizzes(String code) async {
     final body = await _json(
       'GET',
-      '/learner/quizzes?level=${Uri.encodeQueryComponent(level)}',
+      '/learner/quizzes?session_code=${Uri.encodeQueryComponent(code)}',
     );
     return [
       for (final q in (body['quizzes'] as List? ?? const []))

@@ -1645,8 +1645,34 @@ class AppLocalizationsHa extends AppLocalizations {
   }
 
   @override
-  String get msg_unknown_level => 'Don Allah ka sake zaɓar ajinka a Saituna.';
+  String get quizOr => 'ko';
 
   @override
-  String get quizOr => 'ko';
+  String get quizSessionOpen => 'Malami: buɗe zaman ajinka';
+
+  @override
+  String get quizSessionPrompt =>
+      'Malami ne kaɗai ya kamata ya buɗe zaman aji. Rubuta lambar zaman daga shafin malamai.';
+
+  @override
+  String get quizSessionCodeLabel => 'Lambar zama';
+
+  @override
+  String get quizSessionStart => 'Buɗe zama';
+
+  @override
+  String quizSessionActive(String code) {
+    return 'Zaman aji $code';
+  }
+
+  @override
+  String get quizSessionEnd => 'Rufe zaman aji';
+
+  @override
+  String get quizSessionEmpty =>
+      'Babu jarabawa daga malaminka a wannan zaman tukuna.';
+
+  @override
+  String get msg_session_code_invalid =>
+      'Wannan lambar zaman ba daidai ba ce. Duba ta a shafin malamai.';
 }

@@ -96,8 +96,24 @@ class ProfileController extends ChangeNotifier {
     } catch (_) {}
   }
 
-  void startTeacherSession() {
+  /// The class session's code from the teacher portal: it opens that session's
+  /// quizzes. Like the session, never saved.
+  String? get sessionCode => _sessionCode;
+  String? _sessionCode;
+
+  /// A teacher starts a class session on this phone (any age group). With a
+  /// [code], their quizzes for that session appear in Practice quiz.
+  void startTeacherSession({String? code}) {
     _teacherSession = true;
+    if (code != null) _sessionCode = code;
+    notifyListeners();
+  }
+
+  /// Ends the session's quizzes. Classroom (under 13) keeps the session itself
+  /// open, since nothing works without it; others leave teacher mode too.
+  void endTeacherSession() {
+    _sessionCode = null;
+    if (_tier != Tier.classroom) _teacherSession = false;
     notifyListeners();
   }
 }

@@ -429,6 +429,13 @@
   "quizCorrectPrimary": "Ị mere nke ọma! Ị họọrọ {letter}.",
   "quizWrongPrimary": "Ị nwalere nke ọma! Azịza ya bụ {answer}.",
   "quizPicture": "Foto: {description}",
-  "msg_unknown_level": "Biko họrọ klaasị gị ọzọ na Ntọala.",
-  "quizOr": "ma ọ bụ"
+  "quizOr": "ma ọ bụ",
+  "quizSessionOpen": "Onye nkuzi: meghee nnọkọ klaasị gị",
+  "quizSessionPrompt": "Ọ bụ naanị onye nkuzi kwesịrị imeghe nnọkọ klaasị. Dee koodu nnọkọ si na ọdụ ndị nkuzi.",
+  "quizSessionCodeLabel": "Koodu nnọkọ",
+  "quizSessionStart": "Meghee nnọkọ",
+  "quizSessionActive": "Nnọkọ klaasị {code}",
+  "quizSessionEnd": "Kwụsị nnọkọ klaasị",
+  "quizSessionEmpty": "Enweghị ajụjụ site n'aka onye nkuzi gị na nnọkọ a ugbu a.",
+  "msg_session_code_invalid": "Koodu nnọkọ ahụ ezighi ezi. Lelee ya na ọdụ ndị nkuzi."
 }

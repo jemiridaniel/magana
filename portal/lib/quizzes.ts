@@ -30,6 +30,7 @@ export interface Quiz extends QuizDraft {
   id: string;
   status: "draft" | "assigned";
   session: string | null;
+  session_code: string | null; // opens this class session's quizzes in the learner app
   updated_at: string;
 }
 
@@ -54,6 +55,13 @@ export function randomId(hex: number): string {
   const bytes = new Uint8Array(Math.ceil(hex / 2));
   crypto.getRandomValues(bytes);
   return Array.from(bytes, (b) => b.toString(16).padStart(2, "0")).join("").slice(0, hex);
+}
+
+const CODE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"; // backend/app/quizzes.py
+function randomCode(): string {
+  const bytes = new Uint8Array(6);
+  crypto.getRandomValues(bytes);
+  return Array.from(bytes, (b) => CODE_ALPHABET[b % CODE_ALPHABET.length]).join("");
 }
 
 export const words = (text: string) => (text.match(/\S+/g) ?? []).length;
@@ -189,6 +197,7 @@ export async function saveQuiz(draft: QuizDraft, id?: string): Promise<Quiz> {
       id: old?.id ?? randomId(12),
       status: old && !blocking(check(draft)).length ? old.status : "draft",
       session: old && !blocking(check(draft)).length ? old.session : null,
+      session_code: old && !blocking(check(draft)).length ? old.session_code : null,
       updated_at: new Date().toISOString(),
     };
     saveLocal([quiz, ...all.filter((x) => x.id !== quiz.id)]);
@@ -207,7 +216,10 @@ export async function assignQuiz(id: string, session: string): Promise<Quiz> {
     if (!quiz) throw new QuizError("quiz_not_found");
     const problems = check(quiz);
     if (blocking(problems).length) throw new QuizError("quiz_not_ready", problems);
-    const assigned: Quiz = { ...quiz, status: "assigned", session, updated_at: new Date().toISOString() };
+    // Preview: one code per class session, like the server.
+    const same = all.find((x) => x.class_id === quiz.class_id && x.session === session && x.session_code);
+    const session_code = same?.session_code ?? randomCode();
+    const assigned: Quiz = { ...quiz, status: "assigned", session, session_code, updated_at: new Date().toISOString() };
     saveLocal([assigned, ...all.filter((x) => x.id !== id)]);
     return assigned;
   }

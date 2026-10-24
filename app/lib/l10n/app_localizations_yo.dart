@@ -1639,8 +1639,34 @@ class AppLocalizationsYo extends AppLocalizations {
   }
 
   @override
-  String get msg_unknown_level => 'Jọ̀wọ́ tún yan kíláàsì rẹ nínú Ètò.';
+  String get quizOr => 'tàbí';
 
   @override
-  String get quizOr => 'tàbí';
+  String get quizSessionOpen => 'Olùkọ́: ṣí ìpàdé kíláàsì rẹ';
+
+  @override
+  String get quizSessionPrompt =>
+      'Olùkọ́ nìkan ló yẹ kó ṣí ìpàdé kíláàsì. Kọ kóòdù ìpàdé láti ojú-òpó olùkọ́.';
+
+  @override
+  String get quizSessionCodeLabel => 'Kóòdù ìpàdé';
+
+  @override
+  String get quizSessionStart => 'Ṣí ìpàdé';
+
+  @override
+  String quizSessionActive(String code) {
+    return 'Ìpàdé kíláàsì $code';
+  }
+
+  @override
+  String get quizSessionEnd => 'Parí ìpàdé kíláàsì';
+
+  @override
+  String get quizSessionEmpty =>
+      'Kò sí ìdánrawò láti ọ̀dọ̀ olùkọ́ rẹ nínú ìpàdé yìí síbẹ̀.';
+
+  @override
+  String get msg_session_code_invalid =>
+      'Kóòdù ìpàdé yẹn kò tọ̀nà. Ṣàyẹ̀wò rẹ̀ ní ojú-òpó olùkọ́.';
 }

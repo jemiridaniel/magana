@@ -107,47 +107,93 @@ def test_the_class_level_and_subject_follow_the_curriculum():
                        headers=TEACHER).status_code == 422
 
 
-def test_assigned_quizzes_reach_learners_at_that_level_with_checked_translations_only(store):
+def in_session(code, tier="guided"):
+    """The learner app inside a class session the teacher opened with [code]."""
+    headers = {"X-Magana-Tier": tier, "X-Magana-Teacher-Session": "yes"}
+    if tier == "guided":
+        headers["X-Magana-Guardian-Consent"] = "yes"
+    r = client.get("/learner/quizzes", params={"session_code": code}, headers=headers)
+    assert r.status_code == 200, r.text
+    return r.json()["quizzes"]
+
+
+def assign(qid, session="Thu 30 Oct 10:00"):
+    r = client.post(f"/quizzes/{qid}/assign", json={"session": session}, headers=TEACHER)
+    assert r.status_code == 200, r.text
+    return r.json()["quiz"]
+
+
+def test_an_assigned_quiz_reaches_its_session_with_checked_translations_only():
     made = create()
     qid = made["quiz"]["id"]
-    assert client.get("/learner/quizzes", params={"level": "p5"}, headers=LEARNER).json()["quizzes"] == []  # a draft
-    assert client.post(f"/quizzes/{qid}/assign", json={"session": "Thu 30 Oct 10:00"},
-                       headers=TEACHER).json()["quiz"]["status"] == "assigned"
-    got = client.get("/learner/quizzes", params={"level": "p5"}, headers=LEARNER).json()["quizzes"]
+    assert made["quiz"]["session_code"] is None  # a draft has no session
+    quiz = assign(qid)
+    assert quiz["status"] == "assigned"
+    code = quiz["session_code"]
+    assert quizzes.CODE_RE.match(code)
+    got = in_session(code, tier="classroom")
     assert [q["title"] for q in got] == ["Parts of a plant"]
     assert got[0]["questions"][0]["translations"] == {}  # not yet checked
     assert got[0]["questions"][0]["explanation"] == "Well done! Leaves make food using sunlight."
-    assert client.get("/learner/quizzes", params={"level": "p4"}, headers=LEARNER).json()["quizzes"] == []
+    # Lower case and spaces as typed on a phone.
+    assert in_session(f" {code.lower()} ", tier="classroom") == got
 
     body = plant_quiz()
     body["questions"][0]["translations"]["yo"]["checked"] = True
     client.put(f"/quizzes/{qid}", json=body, headers=TEACHER)
-    got = client.get("/learner/quizzes", params={"level": "p5"}, headers=LEARNER).json()["quizzes"]
+    got = in_session(code, tier="classroom")
     assert got[0]["questions"][0]["translations"] == {"yo": "Apá wo nínú ewéko ló ń ṣe oúnjẹ fún ewéko náà?"}
 
 
-def test_editing_an_assigned_quiz_into_a_broken_one_unassigns_it():
-    qid = create()["quiz"]["id"]
-    client.post(f"/quizzes/{qid}/assign", json={"session": "s1"}, headers=TEACHER)
+def test_teacher_a_quiz_never_reaches_a_learner_outside_a_class_or_session():
+    # Teacher A: Primary 5, Thursday's session.
+    a = assign(create(plant_quiz(title="A: plants", class_id="pri5"))["quiz"]["id"], "Thu 30 Oct 10:00")
+    # Teacher B: another Primary 5 class, same level, same session name.
+    b = assign(create(plant_quiz(title="B: plants", class_id="pri5-b"))["quiz"]["id"], "Thu 30 Oct 10:00")
+    # Teacher A's next session.
+    a2 = assign(create(plant_quiz(title="A: next week", class_id="pri5"))["quiz"]["id"], "Thu 6 Nov 10:00")
+    assert len({a["session_code"], b["session_code"], a2["session_code"]}) == 3
+
+    # Only A's session code opens A's quiz; the same level or session name is not enough.
+    assert [q["title"] for q in in_session(a["session_code"])] == ["A: plants"]
+    assert [q["title"] for q in in_session(b["session_code"])] == ["B: plants"]
+    assert [q["title"] for q in in_session(a2["session_code"])] == ["A: next week"]
+    assert in_session("ZZZZZZ") == []
+    for tier in ("standard", "guided", "classroom"):
+        assert "A: plants" not in [q["title"] for q in in_session(b["session_code"], tier=tier)]
+
+    # A learner on their own (no teacher-opened session) gets nothing, for any age group.
+    for headers in ({"X-Magana-Tier": "standard"},
+                    {"X-Magana-Tier": "guided", "X-Magana-Guardian-Consent": "yes"}):
+        r = client.get("/learner/quizzes", params={"session_code": a["session_code"]}, headers=headers)
+        assert (r.status_code, r.json()["detail"]) == (403, {"code": "teacher_session_required"})
+    # Nor by level, as before: that query no longer exists.
+    r = client.get("/learner/quizzes", params={"level": "p5"}, headers=LEARNER)
+    assert r.status_code == 422
+
+
+def test_quizzes_in_the_same_class_session_share_one_code():
+    one = assign(create()["quiz"]["id"], "Thu 30 Oct 10:00")
+    two = assign(create(plant_quiz(title="Seeds"))["quiz"]["id"], "Thu 30 Oct 10:00")
+    assert one["session_code"] == two["session_code"]
+    assert sorted(q["title"] for q in in_session(one["session_code"])) == ["Parts of a plant", "Seeds"]
+
+
+def test_editing_an_assigned_quiz_into_a_broken_one_takes_it_out_of_the_session():
+    quiz = assign(create()["quiz"]["id"])
     body = plant_quiz()
     body["questions"][0]["answer"] = None
-    assert client.put(f"/quizzes/{qid}", json=body, headers=TEACHER).json()["quiz"]["status"] == "draft"
-    assert client.get("/learner/quizzes", params={"level": "p5"}, headers=LEARNER).json()["quizzes"] == []
+    edited = client.put(f"/quizzes/{quiz['id']}", json=body, headers=TEACHER).json()["quiz"]
+    assert (edited["status"], edited["session_code"]) == ("draft", None)
+    assert in_session(quiz["session_code"]) == []
 
 
-def test_under_13_quizzes_only_in_a_teacher_run_session():
-    r = client.get("/learner/quizzes", params={"level": "p3"}, headers={"X-Magana-Tier": "classroom"})
-    assert (r.status_code, r.json()["detail"]) == (403, {"code": "teacher_session_required"})
-    r = client.get("/learner/quizzes", params={"level": "p3"},
-                   headers={"X-Magana-Tier": "classroom", "X-Magana-Teacher-Session": "yes"})
-    assert r.status_code == 200
-
-
-def test_unknown_quiz_and_level():
+def test_a_malformed_code_and_an_unknown_quiz():
     assert client.get("/quizzes/abcdef123456", headers=TEACHER).json()["detail"] == {"code": "quiz_not_found"}
     assert client.get("/quizzes/../../etc", headers=TEACHER).status_code == 404
-    assert client.get("/learner/quizzes", params={"level": "p9"}, headers=LEARNER).json()["detail"] == {
-        "code": "unknown_level"}
+    r = client.get("/learner/quizzes", params={"session_code": "../x"},
+                   headers={**LEARNER, "X-Magana-Teacher-Session": "yes"})
+    assert r.json()["detail"] == {"code": "session_code_invalid"}
 
 
 def test_a_browser_may_save_changes_to_a_quiz_from_the_portal():

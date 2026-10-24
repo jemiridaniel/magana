@@ -1641,8 +1641,34 @@ class AppLocalizationsIg extends AppLocalizations {
   }
 
   @override
-  String get msg_unknown_level => 'Biko họrọ klaasị gị ọzọ na Ntọala.';
+  String get quizOr => 'ma ọ bụ';
 
   @override
-  String get quizOr => 'ma ọ bụ';
+  String get quizSessionOpen => 'Onye nkuzi: meghee nnọkọ klaasị gị';
+
+  @override
+  String get quizSessionPrompt =>
+      'Ọ bụ naanị onye nkuzi kwesịrị imeghe nnọkọ klaasị. Dee koodu nnọkọ si na ọdụ ndị nkuzi.';
+
+  @override
+  String get quizSessionCodeLabel => 'Koodu nnọkọ';
+
+  @override
+  String get quizSessionStart => 'Meghee nnọkọ';
+
+  @override
+  String quizSessionActive(String code) {
+    return 'Nnọkọ klaasị $code';
+  }
+
+  @override
+  String get quizSessionEnd => 'Kwụsị nnọkọ klaasị';
+
+  @override
+  String get quizSessionEmpty =>
+      'Enweghị ajụjụ site n\'aka onye nkuzi gị na nnọkọ a ugbu a.';
+
+  @override
+  String get msg_session_code_invalid =>
+      'Koodu nnọkọ ahụ ezighi ezi. Lelee ya na ọdụ ndị nkuzi.';
 }

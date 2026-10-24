@@ -1641,8 +1641,34 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get msg_unknown_level => 'Please choose your class again in Settings.';
+  String get quizOr => 'or';
 
   @override
-  String get quizOr => 'or';
+  String get quizSessionOpen => 'Teacher: open your class session';
+
+  @override
+  String get quizSessionPrompt =>
+      'Only the teacher should open a class session. Type the session code from the teacher portal.';
+
+  @override
+  String get quizSessionCodeLabel => 'Session code';
+
+  @override
+  String get quizSessionStart => 'Open session';
+
+  @override
+  String quizSessionActive(String code) {
+    return 'Class session $code';
+  }
+
+  @override
+  String get quizSessionEnd => 'End class session';
+
+  @override
+  String get quizSessionEmpty =>
+      'No quizzes from your teacher in this session yet.';
+
+  @override
+  String get msg_session_code_invalid =>
+      'That session code isn\'t right. Check it in the teacher portal.';
 }

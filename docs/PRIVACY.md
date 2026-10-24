@@ -25,7 +25,8 @@
 | **Questions saved for your next visit** | On your phone only | Until you remove them |
 | **Independence Score and task counts** | On your phone only (what you read and when, for 90 days) | "Share my score with my teacher" sends nothing until your class is connected to the teacher portal |
 | **Age group, guardian consent, language** | On your phone. Every request tells the server your age group, so it can refuse what that group may not use | Classroom (under 13) sessions are never saved |
-| **Your class** (for example JSS 2) | On your phone. The app asks the server for your teacher's quizzes for that class level | Until you or a teacher change it. In Classroom sessions it is chosen by the teacher and never saved |
+| **Your class** (for example JSS 2) | On your phone only. It picks the sample questions | Until you or a teacher change it. In Classroom sessions it is chosen by the teacher and never saved |
+| **Class session code** | When a teacher opens a class session on your phone, the app sends the code to get that session's quizzes | Never saved: it ends with the session |
 | **Quizzes you take** | On your phone only | That you finished a quiz counts toward your Independence Score. Your answers are not kept |
 
 ## Speech recognition

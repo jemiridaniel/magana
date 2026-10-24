@@ -53,6 +53,7 @@ export default function InstallAppPage() {
           <li>The learner chooses a language, then their age group.</li>
           <li>Learners aged 13 to 17 choose their class and need a parent&rsquo;s or guardian&rsquo;s consent. Under 13, Magana only runs in a session you start, and you choose the class for that session.</li>
           <li>If a learner chose the wrong class, you can change it in the app&rsquo;s Settings → My class.</li>
+          <li>Your quizzes only reach learners inside your class session: on each learner&rsquo;s phone, open Practice quiz → &ldquo;Teacher: open your class session&rdquo; and type the session code shown when you assigned the quiz. On their own, learners only get Magana&rsquo;s sample questions.</li>
         </ol>
         <p className="note">
           Problems? Email <a href="mailto:maganasupport@gmail.com">maganasupport@gmail.com</a> with the screen name, what the learner did and what Magana said.

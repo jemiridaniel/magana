@@ -429,6 +429,13 @@
   "quizCorrectPrimary": "Madalla! Ka zaɓi {letter}.",
   "quizWrongPrimary": "Ka yi ƙoƙari! Amsar ita ce {answer}.",
   "quizPicture": "Hoto: {description}",
-  "msg_unknown_level": "Don Allah ka sake zaɓar ajinka a Saituna.",
-  "quizOr": "ko"
+  "quizOr": "ko",
+  "quizSessionOpen": "Malami: buɗe zaman ajinka",
+  "quizSessionPrompt": "Malami ne kaɗai ya kamata ya buɗe zaman aji. Rubuta lambar zaman daga shafin malamai.",
+  "quizSessionCodeLabel": "Lambar zama",
+  "quizSessionStart": "Buɗe zama",
+  "quizSessionActive": "Zaman aji {code}",
+  "quizSessionEnd": "Rufe zaman aji",
+  "quizSessionEmpty": "Babu jarabawa daga malaminka a wannan zaman tukuna.",
+  "msg_session_code_invalid": "Wannan lambar zaman ba daidai ba ce. Duba ta a shafin malamai."
 }

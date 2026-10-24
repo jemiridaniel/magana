@@ -325,16 +325,21 @@ def assign_quiz(quiz_id: str, body: Assign, store: quizzes.QuizStore = Depends(g
 
 
 @app.get("/learner/quizzes")
-def learner_quizzes(level: str, tier: policy.Tier = Depends(caller_tier),
+def learner_quizzes(session_code: str, tier: policy.Tier = Depends(caller_tier),
+                    x_magana_teacher_session: str | None = Header(None),
                     store: quizzes.QuizStore = Depends(get_quiz_store)) -> dict:
-    """Assigned quizzes for this class level. Until learners join a class with a code, every
-    learner at the level sees them; quizzes hold no learner data. Under 13: only in a
-    teacher-run session (caller_tier checks it)."""
+    """The quizzes assigned to one class session, for any age group, only inside a session
+    the teacher opened on this phone with the session's code. Learners on their own get
+    the app's sample packs only. Until class codes and teacher accounts exist, the code is
+    what keeps teacher A's quiz inside teacher A's session."""
     require(tier, policy.Feature.QUIZ)
-    if not curriculum.is_level(level):
-        raise HTTPException(422, {"code": "unknown_level"})
+    if x_magana_teacher_session != "yes":
+        raise HTTPException(403, {"code": "teacher_session_required"})
+    code = session_code.strip().upper()
+    if not quizzes.CODE_RE.match(code):
+        raise HTTPException(422, {"code": "session_code_invalid"})
     return {"quizzes": [quizzes.for_learner(q) for q in store.all()
-                        if q.status == "assigned" and q.level == level and quizzes.ready(q)]}
+                        if q.status == "assigned" and q.session_code == code and quizzes.ready(q)]}
 
 
 def get_iba() -> IbaClient | None:

@@ -13,6 +13,26 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Safety, privacy: a teacher's quiz reaches only that teacher's session
+
+- **What changed:**
+  - A teacher's quiz used to reach every learner at the same class level. Now it reaches only the class session it was assigned to.
+  - Assigning gives the class session a 6-character code, shown in the portal. On each learner's phone, the teacher opens Practice quiz → "Teacher: open your class session" and types it.
+  - This works for every age group. Learners on their own get only the team's sample packs: the app doesn't ask the server, and the server refuses without `X-Magana-Teacher-Session`.
+  - The code is kept for the session only, never saved. A wrong code is said aloud and closes the session.
+- **Tests:**
+  - `test_teacher_a_quiz_never_reaches_a_learner_outside_a_class_or_session`, with three quizzes:
+    - teacher A's Primary 5 session;
+    - teacher B's Primary 5 class, same level and same session name;
+    - teacher A's next session.
+
+    Each code opens only its own quiz, for every age group. A made-up code gets nothing. A learner without a teacher-opened session gets `403 teacher_session_required`, and asking by level (`?level=p5`) is refused.
+  - Also: quizzes in one session share a code; a broken edit takes a quiz out of its session.
+  - App (`curriculum_test.dart`): for each age group, on their own, sample packs only and no request. With a code, the request carries `session_code`, the header and no level, and only that session's quizzes show. Ending the session or a wrong code returns to samples only.
+  - Portal end-to-end: the code shown after assigning opens the quiz, another code doesn't, and a learner on their own gets 403.
+- **Pilot measure:** the single shared `MAGANA_TEACHER_KEY`, which lets the portal save and assign quizzes, is for the pilot only. Anyone with it could write quizzes for any class. **Real teacher accounts, and class codes for learners, must come before any school rollout.** Until then the session code is all that separates one teacher's learners from another's. It is 6 characters from 31 (about 887 million combinations) and rate-limited, but it isn't an account.
+- **Status:** fixed in tests. Untested: teachers typing codes on learners' phones in a real lesson.
+
 ## 2026-10-24 · Accessibility: teacher portal Quizzes, checked with axe at 1280×900 and 390×844
 
 - **What we built:**
@@ -29,7 +49,7 @@ No real phone and no blind or low-vision tester has been used yet.
   - "+ Add option" stops at 3: "3 is the most for Primary 5".
   - With no right answer, or a picture with no description, **Assign** is refused and focus moves to "Before you assign".
   - "Listen as a learner" says the app's words at 0.8 speed: "… A, A seed. B, A stone. Say A or B".
-  - Once assigned, the quiz comes back from `/learner/quizzes?level=p5` with Classroom session headers, and not for `p4`.
+  - Once assigned, the quiz comes back from `/learner/quizzes` (at first by class level; changed the same day to the session code, see "A teacher's quiz reaches only that teacher's session").
   - The Yorùbá version only reaches learners after "A Yorùbá-speaking teacher checked it" is ticked.
   - A JSS class allows 4 options.
 - **Bugs found and fixed:**
@@ -62,7 +82,7 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Not done:**
   - A teacher has reviewed none of the 120 sample questions.
   - Hausa, Yorùbá and Igbo screen wording for the class step is drafted, not checked by native speakers.
-  - Learners don't yet join a specific class: every learner at a level sees that level's assigned quizzes.
+  - Learners don't yet join a specific class. At first every learner at a level saw that level's assigned quizzes; this was changed the same day to session codes (entry above).
   - Picture files aren't sent to learners: only the description.
 - **Status:** built and tested. Open until the teacher review.
 

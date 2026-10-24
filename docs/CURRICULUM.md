@@ -32,7 +32,12 @@ One question format everywhere: the bundled packs, the backend's teacher quizzes
 ```
 
 - **Sample packs** (`app/assets/quiz/<band>-<subject>.json`): 10 team-made questions per band for English, Mathematics and Basic Science (Biology for SSS). Each pack is marked `"sample": true`, and the app shows "Sample questions". They are listed in docs/DATA_SOURCES.md as team-made, to be reviewed by a teacher. They work offline.
-- **Teacher-made quizzes:** written in the portal (Quizzes → Create a quiz), saved on the server, and assigned to a class session. The learner app fetches `/learner/quizzes?level=<its class level>` and lists them first, under "From your teacher". Until learners join a class with a code, every learner at that level sees a class's assigned quizzes. Quizzes hold no learner data.
+- **Teacher-made quizzes:** written in the portal (Quizzes → Create a quiz), saved on the server, and assigned to one **class session**. Assigning gives that session a 6-character **session code**; every quiz assigned to the same class session shares it.
+  - A teacher's quiz reaches **only** that session. On each learner's phone, the teacher opens Practice quiz → "Teacher: open your class session" and types the code. The app then fetches `/learner/quizzes?session_code=…` with `X-Magana-Teacher-Session`, for any age group.
+  - **Learners on their own see only the sample packs.** The app doesn't ask the server, and the server refuses without a teacher-opened session.
+  - Never by class level: another class at the same level, or the same session name in another class, gets a different code.
+  - The code is kept for the session only, never saved. Quizzes hold no learner data.
+  - This holds until class codes and teacher accounts exist.
 - **Translations:** a teacher may add the question in Hausa, Yorùbá or Igbo. Learners only hear a translation after a teacher who speaks the language marks it checked; otherwise English.
 - **Pictures:** a picture must be described in words before the quiz can be assigned, and Magana reads the description. The picture file itself isn't sent to learners yet.
 
@@ -44,7 +49,7 @@ One question format everywhere: the bundled packs, the backend's teacher quizzes
 - **Encouraging feedback:** "Well done! You chose A." / "Good try! The answer is A, the leaf."
 - **The right letters:** "Say A, B or C", never "A, B, C or D".
 
-Under 13, quizzes only run inside a teacher-started Classroom session. The app requires the session (ProfileGate), and the backend refuses `/learner/quizzes` without `X-Magana-Teacher-Session`.
+Under 13, every quiz, sample packs included, only runs inside a teacher-started Classroom session (the app's ProfileGate). For every age group, a teacher's quizzes need the session code, and the backend refuses `/learner/quizzes` without `X-Magana-Teacher-Session`.
 
 ## The teacher portal's checks ("Before you assign")
 

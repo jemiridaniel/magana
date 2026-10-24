@@ -2,15 +2,18 @@ import 'package:flutter/material.dart';
 
 import '../app_scope.dart';
 import '../curriculum.dart';
+import '../api.dart';
 import '../l10n/app_localizations.dart';
+import '../messages.dart';
 import '../profile.dart';
 import '../quiz.dart';
 import '../widgets.dart';
 import 'quiz.dart';
 
-/// Practice quizzes for the learner's class: their teacher's quizzes first
-/// (assigned in the portal), then the team-made sample packs for the class's
-/// band. Without a class (an adult not in school), every band's packs.
+/// Practice quizzes. On their own, learners get the team-made sample packs for
+/// their class's band (every band without a class). A teacher's quizzes appear
+/// only inside a class session the teacher opens on this phone with the
+/// session's code from the portal, for any age group: never by class level.
 class QuizListScreen extends StatefulWidget {
   const QuizListScreen({super.key});
 
@@ -20,6 +23,7 @@ class QuizListScreen extends StatefulWidget {
 
 class _QuizListScreenState extends State<QuizListScreen> {
   List<Quiz> _fromTeacher = const [];
+  String? _sessionError;
 
   @override
   void initState() {
@@ -32,19 +36,72 @@ class _QuizListScreenState extends State<QuizListScreen> {
         level == null ? l.quizChooseClassHint : l.quizYourClass(level.name),
       ].join('. ');
     });
-    WidgetsBinding.instance.addPostFrameCallback((_) => _loadTeacherQuizzes());
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadSessionQuizzes());
   }
 
-  Future<void> _loadTeacherQuizzes() async {
+  Future<void> _loadSessionQuizzes() async {
     final scope = AppScope.of(context);
-    final level = scope.profile.level;
-    if (level == null) return;
+    final code = scope.profile.sessionCode;
+    if (code == null) return; // on their own: sample packs only
     try {
-      final quizzes = await scope.api.learnerQuizzes(level.id);
+      final quizzes = await scope.api.sessionQuizzes(code);
       if (mounted) setState(() => _fromTeacher = quizzes);
-    } catch (_) {
-      // Offline or not set up: the bundled samples still work.
+      if (quizzes.isEmpty && mounted) {
+        scope.speaker.say(AppLocalizations.of(context).quizSessionEmpty);
+      }
+    } on ApiException catch (e) {
+      if (!mounted) return;
+      final l = AppLocalizations.of(context);
+      final text = messageFor(l, e.code);
+      if (e.code == 'session_code_invalid') scope.profile.endTeacherSession();
+      setState(() => _sessionError = text);
+      scope.speaker.say(text);
     }
+  }
+
+  Future<void> _openSession() async {
+    final l = AppLocalizations.of(context);
+    final scope = AppScope.of(context);
+    final field = TextEditingController();
+    scope.speaker.say(l.quizSessionPrompt);
+    final code = await showDialog<String>(
+      context: context,
+      builder: (dialog) => AlertDialog(
+        title: Text(
+          l.quizSessionPrompt,
+          style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+        ),
+        content: TextField(
+          controller: field,
+          autofocus: true,
+          textCapitalization: TextCapitalization.characters,
+          style: const TextStyle(fontSize: 24, letterSpacing: 2),
+          decoration: InputDecoration(labelText: l.quizSessionCodeLabel),
+          onSubmitted: (v) => Navigator.of(dialog).pop(v),
+        ),
+        actions: [
+          SecondaryButton(
+            label: l.cancel,
+            onTap: () => Navigator.of(dialog).pop(),
+          ),
+          const SizedBox(height: 8),
+          PrimaryButton(
+            label: l.quizSessionStart,
+            onTap: () => Navigator.of(dialog).pop(field.text),
+          ),
+        ],
+      ),
+    );
+    final typed = code?.replaceAll(RegExp(r'\s'), '').toUpperCase() ?? '';
+    if (typed.isEmpty || !mounted) return;
+    scope.profile.startTeacherSession(code: typed);
+    setState(() => _sessionError = null);
+    await _loadSessionQuizzes();
+  }
+
+  void _endSession() {
+    AppScope.of(context).profile.endTeacherSession();
+    setState(() => _fromTeacher = const []);
   }
 
   void _open(Future<Quiz> Function() load) =>
@@ -74,8 +131,9 @@ class _QuizListScreenState extends State<QuizListScreen> {
         if (level == null &&
             profile.classLevel != ProfileController.notInSchool)
           NoteBox(text: l.quizChooseClassHint),
-        if (_fromTeacher.isNotEmpty) ...[
-          _heading(l.quizFromTeacher),
+        if (profile.sessionCode case final code?) ...[
+          _heading('${l.quizFromTeacher}: ${l.quizSessionActive(code)}'),
+          if (_fromTeacher.isEmpty) NoteBox(text: l.quizSessionEmpty),
           for (final quiz in _fromTeacher)
             ChoiceCard(
               title: quiz.title,
@@ -84,6 +142,11 @@ class _QuizListScreenState extends State<QuizListScreen> {
               leading: const Icon(Icons.school_outlined, size: 30),
               onTap: () => _open(() async => quiz),
             ),
+          SecondaryButton(label: l.quizSessionEnd, onTap: _endSession),
+        ] else ...[
+          if (_sessionError case final e?)
+            NoteBox(text: e, kind: NoteKind.warning),
+          SecondaryButton(label: l.quizSessionOpen, onTap: _openSession),
         ],
         _heading(l.quizSamples),
         for (final band in bands) ...[

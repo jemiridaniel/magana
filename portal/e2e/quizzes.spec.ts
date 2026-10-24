@@ -36,9 +36,9 @@ async function openEditor(page: Page) {
   await page.getByRole("button", { name: "Listen as a learner" }).waitFor();
 }
 
-// The learner app's request for its class level (Classroom, inside a teacher's session).
-async function learnerQuizzes(page: Page, level: string) {
-  const r = await page.request.get(`${apiUrl}/learner/quizzes?level=${level}`, {
+// The learner app inside a class session the teacher opened with [code].
+async function sessionQuizzes(page: Page, code: string) {
+  const r = await page.request.get(`${apiUrl}/learner/quizzes?session_code=${code}`, {
     headers: { "X-Magana-Tier": "classroom", "X-Magana-Teacher-Session": "yes" },
   });
   expect(r.ok()).toBeTruthy();
@@ -128,29 +128,34 @@ test("create, check and assign a Primary 5 quiz; it reaches learners at that lev
   await page.getByLabel("Session").selectOption({ label: "Thu 30 Oct 2026 · 10:00" });
   await page.getByRole("button", { name: "Assign to class" }).click();
   await expect(page.getByRole("status").first()).toHaveText(
-    "Assigned to Primary 5 for Thu 30 Oct 2026 · 10:00. Learners in this class get it in their Practice quiz.",
+    /^Assigned to Primary 5 for Thu 30 Oct 2026 · 10:00\. Session code: [A-Z2-9]{6}\.$/,
   );
+  const code = (await page.locator(".session-code").textContent())!;
 
-  // The learner app's endpoint for Primary 5 now has it. The translation isn't checked yet,
-  // so learners hear English.
-  const mine = (await learnerQuizzes(page, "p5")).find((q) => q.title === title)!;
+  // Only that session's code opens it in the learner app. The translation isn't checked
+  // yet, so learners hear English.
+  const mine = (await sessionQuizzes(page, code)).find((q) => q.title === title)!;
   expect(mine.questions[0].translations).toEqual({});
   expect(mine.questions[1].picture).toBe("A brown bean seed, about the size of a fingernail.");
-  expect((await learnerQuizzes(page, "p4")).find((q) => q.title === title)).toBeUndefined();
+  expect(await sessionQuizzes(page, code === "ZZZZZZ" ? "YYYYYY" : "ZZZZZZ")).toEqual([]);
+  const alone = await page.request.get(`${apiUrl}/learner/quizzes?session_code=${code}`, {
+    headers: { "X-Magana-Tier": "standard" },
+  });
+  expect(alone.status()).toBe(403); // a learner on their own: sample packs only
 
   // A Yorùbá-speaking teacher checks the translation: learners now get it.
   await page.getByRole("button", { name: /^1 Which part of a plant/ }).click();
   await page.getByLabel("A Yorùbá-speaking teacher checked it").check();
   await page.getByRole("button", { name: "Save draft" }).click();
   await expect(page.getByRole("status").first()).toHaveText("Draft saved.");
-  const checked = (await learnerQuizzes(page, "p5")).find((q) => q.title === title)!;
+  const checked = (await sessionQuizzes(page, code)).find((q) => q.title === title)!;
   expect(checked.questions[0].translations).toEqual({ yo: "Apá wo nínú ewéko ló ń ṣe oúnjẹ fún ewéko náà?" });
 
   // All quizzes lists it; Edit opens it again.
   await page.getByRole("link", { name: "‹ All quizzes" }).click();
   await expect(page).toHaveTitle("All quizzes · Magana for Teachers");
   const row = page.getByRole("row").filter({ hasText: title });
-  await expect(row).toContainText("Assigned · Thu 30 Oct 2026 · 10:00");
+  await expect(row).toContainText(`Assigned · Thu 30 Oct 2026 · 10:00 · code ${code}`);
   await designChecks(page);
   await row.getByRole("link", { name: `Edit ${title}` }).click();
   await expect(page.getByRole("heading", { name: "Edit quiz" })).toBeVisible();

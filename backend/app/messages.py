@@ -31,7 +31,7 @@ ENGLISH = {
     "consent_required": "Learners aged 13 to 17 need a parent's or guardian's consent first.",
     "teacher_session_required": "Learners under 13 can only use Magana in a teacher-run session.",
     "unreadable_image": "I couldn't open that photo. Please try again.",
-    "unknown_level": "Please choose your class again in Settings.",
+    "session_code_invalid": "That session code isn't right. Check it in the teacher portal.",
     # Explanations
     "numbers_unconfirmed": "I can't confirm some numbers in this explanation, so I'll read the page exactly instead.",
     "explain_preview": "This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",

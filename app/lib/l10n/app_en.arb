@@ -1124,7 +1124,6 @@
       }
     }
   },
-  "msg_unknown_level": "Please choose your class again in Settings.",
   "quizOr": "or",
   "@quizOr": {
     "description": "Joins the last two answer letters: A, B or C"
@@ -1157,5 +1156,20 @@
         "type": "String"
       }
     }
-  }
+  },
+  "quizSessionOpen": "Teacher: open your class session",
+  "quizSessionPrompt": "Only the teacher should open a class session. Type the session code from the teacher portal.",
+  "quizSessionCodeLabel": "Session code",
+  "quizSessionStart": "Open session",
+  "quizSessionActive": "Class session {code}",
+  "@quizSessionActive": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "quizSessionEnd": "End class session",
+  "quizSessionEmpty": "No quizzes from your teacher in this session yet.",
+  "msg_session_code_invalid": "That session code isn't right. Check it in the teacher portal."
 }

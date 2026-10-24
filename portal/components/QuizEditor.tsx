@@ -57,6 +57,7 @@ export default function QuizEditor() {
   const [quiz, setQuiz] = useState<QuizDraft>(blankQuiz);
   const [id, setId] = useState<string | undefined>();
   const [status, setStatus] = useState<"draft" | "assigned">("draft");
+  const [code, setCode] = useState<string | null>(null);
   const [index, setIndex] = useState(0);
   const [sessionPick, setSession] = useState("");
   const [message, setMessage] = useState<{ text: string; error?: boolean } | null>(null);
@@ -75,6 +76,7 @@ export default function QuizEditor() {
         setQuiz({ title: q.title, class_id: q.class_id, level: q.level, subject: q.subject, languages: q.languages, questions: q.questions });
         setId(q.id);
         setStatus(q.status);
+        setCode(q.session_code);
         setSession(sessions.find((s) => s.label === q.session)?.id ?? "");
       })
       .catch((e) => setMessage({ text: messageFor(e instanceof QuizError ? e.code : "failed"), error: true }));
@@ -138,6 +140,7 @@ export default function QuizEditor() {
       const saved = await saveQuiz(quiz, id);
       setId(saved.id);
       setStatus(saved.status);
+      setCode(saved.session_code);
       if (!id) window.history.replaceState(null, "", `/quizzes/new?id=${saved.id}`);
       setMessage({
         text: savesToServer()
@@ -165,9 +168,10 @@ export default function QuizEditor() {
     try {
       const assigned = await assignQuiz(saved, sessionLabel);
       setStatus(assigned.status);
+      setCode(assigned.session_code);
       setMessage({
-        text: `Assigned to ${cls.name} for ${sessionLabel}.${
-          savesToServer() ? " Learners in this class get it in their Practice quiz." : " (Preview: saved in this browser only.)"
+        text: `Assigned to ${cls.name} for ${sessionLabel}. Session code: ${assigned.session_code}.${
+          savesToServer() ? "" : " (Preview: saved in this browser only.)"
         }`,
       });
     } catch (e) {
@@ -503,10 +507,17 @@ export default function QuizEditor() {
             ) : (
               <p className="note">{cls.name} has no sessions yet. Add one in Attendance.</p>
             )}
-            <p className="note">
-              {status === "assigned" ? <strong>Assigned. </strong> : null}
-              Scores go to Learner progress. Marks are never taken off because Magana misheard a spoken answer.
-            </p>
+            {status === "assigned" && code && (
+              <div className="session-code-box">
+                <p>
+                  <strong>Assigned.</strong> Session code: <strong className="session-code">{code}</strong>
+                </p>
+                <p className="note">
+                  Learners only get this quiz inside your session: on each learner&rsquo;s phone, open Practice quiz → &ldquo;Teacher: open your class session&rdquo; and type the code. Learners on their own only get Magana&rsquo;s sample questions.
+                </p>
+              </div>
+            )}
+            <p className="note">Scores go to Learner progress. Marks are never taken off because Magana misheard a spoken answer.</p>
           </section>
         </aside>
       </div>
