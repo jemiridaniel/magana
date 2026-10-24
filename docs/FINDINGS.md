@@ -13,6 +13,33 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Safety, accessibility: "Say the medicine name when locked" (DRAFT)
+
+- **What we tested and how:** `reminders_test.dart`: `say the medicine name when locked: off by default, DRAFT`, plus the existing reminders tests now expecting the private wording.
+- **Result:**
+  - Off by default. Every notification then shows only "Magana reminder / Open Magana to hear which medicine.", and nothing is spoken.
+  - Turned on: every reminder is rescheduled with the medicine and amount as typed. The notification is public, so TalkBack can read it on the lock screen, and an Android alarm speaks "Time for your medicine. Amlodipine 5 mg · 1 tablet" with the phone's voice.
+  - Turned off again: everything goes back to the private wording.
+  - "Remind in 15 min" follows the same setting.
+  - When a spoken alarm fires, it checks again that the setting is on and the reminder still exists, so turning it off or deleting the reminder always wins.
+- **What we changed:** this commit.
+- **Status:** DRAFT, pending Dr. Amos's sign-off, because people near the phone may see or hear the medicine. Untested on a device:
+  - TalkBack reading the public notification on a locked phone;
+  - the alarm speaking while the phone is locked;
+  - which voice is used when the phone has no Hausa, Yorùbá or Igbo voice (it falls back to English, Nigeria).
+
+## 2026-10-24 · Safety: "Ask a question" could be reached by voice from a Guided account
+
+- **What we tested and how:**
+  - The onboarding tests already asserted that the Home tile is hidden for Guided and Classroom accounts: the exact set of tiles per tier.
+  - New tests in `learner_test.dart`: `guided: Ask a question is hidden, by tile and by voice` and `classroom: Ask a question is hidden, by tile and by voice`.
+- **Result:**
+  - The tile needed the open-chat permission (18+), but the spoken command "ask a question" needed only Explain, which Guided learners have. A Guided learner could reach the Ask screen by voice, and "help" read it out to them.
+  - Fixed: the command now needs the same permission as the tile. We checked the test fails with the old rule; it showed the Guided learner reaching the Explain screen.
+  - Guided learners still have "Explain this" in the Reader, on school pages.
+- **What we changed:** this commit.
+- **Status:** fixed.
+
 ## 2026-10-24 · Accessibility: every app screen has an expectAccessible test
 
 - **What we tested and how:**
@@ -65,7 +92,7 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ## 2026-10-24 · Accessibility: the app and portal compared with every design board
 
-- **What we tested and how:** each of the 25 screens on the design canvas compared with the app and portal code, before and after this round of building.
+- **What we tested and how:** each of the 24 screens on the design canvas (18 app, 6 portal) compared with the app and portal code, before and after this round of building. (Corrected from 25.)
 - **Result before this round:**
   - Built and matching: 1 Choose language, 2 Age check, 4 Capture, 7 Voice quiz, E4 Reminders, E5 Talk to a health worker, L1 Skills, Uploads, Attendance.
   - Built but different: 3 Home (Settings, Ask a question and Hold to speak were "coming soon"), 3b Change app language, 5 Reader, E0, E1, E2, E3, E6, L2, L3.

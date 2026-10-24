@@ -44,8 +44,36 @@ Future<void> askForOnTime(BuildContext context, ReminderAlerts alerts) async {
     ),
   );
   if (open != true || !await alerts.requestExact()) return;
+  if (context.mounted) await rescheduleAll(context, alerts);
+}
+
+/// What a reminder shows on the lock screen and says, by the learner's choice
+/// (DRAFT, pending Dr. Amos): only "Magana reminder" unless they turned on
+/// "Say the medicine name when locked".
+ReminderNotice noticeFor(BuildContext context, Reminder r, bool sayName) {
+  final l = AppLocalizations.of(context);
+  final lang = Localizations.localeOf(context).languageCode;
+  return sayName
+      ? ReminderNotice(
+          title: l.reminderNotifyTitle,
+          body: r.text,
+          speak: '${l.reminderNotifyTitle}. ${r.text}',
+          language: lang,
+        )
+      : ReminderNotice(
+          title: l.reminderGenericTitle,
+          body: l.reminderGenericBody,
+          language: lang,
+        );
+}
+
+/// Schedules every reminder again (after the timing permission or the
+/// lock-screen setting changed).
+Future<void> rescheduleAll(BuildContext context, ReminderAlerts alerts) async {
+  final store = await ReminderStore.load();
+  if (!context.mounted) return;
   for (final r in store.all) {
-    await alerts.daily(r, l.reminderNotifyTitle, r.text);
+    await alerts.daily(r, noticeFor(context, r, store.sayNameWhenLocked));
   }
 }
 
@@ -121,8 +149,7 @@ class _RemindersScreenState extends State<RemindersScreen> {
     await _alerts.snooze(
       r,
       const Duration(minutes: 15),
-      _l.reminderNotifyTitle,
-      r.text,
+      noticeFor(context, r, _store!.sayNameWhenLocked),
     );
     if (mounted) AppScope.of(context).speaker.say(_l.remindLaterSet);
   }
@@ -242,6 +269,18 @@ class _RemindersScreenState extends State<RemindersScreen> {
               ),
         if (_alertsOn == false)
           NoteBox(text: l.notificationsOff, kind: NoteKind.warning),
+        if (store != null && store.all.isNotEmpty) ...[
+          _SayNameRow(
+            on: store.sayNameWhenLocked,
+            onChanged: (on) async {
+              await store.setSayNameWhenLocked(on);
+              if (!context.mounted) return;
+              setState(() {});
+              await rescheduleAll(context, _alerts);
+            },
+          ),
+          NoteBox(text: l.sayNameNote, kind: NoteKind.privacy),
+        ],
         if (_alertsOn == true && !_alerts.exact) ...[
           NoteBox(text: l.remindersMayBeLate, kind: NoteKind.warning),
           SecondaryButton(
@@ -378,7 +417,11 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
       if (!widget.alerts.exact && !store.askedExact && mounted) {
         await askForOnTime(context, widget.alerts);
       }
-      await widget.alerts.daily(r, l.reminderNotifyTitle, r.text);
+      if (!mounted) return;
+      await widget.alerts.daily(
+        r,
+        noticeFor(context, r, store.sayNameWhenLocked),
+      );
     }
     speaker.say(l.reminderSaved(time));
     if (mounted) Navigator.of(context).pop();
@@ -437,6 +480,55 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
         ),
       ],
       bottom: [PrimaryButton(label: l.saveReminder, onTap: _save)],
+    );
+  }
+}
+
+/// "Say the medicine name when locked" (off by default). The whole row toggles.
+class _SayNameRow extends StatelessWidget {
+  const _SayNameRow({required this.on, required this.onChanged});
+  final bool on;
+  final ValueChanged<bool> onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return Semantics(
+      toggled: on,
+      label: l.sayNameWhenLocked,
+      excludeSemantics: true,
+      onTap: () => onChanged(!on),
+      child: InkWell(
+        onTap: () => onChanged(!on),
+        borderRadius: BorderRadius.circular(16),
+        child: Container(
+          constraints: const BoxConstraints(minHeight: 64),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(color: MaganaColors.ink, width: 2),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  l.sayNameWhenLocked,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              ),
+              Switch(
+                value: on,
+                activeThumbColor: MaganaColors.green,
+                onChanged: onChanged,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

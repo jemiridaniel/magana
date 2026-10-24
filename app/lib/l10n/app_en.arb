@@ -998,5 +998,12 @@
     }
   },
   "shareScore": "Share my score with my teacher",
-  "shareScoreNote": "Your teacher will see your score, never your pages or questions, once your class is connected to the Magana teacher portal."
+  "shareScoreNote": "Your teacher will see your score, never your pages or questions, once your class is connected to the Magana teacher portal.",
+  "sayNameWhenLocked": "Say the medicine name when locked",
+  "@sayNameWhenLocked": {
+    "description": "CLINICAL/PRIVACY DRAFT, pending Dr. Amos: off by default"
+  },
+  "sayNameNote": "Off: the lock screen says only “Magana reminder”. On: the lock screen shows the medicine and how much, and Magana says them aloud at each time, so people near you may see or hear them.",
+  "reminderGenericTitle": "Magana reminder",
+  "reminderGenericBody": "Open Magana to hear which medicine."
 }

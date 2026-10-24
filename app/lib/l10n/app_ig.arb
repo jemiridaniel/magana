@@ -376,5 +376,9 @@
   "scoreUpSince": "Ọ rịgoro site na {start} mgbe ị malitere, {weeks, plural, =1{izu 1 gara aga} other{izu {weeks} gara aga}}",
   "scoreSince": "{start} mgbe ị malitere, {weeks, plural, =1{izu 1 gara aga} other{izu {weeks} gara aga}}",
   "shareScore": "Kekọrịta akara m na onye nkuzi m",
-  "shareScoreNote": "Onye nkuzi gị ga-ahụ akara gị, ọ bụghị peeji ma ọ bụ ajụjụ gị, ozugbo ejikọrọ klaasị gị na ọnụ ụzọ ndị nkuzi Magana."
+  "shareScoreNote": "Onye nkuzi gị ga-ahụ akara gị, ọ bụghị peeji ma ọ bụ ajụjụ gị, ozugbo ejikọrọ klaasị gị na ọnụ ụzọ ndị nkuzi Magana.",
+  "sayNameWhenLocked": "Kwuo aha ọgwụ mgbe ekwentị kpọchiri",
+  "sayNameNote": "Agbanyụọ: ihuenyo mkpọchi ga-ekwu naanị “Ihe ncheta Magana”. Agbanyere: ihuenyo mkpọchi ga-egosi ọgwụ na ole, Magana ga-ekwukwa ha n'oke olu n'oge ọ bụla, ya mere ndị nọ gị nso nwere ike ịhụ ma ọ bụ nụ ha.",
+  "reminderGenericTitle": "Ihe ncheta Magana",
+  "reminderGenericBody": "Mepee Magana ka ị nụ ọgwụ ole."
 }

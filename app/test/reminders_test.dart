@@ -7,6 +7,7 @@ import 'package:app/profile.dart';
 import 'package:app/reminders.dart';
 import 'package:app/screens/reminders.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -32,15 +33,14 @@ class FakeAlerts implements ReminderAlerts {
   @override
   Future<bool> init() async => allowed;
   @override
-  Future<void> daily(Reminder r, String title, String body) async =>
-      calls.add('daily ${r.minute} $title | $body');
+  Future<void> daily(Reminder r, ReminderNotice n) async => calls.add(
+    'daily ${r.minute} ${n.title} | ${n.body}${n.speak == null ? '' : ' | says: ${n.speak}'}',
+  );
   @override
-  Future<void> snooze(
-    Reminder r,
-    Duration after,
-    String title,
-    String b,
-  ) async => calls.add('snooze ${r.id} ${after.inMinutes}');
+  Future<void> snooze(Reminder r, Duration after, ReminderNotice n) async =>
+      calls.add(
+        'snooze ${r.id} ${after.inMinutes}${n.speak == null ? '' : ' | says'}',
+      );
   @override
   Future<void> cancelSnooze(Reminder r) async =>
       calls.add('cancelSnooze ${r.id}');
@@ -156,7 +156,8 @@ void main() {
     await tap(tester, en.saveReminder);
 
     expect(alerts.calls, [
-      'daily 840 ${en.reminderNotifyTitle} | Paracetamol 500 mg · 2 tablets',
+      // Off by default: the lock screen says only "Magana reminder".
+      'daily 840 ${en.reminderGenericTitle} | ${en.reminderGenericBody}',
     ]);
     expect(speaker.said.last, en.reminderSaved('2:00 PM'));
     // 2:00 PM has passed (it is 2:05 PM): due now.
@@ -263,8 +264,8 @@ void main() {
     await tap(tester, en.exactOpen);
     expect(alerts.calls, [
       'requestExact',
-      'daily 900 ${en.reminderNotifyTitle} | Amlodipine 5 mg',
-      'daily 900 ${en.reminderNotifyTitle} | Paracetamol',
+      'daily 900 ${en.reminderGenericTitle} | ${en.reminderGenericBody}',
+      'daily 900 ${en.reminderGenericTitle} | ${en.reminderGenericBody}',
     ]);
     expect(find.text(en.remindersMayBeLate), findsNothing);
   });
@@ -273,5 +274,45 @@ void main() {
     await open(tester, tier: Tier.guided);
     expect(find.text(en.adultsOnly), findsOneWidget);
     expect(find.bySemanticsLabel(en.addReminder), findsNothing);
+  });
+
+  testWidgets('say the medicine name when locked: off by default, DRAFT', (
+    tester,
+  ) async {
+    final handle = tester.ensureSemantics();
+    final (speaker, alerts) = await open(
+      tester,
+      prefs: {
+        'reminders': [saved(1, 'Amlodipine 5 mg', '1 tablet', 8 * 60)],
+      },
+    );
+    final row = tester.getSemantics(
+      find.bySemanticsLabel(en.sayNameWhenLocked),
+    );
+    // ignore: deprecated_member_use
+    expect(row.hasFlag(SemanticsFlag.isToggled), isFalse);
+    expect(find.text(en.sayNameNote), findsOneWidget);
+    expectAccessible(tester, 'Reminders with lock-screen setting');
+
+    await tap(tester, en.sayNameWhenLocked);
+    expect(
+      alerts.calls.last,
+      'daily 480 ${en.reminderNotifyTitle} | Amlodipine 5 mg · 1 tablet'
+      ' | says: ${en.reminderNotifyTitle}. Amlodipine 5 mg · 1 tablet',
+    );
+    await tap(tester, en.remindLater);
+    expect(alerts.calls.last, 'snooze 1 15 | says');
+
+    // Off again: back to "Magana reminder", nothing spoken.
+    await tap(tester, en.sayNameWhenLocked);
+    expect(
+      alerts.calls.last,
+      'daily 480 ${en.reminderGenericTitle} | ${en.reminderGenericBody}',
+    );
+    expect(
+      (await SharedPreferences.getInstance()).getBool('remind_say_name'),
+      isFalse,
+    );
+    handle.dispose();
   });
 }

@@ -2357,6 +2357,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your teacher will see your score, never your pages or questions, once your class is connected to the Magana teacher portal.'**
   String get shareScoreNote;
+
+  /// CLINICAL/PRIVACY DRAFT, pending Dr. Amos: off by default
+  ///
+  /// In en, this message translates to:
+  /// **'Say the medicine name when locked'**
+  String get sayNameWhenLocked;
+
+  /// No description provided for @sayNameNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Off: the lock screen says only “Magana reminder”. On: the lock screen shows the medicine and how much, and Magana says them aloud at each time, so people near you may see or hear them.'**
+  String get sayNameNote;
+
+  /// No description provided for @reminderGenericTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana reminder'**
+  String get reminderGenericTitle;
+
+  /// No description provided for @reminderGenericBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Open Magana to hear which medicine.'**
+  String get reminderGenericBody;
 }
 
 class _AppLocalizationsDelegate

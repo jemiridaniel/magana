@@ -1,6 +1,11 @@
 import 'dart:convert';
 
+import 'dart:ui' show DartPluginRegistrant;
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart' show WidgetsFlutterBinding;
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -44,6 +49,25 @@ class Reminder {
 }
 
 enum DoseState { taken, due, later }
+
+/// What a reminder shows and says. With "Say the medicine name when locked" off
+/// (the default) the lock screen says only "Magana reminder" and nothing is
+/// spoken; on, it shows and speaks the medicine and amount. DRAFT, pending
+/// Dr. Amos's sign-off: anyone near the phone may see or hear the medicine.
+class ReminderNotice {
+  const ReminderNotice({
+    required this.title,
+    required this.body,
+    this.speak,
+    this.language = 'en',
+  });
+
+  final String title;
+  final String body;
+  final String?
+  speak; // said aloud when the alarm fires; null: silent text only
+  final String language;
+}
 
 /// Reminders and which of today's doses were marked taken, on this phone.
 class ReminderStore {
@@ -98,6 +122,11 @@ class ReminderStore {
   }
 
   bool get askedExact => _prefs.getBool('asked_exact_alarms') ?? false;
+
+  /// "Say the medicine name when locked": off by default (see ReminderNotice).
+  bool get sayNameWhenLocked => _prefs.getBool(sayNameKey) ?? false;
+  Future<void> setSayNameWhenLocked(bool on) => _prefs.setBool(sayNameKey, on);
+  static const sayNameKey = 'remind_say_name';
   Future<void> markAskedExact() => _prefs.setBool('asked_exact_alarms', true);
 
   DoseState state(Reminder r) {
@@ -120,8 +149,8 @@ abstract class ReminderAlerts {
 
   /// Opens the phone's "Alarms and reminders" switch for Magana.
   Future<bool> requestExact();
-  Future<void> daily(Reminder r, String title, String body);
-  Future<void> snooze(Reminder r, Duration after, String title, String body);
+  Future<void> daily(Reminder r, ReminderNotice notice);
+  Future<void> snooze(Reminder r, Duration after, ReminderNotice notice);
 
   /// After "I've taken it": a pending "remind in 15 min" must not ring.
   Future<void> cancelSnooze(Reminder r);
@@ -135,6 +164,8 @@ class LocalReminderAlerts implements ReminderAlerts {
   static bool _ready = false;
   static bool _exact = false;
 
+  // Public, so the lock screen (and TalkBack) shows the notice's own text, which
+  // is only "Magana reminder" unless the learner chose to show the medicine.
   static const _details = NotificationDetails(
     android: AndroidNotificationDetails(
       'medicine_reminders',
@@ -143,9 +174,15 @@ class LocalReminderAlerts implements ReminderAlerts {
       importance: Importance.max,
       priority: Priority.high,
       category: AndroidNotificationCategory.reminder,
+      visibility: NotificationVisibility.public,
     ),
     iOS: DarwinNotificationDetails(),
   );
+
+  static bool get _android =>
+      !kIsWeb && defaultTargetPlatform == TargetPlatform.android;
+  static int _spokenDaily(Reminder r) => 200000 + r.id;
+  static int _spokenSnooze(Reminder r) => 300000 + r.id;
 
   @override
   Future<bool> init() async {
@@ -158,6 +195,7 @@ class LocalReminderAlerts implements ReminderAlerts {
         } catch (_) {
           tz.setLocalLocation(tz.getLocation('Africa/Lagos'));
         }
+        if (_android) await AndroidAlarmManager.initialize();
         await _plugin.initialize(
           settings: const InitializationSettings(
             android: AndroidInitializationSettings('@mipmap/ic_launcher'),
@@ -201,7 +239,7 @@ class LocalReminderAlerts implements ReminderAlerts {
       : AndroidScheduleMode.inexactAllowWhileIdle;
 
   @override
-  Future<void> daily(Reminder r, String title, String body) {
+  Future<void> daily(Reminder r, ReminderNotice notice) async {
     final now = tz.TZDateTime.now(tz.local);
     var at = tz.TZDateTime(
       tz.local,
@@ -212,34 +250,92 @@ class LocalReminderAlerts implements ReminderAlerts {
       r.minute % 60,
     );
     if (!at.isAfter(now)) at = at.add(const Duration(days: 1));
-    return _plugin.zonedSchedule(
+    await _plugin.zonedSchedule(
       id: r.id,
       scheduledDate: at,
       notificationDetails: _details,
       androidScheduleMode: _mode,
-      title: title,
-      body: body,
+      title: notice.title,
+      body: notice.body,
       matchDateTimeComponents: DateTimeComponents.time,
     );
+    if (!_android) return;
+    await AndroidAlarmManager.cancel(_spokenDaily(r));
+    if (notice.speak case final text?) {
+      await AndroidAlarmManager.periodic(
+        const Duration(days: 1),
+        _spokenDaily(r),
+        speakReminder,
+        startAt: at,
+        exact: _exact,
+        wakeup: true,
+        allowWhileIdle: true,
+        rescheduleOnReboot: true,
+        params: {'id': r.id, 'text': text, 'lang': notice.language},
+      );
+    }
   }
 
   @override
-  Future<void> snooze(Reminder r, Duration after, String title, String body) =>
-      _plugin.zonedSchedule(
-        id: 100000 + r.id,
-        scheduledDate: tz.TZDateTime.now(tz.local).add(after),
-        notificationDetails: _details,
-        androidScheduleMode: _mode,
-        title: title,
-        body: body,
+  Future<void> snooze(Reminder r, Duration after, ReminderNotice notice) async {
+    final at = tz.TZDateTime.now(tz.local).add(after);
+    await _plugin.zonedSchedule(
+      id: 100000 + r.id,
+      scheduledDate: at,
+      notificationDetails: _details,
+      androidScheduleMode: _mode,
+      title: notice.title,
+      body: notice.body,
+    );
+    if (_android && notice.speak != null) {
+      await AndroidAlarmManager.oneShotAt(
+        at,
+        _spokenSnooze(r),
+        speakReminder,
+        exact: _exact,
+        wakeup: true,
+        allowWhileIdle: true,
+        params: {'id': r.id, 'text': notice.speak, 'lang': notice.language},
       );
+    }
+  }
 
   @override
-  Future<void> cancelSnooze(Reminder r) => _plugin.cancel(id: 100000 + r.id);
+  Future<void> cancelSnooze(Reminder r) async {
+    await _plugin.cancel(id: 100000 + r.id);
+    if (_android) await AndroidAlarmManager.cancel(_spokenSnooze(r));
+  }
 
   @override
   Future<void> cancel(Reminder r) async {
     await _plugin.cancel(id: r.id);
     await cancelSnooze(r);
+    if (_android) await AndroidAlarmManager.cancel(_spokenDaily(r));
   }
+}
+
+/// Runs in the background when a spoken reminder's alarm fires (Android), even
+/// with the phone locked. It checks again that the setting is still on and the
+/// reminder still exists, then says it with the phone's voice.
+@pragma('vm:entry-point')
+Future<void> speakReminder(int alarmId, Map<String, dynamic> params) async {
+  WidgetsFlutterBinding.ensureInitialized();
+  DartPluginRegistrant.ensureInitialized();
+  final prefs = await SharedPreferences.getInstance();
+  await prefs.reload();
+  final id = params['id'];
+  final stillThere = (prefs.getStringList('reminders') ?? const []).any(
+    (s) => (jsonDecode(s) as Map)['id'] == id,
+  );
+  if (!(prefs.getBool(ReminderStore.sayNameKey) ?? false) || !stillThere) {
+    return;
+  }
+  final tts = FlutterTts();
+  final lang = params['lang'] as String? ?? 'en';
+  final locale = '$lang-NG';
+  await tts.setLanguage(
+    await tts.isLanguageAvailable(locale) == true ? locale : 'en-NG',
+  );
+  await tts.awaitSpeakCompletion(true);
+  await tts.speak(params['text'] as String);
 }

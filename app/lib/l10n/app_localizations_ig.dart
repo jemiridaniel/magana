@@ -1444,4 +1444,17 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get shareScoreNote =>
       'Onye nkuzi gị ga-ahụ akara gị, ọ bụghị peeji ma ọ bụ ajụjụ gị, ozugbo ejikọrọ klaasị gị na ọnụ ụzọ ndị nkuzi Magana.';
+
+  @override
+  String get sayNameWhenLocked => 'Kwuo aha ọgwụ mgbe ekwentị kpọchiri';
+
+  @override
+  String get sayNameNote =>
+      'Agbanyụọ: ihuenyo mkpọchi ga-ekwu naanị “Ihe ncheta Magana”. Agbanyere: ihuenyo mkpọchi ga-egosi ọgwụ na ole, Magana ga-ekwukwa ha n\'oke olu n\'oge ọ bụla, ya mere ndị nọ gị nso nwere ike ịhụ ma ọ bụ nụ ha.';
+
+  @override
+  String get reminderGenericTitle => 'Ihe ncheta Magana';
+
+  @override
+  String get reminderGenericBody => 'Mepee Magana ka ị nụ ọgwụ ole.';
 }

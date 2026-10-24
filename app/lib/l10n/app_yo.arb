@@ -376,5 +376,9 @@
   "scoreUpSince": "Ó ti gòkè láti {start} nígbà tí o bẹ̀rẹ̀, {weeks, plural, =1{ọ̀sẹ̀ 1 sẹ́yìn} other{ọ̀sẹ̀ {weeks} sẹ́yìn}}",
   "scoreSince": "{start} nígbà tí o bẹ̀rẹ̀, {weeks, plural, =1{ọ̀sẹ̀ 1 sẹ́yìn} other{ọ̀sẹ̀ {weeks} sẹ́yìn}}",
   "shareScore": "Pín ìwọ̀n mi pẹ̀lú olùkọ́ mi",
-  "shareScoreNote": "Olùkọ́ rẹ yóò rí ìwọ̀n rẹ, kì í ṣe ojú-ìwé tàbí ìbéèrè rẹ, nígbà tí a bá so kíláàsì rẹ pọ̀ mọ́ ojú-òpó olùkọ́ Magana."
+  "shareScoreNote": "Olùkọ́ rẹ yóò rí ìwọ̀n rẹ, kì í ṣe ojú-ìwé tàbí ìbéèrè rẹ, nígbà tí a bá so kíláàsì rẹ pọ̀ mọ́ ojú-òpó olùkọ́ Magana.",
+  "sayNameWhenLocked": "Sọ orúkọ oògùn nígbà tí fóònù bá wà ní títì",
+  "sayNameNote": "Ní pípa: ojú títì yóò sọ “Ìrántí Magana” nìkan. Ní títàn: ojú títì yóò fi oògùn àti iye rẹ̀ hàn, Magana yóò sì sọ wọ́n jáde ní àkókò kọ̀ọ̀kan, nítorí náà àwọn tó wà nítòsí rẹ lè rí tàbí gbọ́ wọn.",
+  "reminderGenericTitle": "Ìrántí Magana",
+  "reminderGenericBody": "Ṣí Magana láti gbọ́ oògùn wo."
 }

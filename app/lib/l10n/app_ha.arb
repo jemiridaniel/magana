@@ -376,5 +376,9 @@
   "scoreUpSince": "Ya tashi daga {start} lokacin da ka fara, {weeks, plural, =1{mako 1 da ya wuce} other{makonni {weeks} da suka wuce}}",
   "scoreSince": "{start} lokacin da ka fara, {weeks, plural, =1{mako 1 da ya wuce} other{makonni {weeks} da suka wuce}}",
   "shareScore": "Raba makina da malamina",
-  "shareScoreNote": "Malaminka zai ga makinka, ba shafukanka ko tambayoyinka ba, da zarar an haɗa ajinku da shafin malamai na Magana."
+  "shareScoreNote": "Malaminka zai ga makinka, ba shafukanka ko tambayoyinka ba, da zarar an haɗa ajinku da shafin malamai na Magana.",
+  "sayNameWhenLocked": "Faɗi sunan magani idan waya a kulle take",
+  "sayNameNote": "A kashe: allon kulle zai ce “Tunatarwar Magana” kawai. A kunne: allon kulle zai nuna maganin da yawansa, kuma Magana za ta faɗa da ƙarfi a kowane lokaci, don haka mutanen da ke kusa da kai za su iya gani ko ji.",
+  "reminderGenericTitle": "Tunatarwar Magana",
+  "reminderGenericBody": "Buɗe Magana don jin wane magani."
 }

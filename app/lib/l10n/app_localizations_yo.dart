@@ -1441,4 +1441,17 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get shareScoreNote =>
       'Olùkọ́ rẹ yóò rí ìwọ̀n rẹ, kì í ṣe ojú-ìwé tàbí ìbéèrè rẹ, nígbà tí a bá so kíláàsì rẹ pọ̀ mọ́ ojú-òpó olùkọ́ Magana.';
+
+  @override
+  String get sayNameWhenLocked => 'Sọ orúkọ oògùn nígbà tí fóònù bá wà ní títì';
+
+  @override
+  String get sayNameNote =>
+      'Ní pípa: ojú títì yóò sọ “Ìrántí Magana” nìkan. Ní títàn: ojú títì yóò fi oògùn àti iye rẹ̀ hàn, Magana yóò sì sọ wọ́n jáde ní àkókò kọ̀ọ̀kan, nítorí náà àwọn tó wà nítòsí rẹ lè rí tàbí gbọ́ wọn.';
+
+  @override
+  String get reminderGenericTitle => 'Ìrántí Magana';
+
+  @override
+  String get reminderGenericBody => 'Ṣí Magana láti gbọ́ oògùn wo.';
 }

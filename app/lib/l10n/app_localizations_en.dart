@@ -1442,4 +1442,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get shareScoreNote =>
       'Your teacher will see your score, never your pages or questions, once your class is connected to the Magana teacher portal.';
+
+  @override
+  String get sayNameWhenLocked => 'Say the medicine name when locked';
+
+  @override
+  String get sayNameNote =>
+      'Off: the lock screen says only “Magana reminder”. On: the lock screen shows the medicine and how much, and Magana says them aloud at each time, so people near you may see or hear them.';
+
+  @override
+  String get reminderGenericTitle => 'Magana reminder';
+
+  @override
+  String get reminderGenericBody => 'Open Magana to hear which medicine.';
 }

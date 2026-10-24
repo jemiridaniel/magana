@@ -298,4 +298,22 @@ void main() {
     await captureToReader(tester);
     expect(find.bySemanticsLabel(en.explainThis), findsNothing);
   });
+
+  for (final tier in [Tier.guided, Tier.classroom]) {
+    testWidgets('${tier.name}: Ask a question is hidden, by tile and by voice', (
+      tester,
+    ) async {
+      final (speaker, backend, voice, _) = await start(tester, tier: tier);
+      expect(find.bySemanticsLabel(RegExp('^${en.askQuestion}')), findsNothing);
+      if (tier == Tier.guided) {
+        // Classroom sessions have no voice commands for open questions either;
+        // Guided learners can speak commands, but this one isn't offered.
+        await say(tester, voice, 'ask a question');
+        expect(speaker.said.last, en.commandNotUnderstood('ask a question'));
+        await say(tester, voice, 'help');
+        expect(speaker.said.last, isNot(contains(en.askQuestion)));
+      }
+      expect(backend.explains, isEmpty);
+    });
+  }
 }

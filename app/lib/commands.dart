@@ -23,7 +23,9 @@ enum VoiceCommand {
   library(Feature.library, ['library', 'saved']),
   skills(Feature.skills, ['skill', 'lesson']),
   score(Feature.score, ['score', 'independence', 'progress']),
-  ask(Feature.explain, ['ask', 'question', 'explain']),
+  // Like the Home tile: open questions are 18+ (Guided learners use Explain
+  // this from the Reader, on a school page).
+  ask(Feature.openChat, ['ask', 'question', 'explain']),
   language(null, ['language', ...languageWords]),
   settings(null, ['settings', 'setting', 'version']),
   help(null, ['help', 'what can i say', 'commands']),

@@ -1447,4 +1447,17 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get shareScoreNote =>
       'Malaminka zai ga makinka, ba shafukanka ko tambayoyinka ba, da zarar an haɗa ajinku da shafin malamai na Magana.';
+
+  @override
+  String get sayNameWhenLocked => 'Faɗi sunan magani idan waya a kulle take';
+
+  @override
+  String get sayNameNote =>
+      'A kashe: allon kulle zai ce “Tunatarwar Magana” kawai. A kunne: allon kulle zai nuna maganin da yawansa, kuma Magana za ta faɗa da ƙarfi a kowane lokaci, don haka mutanen da ke kusa da kai za su iya gani ko ji.';
+
+  @override
+  String get reminderGenericTitle => 'Tunatarwar Magana';
+
+  @override
+  String get reminderGenericBody => 'Buɗe Magana don jin wane magani.';
 }
