@@ -147,23 +147,29 @@ def number_problem(words: list[str], i: int) -> str | None:
     return None
 
 
-def _line_words(line: dict) -> list[tuple[str, float]]:
+def _line_words(line: dict) -> list[dict]:
     words = line.get("words") or []
     if words:
-        return [(w["text"], w.get("confidence", 1.0)) for w in words]
-    return [(w, line.get("confidence", 1.0)) for w in line.get("text", "").split()]
+        return [{"text": w["text"], "confidence": w.get("confidence", 1.0), "reread_text": w.get("reread_text")}
+                for w in words]
+    return [{"text": w, "confidence": line.get("confidence", 1.0), "reread_text": None}
+            for w in line.get("text", "").split()]
 
 
 def number_warnings(lines: list[dict], threshold: float = CRITICAL_WORD_THRESHOLD) -> list[Warning]:
-    """One warning per critical word that is low-confidence or unreadable."""
+    """One warning per critical word that is unreadable, read differently by its second
+    (cropped) reading, or low-confidence."""
     out = []
     for i, line in enumerate(lines):
         words = _line_words(line)
-        texts = [w for w, _ in words]
-        for j, (word, conf) in enumerate(words):
+        texts = [w["text"] for w in words]
+        for j, w in enumerate(words):
             problem = number_problem(texts, j)
-            if problem is None and _has_digit(word) and conf < threshold:
-                problem = "low_confidence_number"
+            if problem is None and _has_digit(w["text"]):
+                if w["reread_text"] is not None and _digits(w["reread_text"]) != _digits(w["text"]):
+                    problem = "number_mismatch"  # the two readings disagree: never pick one
+                elif w["confidence"] < threshold:
+                    problem = "low_confidence_number"
             if problem:
                 out.append(Warning(i, code=problem, word_index=j))
     return out

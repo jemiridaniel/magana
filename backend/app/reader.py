@@ -18,6 +18,14 @@ from PIL import Image, ImageChops, ImageFilter, ImageOps, ImageStat
 class Word:
     text: str
     confidence: float  # 0-1
+    # Box on the page in pixels; width 0 when the engine gives no word boxes (PaddleOCR).
+    left: int = 0
+    top: int = 0
+    width: int = 0
+    height: int = 0
+    # Numbers only: an independent second reading of a crop around this word.
+    reread_text: str | None = None
+    reread_confidence: float | None = None
 
 
 @dataclass
@@ -29,6 +37,8 @@ class Line:
     height: int = 0
     # Per-word confidence, so one shaky number is not hidden by confident words around it.
     words: list[Word] = field(default_factory=list)
+    left: int = 0
+    width: int = 0  # horizontal extent of the recognised text; 0 if unknown
 
 
 @dataclass
@@ -65,28 +75,37 @@ class OCREngine(Protocol):
 class TesseractEngine:
     """Dev/offline-fallback engine. Groups Tesseract words into lines."""
 
-    def __init__(self, lang: str = "eng"):
+    def __init__(self, lang: str = "eng", psm: int | None = None):
         self.lang = lang
+        self.psm = psm  # Tesseract page segmentation mode; 7 = a single line of text
+
+    def snippet_engine(self) -> "TesseractEngine":
+        """The same engine set up for a small crop holding one word or line."""
+        return TesseractEngine(self.lang, psm=7)
 
     def read(self, image: Image.Image) -> Page:
         import pytesseract
 
-        data = pytesseract.image_to_data(image, lang=self.lang, output_type=pytesseract.Output.DICT)
+        config = f"--psm {self.psm}" if self.psm else ""
+        data = pytesseract.image_to_data(image, lang=self.lang, config=config, output_type=pytesseract.Output.DICT)
         lines: dict[tuple, dict] = {}
         for i, word in enumerate(data["text"]):
             if not word.strip():
                 continue
             key = (data["block_num"][i], data["par_num"][i], data["line_num"][i])
-            entry = lines.setdefault(key, {"words": [], "confs": [], "top": data["top"][i], "bottom": 0})
+            entry = lines.setdefault(key, {"words": [], "confs": [], "boxes": [], "top": data["top"][i], "bottom": 0})
             entry["words"].append(word)
             entry["confs"].append(max(float(data["conf"][i]), 0.0) / 100)
+            entry["boxes"].append((data["left"][i], data["top"][i], data["width"][i], data["height"][i]))
             entry["bottom"] = max(entry["bottom"], data["top"][i] + data["height"][i])
         out = []
         for n, (_, e) in enumerate(sorted(lines.items(), key=lambda kv: kv[1]["top"])):
             conf = sum(e["confs"]) / len(e["confs"])
-            words = [Word(w, round(c, 3)) for w, c in zip(e["words"], e["confs"])]
+            words = [Word(w, round(c, 3), *box) for w, c, box in zip(e["words"], e["confs"], e["boxes"])]
+            left = min(b[0] for b in e["boxes"])
+            right = max(b[0] + b[2] for b in e["boxes"])
             out.append(Line(" ".join(e["words"]), round(conf, 3), e["top"], label=f"line {n + 1}",
-                            height=e["bottom"] - e["top"], words=words))
+                            height=e["bottom"] - e["top"], words=words, left=left, width=right - left))
         return Page(lines=out)
 
 
@@ -260,7 +279,8 @@ def page_from_structure(result: Any) -> Page:
         # PP-OCR scores whole text lines, so each word carries its line's score.
         words = [Word(w, round(score, 3)) for w in text.split()]
         x1y1x2y2 = _xyxy(box)
-        lines.append(Line(text.strip(), round(score, 3), _top(box), height=int(x1y1x2y2[3] - x1y1x2y2[1]), words=words))
+        lines.append(Line(text.strip(), round(score, 3), _top(box), height=int(x1y1x2y2[3] - x1y1x2y2[1]), words=words,
+                          left=int(x1y1x2y2[0]), width=int(x1y1x2y2[2] - x1y1x2y2[0])))
     lines.sort(key=lambda l: l.top)
     for i, l in enumerate(lines):
         l.label = f"line {i + 1}"
@@ -364,6 +384,8 @@ def recover_faint(image: Image.Image, page: Page, engine: OCREngine) -> list[dic
         found = [l for l in engine.read(crop).lines if l.text.strip()]
         for l in found:
             l.top += y0
+            for w in l.words:
+                w.top += y0
         if found:
             page.lines.extend(found)
             spans += [(l.top, l.top + max(l.height, 1)) for l in found]
@@ -375,6 +397,66 @@ def recover_faint(image: Image.Image, page: Page, engine: OCREngine) -> list[dic
     for i, l in enumerate(page.lines):
         l.label = f"line {i + 1}"
     return faint
+
+
+# ---------- Numbers: a second, independent reading of every number
+
+REREAD_HEIGHT = 36  # crops are scaled so text is about this tall (Tesseract misreads larger, e.g. 5 as 9)
+
+
+def _has_digit(text: str) -> bool:
+    return any(ch.isdigit() for ch in text)
+
+
+def _window_crop(image: Image.Image, words: list[Word]) -> Image.Image:
+    """A crop around whole words (the number and its neighbours), scaled, strokes thickened,
+    on a wide white border. Whole neighbouring words, not slivers: a sliver of a letter
+    reads as a 1, and Tesseract's word boxes are too loose to crop one word tightly."""
+    h = max(w.height for w in words)
+    pad_x, pad_y = int(h * 0.25), int(h * 0.3)
+    box = (max(0, min(w.left for w in words) - pad_x), max(0, min(w.top for w in words) - pad_y),
+           min(image.width, max(w.left + w.width for w in words) + pad_x),
+           min(image.height, max(w.top + w.height for w in words) + pad_y))
+    crop = image.convert("L").crop(box)
+    scale = max(1.0, REREAD_HEIGHT / max(h, 1))
+    crop = crop.resize((max(1, int(crop.width * scale)), max(1, int(crop.height * scale))), Image.LANCZOS)
+    crop = crop.filter(ImageFilter.MinFilter(3))  # recovers faint or broken digits (8 read as 6)
+    return ImageOps.expand(crop, border=32, fill=255)
+
+
+def _pick(reread: Page, position: int, count: int) -> Word | None:
+    """The word in the re-read that stands where the number stood in the window."""
+    words = [w for l in reread.lines for w in l.words]
+    if len(words) == count:
+        return words[position]
+    numbers = [w for w in words if _has_digit(w.text)]
+    return numbers[0] if len(numbers) == 1 else None
+
+
+def reread_numbers(image: Image.Image, page: Page, engine: OCREngine) -> None:
+    """Re-read a crop around every number word and store the result on the word, so the
+    safety layer can flag numbers whose two readings disagree. Runs in every mode."""
+    snippet = engine.snippet_engine() if hasattr(engine, "snippet_engine") else engine
+    jobs = []
+    for line in page.lines:
+        boxed = [w for w in line.words if w.width and w.height]
+        for i, w in enumerate(boxed):
+            if _has_digit(w.text):
+                window = boxed[max(0, i - 1): i + 2]
+                jobs.append((w, window, window.index(w)))
+    if not jobs:
+        return
+
+    def reread(job: tuple[Word, list[Word], int]) -> tuple[Word, Word | None]:
+        w, window, position = job
+        return w, _pick(snippet.read(_window_crop(image, window)), position, len(window))
+
+    from concurrent.futures import ThreadPoolExecutor
+
+    with ThreadPoolExecutor(max_workers=4) as pool:
+        for w, found in pool.map(reread, jobs):
+            w.reread_text = found.text if found else ""
+            w.reread_confidence = found.confidence if found else 0.0
 
 
 SECOND_PASS_SCALE = 1.5
@@ -399,6 +481,7 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     engine = engine or default_engine()
     page = engine.read(image)
     faint = recover_faint(image, page, engine)
+    reread_numbers(image, page, engine)
     result = {"tips": capture_check(image), **_page_dict(page), "faint_regions": faint}
     if second_pass:
         result["second_pass"] = _page_dict(engine.read(second_pass_image(image)))

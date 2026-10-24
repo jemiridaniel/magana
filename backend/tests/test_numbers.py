@@ -144,8 +144,9 @@ def test_misread_dose_photos_never_pass_silently_in_health_mode(name):
     assert read_correctly or _dose_line_flagged(body), dose
 
 
-@pytest.mark.parametrize("name", ["dose_faint_q88.jpg", "dose_broken_q88.jpg", "dose_broken_q85.jpg"])
+@pytest.mark.parametrize("name", ["dose_faint.png", "dose_faint_q88.jpg", "dose_broken_q88.jpg", "dose_broken_q85.jpg"])
 def test_misread_dose_photos_are_flagged_in_school_mode_without_a_second_pass(name):
+    # dose_faint.png ("6" at 92%) is caught by re-reading the number's crop, in every mode.
     data = (MISREADS / name).read_bytes()
     body = client.post("/read", files={"file": (name, data)}, data={"mode": "school"}).json()
     dose = next(l for l in body["lines"] if "24" in l["text"])
@@ -172,3 +173,67 @@ def test_second_pass_only_runs_for_health_and_money(monkeypatch):
             assert len(calls) == expected, mode
     finally:
         app.dependency_overrides.clear()
+
+
+# ---------- re-reading each number's crop, in every mode
+
+def reread_line(*words):
+    """words: (text, confidence, reread_text)"""
+    return {"text": " ".join(w[0] for w in words), "confidence": 0.95,
+            "words": [{"text": t, "confidence": c, "reread_text": r} for t, c, r in words]}
+
+
+def test_two_readings_that_disagree_are_flagged():
+    line = reread_line(("than", .96, None), ("6", .95, "8"), ("in", .96, None), ("24", .95, "24"))
+    [w] = safety.number_warnings([line])
+    assert (w.code, w.word_index) == ("number_mismatch", 1)
+
+
+def test_a_number_the_second_reading_cannot_find_is_flagged():
+    line = reread_line(("than", .96, None), ("6", .95, ""))
+    assert [w.code for w in safety.number_warnings([line])] == ["number_mismatch"]
+
+
+def test_agreeing_readings_pass():
+    line = reread_line(("Balance", .96, None), ("N38,750.00", .93, "N38,750.00"))
+    assert safety.number_warnings([line]) == []
+
+
+def test_punctuation_differences_are_not_disagreements():
+    line = reread_line(("Range", .96, None), ("12.0", .95, "12.0."), ("16.0", .95, "16.0"))
+    assert safety.number_warnings([line]) == []
+
+
+def _render(lines, size):
+    from PIL import ImageDraw, ImageFont
+    img = Image.new("RGB", (1500, 100 + 70 * len(lines)), "white")
+    d = ImageDraw.Draw(img)
+    for name in ("DejaVuSans.ttf", "Arial.ttf"):
+        try:
+            font = ImageFont.truetype(name, size)
+            break
+        except OSError:
+            continue
+    else:
+        font = ImageFont.load_default(size=size)
+    for i, t in enumerate(lines):
+        d.text((50, 40 + 70 * i), t, fill="black", font=font)
+    buf = io.BytesIO(); img.save(buf, "PNG"); return buf.getvalue()
+
+
+LABEL = ["Paracetamol 500 mg tablets", "Take 2 tablets every 4 to 6 hours.",
+         "Do not take more than 8 in 24 hours.", "Expiry 08/2027  Batch PCM2291"]
+
+
+@pytest.mark.parametrize("size", [40, 28])
+def test_a_clean_label_raises_no_number_warnings(size):
+    body = client.post("/read", files={"file": ("p.png", _render(LABEL, size))}, data={"mode": "school"}).json()
+    number = {"number_mismatch", "low_confidence_number", "unreadable_number"}
+    assert [w for w in body["warnings"] if w["code"] in number] == []
+
+
+def test_numbers_are_reread_in_every_mode():
+    for mode in ("school", "health", "money"):
+        body = client.post("/read", files={"file": ("p.png", _render(LABEL, 40))}, data={"mode": mode}).json()
+        numbers = [w for l in body["lines"] for w in l["words"] if any(c.isdigit() for c in w["text"])]
+        assert numbers and all(w["reread_text"] is not None for w in numbers), mode
