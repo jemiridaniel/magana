@@ -9,11 +9,15 @@ The danger-sign question ids below must match Ibà's self-report question ids.
 """
 from __future__ import annotations
 
+import logging
 from dataclasses import dataclass
 from enum import Enum
 
 from .iba_client import IbaClient, IbaUnavailable
+from .iba_monitor import IbaMonitor, monitor as iba_monitor
 from .messages import CODES
+
+log = logging.getLogger("magana.triage")
 
 
 class Priority(str, Enum):
@@ -57,29 +61,44 @@ def fallback_assess(answers: dict) -> TriageResult:
     return TriageResult(Priority.URGENT, "nurse_call_within_2_hours", FALLBACK_RULE_VERSION, "fallback")
 
 
-async def assess(answers: dict, client: IbaClient | None) -> TriageResult:
+def _fallback(answers: dict, reason: str, monitor: IbaMonitor) -> TriageResult:
+    if reason != "not_configured":
+        monitor.failure(reason)
+    result = fallback_assess(answers)
+    # Outage answers are marked in the logs (never the answers themselves).
+    log.warning("triage source=fallback reason=%s priority=%s", reason, result.priority.value)
+    return result
+
+
+async def assess(answers: dict, client: IbaClient | None, monitor: IbaMonitor = iba_monitor) -> TriageResult:
     if client is None:
-        return fallback_assess(answers)
+        return _fallback(answers, "not_configured", monitor)
     try:
         body = await client.assess(answers)
         priority = Priority(body["priority"])
         if body["message"] not in CODES:
-            raise IbaUnavailable("unknown_message")
-    except (IbaUnavailable, ValueError):
-        return fallback_assess(answers)
+            raise IbaUnavailable("bad_response")
+    except IbaUnavailable as e:
+        return _fallback(answers, str(e), monitor)
+    except ValueError:
+        return _fallback(answers, "bad_response", monitor)
+    monitor.success()
     result = TriageResult(priority, body["message"], str(body["rule_version"]), "iba")
     if has_danger_sign(answers) and result.priority is not Priority.EMERGENCY:
         # Defence in depth: whatever Ibà says, a danger sign means go now.
-        return TriageResult(Priority.EMERGENCY, "go_to_clinic_now", result.rule_version, "iba+danger_floor")
+        result = TriageResult(Priority.EMERGENCY, "go_to_clinic_now", result.rule_version, "iba+danger_floor")
+    log.info("triage source=%s priority=%s", result.source, result.priority.value)
     return result
 
 
-async def questions(lang: str, client: IbaClient | None) -> tuple[list[dict], str]:
+async def questions(lang: str, client: IbaClient | None, monitor: IbaMonitor = iba_monitor) -> tuple[list[dict], str]:
     """Ibà's questions in `lang` (its wording, signed off clinically), or the fallback set."""
     if client is not None:
         try:
             qs = await client.questions(lang)
+            monitor.success()
             return [{**q, "message": f"q_{q['id']}"} for q in qs], "iba"
-        except IbaUnavailable:
-            pass
+        except IbaUnavailable as e:
+            monitor.failure(str(e))
+            log.warning("triage questions source=fallback reason=%s", e)
     return FALLBACK_QUESTIONS, "fallback"

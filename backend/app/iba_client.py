@@ -45,18 +45,28 @@ class IbaClient:
 
         try:
             return await asyncio.wait_for(go(), timeout=self.deadline_s)
-        except (asyncio.TimeoutError, httpx.HTTPError, ValueError) as e:
-            raise IbaUnavailable(type(e).__name__) from e
+        except (asyncio.TimeoutError, httpx.TimeoutException) as e:
+            raise IbaUnavailable("timeout") from e
+        except httpx.HTTPStatusError as e:
+            raise IbaUnavailable(f"http_{e.response.status_code}") from e
+        except httpx.HTTPError as e:
+            raise IbaUnavailable("connection") from e
+        except ValueError as e:
+            raise IbaUnavailable("bad_response") from e
+
+    async def health(self) -> None:
+        """Raises IbaUnavailable unless Ibà answers its key-protected health check."""
+        await self._call("GET", "/v1/health")
 
     async def questions(self, lang: str) -> list[dict]:
         body = await self._call("GET", "/v1/questions", params={"mode": "self_report", "lang": lang})
         qs = body.get("questions") if isinstance(body, dict) else None
         if not isinstance(qs, list) or not all(isinstance(q, dict) and "id" in q for q in qs):
-            raise IbaUnavailable("bad_questions")
+            raise IbaUnavailable("bad_response")
         return qs
 
     async def assess(self, answers: dict) -> dict:
         body = await self._call("POST", "/v1/assess", json={"mode": "self_report", "answers": answers})
         if not isinstance(body, dict) or not {"priority", "message", "rule_version"} <= set(body):
-            raise IbaUnavailable("bad_assessment")
+            raise IbaUnavailable("bad_response")
         return body

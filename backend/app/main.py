@@ -1,7 +1,9 @@
 """Magana API (hackathon MVP)."""
 from __future__ import annotations
 
+import asyncio
 import io
+from contextlib import asynccontextmanager
 from functools import lru_cache
 import os
 
@@ -11,11 +13,38 @@ from PIL import Image
 from pydantic import BaseModel
 
 from . import policy, safety, triage
-from .iba_client import IbaClient
+from .iba_client import IbaClient, IbaUnavailable
+from .iba_monitor import monitor as iba_monitor
 from .messages import CodedError
 from .reader import SECOND_PASS_SCALE, OCREngine, default_engine, read_page
 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Probe Ibà in the background, so an outage is noticed (and alerted after 10 minutes)
+    even when nobody is using the quick check."""
+    task = None
+    interval = float(os.environ.get("IBA_PROBE_S", "60"))
+    if IbaClient.from_env() is not None and interval > 0:
+        task = asyncio.create_task(_probe_iba(interval))
+    yield
+    if task:
+        task.cancel()
+
+
+async def _probe_iba(interval: float) -> None:
+    while True:
+        client = IbaClient.from_env()
+        if client is not None:
+            try:
+                await client.health()
+                iba_monitor.success()
+            except IbaUnavailable as e:
+                iba_monitor.failure(str(e))
+        await asyncio.sleep(interval)
+
+
 app = FastAPI(
+    lifespan=lifespan,
     title="Magana API",
     version="0.2.0",
     description="Responses carry message codes, never sentences; see app/messages.py for the English reference.",
@@ -46,7 +75,8 @@ def get_engine() -> OCREngine:
 
 @app.get("/health")
 def health() -> dict:
-    return {"status": "ok"}
+    iba = {"configured": bool(os.environ.get("IBA_API_URL", "").strip()), **iba_monitor.status()}
+    return {"status": "ok", "iba": iba}
 
 
 @app.post("/read")
