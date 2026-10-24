@@ -10,38 +10,107 @@ import 'package:record/record.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
-import 'api.dart';
+import 'package:flutter/widgets.dart' show BuildContext;
 
-/// Short spoken answers and commands. The phone's own recogniser by default; with
-/// --dart-define=MAGANA_ASR=server, NCAIR1's Hausa, Yorùbá, Igbo and Nigerian-English
-/// models on the Magana server first, falling back to the phone (docs/MODELS.md).
+import 'api.dart';
+import 'app_scope.dart';
+import 'platform/speech_support.dart';
+import 'policy.dart';
+
+/// Short spoken answers and commands (docs/PRIVACY.md, "Spoken answers"). Tried in order:
+/// 1. the phone's **on-device** recogniser, where Android has one: audio stays on the phone;
+/// 2. Magana's own server ASR (NCAIR1's Hausa, Yorùbá, Igbo and Nigerian-English models);
+/// 3. for adults (18+) only, the phone's usual recogniser, which may send audio to Google
+///    or the phone maker. Guided and Classroom (under-18) accounts never use it;
+/// then nothing: the screen offers tapping the answer instead.
 abstract class VoiceInput {
-  /// False when the phone has no recogniser or the microphone was refused.
+  /// False when no recogniser can be used or the microphone was refused.
   Future<bool> init();
 
   /// Listens until the person pauses. Returns what was heard, best guess
   /// first, or nothing. [language] is the speech to expect (en, ha, yo, ig).
-  /// Audio is never saved by Magana.
+  /// Audio is never saved by Magana. Throws [VoiceStepFailed] if this
+  /// recogniser failed (not merely heard nothing).
   Future<List<String>> listen({String language = 'en'});
 
   Future<void> stop();
 }
 
-const _asr = String.fromEnvironment('MAGANA_ASR', defaultValue: 'device');
+class VoiceStepFailed implements Exception {
+  VoiceStepFailed(this.reason);
+  final String reason;
+  @override
+  String toString() => 'VoiceStepFailed($reason)';
+}
+
+/// The recognisers a tier may use, in order (see [VoiceInput]).
+List<VoiceInput> voiceSteps(Tier tier) => [
+  SpeechVoiceInput(onDevice: true),
+  if (!kIsWeb) ServerVoiceInput(),
+  if (tier == Tier.standard) SpeechVoiceInput(onDevice: false),
+];
 
 /// Replaceable in tests.
-VoiceInput Function() voiceInput = () => _asr == 'server' && !kIsWeb
-    ? HybridVoiceInput(ServerVoiceInput(), SpeechVoiceInput())
-    : SpeechVoiceInput();
+VoiceInput Function(Tier tier) voiceInput = (tier) =>
+    ChainVoiceInput(voiceSteps(tier));
+
+/// The voice input for whoever is using the app now (most restrictive until a
+/// tier is chosen).
+VoiceInput voiceInputFor(BuildContext context) =>
+    voiceInput(AppScope.of(context).profile.tier ?? Tier.classroom);
+
+class ChainVoiceInput implements VoiceInput {
+  ChainVoiceInput(this.steps);
+  final List<VoiceInput> steps;
+  final _usable = <VoiceInput, bool>{};
+  VoiceInput? _current;
+
+  Future<bool> _ready(VoiceInput step) async =>
+      _usable[step] ??= await step.init().catchError((_) => false);
+
+  @override
+  Future<bool> init() async {
+    for (final step in steps) {
+      if (await _ready(step)) return true;
+    }
+    return false;
+  }
+
+  @override
+  Future<List<String>> listen({String language = 'en'}) async {
+    for (final step in steps) {
+      if (!await _ready(step)) continue;
+      try {
+        _current = step;
+        return await step.listen(language: language);
+      } catch (e) {
+        debugPrint('voice: ${step.runtimeType} failed ($e), trying the next');
+        _usable[step] = false; // not again this session
+      } finally {
+        _current = null;
+      }
+    }
+    throw VoiceStepFailed('no recogniser');
+  }
+
+  @override
+  Future<void> stop() async => _current?.stop();
+}
 
 class SpeechVoiceInput implements VoiceInput {
+  SpeechVoiceInput({required this.onDevice});
+
+  /// Only the phone's on-device recogniser, checked first: speech_to_text quietly
+  /// uses the network recogniser when the phone has no on-device one.
+  final bool onDevice;
   final _stt = SpeechToText();
   Completer<List<String>>? _pending;
-  String? _locale;
+  List<LocaleName> _locales = const [];
 
   @override
   Future<bool> init() async {
     try {
+      if (onDevice && !await onDeviceSpeechAvailable()) return false;
       final ok = await _stt.initialize(
         onStatus: (status) {
           if (status != SpeechToText.doneStatus) return;
@@ -51,29 +120,45 @@ class SpeechVoiceInput implements VoiceInput {
             if (identical(_pending, waiting)) _finish(const []);
           });
         },
-        onError: (_) => _finish(const []),
+        onError: (e) =>
+            e.errorMsg == 'error_no_match' ||
+                e.errorMsg == 'error_speech_timeout'
+            ? _finish(const []) // heard nothing: not a failure
+            : _fail(e.errorMsg),
       );
       if (!ok) return false;
-      // Nigerian English when the phone has it; the quiz is in English.
-      final locales = await _stt.locales();
-      _locale = [
-        for (final l in locales)
-          if (l.localeId.replaceAll('-', '_') == 'en_NG') l.localeId,
-      ].firstOrNull;
+      _locales = await _stt.locales();
       return true;
     } catch (_) {
       return false;
     }
   }
 
+  /// Nigerian variant first, then any of the language; null means the default
+  /// (English only: another language without a model is a failure).
+  String? _localeFor(String language) {
+    String norm(LocaleName l) => l.localeId.replaceAll('-', '_');
+    final ng = _locales.where((l) => norm(l) == '${language}_NG').firstOrNull;
+    final any = _locales
+        .where((l) => norm(l).startsWith('${language}_'))
+        .firstOrNull;
+    final found = (ng ?? any)?.localeId;
+    if (found == null && language != 'en') {
+      throw VoiceStepFailed('no $language recogniser');
+    }
+    return found;
+  }
+
   @override
   Future<List<String>> listen({String language = 'en'}) async {
     _finish(const []);
+    final locale = _localeFor(language);
     final done = _pending = Completer<List<String>>();
     await _stt.listen(
       onResult: _onResult,
       listenOptions: SpeechListenOptions(
-        localeId: _locale,
+        localeId: locale,
+        onDevice: onDevice,
         partialResults: false,
         cancelOnError: true,
         listenMode: ListenMode.confirmation,
@@ -98,6 +183,12 @@ class SpeechVoiceInput implements VoiceInput {
     if (c != null && !c.isCompleted) c.complete(heard);
   }
 
+  void _fail(String reason) {
+    final c = _pending;
+    _pending = null;
+    if (c != null && !c.isCompleted) c.completeError(VoiceStepFailed(reason));
+  }
+
   @override
   Future<void> stop() => _stt.stop();
 }
@@ -106,10 +197,13 @@ class SpeechVoiceInput implements VoiceInput {
 /// speech, at most 8 s), sends it to the server's /asr and deletes it at once.
 class ServerVoiceInput implements VoiceInput {
   ServerVoiceInput({AudioRecorder? recorder, http.Client? client})
-    : _recorder = recorder ?? AudioRecorder(),
+    : _given = recorder,
       _client = client ?? http.Client();
 
-  final AudioRecorder _recorder;
+  final AudioRecorder? _given;
+  AudioRecorder? _made;
+  // Created on first use: the recorder starts the native plugin.
+  AudioRecorder get _recorder => _given ?? (_made ??= AudioRecorder());
   final http.Client _client;
   Completer<void>? _stopped;
 
@@ -162,7 +256,7 @@ class ServerVoiceInput implements VoiceInput {
       final res = await http.Response.fromStream(await _client.send(req))
           .timeout(const Duration(seconds: 15));
       if (res.statusCode != 200) {
-        throw AsrUnavailable(res.statusCode.toString());
+        throw VoiceStepFailed('server ASR ${res.statusCode}');
       }
       final text =
           (jsonDecode(utf8.decode(res.bodyBytes)) as Map)['text'] as String? ??
@@ -177,45 +271,5 @@ class ServerVoiceInput implements VoiceInput {
   Future<void> stop() async {
     final s = _stopped;
     if (s != null && !s.isCompleted) s.complete();
-  }
-}
-
-class AsrUnavailable implements Exception {
-  AsrUnavailable(this.reason);
-  final String reason;
-}
-
-/// Server ASR first; if the server has none, is unreachable or fails, the phone's
-/// own recogniser answers instead (and is used from then on this session).
-class HybridVoiceInput implements VoiceInput {
-  HybridVoiceInput(this.server, this.device);
-  final VoiceInput server;
-  final VoiceInput device;
-  bool _serverWorks = true;
-  bool? _deviceReady;
-
-  @override
-  Future<bool> init() async => await server.init() || await _initDevice();
-
-  Future<bool> _initDevice() async => _deviceReady ??= await device.init();
-
-  @override
-  Future<List<String>> listen({String language = 'en'}) async {
-    if (_serverWorks) {
-      try {
-        return await server.listen(language: language);
-      } catch (e) {
-        debugPrint('server ASR unavailable, using the phone: $e');
-        _serverWorks = false;
-      }
-    }
-    if (!await _initDevice()) return const [];
-    return device.listen(language: language);
-  }
-
-  @override
-  Future<void> stop() async {
-    await server.stop();
-    await device.stop();
   }
 }

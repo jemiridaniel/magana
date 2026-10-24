@@ -1504,4 +1504,30 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get msg_explain_not_available =>
       'Nkọwa adịbeghị. Lee peeji ahụ, a gụrụ ya kpọmkwem ka e si bipụta ya.';
+
+  @override
+  String quizConfirm(String answer) {
+    return 'Ị kwuru $answer. Ọ bụ eziokwu?';
+  }
+
+  @override
+  String quizConfirmYes(String answer) {
+    return 'Ee, $answer';
+  }
+
+  @override
+  String get quizConfirmNo => 'Mba, jụọ m ọzọ';
+
+  @override
+  String get quizSayYesOrNo => 'Kwuo ee ma ọ bụ mba';
+
+  @override
+  String get quizSayAgain => 'Biko kwughachi azịza gị.';
+
+  @override
+  String get quizTapInstead =>
+      'O siri m ike ịnụ gị. Biko pịa azịza gị ugboro abụọ kama.';
+
+  @override
+  String get quizSayTrueFalse => 'Kwuo eziokwu ma ọ bụ ụgha';
 }

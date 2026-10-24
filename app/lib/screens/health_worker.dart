@@ -214,7 +214,7 @@ class QuickCheckScreen extends StatefulWidget {
 }
 
 class _QuickCheckScreenState extends State<QuickCheckScreen> {
-  final VoiceInput _voice = voiceInput();
+  late final VoiceInput _voice = voiceInputFor(context);
   bool? _voiceWorks;
   bool _listening = false;
   List<TriageQuestion>? _questions;
@@ -308,7 +308,16 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
     }
     await speaker.stop();
     setState(() => _listening = true);
-    final heard = await _voice.listen(language: lang);
+    final List<String> heard;
+    try {
+      heard = await _voice.listen(language: lang);
+    } on VoiceStepFailed {
+      // No recogniser this account may use: tap instead.
+      if (!mounted) return;
+      setState(() => _listening = false);
+      speaker.say(_l.voiceCommandsUnavailable);
+      return;
+    }
     if (!mounted) return;
     setState(() => _listening = false);
     final q = _asked[_index];

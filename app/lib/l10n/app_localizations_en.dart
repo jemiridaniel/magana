@@ -1503,4 +1503,30 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get msg_explain_not_available =>
       'Explain isn\'t available yet. Here is the page, read exactly as printed.';
+
+  @override
+  String quizConfirm(String answer) {
+    return 'You said $answer. Is that right?';
+  }
+
+  @override
+  String quizConfirmYes(String answer) {
+    return 'Yes, $answer';
+  }
+
+  @override
+  String get quizConfirmNo => 'No, ask me again';
+
+  @override
+  String get quizSayYesOrNo => 'Say yes or no';
+
+  @override
+  String get quizSayAgain => 'Please say your answer again.';
+
+  @override
+  String get quizTapInstead =>
+      'I\'m having trouble hearing you. Please double tap your answer instead.';
+
+  @override
+  String get quizSayTrueFalse => 'Say true or false';
 }

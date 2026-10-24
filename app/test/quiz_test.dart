@@ -22,6 +22,7 @@ class FakeVoice implements VoiceInput {
   final replies = <List<String>>[];
   int listens = 0;
   final languages = <String>[];
+  final tiers = <Tier>[]; // which account asked for a recogniser
 
   @override
   Future<bool> init() async => works;
@@ -83,7 +84,7 @@ Future<(FakeSpeaker, FakeVoice)> openQuiz(
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
   final voice = FakeVoice(works: voiceWorks);
-  voiceInput = () => voice;
+  voiceInput = (tier) => voice..tiers.add(tier);
   final profile = ProfileController(
     tier: tier,
     consentAt: tier == Tier.guided ? DateTime(2026) : null,
@@ -125,10 +126,11 @@ Future<void> tap(WidgetTester tester, Pattern label) async {
 Future<void> say(
   WidgetTester tester,
   FakeVoice voice,
-  List<String> words,
-) async {
+  List<String> words, {
+  String? button,
+}) async {
   voice.replies.add(words);
-  await tap(tester, en.quizSayAnswer);
+  await tap(tester, button ?? en.quizSayAnswer);
 }
 
 void main() {
@@ -205,7 +207,51 @@ void main() {
     }
   });
 
-  testWidgets('spoken answer marked right, read aloud, TalkBack labels', (
+  group('short spoken answers in each language', () {
+    test('letters as Yorùbá, Hausa and Igbo speakers say them', () {
+      for (final (said, want) in [
+        ('bí', 1),
+        ('Bí', 1),
+        ('dí', 3),
+        ('sí', 2),
+        ('à', 0),
+        ('bi', 1),
+      ]) {
+        expect(answered(hearOne(said, starch)), want, reason: said);
+      }
+    });
+
+    const tf = QuizQuestion(
+      id: 'tf',
+      question: 'Iodine turns blue-black with starch.',
+      options: ['True', 'False'],
+      answer: 0,
+      explanation: '',
+      type: 'true_false',
+    );
+
+    test('true or false, in four languages', () {
+      for (final (said, want) in [
+        ('true', 0),
+        ('false', 1),
+        ('yes', 0),
+        ('no', 1),
+        ('bẹ́ẹ̀ni', 0),
+        ('rárá', 1),
+        ('i', 0),
+        ("a'a", 1),
+        ('ee', 0),
+        ('mba', 1),
+        ("I think it's false", 1),
+      ]) {
+        expect(answered(hearOne(said, tf)), want, reason: said);
+      }
+      expect(hearOne('true false', tf), isA<Unclear>());
+      expect(tf.spokenAnswer(0), 'True');
+    });
+  });
+
+  testWidgets('spoken answer: confirmed first, then marked right', (
     tester,
   ) async {
     final handle = tester.ensureSemantics();
@@ -219,6 +265,13 @@ void main() {
     await say(tester, voice, ['bee']);
     expect(voice.listens, 1);
     expect(voice.languages, ['en']); // the quiz is in English
+    // Not marked yet: "You said B. Is that right?"
+    expect(speaker.said.last, en.quizConfirm('B'));
+    expect(find.bySemanticsLabel(en.quizScoreLabel(0, 0)), findsOneWidget);
+    expect(find.bySemanticsLabel(en.quizSayYesOrNo), findsOneWidget);
+    expectAccessible(tester, 'Quiz confirming');
+
+    await say(tester, voice, ['yes'], button: en.quizSayYesOrNo);
     final right =
         '${en.quizCorrect('B')} '
         'Iodine solution turns blue-black when starch is present.';
@@ -232,9 +285,30 @@ void main() {
     handle.dispose();
   });
 
-  testWidgets('wrong answer: says the right one and marks it', (tester) async {
+  testWidgets('a misheard answer is never marked wrong', (tester) async {
+    final (speaker, voice) = await openQuiz(tester);
+    // The learner meant B; the recogniser heard A.
+    await say(tester, voice, ['A']);
+    expect(speaker.said.last, en.quizConfirm('A'));
+    await say(tester, voice, ['no'], button: en.quizSayYesOrNo);
+    expect(speaker.said.last, en.quizSayAgain);
+    expect(find.bySemanticsLabel(en.quizScoreLabel(0, 0)), findsOneWidget);
+    expect(find.bySemanticsLabel(RegExp(en.quizYourAnswerWrong)), findsNothing);
+    // Second failed try: tap instead.
+    await say(tester, voice, ['A']);
+    await tap(tester, en.quizConfirmNo);
+    expect(speaker.said.last, en.quizTapInstead);
+    expect(find.bySemanticsLabel(en.quizScoreLabel(0, 0)), findsOneWidget);
+    await tap(tester, 'B. Iodine solution');
+    expect(find.bySemanticsLabel(en.quizScoreLabel(1, 1)), findsOneWidget);
+  });
+
+  testWidgets('wrong answer, confirmed by tapping Yes: says the right one', (
+    tester,
+  ) async {
     final (speaker, voice) = await openQuiz(tester);
     await say(tester, voice, ['option a']);
+    await tap(tester, en.quizConfirmYes('A'));
     expect(
       speaker.said.last,
       startsWith(en.quizWrong('A', 'B, Iodine solution')),
@@ -259,17 +333,18 @@ void main() {
     expectAccessible(tester, 'Quiz after answering');
   });
 
-  testWidgets('unclear or silent: asks again and marks nothing', (
+  testWidgets('unclear, then silent: tap instead; marks nothing', (
     tester,
   ) async {
     final (speaker, voice) = await openQuiz(tester);
     await say(tester, voice, ['banana bread']);
     expect(speaker.said.last, en.quizUnclear('banana bread'));
     await say(tester, voice, []);
-    expect(speaker.said.last, en.quizNothingHeard);
+    expect(speaker.said.last, en.quizTapInstead); // second failed try
     expect(find.bySemanticsLabel(en.quizScoreLabel(0, 0)), findsOneWidget);
-    // Still answerable.
+    // Still answerable by voice.
     await say(tester, voice, ['iodine']);
+    await say(tester, voice, ['yes'], button: en.quizSayYesOrNo);
     expect(find.bySemanticsLabel(en.quizScoreLabel(1, 1)), findsOneWidget);
   });
 
@@ -297,6 +372,7 @@ void main() {
     final (speaker, voice) = await openQuiz(tester);
     for (var i = 0; i < 10; i++) {
       await say(tester, voice, ['A']);
+      await say(tester, voice, ['yes'], button: en.quizSayYesOrNo);
       await tap(tester, i < 9 ? en.quizNext : en.quizFinish);
     }
     // Only the malaria question's answer is A.
@@ -307,10 +383,14 @@ void main() {
     expect(find.bySemanticsLabel(en.quizScoreLabel(0, 0)), findsOneWidget);
   });
 
-  for (final tier in [Tier.guided, Tier.classroom]) {
-    testWidgets('${tier.name}: the quiz is open to learners', (tester) async {
-      await openQuiz(tester, tier: tier);
+  for (final tier in Tier.values) {
+    testWidgets('${tier.name}: the recogniser is chosen for this account', (
+      tester,
+    ) async {
+      final (_, voice) = await openQuiz(tester, tier: tier);
       expect(find.text(en.quizProgress(1, 10)), findsOneWidget);
+      await say(tester, voice, ['B']);
+      expect(voice.tiers.toSet(), {tier});
     });
   }
 }

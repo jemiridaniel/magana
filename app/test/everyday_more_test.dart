@@ -135,7 +135,7 @@ Future<(FakeSpeaker, Backend, FakeVoice)> start(
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
   final voice = FakeVoice();
-  voiceInput = () => voice;
+  voiceInput = (tier) => voice..tiers.add(tier);
   dial = (_) async {};
   final backend = Backend(reply);
   final profile = ProfileController(

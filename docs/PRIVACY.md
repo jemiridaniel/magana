@@ -18,13 +18,26 @@
 | **Photo of a page** | Sent over HTTPS to the Magana server, read in memory | **No.** Deleted as soon as it is read. The phone's own copy is deleted once its bytes are sent. |
 | **The text Magana read** | Back to your phone | Only if you choose **Save to my library**: on your phone, deleted after 30 days |
 | **Text you ask Magana to explain** | In tester and production builds, only to an explanation server **approved** in docs/MODELS.md. None is approved yet, so today **no page text leaves the Magana server**: the app says "Explain isn't available yet" and reads the page. When a server is approved, it gets the page text (unclear numbers already masked) and your question. | Not stored by Magana. An approved server must not keep or log it. |
-| **Spoken answers and commands** | By default, your phone's own speech recognition (Google, Samsung or another service, depending on your phone), which may send the audio to that company. If the Magana server has its own speech recognition turned on, the audio goes to the Magana server instead | Magana deletes the recording at once and never stores it |
+| **Spoken answers and commands** | See "Speech recognition" below. In short: on the phone where possible, otherwise Magana's own server. Only adults' audio may go to Google or the phone maker, as a last resort | Magana deletes any recording at once and never stores it |
 | **Quick health check answers** | Sent to the Ibà service, which works out how soon a nurse should call | **No.** Never logged or stored. Logs record only which rules answered and the priority. |
 | **Call-back request** | Your reason (medicine, results, other), call language and priority go to the nurse desk once one is set up | Kept by the desk to arrange the call. Today no desk is connected and the app says so. |
 | **Medicine reminders** | On your phone only | Until you delete them |
 | **Questions saved for your next visit** | On your phone only | Until you remove them |
 | **Independence Score and task counts** | On your phone only (what you read and when, for 90 days) | "Share my score with my teacher" sends nothing until your class is connected to the teacher portal |
 | **Age group, guardian consent, language** | On your phone. Every request tells the server your age group, so it can refuse what that group may not use | Classroom (under 13) sessions are never saved |
+
+## Speech recognition
+
+> **For review by Oluremi O. Balogun** (consent and safeguarding) before testing with learners.
+
+When you answer the quiz, speak a command or ask a question, Magana tries these in order:
+
+1. **Your phone's on-device recogniser,** where Android has one (usually Android 12 or later with an offline speech model). **The audio never leaves your phone.** Magana asks Android whether real on-device recognition is available; it does not just "prefer" offline.
+2. **Magana's own speech recognition server** (NCAIR1's Hausa, Yorùbá, Igbo and Nigerian-English models). The short recording is sent over HTTPS, recognised in memory and deleted at once; it is never stored.
+3. **Adults (18+) only:** the phone's usual recogniser, which may send the audio to Google or the phone maker.
+4. **Otherwise: tap your answer.** Every question and button works by tapping (double tap with TalkBack).
+
+**Learners under 18** (Guided and Classroom accounts) **never use step 3.** If neither the phone nor Magana's server can recognise their speech, the app asks them to tap instead.
 
 ## Development and testing with Kaggle
 

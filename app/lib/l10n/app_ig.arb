@@ -393,5 +393,12 @@
   "aboutSpeech": "Nghọta olu",
   "openSourceLicences": "Ikikere isi mmalite mepere emepe",
   "aboutContact": "Ajụjụ ma ọ bụ nsogbu: zigara {email} ozi email",
-  "msg_explain_not_available": "Nkọwa adịbeghị. Lee peeji ahụ, a gụrụ ya kpọmkwem ka e si bipụta ya."
+  "msg_explain_not_available": "Nkọwa adịbeghị. Lee peeji ahụ, a gụrụ ya kpọmkwem ka e si bipụta ya.",
+  "quizConfirm": "Ị kwuru {answer}. Ọ bụ eziokwu?",
+  "quizConfirmYes": "Ee, {answer}",
+  "quizConfirmNo": "Mba, jụọ m ọzọ",
+  "quizSayYesOrNo": "Kwuo ee ma ọ bụ mba",
+  "quizSayAgain": "Biko kwughachi azịza gị.",
+  "quizTapInstead": "O siri m ike ịnụ gị. Biko pịa azịza gị ugboro abụọ kama.",
+  "quizSayTrueFalse": "Kwuo eziokwu ma ọ bụ ụgha"
 }

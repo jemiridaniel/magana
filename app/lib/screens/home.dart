@@ -551,7 +551,7 @@ class _SpeakButton extends StatefulWidget {
 }
 
 class _SpeakButtonState extends State<_SpeakButton> {
-  final VoiceInput _voice = voiceInput();
+  late final VoiceInput _voice = voiceInputFor(context);
   bool? _works;
   bool _listening = false;
 
@@ -577,7 +577,16 @@ class _SpeakButtonState extends State<_SpeakButton> {
     await speaker.stop();
     setState(() => _listening = true);
     // Commands are English keywords for now.
-    final heard = await _voice.listen(language: 'en');
+    final List<String> heard;
+    try {
+      heard = await _voice.listen(language: 'en');
+    } on VoiceStepFailed {
+      // No recogniser this account may use: tap instead.
+      if (!mounted) return;
+      setState(() => _listening = false);
+      speaker.say(l.voiceCommandsUnavailable);
+      return;
+    }
     if (!mounted) return;
     setState(() => _listening = false);
     if (heard.isEmpty) {

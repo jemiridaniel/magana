@@ -125,14 +125,18 @@ class _ReaderScreenState extends State<ReaderScreen> {
   /// and offers to save the question for the next visit or ask a nurse.
   Future<void> _askAboutResult() async {
     final lang = Localizations.localeOf(context).languageCode;
+    final voice = voiceInputFor(context);
     _run++;
     setState(() => _playing = false);
     await _speaker.stop();
-    final voice = voiceInput();
     String? question;
-    if (await voice.init()) {
-      final heard = await voice.listen(language: lang);
-      if (heard.isNotEmpty) question = heard.first;
+    try {
+      if (await voice.init()) {
+        final heard = await voice.listen(language: lang);
+        if (heard.isNotEmpty) question = heard.first;
+      }
+    } on VoiceStepFailed {
+      // No recogniser this account may use: the fixed answer still follows.
     }
     if (!mounted) return;
     setState(() {
@@ -855,12 +859,18 @@ class _FindDialogState extends State<_FindDialog> {
   Future<void> _speak() async {
     final l = AppLocalizations.of(context);
     final speaker = AppScope.of(context).speaker;
-    final voice = voiceInput();
+    final voice = voiceInputFor(context);
     if (!await voice.init()) {
       speaker.say(l.voiceCommandsUnavailable);
       return;
     }
-    final heard = await voice.listen(language: 'en');
+    final List<String> heard;
+    try {
+      heard = await voice.listen(language: 'en');
+    } on VoiceStepFailed {
+      speaker.say(l.voiceCommandsUnavailable);
+      return;
+    }
     if (heard.isNotEmpty && mounted) Navigator.of(context).pop(heard.first);
   }
 

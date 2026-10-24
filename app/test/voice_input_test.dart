@@ -1,8 +1,17 @@
+import 'package:app/platform/speech_support.dart';
+import 'package:app/policy.dart';
 import 'package:app/voice_input.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+/// A recogniser step with a scripted outcome.
 class Scripted implements VoiceInput {
-  Scripted({this.works = true, this.fails = false, this.reply = const []});
+  Scripted(
+    this.name, {
+    this.works = true,
+    this.fails = false,
+    this.reply = const [],
+  });
+  final String name;
   final bool works;
   final bool fails;
   final List<String> reply;
@@ -14,7 +23,7 @@ class Scripted implements VoiceInput {
   @override
   Future<List<String>> listen({String language = 'en'}) async {
     languages.add(language);
-    if (fails) throw AsrUnavailable('503');
+    if (fails) throw VoiceStepFailed('$name failed');
     return reply;
   }
 
@@ -22,29 +31,103 @@ class Scripted implements VoiceInput {
   Future<void> stop() async {}
 }
 
+/// What each step in a tier's chain is: on-device, server, or the network recogniser.
+List<String> kinds(Tier tier) => [
+  for (final s in voiceSteps(tier))
+    switch (s) {
+      SpeechVoiceInput(onDevice: true) => 'on-device',
+      SpeechVoiceInput(onDevice: false) => 'network',
+      ServerVoiceInput() => 'server',
+      _ => 'other',
+    },
+];
+
 void main() {
-  test('server ASR answers first, in the requested language', () async {
-    final server = Scripted(reply: ['Ina son karanta']);
-    final device = Scripted(reply: ['phone']);
-    final v = HybridVoiceInput(server, device);
-    expect(await v.init(), isTrue);
-    expect(await v.listen(language: 'ha'), ['Ina son karanta']);
-    expect(server.languages, ['ha']);
-    expect(device.languages, isEmpty);
+  TestWidgetsFlutterBinding.ensureInitialized();
+
+  group('which recognisers each tier may use', () {
+    test(
+      '18+: on-device, then Magana server, then the phone network recogniser',
+      () {
+        expect(kinds(Tier.standard), ['on-device', 'server', 'network']);
+      },
+    );
+
+    for (final tier in [Tier.guided, Tier.classroom]) {
+      test(
+        '${tier.name} (under 18): never a recogniser that sends audio away',
+        () {
+          expect(kinds(tier), ['on-device', 'server']);
+          expect(kinds(tier), isNot(contains('network')));
+        },
+      );
+    }
   });
 
-  test('server without ASR or down: the phone answers, from then on', () async {
-    final server = Scripted(fails: true);
-    final device = Scripted(reply: ['option B']);
-    final v = HybridVoiceInput(server, device);
-    expect(await v.listen(language: 'en'), ['option B']);
-    expect(await v.listen(language: 'en'), ['option B']);
-    expect(server.languages, hasLength(1)); // not retried every time
-    expect(device.languages, ['en', 'en']);
+  test('on-device is only used when the phone really has it', () async {
+    // speech_to_text quietly uses the network recogniser when there is no
+    // on-device one, so Magana checks first and refuses.
+    final original = onDeviceSpeechAvailable;
+    onDeviceSpeechAvailable = () async => false;
+    addTearDown(() => onDeviceSpeechAvailable = original);
+    expect(await SpeechVoiceInput(onDevice: true).init(), isFalse);
   });
 
-  test('no microphone for either: nothing heard', () async {
-    final v = HybridVoiceInput(Scripted(fails: true), Scripted(works: false));
-    expect(await v.listen(), isEmpty);
+  group('the chain', () {
+    test('on-device first, when the phone has it', () async {
+      final onDevice = Scripted('on-device', reply: ['B']);
+      final server = Scripted('server', reply: ['server']);
+      final v = ChainVoiceInput([onDevice, server]);
+      expect(await v.listen(language: 'en'), ['B']);
+      expect(server.languages, isEmpty);
+    });
+
+    test(
+      'no on-device recogniser: our server ASR, in the right language',
+      () async {
+        final server = Scripted('server', reply: ['Ina son karanta']);
+        final v = ChainVoiceInput([
+          Scripted('on-device', works: false),
+          server,
+        ]);
+        expect(await v.init(), isTrue);
+        expect(await v.listen(language: 'ha'), ['Ina son karanta']);
+        expect(server.languages, ['ha']);
+      },
+    );
+
+    test(
+      'under 18, both fail: no recogniser, so the screen offers tapping',
+      () async {
+        final v = ChainVoiceInput([
+          Scripted('on-device', works: false),
+          Scripted('server', fails: true),
+        ]);
+        await expectLater(v.listen(), throwsA(isA<VoiceStepFailed>()));
+      },
+    );
+
+    test('18+, both fail: the phone network recogniser', () async {
+      final network = Scripted('network', reply: ['option B']);
+      final server = Scripted('server', fails: true);
+      final v = ChainVoiceInput([
+        Scripted('on-device', works: false),
+        server,
+        network,
+      ]);
+      expect(await v.listen(), ['option B']);
+      expect(await v.listen(), ['option B']);
+      expect(server.languages, hasLength(1)); // a failed step isn't retried
+    });
+
+    test(
+      'heard nothing is not a failure: the next recogniser is not tried',
+      () async {
+        final network = Scripted('network', reply: ['should not be used']);
+        final v = ChainVoiceInput([Scripted('on-device'), network]);
+        expect(await v.listen(), isEmpty);
+        expect(network.languages, isEmpty);
+      },
+    );
   });
 }

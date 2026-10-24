@@ -5,6 +5,7 @@ import '../l10n/app_localizations.dart';
 import '../quiz.dart';
 import '../tasks.dart';
 import '../theme.dart';
+import '../voice_answers.dart' as voice_answers;
 import '../voice_input.dart';
 import '../widgets.dart';
 
@@ -19,7 +20,7 @@ class QuizScreen extends StatefulWidget {
 }
 
 class _QuizScreenState extends State<QuizScreen> {
-  final VoiceInput _voice = voiceInput();
+  late final VoiceInput _voice = voiceInputFor(context);
   bool? _voiceWorks; // null until first tried
   Quiz? _quiz;
   int _index = 0;
@@ -28,6 +29,8 @@ class _QuizScreenState extends State<QuizScreen> {
   int _answered = 0;
   bool _listening = false;
   bool _finished = false;
+  int? _pending; // heard, waiting for "yes" before it counts
+  int _failures = 0; // spoken tries on this question that gave no answer
   ({String text, NoteKind kind})? _feedback;
 
   AppLocalizations get _l => AppLocalizations.of(context);
@@ -58,17 +61,21 @@ class _QuizScreenState extends State<QuizScreen> {
     [
       _progress,
       _q.question,
-      for (var i = 0; i < _q.options.length; i++)
-        '${letters[i]}, ${_q.options[i]}.',
-      _l.quizSayAnswer,
+      if (_q.trueFalse)
+        _l.quizSayTrueFalse
+      else ...[
+        for (var i = 0; i < _q.options.length; i++)
+          '${letters[i]}, ${_q.options[i]}.',
+        _l.quizSayAnswer,
+      ],
     ].join(' '),
   );
 
   String _verdict(int i) {
     final q = _q;
     return i == q.answer
-        ? '${_l.quizCorrect(letters[i])} ${q.explanation}'
-        : '${_l.quizWrong(letters[i], '${letters[q.answer]}, ${q.options[q.answer]}')} '
+        ? '${_l.quizCorrect(q.spokenAnswer(i))} ${q.explanation}'
+        : '${_l.quizWrong(q.spokenAnswer(i), q.trueFalse ? q.options[q.answer] : '${letters[q.answer]}, ${q.options[q.answer]}')} '
               '${q.explanation}';
   }
 
@@ -79,6 +86,7 @@ class _QuizScreenState extends State<QuizScreen> {
     final right = i == _q.answer;
     final text = _verdict(i);
     setState(() {
+      _pending = null;
       _chosen = i;
       _answered++;
       if (right) _right++;
@@ -101,6 +109,8 @@ class _QuizScreenState extends State<QuizScreen> {
       _index++;
       _chosen = null;
       _feedback = null;
+      _pending = null;
+      _failures = 0;
     });
     _askCurrent();
   }
@@ -113,6 +123,8 @@ class _QuizScreenState extends State<QuizScreen> {
       _answered = 0;
       _feedback = null;
       _finished = false;
+      _pending = null;
+      _failures = 0;
     });
     _askCurrent();
   }
@@ -122,6 +134,9 @@ class _QuizScreenState extends State<QuizScreen> {
     _say(text);
   }
 
+  /// Spoken answers are confirmed before they count: "You said B. Is that right?".
+  /// Recognition trouble never marks an answer wrong; after two failed tries the
+  /// learner is asked to tap instead. Tapping an option always works directly.
   Future<void> _listen() async {
     if (_listening) {
       await _voice.stop();
@@ -137,23 +152,64 @@ class _QuizScreenState extends State<QuizScreen> {
     await speaker.stop(); // the microphone must not hear the question
     setState(() {
       _listening = true;
-      if (_chosen == null) _feedback = null; // an old "did not hear" note
+      if (_chosen == null && _pending == null) _feedback = null; // an old note
     });
-    final heard = await _voice.listen(language: 'en'); // the quiz is in English
+    final List<String> heard;
+    try {
+      heard = await _voice.listen(language: 'en'); // the quiz is in English
+    } on VoiceStepFailed {
+      // No recogniser this account may use: tapping still works.
+      if (!mounted) return;
+      setState(() {
+        _listening = false;
+        _voiceWorks = false;
+      });
+      _warn(_l.quizNoVoice);
+      return;
+    }
     if (!mounted) return;
     setState(() => _listening = false);
-    switch (hear(heard, _q)) {
+    final q = _q;
+
+    if (_pending case final pending?) {
+      // Confirming: only a clear yes counts the answer.
+      switch (voice_answers.yesNo(heard.isEmpty ? '' : heard.first)) {
+        case true:
+          _choose(pending);
+        case false:
+          _rejectPending();
+        default:
+          _say(_l.quizConfirm(q.spokenAnswer(pending)));
+      }
+      return;
+    }
+    switch (hear(heard, q)) {
+      case Answered(:final index) when _chosen != null:
+        _choose(index); // already answered: says the verdict again
       case Answered(:final index):
-        _choose(index);
+        setState(() => _pending = index);
+        _say(_l.quizConfirm(q.spokenAnswer(index)));
       case Command(kind: CommandKind.repeat):
         _askCurrent();
       case Command(kind: CommandKind.next):
         _next();
       case Unclear():
-        _warn(
+        _failed(
           heard.isEmpty ? _l.quizNothingHeard : _l.quizUnclear(heard.first),
         );
     }
+  }
+
+  /// "No, ask me again" (spoken or tapped).
+  void _rejectPending() {
+    setState(() => _pending = null);
+    _failed(_l.quizSayAgain);
+  }
+
+  /// A try that didn't give an answer. After two, offer tapping instead.
+  void _failed(String message) {
+    _failures++;
+    _warn(_failures >= 2 ? _l.quizTapInstead : message);
   }
 
   @override
@@ -216,7 +272,17 @@ class _QuizScreenState extends State<QuizScreen> {
             right: i == q.answer,
             onTap: () => _choose(i),
           ),
-        if (_feedback case final f?)
+        if (_pending case final p?) ...[
+          Semantics(
+            liveRegion: true,
+            child: NoteBox(text: l.quizConfirm(q.spokenAnswer(p))),
+          ),
+          PrimaryButton(
+            label: l.quizConfirmYes(q.spokenAnswer(p)),
+            onTap: () => _choose(p),
+          ),
+          SecondaryButton(label: l.quizConfirmNo, onTap: _rejectPending),
+        ] else if (_feedback case final f?)
           Semantics(
             liveRegion: true,
             child: NoteBox(text: f.text, kind: f.kind),
@@ -240,7 +306,15 @@ class _QuizScreenState extends State<QuizScreen> {
             ),
           ],
         ),
-        _MicButton(listening: _listening, onTap: _listen),
+        _MicButton(
+          listening: _listening,
+          onTap: _listen,
+          label: _pending != null
+              ? l.quizSayYesOrNo
+              : q.trueFalse
+              ? l.quizSayTrueFalse
+              : l.quizSayAnswer,
+        ),
       ],
     );
   }
@@ -347,14 +421,19 @@ class _OptionTile extends StatelessWidget {
 }
 
 class _MicButton extends StatelessWidget {
-  const _MicButton({required this.listening, required this.onTap});
+  const _MicButton({
+    required this.listening,
+    required this.onTap,
+    required this.label,
+  });
   final bool listening;
   final VoidCallback onTap;
+  final String label;
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final label = listening ? l.quizListening : l.quizSayAnswer;
+    final label = listening ? l.quizListening : this.label;
     return Labelled(
       label: label,
       onTap: onTap,

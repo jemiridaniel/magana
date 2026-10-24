@@ -1502,4 +1502,30 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get msg_explain_not_available =>
       'Àlàyé kò tíì sí. Ojú-ìwé náà nìyí, a kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́.';
+
+  @override
+  String quizConfirm(String answer) {
+    return 'O sọ pé $answer. Ṣé bẹ́ẹ̀ ni?';
+  }
+
+  @override
+  String quizConfirmYes(String answer) {
+    return 'Bẹ́ẹ̀ni, $answer';
+  }
+
+  @override
+  String get quizConfirmNo => 'Rárá, tún bi mí';
+
+  @override
+  String get quizSayYesOrNo => 'Sọ bẹ́ẹ̀ni tàbí rárá';
+
+  @override
+  String get quizSayAgain => 'Jọ̀wọ́ tún ìdáhùn rẹ sọ.';
+
+  @override
+  String get quizTapInstead =>
+      'Ó ṣòro fún mi láti gbọ́ ọ. Jọ̀wọ́ tẹ ìdáhùn rẹ lẹ́ẹ̀mejì dípò rẹ̀.';
+
+  @override
+  String get quizSayTrueFalse => 'Sọ òótọ́ tàbí irọ́';
 }

@@ -13,6 +13,41 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Accessibility, languages: quiz answers that survive bad recognition
+
+- **What we tested and how:**
+  - `quiz_test.dart` unit tests: Yorùbá, Hausa and Igbo letter variants ("bí", "dí", "sí", "à" become B, D, C, A), and true/false in four languages ("bẹ́ẹ̀ni", "rárá", "i", "a'a", "ee", "mba").
+  - `quiz_test.dart` widget tests:
+    - `spoken answer: confirmed first, then marked right`;
+    - `a misheard answer is never marked wrong`;
+    - `wrong answer, confirmed by tapping Yes: says the right one`;
+    - `unclear, then silent: tap instead; marks nothing`;
+    - one test per tier that the recogniser is chosen for that account.
+- **Why:** the early ASR result for Hausa (see "ASR word error rate" when complete). On 10 FLEURS clips, NCAIR1/Hausa-ASR got **29.1%** of words wrong clean, **56.3%** with noise at 10 dB SNR, and **66.5%** at 5 dB. At that error rate a spoken answer is often misheard, so a mishearing must never cost the learner a mark.
+- **Result:**
+  - A spoken answer is only marked after "You said B. Is that right?" and a yes, spoken or tapped.
+  - A "no", or a misheard letter that is rejected, leaves the score unchanged ("0 right out of 0 answered") and asks again.
+  - After two failed tries the app says "Please double tap your answer instead."
+  - Tapping an option marks it directly, as before.
+  - Answers stay short: a letter, true/false, or one word or number from the option.
+- **What we changed:** this commit.
+- **Status:** fixed in tests. Untested with real learners' voices or with on-device recognisers. The non-English answer words are drafts for native speakers.
+
+## 2026-10-24 · Privacy: speech recognition for children stays off the network
+
+- **What we tested and how:** `voice_input_test.dart`:
+  - which recognisers each tier may use;
+  - that `SpeechVoiceInput(onDevice: true)` refuses when the phone has no real on-device recogniser;
+  - the chain's fallbacks;
+  - in `quiz_test.dart`, that the quiz asks for a recogniser for the account's own tier.
+- **Found while building it:** asking `speech_to_text` for on-device recognition doesn't guarantee it. On Android below 12, or without an on-device model, it **silently uses the normal recogniser**, which can send audio to Google. Magana now asks Android directly (`SpeechRecognizer.isOnDeviceRecognitionAvailable`, through `MainActivity`) before using it.
+- **Result:**
+  - The order is on-device recognition, then Magana's server ASR, then (18+ only) the phone's network recogniser, then tapping.
+  - Guided and Classroom accounts have no network-recogniser step at all. If on-device and server both fail, `listen` raises and the screen asks them to tap.
+  - "Heard nothing" doesn't move on to the next recogniser. A step that fails isn't retried in the same session.
+- **What we changed:** this commit. docs/PRIVACY.md, "Speech recognition", is marked for Nurse Balogun's review.
+- **Status:** fixed in tests. Untested on phones: which models have on-device recognition, and for which languages. Hausa, Yorùbá and Igbo are unlikely to have on-device models, so those learners will mostly use the server, which is not deployed yet.
+
 ## 2026-10-24 · Privacy: private papers never go to an unapproved Explain host
 
 - **What we tested and how:** `test_explain.py`:

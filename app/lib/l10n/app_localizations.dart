@@ -2459,6 +2459,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Explain isn\'t available yet. Here is the page, read exactly as printed.'**
   String get msg_explain_not_available;
+
+  /// No description provided for @quizConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'You said {answer}. Is that right?'**
+  String quizConfirm(String answer);
+
+  /// No description provided for @quizConfirmYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, {answer}'**
+  String quizConfirmYes(String answer);
+
+  /// No description provided for @quizConfirmNo.
+  ///
+  /// In en, this message translates to:
+  /// **'No, ask me again'**
+  String get quizConfirmNo;
+
+  /// No description provided for @quizSayYesOrNo.
+  ///
+  /// In en, this message translates to:
+  /// **'Say yes or no'**
+  String get quizSayYesOrNo;
+
+  /// No description provided for @quizSayAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Please say your answer again.'**
+  String get quizSayAgain;
+
+  /// No description provided for @quizTapInstead.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m having trouble hearing you. Please double tap your answer instead.'**
+  String get quizTapInstead;
+
+  /// No description provided for @quizSayTrueFalse.
+  ///
+  /// In en, this message translates to:
+  /// **'Say true or false'**
+  String get quizSayTrueFalse;
 }
 
 class _AppLocalizationsDelegate

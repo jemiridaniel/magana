@@ -1508,4 +1508,30 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get msg_explain_not_available =>
       'Bayani bai samu ba tukuna. Ga shafin, an karanta shi daidai yadda aka buga.';
+
+  @override
+  String quizConfirm(String answer) {
+    return 'Ka ce $answer. Haka ne?';
+  }
+
+  @override
+  String quizConfirmYes(String answer) {
+    return 'I, $answer';
+  }
+
+  @override
+  String get quizConfirmNo => 'A\'a, sake tambayata';
+
+  @override
+  String get quizSayYesOrNo => 'Faɗi i ko a\'a';
+
+  @override
+  String get quizSayAgain => 'Don Allah ka sake faɗin amsarka.';
+
+  @override
+  String get quizTapInstead =>
+      'Ina da wahalar jin ka. Don Allah ka taɓa amsarka sau biyu maimakon haka.';
+
+  @override
+  String get quizSayTrueFalse => 'Faɗi gaskiya ko ƙarya';
 }

@@ -89,7 +89,7 @@ Future<(FakeSpeaker, Backend, FakeVoice, LanguageController)> start(
   tester.view.devicePixelRatio = 3;
   addTearDown(tester.view.reset);
   final voice = FakeVoice(works: voiceWorks);
-  voiceInput = () => voice;
+  voiceInput = (tier) => voice..tiers.add(tier);
   appVersion = () async => (version: '0.1.0', build: '3');
   final b = backend ?? Backend();
   final profile = ProfileController(

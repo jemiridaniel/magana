@@ -27,7 +27,7 @@ class ExplainScreen extends StatefulWidget {
 }
 
 class _ExplainScreenState extends State<ExplainScreen> {
-  final VoiceInput _voice = voiceInput();
+  late final VoiceInput _voice = voiceInputFor(context);
   bool? _voiceWorks;
   bool _listening = false;
   late String _language = Localizations.localeOf(context).languageCode;
@@ -106,7 +106,16 @@ class _ExplainScreenState extends State<ExplainScreen> {
     }
     await speaker.stop();
     setState(() => _listening = true);
-    final heard = await _voice.listen(language: lang);
+    final List<String> heard;
+    try {
+      heard = await _voice.listen(language: lang);
+    } on VoiceStepFailed {
+      // No recogniser this account may use: tap instead.
+      if (!mounted) return;
+      setState(() => _listening = false);
+      speaker.say(_l.voiceCommandsUnavailable);
+      return;
+    }
     if (!mounted) return;
     setState(() => _listening = false);
     if (heard.isEmpty) {

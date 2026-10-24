@@ -393,5 +393,12 @@
   "aboutSpeech": "Gane murya",
   "openSourceLicences": "Lasisin buɗaɗɗen tushe",
   "aboutContact": "Tambayoyi ko matsaloli: aika imel zuwa {email}",
-  "msg_explain_not_available": "Bayani bai samu ba tukuna. Ga shafin, an karanta shi daidai yadda aka buga."
+  "msg_explain_not_available": "Bayani bai samu ba tukuna. Ga shafin, an karanta shi daidai yadda aka buga.",
+  "quizConfirm": "Ka ce {answer}. Haka ne?",
+  "quizConfirmYes": "I, {answer}",
+  "quizConfirmNo": "A'a, sake tambayata",
+  "quizSayYesOrNo": "Faɗi i ko a'a",
+  "quizSayAgain": "Don Allah ka sake faɗin amsarka.",
+  "quizTapInstead": "Ina da wahalar jin ka. Don Allah ka taɓa amsarka sau biyu maimakon haka.",
+  "quizSayTrueFalse": "Faɗi gaskiya ko ƙarya"
 }

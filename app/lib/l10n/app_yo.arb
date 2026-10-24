@@ -393,5 +393,12 @@
   "aboutSpeech": "Ìdánimọ̀ ohùn",
   "openSourceLicences": "Ìwé-àṣẹ orísun ṣíṣí",
   "aboutContact": "Ìbéèrè tàbí ìṣòro: fi ímeèlì ránṣẹ́ sí {email}",
-  "msg_explain_not_available": "Àlàyé kò tíì sí. Ojú-ìwé náà nìyí, a kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́."
+  "msg_explain_not_available": "Àlàyé kò tíì sí. Ojú-ìwé náà nìyí, a kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́.",
+  "quizConfirm": "O sọ pé {answer}. Ṣé bẹ́ẹ̀ ni?",
+  "quizConfirmYes": "Bẹ́ẹ̀ni, {answer}",
+  "quizConfirmNo": "Rárá, tún bi mí",
+  "quizSayYesOrNo": "Sọ bẹ́ẹ̀ni tàbí rárá",
+  "quizSayAgain": "Jọ̀wọ́ tún ìdáhùn rẹ sọ.",
+  "quizTapInstead": "Ó ṣòro fún mi láti gbọ́ ọ. Jọ̀wọ́ tẹ ìdáhùn rẹ lẹ́ẹ̀mejì dípò rẹ̀.",
+  "quizSayTrueFalse": "Sọ òótọ́ tàbí irọ́"
 }
