@@ -8,6 +8,7 @@ import '../papers.dart';
 import '../policy.dart';
 import '../widgets.dart';
 import 'health_worker.dart';
+import 'reminders.dart';
 import '../messages.dart';
 import '../speech.dart';
 import '../theme.dart';
@@ -335,6 +336,15 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         NoteBox(text: paper.note(l)),
                         if (paper.isHealth) ...[
                           const SizedBox(height: 12),
+                          if (paper == Paper.medicine &&
+                              AppScope.of(context).profile
+                                  .can(Feature.reminders)) ...[
+                            SecondaryButton(
+                              label: l.remindersCard,
+                              onTap: () => openReminders(context),
+                            ),
+                            const SizedBox(height: 12),
+                          ],
                           SecondaryButton(
                             label: l.askPharmacistOrNurse,
                             onTap: () => openHealthWorker(

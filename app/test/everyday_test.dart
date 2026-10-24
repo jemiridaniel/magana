@@ -107,6 +107,7 @@ void main() {
       expect(find.textContaining(en.readExactly), findsOneWidget);
       expect(find.text(en.noteMedicine), findsOneWidget);
       expect(speaker.said.last, contains(en.noteMedicine));
+      expect(find.bySemanticsLabel(en.remindersCard), findsOneWidget);
       expectAccessible(tester, 'Medicine reader');
       await tap(tester, en.askPharmacistOrNurse);
       expect(find.text(en.healthWorkerTitle), findsOneWidget);

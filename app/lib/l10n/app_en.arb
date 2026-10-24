@@ -709,5 +709,75 @@
   "deleteFromLibrary": "Delete from my library",
   "deleteConfirm": "Delete this reading from your library?",
   "deleteYes": "Delete",
-  "deletedFromLibrary": "Deleted from your library."
+  "deletedFromLibrary": "Deleted from your library.",
+  "remindersTitle": "Today's medicines",
+  "remindersSubtitle": "Times set with your pharmacist",
+  "remindersCard": "Medicine reminders",
+  "remindersCardDetail": "Times for your medicines",
+  "remindersEmpty": "No reminders yet. Add the times your pharmacist or doctor gave you.",
+  "doseTaken": "Taken",
+  "doseDue": "Due now",
+  "doseLater": "Later today",
+  "doseLabel": "{time}, {state}. {medicine}. {amount}",
+  "@doseLabel": {
+    "description": "medicine and amount are exactly what the user typed",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "state": {
+        "type": "String"
+      },
+      "medicine": {
+        "type": "String"
+      },
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "iTookIt": "I've taken it",
+  "remindLater": "Remind in 15 min",
+  "remindLaterSet": "I will remind you again in 15 minutes.",
+  "markedTaken": "Marked as taken.",
+  "addReminder": "Add a reminder",
+  "medicineName": "Medicine name, as on the label",
+  "medicineAmount": "How much, as your pharmacist said (for example, 2 tablets)",
+  "reminderTime": "Time",
+  "earlierHour": "One hour earlier",
+  "laterHour": "One hour later",
+  "earlierMinutes": "15 minutes earlier",
+  "laterMinutes": "15 minutes later",
+  "saveReminder": "Save reminder",
+  "medicineNameNeeded": "Type the medicine name first.",
+  "reminderSaved": "Reminder saved for {time}.",
+  "@reminderSaved": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "deleteReminder": "Delete reminder",
+  "deleteReminderConfirm": "Delete the {time} reminder for {medicine}?",
+  "@deleteReminderConfirm": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      },
+      "medicine": {
+        "type": "String"
+      }
+    }
+  },
+  "reminderNotice": "Your phone rings and vibrates at each time, as a notification. Magana reminds you at the times you set. It never changes a dose.",
+  "notificationsOff": "Notifications are off for Magana, so reminders only show when Magana is open. You can turn them on in your phone's settings.",
+  "missedDose": "Missed a dose? Ask a pharmacist",
+  "reminderNotifyTitle": "Time for your medicine",
+  "exactTitle": "Ring on time?",
+  "exactBody": "To ring at the exact minute, your phone needs to allow Magana to set alarms and reminders. The next screen has one switch: turn it on, then go back.",
+  "exactOpen": "Open the setting",
+  "notNow": "Not now",
+  "remindersMayBeLate": "On this phone, reminders may ring up to an hour late. To ring on time, allow alarms and reminders for Magana.",
+  "allowOnTime": "Allow on-time reminders"
 }

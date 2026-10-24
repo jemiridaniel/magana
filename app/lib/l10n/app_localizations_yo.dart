@@ -1021,4 +1021,124 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get deletedFromLibrary => 'A ti pa á rẹ́ kúrò ní ilé-ìkàwé rẹ.';
+
+  @override
+  String get remindersTitle => 'Àwọn oògùn òní';
+
+  @override
+  String get remindersSubtitle => 'Àkókò tí o ṣètò pẹ̀lú oníṣègùn oògùn';
+
+  @override
+  String get remindersCard => 'Ìrántí oògùn';
+
+  @override
+  String get remindersCardDetail => 'Àkókò fún àwọn oògùn rẹ';
+
+  @override
+  String get remindersEmpty =>
+      'Kò sí ìrántí síbẹ̀. Fi àkókò tí oníṣègùn oògùn tàbí dókítà fún ọ kún un.';
+
+  @override
+  String get doseTaken => 'A ti lò ó';
+
+  @override
+  String get doseDue => 'Àkókò ti tó';
+
+  @override
+  String get doseLater => 'Lẹ́yìn náà lónìí';
+
+  @override
+  String doseLabel(String time, String state, String medicine, String amount) {
+    return '$time, $state. $medicine. $amount';
+  }
+
+  @override
+  String get iTookIt => 'Mo ti lò ó';
+
+  @override
+  String get remindLater => 'Rán mi létí ní ìṣẹ́jú 15';
+
+  @override
+  String get remindLaterSet => 'Màá tún rán ọ létí ní ìṣẹ́jú 15.';
+
+  @override
+  String get markedTaken => 'A ti kọ ọ́ pé o ti lò ó.';
+
+  @override
+  String get addReminder => 'Fi ìrántí kún un';
+
+  @override
+  String get medicineName => 'Orúkọ oògùn, bí ó ṣe wà lórí àmì';
+
+  @override
+  String get medicineAmount => 'Iye tí oníṣègùn oògùn sọ (fún àpẹẹrẹ, oògùn 2)';
+
+  @override
+  String get reminderTime => 'Àkókò';
+
+  @override
+  String get earlierHour => 'Wákàtí kan ṣáájú';
+
+  @override
+  String get laterHour => 'Wákàtí kan lẹ́yìn';
+
+  @override
+  String get earlierMinutes => 'Ìṣẹ́jú 15 ṣáájú';
+
+  @override
+  String get laterMinutes => 'Ìṣẹ́jú 15 lẹ́yìn';
+
+  @override
+  String get saveReminder => 'Fi ìrántí pamọ́';
+
+  @override
+  String get medicineNameNeeded => 'Kọ orúkọ oògùn náà kọ́kọ́.';
+
+  @override
+  String reminderSaved(String time) {
+    return 'A ti fi ìrántí pamọ́ fún $time.';
+  }
+
+  @override
+  String get deleteReminder => 'Pa ìrántí rẹ́';
+
+  @override
+  String deleteReminderConfirm(String time, String medicine) {
+    return 'Ṣé kí a pa ìrántí $time fún $medicine rẹ́?';
+  }
+
+  @override
+  String get reminderNotice =>
+      'Fóònù rẹ yóò dún, yóò sì gbọ̀n ní àkókò kọ̀ọ̀kan, gẹ́gẹ́ bí ìfitónilétí. Magana ń rán ọ létí ní àkókò tí o ṣètò. Kì í yí iye oògùn padà.';
+
+  @override
+  String get notificationsOff =>
+      'Ìfitónilétí ti wà ní pípa fún Magana, nítorí náà ìrántí yóò hàn nígbà tí Magana bá ṣí nìkan. O lè tàn wọ́n nínú ètò fóònù rẹ.';
+
+  @override
+  String get missedDose =>
+      'Ṣé o gbàgbé láti lo oògùn? Béèrè lọ́wọ́ oníṣègùn oògùn';
+
+  @override
+  String get reminderNotifyTitle => 'Àkókò láti lo oògùn rẹ ti tó';
+
+  @override
+  String get exactTitle => 'Ṣé kí ó dún ní àkókò gan-an?';
+
+  @override
+  String get exactBody =>
+      'Kí ó lè dún ní ìṣẹ́jú gan-an, fóònù rẹ gbọ́dọ̀ gba Magana láàyè láti ṣètò aago àti ìrántí. Ojú-ìwé tó kàn ní bọ́tìnnì kan: tàn án, lẹ́yìn náà padà sẹ́yìn.';
+
+  @override
+  String get exactOpen => 'Ṣí ètò náà';
+
+  @override
+  String get notNow => 'Kì í ṣe báyìí';
+
+  @override
+  String get remindersMayBeLate =>
+      'Lórí fóònù yìí, ìrántí lè dún ní wákàtí kan lẹ́yìn àkókò. Kí ó lè dún ní àkókò, gba Magana láàyè fún aago àti ìrántí.';
+
+  @override
+  String get allowOnTime => 'Gba ìrántí ní àkókò láàyè';
 }

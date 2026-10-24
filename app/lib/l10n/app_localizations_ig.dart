@@ -1024,4 +1024,123 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get deletedFromLibrary => 'Ehichapụla ya n\'ọbá akwụkwọ gị.';
+
+  @override
+  String get remindersTitle => 'Ọgwụ taa';
+
+  @override
+  String get remindersSubtitle => 'Oge gị na onye na-ere ọgwụ setịrị';
+
+  @override
+  String get remindersCard => 'Ihe ncheta ọgwụ';
+
+  @override
+  String get remindersCardDetail => 'Oge maka ọgwụ gị';
+
+  @override
+  String get remindersEmpty =>
+      'Enweghị ihe ncheta ugbu a. Tinye oge onye na-ere ọgwụ ma ọ bụ dọkịta nyere gị.';
+
+  @override
+  String get doseTaken => 'Aṅụọla';
+
+  @override
+  String get doseDue => 'Oge eruola';
+
+  @override
+  String get doseLater => 'Ma emechaa taa';
+
+  @override
+  String doseLabel(String time, String state, String medicine, String amount) {
+    return '$time, $state. $medicine. $amount';
+  }
+
+  @override
+  String get iTookIt => 'Aṅụọla m ya';
+
+  @override
+  String get remindLater => 'Chetara m n\'ime nkeji 15';
+
+  @override
+  String get remindLaterSet => 'M ga-echetara gị ọzọ n\'ime nkeji 15.';
+
+  @override
+  String get markedTaken => 'Edere na ị ṅụọla ya.';
+
+  @override
+  String get addReminder => 'Tinye ihe ncheta';
+
+  @override
+  String get medicineName => 'Aha ọgwụ, dị ka o dị n\'akara';
+
+  @override
+  String get medicineAmount => 'Ole ka onye na-ere ọgwụ kwuru (dịka, mkpụrụ 2)';
+
+  @override
+  String get reminderTime => 'Oge';
+
+  @override
+  String get earlierHour => 'Otu awa tupu';
+
+  @override
+  String get laterHour => 'Otu awa mgbe';
+
+  @override
+  String get earlierMinutes => 'Nkeji 15 tupu';
+
+  @override
+  String get laterMinutes => 'Nkeji 15 mgbe';
+
+  @override
+  String get saveReminder => 'Chekwaa ihe ncheta';
+
+  @override
+  String get medicineNameNeeded => 'Buru ụzọ dee aha ọgwụ ahụ.';
+
+  @override
+  String reminderSaved(String time) {
+    return 'Echekwala ihe ncheta maka $time.';
+  }
+
+  @override
+  String get deleteReminder => 'Hichapụ ihe ncheta';
+
+  @override
+  String deleteReminderConfirm(String time, String medicine) {
+    return 'Hichapụ ihe ncheta $time maka $medicine?';
+  }
+
+  @override
+  String get reminderNotice =>
+      'Ekwentị gị ga-ada ụda ma maa jijiji n\'oge ọ bụla, dị ka ọkwa. Magana na-echetara gị n\'oge ị setịrị. Ọ naghị agbanwe ọnụọgụ ọgwụ.';
+
+  @override
+  String get notificationsOff =>
+      'Agbanyụrụ ọkwa maka Magana, ya mere ihe ncheta ga-apụta naanị mgbe Magana mepere emepe. Ị nwere ike ịgbanye ha na ntọala ekwentị gị.';
+
+  @override
+  String get missedDose => 'Ị ṅụghị ọgwụ n\'oge? Jụọ onye na-ere ọgwụ';
+
+  @override
+  String get reminderNotifyTitle => 'Oge ịṅụ ọgwụ gị eruola';
+
+  @override
+  String get exactTitle => 'Ka ọ daa n\'oge?';
+
+  @override
+  String get exactBody =>
+      'Ka ọ daa n\'otu nkeji ahụ, ekwentị gị ga-ekwe Magana ka o setịa mkpu na ihe ncheta. Ihuenyo na-esote nwere otu mgbanwe: gbanye ya, wee laghachi.';
+
+  @override
+  String get exactOpen => 'Mepee ntọala ahụ';
+
+  @override
+  String get notNow => 'Ọ bụghị ugbu a';
+
+  @override
+  String get remindersMayBeLate =>
+      'Na ekwentị a, ihe ncheta nwere ike ịda ruo otu awa mgbe oge gachara. Ka ọ daa n\'oge, kwe Magana maka mkpu na ihe ncheta.';
+
+  @override
+  String get allowOnTime => 'Kwe ihe ncheta n\'oge';
 }

@@ -1703,6 +1703,222 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Deleted from your library.'**
   String get deletedFromLibrary;
+
+  /// No description provided for @remindersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s medicines'**
+  String get remindersTitle;
+
+  /// No description provided for @remindersSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Times set with your pharmacist'**
+  String get remindersSubtitle;
+
+  /// No description provided for @remindersCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine reminders'**
+  String get remindersCard;
+
+  /// No description provided for @remindersCardDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Times for your medicines'**
+  String get remindersCardDetail;
+
+  /// No description provided for @remindersEmpty.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminders yet. Add the times your pharmacist or doctor gave you.'**
+  String get remindersEmpty;
+
+  /// No description provided for @doseTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Taken'**
+  String get doseTaken;
+
+  /// No description provided for @doseDue.
+  ///
+  /// In en, this message translates to:
+  /// **'Due now'**
+  String get doseDue;
+
+  /// No description provided for @doseLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Later today'**
+  String get doseLater;
+
+  /// medicine and amount are exactly what the user typed
+  ///
+  /// In en, this message translates to:
+  /// **'{time}, {state}. {medicine}. {amount}'**
+  String doseLabel(String time, String state, String medicine, String amount);
+
+  /// No description provided for @iTookIt.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ve taken it'**
+  String get iTookIt;
+
+  /// No description provided for @remindLater.
+  ///
+  /// In en, this message translates to:
+  /// **'Remind in 15 min'**
+  String get remindLater;
+
+  /// No description provided for @remindLaterSet.
+  ///
+  /// In en, this message translates to:
+  /// **'I will remind you again in 15 minutes.'**
+  String get remindLaterSet;
+
+  /// No description provided for @markedTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Marked as taken.'**
+  String get markedTaken;
+
+  /// No description provided for @addReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a reminder'**
+  String get addReminder;
+
+  /// No description provided for @medicineName.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine name, as on the label'**
+  String get medicineName;
+
+  /// No description provided for @medicineAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'How much, as your pharmacist said (for example, 2 tablets)'**
+  String get medicineAmount;
+
+  /// No description provided for @reminderTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get reminderTime;
+
+  /// No description provided for @earlierHour.
+  ///
+  /// In en, this message translates to:
+  /// **'One hour earlier'**
+  String get earlierHour;
+
+  /// No description provided for @laterHour.
+  ///
+  /// In en, this message translates to:
+  /// **'One hour later'**
+  String get laterHour;
+
+  /// No description provided for @earlierMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'15 minutes earlier'**
+  String get earlierMinutes;
+
+  /// No description provided for @laterMinutes.
+  ///
+  /// In en, this message translates to:
+  /// **'15 minutes later'**
+  String get laterMinutes;
+
+  /// No description provided for @saveReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Save reminder'**
+  String get saveReminder;
+
+  /// No description provided for @medicineNameNeeded.
+  ///
+  /// In en, this message translates to:
+  /// **'Type the medicine name first.'**
+  String get medicineNameNeeded;
+
+  /// No description provided for @reminderSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder saved for {time}.'**
+  String reminderSaved(String time);
+
+  /// No description provided for @deleteReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete reminder'**
+  String get deleteReminder;
+
+  /// No description provided for @deleteReminderConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete the {time} reminder for {medicine}?'**
+  String deleteReminderConfirm(String time, String medicine);
+
+  /// No description provided for @reminderNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone rings and vibrates at each time, as a notification. Magana reminds you at the times you set. It never changes a dose.'**
+  String get reminderNotice;
+
+  /// No description provided for @notificationsOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications are off for Magana, so reminders only show when Magana is open. You can turn them on in your phone\'s settings.'**
+  String get notificationsOff;
+
+  /// No description provided for @missedDose.
+  ///
+  /// In en, this message translates to:
+  /// **'Missed a dose? Ask a pharmacist'**
+  String get missedDose;
+
+  /// No description provided for @reminderNotifyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Time for your medicine'**
+  String get reminderNotifyTitle;
+
+  /// No description provided for @exactTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ring on time?'**
+  String get exactTitle;
+
+  /// No description provided for @exactBody.
+  ///
+  /// In en, this message translates to:
+  /// **'To ring at the exact minute, your phone needs to allow Magana to set alarms and reminders. The next screen has one switch: turn it on, then go back.'**
+  String get exactBody;
+
+  /// No description provided for @exactOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the setting'**
+  String get exactOpen;
+
+  /// No description provided for @notNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get notNow;
+
+  /// No description provided for @remindersMayBeLate.
+  ///
+  /// In en, this message translates to:
+  /// **'On this phone, reminders may ring up to an hour late. To ring on time, allow alarms and reminders for Magana.'**
+  String get remindersMayBeLate;
+
+  /// No description provided for @allowOnTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Allow on-time reminders'**
+  String get allowOnTime;
 }
 
 class _AppLocalizationsDelegate

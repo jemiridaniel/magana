@@ -7,6 +7,7 @@ import '../policy.dart';
 import '../widgets.dart';
 import 'capture.dart';
 import 'health_worker.dart';
+import 'reminders.dart';
 
 /// Everyday papers hub (18+): medicine labels, medical reports, bank statements.
 class EverydayScreen extends StatefulWidget {
@@ -44,6 +45,13 @@ class _EverydayScreenState extends State<EverydayScreen> {
                 MaterialPageRoute(builder: (_) => CaptureScreen(paper: paper)),
               ),
             ),
+        if (profile.can(Feature.reminders))
+          ChoiceCard(
+            title: l.remindersCard,
+            detail: l.remindersCardDetail,
+            leading: const Icon(Icons.alarm, size: 34),
+            onTap: () => openReminders(context),
+          ),
         if (profile.can(Feature.healthCallback))
           ChoiceCard(
             title: l.talkToNurse,

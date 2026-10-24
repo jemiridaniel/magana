@@ -1021,4 +1021,124 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deletedFromLibrary => 'Deleted from your library.';
+
+  @override
+  String get remindersTitle => 'Today\'s medicines';
+
+  @override
+  String get remindersSubtitle => 'Times set with your pharmacist';
+
+  @override
+  String get remindersCard => 'Medicine reminders';
+
+  @override
+  String get remindersCardDetail => 'Times for your medicines';
+
+  @override
+  String get remindersEmpty =>
+      'No reminders yet. Add the times your pharmacist or doctor gave you.';
+
+  @override
+  String get doseTaken => 'Taken';
+
+  @override
+  String get doseDue => 'Due now';
+
+  @override
+  String get doseLater => 'Later today';
+
+  @override
+  String doseLabel(String time, String state, String medicine, String amount) {
+    return '$time, $state. $medicine. $amount';
+  }
+
+  @override
+  String get iTookIt => 'I\'ve taken it';
+
+  @override
+  String get remindLater => 'Remind in 15 min';
+
+  @override
+  String get remindLaterSet => 'I will remind you again in 15 minutes.';
+
+  @override
+  String get markedTaken => 'Marked as taken.';
+
+  @override
+  String get addReminder => 'Add a reminder';
+
+  @override
+  String get medicineName => 'Medicine name, as on the label';
+
+  @override
+  String get medicineAmount =>
+      'How much, as your pharmacist said (for example, 2 tablets)';
+
+  @override
+  String get reminderTime => 'Time';
+
+  @override
+  String get earlierHour => 'One hour earlier';
+
+  @override
+  String get laterHour => 'One hour later';
+
+  @override
+  String get earlierMinutes => '15 minutes earlier';
+
+  @override
+  String get laterMinutes => '15 minutes later';
+
+  @override
+  String get saveReminder => 'Save reminder';
+
+  @override
+  String get medicineNameNeeded => 'Type the medicine name first.';
+
+  @override
+  String reminderSaved(String time) {
+    return 'Reminder saved for $time.';
+  }
+
+  @override
+  String get deleteReminder => 'Delete reminder';
+
+  @override
+  String deleteReminderConfirm(String time, String medicine) {
+    return 'Delete the $time reminder for $medicine?';
+  }
+
+  @override
+  String get reminderNotice =>
+      'Your phone rings and vibrates at each time, as a notification. Magana reminds you at the times you set. It never changes a dose.';
+
+  @override
+  String get notificationsOff =>
+      'Notifications are off for Magana, so reminders only show when Magana is open. You can turn them on in your phone\'s settings.';
+
+  @override
+  String get missedDose => 'Missed a dose? Ask a pharmacist';
+
+  @override
+  String get reminderNotifyTitle => 'Time for your medicine';
+
+  @override
+  String get exactTitle => 'Ring on time?';
+
+  @override
+  String get exactBody =>
+      'To ring at the exact minute, your phone needs to allow Magana to set alarms and reminders. The next screen has one switch: turn it on, then go back.';
+
+  @override
+  String get exactOpen => 'Open the setting';
+
+  @override
+  String get notNow => 'Not now';
+
+  @override
+  String get remindersMayBeLate =>
+      'On this phone, reminders may ring up to an hour late. To ring on time, allow alarms and reminders for Magana.';
+
+  @override
+  String get allowOnTime => 'Allow on-time reminders';
 }

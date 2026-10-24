@@ -1026,4 +1026,124 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get deletedFromLibrary => 'An goge daga laburarenka.';
+
+  @override
+  String get remindersTitle => 'Magungunan yau';
+
+  @override
+  String get remindersSubtitle => 'Lokutan da ka tsara da mai ba da magani';
+
+  @override
+  String get remindersCard => 'Tunatarwar magani';
+
+  @override
+  String get remindersCardDetail => 'Lokutan shan maganinka';
+
+  @override
+  String get remindersEmpty =>
+      'Babu tunatarwa tukuna. Ƙara lokutan da mai ba da magani ko likita ya ba ka.';
+
+  @override
+  String get doseTaken => 'An sha';
+
+  @override
+  String get doseDue => 'Lokaci ya yi';
+
+  @override
+  String get doseLater => 'Anjima yau';
+
+  @override
+  String doseLabel(String time, String state, String medicine, String amount) {
+    return '$time, $state. $medicine. $amount';
+  }
+
+  @override
+  String get iTookIt => 'Na sha';
+
+  @override
+  String get remindLater => 'Tuna min bayan minti 15';
+
+  @override
+  String get remindLaterSet => 'Zan sake tuna maka bayan minti 15.';
+
+  @override
+  String get markedTaken => 'An rubuta cewa ka sha.';
+
+  @override
+  String get addReminder => 'Ƙara tunatarwa';
+
+  @override
+  String get medicineName => 'Sunan magani, kamar yadda yake a jiki';
+
+  @override
+  String get medicineAmount =>
+      'Yawan da za a sha, kamar yadda mai ba da magani ya faɗa (misali, ƙwaya 2)';
+
+  @override
+  String get reminderTime => 'Lokaci';
+
+  @override
+  String get earlierHour => 'Awa ɗaya a baya';
+
+  @override
+  String get laterHour => 'Awa ɗaya a gaba';
+
+  @override
+  String get earlierMinutes => 'Minti 15 a baya';
+
+  @override
+  String get laterMinutes => 'Minti 15 a gaba';
+
+  @override
+  String get saveReminder => 'Adana tunatarwa';
+
+  @override
+  String get medicineNameNeeded => 'Rubuta sunan maganin da farko.';
+
+  @override
+  String reminderSaved(String time) {
+    return 'An adana tunatarwa na $time.';
+  }
+
+  @override
+  String get deleteReminder => 'Goge tunatarwa';
+
+  @override
+  String deleteReminderConfirm(String time, String medicine) {
+    return 'A goge tunatarwar $time ta $medicine?';
+  }
+
+  @override
+  String get reminderNotice =>
+      'Wayarka za ta yi ƙara da girgiza a kowane lokaci, a matsayin sanarwa. Magana tana tuna maka a lokutan da ka saita. Ba ta taɓa canja yawan magani ba.';
+
+  @override
+  String get notificationsOff =>
+      'An kashe sanarwa ga Magana, don haka tunatarwa za ta bayyana ne kawai idan Magana a buɗe take. Za ka iya kunna su a saitunan wayarka.';
+
+  @override
+  String get missedDose => 'Ka manta da shan magani? Tambayi mai ba da magani';
+
+  @override
+  String get reminderNotifyTitle => 'Lokacin shan maganinka ya yi';
+
+  @override
+  String get exactTitle => 'Ta yi ƙara a kan lokaci?';
+
+  @override
+  String get exactBody =>
+      'Don ta yi ƙara daidai minti, wayarka tana buƙatar ba Magana izinin saita ƙararrawa da tunatarwa. Shafi na gaba yana da maɓalli ɗaya: kunna shi, sannan ka koma.';
+
+  @override
+  String get exactOpen => 'Buɗe saitin';
+
+  @override
+  String get notNow => 'Ba yanzu ba';
+
+  @override
+  String get remindersMayBeLate =>
+      'A wannan wayar, tunatarwa na iya yin ƙara har awa ɗaya a makare. Don ta yi ƙara a kan lokaci, ba Magana izinin ƙararrawa da tunatarwa.';
+
+  @override
+  String get allowOnTime => 'Ba da izinin tunatarwa a kan lokaci';
 }
