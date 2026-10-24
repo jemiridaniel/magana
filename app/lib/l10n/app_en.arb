@@ -44,7 +44,7 @@
     }
   },
   "backToHome": "Back to home",
-  "framingGuidance": "Lay the page flat in good light. Hold the phone about one forearm above it, so all four corners fit. Then tap Take photo, at the bottom of the screen.",
+  "framingGuidance": "Lay the page flat in good light and hold the phone about one forearm above it. I'll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.",
   "@framingGuidance": {
     "description": "Spoken when Capture opens. Keep it to short, concrete steps."
   },
@@ -275,5 +275,26 @@
   "msg_nurse_call_working_hours": "Thank you. A nurse will call you back during working hours.",
   "@msg_nurse_call_working_hours": {
     "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
-  }
+  },
+  "guideTooDark": "It's dark. Turn on the torch or find more light.",
+  "guideNoPage": "I can't see a page yet. Point the phone down at the page.",
+  "guideMoveCloser": "Bring the phone a little closer to the page.",
+  "guideLiftPhone": "Lift the phone a little higher, so the whole page fits.",
+  "guideMoveUp": "Move the phone a little toward the top of the page. The top is cut off.",
+  "@guideMoveUp": {
+    "description": "Spoken while framing: the page's top edge is outside the camera view."
+  },
+  "guideMoveDown": "Move the phone a little toward the bottom of the page. The bottom is cut off.",
+  "guideMoveLeft": "Move the phone a little to the left. The left edge is cut off.",
+  "guideMoveRight": "Move the phone a little to the right. The right edge is cut off.",
+  "guideHoldStill": "Good. Hold still.",
+  "guideCapturing": "Taking the photo.",
+  "autoCapture": "Auto-capture",
+  "@autoCapture": {
+    "description": "Switch: take the photo by itself when the page is steady and in frame."
+  },
+  "torchOn": "Turn on torch",
+  "torchOff": "Turn off torch",
+  "cameraView": "Camera view",
+  "cameraUnavailable": "I can't use the camera. Allow camera access in Settings, or choose a photo from the gallery."
 }

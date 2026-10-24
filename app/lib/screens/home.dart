@@ -157,6 +157,7 @@ class _Header extends StatelessWidget {
           button: true,
           label: l.languageButtonLabel(language.name),
           excludeSemantics: true,
+          onTap: () => showLanguagePicker(context),
           child: OutlinedButton(
             onPressed: () => showLanguagePicker(context),
             style: outlinedTile(radius: 32).copyWith(
@@ -180,6 +181,7 @@ class _Header extends StatelessWidget {
           label: l.settings,
           hint: l.comingSoonHint,
           excludeSemantics: true,
+          onTap: onSettings,
           child: OutlinedButton(
             onPressed: onSettings,
             style: outlinedTile(
@@ -197,6 +199,15 @@ class _Header extends StatelessWidget {
 Future<void> showLanguagePicker(BuildContext context) {
   final scope = AppScope.of(context);
   final current = Localizations.localeOf(context).languageCode;
+  Future<void> choose(AppLanguage lang) async {
+    Navigator.of(context).pop();
+    await scope.language.select(lang.code);
+    await scope.speaker.setLanguage(lang.code);
+    await scope.speaker.say(
+      lookupAppLocalizations(Locale(lang.code)).languageChanged(lang.name),
+    );
+  }
+
   return showModalBottomSheet<void>(
     context: context,
     backgroundColor: MaganaColors.ground,
@@ -226,16 +237,9 @@ Future<void> showLanguagePicker(BuildContext context) {
                 inMutuallyExclusiveGroup: true,
                 label: lang.name,
                 excludeSemantics: true,
+                onTap: () => choose(lang),
                 child: OutlinedButton(
-                  onPressed: () async {
-                    Navigator.of(sheet).pop();
-                    await scope.language.select(lang.code);
-                    await scope.speaker.setLanguage(lang.code);
-                    await scope.speaker.say(
-                      lookupAppLocalizations(Locale(lang.code))
-                          .languageChanged(lang.name),
-                    );
-                  },
+                  onPressed: () => choose(lang),
                   style: outlinedTile(
                     bg: lang.code == current ? MaganaColors.ink : Colors.white,
                     fg: lang.code == current ? Colors.white : MaganaColors.ink,
@@ -274,6 +278,7 @@ class _ReadPageButton extends StatelessWidget {
       button: true,
       label: '${l.readPage}. ${l.readPageSubtitle}',
       excludeSemantics: true,
+      onTap: onPressed,
       child: FilledButton(
         onPressed: onPressed,
         style: FilledButton.styleFrom(
@@ -340,6 +345,7 @@ class _TileGrid extends StatelessWidget {
         label: t.label,
         hint: hint,
         excludeSemantics: true,
+        onTap: t.onPressed,
         child: OutlinedButton(
           onPressed: t.onPressed,
           style: outlinedTile(radius: 20).copyWith(
@@ -402,6 +408,7 @@ class _Chip extends StatelessWidget {
       label: label,
       hint: AppLocalizations.of(context).comingSoonHint,
       excludeSemantics: true,
+      onTap: onPressed,
       child: FilledButton(
         onPressed: onPressed,
         style: FilledButton.styleFrom(
@@ -445,6 +452,7 @@ class _SpeakButton extends StatelessWidget {
       label: l.holdToSpeakLabel,
       hint: l.comingSoonHint,
       excludeSemantics: true,
+      onTap: onPressed,
       child: OutlinedButton.icon(
         onPressed: onPressed,
         icon: const Icon(Icons.mic_none, size: 30),

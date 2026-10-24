@@ -78,7 +78,7 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get framingGuidance =>
-      'Shimfiɗa shafin a wuri mai haske. Riƙe wayar sama da shi kamar tsawon hannunka, har kusurwoyi huɗu duka su shiga. Sannan ka taɓa Ɗauki hoto, a ƙasan allo.';
+      'Shimfiɗa shafin a wuri mai haske, ka riƙe wayar sama da shi kamar tsawon hannunka. Zan gaya maka yadda za ka matsa, kuma zan ɗauki hoton idan shafin duka ya tsaya. Kana iya taɓa Ɗauki hoto kuma.';
 
   @override
   String get repeat => 'Maimaita';
@@ -348,4 +348,56 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get msg_nurse_call_working_hours =>
       'Thank you. A nurse will call you back during working hours.';
+
+  @override
+  String get guideTooDark => 'Akwai duhu. Kunna fitila ko ka nemi ƙarin haske.';
+
+  @override
+  String get guideNoPage =>
+      'Ban ga shafi ba tukuna. Karkata wayar zuwa kan shafin.';
+
+  @override
+  String get guideMoveCloser => 'Kawo wayar kusa da shafin kaɗan.';
+
+  @override
+  String get guideLiftPhone =>
+      'Ɗaga wayar sama kaɗan, don shafin duka ya shiga.';
+
+  @override
+  String get guideMoveUp =>
+      'Matsar da wayar zuwa saman shafin kaɗan. An yanke saman.';
+
+  @override
+  String get guideMoveDown =>
+      'Matsar da wayar zuwa ƙasan shafin kaɗan. An yanke ƙasan.';
+
+  @override
+  String get guideMoveLeft =>
+      'Matsar da wayar hagu kaɗan. An yanke gefen hagu.';
+
+  @override
+  String get guideMoveRight =>
+      'Matsar da wayar dama kaɗan. An yanke gefen dama.';
+
+  @override
+  String get guideHoldStill => 'Yayi kyau. Riƙe a tsaye.';
+
+  @override
+  String get guideCapturing => 'Ina ɗaukar hoton.';
+
+  @override
+  String get autoCapture => 'Ɗauka da kanta';
+
+  @override
+  String get torchOn => 'Kunna fitila';
+
+  @override
+  String get torchOff => 'Kashe fitila';
+
+  @override
+  String get cameraView => 'Kallon kyamara';
+
+  @override
+  String get cameraUnavailable =>
+      'Ba zan iya amfani da kyamara ba. Ba da izinin kyamara a Saituna, ko ka zaɓi hoto daga cikin hotuna.';
 }

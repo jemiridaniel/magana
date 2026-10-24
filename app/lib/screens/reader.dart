@@ -182,6 +182,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                     button: true,
                     label: l.backToHome,
                     excludeSemantics: true,
+                    onTap: () => Navigator.of(context).maybePop(),
                     child: OutlinedButton(
                       onPressed: () => Navigator.of(context).maybePop(),
                       style: outlinedTile(radius: 32).copyWith(
@@ -275,6 +276,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 button: true,
                 label: _playing ? l.pauseLabel : l.playLabel,
                 excludeSemantics: true,
+                onTap: _togglePause,
                 child: OutlinedButton.icon(
                   onPressed: _togglePause,
                   icon: Icon(
@@ -462,6 +464,7 @@ class _ControlButton extends StatelessWidget {
       button: true,
       label: semantics,
       excludeSemantics: true,
+      onTap: onPressed,
       child: OutlinedButton(
         onPressed: onPressed,
         style: outlinedTile(),

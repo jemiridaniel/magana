@@ -225,7 +225,7 @@ abstract class AppLocalizations {
   /// Spoken when Capture opens. Keep it to short, concrete steps.
   ///
   /// In en, this message translates to:
-  /// **'Lay the page flat in good light. Hold the phone about one forearm above it, so all four corners fit. Then tap Take photo, at the bottom of the screen.'**
+  /// **'Lay the page flat in good light and hold the phone about one forearm above it. I\'ll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.'**
   String get framingGuidance;
 
   /// No description provided for @repeat.
@@ -629,6 +629,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Thank you. A nurse will call you back during working hours.'**
   String get msg_nurse_call_working_hours;
+
+  /// No description provided for @guideTooDark.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s dark. Turn on the torch or find more light.'**
+  String get guideTooDark;
+
+  /// No description provided for @guideNoPage.
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t see a page yet. Point the phone down at the page.'**
+  String get guideNoPage;
+
+  /// No description provided for @guideMoveCloser.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring the phone a little closer to the page.'**
+  String get guideMoveCloser;
+
+  /// No description provided for @guideLiftPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Lift the phone a little higher, so the whole page fits.'**
+  String get guideLiftPhone;
+
+  /// Spoken while framing: the page's top edge is outside the camera view.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the phone a little toward the top of the page. The top is cut off.'**
+  String get guideMoveUp;
+
+  /// No description provided for @guideMoveDown.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the phone a little toward the bottom of the page. The bottom is cut off.'**
+  String get guideMoveDown;
+
+  /// No description provided for @guideMoveLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the phone a little to the left. The left edge is cut off.'**
+  String get guideMoveLeft;
+
+  /// No description provided for @guideMoveRight.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the phone a little to the right. The right edge is cut off.'**
+  String get guideMoveRight;
+
+  /// No description provided for @guideHoldStill.
+  ///
+  /// In en, this message translates to:
+  /// **'Good. Hold still.'**
+  String get guideHoldStill;
+
+  /// No description provided for @guideCapturing.
+  ///
+  /// In en, this message translates to:
+  /// **'Taking the photo.'**
+  String get guideCapturing;
+
+  /// Switch: take the photo by itself when the page is steady and in frame.
+  ///
+  /// In en, this message translates to:
+  /// **'Auto-capture'**
+  String get autoCapture;
+
+  /// No description provided for @torchOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on torch'**
+  String get torchOn;
+
+  /// No description provided for @torchOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn off torch'**
+  String get torchOff;
+
+  /// No description provided for @cameraView.
+  ///
+  /// In en, this message translates to:
+  /// **'Camera view'**
+  String get cameraView;
+
+  /// No description provided for @cameraUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t use the camera. Allow camera access in Settings, or choose a photo from the gallery.'**
+  String get cameraUnavailable;
 }
 
 class _AppLocalizationsDelegate

@@ -18,6 +18,9 @@ class Speaker {
 
   double get rate => _rate;
 
+  /// True while an utterance is playing or about to.
+  bool get speaking => _pending != null;
+
   FlutterTts _create() {
     final tts = FlutterTts();
     tts.setStartHandler(() => _started = _active = true);

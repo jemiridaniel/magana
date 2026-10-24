@@ -78,7 +78,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get framingGuidance =>
-      'Lay the page flat in good light. Hold the phone about one forearm above it, so all four corners fit. Then tap Take photo, at the bottom of the screen.';
+      'Lay the page flat in good light and hold the phone about one forearm above it. I\'ll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.';
 
   @override
   String get repeat => 'Repeat';
@@ -349,4 +349,57 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get msg_nurse_call_working_hours =>
       'Thank you. A nurse will call you back during working hours.';
+
+  @override
+  String get guideTooDark =>
+      'It\'s dark. Turn on the torch or find more light.';
+
+  @override
+  String get guideNoPage =>
+      'I can\'t see a page yet. Point the phone down at the page.';
+
+  @override
+  String get guideMoveCloser => 'Bring the phone a little closer to the page.';
+
+  @override
+  String get guideLiftPhone =>
+      'Lift the phone a little higher, so the whole page fits.';
+
+  @override
+  String get guideMoveUp =>
+      'Move the phone a little toward the top of the page. The top is cut off.';
+
+  @override
+  String get guideMoveDown =>
+      'Move the phone a little toward the bottom of the page. The bottom is cut off.';
+
+  @override
+  String get guideMoveLeft =>
+      'Move the phone a little to the left. The left edge is cut off.';
+
+  @override
+  String get guideMoveRight =>
+      'Move the phone a little to the right. The right edge is cut off.';
+
+  @override
+  String get guideHoldStill => 'Good. Hold still.';
+
+  @override
+  String get guideCapturing => 'Taking the photo.';
+
+  @override
+  String get autoCapture => 'Auto-capture';
+
+  @override
+  String get torchOn => 'Turn on torch';
+
+  @override
+  String get torchOff => 'Turn off torch';
+
+  @override
+  String get cameraView => 'Camera view';
+
+  @override
+  String get cameraUnavailable =>
+      'I can\'t use the camera. Allow camera access in Settings, or choose a photo from the gallery.';
 }

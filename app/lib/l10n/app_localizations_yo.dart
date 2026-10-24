@@ -78,7 +78,7 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get framingGuidance =>
-      'Tẹ́ ojú-ìwé náà sílẹ̀ níbi tí ìmọ́lẹ̀ dára. Gbé fóònù sókè lórí rẹ̀ tó ìwọ̀n apá kan, kí igun mẹ́rẹ̀ẹ̀rin lè wọlé. Lẹ́yìn náà tẹ Ya fọ́tò, ní ìsàlẹ̀ ojú fóònù.';
+      'Tẹ́ ojú-ìwé náà sílẹ̀ níbi tí ìmọ́lẹ̀ dára, kí o sì gbé fóònù sókè lórí rẹ̀ tó ìwọ̀n apá kan. Màá sọ bí o ṣe máa sún un fún ọ, màá sì ya fọ́tò náà nígbà tí gbogbo ojú-ìwé bá dúró jẹ́ẹ́. O tún lè tẹ Ya fọ́tò.';
 
   @override
   String get repeat => 'Tún sọ';
@@ -347,4 +347,55 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get msg_nurse_call_working_hours =>
       'Thank you. A nurse will call you back during working hours.';
+
+  @override
+  String get guideTooDark => 'Ó ṣókùnkùn. Tan iná fóònù tàbí wá ìmọ́lẹ̀ sí i.';
+
+  @override
+  String get guideNoPage =>
+      'Mi ò tíì rí ojú-ìwé kankan. Dojú fóònù kọ ojú-ìwé náà.';
+
+  @override
+  String get guideMoveCloser => 'Mú fóònù súnmọ́ ojú-ìwé náà díẹ̀.';
+
+  @override
+  String get guideLiftPhone =>
+      'Gbé fóònù sókè díẹ̀, kí gbogbo ojú-ìwé náà lè wọlé.';
+
+  @override
+  String get guideMoveUp =>
+      'Sún fóònù díẹ̀ sí òkè ojú-ìwé náà. Òkè rẹ̀ ti gé kúrò.';
+
+  @override
+  String get guideMoveDown =>
+      'Sún fóònù díẹ̀ sí ìsàlẹ̀ ojú-ìwé náà. Ìsàlẹ̀ rẹ̀ ti gé kúrò.';
+
+  @override
+  String get guideMoveLeft => 'Sún fóònù díẹ̀ sí apá òsì. Etí òsì ti gé kúrò.';
+
+  @override
+  String get guideMoveRight =>
+      'Sún fóònù díẹ̀ sí apá ọ̀tún. Etí ọ̀tún ti gé kúrò.';
+
+  @override
+  String get guideHoldStill => 'Ó dára. Dúró jẹ́ẹ́.';
+
+  @override
+  String get guideCapturing => 'Mo ń ya fọ́tò náà.';
+
+  @override
+  String get autoCapture => 'Ya fọ́tò fúnra rẹ̀';
+
+  @override
+  String get torchOn => 'Tan iná fóònù';
+
+  @override
+  String get torchOff => 'Pa iná fóònù';
+
+  @override
+  String get cameraView => 'Ìwòye kámẹ́rà';
+
+  @override
+  String get cameraUnavailable =>
+      'Mi ò lè lo kámẹ́rà. Fún kámẹ́rà láṣẹ nínú Ètò, tàbí yan fọ́tò láti inú àwọn fọ́tò.';
 }

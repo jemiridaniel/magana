@@ -1,6 +1,6 @@
 # Magana app (Flutter)
 
-TalkBack-first Android app that also runs on the web, built to be iOS-ready. Screens: Home, Capture (spoken framing guidance), Reader (reads lines or table rows aloud with Repeat, Previous, Next, Pause and speed; speaks low-confidence warnings). UI in English, Hausa, Yorùbá and Igbo.
+TalkBack-first Android app that also runs on the web, built to be iOS-ready. Screens: Home, Capture (live camera with spoken framing guidance about every second, auto-capture when the page is whole and steady, torch, gallery), Reader (reads lines or table rows aloud with Repeat, Previous, Next, Pause and speed; speaks low-confidence warnings). UI in English, Hausa, Yorùbá and Igbo.
 
 ## Run
 
@@ -31,6 +31,7 @@ If the emulator stalls ("System isn't responding"), the AVD probably has one CPU
 | `lib/l10n/` | All UI strings, one ARB file per language; see `lib/l10n/README.md` |
 | `lib/api.dart` | `/read` client; turns lines, tables and the backend's warnings into reading items |
 | `lib/speech.dart` | `flutter_tts` wrapper whose `say()` completes when speech ends (Android, iOS, web) |
+| `lib/capture/` | Frame analysis for live framing (page found, cut edge, too far, dark, steady), pure Dart and unit-tested |
 | `lib/screens/` | Home, Capture, Reader |
 | `assets/brand/` | Logo and icon sources; launcher icons via `dart run flutter_launcher_icons` |
 
@@ -38,7 +39,7 @@ The layout is a centred column of at most 480 px on tablets and the web.
 
 ## Adding iOS
 
-Every package used (`image_picker`, `flutter_tts`, `http`, `flutter_svg`, `shared_preferences`, `flutter_localizations`) supports Android and iOS. Platform-specific code lives only in `lib/platform.dart`.
+Every package used (`camera`, `image_picker`, `flutter_tts`, `http`, `flutter_svg`, `shared_preferences`, `flutter_localizations`) supports Android and iOS. Platform-specific code lives only in `lib/platform.dart` (backend address, speech rate, camera frame format, torch, deleting the captured photo) and `lib/platform/`.
 
 1. `flutter create --platforms ios .`
 2. In `ios/Runner/Info.plist` add `NSCameraUsageDescription` and `NSPhotoLibraryUsageDescription` (say photos are read and not stored).
@@ -46,8 +47,19 @@ Every package used (`image_picker`, `flutter_tts`, `http`, `flutter_svg`, `share
 4. Speech should still play with the silent switch on: in `lib/speech.dart` call `setIosAudioCategory(IosTextToSpeechAudioCategory.playback, [...])` behind a `defaultTargetPlatform == TargetPlatform.iOS` check.
 5. Test on a real iPhone with VoiceOver: every control already has a Semantics label, and VoiceOver uses the same labels as TalkBack.
 
+## Accessibility checks
+
+`flutter test` fails if any button or switch has no screen-reader tap action (TalkBack, VoiceOver, Switch Access and Voice Access all need it), or if a Home control is under 64 px.
+
+## Camera notes
+
+- Framing looks for a near-white page against a darker background. Thresholds are named constants in `lib/capture/frame_analysis.dart`; tune them with testers on real phones and paper.
+- The captured photo's temporary file is deleted as soon as its bytes are read.
+- In browsers there is no live frame analysis or torch: the preview shows, Take photo works, and guidance is spoken once.
+- On the emulator the back camera is a virtual room; `adb emu virtualscene-image table page.png` puts a page in it, but aiming needs the emulator window's keyboard controls.
+
 ## Not built yet
 
-Live camera preview and torch (image_picker opens the system camera), voice commands, and the Home tiles other than Read a page (they announce "coming soon").
+Voice commands, and the Home tiles other than Read a page (they announce "coming soon").
 
 Fonts: Atkinson Hyperlegible, with a bundled Noto Sans subset as the fallback for letters Atkinson lacks (Hausa ɓ ɗ ƙ, Yorùbá and Igbo ẹ ọ ṣ ị ụ, ₦). Both are SIL Open Font License; see `assets/fonts/README.md`.

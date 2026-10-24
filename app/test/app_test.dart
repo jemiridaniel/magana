@@ -9,6 +9,7 @@ import 'package:app/messages.dart';
 import 'package:app/screens/capture.dart';
 import 'package:app/speech.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -108,6 +109,7 @@ Future<void> captureToReader(
   nav.push(
     MaterialPageRoute(
       builder: (_) => CaptureScreen(
+        findCameras: () async => [],
         picker: (_) async => XFile.fromData(utf8.encode('png'), name: 'p.png'),
       ),
     ),
@@ -364,5 +366,68 @@ void main() {
     expect(messageFor(ha, 'not_allowed_for_tier'), ha.msg_not_allowed_for_tier);
     expect(messageFor(ha, 'too_dark'), ha.msg_too_dark);
     expect(messageFor(ha, 'something_new'), ha.readFailed);
+  });
+
+  testWidgets('every button and switch can be activated by screen readers', (
+    tester,
+  ) async {
+    // TalkBack, Switch Access, Voice Access and VoiceOver activate a control
+    // through its semantics tap action, not by touching the screen.
+    final handle = tester.ensureSemantics();
+    final speaker = FakeSpeaker();
+    await pumpApp(tester, speaker);
+
+    void expectActionable(String screen) {
+      final missing = <String>[];
+      void visit(SemanticsNode node) {
+        final data = node.getSemanticsData();
+        // ignore: deprecated_member_use
+        bool has(SemanticsFlag f) => data.hasFlag(f);
+        final control =
+            has(SemanticsFlag.isButton) || has(SemanticsFlag.hasToggledState);
+        final disabled =
+            has(SemanticsFlag.hasEnabledState) && !has(SemanticsFlag.isEnabled);
+        if (control && !disabled && !data.hasAction(SemanticsAction.tap)) {
+          missing.add(data.label);
+        }
+        node.visitChildren((child) {
+          visit(child);
+          return true;
+        });
+      }
+
+      var root = tester.getSemantics(find.byType(Scaffold).last);
+      while (root.parent != null) {
+        root = root.parent!;
+      }
+      visit(root);
+      expect(missing, isEmpty, reason: '$screen controls without a tap action');
+    }
+
+    expectActionable('Home');
+    await tester.tap(
+      find.bySemanticsLabel('App language: English. Change language'),
+    );
+    await tester.pumpAndSettle();
+    expectActionable('Language sheet');
+    await tester.tapAt(const Offset(10, 10)); // close the sheet
+    await tester.pumpAndSettle();
+
+    final nav = tester.state<NavigatorState>(find.byType(Navigator));
+    nav.push(
+      MaterialPageRoute(
+        builder: (_) => CaptureScreen(
+          findCameras: () async => [],
+          picker: (_) async =>
+              XFile.fromData(utf8.encode('png'), name: 'p.png'),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+    expectActionable('Capture');
+    await tester.tap(find.bySemanticsLabel('Take photo'));
+    await tester.pumpAndSettle();
+    expectActionable('Reader');
+    handle.dispose();
   });
 }

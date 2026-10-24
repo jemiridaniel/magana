@@ -78,7 +78,7 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get framingGuidance =>
-      'Tọgbọ peeji ahụ n\'ala ebe ìhè dị mma. Jide ekwentị ahụ n\'elu ya ihe dịka ogologo aka gị, ka akụkụ anọ ya niile pụta. Mgbe ahụ, pịa See foto, n\'okpuru ihuenyo.';
+      'Tọgbọ peeji ahụ n\'ala ebe ìhè dị mma, jide ekwentị ahụ n\'elu ya ihe dịka ogologo aka gị. Aga m agwa gị otú ị ga-esi bugharịa ya, ma see foto ahụ mgbe peeji ahụ niile kwụsiri ọtọ. Ị nwekwara ike ịpịa See foto.';
 
   @override
   String get repeat => 'Kwughachi';
@@ -348,4 +348,57 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get msg_nurse_call_working_hours =>
       'Thank you. A nurse will call you back during working hours.';
+
+  @override
+  String get guideTooDark =>
+      'Ọ gbara ọchịchịrị. Gbanye ọkụ ekwentị ma ọ bụ chọọ ìhè karịa.';
+
+  @override
+  String get guideNoPage =>
+      'Ahụbeghị m peeji. Tụgharịa ekwentị ahụ lee peeji ahụ.';
+
+  @override
+  String get guideMoveCloser => 'Bịaruo ekwentị ahụ nso na peeji ahụ ntakịrị.';
+
+  @override
+  String get guideLiftPhone =>
+      'Welie ekwentị ahụ elu ntakịrị, ka peeji ahụ niile pụta.';
+
+  @override
+  String get guideMoveUp =>
+      'Bugharịa ekwentị ahụ ntakịrị gaa n\'elu peeji ahụ. E bipụrụ elu ya.';
+
+  @override
+  String get guideMoveDown =>
+      'Bugharịa ekwentị ahụ ntakịrị gaa n\'okpuru peeji ahụ. E bipụrụ okpuru ya.';
+
+  @override
+  String get guideMoveLeft =>
+      'Bugharịa ekwentị ahụ ntakịrị gaa n\'aka ekpe. E bipụrụ akụkụ aka ekpe.';
+
+  @override
+  String get guideMoveRight =>
+      'Bugharịa ekwentị ahụ ntakịrị gaa n\'aka nri. E bipụrụ akụkụ aka nri.';
+
+  @override
+  String get guideHoldStill => 'Ọ dị mma. Jide ya nke ọma.';
+
+  @override
+  String get guideCapturing => 'Ana m ese foto ahụ.';
+
+  @override
+  String get autoCapture => 'See foto n\'onwe ya';
+
+  @override
+  String get torchOn => 'Gbanye ọkụ ekwentị';
+
+  @override
+  String get torchOff => 'Gbanyụọ ọkụ ekwentị';
+
+  @override
+  String get cameraView => 'Ihe igwefoto na-ahụ';
+
+  @override
+  String get cameraUnavailable =>
+      'Enweghị m ike iji igwefoto. Nye ikike igwefoto na Ntọala, ma ọ bụ họrọ foto site na foto gị.';
 }
