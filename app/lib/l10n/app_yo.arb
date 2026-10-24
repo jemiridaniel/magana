@@ -303,5 +303,12 @@
   "exactOpen": "Ṣí ètò náà",
   "notNow": "Kì í ṣe báyìí",
   "remindersMayBeLate": "Lórí fóònù yìí, ìrántí lè dún ní wákàtí kan lẹ́yìn àkókò. Kí ó lè dún ní àkókò, gba Magana láàyè fún aago àti ìrántí.",
-  "allowOnTime": "Gba ìrántí ní àkókò láàyè"
+  "allowOnTime": "Gba ìrántí ní àkókò láàyè",
+  "msg_q_bleeding_no_sight": "Ṣé ẹ̀jẹ̀ ń jáde lára rẹ láìnídìí? Fún àpẹẹrẹ ẹ̀jẹ̀ láti imú, ẹ̀jẹ̀ tí o ń tọ́ wò láti èrìgì, tàbí ṣé ẹnìkan ti sọ fún ọ pé ẹ̀jẹ̀ wà nínú èébì tàbí ìgbẹ́ rẹ?",
+  "msg_q_yellow_eyes_no_sight": "Ṣé ẹnìkan ti sọ fún ọ pé ojú rẹ tàbí awọ ara rẹ dà bí ẹni pé ó ti pọ́n?",
+  "msg_q_very_pale_no_sight": "Ṣé ẹnìkan ti sọ fún ọ pé àtẹ́lẹwọ́ rẹ, ètè rẹ tàbí inú ìpéǹpéjú rẹ funfun gan-an?",
+  "msg_q_dark_urine_no_sight": "Ṣé ẹnìkan ti sọ fún ọ pé ìtọ̀ rẹ ṣókùnkùn gan-an, bíi kóòkì tàbí tíì?",
+  "cantCheck": "Mi ò lè yẹ̀ ẹ́ wò",
+  "quickCheckSightNote": "Ìbéèrè yìí jẹ́ nípa bí nǹkan ṣe rí. Bí ẹnìkan tí o fọkàn tán bá wà pẹ̀lú rẹ, o lè bi í. Bí o kò bá lè yẹ̀ ẹ́ wò, yan Mi ò lè yẹ̀ ẹ́ wò.",
+  "couldNotCheck": "{count, plural, =1{O kò lè yẹ àmì 1 wò. Sọ fún nọ́ọ̀sì nígbà tí wọ́n bá pè ọ́.} other{O kò lè yẹ àmì {count} wò. Sọ fún nọ́ọ̀sì nígbà tí wọ́n bá pè ọ́.}}"
 }

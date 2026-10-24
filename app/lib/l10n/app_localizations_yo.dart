@@ -1141,4 +1141,38 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get allowOnTime => 'Gba ìrántí ní àkókò láàyè';
+
+  @override
+  String get msg_q_bleeding_no_sight =>
+      'Ṣé ẹ̀jẹ̀ ń jáde lára rẹ láìnídìí? Fún àpẹẹrẹ ẹ̀jẹ̀ láti imú, ẹ̀jẹ̀ tí o ń tọ́ wò láti èrìgì, tàbí ṣé ẹnìkan ti sọ fún ọ pé ẹ̀jẹ̀ wà nínú èébì tàbí ìgbẹ́ rẹ?';
+
+  @override
+  String get msg_q_yellow_eyes_no_sight =>
+      'Ṣé ẹnìkan ti sọ fún ọ pé ojú rẹ tàbí awọ ara rẹ dà bí ẹni pé ó ti pọ́n?';
+
+  @override
+  String get msg_q_very_pale_no_sight =>
+      'Ṣé ẹnìkan ti sọ fún ọ pé àtẹ́lẹwọ́ rẹ, ètè rẹ tàbí inú ìpéǹpéjú rẹ funfun gan-an?';
+
+  @override
+  String get msg_q_dark_urine_no_sight =>
+      'Ṣé ẹnìkan ti sọ fún ọ pé ìtọ̀ rẹ ṣókùnkùn gan-an, bíi kóòkì tàbí tíì?';
+
+  @override
+  String get cantCheck => 'Mi ò lè yẹ̀ ẹ́ wò';
+
+  @override
+  String get quickCheckSightNote =>
+      'Ìbéèrè yìí jẹ́ nípa bí nǹkan ṣe rí. Bí ẹnìkan tí o fọkàn tán bá wà pẹ̀lú rẹ, o lè bi í. Bí o kò bá lè yẹ̀ ẹ́ wò, yan Mi ò lè yẹ̀ ẹ́ wò.';
+
+  @override
+  String couldNotCheck(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'O kò lè yẹ àmì $count wò. Sọ fún nọ́ọ̀sì nígbà tí wọ́n bá pè ọ́.',
+      one: 'O kò lè yẹ àmì 1 wò. Sọ fún nọ́ọ̀sì nígbà tí wọ́n bá pè ọ́.',
+    );
+    return '$_temp0';
+  }
 }

@@ -10,6 +10,9 @@ import '../policy.dart';
 import '../widgets.dart';
 import 'everyday.dart';
 
+/// The answer sent for "I can't check" (see backend triage.SIGHT_BASED).
+const cantCheck = 'cant_check';
+
 /// Opens the phone dialler on a number; replaceable in tests.
 Future<void> Function(String number) dial = (number) =>
     launchUrl(Uri(scheme: 'tel', path: number));
@@ -223,8 +226,11 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
 
   void _askCurrent() {
     final q = _asked[_index];
-    AppScope.of(context).speaker.say(_text(q));
+    AppScope.of(context).speaker
+        .say(q.cantCheck ? '${_text(q)} ${_l.quickCheckSightNote}' : _text(q));
   }
+
+  int get _unchecked => _answers.values.where((v) => v == cantCheck).length;
 
   Future<void> _answer(Object value) async {
     final q = _asked[_index];
@@ -243,7 +249,12 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
       final r = await scope.api.triageAssess(_answers);
       if (!mounted) return;
       setState(() => _result = r);
-      scope.speaker.say(_resultText(_l, r));
+      scope.speaker.say(
+        [
+          _resultText(_l, r),
+          if (_unchecked > 0) _l.couldNotCheck(_unchecked),
+        ].join(' '),
+      );
     } on ApiException catch (e) {
       if (mounted) setState(() => _error = messageFor(_l, e.code));
     }
@@ -316,27 +327,12 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
                 ),
               ],
             ),
-            PrimaryButton(label: l.nextLabel, onTap: () => _answer(_days)),
-          ] else
-            Row(
-              children: [
-                Expanded(
-                  child: PrimaryButton(
-                    label: l.yes,
-                    onTap: () => _answer(true),
-                  ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: SecondaryButton(
-                    label: l.no,
-                    onTap: () => _answer(false),
-                  ),
-                ),
-              ],
-            ),
-          // Only the last two answers, below the buttons: with ten questions a full
-          // list pushed Yes and No off the screen.
+          ],
+          // Signs normally checked by looking (DRAFT, pending Dr. Amos):
+          // "I can't check" is never a yes, and never leaves the result at
+          // routine (the backend raises it to the faster call-back).
+          if (q.cantCheck) NoteBox(text: l.quickCheckSightNote),
+          // Only the last two answers: with ten questions a full list was long.
           for (final done in asked.take(_index).toList().reversed.take(2))
             NoteBox(
               text: '${_text(done)} ${_answerText(l, _answers[done.id])}',
@@ -344,13 +340,41 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
         ],
         NoteBox(text: l.quickCheckNote),
       ],
-      bottom: const [EmergencyBanner()],
+      // The answers stay pinned above the 112 banner: long questions used to
+      // push Yes and No below the screen.
+      bottom: [
+        if (q != null && q.type == 'number')
+          PrimaryButton(label: l.nextLabel, onTap: () => _answer(_days))
+        else if (q != null) ...[
+          Row(
+            children: [
+              Expanded(
+                child: PrimaryButton(label: l.yes, onTap: () => _answer(true)),
+              ),
+              const SizedBox(width: 10),
+              Expanded(
+                child: SecondaryButton(
+                  label: l.no,
+                  onTap: () => _answer(false),
+                ),
+              ),
+            ],
+          ),
+          if (q.cantCheck)
+            SecondaryButton(
+              label: l.cantCheck,
+              onTap: () => _answer(cantCheck),
+            ),
+        ],
+        const EmergencyBanner(),
+      ],
     );
   }
 
   String _answerText(AppLocalizations l, Object? v) => switch (v) {
     true => l.yes,
     false => l.no,
+    cantCheck => l.cantCheck,
     int days => l.daysCount(days),
     _ => '',
   };
@@ -382,6 +406,8 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
             kind: emergency ? NoteKind.warning : NoteKind.info,
           ),
         ),
+        if (_unchecked > 0)
+          NoteBox(text: l.couldNotCheck(_unchecked), kind: NoteKind.warning),
       ],
       bottom: [
         if (emergency)

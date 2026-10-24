@@ -42,6 +42,11 @@ ENGLISH = {
     "q_very_pale": "Are your palms, lips or inner eyelids very pale?",
     "q_dark_urine": "Is your urine very dark, like cola or tea?",
     "q_too_weak": "Are you too weak to sit up or stand without help?",
+    # Sight-based danger signs, asked so a blind user can answer (DRAFT, pending Dr. Amos).
+    "q_bleeding_no_sight": "Are you bleeding without a clear reason? For example a nosebleed, blood you can taste from your gums, or has anyone told you there is blood in your vomit or stool?",
+    "q_yellow_eyes_no_sight": "Has anyone told you that your eyes or skin look yellow?",
+    "q_very_pale_no_sight": "Has anyone told you that your palms, lips or the inside of your eyelids look very pale?",
+    "q_dark_urine_no_sight": "Has anyone told you that your urine is very dark, like cola or tea?",
     "go_to_clinic_now": "This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.",
     "nurse_call_within_2_hours": "Thank you. A nurse will call you within 2 hours.",
     "callback_booked": "Your call back is booked. A nurse or pharmacist will call you.",

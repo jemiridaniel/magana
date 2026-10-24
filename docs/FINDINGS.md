@@ -16,14 +16,25 @@ No real phone and no blind or low-vision tester has been used yet.
 ## 2026-10-24 · Triage/Ibà, accessibility: the quick check asks about things you need sight to check
 
 - **What we tested and how:** the Ibà quick check on the Emulator, reviewed by Jemiri Daniel Taiwo from screenshots of the answered questions.
-- **Result:** at least 3 of the questions can't be answered without sight:
-  - "Are you bleeding without a clear reason, from the nose or gums, or in vomit or stool?"
-  - "Is your urine very dark, like cola or tea?"
-  - "Are your palms, lips or inner eyelids very pale?"
+- **Result:** 4 of the 10 danger-sign questions need sight to answer:
+  - bleeding "in vomit or stool";
+  - "eyes or skin turned yellow";
+  - "palms, lips or inner eyelids very pale";
+  - "urine very dark, like cola or tea".
 
   A blind user can't check these alone, so a "No" may only mean "I can't tell", and a danger sign could be missed.
-- **What we changed:** nothing yet. This entry records the problem.
-- **Status:** open. The rewording is clinical content and needs Dr. Amos's sign-off.
+- **What we changed (this commit):**
+  - Magana now words these four questions so they can be answered without sight: "Has anyone told you…", and for bleeding also signs you can feel, such as a nosebleed or blood you can taste. The wording exists in English, Hausa, Yorùbá and Igbo.
+  - The four questions also offer "I can't check", with a note suggesting the user ask someone they trust.
+  - "I can't check" is sent to Ibà as "no", so it is never an emergency on its own. If the result would be routine, Magana raises it to the faster call-back. The result says "You could not check N signs. Tell the nurse when they call."
+  - A "Yes" is still always an emergency.
+  - Ibà's own rules and question ids are unchanged.
+- **Also found while testing:** on a 390×844 phone, the long bleeding question pushed "Yes" below the visible screen. The answer buttons are now pinned above the 112 banner.
+- **Tests:**
+  - Backend: `test_sight_based_questions_are_asked_without_needing_sight`, `test_cant_check_is_never_a_yes_and_ibà_sees_false`, `test_cant_check_never_lowers_a_higher_priority`, `test_cant_check_without_iba`.
+  - App: `Iba down: built-in questions, labelled honestly, buttons stay on screen`, `a sign you need sight for: worded for a blind user, cannot check`.
+- **Emulator check with TalkBack:** we went through all 10 built-in questions with "I can't check" on question 5. The answer buttons were visible on every question. The result was "urgent" (`triage source=fallback reason=not_configured priority=urgent`, with no answers logged) and showed the could-not-check note. An earlier automated run left the quick check at about question 6 without an error; the step-by-step rerun completed, and we didn't find the cause (possibly our tap automation).
+- **Status:** fixed in Magana. The wording, the translations and the "can't check → faster call-back" rule are drafts pending Dr. Amos's sign-off, and the translations need native speakers. Ibà's own wording (iba-natlas) still assumes sight. Not yet tried by a blind user.
 
 ## 2026-10-24 · Accessibility: TalkBack speaking over the app skipped lines
 

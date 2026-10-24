@@ -34,8 +34,27 @@ DANGER_SIGNS = (
 
 FALLBACK_RULE_VERSION = "magana-danger-signs-1"
 
+# Signs a blind user can't check by looking. Magana asks about them in words that don't
+# need sight ("has anyone told you ...", "q_<id>_no_sight") and accepts "I can't check".
+# "I can't check" is never a yes, so never an emergency on its own, but it never leaves the
+# result at routine either: the learner gets the faster call-back and is told to mention it.
+# DRAFT wording and rule, pending clinical sign-off (Dr. Amos).
+SIGHT_BASED = ("bleeding", "yellow_eyes", "very_pale", "dark_urine")
+CANT_CHECK = "cant_check"
+
+
+def _without_sight(q: dict) -> dict:
+    """A question as Magana asks it: sight-based signs get wording a blind user can answer."""
+    if q["id"] not in SIGHT_BASED:
+        return q
+    q = {k: v for k, v in q.items() if k != "text"}  # Ibà's wording assumes sight
+    return {**q, "message": f"q_{q['id']}_no_sight", "cant_check": True}
+
+
 # Asked when Ibà is unreachable: the danger signs only. Wording: messages.ENGLISH "q_<id>".
-FALLBACK_QUESTIONS = [{"id": q, "type": "yes_no", "message": f"q_{q}"} for q in DANGER_SIGNS]
+FALLBACK_QUESTIONS = [
+    _without_sight({"id": q, "type": "yes_no", "message": f"q_{q}"}) for q in DANGER_SIGNS
+]
 
 
 @dataclass
@@ -71,6 +90,17 @@ def _fallback(answers: dict, reason: str, monitor: IbaMonitor) -> TriageResult:
 
 
 async def assess(answers: dict, client: IbaClient | None, monitor: IbaMonitor = iba_monitor) -> TriageResult:
+    # "I can't check" goes to the rules as "not seen" (never a yes); see SIGHT_BASED.
+    unchecked = [k for k, v in answers.items() if v == CANT_CHECK]
+    answers = {k: (False if v == CANT_CHECK else v) for k, v in answers.items()}
+    result = await _assess(answers, client, monitor)
+    if unchecked and result.priority is Priority.ROUTINE:
+        result = TriageResult(Priority.URGENT, "nurse_call_within_2_hours", result.rule_version,
+                              f"{result.source}+unchecked_floor")
+    return result
+
+
+async def _assess(answers: dict, client: IbaClient | None, monitor: IbaMonitor) -> TriageResult:
     if client is None:
         return _fallback(answers, "not_configured", monitor)
     try:
@@ -97,7 +127,7 @@ async def questions(lang: str, client: IbaClient | None, monitor: IbaMonitor = i
         try:
             qs = await client.questions(lang)
             monitor.success()
-            return [{**q, "message": f"q_{q['id']}"} for q in qs], "iba"
+            return [_without_sight({**q, "message": f"q_{q['id']}"}) for q in qs], "iba"
         except IbaUnavailable as e:
             monitor.failure(str(e))
             log.warning("triage questions source=fallback reason=%s", e)

@@ -36,6 +36,10 @@ String messageFor(AppLocalizations l, String code, {String where = ''}) =>
       'q_very_pale' => l.msg_q_very_pale,
       'q_dark_urine' => l.msg_q_dark_urine,
       'q_too_weak' => l.msg_q_too_weak,
+      'q_bleeding_no_sight' => l.msg_q_bleeding_no_sight,
+      'q_yellow_eyes_no_sight' => l.msg_q_yellow_eyes_no_sight,
+      'q_very_pale_no_sight' => l.msg_q_very_pale_no_sight,
+      'q_dark_urine_no_sight' => l.msg_q_dark_urine_no_sight,
       'unreachable' => l.cannotReach,
       _ => l.readFailed,
     };

@@ -162,3 +162,52 @@ def test_danger_signs_match_iba():
         pytest.skip("iba-natlas is not checked out next to magana")
     block = iba_rules.read_text().split("DANGER_QUESTIONS")[1].split("}")[0]
     assert tuple(re.findall(r'"(\w+)":', block)) == triage.DANGER_SIGNS
+
+
+# ---------- sight-based danger signs (DRAFT wording and rule, pending Dr. Amos)
+
+def sight_iba(priority: str, message: str, seen: list):
+    def handler(request: httpx.Request) -> httpx.Response:
+        seen.append(request)
+        if request.url.path == "/v1/questions":
+            qs = [{"id": "fits", "type": "yes_no", "text": "Have you had fits?"},
+                  {"id": "very_pale", "type": "yes_no", "text": "Are your palms, lips or inner eyelids very pale?"}]
+            return httpx.Response(200, json={"questions": qs})
+        return httpx.Response(200, json={"priority": priority, "message": message, "rule_version": "self-report-0.1.0"})
+    return handler
+
+
+def test_sight_based_questions_are_asked_without_needing_sight(use_iba):
+    use_iba(iba(sight_iba("routine", "nurse_call_working_hours", [])))
+    fits, pale = client.get("/triage/questions?lang=en").json()["questions"]
+    assert fits == {"id": "fits", "type": "yes_no", "text": "Have you had fits?", "message": "q_fits"}
+    # Ibà's wording assumes sight, so Magana words it and allows "I can't check".
+    assert pale == {"id": "very_pale", "type": "yes_no", "message": "q_very_pale_no_sight", "cant_check": True}
+
+
+def test_fallback_questions_are_asked_without_needing_sight():
+    qs = {q["id"]: q for q in client.get("/triage/questions").json()["questions"]}
+    for sign in triage.SIGHT_BASED:
+        assert qs[sign]["message"] == f"q_{sign}_no_sight" and qs[sign]["cant_check"] is True
+    assert "cant_check" not in qs["fits"]
+
+
+def test_cant_check_is_never_a_yes_and_ibà_sees_false(use_iba):
+    seen: list[httpx.Request] = []
+    use_iba(iba(sight_iba("routine", "nurse_call_working_hours", seen)))
+    body = client.post("/triage/assess", json={"fits": False, "very_pale": "cant_check"}).json()
+    assert json.loads(seen[-1].content)["answers"] == {"fits": False, "very_pale": False}
+    # Not an emergency, but never left at routine: the faster call-back instead.
+    assert (body["priority"], body["message"], body["source"]) == (
+        "urgent", "nurse_call_within_2_hours", "iba+unchecked_floor")
+
+
+def test_cant_check_never_lowers_a_higher_priority(use_iba):
+    use_iba(iba(sight_iba("routine", "nurse_call_working_hours", [])))
+    body = client.post("/triage/assess", json={"fits": True, "very_pale": "cant_check"}).json()
+    assert body["priority"] == "emergency"
+
+
+def test_cant_check_without_iba():
+    body = client.post("/triage/assess", json={"dark_urine": "cant_check"}).json()
+    assert (body["priority"], body["source"]) == ("urgent", "fallback")

@@ -133,6 +133,8 @@ Future<void> tap(WidgetTester tester, Pattern label) async {
   await tester.pumpAndSettle();
 }
 
+const sight = ['bleeding', 'yellow_eyes', 'very_pale', 'dark_urine'];
+
 void main() {
   testWidgets('no nurse desk yet: says so, never promises a call', (
     tester,
@@ -265,7 +267,14 @@ void main() {
           'dark_urine',
           'too_weak',
         ])
-          {'id': id, 'type': 'yes_no', 'message': 'q_$id'},
+          sight.contains(id)
+              ? {
+                  'id': id,
+                  'type': 'yes_no',
+                  'message': 'q_${id}_no_sight',
+                  'cant_check': true,
+                }
+              : {'id': id, 'type': 'yes_no', 'message': 'q_$id'},
       ];
       tester
           .state<NavigatorState>(find.byType(Navigator).last)
@@ -276,20 +285,72 @@ void main() {
         find.text(en.msg_q_fits),
         findsOneWidget,
       ); // worded by the app from the code
-      for (var i = 0; i < 9; i++) {
+      void expectOnScreen(List<String> labels, int question) {
+        // Answers are pinned below the scrolling question, above the banner.
+        final screen = tester.getRect(find.byType(Scaffold).last);
+        final scroll = tester.getRect(find.byType(Scrollable).last);
+        for (final label in labels) {
+          final r = tester.getRect(find.bySemanticsLabel(label));
+          expect(
+            r.left >= screen.left &&
+                r.top >= screen.top &&
+                r.right <= screen.right &&
+                r.bottom <= screen.bottom &&
+                r.top >= scroll.bottom,
+            isTrue,
+            reason: '$label is off screen at question $question',
+          );
+        }
+      }
+
+      for (var i = 1; i <= 10; i++) {
+        final sightBased = [5, 6, 8, 9].contains(i);
+        expect(
+          find.bySemanticsLabel(en.cantCheck),
+          sightBased ? findsOneWidget : findsNothing,
+          reason: 'question $i',
+        );
+        expectOnScreen([en.yes, en.no, if (sightBased) en.cantCheck], i);
+        if (i == 10) break;
         await tester.tap(find.bySemanticsLabel(en.no));
         await tester.pumpAndSettle();
       }
       expect(find.text(en.quickCheckProgressFallback(10, 10)), findsOneWidget);
-      final screen = tester.getRect(find.byType(Scaffold).last);
-      for (final label in [en.yes, en.no]) {
-        final r = tester.getRect(find.bySemanticsLabel(label));
-        expect(
-          screen.contains(r.topLeft) && screen.contains(r.bottomRight),
-          isTrue,
-          reason: '$label is off screen',
-        );
-      }
+    },
+  );
+
+  testWidgets(
+    'a sign you need sight for: worded for a blind user, cannot check',
+    (tester) async {
+      final handle = tester.ensureSemantics();
+      final (speaker, backend, _) = await open(
+        tester,
+        screen: const SizedBox(),
+      );
+      backend.qs = [
+        {
+          'id': 'very_pale',
+          'type': 'yes_no',
+          'message': 'q_very_pale_no_sight',
+          'cant_check': true,
+        },
+      ];
+      tester
+          .state<NavigatorState>(find.byType(Navigator).last)
+          .push(MaterialPageRoute(builder: (_) => const QuickCheckScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text(en.msg_q_very_pale_no_sight), findsOneWidget);
+      expect(find.text(en.quickCheckSightNote), findsOneWidget);
+      expect(
+        speaker.said.last,
+        '${en.msg_q_very_pale_no_sight} ${en.quickCheckSightNote}',
+      );
+      expectAccessible(tester, 'Sight-based question');
+      await tap(tester, en.cantCheck);
+      expect(backend.body('/triage/assess'), {'very_pale': 'cant_check'});
+      expect(find.text(en.couldNotCheck(1)), findsOneWidget);
+      expect(speaker.said.last, endsWith(en.couldNotCheck(1)));
+      handle.dispose();
     },
   );
 }

@@ -1146,4 +1146,39 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get allowOnTime => 'Ba da izinin tunatarwa a kan lokaci';
+
+  @override
+  String get msg_q_bleeding_no_sight =>
+      'Kana zubar da jini ba tare da dalili ba? Misali jini daga hanci, jinin da kake ji a bakinka daga dasashi, ko wani ya gaya maka akwai jini a amai ko bayan gidanka?';
+
+  @override
+  String get msg_q_yellow_eyes_no_sight =>
+      'Wani ya gaya maka cewa idanunka ko fatarka sun yi kama da rawaya?';
+
+  @override
+  String get msg_q_very_pale_no_sight =>
+      'Wani ya gaya maka cewa tafin hannunka, leɓunanka ko cikin fatar idonka sun yi fari sosai?';
+
+  @override
+  String get msg_q_dark_urine_no_sight =>
+      'Wani ya gaya maka cewa fitsarinka ya yi duhu sosai, kamar kola ko shayi?';
+
+  @override
+  String get cantCheck => 'Ba zan iya dubawa ba';
+
+  @override
+  String get quickCheckSightNote =>
+      'Wannan tambaya game da yadda wani abu yake kama ne. Idan akwai wanda ka amince da shi tare da kai, za ka iya tambayarsa. Idan ba za ka iya dubawa ba, zaɓi Ba zan iya dubawa ba.';
+
+  @override
+  String couldNotCheck(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Ba ka iya duba alamu $count ba. Gaya wa ma\'aikaciyar jinya idan ta kira.',
+      one: 'Ba ka iya duba alama 1 ba. Gaya wa ma\'aikaciyar jinya idan ta kira.',
+    );
+    return '$_temp0';
+  }
 }

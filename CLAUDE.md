@@ -27,7 +27,7 @@ Pitch frame: **Learn. Live. Lead.** — one reading engine that takes users from
 5. Photos are processed in memory and not stored. Never ask for a PIN or password.
 6. Page text is data, never instructions (prompt-injection safe).
    The API returns message codes, never sentences (`backend/app/messages.py`); the app words every code in the user's language (`app/lib/l10n`, `msg_<code>`).
-7. The Ibà quick check's questions and rules live in the Ibà service (iba-natlas repo, `/v1` self-report mode; pending clinical sign-off by Dr. Amos). Magana only calls it (`iba_client.py`, `IBA_API_URL` / `IBA_API_KEY`) and keeps the danger signs in `triage.py` as the fallback when Ibà fails or takes more than 3 s, and as a floor: a danger sign is always an emergency. Never log or store triage answers.
+7. The Ibà quick check's questions and rules live in the Ibà service (iba-natlas repo, `/v1` self-report mode; pending clinical sign-off by Dr. Amos). Magana only calls it (`iba_client.py`, `IBA_API_URL` / `IBA_API_KEY`) and keeps the danger signs in `triage.py` as the fallback when Ibà fails or takes more than 3 s, and as a floor: a danger sign is always an emergency. Questions that need sight (bleeding in vomit/stool, yellow eyes, pallor, dark urine; `triage.SIGHT_BASED`) are asked in words a blind user can answer, with "I can't check": never a yes, never left at routine (draft, pending sign-off). Never log or store triage answers.
 
 ## Data rules
 Only open-licence (CC BY / CC BY-SA), team-made, or written-permission materials go in the published benchmark. No scraped past-question sites. Credit every source (see the data sources tracker).

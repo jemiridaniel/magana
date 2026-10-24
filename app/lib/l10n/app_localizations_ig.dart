@@ -1143,4 +1143,39 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get allowOnTime => 'Kwe ihe ncheta n\'oge';
+
+  @override
+  String get msg_q_bleeding_no_sight =>
+      'Ọbara ọ na-esi gị n\'enweghị ihe kpatara ya? Dịka ọbara si n\'imi, ọbara ị na-anụ ụtọ ya site n\'ọnụ eze, ma ọ bụ onye ọ gwara gị na ọbara dị n\'agbọ ma ọ bụ nsị gị?';
+
+  @override
+  String get msg_q_yellow_eyes_no_sight =>
+      'Onye ọ gwara gị na anya gị ma ọ bụ akpụkpọ ahụ gị dị ka odo odo?';
+
+  @override
+  String get msg_q_very_pale_no_sight =>
+      'Onye ọ gwara gị na ọbụ aka gị, egbugbere ọnụ gị ma ọ bụ ime akpụkpọ anya gị chachara nke ukwuu?';
+
+  @override
+  String get msg_q_dark_urine_no_sight =>
+      'Onye ọ gwara gị na mamịrị gị gbara oji nke ukwuu, dịka kola ma ọ bụ tii?';
+
+  @override
+  String get cantCheck => 'Enweghị m ike ilele ya';
+
+  @override
+  String get quickCheckSightNote =>
+      'Ajụjụ a bụ maka otú ihe si dị n\'anya. Ọ bụrụ na onye ị tụkwasịrị obi nọnyeere gị, ị nwere ike ịjụ ya. Ọ bụrụ na ị nweghị ike ilele ya, họrọ Enweghị m ike ilele ya.';
+
+  @override
+  String couldNotCheck(num count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'Ị nweghị ike ilele ihe ịrịba ama $count. Gwa nọọsụ mgbe ọ kpọrọ gị.',
+      one: 'Ị nweghị ike ilele otu ihe ịrịba ama. Gwa nọọsụ mgbe ọ kpọrọ gị.',
+    );
+    return '$_temp0';
+  }
 }
