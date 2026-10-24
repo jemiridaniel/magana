@@ -1,0 +1,436 @@
+import 'package:flutter/material.dart';
+
+import '../api.dart';
+import '../app_scope.dart';
+import '../l10n/app_localizations.dart';
+import '../speech.dart';
+import '../theme.dart';
+
+const _speeds = [0.75, 1.0, 1.25, 1.5];
+
+/// Reads a page aloud item by item (lines, or table rows) with Repeat,
+/// Previous and Next. Low-confidence items carry a spoken warning.
+class ReaderScreen extends StatefulWidget {
+  const ReaderScreen({super.key, required this.result});
+  final ReadResult result;
+
+  @override
+  State<ReaderScreen> createState() => _ReaderScreenState();
+}
+
+class _ReaderScreenState extends State<ReaderScreen> {
+  late Speaker _speaker;
+  int _index = 0;
+  bool _playing = false;
+  int _run = 0; // bumps on every command so an old reading loop stops
+  int _speed = 1;
+
+  List<ReadItem> get _items => widget.result.items;
+  AppLocalizations get _l => AppLocalizations.of(context);
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _play(0, intro: true));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _speaker = AppScope.of(context).speaker;
+  }
+
+  @override
+  void dispose() {
+    _run++;
+    _speaker.stop();
+    super.dispose();
+  }
+
+  String _position(ReadItem item) => switch (item) {
+    ReadItem(isRow: false) => _l.linePosition(item.number, item.total),
+    ReadItem(table: final int t) => _l.rowPositionInTable(
+      item.number,
+      item.total,
+      t,
+    ),
+    _ => _l.rowPosition(item.number, item.total),
+  };
+
+  String? _warning(ReadItem item) => !item.unsure
+      ? null
+      : (item.isRow ? _l.unsureRow(item.number) : _l.unsureLine(item.number));
+
+  /// Text exactly as printed, then the warning if the backend was unsure.
+  String _spoken(ReadItem item) {
+    final body = item.isRow
+        ? '${_position(item)}. ${item.cells.map((c) => c.$1.isEmpty ? c.$2 : '${c.$1}: ${c.$2}').join('. ')}'
+        : item.text;
+    final warning = _warning(item);
+    if (warning == null) return item.isRow ? '$body.' : body;
+    return '$body. $warning';
+  }
+
+  String _counts() {
+    final lines = _items.where((i) => !i.isRow).length;
+    final rows = _items.length - lines;
+    return [
+      if (lines > 0) _l.lineCount(lines),
+      if (rows > 0) _l.rowCount(rows),
+    ].join(', ');
+  }
+
+  String _intro() {
+    final unsure = widget.result.unsureCount;
+    return [
+      ...widget.result.tips,
+      _l.pageRead,
+      '${_counts()}.',
+      if (unsure > 0) _l.unsureSummary(unsure),
+    ].join(' ');
+  }
+
+  /// Reads from [from] to the end, unless interrupted by another command.
+  Future<void> _play(int from, {bool intro = false}) async {
+    final run = ++_run;
+    setState(() {
+      _index = from;
+      _playing = true;
+    });
+    if (intro) await _speaker.say(_intro());
+    for (var i = from; i < _items.length; i++) {
+      if (run != _run || !mounted) return;
+      setState(() => _index = i);
+      await _speaker.say(_spoken(_items[i]));
+    }
+    if (run != _run || !mounted) return;
+    setState(() => _playing = false);
+    await _speaker.say(_l.endOfPageHint);
+  }
+
+  Future<void> _sayOnly(int i) async {
+    _run++;
+    setState(() {
+      _index = i;
+      _playing = false;
+    });
+    await _speaker.say(_spoken(_items[i]));
+  }
+
+  void _prev() => _index > 0
+      ? _go(_index - 1)
+      : _speaker.say(_items[_index].isRow ? _l.firstRow : _l.firstLine);
+  void _next() =>
+      _index < _items.length - 1 ? _go(_index + 1) : _speaker.say(_l.endOfPage);
+  void _repeat() => _go(_index);
+  void _go(int i) => _playing ? _play(i) : _sayOnly(i);
+
+  void _togglePause() {
+    if (_playing) {
+      _run++;
+      _speaker.stop();
+      setState(() => _playing = false);
+    } else {
+      _play(_index);
+    }
+  }
+
+  Future<void> _cycleSpeed() async {
+    setState(() => _speed = (_speed + 1) % _speeds.length);
+    await _speaker.setRate(_speeds[_speed]);
+    await _speaker.say(_l.speed(_speedValue()));
+    if (_playing) _play(_index);
+  }
+
+  // "1×" not "1.0×", the same on web and Android.
+  String _speedValue() =>
+      '${_speeds[_speed].toString().replaceFirst(RegExp(r'\.0$'), '')}×';
+
+  @override
+  Widget build(BuildContext context) {
+    final l = _l;
+    final item = _items[_index];
+    final row = item.isRow;
+    final warning = _warning(item);
+    final unsure = widget.result.unsureCount;
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Row(
+                children: [
+                  Semantics(
+                    button: true,
+                    label: l.backToHome,
+                    excludeSemantics: true,
+                    child: OutlinedButton(
+                      onPressed: () => Navigator.of(context).maybePop(),
+                      style: outlinedTile(radius: 32).copyWith(
+                        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+                      ),
+                      child: const Icon(Icons.chevron_left, size: 32),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Semantics(
+                      header: true,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            l.yourPage,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
+                          Text(
+                            '${_counts()}${unsure > 0 ? ' · ${l.unclearCount(unsure)}' : ''}',
+                            style: const TextStyle(
+                              fontSize: 16,
+                              color: MaganaColors.muted,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 16),
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      _ItemCard(
+                        item: item,
+                        position: _position(item),
+                        status: _playing ? l.nowReading : null,
+                      ),
+                      if (warning != null) ...[
+                        const SizedBox(height: 16),
+                        _WarningNote(text: warning),
+                      ],
+                    ],
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16),
+              Row(
+                children: [
+                  Expanded(
+                    child: _ControlButton(
+                      label: l.previous,
+                      semantics: row ? l.previousRow : l.previousLine,
+                      onPressed: _prev,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _ControlButton(
+                      label: l.repeat,
+                      semantics: row ? l.repeatRow : l.repeatLine,
+                      onPressed: _repeat,
+                    ),
+                  ),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: _ControlButton(
+                      label: l.next,
+                      semantics: row ? l.nextRow : l.nextLine,
+                      onPressed: _next,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 10),
+              _ControlButton(
+                label: l.speed(_speedValue()),
+                semantics: l.speedLabel(_speedValue()),
+                onPressed: _cycleSpeed,
+              ),
+              const SizedBox(height: 10),
+              Semantics(
+                button: true,
+                label: _playing ? l.pauseLabel : l.playLabel,
+                excludeSemantics: true,
+                child: OutlinedButton.icon(
+                  onPressed: _togglePause,
+                  icon: Icon(
+                    _playing ? Icons.pause : Icons.play_arrow,
+                    size: 30,
+                  ),
+                  label: Text(_playing ? l.pause : l.play),
+                  style: outlinedTile(radius: 36, bg: MaganaColors.amber)
+                      .copyWith(
+                        minimumSize: const WidgetStatePropertyAll(
+                          Size.fromHeight(72),
+                        ),
+                        side: const WidgetStatePropertyAll(
+                          BorderSide(color: MaganaColors.ink, width: 3),
+                        ),
+                        textStyle: const WidgetStatePropertyAll(
+                          TextStyle(
+                            fontFamily: 'AtkinsonHyperlegible',
+                            fontSize: 21,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                      ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _ItemCard extends StatelessWidget {
+  const _ItemCard({required this.item, required this.position, this.status});
+  final ReadItem item;
+  final String position;
+  final String? status;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      container: true,
+      label: position,
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(22),
+          border: Border.all(color: MaganaColors.green, width: 3),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ExcludeSemantics(
+              child: Text(
+                status == null ? position : '$position · $status',
+                style: const TextStyle(
+                  fontSize: 17,
+                  fontWeight: FontWeight.w700,
+                  color: MaganaColors.green,
+                ),
+              ),
+            ),
+            const SizedBox(height: 14),
+            if (item.isRow)
+              for (final (header, value) in item.cells)
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      if (header.isNotEmpty)
+                        Text(
+                          header,
+                          style: const TextStyle(
+                            fontSize: 15,
+                            color: MaganaColors.muted,
+                          ),
+                        ),
+                      Text(
+                        value,
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+            else
+              Text(
+                item.text,
+                style: const TextStyle(
+                  fontSize: 26,
+                  height: 1.35,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _WarningNote extends StatelessWidget {
+  const _WarningNote({required this.text});
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      container: true,
+      liveRegion: true,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+        decoration: BoxDecoration(
+          color: MaganaColors.warnFill,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: MaganaColors.warnBorder, width: 2),
+        ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const ExcludeSemantics(
+              child: Icon(
+                Icons.warning_amber_rounded,
+                size: 26,
+                color: MaganaColors.warnBorder,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Text(
+                text,
+                style: const TextStyle(
+                  fontSize: 17,
+                  height: 1.4,
+                  color: MaganaColors.warnInk,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _ControlButton extends StatelessWidget {
+  const _ControlButton({
+    required this.label,
+    required this.semantics,
+    required this.onPressed,
+  });
+  final String label;
+  final String semantics;
+  final VoidCallback onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      button: true,
+      label: semantics,
+      excludeSemantics: true,
+      child: OutlinedButton(
+        onPressed: onPressed,
+        style: outlinedTile(),
+        child: Text(label),
+      ),
+    );
+  }
+}
