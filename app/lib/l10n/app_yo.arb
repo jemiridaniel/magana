@@ -392,5 +392,6 @@
   "aboutExplain": "Àlàyé ní èdè rẹ",
   "aboutSpeech": "Ìdánimọ̀ ohùn",
   "openSourceLicences": "Ìwé-àṣẹ orísun ṣíṣí",
-  "aboutContact": "Ìbéèrè tàbí ìṣòro: fi ímeèlì ránṣẹ́ sí {email}"
+  "aboutContact": "Ìbéèrè tàbí ìṣòro: fi ímeèlì ránṣẹ́ sí {email}",
+  "msg_explain_not_available": "Àlàyé kò tíì sí. Ojú-ìwé náà nìyí, a kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́."
 }

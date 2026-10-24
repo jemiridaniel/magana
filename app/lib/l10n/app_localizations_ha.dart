@@ -1504,4 +1504,8 @@ class AppLocalizationsHa extends AppLocalizations {
   String aboutContact(String email) {
     return 'Tambayoyi ko matsaloli: aika imel zuwa $email';
   }
+
+  @override
+  String get msg_explain_not_available =>
+      'Bayani bai samu ba tukuna. Ga shafin, an karanta shi daidai yadda aka buga.';
 }

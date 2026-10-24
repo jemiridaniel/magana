@@ -196,6 +196,10 @@ def explain_page(body: ExplainRequest, tier: policy.Tier = Depends(caller_tier),
     require(tier, policy.Feature.EXPLAIN)
     if not body.source_text.strip() or len(body.source_text) > explain.MAX_SOURCE_CHARS:
         raise HTTPException(400, {"code": "explain_bad_source"})
+    if not explain.allowed(engine):
+        # Tester and production builds: no page text leaves for an unapproved host.
+        return {"code": "explain_not_available", "explanation": None, "read_instead": body.source_text,
+                "preview": False}
     r = explain.explain(engine, body.source_text, body.question, body.lang, body.style,
                         guided=tier is policy.Tier.GUIDED)
     return {"code": r.code, "explanation": r.explanation, "read_instead": r.read_instead,

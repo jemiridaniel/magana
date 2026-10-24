@@ -1500,4 +1500,8 @@ class AppLocalizationsIg extends AppLocalizations {
   String aboutContact(String email) {
     return 'Ajụjụ ma ọ bụ nsogbu: zigara $email ozi email';
   }
+
+  @override
+  String get msg_explain_not_available =>
+      'Nkọwa adịbeghị. Lee peeji ahụ, a gụrụ ya kpọmkwem ka e si bipụta ya.';
 }

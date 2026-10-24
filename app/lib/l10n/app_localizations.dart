@@ -2453,6 +2453,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Questions or problems: email {email}'**
   String aboutContact(String email);
+
+  /// No description provided for @msg_explain_not_available.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain isn\'t available yet. Here is the page, read exactly as printed.'**
+  String get msg_explain_not_available;
 }
 
 class _AppLocalizationsDelegate

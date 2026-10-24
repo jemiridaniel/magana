@@ -392,5 +392,6 @@
   "aboutExplain": "Nkọwa n'asụsụ gị",
   "aboutSpeech": "Nghọta olu",
   "openSourceLicences": "Ikikere isi mmalite mepere emepe",
-  "aboutContact": "Ajụjụ ma ọ bụ nsogbu: zigara {email} ozi email"
+  "aboutContact": "Ajụjụ ma ọ bụ nsogbu: zigara {email} ozi email",
+  "msg_explain_not_available": "Nkọwa adịbeghị. Lee peeji ahụ, a gụrụ ya kpọmkwem ka e si bipụta ya."
 }

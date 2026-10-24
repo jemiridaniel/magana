@@ -9,6 +9,14 @@ from app import explain
 from app.main import app, get_explain_engine
 
 client = TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def development(monkeypatch):
+    """These tests are about the engines; deployment rules are tested below."""
+    monkeypatch.setenv("MAGANA_ENV", "development")
+
+
 LABEL = "Paracetamol 500 mg tablets. Take 2 tablets every 4 to 6 hours."
 
 
@@ -186,3 +194,79 @@ def test_engine_selection(monkeypatch):
     monkeypatch.setenv("EXPLAIN_ENGINE", "chatgpt")
     with pytest.raises(RuntimeError):
         explain.default_engine()
+
+
+# ---------- tester and production builds: approved hosts only (docs/MODELS.md)
+
+class Counting(Fixed):
+    def __init__(self, url):
+        super().__init__("Take 2 tablets every 4 to 6 hours.")
+        self.url = url
+
+
+@pytest.mark.parametrize("env", ["tester", "production", "", "staging"])
+def test_outside_development_the_preview_is_off(engine, monkeypatch, env):
+    monkeypatch.setenv("MAGANA_ENV", env)
+    body = post({"source_text": LABEL}).json()
+    assert body == {"code": "explain_not_available", "explanation": None, "read_instead": LABEL, "preview": False}
+
+
+def test_unset_means_production(monkeypatch):
+    monkeypatch.delenv("MAGANA_ENV")
+    assert explain.deployment() == "production"
+
+
+def test_a_kaggle_tunnel_never_gets_page_text_in_a_tester_build(engine, monkeypatch):
+    monkeypatch.setenv("MAGANA_ENV", "tester")
+    e = Counting("https://abc-def.trycloudflare.com")
+    engine(e)
+    body = post({"source_text": LABEL}).json()
+    assert body["code"] == "explain_not_available" and body["read_instead"] == LABEL
+    assert e.calls == []  # nothing was sent
+
+
+def test_an_approved_host_is_used(engine, monkeypatch):
+    monkeypatch.setenv("MAGANA_ENV", "production")
+    monkeypatch.setattr(explain, "APPROVED_HOSTS", frozenset({"natlas.magana.example"}))
+    e = Counting("https://natlas.magana.example")
+    engine(e)
+    assert post({"source_text": LABEL}).json()["code"] == "explained"
+
+
+def test_kaggle_is_allowed_in_development(engine, monkeypatch):
+    monkeypatch.setenv("MAGANA_ENV", "development")
+    e = Counting("https://abc-def.trycloudflare.com")
+    engine(e)
+    assert post({"source_text": LABEL}).json()["code"] == "explained"
+
+
+def test_approved_hosts_match_docs_models_md():
+    import pathlib
+    import re
+    doc = (pathlib.Path(__file__).parents[2] / "docs" / "MODELS.md").read_text()
+    section = doc.split("## Approved explanation hosts", 1)[1].split("\n## ", 1)[0]
+    listed = set(re.findall(r"^- `([a-z0-9.-]+)`", section, flags=re.M))
+    assert listed == set(explain.APPROVED_HOSTS)
+    assert not any("trycloudflare" in h or "kaggle" in h for h in listed)
+
+
+def test_a_tester_build_never_sends_page_text_to_an_unapproved_host(monkeypatch):
+    """At the network level: the real vLLM engine, pointed at a Kaggle tunnel, in a tester
+    build, makes no HTTP request at all, so no page text leaves the server."""
+    monkeypatch.setenv("MAGANA_ENV", "tester")
+    requests = []
+
+    def handler(request):
+        requests.append(request)
+        return httpx.Response(200, json={"choices": [{"message": {"content": "Take 2 tablets."}}]})
+
+    real = explain.OpenAIChatEngine("https://abc-def.trycloudflare.com", "k", "NCAIR1/N-ATLaS",
+                                    transport=httpx.MockTransport(handler))
+    app.dependency_overrides[get_explain_engine] = lambda: real
+    try:
+        private = "Mrs Grace Eze. Haemoglobin 10.8 g/dL. Account 0123456789."
+        body = post({"source_text": private}).json()
+    finally:
+        app.dependency_overrides.clear()
+    assert requests == []
+    assert body["code"] == "explain_not_available" and body["read_instead"] == private

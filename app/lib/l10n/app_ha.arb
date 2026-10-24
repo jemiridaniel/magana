@@ -392,5 +392,6 @@
   "aboutExplain": "Bayani a harshenka",
   "aboutSpeech": "Gane murya",
   "openSourceLicences": "Lasisin buɗaɗɗen tushe",
-  "aboutContact": "Tambayoyi ko matsaloli: aika imel zuwa {email}"
+  "aboutContact": "Tambayoyi ko matsaloli: aika imel zuwa {email}",
+  "msg_explain_not_available": "Bayani bai samu ba tukuna. Ga shafin, an karanta shi daidai yadda aka buga."
 }

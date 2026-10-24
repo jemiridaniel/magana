@@ -17,6 +17,7 @@ from __future__ import annotations
 import os
 import re
 import time
+from urllib.parse import urlparse
 from dataclasses import dataclass
 from datetime import date
 from typing import Protocol
@@ -39,6 +40,27 @@ TEMPERATURE = 0.1  # the model card's settings
 REPETITION_PENALTY = 1.12
 
 LANGUAGE_NAMES = {"en": "English", "ha": "Hausa", "yo": "Yorùbá", "ig": "Igbo"}
+
+# Where page text may be sent for explanation outside development. Must match the list in
+# docs/MODELS.md, "Approved explanation hosts" (a test checks). Kaggle tunnels are never on it.
+APPROVED_HOSTS: frozenset[str] = frozenset()
+
+
+def deployment() -> str:
+    """MAGANA_ENV: development, tester or production. Anything else, or unset, counts as
+    production, so a forgotten setting fails safe."""
+    env = os.environ.get("MAGANA_ENV", "production").lower()
+    return env if env in ("development", "tester", "production") else "production"
+
+
+def allowed(engine: "Engine") -> bool:
+    """Explain may run here. In development any engine may be used (Kaggle only with the
+    team's own test pages: docs/MODELS.md). In tester and production builds only a real
+    model on an approved host: not the preview stub, not an unapproved tunnel."""
+    if deployment() == "development":
+        return True
+    host = urlparse(getattr(engine, "url", "") or "").hostname or ""
+    return not engine.preview and host in APPROVED_HOSTS
 
 
 class Engine(Protocol):

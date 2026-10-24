@@ -67,6 +67,17 @@ class GuardFails extends Backend {
   };
 }
 
+/// A tester or production server whose Explain host isn't approved (docs/MODELS.md).
+class NotApproved extends Backend {
+  @override
+  Map<String, Object?> explainReply(Map body) => {
+    'code': 'explain_not_available',
+    'explanation': null,
+    'read_instead': body['source_text'],
+    'preview': false,
+  };
+}
+
 Future<(FakeSpeaker, Backend, FakeVoice, LanguageController)> start(
   WidgetTester tester, {
   Tier tier = Tier.standard,
@@ -332,4 +343,16 @@ void main() {
       expect(backend.explains, isEmpty);
     });
   }
+
+  testWidgets(
+    'tester build without an approved host: not available, page read',
+    (tester) async {
+      final (speaker, _, _, _) = await start(tester, backend: NotApproved());
+      await captureToReader(tester);
+      await tap(tester, en.explainThis);
+      expect(find.text(en.msg_explain_not_available), findsOneWidget);
+      expect(speaker.said.last, startsWith(en.msg_explain_not_available));
+      expect(speaker.said.last, contains('Amoxicillin unclear number mg'));
+    },
+  );
 }

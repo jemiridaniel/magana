@@ -29,6 +29,7 @@ String messageFor(AppLocalizations l, String code, {String where = ''}) =>
       'explain_preview' => l.msg_explain_preview,
       'explained' => l.msg_explained,
       'explain_unavailable' => l.msg_explain_unavailable,
+      'explain_not_available' => l.msg_explain_not_available,
       'explain_bad_source' => l.msg_explain_bad_source,
       'ask_someone_to_check' => l.msg_ask_someone_to_check,
       'nurse_call_within_2_hours' => l.msg_nurse_call_within_2_hours,

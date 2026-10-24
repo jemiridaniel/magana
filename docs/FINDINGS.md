@@ -13,6 +13,23 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Privacy: private papers never go to an unapproved Explain host
+
+- **What we tested and how:** `test_explain.py`:
+  - `test_outside_development_the_preview_is_off`, for tester, production, unset and an unknown value;
+  - `test_a_kaggle_tunnel_never_gets_page_text_in_a_tester_build`;
+  - `test_a_tester_build_never_sends_page_text_to_an_unapproved_host`: the real vLLM engine pointed at a `*.trycloudflare.com` URL, with every HTTP request recorded;
+  - `test_an_approved_host_is_used`, `test_kaggle_is_allowed_in_development`;
+  - `test_approved_hosts_match_docs_models_md`.
+
+  App test: `tester build without an approved host: not available, page read`.
+- **Result:**
+  - With `MAGANA_ENV` tester, production, unset or unknown, and no approved host (none is approved yet), `/explain` made **0 HTTP requests**. It answered `explain_not_available` with the page text, and the app said "Explain isn't available yet" and read the page.
+  - In development, Kaggle is allowed, for the team's own test pages only.
+  - We checked the tests can fail: with the deployment rule removed, 5 fail.
+- **What we changed:** this commit.
+- **Status:** fixed. The approved-host list in docs/MODELS.md and in code are kept the same by a test.
+
 ## 2026-10-24 · Safety: the per-number re-read now runs for every OCR engine
 
 - **What we tested and how:** `test_number_reread.py`, 9 tests, on the Mac:

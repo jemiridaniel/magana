@@ -1498,4 +1498,8 @@ class AppLocalizationsYo extends AppLocalizations {
   String aboutContact(String email) {
     return 'Ìbéèrè tàbí ìṣòro: fi ímeèlì ránṣẹ́ sí $email';
   }
+
+  @override
+  String get msg_explain_not_available =>
+      'Àlàyé kò tíì sí. Ojú-ìwé náà nìyí, a kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́.';
 }

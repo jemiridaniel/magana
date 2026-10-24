@@ -1499,4 +1499,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String aboutContact(String email) {
     return 'Questions or problems: email $email';
   }
+
+  @override
+  String get msg_explain_not_available =>
+      'Explain isn\'t available yet. Here is the page, read exactly as printed.';
 }

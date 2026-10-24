@@ -34,6 +34,7 @@ ENGLISH = {
     "numbers_unconfirmed": "I can't confirm some numbers in this explanation, so I'll read the page exactly instead.",
     "explain_preview": "This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",
     "explained": "Here is the explanation.",
+    "explain_not_available": "Explain isn't available yet. Here is the page, read exactly as printed.",
     "explain_unavailable": "Explanations aren't available right now. Here is the page, read exactly as printed.",
     "explain_bad_source": "There is no page text to explain. Please read a page first.",
     # Ibà quick check. The Ibà service owns this wording (iba-natlas, backend/app/questions.py,

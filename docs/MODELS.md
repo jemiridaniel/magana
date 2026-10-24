@@ -99,9 +99,32 @@ The terms are at the bottom of each model card; there is no separate LICENSE fil
 - **One GPU, several adapters:** vLLM with `--enable-lora --max-lora-rank 16` serves the base model, the Ibà adapter (`iba-atlas`) and a future Magana adapter side by side. Choose with `EXPLAIN_MODEL`.
 - **Base model first:** a Magana LoRA is decided from the benchmark (`benchmark/explain/`): its number-change rate per language, and native-speaker ratings of the saved outputs.
 
+## Approved explanation hosts
+
+In **tester and production builds** (`MAGANA_ENV=tester` or `production`; unset counts as production), Explain only runs when `EXPLAIN_URL` points at a host listed here. Otherwise the app says **"Explain isn't available yet"** and reads the page exactly as printed. That covers the preview stub too, and no page text leaves the Magana server.
+
+The list in code (`backend/app/explain.py`, `APPROVED_HOSTS`) must match this one; a test checks.
+
+Approved hosts:
+
+*None yet.*
+
+To approve a host, add it here as a list item (``- `natlas.example.org` ``), with who runs it, where, and the date. All of these must hold:
+- it stays up, under our control or covered by a written agreement (for example DSN's compute);
+- it requires the API key;
+- it does not keep or log page text;
+- it is in a region we have named in docs/PRIVACY.md;
+- the N-ATLaS licence covers it (1,000 active users, or a commercial licence).
+
+Kaggle tunnels (`*.trycloudflare.com`) and other temporary hosts are never approved.
+
 ## Kaggle: development and demos only
 
-`notebooks/magana-serve` serves N-ATLaS on vLLM in a Kaggle notebook (GPU T4 × 2), protected by an API key, behind a temporary Cloudflare tunnel. `scripts/set_explain_url.sh <url>` points the AWS server at it. Kaggle is **not** a production host:
+`notebooks/magana-serve` serves N-ATLaS on vLLM in a Kaggle notebook (GPU T4 × 2), protected by an API key, behind a temporary Cloudflare tunnel.
+
+**Use it only with our own test pages** (`benchmark/explain/pages`, or other pages the team wrote), never with testers' or users' papers. Only a server running with `MAGANA_ENV=development` will send text to it. Tester and production servers refuse because Kaggle is not an approved host (above). `scripts/set_explain_url.sh <url>` points a development server at it.
+
+Kaggle is **not** a production host:
 
 - **GPU time:** about **30 hours per week**, resetting weekly. It varies by account; check the quota shown in the notebook editor.
 - **Sessions:** at most about **12 hours** each (some sources say 9), and they stop sooner when idle. The tunnel URL changes every session, so Explain falls back to reading the page whenever the notebook isn't running.

@@ -5,6 +5,8 @@
 # engine: vllm (default) | hf_space | llamacpp. Use "stub" with no URL to go back to the preview:
 #   scripts/set_explain_url.sh "" stub
 # EXPLAIN_API_KEY must already be in the server's .env (the same key the vLLM server requires).
+# A tester or production server (MAGANA_ENV) only uses hosts approved in docs/MODELS.md; for any
+# other URL, such as a Kaggle tunnel, Explain stays off and the app says it isn't available yet.
 set -euo pipefail
 url="${1:?usage: $0 <url> [engine]}"
 engine="${2:-vllm}"
@@ -21,6 +23,10 @@ cd ~/srv/magana
 set_var() {  # replace KEY=... or append it
   if grep -q "^$1=" .env; then sed -i "s|^$1=.*|$1=$2|" .env; else echo "$1=$2" >> .env; fi
 }
+env=$(grep -oP '^MAGANA_ENV=\K.*' .env || echo production)
+if [ "$env" != development ] && [ "$engine" != stub ]; then
+  echo "note: MAGANA_ENV=$env, so Explain stays off unless $url is approved in docs/MODELS.md"
+fi
 set_var EXPLAIN_ENGINE "$engine"
 set_var EXPLAIN_URL "$url"
 grep -q '^EXPLAIN_API_KEY=.\+' .env || [ "$engine" = stub ] || echo "warning: EXPLAIN_API_KEY is empty in .env"
