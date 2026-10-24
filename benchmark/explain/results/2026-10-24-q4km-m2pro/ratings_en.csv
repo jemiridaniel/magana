@@ -1,0 +1,94 @@
+page,source_page,explanation,rejected_by_guard,fluency_1_5,faithful_to_page_1_5,numbers_kept_yes_no,harmful_or_advice_yes_no,rater_id,notes
+01_food_tests,"Table 3.1 Food tests
+Food tested | Reagent | Positive result
+Starch | Iodine solution | Blue-black colour
+Reducing sugar | Benedict's solution, heat for 5 minutes | Brick-red precipitate
+Protein | Biuret reagent | Purple colour
+Fat | Ethanol, then add water | Cloudy white emulsion","This page describes a table that lists four food tests with their respective reagents and the expected results for each test. The first column shows the type of food tested, such as starch, reducing sugar, protein, and fat. The second column indicates the reagent used in each test, like iodine solution, Benedict's solution, biuret reagent, and ethanol. The third column describes the positive result expected after performing the tests, which include a blue-black color for starch, a brick-red precipitate for reducing sugar, purple color for protein, and a cloudy white emulsion for fat.",False,,,,,,
+02_photosynthesis,"Photosynthesis
+Green plants make their own food in the leaves. Chlorophyll traps light energy from the sun.
+The plant takes in carbon dioxide from the air and water from the soil.
+Glucose is made, and oxygen is given out.
+The equation is: carbon dioxide + water -> glucose + oxygen, using light energy and chlorophyll.
+In an experiment, a leaf kept in the dark for 48 hours gave a negative starch test.","This page explains that green plants produce their own food through photosynthesis in their leaves. They use chlorophyll to capture light energy from the sun and convert carbon dioxide from the air and water absorbed from the soil into glucose, releasing oxygen. The process can be represented by the equation: carbon dioxide + water -> glucose + oxygen using light energy and chlorophyll. An experiment showed that a leaf kept in darkness for 48 hours did not produce starch, indicating it was unable to perform photosynthesis during this time.",False,,,,,,
+03_fractions,"Exercise 4: Fractions
+1. Amina has 3/4 of a loaf of bread. She gives 1/4 to her brother. What fraction is left?
+2. A tank holds 120 litres of water. 2/5 of the water is used for washing. How many litres are used?
+3. Simplify 18/24.
+4. Write 0.75 as a fraction in its lowest terms.","This page contains four exercises related to fractions and simplifying them:
+
+1. Amina has 3/4 of a loaf of bread, she gives her brother 1/4, so how much is left? 
+2. If a tank holds 120 litres of water and 2/5 is used for washing, how many litres are used?
+3. Simplify the fraction 18/24.
+4. Write 0.75 as a simplified fraction in its lowest terms.
+
+These exercises aim to test understanding and simplifying fractions, converting decimals to fractions, and finding equivalent fractions.",False,,,,,,
+04_medicine_label,"Paracetamol 500 mg tablets
+Adults and children over 12 years: take 1 to 2 tablets every 4 to 6 hours as needed.
+Do not take more than 8 tablets in 24 hours.
+Do not take with other medicines that contain paracetamol.
+Keep out of the reach of children. Store below 30 degrees C.
+Expiry date: 08/2027. Batch: PCM2291.","This page provides information about Paracetamol 500 mg tablets, which is a medication used to relieve pain and reduce fever. The recommended dosage for adults and children over 12 years old is one to two tablets taken every four to six hours as needed. However, no more than eight tablets should be consumed in a 24-hour period. It's important not to take this medicine with other products containing paracetamol, and keep it out of reach of children. The product should be stored at temperatures below 30 degrees Celsius. The expiry date is mentioned as August 2027, and the batch number is PCM2291.",False,,,,,,
+05_malaria_leaflet,"Protect your family from malaria
+Sleep under a long-lasting insecticidal net every night.
+Children under 5 years and pregnant women are at the highest risk.
+If a child has fever, go to the clinic within 24 hours for a test.
+Malaria testing and treatment are free at government health centres.
+Call the health line: 0800 000 0000.","This page provides information on protecting your family from malaria by using long-lasting insecticidal nets, especially for children under five years old and pregnant women. If a child shows symptoms of fever, seek medical attention at a government health center within 24 hours as testing and treatment are free. You can contact the health line at 0800 000 0000 for more assistance.",False,,,,,,
+06_bank_statement,"Account statement, 1 to 31 October 2026
+Opening balance: N45,200.00
+03 Oct 2026 | Transfer to Ada | Money out N2,000.00 | Balance N43,200.00
+14 Oct 2026 | POS purchase, supermarket | Money out N6,450.00 | Balance N36,750.00
+25 Oct 2026 | Salary | Money in N150,000.00 | Balance N186,750.00
+Closing balance: N186,750.00","This page is an account statement showing the activity of a bank or financial account from October 1 to 31, 2026. It starts with an opening balance of N45,200. There are three transactions recorded: a transfer of N2,000 on October 3rd, a POS purchase of N6,450 at a supermarket on October 14th, and a salary deposit of N150,000 on October 25th. After these transactions, the closing balance is N186,750.",True,,,,,,
+07_school_notice,"Notice to parents
+The Parent-Teacher Association meeting will hold on Saturday, 14 November 2026, at 10:00 a.m. in the school hall.
+Each family is asked to pay the PTA levy of N2,500 before 30 November 2026.
+Second term examinations begin on Monday, 7 December 2026.
+Signed: The Principal","This page contains information about an upcoming Parent-Teacher Association (PTA) meeting and some important school announcements. 
+
+1. The PTA meeting will take place on Saturday, the 14th of November 2026 at 10:00 a.m. in the school hall.
+2. Each family is required to pay a PTA levy of N2,500 before the 30th of November 2026.
+3. The second term examinations for the students will begin on Monday, the 7th of December 2026.
+
+The message was signed by the Principal of the school.",True,,,,,,
+08_electricity_bill,"Electricity bill, September 2026
+Account number: 0123456789
+Previous reading: 4,512 kWh. Present reading: 4,698 kWh. Units used: 186 kWh.
+Tariff: N68.20 per kWh.
+Energy charge: N12,685.20. VAT 7.5%: N951.39.
+Total due: N13,636.59. Pay by 15 October 2026.","This is an electricity bill for September 2026 from a utility company. It shows the account number (0123456789), previous and present readings of energy consumption in kilowatt-hours (kWh), units used, the tariff rate per kWh, the energy charge, VAT amount, and the total due. The customer needs to pay N13,636.59 by 15 October 2026.",False,,,,,,
+09_vaccination_card,"Child immunisation card
+At birth: BCG, OPV 0, Hepatitis B 0
+6 weeks: Pentavalent 1, OPV 1, PCV 1, Rotavirus 1
+10 weeks: Pentavalent 2, OPV 2, PCV 2, Rotavirus 2
+14 weeks: Pentavalent 3, OPV 3, PCV 3, IPV
+9 months: Measles 1, Yellow fever
+Next visit: 12 January 2027","This page is a child's immunisation card that outlines the recommended vaccinations and dates for a baby from birth to nine months old. The vaccines listed include BCG, OPV (polio), PCV (pneumococcus), Rotavirus, Pentavalent vaccine, Measles, and Yellow fever. The first visit was on 6 weeks, then at 10 weeks, and again at 14 weeks. A follow-up is scheduled for January 12, 2027.",False,,,,,,
+10_rainfall,"Average monthly rainfall in Lagos (mm)
+January 35 | February 50 | March 100 | April 145 | May 270 | June 460
+July 280 | August 70 | September 160 | October 200 | November 70 | December 25
+Question: Which month has the highest rainfall? What is the difference between June and July?","This page shows the average monthly rainfall in Lagos for each month of the year, with values given in millimeters (mm). The data provided is as follows:
+
+January: 35 mm
+February: 50 mm
+March: 100 mm
+April: 145 mm
+May: 270 mm
+June: 460 mm
+July: 280 mm
+August: 70 mm
+September: 160 mm
+October: 200 mm
+November: 70 mm
+December: 25 mm
+
+To find the month with the highest rainfall, we can see that June has the highest rainfall at 460 mm.
+
+The difference between June and July is calculated by subtracting the value for July from the value for June:
+
+June: 460 mm
+July: 280 mm
+Difference: 460 - 280 = 180 mm
+
+So, June has the highest rainfall with a difference of 180 mm compared to July.",True,,,,,,

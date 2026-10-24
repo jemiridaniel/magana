@@ -1,0 +1,66 @@
+{
+  "run": {
+    "engine": "llamacpp",
+    "model": "NCAIR1/N-ATLaS",
+    "url_kind": "llamacpp",
+    "temperature": 0.1,
+    "repetition_penalty": 1.12,
+    "note": "N-ATLaS base model, QuantFactory Q4_K_M GGUF (sha256 71de156e...), llama.cpp llama-server on an Apple M2 Pro (Metal, 16 GB), context 8192, temperature 0.1, repeat penalty 1.12, the app's prompts. Team-written test pages only."
+  },
+  "by_language": {
+    "en": {
+      "pages": 10,
+      "answered": 10,
+      "errors": 0,
+      "rejected_by_guard": 3,
+      "number_change_rate": 0.3,
+      "median_seconds": 4.23,
+      "rejected_pages": [
+        "06_bank_statement",
+        "07_school_notice",
+        "10_rainfall"
+      ]
+    },
+    "ha": {
+      "pages": 10,
+      "answered": 10,
+      "errors": 0,
+      "rejected_by_guard": 4,
+      "number_change_rate": 0.4,
+      "median_seconds": 6.18,
+      "rejected_pages": [
+        "03_fractions",
+        "05_malaria_leaflet",
+        "06_bank_statement",
+        "10_rainfall"
+      ]
+    },
+    "yo": {
+      "pages": 10,
+      "answered": 10,
+      "errors": 0,
+      "rejected_by_guard": 4,
+      "number_change_rate": 0.4,
+      "median_seconds": 5.965,
+      "rejected_pages": [
+        "03_fractions",
+        "06_bank_statement",
+        "09_vaccination_card",
+        "10_rainfall"
+      ]
+    },
+    "ig": {
+      "pages": 10,
+      "answered": 10,
+      "errors": 0,
+      "rejected_by_guard": 3,
+      "number_change_rate": 0.3,
+      "median_seconds": 6.46,
+      "rejected_pages": [
+        "06_bank_statement",
+        "07_school_notice",
+        "10_rainfall"
+      ]
+    }
+  }
+}
