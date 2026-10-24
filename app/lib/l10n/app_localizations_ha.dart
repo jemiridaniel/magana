@@ -424,4 +424,122 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get cueNoPage => 'Babu shafi';
+
+  @override
+  String stepOf(int n, int total) {
+    return 'Mataki na $n cikin $total';
+  }
+
+  @override
+  String get chooseLanguageTitle => 'Zaɓi harshenka';
+
+  @override
+  String get chooseLanguageBody =>
+      'Magana za ta yi maka magana da wannan harshe. Kana iya canza shi a kowane lokaci daga shafin farko.';
+
+  @override
+  String get languageHearsHint =>
+      'Ana karanta kowane zaɓi da harshensa idan ka taɓa shi.';
+
+  @override
+  String get continueLabel => 'Ci gaba';
+
+  @override
+  String get welcome => 'Barka da zuwa';
+
+  @override
+  String get ageTitle => 'Shekarunka nawa?';
+
+  @override
+  String get ageBody =>
+      'Muna tambaya ne don Magana ta kasance lafiya kuma ta dace da kai.';
+
+  @override
+  String get ageAdult => 'Shekaruna 18 ko fiye';
+
+  @override
+  String get ageAdultDetail =>
+      'Ka yi amfani da komai a Magana, har da takardun lafiya da na kuɗi.';
+
+  @override
+  String get ageTeen => 'Shekaruna 13 zuwa 17';
+
+  @override
+  String get ageTeenDetail =>
+      'Iyaye, mai kula ko malami za su amince tukuna. Magana tana taimakawa da darussan makaranta kawai.';
+
+  @override
+  String get ageChild => 'Shekaruna ƙasa da 13';
+
+  @override
+  String get ageChildDetail =>
+      'Malaminka zai yi amfani da Magana tare da kai a aji.';
+
+  @override
+  String get privacyNote =>
+      'Ana goge hotunan shafukanka bayan an karanta su. Ba ma ba wa kowa bayananka.';
+
+  @override
+  String get hearAgain => 'Sake jin wannan shafi';
+
+  @override
+  String get readyTitle => 'Ka shirya';
+
+  @override
+  String get readyBody =>
+      'Riƙe wayarka sama da kowane shafin da aka buga, Magana za ta karanta maka shi.';
+
+  @override
+  String get startLabel => 'Fara';
+
+  @override
+  String get consentTitle => 'Tambayi iyaye, mai kula ko malami';
+
+  @override
+  String get consentBody => 'Don Allah ku karanta ko ku saurari wannan tare.';
+
+  @override
+  String get consentPoint1 =>
+      'Magana tana taimakawa da darussan makaranta kawai.';
+
+  @override
+  String get consentPoint2 =>
+      'Babu takardun lafiya ko na kuɗi, babu WhatsApp, babu hira kai tsaye.';
+
+  @override
+  String get consentPoint3 => 'Ana goge hotuna bayan an karanta su.';
+
+  @override
+  String get consentConfirm =>
+      'Ni ne iyaye, mai kula ko malami, kuma na amince';
+
+  @override
+  String get classroomTitle => 'Magana a aji';
+
+  @override
+  String get classroomBody =>
+      'Malaminka zai fara Magana tare da kai a aji. Idan darasi ya ƙare, a rufe manhajar.';
+
+  @override
+  String get classroomStart => 'Malami: fara zaman aji';
+
+  @override
+  String get classroomConfirmTitle => 'Kai ne malamin?';
+
+  @override
+  String get classroomConfirmYes => 'Eh, fara zaman';
+
+  @override
+  String get cancel => 'Soke';
+
+  @override
+  String get back => 'Baya';
+
+  @override
+  String get msg_unknown_tier =>
+      'Don Allah ka sake saita Magana: ba a gane rukunin shekarunka ba.';
+
+  @override
+  String get readPageSubtitleSchool =>
+      'Aikin makaranta, rubuce-rubuce, littattafai da jarabawa';
 }

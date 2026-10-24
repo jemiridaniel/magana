@@ -425,4 +425,119 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get cueNoPage => 'No page';
+
+  @override
+  String stepOf(int n, int total) {
+    return 'Step $n of $total';
+  }
+
+  @override
+  String get chooseLanguageTitle => 'Choose your language';
+
+  @override
+  String get chooseLanguageBody =>
+      'Magana will speak to you in this language. You can change it any time from the Home screen.';
+
+  @override
+  String get languageHearsHint =>
+      'Each option is read aloud in its own language when you touch it.';
+
+  @override
+  String get continueLabel => 'Continue';
+
+  @override
+  String get welcome => 'Welcome';
+
+  @override
+  String get ageTitle => 'How old are you?';
+
+  @override
+  String get ageBody => 'We ask so Magana is safe and right for you.';
+
+  @override
+  String get ageAdult => 'I am 18 or older';
+
+  @override
+  String get ageAdultDetail =>
+      'Use everything in Magana, including health and money papers.';
+
+  @override
+  String get ageTeen => 'I am 13 to 17';
+
+  @override
+  String get ageTeenDetail =>
+      'A parent, guardian or teacher agrees first. Magana helps with school subjects only.';
+
+  @override
+  String get ageChild => 'I am under 13';
+
+  @override
+  String get ageChildDetail =>
+      'Your teacher will use Magana with you in class.';
+
+  @override
+  String get privacyNote =>
+      'Photos of your pages are deleted after reading. We never share your details.';
+
+  @override
+  String get hearAgain => 'Hear this page again';
+
+  @override
+  String get readyTitle => 'You\'re ready';
+
+  @override
+  String get readyBody =>
+      'Hold your phone over any printed page and Magana will read it to you.';
+
+  @override
+  String get startLabel => 'Start';
+
+  @override
+  String get consentTitle => 'Ask a parent, guardian or teacher';
+
+  @override
+  String get consentBody => 'Please read or listen to this together.';
+
+  @override
+  String get consentPoint1 => 'Magana helps with school subjects only.';
+
+  @override
+  String get consentPoint2 =>
+      'No health or money papers, no WhatsApp and no open chat.';
+
+  @override
+  String get consentPoint3 => 'Photos are deleted after reading.';
+
+  @override
+  String get consentConfirm =>
+      'I am the parent, guardian or teacher, and I agree';
+
+  @override
+  String get classroomTitle => 'Magana in class';
+
+  @override
+  String get classroomBody =>
+      'Your teacher starts Magana with you in class. When the lesson ends, close the app.';
+
+  @override
+  String get classroomStart => 'Teacher: start the class session';
+
+  @override
+  String get classroomConfirmTitle => 'Are you the teacher?';
+
+  @override
+  String get classroomConfirmYes => 'Yes, start the session';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get back => 'Back';
+
+  @override
+  String get msg_unknown_tier =>
+      'Please set up Magana again: your age group wasn\'t recognised.';
+
+  @override
+  String get readPageSubtitleSchool => 'Schoolwork, notes, textbooks and tests';
 }

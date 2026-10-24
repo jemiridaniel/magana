@@ -4,6 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
 import '../language.dart';
+import '../policy.dart';
 import '../theme.dart';
 import 'capture.dart';
 
@@ -28,6 +29,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    final can = AppScope.of(context).profile.can;
     return Scaffold(
       body: SafeArea(
         child: LayoutBuilder(
@@ -43,48 +45,57 @@ class HomeScreen extends StatelessWidget {
                     const SizedBox(height: 20),
                     _ReadPageButton(onPressed: () => _openCapture(context)),
                     const SizedBox(height: 14),
+                    // Only what this age tier may use: a screen-reader user never
+                    // reaches a dead end (CLAUDE.md rule 4).
                     _TileGrid(
                       tiles: [
-                        _Tile(
-                          Icons.help_outline,
-                          l.askQuestion,
-                          () => _comingSoon(context, l.askQuestion),
-                        ),
-                        _Tile(
-                          Icons.task_alt,
-                          l.practiceQuiz,
-                          () => _comingSoon(context, l.practiceQuiz),
-                        ),
-                        _Tile(
-                          Icons.menu_book_outlined,
-                          l.myLibrary,
-                          () => _comingSoon(context, l.myLibrary),
-                        ),
-                        _Tile(
-                          Icons.description_outlined,
-                          l.everydayPapers,
-                          () => _comingSoon(context, l.everydayPapers),
-                        ),
+                        if (can(Feature.openChat))
+                          _Tile(
+                            Icons.help_outline,
+                            l.askQuestion,
+                            () => _comingSoon(context, l.askQuestion),
+                          ),
+                        if (can(Feature.quiz))
+                          _Tile(
+                            Icons.task_alt,
+                            l.practiceQuiz,
+                            () => _comingSoon(context, l.practiceQuiz),
+                          ),
+                        if (can(Feature.library))
+                          _Tile(
+                            Icons.menu_book_outlined,
+                            l.myLibrary,
+                            () => _comingSoon(context, l.myLibrary),
+                          ),
+                        if (can(Feature.everydayHealth))
+                          _Tile(
+                            Icons.description_outlined,
+                            l.everydayPapers,
+                            () => _comingSoon(context, l.everydayPapers),
+                          ),
                       ],
                     ),
                     const SizedBox(height: 14),
                     Row(
                       children: [
-                        Expanded(
-                          child: _Chip(
-                            Icons.school_outlined,
-                            l.skills,
-                            () => _comingSoon(context, l.skills),
+                        if (can(Feature.skills))
+                          Expanded(
+                            child: _Chip(
+                              Icons.school_outlined,
+                              l.skills,
+                              () => _comingSoon(context, l.skills),
+                            ),
                           ),
-                        ),
-                        const SizedBox(width: 14),
-                        Expanded(
-                          child: _Chip(
-                            Icons.trending_up,
-                            l.myScore,
-                            () => _comingSoon(context, l.myScore),
+                        if (can(Feature.skills) && can(Feature.score))
+                          const SizedBox(width: 14),
+                        if (can(Feature.score))
+                          Expanded(
+                            child: _Chip(
+                              Icons.trending_up,
+                              l.myScore,
+                              () => _comingSoon(context, l.myScore),
+                            ),
                           ),
-                        ),
                       ],
                     ),
                     const Spacer(),
@@ -274,9 +285,13 @@ class _ReadPageButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
+    // Health and money papers are for adults only; don't promise them to under-18s.
+    final subtitle = AppScope.of(context).profile.can(Feature.everydayHealth)
+        ? l.readPageSubtitle
+        : l.readPageSubtitleSchool;
     return Semantics(
       button: true,
-      label: '${l.readPage}. ${l.readPageSubtitle}',
+      label: '${l.readPage}. $subtitle',
       excludeSemantics: true,
       onTap: onPressed,
       child: FilledButton(
@@ -308,7 +323,7 @@ class _ReadPageButton extends StatelessWidget {
                   ),
                   const SizedBox(height: 6),
                   Text(
-                    l.readPageSubtitle,
+                    subtitle,
                     style: const TextStyle(
                       fontSize: 17,
                       height: 1.35,

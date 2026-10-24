@@ -6,6 +6,8 @@ import 'package:app/api.dart';
 import 'package:app/l10n/app_localizations.dart';
 import 'package:app/language.dart';
 import 'package:app/main.dart';
+import 'package:app/policy.dart';
+import 'package:app/profile.dart';
 import 'package:app/screens/splash.dart';
 import 'package:app/messages.dart';
 import 'package:app/screens/capture.dart';
@@ -89,6 +91,7 @@ Future<LanguageController> pumpApp(
   Map<String, Object?> body = readJson,
   Size size = const Size(390, 844),
   String language = 'en',
+  ProfileController? profile,
 }) async {
   SharedPreferences.setMockInitialValues({});
   tester.view.physicalSize = size * 3;
@@ -96,7 +99,12 @@ Future<LanguageController> pumpApp(
   addTearDown(tester.view.reset);
   final controller = LanguageController(Locale(language));
   await tester.pumpWidget(
-    MaganaApp(api: fakeApi(body), speaker: speaker, language: controller),
+    MaganaApp(
+      api: fakeApi(body),
+      speaker: speaker,
+      language: controller,
+      profile: profile ?? ProfileController(tier: Tier.standard),
+    ),
   );
   await tester.pumpAndSettle();
   return controller;
@@ -443,6 +451,7 @@ void main() {
         api: fakeApi(readJson),
         speaker: FakeSpeaker(),
         language: LanguageController(),
+        profile: ProfileController(tier: Tier.standard),
         ready: ready.future,
         firstFrameShown: () async {},
       ),

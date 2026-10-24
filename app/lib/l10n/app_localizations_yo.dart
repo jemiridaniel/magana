@@ -423,4 +423,118 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get cueNoPage => 'Kò sí ojú-ìwé';
+
+  @override
+  String stepOf(int n, int total) {
+    return 'Ìgbésẹ̀ $n nínú $total';
+  }
+
+  @override
+  String get chooseLanguageTitle => 'Yan èdè rẹ';
+
+  @override
+  String get chooseLanguageBody =>
+      'Magana yóò bá ọ sọ̀rọ̀ ní èdè yìí. O lè yí i padà nígbàkúùgbà láti ojú-ìwé àkọ́kọ́.';
+
+  @override
+  String get languageHearsHint =>
+      'A ó ka àṣàyàn kọ̀ọ̀kan ní èdè tirẹ̀ nígbà tí o bá fọwọ́ kàn án.';
+
+  @override
+  String get continueLabel => 'Tẹ̀síwájú';
+
+  @override
+  String get welcome => 'Ẹ káàbọ̀';
+
+  @override
+  String get ageTitle => 'Ọmọ ọdún mélòó ni ọ́?';
+
+  @override
+  String get ageBody => 'A ń béèrè kí Magana lè jẹ́ ààbò àti kí ó bá ọ mu.';
+
+  @override
+  String get ageAdult => 'Mo ti pé ọdún 18 tàbí jù bẹ́ẹ̀ lọ';
+
+  @override
+  String get ageAdultDetail =>
+      'Lo gbogbo ohun tí ó wà nínú Magana, pẹ̀lú ìwé ìlera àti ti owó.';
+
+  @override
+  String get ageTeen => 'Mo wà láàrin ọdún 13 sí 17';
+
+  @override
+  String get ageTeenDetail =>
+      'Òbí, alágbàtọ́ tàbí olùkọ́ yóò kọ́kọ́ gbà. Magana ń ràn ọ́ lọ́wọ́ pẹ̀lú ẹ̀kọ́ ilé-ìwé nìkan.';
+
+  @override
+  String get ageChild => 'Mi ò tíì pé ọdún 13';
+
+  @override
+  String get ageChildDetail => 'Olùkọ́ rẹ yóò lo Magana pẹ̀lú rẹ ní kíláàsì.';
+
+  @override
+  String get privacyNote =>
+      'A máa ń pa fọ́tò ojú-ìwé rẹ rẹ́ lẹ́yìn kíkà. A kì í pín àlàyé rẹ fún ẹnikẹ́ni.';
+
+  @override
+  String get hearAgain => 'Tún gbọ́ ojú-ìwé yìí';
+
+  @override
+  String get readyTitle => 'O ti ṣetán';
+
+  @override
+  String get readyBody =>
+      'Gbé fóònù rẹ sórí ojú-ìwé tí a tẹ̀ jáde, Magana yóò kà á fún ọ.';
+
+  @override
+  String get startLabel => 'Bẹ̀rẹ̀';
+
+  @override
+  String get consentTitle => 'Bi òbí, alágbàtọ́ tàbí olùkọ́ léèrè';
+
+  @override
+  String get consentBody => 'Jọ̀wọ́ ẹ ka tàbí ẹ gbọ́ èyí papọ̀.';
+
+  @override
+  String get consentPoint1 => 'Magana ń ràn lọ́wọ́ pẹ̀lú ẹ̀kọ́ ilé-ìwé nìkan.';
+
+  @override
+  String get consentPoint2 =>
+      'Kò sí ìwé ìlera tàbí ti owó, kò sí WhatsApp, kò sí ìjíròrò ọ̀fẹ́.';
+
+  @override
+  String get consentPoint3 => 'A máa ń pa fọ́tò rẹ́ lẹ́yìn kíkà.';
+
+  @override
+  String get consentConfirm => 'Èmi ni òbí, alágbàtọ́ tàbí olùkọ́, mo sì gbà';
+
+  @override
+  String get classroomTitle => 'Magana ní kíláàsì';
+
+  @override
+  String get classroomBody =>
+      'Olùkọ́ rẹ yóò bẹ̀rẹ̀ Magana pẹ̀lú rẹ ní kíláàsì. Nígbà tí ẹ̀kọ́ bá parí, ẹ pa áàpù náà.';
+
+  @override
+  String get classroomStart => 'Olùkọ́: bẹ̀rẹ̀ ìpàdé kíláàsì';
+
+  @override
+  String get classroomConfirmTitle => 'Ṣé ìwọ ni olùkọ́?';
+
+  @override
+  String get classroomConfirmYes => 'Bẹ́ẹ̀ ni, bẹ̀rẹ̀ ìpàdé';
+
+  @override
+  String get cancel => 'Fagilé';
+
+  @override
+  String get back => 'Padà';
+
+  @override
+  String get msg_unknown_tier =>
+      'Jọ̀wọ́ tún Magana ṣètò: a kò dá ẹgbẹ́ ọjọ́-orí rẹ mọ̀.';
+
+  @override
+  String get readPageSubtitleSchool =>
+      'Iṣẹ́ ilé-ìwé, àkọsílẹ̀, ìwé ẹ̀kọ́ àti ìdánwò';
 }

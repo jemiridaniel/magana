@@ -7,7 +7,7 @@ from contextlib import asynccontextmanager
 from functools import lru_cache
 import os
 
-from fastapi import Depends, FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 from PIL import Image
 from pydantic import BaseModel
@@ -73,6 +73,35 @@ def get_engine() -> OCREngine:
     return default_engine()
 
 
+def caller_tier(
+    x_magana_tier: str = Header("standard"),
+    x_magana_guardian_consent: str | None = Header(None),
+    x_magana_teacher_session: str | None = Header(None),
+) -> policy.Tier:
+    """The age tier the app says this user is in (headers on every request)."""
+    try:
+        tier = policy.Tier(x_magana_tier)
+    except ValueError:
+        raise HTTPException(400, {"code": "unknown_tier"})
+    try:
+        return policy.check_request(tier, x_magana_guardian_consent == "yes", x_magana_teacher_session == "yes")
+    except CodedError as e:
+        raise HTTPException(403, {"code": e.code})
+
+
+def require(tier: policy.Tier, feature: policy.Feature) -> None:
+    try:
+        policy.require(tier, feature)
+    except CodedError as e:
+        raise HTTPException(403, {"code": e.code})
+
+
+def health_caller(tier: policy.Tier = Depends(caller_tier)) -> policy.Tier:
+    """Talking to a health worker and the Ibà check are for adults only."""
+    require(tier, policy.Feature.HEALTH_CALLBACK)
+    return tier
+
+
 @app.get("/health")
 def health() -> dict:
     iba = {"configured": bool(os.environ.get("IBA_API_URL", "").strip()), **iba_monitor.status()}
@@ -80,15 +109,12 @@ def health() -> dict:
 
 
 @app.post("/read")
-async def read(file: UploadFile = File(...), tier: policy.Tier = Form(policy.Tier.STANDARD), mode: str = Form("school"),
-               engine: OCREngine = Depends(get_engine)) -> dict:
+async def read(file: UploadFile = File(...), mode: str = Form("school"),
+               tier: policy.Tier = Depends(caller_tier), engine: OCREngine = Depends(get_engine)) -> dict:
     feature = MODE_FEATURE.get(mode)
     if feature is None:
         raise HTTPException(400, {"code": "unknown_mode"})
-    try:
-        policy.require(tier, feature)
-    except CodedError as e:
-        raise HTTPException(403, {"code": e.code})
+    require(tier, feature)
     try:
         image = Image.open(io.BytesIO(await file.read()))
         image.load()
@@ -124,7 +150,7 @@ def get_iba() -> IbaClient | None:
     return IbaClient.from_env()
 
 
-@app.get("/triage/questions")
+@app.get("/triage/questions", dependencies=[Depends(health_caller)])
 async def triage_questions(lang: str = "en", iba: IbaClient | None = Depends(get_iba)) -> dict:
     # Question wording comes from Ibà, where it is signed off clinically; the fallback set
     # carries message codes only (messages.ENGLISH "q_<id>").
@@ -132,7 +158,7 @@ async def triage_questions(lang: str = "en", iba: IbaClient | None = Depends(get
     return {"source": source, "questions": qs}
 
 
-@app.post("/triage/assess")
+@app.post("/triage/assess", dependencies=[Depends(health_caller)])
 async def triage_assess(answers: dict, iba: IbaClient | None = Depends(get_iba)) -> dict:
     # Answers are health information: they are passed to Ibà and never logged or stored.
     r = await triage.assess(answers, iba)

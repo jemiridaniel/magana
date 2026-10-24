@@ -761,6 +761,210 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No page'**
   String get cueNoPage;
+
+  /// No description provided for @stepOf.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {n} of {total}'**
+  String stepOf(int n, int total);
+
+  /// No description provided for @chooseLanguageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your language'**
+  String get chooseLanguageTitle;
+
+  /// No description provided for @chooseLanguageBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana will speak to you in this language. You can change it any time from the Home screen.'**
+  String get chooseLanguageBody;
+
+  /// No description provided for @languageHearsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Each option is read aloud in its own language when you touch it.'**
+  String get languageHearsHint;
+
+  /// No description provided for @continueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueLabel;
+
+  /// Spoken in each language's own voice when its option is touched during onboarding.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome'**
+  String get welcome;
+
+  /// No description provided for @ageTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How old are you?'**
+  String get ageTitle;
+
+  /// No description provided for @ageBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We ask so Magana is safe and right for you.'**
+  String get ageBody;
+
+  /// No description provided for @ageAdult.
+  ///
+  /// In en, this message translates to:
+  /// **'I am 18 or older'**
+  String get ageAdult;
+
+  /// No description provided for @ageAdultDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Use everything in Magana, including health and money papers.'**
+  String get ageAdultDetail;
+
+  /// No description provided for @ageTeen.
+  ///
+  /// In en, this message translates to:
+  /// **'I am 13 to 17'**
+  String get ageTeen;
+
+  /// No description provided for @ageTeenDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'A parent, guardian or teacher agrees first. Magana helps with school subjects only.'**
+  String get ageTeenDetail;
+
+  /// No description provided for @ageChild.
+  ///
+  /// In en, this message translates to:
+  /// **'I am under 13'**
+  String get ageChild;
+
+  /// No description provided for @ageChildDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Your teacher will use Magana with you in class.'**
+  String get ageChildDetail;
+
+  /// No description provided for @privacyNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos of your pages are deleted after reading. We never share your details.'**
+  String get privacyNote;
+
+  /// No description provided for @hearAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Hear this page again'**
+  String get hearAgain;
+
+  /// No description provided for @readyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re ready'**
+  String get readyTitle;
+
+  /// No description provided for @readyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold your phone over any printed page and Magana will read it to you.'**
+  String get readyBody;
+
+  /// No description provided for @startLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Start'**
+  String get startLabel;
+
+  /// No description provided for @consentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a parent, guardian or teacher'**
+  String get consentTitle;
+
+  /// No description provided for @consentBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Please read or listen to this together.'**
+  String get consentBody;
+
+  /// No description provided for @consentPoint1.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana helps with school subjects only.'**
+  String get consentPoint1;
+
+  /// No description provided for @consentPoint2.
+  ///
+  /// In en, this message translates to:
+  /// **'No health or money papers, no WhatsApp and no open chat.'**
+  String get consentPoint2;
+
+  /// No description provided for @consentPoint3.
+  ///
+  /// In en, this message translates to:
+  /// **'Photos are deleted after reading.'**
+  String get consentPoint3;
+
+  /// No description provided for @consentConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'I am the parent, guardian or teacher, and I agree'**
+  String get consentConfirm;
+
+  /// No description provided for @classroomTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana in class'**
+  String get classroomTitle;
+
+  /// No description provided for @classroomBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your teacher starts Magana with you in class. When the lesson ends, close the app.'**
+  String get classroomBody;
+
+  /// No description provided for @classroomStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Teacher: start the class session'**
+  String get classroomStart;
+
+  /// No description provided for @classroomConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you the teacher?'**
+  String get classroomConfirmTitle;
+
+  /// No description provided for @classroomConfirmYes.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, start the session'**
+  String get classroomConfirmYes;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @back.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get back;
+
+  /// No description provided for @msg_unknown_tier.
+  ///
+  /// In en, this message translates to:
+  /// **'Please set up Magana again: your age group wasn\'t recognised.'**
+  String get msg_unknown_tier;
+
+  /// No description provided for @readPageSubtitleSchool.
+  ///
+  /// In en, this message translates to:
+  /// **'Schoolwork, notes, textbooks and tests'**
+  String get readPageSubtitleSchool;
 }
 
 class _AppLocalizationsDelegate

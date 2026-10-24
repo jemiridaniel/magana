@@ -45,7 +45,7 @@ def test_read_returns_codes_not_sentences():
 def test_errors_are_codes():
     r = client.post("/read", files={"file": ("p.png", _png())}, data={"mode": "poetry"})
     assert r.status_code == 400 and r.json()["detail"] == {"code": "unknown_mode"}
-    r = client.post("/read", files={"file": ("p.png", _png())}, data={"mode": "money", "tier": "guided"})
+    r = client.post("/read", files={"file": ("p.png", _png())}, data={"mode": "money"}, headers={"X-Magana-Tier": "guided", "X-Magana-Guardian-Consent": "yes"})
     assert r.status_code == 403 and r.json()["detail"] == {"code": "not_allowed_for_tier"}
     r = client.post("/read", files={"file": ("p.png", b"not an image")})
     assert r.status_code == 400 and r.json()["detail"] == {"code": "unreadable_image"}

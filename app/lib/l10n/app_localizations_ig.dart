@@ -425,4 +425,121 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get cueNoPage => 'Enweghị peeji';
+
+  @override
+  String stepOf(int n, int total) {
+    return 'Nzọụkwụ $n n\'ime $total';
+  }
+
+  @override
+  String get chooseLanguageTitle => 'Họrọ asụsụ gị';
+
+  @override
+  String get chooseLanguageBody =>
+      'Magana ga-agwa gị okwu n\'asụsụ a. Ị nwere ike ịgbanwe ya oge ọ bụla site na ihuenyo mbụ.';
+
+  @override
+  String get languageHearsHint =>
+      'A ga-agụ nhọrọ ọ bụla n\'asụsụ nke ya mgbe i metụrụ ya aka.';
+
+  @override
+  String get continueLabel => 'Gaa n\'ihu';
+
+  @override
+  String get welcome => 'Nnọọ';
+
+  @override
+  String get ageTitle => 'Afọ ole ka ị dị?';
+
+  @override
+  String get ageBody => 'Anyị na-ajụ ka Magana wee dị nchebe ma kwekọọ gị.';
+
+  @override
+  String get ageAdult => 'Adị m afọ 18 ma ọ bụ karịa';
+
+  @override
+  String get ageAdultDetail =>
+      'Jiri ihe niile dị na Magana, gụnyere akwụkwọ ahụike na nke ego.';
+
+  @override
+  String get ageTeen => 'Adị m afọ 13 ruo 17';
+
+  @override
+  String get ageTeenDetail =>
+      'Nne na nna, onye na-elekọta gị ma ọ bụ onye nkuzi ga-ebu ụzọ kwenye. Magana na-enyere naanị n\'ihe ọmụmụ ụlọ akwụkwọ.';
+
+  @override
+  String get ageChild => 'Erubeghị m afọ 13';
+
+  @override
+  String get ageChildDetail =>
+      'Onye nkuzi gị ga-eji Magana na gị n\'ime klaasị.';
+
+  @override
+  String get privacyNote =>
+      'A na-ehichapụ foto peeji gị mgbe a gụchara ha. Anyị anaghị ekesa nkọwa gị.';
+
+  @override
+  String get hearAgain => 'Nụghachi peeji a';
+
+  @override
+  String get readyTitle => 'Ị dị njikere';
+
+  @override
+  String get readyBody =>
+      'Jide ekwentị gị n\'elu peeji e biri ebi, Magana ga-agụrụ gị ya.';
+
+  @override
+  String get startLabel => 'Malite';
+
+  @override
+  String get consentTitle =>
+      'Jụọ nne na nna, onye na-elekọta gị ma ọ bụ onye nkuzi';
+
+  @override
+  String get consentBody => 'Biko gụọ ma ọ bụ gee nke a ọnụ.';
+
+  @override
+  String get consentPoint1 =>
+      'Magana na-enyere naanị n\'ihe ọmụmụ ụlọ akwụkwọ.';
+
+  @override
+  String get consentPoint2 =>
+      'Enweghị akwụkwọ ahụike ma ọ bụ nke ego, enweghị WhatsApp, enweghị mkparịta ụka efu.';
+
+  @override
+  String get consentPoint3 => 'A na-ehichapụ foto mgbe a gụchara ha.';
+
+  @override
+  String get consentConfirm =>
+      'Abụ m nne ma ọ bụ nna, onye na-elekọta ma ọ bụ onye nkuzi, ekwenyere m';
+
+  @override
+  String get classroomTitle => 'Magana n\'ime klaasị';
+
+  @override
+  String get classroomBody =>
+      'Onye nkuzi gị ga-amalite Magana na gị n\'ime klaasị. Mgbe nkuzi gwụchara, mechie ngwa ahụ.';
+
+  @override
+  String get classroomStart => 'Onye nkuzi: malite oge klaasị';
+
+  @override
+  String get classroomConfirmTitle => 'Ị bụ onye nkuzi?';
+
+  @override
+  String get classroomConfirmYes => 'Ee, malite oge ahụ';
+
+  @override
+  String get cancel => 'Kagbuo';
+
+  @override
+  String get back => 'Laghachi';
+
+  @override
+  String get msg_unknown_tier => 'Biko hazie Magana ọzọ: amataghị otu afọ gị.';
+
+  @override
+  String get readPageSubtitleSchool =>
+      'Ihe ọmụmụ ụlọ akwụkwọ, ndetu, akwụkwọ ọgụgụ na ule';
 }

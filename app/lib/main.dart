@@ -5,7 +5,9 @@ import 'api.dart';
 import 'app_scope.dart';
 import 'l10n/app_localizations.dart';
 import 'language.dart';
+import 'profile.dart';
 import 'screens/home.dart';
+import 'screens/onboarding.dart';
 import 'screens/splash.dart';
 import 'speech.dart';
 import 'theme.dart';
@@ -17,18 +19,20 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final language = LanguageController();
   final speaker = Speaker();
-  // The splash shows while the saved language and its voice load.
-  // The splash shows while the saved language and its voice load.
+  final profile = ProfileController();
+  // The splash shows while the saved profile, language and voice load.
   final ready = () async {
+    await profile.load();
     await language.load();
     await speaker.setLanguage(language.value.languageCode);
   }();
   await precacheSplash();
   runApp(
     MaganaApp(
-      api: MaganaApi(),
+      api: MaganaApi(headers: () => profile.headers),
       speaker: speaker,
       language: language,
+      profile: profile,
       ready: ready,
     ),
   );
@@ -40,6 +44,7 @@ class MaganaApp extends StatelessWidget {
     required this.api,
     required this.speaker,
     required this.language,
+    required this.profile,
     this.ready,
     this.firstFrameShown,
   });
@@ -47,6 +52,7 @@ class MaganaApp extends StatelessWidget {
   final MaganaApi api;
   final Speaker speaker;
   final LanguageController language;
+  final ProfileController profile;
 
   /// Start-up work the splash waits for; null (tests) goes straight to Home.
   final Future<void>? ready;
@@ -60,6 +66,7 @@ class MaganaApp extends StatelessWidget {
       api: api,
       speaker: speaker,
       language: language,
+      profile: profile,
       child: ValueListenableBuilder<Locale>(
         valueListenable: language,
         builder: (context, locale, _) => MaterialApp(
@@ -86,11 +93,14 @@ class MaganaApp extends StatelessWidget {
             ),
           ),
           home: firstFrameShown == null
-              ? SplashGate(ready: ready, child: const HomeScreen())
+              ? SplashGate(
+                  ready: ready,
+                  child: const ProfileGate(home: HomeScreen()),
+                )
               : SplashGate(
                   ready: ready,
                   firstFrameShown: firstFrameShown!,
-                  child: const HomeScreen(),
+                  child: const ProfileGate(home: HomeScreen()),
                 ),
         ),
       ),

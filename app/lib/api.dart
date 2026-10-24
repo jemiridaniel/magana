@@ -201,8 +201,13 @@ class ApiException implements Exception {
 }
 
 class MaganaApi {
-  MaganaApi({http.Client? client}) : _client = client ?? http.Client();
+  MaganaApi({http.Client? client, Map<String, String> Function()? headers})
+    : _client = client ?? http.Client(),
+      _headers = headers ?? (() => const {});
   final http.Client _client;
+
+  /// Age tier and consent headers, sent with every request (see ProfileController).
+  final Map<String, String> Function() _headers;
 
   /// Sends the photo to /read. The photo is only held in memory for the request.
   Future<ReadResult> read(
@@ -211,6 +216,7 @@ class MaganaApi {
     String mode = 'school',
   }) async {
     final req = http.MultipartRequest('POST', Uri.parse('$apiBase/read'))
+      ..headers.addAll(_headers())
       ..fields['mode'] = mode
       ..files.add(
         http.MultipartFile.fromBytes('file', bytes, filename: filename),

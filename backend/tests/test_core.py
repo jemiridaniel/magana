@@ -79,5 +79,5 @@ def test_read_endpoint_reads_text():
 
 def test_minor_blocked_from_health_mode():
     png = _page_png(["Paracetamol 500 mg"])
-    r = client.post("/read", files={"file": ("p.png", png, "image/png")}, data={"mode": "health", "tier": "guided"})
+    r = client.post("/read", files={"file": ("p.png", png, "image/png")}, data={"mode": "health"}, headers={"X-Magana-Tier": "guided", "X-Magana-Guardian-Consent": "yes"})
     assert r.status_code == 403

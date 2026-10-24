@@ -356,5 +356,52 @@
   "cueNoPage": "No page",
   "@cueNoPage": {
     "description": "One-word camera cue: no page in view."
-  }
+  },
+  "stepOf": "Step {n} of {total}",
+  "@stepOf": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "chooseLanguageTitle": "Choose your language",
+  "chooseLanguageBody": "Magana will speak to you in this language. You can change it any time from the Home screen.",
+  "languageHearsHint": "Each option is read aloud in its own language when you touch it.",
+  "continueLabel": "Continue",
+  "welcome": "Welcome",
+  "@welcome": {
+    "description": "Spoken in each language's own voice when its option is touched during onboarding."
+  },
+  "ageTitle": "How old are you?",
+  "ageBody": "We ask so Magana is safe and right for you.",
+  "ageAdult": "I am 18 or older",
+  "ageAdultDetail": "Use everything in Magana, including health and money papers.",
+  "ageTeen": "I am 13 to 17",
+  "ageTeenDetail": "A parent, guardian or teacher agrees first. Magana helps with school subjects only.",
+  "ageChild": "I am under 13",
+  "ageChildDetail": "Your teacher will use Magana with you in class.",
+  "privacyNote": "Photos of your pages are deleted after reading. We never share your details.",
+  "hearAgain": "Hear this page again",
+  "readyTitle": "You're ready",
+  "readyBody": "Hold your phone over any printed page and Magana will read it to you.",
+  "startLabel": "Start",
+  "consentTitle": "Ask a parent, guardian or teacher",
+  "consentBody": "Please read or listen to this together.",
+  "consentPoint1": "Magana helps with school subjects only.",
+  "consentPoint2": "No health or money papers, no WhatsApp and no open chat.",
+  "consentPoint3": "Photos are deleted after reading.",
+  "consentConfirm": "I am the parent, guardian or teacher, and I agree",
+  "classroomTitle": "Magana in class",
+  "classroomBody": "Your teacher starts Magana with you in class. When the lesson ends, close the app.",
+  "classroomStart": "Teacher: start the class session",
+  "classroomConfirmTitle": "Are you the teacher?",
+  "classroomConfirmYes": "Yes, start the session",
+  "cancel": "Cancel",
+  "back": "Back",
+  "msg_unknown_tier": "Please set up Magana again: your age group wasn't recognised.",
+  "readPageSubtitleSchool": "Schoolwork, notes, textbooks and tests"
 }
