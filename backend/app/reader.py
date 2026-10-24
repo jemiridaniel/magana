@@ -11,7 +11,7 @@ from dataclasses import dataclass, asdict, field
 from html.parser import HTMLParser
 from typing import Any, Callable, Protocol
 
-from PIL import Image, ImageFilter, ImageStat
+from PIL import Image, ImageChops, ImageFilter, ImageOps, ImageStat
 
 
 @dataclass
@@ -49,6 +49,7 @@ class Table:
     label: str = ""
     header: bool = False
     confidence: float = 1.0  # whole-table structure score
+    height: int = 0
 
 
 @dataclass
@@ -246,7 +247,8 @@ def page_from_structure(result: Any) -> Page:
                 inside = [s for s, wb in zip(tscores, tboxes) if _boxes_overlap(cbox, wb) > 0.5]
                 cell.confidence = round(min(inside), 3) if inside else (1.0 if not cell.text else cell.confidence)
         top = int(region[1]) if region else 0
-        tables.append(Table(rows, top, label=f"table {n + 1}", header=header, confidence=round(overall, 3)))
+        height = int(region[3] - region[1]) if region else 0
+        tables.append(Table(rows, top, label=f"table {n + 1}", header=header, confidence=round(overall, 3), height=height))
 
     # Page lines: overall OCR text that is not inside a table (tables are read cell by cell).
     regions = table_regions or [_union([_xyxy(b) for b in t["cell_box_list"]])
@@ -298,6 +300,81 @@ def capture_check(image: Image.Image) -> list[str]:
     return tips
 
 
+# ---------- Faint print
+
+INK_DELTA = 10  # grey levels darker than the local paper that count as ink
+
+
+def ink_map(image: Image.Image) -> Image.Image:
+    """How much darker each pixel is than the paper around it, so shading and
+    tinted paper don't count as ink but faint print does."""
+    gray = image.convert("L")
+    small = gray.resize((max(1, gray.width // 4), max(1, gray.height // 4)))
+    paper = small.filter(ImageFilter.MaxFilter(9)).filter(ImageFilter.GaussianBlur(4)).resize(gray.size)
+    return ImageChops.subtract(paper, gray)
+
+
+def ink_bands(ink: Image.Image) -> list[tuple[int, int]]:
+    """Horizontal bands (top, bottom) that hold text-like ink."""
+    import numpy as np
+
+    a = np.asarray(ink) > INK_DELTA
+    h, w = a.shape
+    rows = a.sum(axis=1) >= max(3, int(w * 0.002))
+    bands, start, gap = [], None, 0
+    for y, on in enumerate(list(rows) + [False] * 4):
+        if on:
+            start, gap = (y if start is None else start), 0
+        elif start is not None:
+            gap += 1
+            if gap > 3:
+                bands.append((start, y - gap + 1))
+                start, gap = None, 0
+    out = []
+    for top, bottom in bands:
+        height = bottom - top
+        cover = a[top:bottom].mean() if height else 0
+        # Text-sized and text-like: not a speck, not a dark edge or photo filling the band.
+        if max(4, h * 0.004) <= height <= h * 0.25 and 0.002 <= cover <= 0.4:
+            out.append((top, bottom))
+    return out
+
+
+def _covered(band: tuple[int, int], spans: list[tuple[int, int]]) -> bool:
+    top, bottom = band
+    return any(min(bottom, b) - max(top, t) >= 0.5 * (bottom - top) for t, b in spans)
+
+
+def recover_faint(image: Image.Image, page: Page, engine: OCREngine) -> list[dict]:
+    """Find ink the OCR skipped, contrast-boost each such band and read it again.
+    Recovered lines join the page; bands that still give no text are returned as
+    faint regions, so the user hears that something is there but unreadable."""
+    ink = ink_map(image)
+    spans = [(l.top, l.top + max(l.height, 1)) for l in page.lines]
+    spans += [(t.top, t.top + t.height) for t in page.tables if t.height]
+    faint = []
+    for top, bottom in ink_bands(ink):
+        if _covered((top, bottom), spans):
+            continue
+        pad = max(6, (bottom - top) // 2)
+        y0, y1 = max(0, top - pad), min(image.height, bottom + pad)
+        # Stretch contrast within the band only: one dark heading elsewhere on the
+        # page no longer pushes the faint line below the OCR's threshold.
+        crop = ImageOps.invert(ImageOps.autocontrast(ink.crop((0, y0, image.width, y1)), cutoff=1))
+        found = [l for l in engine.read(crop).lines if l.text.strip()]
+        for l in found:
+            l.top += y0
+        if found:
+            page.lines.extend(found)
+            spans += [(l.top, l.top + max(l.height, 1)) for l in found]
+        else:
+            faint.append({"top": top, "bottom": bottom})
+    page.lines.sort(key=lambda l: l.top)
+    for i, l in enumerate(page.lines):
+        l.label = f"line {i + 1}"
+    return faint
+
+
 SECOND_PASS_SCALE = 1.5
 
 
@@ -318,7 +395,9 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     """OCR one photo. With second_pass, also read a differently prepared copy so the
     safety layer can compare every number between the two readings."""
     engine = engine or default_engine()
-    result = {"tips": capture_check(image), **_page_dict(engine.read(image))}
+    page = engine.read(image)
+    faint = recover_faint(image, page, engine)
+    result = {"tips": capture_check(image), **_page_dict(page), "faint_regions": faint}
     if second_pass:
         result["second_pass"] = _page_dict(engine.read(second_pass_image(image)))
     return result

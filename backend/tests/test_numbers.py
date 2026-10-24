@@ -4,10 +4,12 @@ The fixtures under fixtures/misreads are the pages where the dose "8 in 24 hours
 was really misread on the Android emulator and in development: as "6" (with 92%
 and 64% word confidence) and as "@" or "&".
 """
+import io
 from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
+from PIL import Image
 
 from app import safety
 from app.main import app
@@ -162,7 +164,8 @@ def test_second_pass_only_runs_for_health_and_money(monkeypatch):
 
     app.dependency_overrides[main.get_engine] = lambda: Engine()
     try:
-        data = (MISREADS / "dose_faint.png").read_bytes()
+        # A blank page: no ink bands, so the faint-text retry never calls the engine.
+        buf = io.BytesIO(); Image.new("RGB", (400, 300), "white").save(buf, "PNG"); data = buf.getvalue()
         for mode, expected in [("school", 1), ("health", 2), ("money", 2)]:
             calls.clear()
             client.post("/read", files={"file": ("p.png", data)}, data={"mode": mode})
