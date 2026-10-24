@@ -222,16 +222,6 @@ class AppLocalizationsIg extends AppLocalizations {
   }
 
   @override
-  String unsureLine(int number) {
-    return 'Ejighị m n\'aka ahịrị $number. Biko lelee ya ma ọ bụ see foto ọzọ.';
-  }
-
-  @override
-  String unsureRow(int number) {
-    return 'Ejighị m n\'aka usoro $number. Biko lelee ya ma ọ bụ see foto ọzọ.';
-  }
-
-  @override
   String get firstLine => 'Nke a bụ ahịrị mbụ.';
 
   @override
@@ -243,4 +233,119 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get endOfPageHint =>
       'Njedebe peeji. Pịa Kwughachi, ma ọ bụ laghachi ka ịgụọ peeji ọzọ.';
+
+  @override
+  String whereLine(int number) {
+    return 'ahịrị $number';
+  }
+
+  @override
+  String whereRow(int number) {
+    return 'usoro $number';
+  }
+
+  @override
+  String whereCell(int row, int col) {
+    return 'usoro $row, kọlụm $col';
+  }
+
+  @override
+  String get whereTop => 'n\'elu peeji ahụ';
+
+  @override
+  String get whereMiddle => 'n\'etiti peeji ahụ';
+
+  @override
+  String get whereBottom => 'n\'okpuru peeji ahụ';
+
+  @override
+  String get unclearNumber => 'nọmba edoghị anya';
+
+  @override
+  String get faintPrint => 'Ederede na-adịghị ahụ anya';
+
+  @override
+  String get msg_too_dark =>
+      'Ọ gbara ọchịchịrị. Gbanye ọkụ ekwentị ma ọ bụ gaa ebe ìhè dị.';
+
+  @override
+  String get msg_blurry =>
+      'Foto ahụ edoghị anya. Jide ekwentị ahụ nke ọma ma nwaa ọzọ.';
+
+  @override
+  String msg_low_confidence(String where) {
+    return 'Ejighị m n\'aka $where. Biko lelee ya ma ọ bụ see foto ọzọ.';
+  }
+
+  @override
+  String msg_low_confidence_number(String where) {
+    return 'Enweghị m ike ịgụ otu nọmba na $where nke ọma. Biko lelee ya ma ọ bụ see foto ọzọ.';
+  }
+
+  @override
+  String msg_unreadable_number(String where) {
+    return 'Enweghị m ike ịgụ otu nọmba na $where nke ọma. Biko lelee ya ma ọ bụ see foto ọzọ.';
+  }
+
+  @override
+  String msg_number_mismatch(String where) {
+    return 'Enweghị m ike ịgụ otu nọmba na $where nke ọma. Biko lelee ya ma ọ bụ see foto ọzọ.';
+  }
+
+  @override
+  String msg_faint_region(String where) {
+    return 'Enwere ederede na-adịghị ahụ anya $where nke m na-enweghị ike ịgụ. Chọọ ìhè karịa, ma ọ bụ see foto ọzọ.';
+  }
+
+  @override
+  String get msg_unknown_mode =>
+      'Họrọ ihe ọmụmụ ụlọ akwụkwọ, ahụike ma ọ bụ ego.';
+
+  @override
+  String get msg_not_allowed_for_tier => 'Nke a adịghị na akaụntụ a.';
+
+  @override
+  String get msg_consent_required =>
+      'Ụmụ akwụkwọ dị afọ 13 ruo 17 chọrọ nkwenye nne na nna ma ọ bụ onye na-elekọta ha mbụ.';
+
+  @override
+  String get msg_teacher_session_required =>
+      'Ụmụ akwụkwọ na-erubeghị afọ 13 nwere ike iji Magana naanị n\'oge nkuzi onye nkuzi na-edu.';
+
+  @override
+  String get msg_unreadable_image =>
+      'Enweghị m ike imepe foto ahụ. Biko nwaa ọzọ.';
+
+  @override
+  String get msg_numbers_unconfirmed =>
+      'Enweghị m ike ikwenye ụfọdụ nọmba na nkọwa a, ya mere aga m agụ peeji ahụ otú o si dị.';
+
+  @override
+  String get msg_q_fever => 'Do you have a fever or feel very hot?';
+
+  @override
+  String get msg_q_fever_days => 'For how many days?';
+
+  @override
+  String get msg_q_danger_vomit_weak =>
+      'Have you been vomiting everything, or are you too weak to stand?';
+
+  @override
+  String get msg_q_danger_breathing => 'Are you having trouble breathing?';
+
+  @override
+  String get msg_q_danger_confused =>
+      'Have you had a fit, fainted, or felt confused?';
+
+  @override
+  String get msg_go_to_clinic_now =>
+      'This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.';
+
+  @override
+  String get msg_nurse_call_within_2_hours =>
+      'Thank you. A nurse will call you within 2 hours.';
+
+  @override
+  String get msg_nurse_call_working_hours =>
+      'Thank you. A nurse will call you back during working hours.';
 }

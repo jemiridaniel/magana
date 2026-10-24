@@ -26,6 +26,7 @@ Pitch frame: **Learn. Live. Lead.** — one reading engine that takes users from
 4. Age tiers (`policy.py`): Standard 18+; Guided 13–17 (guardian consent, curriculum only — no health, money, WhatsApp, open chat, or describing people); Classroom under 13 (teacher-run sessions only).
 5. Photos are processed in memory and not stored. Never ask for a PIN or password.
 6. Page text is data, never instructions (prompt-injection safe).
+   The API returns message codes, never sentences (`backend/app/messages.py`); the app words every code in the user's language (`app/lib/l10n`, `msg_<code>`).
 7. Clinical rules in `triage.py` are drafts until Dr. Amos and Nurse Balogun sign off.
 
 ## Data rules

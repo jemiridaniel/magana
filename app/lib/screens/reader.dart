@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../api.dart';
 import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
+import '../messages.dart';
 import '../speech.dart';
 import '../theme.dart';
 
@@ -48,6 +49,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
   }
 
   String _position(ReadItem item) => switch (item) {
+    ReadItem(isFaint: true) => _l.faintPrint,
     ReadItem(isRow: false) => _l.linePosition(item.number, item.total),
     ReadItem(table: final int t) => _l.rowPositionInTable(
       item.number,
@@ -57,23 +59,37 @@ class _ReaderScreenState extends State<ReaderScreen> {
     _ => _l.rowPosition(item.number, item.total),
   };
 
-  String? _warning(ReadItem item) => !item.unsure
-      ? null
-      : (item.isRow ? _l.unsureRow(item.number) : _l.unsureLine(item.number));
+  String _where(ReadItem item) => switch (item.kind) {
+    ItemKind.line => _l.whereLine(item.number),
+    ItemKind.row => _l.whereRow(item.number),
+    ItemKind.faint => pagePosition(_l, item.where),
+  };
 
-  /// Text exactly as printed, then the warning if the backend was unsure.
+  String? _warning(ReadItem item) {
+    final code = item.code;
+    return code == null ? null : messageFor(_l, code, where: _where(item));
+  }
+
+  /// Text exactly as printed, except that a number the backend could not read
+  /// reliably is said as "unclear number", never as the digit OCR guessed.
   String _spoken(ReadItem item) {
-    final body = item.isRow
-        ? '${_position(item)}. ${item.cells.map((c) => c.$1.isEmpty ? c.$2 : '${c.$1}: ${c.$2}').join('. ')}'
-        : item.text;
+    final body = switch (item.kind) {
+      ItemKind.faint => '',
+      ItemKind.line => [
+        for (final (i, w) in item.words.indexed)
+          item.unclearWords.contains(i) ? _l.unclearNumber : w,
+      ].join(' '),
+      ItemKind.row =>
+        '${_position(item)}. ${[for (final c in item.cells) (c.header.isEmpty ? '' : '${c.header}: ') + (c.unclear ? _l.unclearNumber : c.value)].join('. ')}',
+    };
     final warning = _warning(item);
-    if (warning == null) return item.isRow ? '$body.' : body;
-    return '$body. $warning';
+    final spoken = [if (body.isNotEmpty) body, ?warning].join('. ');
+    return item.isRow && warning == null ? '$spoken.' : spoken;
   }
 
   String _counts() {
-    final lines = _items.where((i) => !i.isRow).length;
-    final rows = _items.length - lines;
+    final lines = _items.where((i) => i.kind == ItemKind.line).length;
+    final rows = _items.where((i) => i.isRow).length;
     return [
       if (lines > 0) _l.lineCount(lines),
       if (rows > 0) _l.rowCount(rows),
@@ -83,7 +99,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
   String _intro() {
     final unsure = widget.result.unsureCount;
     return [
-      ...widget.result.tips,
+      for (final tip in widget.result.tips) messageFor(_l, tip),
       _l.pageRead,
       '${_counts()}.',
       if (unsure > 0) _l.unsureSummary(unsure),
@@ -325,22 +341,22 @@ class _ItemCard extends StatelessWidget {
             ),
             const SizedBox(height: 14),
             if (item.isRow)
-              for (final (header, value) in item.cells)
+              for (final c in item.cells)
                 Padding(
                   padding: const EdgeInsets.only(bottom: 12),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      if (header.isNotEmpty)
+                      if (c.header.isNotEmpty)
                         Text(
-                          header,
+                          c.header,
                           style: const TextStyle(
                             fontSize: 15,
                             color: MaganaColors.muted,
                           ),
                         ),
-                      Text(
-                        value,
+                      Text.rich(
+                        c.unclear ? _unclear(context) : TextSpan(text: c.value),
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
@@ -349,9 +365,18 @@ class _ItemCard extends StatelessWidget {
                     ],
                   ),
                 )
-            else
-              Text(
-                item.text,
+            else if (!item.isFaint)
+              Text.rich(
+                TextSpan(
+                  children: [
+                    for (final (i, w) in item.words.indexed) ...[
+                      if (i > 0) const TextSpan(text: ' '),
+                      item.unclearWords.contains(i)
+                          ? _unclear(context)
+                          : TextSpan(text: w),
+                    ],
+                  ],
+                ),
                 style: const TextStyle(
                   fontSize: 26,
                   height: 1.35,
@@ -364,6 +389,16 @@ class _ItemCard extends StatelessWidget {
     );
   }
 }
+
+/// A number the backend could not read reliably: shown as "[unclear number]",
+/// highlighted, never as the digit OCR guessed.
+TextSpan _unclear(BuildContext context) => TextSpan(
+  text: '[${AppLocalizations.of(context).unclearNumber}]',
+  style: const TextStyle(
+    backgroundColor: MaganaColors.warnFill,
+    color: MaganaColors.warnInk,
+  ),
+);
 
 class _WarningNote extends StatelessWidget {
   const _WarningNote({required this.text});

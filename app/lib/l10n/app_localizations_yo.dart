@@ -222,16 +222,6 @@ class AppLocalizationsYo extends AppLocalizations {
   }
 
   @override
-  String unsureLine(int number) {
-    return 'Ìlà $number kò dá mi lójú. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà.';
-  }
-
-  @override
-  String unsureRow(int number) {
-    return 'Ọ̀wọ́ $number kò dá mi lójú. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà.';
-  }
-
-  @override
   String get firstLine => 'Èyí ni ìlà àkọ́kọ́.';
 
   @override
@@ -243,4 +233,118 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get endOfPageHint =>
       'Òpin ojú-ìwé. Tẹ Tún sọ, tàbí padà láti ka ojú-ìwé mìíràn.';
+
+  @override
+  String whereLine(int number) {
+    return 'ìlà $number';
+  }
+
+  @override
+  String whereRow(int number) {
+    return 'ọ̀wọ́ $number';
+  }
+
+  @override
+  String whereCell(int row, int col) {
+    return 'ọ̀wọ́ $row, òpó $col';
+  }
+
+  @override
+  String get whereTop => 'ní òkè ojú-ìwé náà';
+
+  @override
+  String get whereMiddle => 'ní àárín ojú-ìwé náà';
+
+  @override
+  String get whereBottom => 'ní ìsàlẹ̀ ojú-ìwé náà';
+
+  @override
+  String get unclearNumber => 'nọ́ńbà tí kò ṣe kedere';
+
+  @override
+  String get faintPrint => 'Àkọsílẹ̀ tí kò hàn dáadáa';
+
+  @override
+  String get msg_too_dark =>
+      'Ó ṣókùnkùn díẹ̀. Tan iná fóònù tàbí lọ síbi tí ìmọ́lẹ̀ wà.';
+
+  @override
+  String get msg_blurry =>
+      'Fọ́tò náà kò mọ́ kedere. Di fóònù mú dáadáa kí o tún gbìyànjú.';
+
+  @override
+  String msg_low_confidence(String where) {
+    return '$where kò dá mi lójú. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà.';
+  }
+
+  @override
+  String msg_low_confidence_number(String where) {
+    return 'Mi ò lè ka nọ́ńbà kan ní $where kedere. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà.';
+  }
+
+  @override
+  String msg_unreadable_number(String where) {
+    return 'Mi ò lè ka nọ́ńbà kan ní $where kedere. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà.';
+  }
+
+  @override
+  String msg_number_mismatch(String where) {
+    return 'Mi ò lè ka nọ́ńbà kan ní $where kedere. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà.';
+  }
+
+  @override
+  String msg_faint_region(String where) {
+    return 'Àkọsílẹ̀ kan wà $where tí kò hàn dáadáa, mi ò lè kà á. Wá ìmọ́lẹ̀ sí i, tàbí kí o tún fọ́tò yà.';
+  }
+
+  @override
+  String get msg_unknown_mode => 'Yan iṣẹ́ ilé-ìwé, ìlera tàbí owó.';
+
+  @override
+  String get msg_not_allowed_for_tier => 'Èyí kò sí fún àkọọ́lẹ̀ yìí.';
+
+  @override
+  String get msg_consent_required =>
+      'Àwọn akẹ́kọ̀ọ́ ọmọ ọdún 13 sí 17 nílò àṣẹ òbí tàbí alágbàtọ́ wọn ná.';
+
+  @override
+  String get msg_teacher_session_required =>
+      'Àwọn akẹ́kọ̀ọ́ tí kò tíì pé ọdún 13 lè lo Magana nínú ìpàdé tí olùkọ́ ń darí nìkan.';
+
+  @override
+  String get msg_unreadable_image =>
+      'Mi ò lè ṣí fọ́tò yẹn. Jọ̀wọ́ tún gbìyànjú.';
+
+  @override
+  String get msg_numbers_unconfirmed =>
+      'Mi ò lè fìdí àwọn nọ́ńbà kan nínú àlàyé yìí múlẹ̀, nítorí náà màá ka ojú-ìwé náà gẹ́gẹ́ bí ó ṣe wà.';
+
+  @override
+  String get msg_q_fever => 'Do you have a fever or feel very hot?';
+
+  @override
+  String get msg_q_fever_days => 'For how many days?';
+
+  @override
+  String get msg_q_danger_vomit_weak =>
+      'Have you been vomiting everything, or are you too weak to stand?';
+
+  @override
+  String get msg_q_danger_breathing => 'Are you having trouble breathing?';
+
+  @override
+  String get msg_q_danger_confused =>
+      'Have you had a fit, fainted, or felt confused?';
+
+  @override
+  String get msg_go_to_clinic_now =>
+      'This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.';
+
+  @override
+  String get msg_nurse_call_within_2_hours =>
+      'Thank you. A nurse will call you within 2 hours.';
+
+  @override
+  String get msg_nurse_call_working_hours =>
+      'Thank you. A nurse will call you back during working hours.';
 }

@@ -8,6 +8,8 @@ from __future__ import annotations
 
 from enum import Enum
 
+from .messages import CodedError
+
 
 class Tier(str, Enum):
     STANDARD = "standard"
@@ -40,10 +42,10 @@ def tier_for_age(age: int, guardian_consent: bool = False, teacher_session: bool
         return Tier.STANDARD
     if age >= 13:
         if not guardian_consent:
-            raise PermissionError("Learners aged 13-17 need a parent's or guardian's consent first.")
+            raise CodedError("consent_required")
         return Tier.GUIDED
     if not teacher_session:
-        raise PermissionError("Learners under 13 can only use Magana in a teacher-run session.")
+        raise CodedError("teacher_session_required")
     return Tier.CLASSROOM
 
 
@@ -53,4 +55,4 @@ def allowed(tier: Tier, feature: Feature) -> bool:
 
 def require(tier: Tier, feature: Feature) -> None:
     if not allowed(tier, feature):
-        raise PermissionError(f"'{feature.value}' is not available for {tier.value} accounts.")
+        raise CodedError("not_allowed_for_tier")

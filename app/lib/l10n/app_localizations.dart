@@ -432,18 +432,6 @@ abstract class AppLocalizations {
   /// **'{count, plural, =1{I\'m not sure about 1 of them.} other{I\'m not sure about {count} of them.}} I\'ll tell you when we get there.'**
   String unsureSummary(int count);
 
-  /// No description provided for @unsureLine.
-  ///
-  /// In en, this message translates to:
-  /// **'I\'m not sure about line {number}. Please check it or retake the photo.'**
-  String unsureLine(int number);
-
-  /// No description provided for @unsureRow.
-  ///
-  /// In en, this message translates to:
-  /// **'I\'m not sure about row {number}. Please check it or retake the photo.'**
-  String unsureRow(int number);
-
   /// No description provided for @firstLine.
   ///
   /// In en, this message translates to:
@@ -467,6 +455,180 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'End of page. Tap Repeat, or go back to read another page.'**
   String get endOfPageHint;
+
+  /// No description provided for @whereLine.
+  ///
+  /// In en, this message translates to:
+  /// **'line {number}'**
+  String whereLine(int number);
+
+  /// No description provided for @whereRow.
+  ///
+  /// In en, this message translates to:
+  /// **'row {number}'**
+  String whereRow(int number);
+
+  /// No description provided for @whereCell.
+  ///
+  /// In en, this message translates to:
+  /// **'row {row}, column {col}'**
+  String whereCell(int row, int col);
+
+  /// No description provided for @whereTop.
+  ///
+  /// In en, this message translates to:
+  /// **'near the top of the page'**
+  String get whereTop;
+
+  /// No description provided for @whereMiddle.
+  ///
+  /// In en, this message translates to:
+  /// **'in the middle of the page'**
+  String get whereMiddle;
+
+  /// No description provided for @whereBottom.
+  ///
+  /// In en, this message translates to:
+  /// **'near the bottom of the page'**
+  String get whereBottom;
+
+  /// Said and shown in place of a number the app could not read reliably.
+  ///
+  /// In en, this message translates to:
+  /// **'unclear number'**
+  String get unclearNumber;
+
+  /// No description provided for @faintPrint.
+  ///
+  /// In en, this message translates to:
+  /// **'Faint print'**
+  String get faintPrint;
+
+  /// No description provided for @msg_too_dark.
+  ///
+  /// In en, this message translates to:
+  /// **'It\'s quite dark. Turn on the torch or move to more light.'**
+  String get msg_too_dark;
+
+  /// No description provided for @msg_blurry.
+  ///
+  /// In en, this message translates to:
+  /// **'The photo looks blurry. Hold the phone still and try again.'**
+  String get msg_blurry;
+
+  /// No description provided for @msg_low_confidence.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m not sure about {where}. Please check it or retake the photo.'**
+  String msg_low_confidence(String where);
+
+  /// No description provided for @msg_low_confidence_number.
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t read a number on {where} clearly. Please check it or retake the photo.'**
+  String msg_low_confidence_number(String where);
+
+  /// No description provided for @msg_unreadable_number.
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t read a number on {where} clearly. Please check it or retake the photo.'**
+  String msg_unreadable_number(String where);
+
+  /// No description provided for @msg_number_mismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t read a number on {where} clearly. Please check it or retake the photo.'**
+  String msg_number_mismatch(String where);
+
+  /// No description provided for @msg_faint_region.
+  ///
+  /// In en, this message translates to:
+  /// **'There is faint print {where} that I can\'t read. Try more light, or retake the photo.'**
+  String msg_faint_region(String where);
+
+  /// No description provided for @msg_unknown_mode.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose schoolwork, health or money.'**
+  String get msg_unknown_mode;
+
+  /// No description provided for @msg_not_allowed_for_tier.
+  ///
+  /// In en, this message translates to:
+  /// **'This isn\'t available on this account.'**
+  String get msg_not_allowed_for_tier;
+
+  /// No description provided for @msg_consent_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Learners aged 13 to 17 need a parent\'s or guardian\'s consent first.'**
+  String get msg_consent_required;
+
+  /// No description provided for @msg_teacher_session_required.
+  ///
+  /// In en, this message translates to:
+  /// **'Learners under 13 can only use Magana in a teacher-run session.'**
+  String get msg_teacher_session_required;
+
+  /// No description provided for @msg_unreadable_image.
+  ///
+  /// In en, this message translates to:
+  /// **'I couldn\'t open that photo. Please try again.'**
+  String get msg_unreadable_image;
+
+  /// No description provided for @msg_numbers_unconfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t confirm some numbers in this explanation, so I\'ll read the page exactly instead.'**
+  String get msg_numbers_unconfirmed;
+
+  /// CLINICAL DRAFT: needs sign-off by Dr. Amos and Nurse Balogun before translation.
+  ///
+  /// In en, this message translates to:
+  /// **'Do you have a fever or feel very hot?'**
+  String get msg_q_fever;
+
+  /// CLINICAL DRAFT: needs clinical sign-off before translation.
+  ///
+  /// In en, this message translates to:
+  /// **'For how many days?'**
+  String get msg_q_fever_days;
+
+  /// CLINICAL DRAFT: needs clinical sign-off before translation.
+  ///
+  /// In en, this message translates to:
+  /// **'Have you been vomiting everything, or are you too weak to stand?'**
+  String get msg_q_danger_vomit_weak;
+
+  /// CLINICAL DRAFT: needs clinical sign-off before translation.
+  ///
+  /// In en, this message translates to:
+  /// **'Are you having trouble breathing?'**
+  String get msg_q_danger_breathing;
+
+  /// CLINICAL DRAFT: needs clinical sign-off before translation.
+  ///
+  /// In en, this message translates to:
+  /// **'Have you had a fit, fainted, or felt confused?'**
+  String get msg_q_danger_confused;
+
+  /// CLINICAL DRAFT: needs clinical sign-off before translation.
+  ///
+  /// In en, this message translates to:
+  /// **'This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.'**
+  String get msg_go_to_clinic_now;
+
+  /// CLINICAL DRAFT: needs clinical sign-off before translation.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you. A nurse will call you within 2 hours.'**
+  String get msg_nurse_call_within_2_hours;
+
+  /// CLINICAL DRAFT: needs clinical sign-off before translation.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you. A nurse will call you back during working hours.'**
+  String get msg_nurse_call_working_hours;
 }
 
 class _AppLocalizationsDelegate

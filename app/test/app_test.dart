@@ -1,9 +1,11 @@
 import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:app/api.dart';
 import 'package:app/l10n/app_localizations.dart';
 import 'package:app/language.dart';
 import 'package:app/main.dart';
+import 'package:app/messages.dart';
 import 'package:app/screens/capture.dart';
 import 'package:app/speech.dart';
 import 'package:flutter/material.dart';
@@ -38,11 +40,7 @@ const readJson = {
     },
   ],
   'warnings': [
-    {
-      'block_index': 1,
-      'spoken':
-          "I'm not sure about line 2. Please check it or retake the photo.",
-    },
+    {'block_index': 1, 'code': 'low_confidence'},
   ],
 };
 
@@ -67,12 +65,7 @@ const tableJson = {
     },
   ],
   'cell_warnings': [
-    {
-      'table_index': 0,
-      'row': 1,
-      'col': 1,
-      'spoken': "I'm not sure about row 2, column 2 of table 1.",
-    },
+    {'table_index': 0, 'row': 1, 'col': 1, 'code': 'low_confidence'},
   ],
 };
 
@@ -136,9 +129,9 @@ void main() {
     ]);
     expect(r.items.map((i) => i.unsure), [false, true, true]);
     // Header names each cell; values are kept exactly as printed.
-    expect(r.items[2].cells, [
-      ('Test', 'Haemoglobin'),
-      ('Result', '11.2 g/dL'),
+    expect(r.items[2].cells.map((c) => (c.header, c.value, c.unclear)), [
+      ('Test', 'Haemoglobin', false),
+      ('Result', '11.2 g/dL', false), // low_confidence, not a number code
     ]);
   });
 
@@ -192,7 +185,9 @@ void main() {
       expect(speaker.said, contains('Food tests'));
       expect(
         speaker.said,
-        contains('Take 2 tablets every 4 to 6 hours. ${en.unsureLine(2)}'),
+        contains(
+          'Take 2 tablets every 4 to 6 hours. ${en.msg_low_confidence(en.whereLine(2))}',
+        ),
       );
       expect(speaker.said.last, en.endOfPageHint);
 
@@ -203,7 +198,7 @@ void main() {
 
       await tester.tap(find.bySemanticsLabel('Next line'));
       await tester.pump();
-      expect(find.text(en.unsureLine(2)), findsOneWidget);
+      expect(find.text(en.msg_low_confidence(en.whereLine(2))), findsOneWidget);
 
       speaker.said.clear();
       await tester.tap(find.bySemanticsLabel('Repeat this line'));
@@ -221,7 +216,7 @@ void main() {
     expect(
       speaker.said,
       contains(
-        'Row 1 of 1. Test: Haemoglobin. Result: 11.2 g/dL. ${en.unsureRow(1)}',
+        'Row 1 of 1. Test: Haemoglobin. Result: 11.2 g/dL. ${en.msg_low_confidence(en.whereRow(1))}',
       ),
     );
     expect(find.text('Haemoglobin'), findsOneWidget);
@@ -252,7 +247,9 @@ void main() {
     await captureToReader(tester, takePhoto: ha.takePhoto);
     expect(
       speaker.said,
-      contains('Take 2 tablets every 4 to 6 hours. ${ha.unsureLine(2)}'),
+      contains(
+        'Take 2 tablets every 4 to 6 hours. ${ha.msg_low_confidence(ha.whereLine(2))}',
+      ),
     );
     expect(find.text(ha.yourPage), findsOneWidget);
   });
@@ -273,7 +270,7 @@ void main() {
       tester,
       speaker,
       body: {
-        'tips': ["It's quite dark. Turn on the torch or move to more light."],
+        'tips': ['too_dark'],
         'lines': [],
         'warnings': [],
       },
@@ -281,5 +278,91 @@ void main() {
     await captureToReader(tester);
     expect(find.textContaining("It's quite dark"), findsOneWidget);
     expect(speaker.said.last, contains("couldn't find any text"));
+  });
+
+  testWidgets('an unreliable number is said and shown as "unclear number"', (
+    tester,
+  ) async {
+    final speaker = FakeSpeaker();
+    const text = 'Do not take more than @ in 24 hours';
+    await pumpApp(
+      tester,
+      speaker,
+      body: {
+        'tips': <String>[],
+        'lines': [
+          {
+            'text': text,
+            'top': 10,
+            'words': [
+              for (final w in text.split(' ')) {'text': w, 'confidence': 0.9},
+            ],
+          },
+        ],
+        'warnings': [
+          {'block_index': 0, 'code': 'unreadable_number', 'word_index': 5},
+        ],
+      },
+    );
+    await captureToReader(tester);
+    final warning = en.msg_unreadable_number(en.whereLine(1));
+    expect(
+      speaker.said,
+      contains('Do not take more than unclear number in 24 hours. $warning'),
+    );
+    expect(speaker.said.where((s) => s.contains('@')), isEmpty);
+    expect(
+      find.textContaining('Do not take more than [unclear number] in 24 hours'),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('a faint region is announced where it sits on the page', (
+    tester,
+  ) async {
+    final speaker = FakeSpeaker();
+    await pumpApp(
+      tester,
+      speaker,
+      body: {
+        ...readJson,
+        'faint_regions': [
+          {'code': 'faint_region', 'top': 60, 'bottom': 90, 'where': 'top'},
+        ],
+      },
+    );
+    await captureToReader(tester);
+    final faint = en.msg_faint_region(en.whereTop);
+    final order = speaker.said
+        .where((s) => s == 'Food tests' || s == faint || s.startsWith('Take 2'))
+        .toList();
+    expect(order, ['Food tests', faint, startsWith('Take 2')]);
+  });
+
+  test('backend error codes are said in the app language', () async {
+    final ha = lookupAppLocalizations(const Locale('ha'));
+    final api = MaganaApi(
+      client: MockClient(
+        (_) async => http.Response(
+          jsonEncode({
+            'detail': {'code': 'not_allowed_for_tier'},
+          }),
+          403,
+        ),
+      ),
+    );
+    await expectLater(
+      api.read(Uint8List(0)),
+      throwsA(
+        isA<ApiException>().having(
+          (e) => e.code,
+          'code',
+          'not_allowed_for_tier',
+        ),
+      ),
+    );
+    expect(messageFor(ha, 'not_allowed_for_tier'), ha.msg_not_allowed_for_tier);
+    expect(messageFor(ha, 'too_dark'), ha.msg_too_dark);
+    expect(messageFor(ha, 'something_new'), ha.readFailed);
   });
 }

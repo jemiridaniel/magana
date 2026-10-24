@@ -30,7 +30,7 @@ def test_naira_amount_formats_match():
 
 def test_confidence_warning():
     w = safety.confidence_warnings([{"confidence": 0.95}, {"confidence": 0.4, "label": "row 4"}])
-    assert len(w) == 1 and "row 4" in w[0].spoken
+    assert [(x.block_index, x.code) for x in w] == [(1, "low_confidence")]
 
 
 # ---------- policy: age tiers

@@ -223,16 +223,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String unsureLine(int number) {
-    return 'I\'m not sure about line $number. Please check it or retake the photo.';
-  }
-
-  @override
-  String unsureRow(int number) {
-    return 'I\'m not sure about row $number. Please check it or retake the photo.';
-  }
-
-  @override
   String get firstLine => 'This is the first line.';
 
   @override
@@ -244,4 +234,119 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get endOfPageHint =>
       'End of page. Tap Repeat, or go back to read another page.';
+
+  @override
+  String whereLine(int number) {
+    return 'line $number';
+  }
+
+  @override
+  String whereRow(int number) {
+    return 'row $number';
+  }
+
+  @override
+  String whereCell(int row, int col) {
+    return 'row $row, column $col';
+  }
+
+  @override
+  String get whereTop => 'near the top of the page';
+
+  @override
+  String get whereMiddle => 'in the middle of the page';
+
+  @override
+  String get whereBottom => 'near the bottom of the page';
+
+  @override
+  String get unclearNumber => 'unclear number';
+
+  @override
+  String get faintPrint => 'Faint print';
+
+  @override
+  String get msg_too_dark =>
+      'It\'s quite dark. Turn on the torch or move to more light.';
+
+  @override
+  String get msg_blurry =>
+      'The photo looks blurry. Hold the phone still and try again.';
+
+  @override
+  String msg_low_confidence(String where) {
+    return 'I\'m not sure about $where. Please check it or retake the photo.';
+  }
+
+  @override
+  String msg_low_confidence_number(String where) {
+    return 'I can\'t read a number on $where clearly. Please check it or retake the photo.';
+  }
+
+  @override
+  String msg_unreadable_number(String where) {
+    return 'I can\'t read a number on $where clearly. Please check it or retake the photo.';
+  }
+
+  @override
+  String msg_number_mismatch(String where) {
+    return 'I can\'t read a number on $where clearly. Please check it or retake the photo.';
+  }
+
+  @override
+  String msg_faint_region(String where) {
+    return 'There is faint print $where that I can\'t read. Try more light, or retake the photo.';
+  }
+
+  @override
+  String get msg_unknown_mode => 'Choose schoolwork, health or money.';
+
+  @override
+  String get msg_not_allowed_for_tier =>
+      'This isn\'t available on this account.';
+
+  @override
+  String get msg_consent_required =>
+      'Learners aged 13 to 17 need a parent\'s or guardian\'s consent first.';
+
+  @override
+  String get msg_teacher_session_required =>
+      'Learners under 13 can only use Magana in a teacher-run session.';
+
+  @override
+  String get msg_unreadable_image =>
+      'I couldn\'t open that photo. Please try again.';
+
+  @override
+  String get msg_numbers_unconfirmed =>
+      'I can\'t confirm some numbers in this explanation, so I\'ll read the page exactly instead.';
+
+  @override
+  String get msg_q_fever => 'Do you have a fever or feel very hot?';
+
+  @override
+  String get msg_q_fever_days => 'For how many days?';
+
+  @override
+  String get msg_q_danger_vomit_weak =>
+      'Have you been vomiting everything, or are you too weak to stand?';
+
+  @override
+  String get msg_q_danger_breathing => 'Are you having trouble breathing?';
+
+  @override
+  String get msg_q_danger_confused =>
+      'Have you had a fit, fainted, or felt confused?';
+
+  @override
+  String get msg_go_to_clinic_now =>
+      'This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.';
+
+  @override
+  String get msg_nurse_call_within_2_hours =>
+      'Thank you. A nurse will call you within 2 hours.';
+
+  @override
+  String get msg_nurse_call_working_hours =>
+      'Thank you. A nurse will call you back during working hours.';
 }

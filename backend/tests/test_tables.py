@@ -100,7 +100,7 @@ def test_low_confidence_cell_is_named_by_row_and_column():
     ]}]
     w = safety.table_warnings(tables)
     assert len(w) == 1
-    assert "row 2, column 2 of table 1" in w[0].spoken
+    assert (w[0].table_index, w[0].row, w[0].col, w[0].code) == (0, 1, 1, "low_confidence")
 
 
 def test_empty_cells_are_not_warned():
@@ -138,7 +138,7 @@ def test_read_endpoint_returns_tables_and_cell_warnings(paddle_client):
     assert body["lines"][0]["text"] == "Full Blood Count"
     assert body["tables"][0]["header"] is True
     assert body["tables"][0]["rows"][1][1]["text"] == "11.2 g/dL"
-    assert body["cell_warnings"][0]["spoken"].startswith("I'm not sure about row 2, column 2 of table 1")
+    assert body["cell_warnings"][0] == {"table_index": 0, "row": 1, "col": 1, "code": "low_confidence"}
 
 
 # ---------- real engine, only where paddleocr is installed (requirements-paddle.txt)

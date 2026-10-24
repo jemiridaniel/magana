@@ -289,14 +289,14 @@ def default_engine() -> OCREngine:
 
 
 def capture_check(image: Image.Image) -> list[str]:
-    """Spoken guidance before reading: too dark or too blurry."""
+    """Capture tips as message codes: too_dark, blurry."""
     tips = []
     gray = image.convert("L")
     if ImageStat.Stat(gray).mean[0] < 60:
-        tips.append("It's quite dark. Turn on the torch or move to more light.")
+        tips.append("too_dark")
     edges = gray.filter(ImageFilter.FIND_EDGES)
     if ImageStat.Stat(edges).var[0] < 50:
-        tips.append("The photo looks blurry. Hold the phone still and try again.")
+        tips.append("blurry")
     return tips
 
 
@@ -368,7 +368,9 @@ def recover_faint(image: Image.Image, page: Page, engine: OCREngine) -> list[dic
             page.lines.extend(found)
             spans += [(l.top, l.top + max(l.height, 1)) for l in found]
         else:
-            faint.append({"top": top, "bottom": bottom})
+            middle = (top + bottom) / 2 / max(image.height, 1)
+            where = "top" if middle < 1 / 3 else "middle" if middle < 2 / 3 else "bottom"
+            faint.append({"code": "faint_region", "top": top, "bottom": bottom, "where": where})
     page.lines.sort(key=lambda l: l.top)
     for i, l in enumerate(page.lines):
         l.label = f"line {i + 1}"

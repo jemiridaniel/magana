@@ -11,9 +11,14 @@ from PIL import Image
 from pydantic import BaseModel
 
 from . import policy, safety, triage
+from .messages import CodedError
 from .reader import SECOND_PASS_SCALE, OCREngine, default_engine, read_page
 
-app = FastAPI(title="Magana API", version="0.1.0")
+app = FastAPI(
+    title="Magana API",
+    version="0.2.0",
+    description="Responses carry message codes, never sentences; see app/messages.py for the English reference.",
+)
 # Browsers (Flutter web, teacher portal) need CORS. Dev allows any localhost port;
 # production sets MAGANA_CORS_ORIGIN_REGEX to its own domains.
 app.add_middleware(
@@ -48,15 +53,16 @@ async def read(file: UploadFile = File(...), tier: policy.Tier = Form(policy.Tie
                engine: OCREngine = Depends(get_engine)) -> dict:
     feature = MODE_FEATURE.get(mode)
     if feature is None:
-        raise HTTPException(400, "mode must be school, health or money")
+        raise HTTPException(400, {"code": "unknown_mode"})
     try:
         policy.require(tier, feature)
-    except PermissionError as e:
-        raise HTTPException(403, str(e))
+    except CodedError as e:
+        raise HTTPException(403, {"code": e.code})
     try:
         image = Image.open(io.BytesIO(await file.read()))
+        image.load()
     except Exception:
-        raise HTTPException(400, "Could not open that image.")
+        raise HTTPException(400, {"code": "unreadable_image"})
     # Health and money papers get a second OCR pass so every number is read twice.
     result = read_page(image, engine, second_pass=mode in SECOND_PASS_MODES)
     # The uploaded photo is never stored: it only lives in memory for this request.
@@ -89,4 +95,4 @@ def triage_questions() -> list[dict]:
 @app.post("/triage/assess")
 def triage_assess(answers: dict) -> dict:
     r = triage.assess(answers)
-    return {"priority": r.priority.value, "spoken": r.spoken}
+    return {"priority": r.priority.value, "message": r.message}

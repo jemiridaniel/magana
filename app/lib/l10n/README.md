@@ -20,4 +20,8 @@ Each draft file carries an `@@x-review` note. Remove it only after a native spea
 - Language names (English, Hausa, Yorùbá, Igbo) are shown in their own language and are not translated.
 - Yorùbá tone marks matter: please check every diacritic.
 
-Backend messages (capture tips like "It's quite dark") are still English and will move into these files when the backend returns codes instead of sentences.
+## Backend message codes
+
+The backend never sends sentences: it sends codes (`too_dark`, `low_confidence_number`, `faint_region`, ...), listed with English reference wording in `backend/app/messages.py`. Each code has a string here named `msg_<code>`; a backend test fails if one is missing. Places are separate strings (`whereLine`, `whereCell`, `whereTop`, ...) so each language can order the sentence its own way.
+
+The Ibà quick-check strings (`msg_q_*`, `msg_go_to_clinic_now`, `msg_nurse_call_*`) are **English only on purpose**: they are clinical drafts. Translate them only after Dr. Amos and Nurse Balogun sign off the English, and have a native speaker and a clinician check each translation. Until then Flutter falls back to English for them.

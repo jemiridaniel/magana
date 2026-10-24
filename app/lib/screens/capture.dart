@@ -4,6 +4,7 @@ import 'package:image_picker/image_picker.dart';
 import '../api.dart';
 import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
+import '../messages.dart';
 import '../theme.dart';
 import 'reader.dart';
 
@@ -69,18 +70,22 @@ class _CaptureScreenState extends State<CaptureScreen> {
         filename: photo.name,
       );
       if (!mounted) return;
-      if (result.items.isEmpty) {
-        // Backend tips (too dark, blurry) are English for now.
-        _setStatus([...result.tips, _l.noTextFound].join(' '));
+      if (result.readableCount == 0) {
+        _setStatus(
+          [
+            for (final tip in result.tips) messageFor(_l, tip),
+            for (final f in result.items.where((i) => i.isFaint))
+              messageFor(_l, 'faint_region', where: pagePosition(_l, f.where)),
+            _l.noTextFound,
+          ].join(' '),
+        );
         return;
       }
       await Navigator.of(context).pushReplacement(
         MaterialPageRoute(builder: (_) => ReaderScreen(result: result)),
       );
     } on ApiException catch (e) {
-      _setStatus(
-        e.error == ApiError.unreachable ? _l.cannotReach : _l.readFailed,
-      );
+      _setStatus(messageFor(_l, e.code));
     } finally {
       if (mounted) setState(() => _busy = false);
     }

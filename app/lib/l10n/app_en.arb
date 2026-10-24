@@ -2,12 +2,26 @@
   "@@locale": "en",
   "appTitle": "Magana",
   "greeting": "Hello",
-  "@greeting": {"description": "Short greeting under the app name on Home."},
+  "@greeting": {
+    "description": "Short greeting under the app name on Home."
+  },
   "languageButtonLabel": "App language: {language}. Change language",
-  "@languageButtonLabel": {"placeholders": {"language": {"type": "String"}}},
+  "@languageButtonLabel": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
   "chooseLanguage": "Choose app language",
   "languageChanged": "App language is now {language}.",
-  "@languageChanged": {"placeholders": {"language": {"type": "String"}}},
+  "@languageChanged": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
   "settings": "Settings",
   "readPage": "Read a page",
   "readPageSubtitle": "Schoolwork, medical reports, bank statements, letters — anything printed",
@@ -22,11 +36,18 @@
   "voiceCommands": "Voice commands",
   "comingSoonHint": "Coming soon",
   "comingSoon": "{feature} is coming soon.",
-  "@comingSoon": {"placeholders": {"feature": {"type": "String"}}},
-
+  "@comingSoon": {
+    "placeholders": {
+      "feature": {
+        "type": "String"
+      }
+    }
+  },
   "backToHome": "Back to home",
   "framingGuidance": "Lay the page flat in good light. Hold the phone about one forearm above it, so all four corners fit. Then tap Take photo, at the bottom of the screen.",
-  "@framingGuidance": {"description": "Spoken when Capture opens. Keep it to short, concrete steps."},
+  "@framingGuidance": {
+    "description": "Spoken when Capture opens. Keep it to short, concrete steps."
+  },
   "repeat": "Repeat",
   "repeatInstructions": "Hear the instructions again",
   "takePhoto": "Take photo",
@@ -37,20 +58,67 @@
   "noTextFound": "I couldn't find any text. Check the page is face up and try again.",
   "cannotReach": "I couldn't reach Magana. Check the connection and try again.",
   "readFailed": "Something went wrong reading the page. Please try again.",
-
   "yourPage": "Your page",
   "lineCount": "{count, plural, =1{1 line} other{{count} lines}}",
-  "@lineCount": {"placeholders": {"count": {"type": "int"}}},
+  "@lineCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "rowCount": "{count, plural, =1{1 row} other{{count} rows}}",
-  "@rowCount": {"placeholders": {"count": {"type": "int"}}},
+  "@rowCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "unclearCount": "{count} unclear",
-  "@unclearCount": {"placeholders": {"count": {"type": "int"}}},
+  "@unclearCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "linePosition": "Line {number} of {total}",
-  "@linePosition": {"placeholders": {"number": {"type": "int"}, "total": {"type": "int"}}},
+  "@linePosition": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "rowPosition": "Row {number} of {total}",
-  "@rowPosition": {"placeholders": {"number": {"type": "int"}, "total": {"type": "int"}}},
+  "@rowPosition": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "rowPositionInTable": "Row {number} of {total}, table {table}",
-  "@rowPositionInTable": {"placeholders": {"number": {"type": "int"}, "total": {"type": "int"}, "table": {"type": "int"}}},
+  "@rowPositionInTable": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      },
+      "table": {
+        "type": "int"
+      }
+    }
+  },
   "nowReading": "now reading",
   "previous": "Prev",
   "next": "Next",
@@ -61,22 +129,151 @@
   "repeatLine": "Repeat this line",
   "repeatRow": "Repeat this row",
   "speed": "Speed {value}",
-  "@speed": {"placeholders": {"value": {"type": "String"}}},
+  "@speed": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "speedLabel": "Reading speed {value}. Tap to change",
-  "@speedLabel": {"placeholders": {"value": {"type": "String"}}},
+  "@speedLabel": {
+    "placeholders": {
+      "value": {
+        "type": "String"
+      }
+    }
+  },
   "pause": "Pause",
   "play": "Play",
   "pauseLabel": "Pause reading",
   "playLabel": "Read from here",
   "pageRead": "Page read.",
   "unsureSummary": "{count, plural, =1{I'm not sure about 1 of them.} other{I'm not sure about {count} of them.}} I'll tell you when we get there.",
-  "@unsureSummary": {"placeholders": {"count": {"type": "int"}}},
-  "unsureLine": "I'm not sure about line {number}. Please check it or retake the photo.",
-  "@unsureLine": {"placeholders": {"number": {"type": "int"}}},
-  "unsureRow": "I'm not sure about row {number}. Please check it or retake the photo.",
-  "@unsureRow": {"placeholders": {"number": {"type": "int"}}},
+  "@unsureSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "firstLine": "This is the first line.",
   "firstRow": "This is the first row.",
   "endOfPage": "End of page.",
-  "endOfPageHint": "End of page. Tap Repeat, or go back to read another page."
+  "endOfPageHint": "End of page. Tap Repeat, or go back to read another page.",
+  "whereLine": "line {number}",
+  "@whereLine": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "whereRow": "row {number}",
+  "@whereRow": {
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "whereCell": "row {row}, column {col}",
+  "@whereCell": {
+    "placeholders": {
+      "row": {
+        "type": "int"
+      },
+      "col": {
+        "type": "int"
+      }
+    }
+  },
+  "whereTop": "near the top of the page",
+  "whereMiddle": "in the middle of the page",
+  "whereBottom": "near the bottom of the page",
+  "unclearNumber": "unclear number",
+  "@unclearNumber": {
+    "description": "Said and shown in place of a number the app could not read reliably."
+  },
+  "faintPrint": "Faint print",
+  "msg_too_dark": "It's quite dark. Turn on the torch or move to more light.",
+  "msg_blurry": "The photo looks blurry. Hold the phone still and try again.",
+  "msg_low_confidence": "I'm not sure about {where}. Please check it or retake the photo.",
+  "@msg_low_confidence": {
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "msg_low_confidence_number": "I can't read a number on {where} clearly. Please check it or retake the photo.",
+  "@msg_low_confidence_number": {
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "msg_unreadable_number": "I can't read a number on {where} clearly. Please check it or retake the photo.",
+  "@msg_unreadable_number": {
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "msg_number_mismatch": "I can't read a number on {where} clearly. Please check it or retake the photo.",
+  "@msg_number_mismatch": {
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "msg_faint_region": "There is faint print {where} that I can't read. Try more light, or retake the photo.",
+  "@msg_faint_region": {
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "msg_unknown_mode": "Choose schoolwork, health or money.",
+  "msg_not_allowed_for_tier": "This isn't available on this account.",
+  "msg_consent_required": "Learners aged 13 to 17 need a parent's or guardian's consent first.",
+  "msg_teacher_session_required": "Learners under 13 can only use Magana in a teacher-run session.",
+  "msg_unreadable_image": "I couldn't open that photo. Please try again.",
+  "msg_numbers_unconfirmed": "I can't confirm some numbers in this explanation, so I'll read the page exactly instead.",
+  "msg_q_fever": "Do you have a fever or feel very hot?",
+  "@msg_q_fever": {
+    "description": "CLINICAL DRAFT: needs sign-off by Dr. Amos and Nurse Balogun before translation."
+  },
+  "msg_q_fever_days": "For how many days?",
+  "@msg_q_fever_days": {
+    "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
+  },
+  "msg_q_danger_vomit_weak": "Have you been vomiting everything, or are you too weak to stand?",
+  "@msg_q_danger_vomit_weak": {
+    "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
+  },
+  "msg_q_danger_breathing": "Are you having trouble breathing?",
+  "@msg_q_danger_breathing": {
+    "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
+  },
+  "msg_q_danger_confused": "Have you had a fit, fainted, or felt confused?",
+  "@msg_q_danger_confused": {
+    "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
+  },
+  "msg_go_to_clinic_now": "This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.",
+  "@msg_go_to_clinic_now": {
+    "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
+  },
+  "msg_nurse_call_within_2_hours": "Thank you. A nurse will call you within 2 hours.",
+  "@msg_nurse_call_within_2_hours": {
+    "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
+  },
+  "msg_nurse_call_working_hours": "Thank you. A nurse will call you back during working hours.",
+  "@msg_nurse_call_working_hours": {
+    "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
+  }
 }

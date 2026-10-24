@@ -223,16 +223,6 @@ class AppLocalizationsHa extends AppLocalizations {
   }
 
   @override
-  String unsureLine(int number) {
-    return 'Ban tabbatar da layi na $number ba. Don Allah ka duba shi ko ka sake ɗaukar hoto.';
-  }
-
-  @override
-  String unsureRow(int number) {
-    return 'Ban tabbatar da jere na $number ba. Don Allah ka duba shi ko ka sake ɗaukar hoto.';
-  }
-
-  @override
   String get firstLine => 'Wannan shi ne layi na farko.';
 
   @override
@@ -244,4 +234,118 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get endOfPageHint =>
       'Ƙarshen shafi. Taɓa Maimaita, ko ka koma ka karanta wani shafi.';
+
+  @override
+  String whereLine(int number) {
+    return 'layi na $number';
+  }
+
+  @override
+  String whereRow(int number) {
+    return 'jere na $number';
+  }
+
+  @override
+  String whereCell(int row, int col) {
+    return 'jere na $row, shafi na $col';
+  }
+
+  @override
+  String get whereTop => 'a saman shafin';
+
+  @override
+  String get whereMiddle => 'a tsakiyar shafin';
+
+  @override
+  String get whereBottom => 'a ƙasan shafin';
+
+  @override
+  String get unclearNumber => 'lambar da ba a gane ba';
+
+  @override
+  String get faintPrint => 'Rubutu mara haske';
+
+  @override
+  String get msg_too_dark =>
+      'Akwai duhu sosai. Kunna fitila ko ka matsa inda haske yake.';
+
+  @override
+  String get msg_blurry =>
+      'Hoton bai fito sarai ba. Riƙe wayar a tsaye ka sake gwadawa.';
+
+  @override
+  String msg_low_confidence(String where) {
+    return 'Ban tabbatar da $where ba. Don Allah ka duba shi ko ka sake ɗaukar hoto.';
+  }
+
+  @override
+  String msg_low_confidence_number(String where) {
+    return 'Ban iya karanta wata lamba a $where sarai ba. Don Allah ka duba ko ka sake ɗaukar hoto.';
+  }
+
+  @override
+  String msg_unreadable_number(String where) {
+    return 'Ban iya karanta wata lamba a $where sarai ba. Don Allah ka duba ko ka sake ɗaukar hoto.';
+  }
+
+  @override
+  String msg_number_mismatch(String where) {
+    return 'Ban iya karanta wata lamba a $where sarai ba. Don Allah ka duba ko ka sake ɗaukar hoto.';
+  }
+
+  @override
+  String msg_faint_region(String where) {
+    return 'Akwai rubutu mara haske $where da ban iya karantawa ba. Ka nemi ƙarin haske, ko ka sake ɗaukar hoto.';
+  }
+
+  @override
+  String get msg_unknown_mode => 'Zaɓi aikin makaranta, lafiya ko kuɗi.';
+
+  @override
+  String get msg_not_allowed_for_tier => 'Wannan bai samu a wannan asusun ba.';
+
+  @override
+  String get msg_consent_required =>
+      'Ɗalibai masu shekaru 13 zuwa 17 suna buƙatar izinin iyaye ko mai kula da su tukuna.';
+
+  @override
+  String get msg_teacher_session_required =>
+      'Ɗalibai ƙasa da shekara 13 suna iya amfani da Magana ne kawai a zaman da malami ke jagoranta.';
+
+  @override
+  String get msg_unreadable_image =>
+      'Na kasa buɗe wannan hoton. Don Allah ka sake gwadawa.';
+
+  @override
+  String get msg_numbers_unconfirmed =>
+      'Ban iya tabbatar da wasu lambobi a wannan bayanin ba, don haka zan karanta shafin daidai yadda yake.';
+
+  @override
+  String get msg_q_fever => 'Do you have a fever or feel very hot?';
+
+  @override
+  String get msg_q_fever_days => 'For how many days?';
+
+  @override
+  String get msg_q_danger_vomit_weak =>
+      'Have you been vomiting everything, or are you too weak to stand?';
+
+  @override
+  String get msg_q_danger_breathing => 'Are you having trouble breathing?';
+
+  @override
+  String get msg_q_danger_confused =>
+      'Have you had a fit, fainted, or felt confused?';
+
+  @override
+  String get msg_go_to_clinic_now =>
+      'This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.';
+
+  @override
+  String get msg_nurse_call_within_2_hours =>
+      'Thank you. A nurse will call you within 2 hours.';
+
+  @override
+  String get msg_nurse_call_working_hours =>
+      'Thank you. A nurse will call you back during working hours.';
 }

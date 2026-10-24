@@ -4,8 +4,8 @@ Two core rules from the Magana design:
 1. Critical values (numbers, money, doses, dates, percentages, ranges) are read
    verbatim from the page. If a model-generated explanation contains a critical
    value that is not on the page, the explanation is rejected.
-2. Low-confidence text is never read as if it were certain: it gets a spoken
-   warning instead.
+2. Low-confidence text is never read as if it were certain: it gets a warning
+   instead. Warnings are message codes (messages.py); the app words them.
 """
 from __future__ import annotations
 
@@ -41,7 +41,7 @@ def extract_critical(text: str) -> list[str]:
 class GuardResult:
     ok: bool
     unsupported: list[str] = field(default_factory=list)
-    message: str = ""
+    message: str | None = None  # a code from messages.ENGLISH
 
 
 def guard_explanation(source_text: str, explanation: str) -> GuardResult:
@@ -60,7 +60,7 @@ def guard_explanation(source_text: str, explanation: str) -> GuardResult:
         return GuardResult(
             ok=False,
             unsupported=unsupported,
-            message="I can't confirm some numbers in this explanation, so I'll read the page exactly instead.",
+            message="numbers_unconfirmed",
         )
     return GuardResult(ok=True)
 
@@ -68,18 +68,16 @@ def guard_explanation(source_text: str, explanation: str) -> GuardResult:
 @dataclass
 class Warning:
     block_index: int
-    spoken: str
     code: str = "low_confidence"
     word_index: int | None = None  # the word in the line, for number warnings
 
 
 def confidence_warnings(blocks: list[dict], threshold: float = 0.75) -> list[Warning]:
-    """Spoken warnings for blocks the OCR is unsure about (confidence 0-1)."""
+    """Warnings for blocks the OCR is unsure about (confidence 0-1)."""
     out = []
     for i, b in enumerate(blocks):
         if b.get("confidence", 1.0) < threshold:
-            label = b.get("label") or f"line {i + 1}"
-            out.append(Warning(i, f"I'm not sure about {label}. Please check it or retake the photo."))
+            out.append(Warning(i))
     return out
 
 
@@ -88,20 +86,17 @@ class CellWarning:
     table_index: int
     row: int
     col: int
-    spoken: str
     code: str = "low_confidence"
 
 
 def table_warnings(tables: list[dict], threshold: float = 0.75) -> list[CellWarning]:
-    """Spoken warnings for table cells the OCR is unsure about, named by row and column (1-based)."""
+    """Warnings for table cells the OCR is unsure about (row and column are 0-based)."""
     out = []
     for t_i, t in enumerate(tables):
-        label = t.get("label") or f"table {t_i + 1}"
         for row in t.get("rows", []):
             for c in row:
                 if c.get("text") and c.get("confidence", 1.0) < threshold:
-                    where = f"row {c['row'] + 1}, column {c['col'] + 1} of {label}"
-                    out.append(CellWarning(t_i, c["row"], c["col"], f"I'm not sure about {where}. Please check it or retake the photo."))
+                    out.append(CellWarning(t_i, c["row"], c["col"]))
     return out
 
 
@@ -159,30 +154,24 @@ def _line_words(line: dict) -> list[tuple[str, float]]:
     return [(w, line.get("confidence", 1.0)) for w in line.get("text", "").split()]
 
 
-def _number_message(label: str) -> str:
-    return f"I can't read a number on {label} clearly. Please check it or retake the photo."
-
-
 def number_warnings(lines: list[dict], threshold: float = CRITICAL_WORD_THRESHOLD) -> list[Warning]:
     """One warning per critical word that is low-confidence or unreadable."""
     out = []
     for i, line in enumerate(lines):
         words = _line_words(line)
         texts = [w for w, _ in words]
-        label = line.get("label") or f"line {i + 1}"
         for j, (word, conf) in enumerate(words):
             problem = number_problem(texts, j)
             if problem is None and _has_digit(word) and conf < threshold:
                 problem = "low_confidence_number"
             if problem:
-                out.append(Warning(i, _number_message(label), code=problem, word_index=j))
+                out.append(Warning(i, code=problem, word_index=j))
     return out
 
 
 def cell_number_warnings(tables: list[dict], threshold: float = CRITICAL_WORD_THRESHOLD) -> list[CellWarning]:
     out = []
     for t_i, t in enumerate(tables):
-        label = t.get("label") or f"table {t_i + 1}"
         for row in t.get("rows", []):
             for c in row:
                 texts = c.get("text", "").split()
@@ -190,8 +179,7 @@ def cell_number_warnings(tables: list[dict], threshold: float = CRITICAL_WORD_TH
                 if problem is None and any(_has_digit(w) for w in texts) and c.get("confidence", 1.0) < threshold:
                     problem = "low_confidence_number"
                 if problem:
-                    where = f"row {c['row'] + 1}, column {c['col'] + 1} of {label}"
-                    out.append(CellWarning(t_i, c["row"], c["col"], _number_message(where), code=problem))
+                    out.append(CellWarning(t_i, c["row"], c["col"], code=problem))
     return out
 
 
@@ -237,14 +225,10 @@ def number_mismatches(first: dict, second: dict, scale: float = 1.5) -> tuple[li
                 flagged.add(("line", nearest))
 
     line_out, cell_out = [], []
-    tables = first.get("tables", [])
     for where in sorted(flagged, key=str):
         if where[0] == "line":
-            label = lines[where[1]].get("label") or f"line {where[1] + 1}"
-            line_out.append(Warning(where[1], _number_message(label), code="number_mismatch"))
+            line_out.append(Warning(where[1], code="number_mismatch"))
         else:
             _, t_i, r, c = where
-            label = tables[t_i].get("label") or f"table {t_i + 1}"
-            cell_out.append(CellWarning(t_i, r, c, _number_message(f"row {r + 1}, column {c + 1} of {label}"),
-                                        code="number_mismatch"))
+            cell_out.append(CellWarning(t_i, r, c, code="number_mismatch"))
     return line_out, cell_out
