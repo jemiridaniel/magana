@@ -1,0 +1,6 @@
+# Production OCR engine (MAGANA_OCR=paddle): PaddleOCR PP-StructureV3 for layout and tables.
+# Large (~1 GB installed, ~1 GB of models downloaded to ~/.paddlex on first run), so it is
+# kept out of requirements.txt. Install on top of it:  pip install -r requirements-paddle.txt
+-r requirements.txt
+paddlepaddle==3.3.1
+paddleocr[doc-parser]==3.7.0

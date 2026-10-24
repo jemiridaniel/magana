@@ -10,8 +10,8 @@ Team: Jemiri Daniel Taiwo (AI/ML and full-stack), Dr. Oluba Amos (clinical pharm
 
 | Module | What it does |
 | --- | --- |
-| `app/reader.py` | OCR into lines with confidence + capture check (too dark / blurry). Tesseract for dev; swap in PaddleOCR PP-Structure for tables and layout. |
-| `app/safety.py` | Verbatim-number guard (rejects explanations that invent doses, amounts, dates) and low-confidence spoken warnings. |
+| `app/reader.py` | OCR into lines and tables (rows of cells, each with confidence) + capture check (too dark / blurry). Tesseract for dev; `MAGANA_OCR=paddle` uses PaddleOCR PP-StructureV3 for layout and tables (`pip install -r requirements-paddle.txt`). |
+| `app/safety.py` | Verbatim-number guard (rejects explanations that invent doses, amounts, dates) and low-confidence spoken warnings, for lines and for table cells ("row 2, column 3 of table 1"). |
 | `app/policy.py` | Age tiers: Standard 18+, Guided 13–17 (guardian consent, curriculum only), Classroom under 13. |
 | `app/triage.py` | Ibà quick check: sets nurse call-back priority, danger signs → clinic / 112. Draft rules — clinical sign-off required. |
 | `app/main.py` | `/read`, `/explain/check`, `/triage/questions`, `/triage/assess`, `/health`. |

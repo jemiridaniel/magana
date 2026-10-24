@@ -79,3 +79,24 @@ def confidence_warnings(blocks: list[dict], threshold: float = 0.75) -> list[War
             label = b.get("label") or f"line {i + 1}"
             out.append(Warning(i, f"I'm not sure about {label}. Please check it or retake the photo."))
     return out
+
+
+@dataclass
+class CellWarning:
+    table_index: int
+    row: int
+    col: int
+    spoken: str
+
+
+def table_warnings(tables: list[dict], threshold: float = 0.75) -> list[CellWarning]:
+    """Spoken warnings for table cells the OCR is unsure about, named by row and column (1-based)."""
+    out = []
+    for t_i, t in enumerate(tables):
+        label = t.get("label") or f"table {t_i + 1}"
+        for row in t.get("rows", []):
+            for c in row:
+                if c.get("text") and c.get("confidence", 1.0) < threshold:
+                    where = f"row {c['row'] + 1}, column {c['col'] + 1} of {label}"
+                    out.append(CellWarning(t_i, c["row"], c["col"], f"I'm not sure about {where}. Please check it or retake the photo."))
+    return out
