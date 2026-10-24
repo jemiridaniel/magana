@@ -75,6 +75,38 @@ Please don't send photos of private papers such as your own bank statement or me
 
 ---
 
+## The web version (for testing on iPhone, or without installing the APK)
+
+Magana also runs in the phone's browser and can be added to the home screen like an app. **It is for testing only.** The real iPhone app comes later through TestFlight. The address will be sent to you with your invitation, for example `https://18-130-12-34.sslip.io/app/`.
+
+What is different in the web version:
+- **Reminders don't work.** The screen says "Reminders need the Android or iPhone app".
+- **No live camera guidance.** Capture opens the phone's camera; take the photo yourself, holding the phone about a forearm's length above the page.
+- **Speech recognition:** for under-18 accounts, Magana never uses Safari's or Chrome's speech recognition, because that sends audio to Apple or Google. They use Magana's own server or tap their answers.
+- It needs the internet to read pages. The screens open without it, and if the server can't be reached Magana says "I couldn't reach Magana. Check the connection and try again."
+
+### Install on iPhone
+
+1. Open the address in **Safari** (not Chrome; on iPhone only Safari can add it to the home screen as an app).
+2. Tap the **Share** button (the square with an arrow pointing up, at the bottom of the screen; with VoiceOver it is called "Share").
+3. Scroll down and tap **Add to Home Screen**, then **Add**.
+4. Open **Magana** from the home screen. It opens full screen, without Safari's address bar.
+
+**VoiceOver** (the iPhone screen reader): **Settings → Accessibility → VoiceOver**, or ask Siri "Turn on VoiceOver". Touch to hear, **double tap** to press, **swipe right or left** to move between items. Magana turns on its screen-reader support by itself; you don't need to find an "Enable accessibility" button.
+
+When Safari asks for the **microphone** or **camera**, tap **Allow**.
+
+### Install on Android Chrome
+
+1. Open the address in **Chrome**.
+2. Chrome may offer **Install app** or **Add Magana to Home screen** at the bottom. Tap **Install**.
+3. If it doesn't, tap the **⋮ menu** (top right; with TalkBack it is called "More options") → **Install app** or **Add to Home screen** → **Install**.
+4. Open **Magana** from the home screen or the app drawer.
+
+If you can install the APK (sections 1 and 2), please use the APK instead: it has reminders and live camera guidance.
+
+---
+
 ## For the team: signing and building the APK
 
 Every Magana APK, and later the Play Store upload, must be signed with the **same upload key**. If the key is lost, testers have to uninstall and reinstall to get updates, and the Play listing would need a key reset.

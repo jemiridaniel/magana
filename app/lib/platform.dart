@@ -8,6 +8,10 @@ import 'platform/discard_stub.dart'
 // reviewing this one file. File access is behind a conditional import
 // (platform/discard_*.dart), so it also compiles for the web.
 
+/// True in a browser (the PWA). A variable rather than kIsWeb so tests can check
+/// the web-only behaviour.
+bool runningOnWeb = kIsWeb;
+
 /// Backend address when no --dart-define=MAGANA_API is given (development only;
 /// real phones always get the deployed URL through MAGANA_API).
 String get defaultApiBase {

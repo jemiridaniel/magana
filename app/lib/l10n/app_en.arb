@@ -1046,5 +1046,7 @@
   "quizSayYesOrNo": "Say yes or no",
   "quizSayAgain": "Please say your answer again.",
   "quizTapInstead": "I'm having trouble hearing you. Please double tap your answer instead.",
-  "quizSayTrueFalse": "Say true or false"
+  "quizSayTrueFalse": "Say true or false",
+  "msg_too_many_requests": "Magana is busy right now. Please wait a minute and try again.",
+  "remindersNeedApp": "Reminders need the Android or iPhone app. In a web browser Magana can't ring at the right time."
 }

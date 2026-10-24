@@ -1528,4 +1528,12 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get quizSayTrueFalse => 'Sọ òótọ́ tàbí irọ́';
+
+  @override
+  String get msg_too_many_requests =>
+      'Magana ń ṣiṣẹ́ lọ́wọ́ báyìí. Jọ̀wọ́ dúró fún ìṣẹ́jú kan kí o tún gbìyànjú.';
+
+  @override
+  String get remindersNeedApp =>
+      'Ìrántí nílò áàpù Android tàbí iPhone. Nínú aṣàwákiri, Magana kò lè dún ní àkókò tó tọ́.';
 }

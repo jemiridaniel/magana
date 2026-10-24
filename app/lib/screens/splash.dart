@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../theme.dart';
@@ -43,8 +45,12 @@ class SplashGate extends StatefulWidget {
   /// Completes when the first frame is on screen; tests have no rasterizer.
   final Future<void> Function() firstFrameShown;
 
-  static Future<void> _firstFrameRasterized() =>
-      WidgetsBinding.instance.waitUntilFirstFrameRasterized;
+  /// On phones, when the first frame is on screen. On the web Flutter never reports
+  /// frame timings, so waitUntilFirstFrameRasterized never completes and the splash
+  /// would stay forever: wait for the end of the first frame instead.
+  static Future<void> _firstFrameRasterized() => kIsWeb
+      ? SchedulerBinding.instance.endOfFrame
+      : WidgetsBinding.instance.waitUntilFirstFrameRasterized;
 
   @override
   State<SplashGate> createState() => _SplashGateState();

@@ -1530,4 +1530,12 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get quizSayTrueFalse => 'Kwuo eziokwu ma ọ bụ ụgha';
+
+  @override
+  String get msg_too_many_requests =>
+      'Magana na-arụsi ọrụ ike ugbu a. Biko chere otu nkeji wee nwaa ọzọ.';
+
+  @override
+  String get remindersNeedApp =>
+      'Ihe ncheta chọrọ ngwa Android ma ọ bụ iPhone. Na ihe nchọgharị, Magana enweghị ike ịda n\'oge kwesịrị ekwesị.';
 }

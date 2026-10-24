@@ -18,7 +18,7 @@ from typing import Literal
 import httpx
 from pydantic import BaseModel, ConfigDict
 
-from . import asr, explain, policy, safety, triage
+from . import asr, explain, policy, ratelimit, safety, triage
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
 from .messages import CodedError
@@ -70,6 +70,18 @@ app.add_middleware(
 )
 
 # Letters and "read any paper" may hold doses or amounts, so they get the strict checks too.
+@app.middleware("http")
+async def rate_limit(request, call_next):
+    """Per-IP and per-device limits (app/ratelimit.py): the web app's key is public."""
+    if request.method != "OPTIONS":
+        ip = request.client.host if request.client else "unknown"
+        wait = ratelimit.limiter.check(request.url.path, ip, request.headers.get("x-magana-device"))
+        if wait:
+            return JSONResponse({"detail": {"code": "too_many_requests"}}, status_code=429,
+                                headers={"Retry-After": str(max(1, round(wait)))})
+    return await call_next(request)
+
+
 @app.middleware("http")
 async def require_api_key(request, call_next):
     """MAGANA_API_KEY (set on the server) must come with every request as X-Magana-Key.

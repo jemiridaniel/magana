@@ -400,5 +400,7 @@
   "quizSayYesOrNo": "Faɗi i ko a'a",
   "quizSayAgain": "Don Allah ka sake faɗin amsarka.",
   "quizTapInstead": "Ina da wahalar jin ka. Don Allah ka taɓa amsarka sau biyu maimakon haka.",
-  "quizSayTrueFalse": "Faɗi gaskiya ko ƙarya"
+  "quizSayTrueFalse": "Faɗi gaskiya ko ƙarya",
+  "msg_too_many_requests": "Magana tana da aiki sosai yanzu. Don Allah ka jira minti ɗaya ka sake gwadawa.",
+  "remindersNeedApp": "Tunatarwa na buƙatar manhajar Android ko iPhone. A cikin burauza Magana ba za ta iya yin ƙara a daidai lokaci ba."
 }

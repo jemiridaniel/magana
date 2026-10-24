@@ -246,8 +246,14 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
       });
       _askCurrent();
     } on ApiException catch (e) {
-      if (mounted) setState(() => _error = messageFor(_l, e.code));
+      if (mounted) _showError(messageFor(_l, e.code));
     }
+  }
+
+  /// Shown and said: a screen-reader user must hear that the server can't be reached.
+  void _showError(String message) {
+    setState(() => _error = message);
+    AppScope.of(context).speaker.say(message);
   }
 
   /// Questions still to ask: follow-ups only when their parent was answered yes.
@@ -282,7 +288,7 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
       setState(() => _result = r);
       scope.speaker.say(_resultText(_l, r));
     } on ApiException catch (e) {
-      if (mounted) setState(() => _error = messageFor(_l, e.code));
+      if (mounted) _showError(messageFor(_l, e.code));
     }
   }
 

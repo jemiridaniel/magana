@@ -17,6 +17,8 @@ services:
       MAGANA_DOMAIN: ${MAGANA_DOMAIN:?set MAGANA_DOMAIN in .env, e.g. 18-130-12-34.sslip.io}
     volumes:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      # The tester PWA, served at /app/ (scripts/deploy-web.sh fills it).
+      - ./deploy/web:/srv/app:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:

@@ -1,7 +1,9 @@
+import 'dart:math';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'platform.dart';
 
@@ -13,6 +15,30 @@ String get apiBase => _configured.isNotEmpty ? _configured : defaultApiBase;
 /// The backend's API key, set at build time: --dart-define=MAGANA_API_KEY=...
 /// (the server's MAGANA_API_KEY). Empty for local development.
 const apiKey = String.fromEnvironment('MAGANA_API_KEY');
+
+/// A random ID made once per install (not personal data), sent as X-Magana-Device so the
+/// server can rate-limit per device as well as per IP. Set at start-up ([loadDeviceId]).
+String deviceId = '';
+
+Future<void> loadDeviceId() async {
+  final prefs = await SharedPreferences.getInstance();
+  var id = prefs.getString('device_id');
+  if (id == null || id.length < 8) {
+    final r = Random.secure();
+    id = List.generate(
+      16,
+      (_) => r.nextInt(256).toRadixString(16).padLeft(2, '0'),
+    ).join();
+    await prefs.setString('device_id', id);
+  }
+  deviceId = id;
+}
+
+/// Headers every call to the Magana server carries.
+Map<String, String> get serverHeaders => {
+  if (apiKey.isNotEmpty) 'X-Magana-Key': apiKey,
+  if (deviceId.isNotEmpty) 'X-Magana-Device': deviceId,
+};
 
 enum ItemKind { line, row, faint }
 
@@ -244,10 +270,7 @@ class ApiException implements Exception {
 class MaganaApi {
   MaganaApi({http.Client? client, Map<String, String> Function()? headers})
     : _client = client ?? http.Client(),
-      _headers = (() => {
-        ...?headers?.call(),
-        if (apiKey.isNotEmpty) 'X-Magana-Key': apiKey,
-      });
+      _headers = (() => {...?headers?.call(), ...serverHeaders});
   final http.Client _client;
 
   /// Age tier and consent headers, sent with every request (see ProfileController).

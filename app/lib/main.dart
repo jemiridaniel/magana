@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'api.dart';
@@ -15,13 +17,20 @@ import 'theme.dart';
 /// Phones use the full width; on tablets and the web the app is a centred column.
 const double maxContentWidth = 480;
 
+/// Kept for the app's lifetime: on the web, Flutter builds the screen-reader tree only
+/// when asked, behind a hidden "Enable accessibility" button that VoiceOver users may
+/// never find. Forcing it on means VoiceOver and TalkBack work from the first screen.
+SemanticsHandle? webSemantics;
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  if (kIsWeb) webSemantics = SemanticsBinding.instance.ensureSemantics();
   final language = LanguageController();
   final speaker = Speaker();
   final profile = ProfileController();
   // The splash shows while the saved profile, language and voice load.
   final ready = () async {
+    await loadDeviceId();
     await profile.load();
     await language.load();
     await speaker.setLanguage(language.value.languageCode);

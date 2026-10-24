@@ -46,7 +46,7 @@ class VoiceStepFailed implements Exception {
 /// The recognisers a tier may use, in order (see [VoiceInput]).
 List<VoiceInput> voiceSteps(Tier tier) => [
   SpeechVoiceInput(onDevice: true),
-  if (!kIsWeb) ServerVoiceInput(),
+  ServerVoiceInput(), // phones and the web
   if (tier == Tier.standard) SpeechVoiceInput(onDevice: false),
 ];
 
@@ -212,9 +212,10 @@ class ServerVoiceInput implements VoiceInput {
 
   @override
   Future<List<String>> listen({String language = 'en'}) async {
-    final dir = await getTemporaryDirectory();
-    final path =
-        '${dir.path}/answer-${DateTime.now().microsecondsSinceEpoch}.wav';
+    // Phones record to a temporary file; browsers to an in-memory blob.
+    final path = kIsWeb
+        ? ''
+        : '${(await getTemporaryDirectory()).path}/answer-${DateTime.now().microsecondsSinceEpoch}.wav';
     await _recorder.start(
       const RecordConfig(
         encoder: AudioEncoder.wav,
@@ -245,14 +246,18 @@ class ServerVoiceInput implements VoiceInput {
         });
     await stopped.future;
     await levels.cancel();
-    await _recorder.stop();
-    final file = File(path);
+    final recorded = await _recorder.stop();
     try {
-      if (!heardSpeech) return const [];
+      if (!heardSpeech || recorded == null) return const [];
+      final bytes = kIsWeb
+          ? await _client.readBytes(Uri.parse(recorded))
+          : await File(recorded).readAsBytes();
       final req = http.MultipartRequest('POST', Uri.parse('$apiBase/asr'))
         ..fields['lang'] = language
-        ..files.add(await http.MultipartFile.fromPath('file', path));
-      if (apiKey.isNotEmpty) req.headers['X-Magana-Key'] = apiKey;
+        ..headers.addAll(serverHeaders)
+        ..files.add(
+          http.MultipartFile.fromBytes('file', bytes, filename: 'answer.wav'),
+        );
       final res = await http.Response.fromStream(await _client.send(req))
           .timeout(const Duration(seconds: 15));
       if (res.statusCode != 200) {
@@ -263,7 +268,10 @@ class ServerVoiceInput implements VoiceInput {
           '';
       return text.trim().isEmpty ? const [] : [text.trim()];
     } finally {
-      if (await file.exists()) await file.delete(); // the audio is never kept
+      // The audio is never kept.
+      if (!kIsWeb && recorded != null && await File(recorded).exists()) {
+        await File(recorded).delete();
+      }
     }
   }
 

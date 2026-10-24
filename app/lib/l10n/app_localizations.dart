@@ -2501,6 +2501,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Say true or false'**
   String get quizSayTrueFalse;
+
+  /// No description provided for @msg_too_many_requests.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana is busy right now. Please wait a minute and try again.'**
+  String get msg_too_many_requests;
+
+  /// No description provided for @remindersNeedApp.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminders need the Android or iPhone app. In a web browser Magana can\'t ring at the right time.'**
+  String get remindersNeedApp;
 }
 
 class _AppLocalizationsDelegate

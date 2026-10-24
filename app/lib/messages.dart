@@ -23,6 +23,7 @@ String messageFor(AppLocalizations l, String code, {String where = ''}) =>
       'unknown_tier' => l.msg_unknown_tier,
       'go_to_clinic_now' => l.msg_go_to_clinic_now,
       'bad_api_key' => l.msg_bad_api_key,
+      'too_many_requests' => l.msg_too_many_requests,
       'asr_unavailable' => l.msg_asr_unavailable,
       'audio_too_long' => l.msg_audio_too_long,
       'unreadable_audio' => l.msg_unreadable_audio,

@@ -9,3 +9,6 @@ venv/
 # Kaggle credentials never go in the repo
 kaggle.json
 .kaggle/
+
+# The built PWA copied to the server (scripts/deploy-web.sh)
+deploy/web/

@@ -1,14 +1,29 @@
-# Automatic HTTPS for the Magana API (certificates from Let's Encrypt).
+# Automatic HTTPS for the Magana API and the tester PWA (certificates from Let's Encrypt).
 {$MAGANA_DOMAIN} {
 	encode gzip
-	# Page photos only: Magana never stores them.
-	request_body {
-		max_size 15MB
-	}
 	header {
 		Strict-Transport-Security "max-age=31536000"
 		X-Content-Type-Options "nosniff"
 		-Server
 	}
-	reverse_proxy magana:8000
+
+	# The PWA for testers at /app/ (scripts/deploy-web.sh copies it to deploy/web).
+	redir /app /app/ 308
+	handle_path /app/* {
+		root * {$MAGANA_WEB_ROOT:/srv/app}
+		# Always check these for a newer version; the service worker caches the rest.
+		@fresh path / /index.html /magana_sw.js /flutter_bootstrap.js /manifest.json
+		header @fresh Cache-Control "no-cache"
+		try_files {path} /index.html
+		file_server
+	}
+
+	# Everything else is the API.
+	handle {
+		# Page photos only: Magana never stores them.
+		request_body {
+			max_size 15MB
+		}
+		reverse_proxy {$MAGANA_UPSTREAM:magana:8000}
+	}
 }

@@ -25,6 +25,7 @@ ENGLISH = {
     "asr_unavailable": "Speech recognition on the server is not set up; the phone's own is used.",
     "audio_too_long": "That recording is too long. Please say a short answer.",
     "unreadable_audio": "I couldn't hear that recording. Please try again.",
+    "too_many_requests": "Magana is busy right now. Please wait a minute and try again.",
     "unknown_tier": "Please set up Magana again: your age group wasn't recognised.",
     "not_allowed_for_tier": "This isn't available on this account.",
     "consent_required": "Learners aged 13 to 17 need a parent's or guardian's consent first.",

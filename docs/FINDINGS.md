@@ -13,6 +13,67 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Security: rate limits for the public web API key
+
+- **What we tested and how:** `test_ratelimit.py` (8 tests):
+  - per-IP and per-device limits;
+  - stricter limits on `/read`, `/asr` and `/explain`;
+  - `429 too_many_requests` with `Retry-After`;
+  - a refused request doesn't use up the other buckets;
+  - `/health` is never limited;
+  - a malformed device ID falls back to the IP limit.
+  
+  `web_test.dart` checks that every app request carries `X-Magana-Device` and that a 429 is spoken in the user's language. By hand, through a local Caddy with the production Caddyfile: 125 calls from one IP in under a minute gave 121 × 200 and 4 × 429.
+- **Why:** the web build's API key is in its JavaScript, so anyone can copy it.
+- **Result:** the limits work, including behind Caddy. The backend only listens inside Docker, and Caddy replaces any `X-Forwarded-For` a client sends, so the IP can't be faked.
+- **What we changed:** `backend/app/ratelimit.py`, its middleware in `main.py`, the `too_many_requests` message in four languages, and the settings in docs/DEPLOY_AWS.md §10a.
+- **Status:** fixed in tests.
+  - **Open:** the limits live in memory, so they reset on restart. They also don't protect against many IPs at once.
+  - **Untested:** the right limit for a school class sharing one router.
+
+## 2026-10-24 · Accessibility: the web app (PWA) with screen readers
+
+- **What we tested and how:**
+  - **WebKit and Chrome** (Playwright on the Mac), release build served under `/app/`. We read the accessibility tree at first load, before any interaction.
+  - **iOS Safari**, iPhone 17 Simulator, iOS 26.4. We opened the PWA and took screenshots.
+- **Why:** Flutter web normally builds its screen-reader tree only after the user finds a hidden "Enable accessibility" button. A blind user can't be expected to find it. Magana now calls `SemanticsBinding.instance.ensureSemantics()` at startup on web.
+- **Result:**
+  - In WebKit and Chrome, the tree is there at first load, with no placeholder button. Language choice reads as the heading "Choose your language", then buttons English, Hausa, Yorùbá, Igbo and Continue.
+  - In the iOS Simulator, the PWA loads past the splash screen and the Hausa, Yorùbá and Igbo letters render correctly.
+- **Could not test:**
+  - **VoiceOver on iOS.** The Simulator has no VoiceOver.
+  - **VoiceOver on the Mac with Safari.** It would take over the developer's own Mac, so we didn't turn it on without asking.
+  - **TalkBack with Chrome on Android.**
+  - **"Add to Home Screen"** on a real iPhone.
+  
+  The accessibility tree shows the right names and roles, but nobody has yet heard a screen reader speak them.
+- **What we changed:** `main.dart` (forced semantics on web).
+- **Status:** open until it has been tried with VoiceOver on a real iPhone and TalkBack on Android Chrome.
+
+## 2026-10-24 · Accessibility: the web build never got past the splash screen (fixed)
+
+- **What we tested and how:** the release web build in WebKit, headless and headed Chrome, and iOS Safari (Simulator). We also built an older commit (476bb70) to see whether this was new.
+- **Result:** every browser stayed on the splash screen, including the older commit, so **the web build had never worked**. The app had finished starting up, but the splash waited for `waitUntilFirstFrameRasterized`, which never completes on web.
+- **What we changed:** on web, the splash waits for `SchedulerBinding.instance.endOfFrame` instead (`splash.dart`). Phones are unchanged.
+- **Status:** fixed. Checked in WebKit, Chrome and iOS Safari (Simulator).
+
+## 2026-10-24 · Accessibility: the web app offline, and when the server can't be reached
+
+- **What we tested and how:** the release build with Magana's own service worker (`magana_sw.js`), in Chrome via Playwright. We loaded it online, then reloaded with the network off and pressed buttons that call the server.
+- **Result:**
+  - **First load online:** about 1.4 to 1.7 s on the Mac.
+  - **Offline reload:** the screens load in about **0.95 s**.
+  - **A server call offline:** the app shows and **speaks** "I couldn't reach Magana. Check the connection and try again."
+  - The service worker never caches API answers.
+  - The first precache list was **30.1 MB**, because it included every CanvasKit variant. We cut it to **4.2 MB** (33 files); the renderer the browser actually uses is cached the first time it loads.
+- **Found while testing:** in the health worker quick check, a server that couldn't be reached was **shown but not spoken**. It is now spoken too (test `server unreachable: the quick check says so out loud`).
+- **Could not test:** going offline in WebKit/Safari. Playwright's WebKit fails with an internal error when a service worker page reloads offline.
+- **Also on web:**
+  - Reminders say "Reminders need the Android or iPhone app" (`web_test.dart`).
+  - Under-18 accounts never use the browser's speech recognition. The order is our server ASR, then tapping.
+  - Explain follows the same approved-host rule as the app.
+- **Status:** fixed in Chrome. Untested: offline in Safari, and on a real iPhone or Android phone.
+
 ## 2026-10-24 · Accessibility, languages: quiz answers that survive bad recognition
 
 - **What we tested and how:**

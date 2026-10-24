@@ -48,8 +48,11 @@ class Backend {
   String source = 'iba';
   List<Map<String, Object>> qs = questions;
 
+  bool unreachable = false;
+
   MockClient get client => MockClient((req) async {
     requests.add(req);
+    if (unreachable) throw http.ClientException('no network');
     switch (req.url.path) {
       case '/triage/questions':
         return http.Response(
@@ -372,5 +375,18 @@ void main() {
       'fever_days': 'cant_tell',
       'fits': false,
     });
+  });
+
+  testWidgets('server unreachable: the quick check says so out loud', (
+    tester,
+  ) async {
+    final (speaker, backend, _) = await open(tester, screen: const SizedBox());
+    backend.unreachable = true;
+    tester
+        .state<NavigatorState>(find.byType(Navigator).last)
+        .push(MaterialPageRoute(builder: (_) => const QuickCheckScreen()));
+    await tester.pumpAndSettle();
+    expect(find.text(en.cannotReach), findsOneWidget);
+    expect(speaker.said.last, en.cannotReach);
   });
 }

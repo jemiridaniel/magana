@@ -35,6 +35,7 @@ Only open-licence (CC BY / CC BY-SA), team-made, or written-permission materials
 ## Working rules
 - Push to origin/main after each set of commits, without asking, as long as all tests pass (backend `pytest -q`, app `flutter analyze` and `flutter test`).
 - After any test, bug fix or measurement that changes what we know about accuracy, safety or accessibility, add an entry to docs/FINDINGS.md in the same commit.
+- The web build (`scripts/build-web.sh`, served at `/app` by Caddy) is an installable PWA **for testing only**. The native iOS app (TestFlight) is still required before 10 Dec. Its API key is public, so the backend rate-limits per device and per IP (`ratelimit.py`).
 
 ## Commands
 ```bash

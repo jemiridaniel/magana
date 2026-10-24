@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
+import '../platform.dart';
 import '../policy.dart';
 import '../reminders.dart';
 import '../theme.dart';
@@ -101,6 +102,10 @@ class _RemindersScreenState extends State<RemindersScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (runningOnWeb) {
+        AppScope.of(context).speaker.say(_l.remindersNeedApp);
+        return;
+      }
       await _load();
       if (!mounted) return;
       final store = _store!;
@@ -233,6 +238,15 @@ class _RemindersScreenState extends State<RemindersScreen> {
     final l = _l;
     if (!AppScope.of(context).profile.can(Feature.reminders)) {
       return const AdultsOnlyScreen();
+    }
+    if (runningOnWeb) {
+      // A web page can't ring at the right time when it isn't open.
+      return PageScaffold(
+        body: [
+          ScreenHeader(title: l.remindersTitle),
+          NoteBox(text: l.remindersNeedApp, kind: NoteKind.warning),
+        ],
+      );
     }
     final store = _store;
     return PageScaffold(

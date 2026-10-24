@@ -16,3 +16,13 @@ def fresh_iba_monitor():
     monitor.success()
     yield
     monitor.success()
+
+
+@pytest.fixture(autouse=True)
+def fresh_rate_limits(monkeypatch):
+    """Every test starts with empty buckets and generous limits; test_ratelimit.py sets its own."""
+    from app import ratelimit
+
+    monkeypatch.setattr(ratelimit, "limiter", ratelimit.RateLimiter())
+    for name in ("RATE_IP_PER_MIN", "RATE_DEVICE_PER_MIN", "RATE_HEAVY_IP_PER_MIN", "RATE_HEAVY_DEVICE_PER_MIN"):
+        monkeypatch.setenv(name, "100000")

@@ -1534,4 +1534,12 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get quizSayTrueFalse => 'Faɗi gaskiya ko ƙarya';
+
+  @override
+  String get msg_too_many_requests =>
+      'Magana tana da aiki sosai yanzu. Don Allah ka jira minti ɗaya ka sake gwadawa.';
+
+  @override
+  String get remindersNeedApp =>
+      'Tunatarwa na buƙatar manhajar Android ko iPhone. A cikin burauza Magana ba za ta iya yin ƙara a daidai lokaci ba.';
 }

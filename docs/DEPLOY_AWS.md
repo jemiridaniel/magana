@@ -168,6 +168,27 @@ To go back, set `OCR_ENGINE=tesseract`, run the same command, and change the typ
 sudo docker compose -f docker-compose.prod.yml up -d
 ```
 
+## 10a. The web app (PWA) at /app
+
+The same Caddy serves the Flutter web build at `https://<host>/app/` from `deploy/web/` on the server (git-ignored, mounted read-only into Caddy). From your Mac, with `MAGANA_API` and `MAGANA_API_KEY` in `~/.magana/app.env` and `MAGANA_HOST` in `~/.magana/aws.env`:
+
+```bash
+scripts/deploy-web.sh
+```
+
+It builds with `--base-href /app/`, fills in the service worker's file list and copies `build/web/` to the server. No restart is needed. `index.html`, `magana_sw.js`, `flutter_bootstrap.js` and `manifest.json` are served with `Cache-Control: no-cache`, so testers get the new version the next time they open it online.
+
+**The web API key is public:** anyone can read it from the JavaScript. The backend therefore limits requests per IP and per device (`X-Magana-Device`), and answers `429 too_many_requests` with `Retry-After`. Defaults are per minute, in `.env`:
+
+| Setting | Default | Applies to |
+|---|---|---|
+| `RATE_IP_PER_MIN` | 120 | every request from one IP |
+| `RATE_DEVICE_PER_MIN` | 60 | every request from one device |
+| `RATE_HEAVY_IP_PER_MIN` | 30 | `/read`, `/asr`, `/explain` from one IP |
+| `RATE_HEAVY_DEVICE_PER_MIN` | 12 | the same, from one device |
+
+A school's testers may share one IP behind a router. If they hit the limit, raise the two IP settings. `/health` is never limited. The limits are kept in memory, so a restart resets them.
+
 ## 11. Logs and troubleshooting
 
 ```bash

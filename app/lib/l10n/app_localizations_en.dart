@@ -1529,4 +1529,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get quizSayTrueFalse => 'Say true or false';
+
+  @override
+  String get msg_too_many_requests =>
+      'Magana is busy right now. Please wait a minute and try again.';
+
+  @override
+  String get remindersNeedApp =>
+      'Reminders need the Android or iPhone app. In a web browser Magana can\'t ring at the right time.';
 }
