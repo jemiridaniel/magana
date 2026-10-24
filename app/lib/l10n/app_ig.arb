@@ -144,5 +144,21 @@
   "cancel": "Kagbuo",
   "back": "Laghachi",
   "msg_unknown_tier": "Biko hazie Magana ọzọ: amataghị otu afọ gị.",
-  "readPageSubtitleSchool": "Ihe ọmụmụ ụlọ akwụkwọ, ndetu, akwụkwọ ọgụgụ na ule"
+  "readPageSubtitleSchool": "Ihe ọmụmụ ụlọ akwụkwọ, ndetu, akwụkwọ ọgụgụ na ule",
+  "everydaySubtitle": "Akwụkwọ ahụike na nke ego · 18+",
+  "paperMedicine": "Akara ọgwụ",
+  "paperMedicineDetail": "Akara na ndenye ọgwụ",
+  "paperReport": "Akụkọ ahụike",
+  "paperReportDetail": "Nsonaazụ ule na akwụkwọ ntọhapụ",
+  "paperStatement": "Nkwupụta ụlọ akụ",
+  "paperStatementDetail": "Nkwupụta, nnata na ụgwọ",
+  "talkToNurse": "Gwa nọọsụ okwu",
+  "talkToNurseDetail": "Ya na nyocha ọsọ ọsọ Ibà",
+  "everydayPrivacy": "A na-agụ akwụkwọ nzuzo na ekwentị gị, anaghị echekwa ha. Magana anaghị arịọ PIN ma ọ bụ okwuntughe gị.",
+  "readExactly": "A na-agụ ya otú e biri ya",
+  "noteMedicine": "Magana na-agụ ihe e biri ebi. Ọ naghị enye ndụmọdụ ahụike. Ọ bụrụ na ihe ọ bụla dị na akara edoghị anya, jụọ onye na-ere ọgwụ gị tupu ị ṅụọ ya.",
+  "noteReport": "A na-agụ nọmba na oke otú e biri ha. Magana anaghị akọwa nsonaazụ: naanị onye ọrụ ahụike gị nwere ike ịkọwa ihe ha pụtara nye gị.",
+  "noteStatement": "A na-agụ ego otú e biri ya. Anaghị echekwa nkwupụta a. Magana anaghị arịọ PIN ma ọ bụ okwuntughe gị. Ọ bụrụ na ego ọ bụla edoghị anya, lelee ya na ụlọ akụ gị ma ọ bụ onye ị tụkwasịrị obi.",
+  "askPharmacistOrNurse": "Jụọ onye na-ere ọgwụ ma ọ bụ nọọsụ",
+  "adultsOnly": "Nke a bụ maka ndị okenye (afọ 18 gaa n'ihu)."
 }

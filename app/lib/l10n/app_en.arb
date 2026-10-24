@@ -403,5 +403,21 @@
   "cancel": "Cancel",
   "back": "Back",
   "msg_unknown_tier": "Please set up Magana again: your age group wasn't recognised.",
-  "readPageSubtitleSchool": "Schoolwork, notes, textbooks and tests"
+  "readPageSubtitleSchool": "Schoolwork, notes, textbooks and tests",
+  "everydaySubtitle": "Health and money papers · 18+",
+  "paperMedicine": "Medicine label",
+  "paperMedicineDetail": "Labels and prescriptions",
+  "paperReport": "Medical report",
+  "paperReportDetail": "Test results and discharge notes",
+  "paperStatement": "Bank statement",
+  "paperStatementDetail": "Statements, receipts and bills",
+  "talkToNurse": "Talk to a nurse",
+  "talkToNurseDetail": "With the Ibà quick check",
+  "everydayPrivacy": "Private papers are read on your phone and not saved. Magana never asks for your PIN or password.",
+  "readExactly": "Read exactly as printed",
+  "noteMedicine": "Magana reads what is printed. It does not give medical advice. If anything on the label is unclear, ask your pharmacist before taking it.",
+  "noteReport": "Numbers and ranges are read exactly as printed. Magana does not interpret results: only your health worker can explain what they mean for you.",
+  "noteStatement": "Amounts are read exactly as printed. This statement is not saved. Magana never asks for your PIN or password. If an amount is unclear, check it with your bank or a trusted person.",
+  "askPharmacistOrNurse": "Ask a pharmacist or nurse",
+  "adultsOnly": "This is for adults (18 and over)."
 }

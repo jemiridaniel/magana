@@ -12,6 +12,7 @@ import '../capture/feedback.dart';
 import '../capture/frame_analysis.dart';
 import '../l10n/app_localizations.dart';
 import '../messages.dart';
+import '../papers.dart';
 import '../platform.dart';
 import '../theme.dart';
 import 'reader.dart';
@@ -24,7 +25,11 @@ class CaptureScreen extends StatefulWidget {
     this.picker,
     this.findCameras = availableCameras,
     this.feedback,
+    this.paper,
   });
+
+  /// An everyday paper (health or money mode); null for schoolwork and other pages.
+  final Paper? paper;
 
   /// Gallery (and fallback camera) picker; injectable for tests.
   final Future<XFile?> Function(ImageSource source)? picker;
@@ -297,7 +302,11 @@ class _CaptureScreenState extends State<CaptureScreen>
     final scope = AppScope.of(context);
     _setStatus(_l.readingPage);
     try {
-      final result = await scope.api.read(bytes, filename: filename);
+      final result = await scope.api.read(
+        bytes,
+        filename: filename,
+        mode: widget.paper?.mode ?? 'school',
+      );
       if (!mounted) return;
       if (result.readableCount == 0) {
         _setStatus(
@@ -314,7 +323,9 @@ class _CaptureScreenState extends State<CaptureScreen>
       await _stopCamera();
       if (!mounted) return;
       await Navigator.of(context).pushReplacement(
-        MaterialPageRoute(builder: (_) => ReaderScreen(result: result)),
+        MaterialPageRoute(
+          builder: (_) => ReaderScreen(result: result, paper: widget.paper),
+        ),
       );
     } on ApiException catch (e) {
       _setStatus(messageFor(_l, e.code));
@@ -384,7 +395,7 @@ class _CaptureScreenState extends State<CaptureScreen>
                     child: Semantics(
                       header: true,
                       child: Text(
-                        l.readPage,
+                        widget.paper?.title(l) ?? l.readPage,
                         textAlign: TextAlign.center,
                         style: const TextStyle(
                           color: Colors.white,

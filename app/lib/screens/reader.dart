@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import '../api.dart';
 import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
+import '../papers.dart';
+import '../widgets.dart';
+import 'health_worker.dart';
 import '../messages.dart';
 import '../speech.dart';
 import '../theme.dart';
@@ -12,8 +15,12 @@ const _speeds = [0.75, 1.0, 1.25, 1.5];
 /// Reads a page aloud item by item (lines, or table rows) with Repeat,
 /// Previous and Next. Low-confidence items carry a spoken warning.
 class ReaderScreen extends StatefulWidget {
-  const ReaderScreen({super.key, required this.result});
+  const ReaderScreen({super.key, required this.result, this.paper});
   final ReadResult result;
+
+  /// An everyday paper: adds its "read exactly as printed" note and, for health
+  /// papers, the "Ask a pharmacist or nurse" button.
+  final Paper? paper;
 
   @override
   State<ReaderScreen> createState() => _ReaderScreenState();
@@ -121,7 +128,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
     }
     if (run != _run || !mounted) return;
     setState(() => _playing = false);
-    await _speaker.say(_l.endOfPageHint);
+    // Everyday papers end with their safety note (no advice; PIN never asked).
+    await _speaker.say([_l.endOfPageHint, ?widget.paper?.note(_l)].join(' '));
   }
 
   Future<void> _sayOnly(int i) async {
@@ -199,14 +207,14 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            l.yourPage,
+                            widget.paper?.title(l) ?? l.yourPage,
                             style: const TextStyle(
                               fontSize: 20,
                               fontWeight: FontWeight.w700,
                             ),
                           ),
                           Text(
-                            '${_counts()}${unsure > 0 ? ' · ${l.unclearCount(unsure)}' : ''}',
+                            '${widget.paper != null ? '${l.readExactly} · ' : ''}${_counts()}${unsure > 0 ? ' · ${l.unclearCount(unsure)}' : ''}',
                             style: const TextStyle(
                               fontSize: 16,
                               color: MaganaColors.muted,
@@ -232,6 +240,17 @@ class _ReaderScreenState extends State<ReaderScreen> {
                       if (warning != null) ...[
                         const SizedBox(height: 16),
                         _WarningNote(text: warning),
+                      ],
+                      if (widget.paper case final paper?) ...[
+                        const SizedBox(height: 16),
+                        NoteBox(text: paper.note(l)),
+                        if (paper.isHealth) ...[
+                          const SizedBox(height: 12),
+                          SecondaryButton(
+                            label: l.askPharmacistOrNurse,
+                            onTap: () => openHealthWorker(context),
+                          ),
+                        ],
                       ],
                     ],
                   ),

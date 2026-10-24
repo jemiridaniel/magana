@@ -542,4 +542,57 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get readPageSubtitleSchool =>
       'Aikin makaranta, rubuce-rubuce, littattafai da jarabawa';
+
+  @override
+  String get everydaySubtitle => 'Takardun lafiya da na kuɗi · 18+';
+
+  @override
+  String get paperMedicine => 'Lakabin magani';
+
+  @override
+  String get paperMedicineDetail => 'Lakabi da takardun likita';
+
+  @override
+  String get paperReport => 'Rahoton asibiti';
+
+  @override
+  String get paperReportDetail => 'Sakamakon gwaji da takardun sallama';
+
+  @override
+  String get paperStatement => 'Bayanan banki';
+
+  @override
+  String get paperStatementDetail => 'Bayanan banki, rasit da kuɗaɗen biya';
+
+  @override
+  String get talkToNurse => 'Yi magana da ma\'aikaciyar jinya';
+
+  @override
+  String get talkToNurseDetail => 'Tare da gwajin gaggawa na Ibà';
+
+  @override
+  String get everydayPrivacy =>
+      'Ana karanta takardun sirri a wayarka, ba a adana su. Magana ba ta taɓa tambayar PIN ko kalmar sirri ba.';
+
+  @override
+  String get readExactly => 'Ana karantawa daidai yadda aka buga';
+
+  @override
+  String get noteMedicine =>
+      'Magana tana karanta abin da aka buga. Ba ta ba da shawarar likita. Idan wani abu a lakabin bai fito sarai ba, tambayi mai sayar da magani kafin ka sha.';
+
+  @override
+  String get noteReport =>
+      'Ana karanta lambobi da iyaka daidai yadda aka buga. Magana ba ta fassara sakamako: ma\'aikacin lafiyarka ne kawai zai iya bayyana ma\'anarsu gare ka.';
+
+  @override
+  String get noteStatement =>
+      'Ana karanta kuɗaɗe daidai yadda aka buga. Ba a adana wannan bayanin ba. Magana ba ta taɓa tambayar PIN ko kalmar sirri ba. Idan wani adadi bai fito sarai ba, duba shi da bankinka ko wanda ka amince da shi.';
+
+  @override
+  String get askPharmacistOrNurse =>
+      'Tambayi mai sayar da magani ko ma\'aikaciyar jinya';
+
+  @override
+  String get adultsOnly => 'Wannan na manya ne (shekara 18 zuwa sama).';
 }

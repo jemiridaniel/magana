@@ -540,4 +540,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get readPageSubtitleSchool => 'Schoolwork, notes, textbooks and tests';
+
+  @override
+  String get everydaySubtitle => 'Health and money papers · 18+';
+
+  @override
+  String get paperMedicine => 'Medicine label';
+
+  @override
+  String get paperMedicineDetail => 'Labels and prescriptions';
+
+  @override
+  String get paperReport => 'Medical report';
+
+  @override
+  String get paperReportDetail => 'Test results and discharge notes';
+
+  @override
+  String get paperStatement => 'Bank statement';
+
+  @override
+  String get paperStatementDetail => 'Statements, receipts and bills';
+
+  @override
+  String get talkToNurse => 'Talk to a nurse';
+
+  @override
+  String get talkToNurseDetail => 'With the Ibà quick check';
+
+  @override
+  String get everydayPrivacy =>
+      'Private papers are read on your phone and not saved. Magana never asks for your PIN or password.';
+
+  @override
+  String get readExactly => 'Read exactly as printed';
+
+  @override
+  String get noteMedicine =>
+      'Magana reads what is printed. It does not give medical advice. If anything on the label is unclear, ask your pharmacist before taking it.';
+
+  @override
+  String get noteReport =>
+      'Numbers and ranges are read exactly as printed. Magana does not interpret results: only your health worker can explain what they mean for you.';
+
+  @override
+  String get noteStatement =>
+      'Amounts are read exactly as printed. This statement is not saved. Magana never asks for your PIN or password. If an amount is unclear, check it with your bank or a trusted person.';
+
+  @override
+  String get askPharmacistOrNurse => 'Ask a pharmacist or nurse';
+
+  @override
+  String get adultsOnly => 'This is for adults (18 and over).';
 }

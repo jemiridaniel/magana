@@ -144,5 +144,21 @@
   "cancel": "Fagilé",
   "back": "Padà",
   "msg_unknown_tier": "Jọ̀wọ́ tún Magana ṣètò: a kò dá ẹgbẹ́ ọjọ́-orí rẹ mọ̀.",
-  "readPageSubtitleSchool": "Iṣẹ́ ilé-ìwé, àkọsílẹ̀, ìwé ẹ̀kọ́ àti ìdánwò"
+  "readPageSubtitleSchool": "Iṣẹ́ ilé-ìwé, àkọsílẹ̀, ìwé ẹ̀kọ́ àti ìdánwò",
+  "everydaySubtitle": "Ìwé ìlera àti ti owó · 18+",
+  "paperMedicine": "Àmì òògùn",
+  "paperMedicineDetail": "Àmì àti ìwé àṣẹ dókítà",
+  "paperReport": "Ìjábọ̀ ìlera",
+  "paperReportDetail": "Àbájáde àyẹ̀wò àti ìwé ìdásílẹ̀",
+  "paperStatement": "Ìwé àkọsílẹ̀ báǹkì",
+  "paperStatementDetail": "Ìwé àkọsílẹ̀, ìwé ìsanwó àti owó tí a ó san",
+  "talkToNurse": "Bá nọ́ọ̀sì sọ̀rọ̀",
+  "talkToNurseDetail": "Pẹ̀lú àyẹ̀wò kíákíá Ibà",
+  "everydayPrivacy": "A ń ka àwọn ìwé àṣírí lórí fóònù rẹ, a kì í tọ́jú wọn. Magana kì í béèrè PIN tàbí ọ̀rọ̀ aṣínà rẹ.",
+  "readExactly": "A ń kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́",
+  "noteMedicine": "Magana ń ka ohun tí a tẹ̀. Kò fúnni ní ìmọ̀ràn ìlera. Bí ohunkóhun lórí àmì bá ṣókùnkùn, bi oníṣègùn òògùn rẹ léèrè kí o tó lò ó.",
+  "noteReport": "A ń ka nọ́ńbà àti ààlà gẹ́gẹ́ bí a ṣe tẹ̀ wọ́n. Magana kì í ṣàlàyé àbájáde: òṣìṣẹ́ ìlera rẹ nìkan ló lè ṣàlàyé ohun tí wọ́n túmọ̀ sí fún ọ.",
+  "noteStatement": "A ń ka iye owó gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́. A kò tọ́jú ìwé yìí. Magana kì í béèrè PIN tàbí ọ̀rọ̀ aṣínà rẹ. Bí iye kan bá ṣókùnkùn, ṣàyẹ̀wò rẹ̀ pẹ̀lú báǹkì rẹ tàbí ẹni tí o fọkàn tán.",
+  "askPharmacistOrNurse": "Bi oníṣègùn òògùn tàbí nọ́ọ̀sì léèrè",
+  "adultsOnly": "Èyí wà fún àgbàlagbà (ọdún 18 sókè)."
 }

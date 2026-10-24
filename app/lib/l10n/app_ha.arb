@@ -144,5 +144,21 @@
   "cancel": "Soke",
   "back": "Baya",
   "msg_unknown_tier": "Don Allah ka sake saita Magana: ba a gane rukunin shekarunka ba.",
-  "readPageSubtitleSchool": "Aikin makaranta, rubuce-rubuce, littattafai da jarabawa"
+  "readPageSubtitleSchool": "Aikin makaranta, rubuce-rubuce, littattafai da jarabawa",
+  "everydaySubtitle": "Takardun lafiya da na kuɗi · 18+",
+  "paperMedicine": "Lakabin magani",
+  "paperMedicineDetail": "Lakabi da takardun likita",
+  "paperReport": "Rahoton asibiti",
+  "paperReportDetail": "Sakamakon gwaji da takardun sallama",
+  "paperStatement": "Bayanan banki",
+  "paperStatementDetail": "Bayanan banki, rasit da kuɗaɗen biya",
+  "talkToNurse": "Yi magana da ma'aikaciyar jinya",
+  "talkToNurseDetail": "Tare da gwajin gaggawa na Ibà",
+  "everydayPrivacy": "Ana karanta takardun sirri a wayarka, ba a adana su. Magana ba ta taɓa tambayar PIN ko kalmar sirri ba.",
+  "readExactly": "Ana karantawa daidai yadda aka buga",
+  "noteMedicine": "Magana tana karanta abin da aka buga. Ba ta ba da shawarar likita. Idan wani abu a lakabin bai fito sarai ba, tambayi mai sayar da magani kafin ka sha.",
+  "noteReport": "Ana karanta lambobi da iyaka daidai yadda aka buga. Magana ba ta fassara sakamako: ma'aikacin lafiyarka ne kawai zai iya bayyana ma'anarsu gare ka.",
+  "noteStatement": "Ana karanta kuɗaɗe daidai yadda aka buga. Ba a adana wannan bayanin ba. Magana ba ta taɓa tambayar PIN ko kalmar sirri ba. Idan wani adadi bai fito sarai ba, duba shi da bankinka ko wanda ka amince da shi.",
+  "askPharmacistOrNurse": "Tambayi mai sayar da magani ko ma'aikaciyar jinya",
+  "adultsOnly": "Wannan na manya ne (shekara 18 zuwa sama)."
 }

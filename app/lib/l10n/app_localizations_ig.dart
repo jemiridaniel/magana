@@ -542,4 +542,56 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get readPageSubtitleSchool =>
       'Ihe ọmụmụ ụlọ akwụkwọ, ndetu, akwụkwọ ọgụgụ na ule';
+
+  @override
+  String get everydaySubtitle => 'Akwụkwọ ahụike na nke ego · 18+';
+
+  @override
+  String get paperMedicine => 'Akara ọgwụ';
+
+  @override
+  String get paperMedicineDetail => 'Akara na ndenye ọgwụ';
+
+  @override
+  String get paperReport => 'Akụkọ ahụike';
+
+  @override
+  String get paperReportDetail => 'Nsonaazụ ule na akwụkwọ ntọhapụ';
+
+  @override
+  String get paperStatement => 'Nkwupụta ụlọ akụ';
+
+  @override
+  String get paperStatementDetail => 'Nkwupụta, nnata na ụgwọ';
+
+  @override
+  String get talkToNurse => 'Gwa nọọsụ okwu';
+
+  @override
+  String get talkToNurseDetail => 'Ya na nyocha ọsọ ọsọ Ibà';
+
+  @override
+  String get everydayPrivacy =>
+      'A na-agụ akwụkwọ nzuzo na ekwentị gị, anaghị echekwa ha. Magana anaghị arịọ PIN ma ọ bụ okwuntughe gị.';
+
+  @override
+  String get readExactly => 'A na-agụ ya otú e biri ya';
+
+  @override
+  String get noteMedicine =>
+      'Magana na-agụ ihe e biri ebi. Ọ naghị enye ndụmọdụ ahụike. Ọ bụrụ na ihe ọ bụla dị na akara edoghị anya, jụọ onye na-ere ọgwụ gị tupu ị ṅụọ ya.';
+
+  @override
+  String get noteReport =>
+      'A na-agụ nọmba na oke otú e biri ha. Magana anaghị akọwa nsonaazụ: naanị onye ọrụ ahụike gị nwere ike ịkọwa ihe ha pụtara nye gị.';
+
+  @override
+  String get noteStatement =>
+      'A na-agụ ego otú e biri ya. Anaghị echekwa nkwupụta a. Magana anaghị arịọ PIN ma ọ bụ okwuntughe gị. Ọ bụrụ na ego ọ bụla edoghị anya, lelee ya na ụlọ akụ gị ma ọ bụ onye ị tụkwasịrị obi.';
+
+  @override
+  String get askPharmacistOrNurse => 'Jụọ onye na-ere ọgwụ ma ọ bụ nọọsụ';
+
+  @override
+  String get adultsOnly => 'Nke a bụ maka ndị okenye (afọ 18 gaa n\'ihu).';
 }

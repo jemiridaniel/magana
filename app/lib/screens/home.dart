@@ -7,6 +7,7 @@ import '../language.dart';
 import '../policy.dart';
 import '../theme.dart';
 import 'capture.dart';
+import 'everyday.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -71,7 +72,11 @@ class HomeScreen extends StatelessWidget {
                           _Tile(
                             Icons.description_outlined,
                             l.everydayPapers,
-                            () => _comingSoon(context, l.everydayPapers),
+                            () => Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (_) => const EverydayScreen(),
+                              ),
+                            ),
                           ),
                       ],
                     ),

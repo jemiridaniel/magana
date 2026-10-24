@@ -965,6 +965,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Schoolwork, notes, textbooks and tests'**
   String get readPageSubtitleSchool;
+
+  /// No description provided for @everydaySubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Health and money papers · 18+'**
+  String get everydaySubtitle;
+
+  /// No description provided for @paperMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine label'**
+  String get paperMedicine;
+
+  /// No description provided for @paperMedicineDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Labels and prescriptions'**
+  String get paperMedicineDetail;
+
+  /// No description provided for @paperReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Medical report'**
+  String get paperReport;
+
+  /// No description provided for @paperReportDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Test results and discharge notes'**
+  String get paperReportDetail;
+
+  /// No description provided for @paperStatement.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank statement'**
+  String get paperStatement;
+
+  /// No description provided for @paperStatementDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Statements, receipts and bills'**
+  String get paperStatementDetail;
+
+  /// No description provided for @talkToNurse.
+  ///
+  /// In en, this message translates to:
+  /// **'Talk to a nurse'**
+  String get talkToNurse;
+
+  /// No description provided for @talkToNurseDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'With the Ibà quick check'**
+  String get talkToNurseDetail;
+
+  /// No description provided for @everydayPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Private papers are read on your phone and not saved. Magana never asks for your PIN or password.'**
+  String get everydayPrivacy;
+
+  /// No description provided for @readExactly.
+  ///
+  /// In en, this message translates to:
+  /// **'Read exactly as printed'**
+  String get readExactly;
+
+  /// No description provided for @noteMedicine.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana reads what is printed. It does not give medical advice. If anything on the label is unclear, ask your pharmacist before taking it.'**
+  String get noteMedicine;
+
+  /// No description provided for @noteReport.
+  ///
+  /// In en, this message translates to:
+  /// **'Numbers and ranges are read exactly as printed. Magana does not interpret results: only your health worker can explain what they mean for you.'**
+  String get noteReport;
+
+  /// No description provided for @noteStatement.
+  ///
+  /// In en, this message translates to:
+  /// **'Amounts are read exactly as printed. This statement is not saved. Magana never asks for your PIN or password. If an amount is unclear, check it with your bank or a trusted person.'**
+  String get noteStatement;
+
+  /// No description provided for @askPharmacistOrNurse.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask a pharmacist or nurse'**
+  String get askPharmacistOrNurse;
+
+  /// No description provided for @adultsOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'This is for adults (18 and over).'**
+  String get adultsOnly;
 }
 
 class _AppLocalizationsDelegate

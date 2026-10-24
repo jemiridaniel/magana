@@ -537,4 +537,57 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get readPageSubtitleSchool =>
       'Iṣẹ́ ilé-ìwé, àkọsílẹ̀, ìwé ẹ̀kọ́ àti ìdánwò';
+
+  @override
+  String get everydaySubtitle => 'Ìwé ìlera àti ti owó · 18+';
+
+  @override
+  String get paperMedicine => 'Àmì òògùn';
+
+  @override
+  String get paperMedicineDetail => 'Àmì àti ìwé àṣẹ dókítà';
+
+  @override
+  String get paperReport => 'Ìjábọ̀ ìlera';
+
+  @override
+  String get paperReportDetail => 'Àbájáde àyẹ̀wò àti ìwé ìdásílẹ̀';
+
+  @override
+  String get paperStatement => 'Ìwé àkọsílẹ̀ báǹkì';
+
+  @override
+  String get paperStatementDetail =>
+      'Ìwé àkọsílẹ̀, ìwé ìsanwó àti owó tí a ó san';
+
+  @override
+  String get talkToNurse => 'Bá nọ́ọ̀sì sọ̀rọ̀';
+
+  @override
+  String get talkToNurseDetail => 'Pẹ̀lú àyẹ̀wò kíákíá Ibà';
+
+  @override
+  String get everydayPrivacy =>
+      'A ń ka àwọn ìwé àṣírí lórí fóònù rẹ, a kì í tọ́jú wọn. Magana kì í béèrè PIN tàbí ọ̀rọ̀ aṣínà rẹ.';
+
+  @override
+  String get readExactly => 'A ń kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́';
+
+  @override
+  String get noteMedicine =>
+      'Magana ń ka ohun tí a tẹ̀. Kò fúnni ní ìmọ̀ràn ìlera. Bí ohunkóhun lórí àmì bá ṣókùnkùn, bi oníṣègùn òògùn rẹ léèrè kí o tó lò ó.';
+
+  @override
+  String get noteReport =>
+      'A ń ka nọ́ńbà àti ààlà gẹ́gẹ́ bí a ṣe tẹ̀ wọ́n. Magana kì í ṣàlàyé àbájáde: òṣìṣẹ́ ìlera rẹ nìkan ló lè ṣàlàyé ohun tí wọ́n túmọ̀ sí fún ọ.';
+
+  @override
+  String get noteStatement =>
+      'A ń ka iye owó gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́. A kò tọ́jú ìwé yìí. Magana kì í béèrè PIN tàbí ọ̀rọ̀ aṣínà rẹ. Bí iye kan bá ṣókùnkùn, ṣàyẹ̀wò rẹ̀ pẹ̀lú báǹkì rẹ tàbí ẹni tí o fọkàn tán.';
+
+  @override
+  String get askPharmacistOrNurse => 'Bi oníṣègùn òògùn tàbí nọ́ọ̀sì léèrè';
+
+  @override
+  String get adultsOnly => 'Èyí wà fún àgbàlagbà (ọdún 18 sókè).';
 }
