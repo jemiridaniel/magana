@@ -600,66 +600,6 @@ abstract class AppLocalizations {
   /// **'Thank you. A nurse will call you back during working hours.'**
   String get msg_nurse_call_working_hours;
 
-  /// No description provided for @guideTooDark.
-  ///
-  /// In en, this message translates to:
-  /// **'It\'s dark. Turn on the torch or find more light.'**
-  String get guideTooDark;
-
-  /// No description provided for @guideNoPage.
-  ///
-  /// In en, this message translates to:
-  /// **'I can\'t see a page yet. Point the phone down at the page.'**
-  String get guideNoPage;
-
-  /// No description provided for @guideMoveCloser.
-  ///
-  /// In en, this message translates to:
-  /// **'Bring the phone a little closer to the page.'**
-  String get guideMoveCloser;
-
-  /// No description provided for @guideLiftPhone.
-  ///
-  /// In en, this message translates to:
-  /// **'Lift the phone a little higher, so the whole page fits.'**
-  String get guideLiftPhone;
-
-  /// Spoken while framing: the page's top edge is outside the camera view.
-  ///
-  /// In en, this message translates to:
-  /// **'Move the phone a little toward the top of the page. The top is cut off.'**
-  String get guideMoveUp;
-
-  /// No description provided for @guideMoveDown.
-  ///
-  /// In en, this message translates to:
-  /// **'Move the phone a little toward the bottom of the page. The bottom is cut off.'**
-  String get guideMoveDown;
-
-  /// No description provided for @guideMoveLeft.
-  ///
-  /// In en, this message translates to:
-  /// **'Move the phone a little to the left. The left edge is cut off.'**
-  String get guideMoveLeft;
-
-  /// No description provided for @guideMoveRight.
-  ///
-  /// In en, this message translates to:
-  /// **'Move the phone a little to the right. The right edge is cut off.'**
-  String get guideMoveRight;
-
-  /// No description provided for @guideHoldStill.
-  ///
-  /// In en, this message translates to:
-  /// **'Good. Hold still.'**
-  String get guideHoldStill;
-
-  /// No description provided for @guideCapturing.
-  ///
-  /// In en, this message translates to:
-  /// **'Taking the photo.'**
-  String get guideCapturing;
-
   /// Switch: take the photo by itself when the page is steady and in frame.
   ///
   /// In en, this message translates to:
@@ -767,6 +707,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I can\'t read the end of {where}. Please check it or retake the photo.'**
   String msg_line_end_unclear(String where);
+
+  /// One-word camera cue: move the phone toward the top of the page (its top edge is cut off).
+  ///
+  /// In en, this message translates to:
+  /// **'Higher'**
+  String get cueHigher;
+
+  /// One-word camera cue: move the phone toward the bottom of the page.
+  ///
+  /// In en, this message translates to:
+  /// **'Lower'**
+  String get cueLower;
+
+  /// One-word camera cue: move the phone left.
+  ///
+  /// In en, this message translates to:
+  /// **'Left'**
+  String get cueLeft;
+
+  /// One-word camera cue: move the phone right.
+  ///
+  /// In en, this message translates to:
+  /// **'Right'**
+  String get cueRight;
+
+  /// One-word camera cue: the page fits; keep the phone still for the photo.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold still'**
+  String get cueHoldStill;
+
+  /// One-word camera cue: the page is small in view; bring the phone closer.
+  ///
+  /// In en, this message translates to:
+  /// **'Closer'**
+  String get cueCloser;
+
+  /// One-word camera cue: the page is bigger than the view; lift the phone further away.
+  ///
+  /// In en, this message translates to:
+  /// **'Further'**
+  String get cueFurther;
+
+  /// One-word camera cue: too dark.
+  ///
+  /// In en, this message translates to:
+  /// **'More light'**
+  String get cueMoreLight;
+
+  /// One-word camera cue: no page in view.
+  ///
+  /// In en, this message translates to:
+  /// **'No page'**
+  String get cueNoPage;
 }
 
 class _AppLocalizationsDelegate

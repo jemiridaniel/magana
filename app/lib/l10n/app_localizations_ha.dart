@@ -333,42 +333,6 @@ class AppLocalizationsHa extends AppLocalizations {
       'Thank you. A nurse will call you back during working hours.';
 
   @override
-  String get guideTooDark => 'Akwai duhu. Kunna fitila ko ka nemi ƙarin haske.';
-
-  @override
-  String get guideNoPage =>
-      'Ban ga shafi ba tukuna. Karkata wayar zuwa kan shafin.';
-
-  @override
-  String get guideMoveCloser => 'Kawo wayar kusa da shafin kaɗan.';
-
-  @override
-  String get guideLiftPhone =>
-      'Ɗaga wayar sama kaɗan, don shafin duka ya shiga.';
-
-  @override
-  String get guideMoveUp =>
-      'Matsar da wayar zuwa saman shafin kaɗan. An yanke saman.';
-
-  @override
-  String get guideMoveDown =>
-      'Matsar da wayar zuwa ƙasan shafin kaɗan. An yanke ƙasan.';
-
-  @override
-  String get guideMoveLeft =>
-      'Matsar da wayar hagu kaɗan. An yanke gefen hagu.';
-
-  @override
-  String get guideMoveRight =>
-      'Matsar da wayar dama kaɗan. An yanke gefen dama.';
-
-  @override
-  String get guideHoldStill => 'Yayi kyau. Riƙe a tsaye.';
-
-  @override
-  String get guideCapturing => 'Ina ɗaukar hoton.';
-
-  @override
   String get autoCapture => 'Ɗauka da kanta';
 
   @override
@@ -433,4 +397,31 @@ class AppLocalizationsHa extends AppLocalizations {
   String msg_line_end_unclear(String where) {
     return 'Ban iya karanta ƙarshen $where ba. Don Allah ka duba shi ko ka sake ɗaukar hoto.';
   }
+
+  @override
+  String get cueHigher => 'Sama';
+
+  @override
+  String get cueLower => 'Ƙasa';
+
+  @override
+  String get cueLeft => 'Hagu';
+
+  @override
+  String get cueRight => 'Dama';
+
+  @override
+  String get cueHoldStill => 'Riƙe a tsaye';
+
+  @override
+  String get cueCloser => 'Kusa';
+
+  @override
+  String get cueFurther => 'Nesa';
+
+  @override
+  String get cueMoreLight => 'Ƙarin haske';
+
+  @override
+  String get cueNoPage => 'Babu shafi';
 }

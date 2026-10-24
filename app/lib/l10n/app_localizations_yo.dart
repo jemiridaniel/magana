@@ -332,41 +332,6 @@ class AppLocalizationsYo extends AppLocalizations {
       'Thank you. A nurse will call you back during working hours.';
 
   @override
-  String get guideTooDark => 'Ó ṣókùnkùn. Tan iná fóònù tàbí wá ìmọ́lẹ̀ sí i.';
-
-  @override
-  String get guideNoPage =>
-      'Mi ò tíì rí ojú-ìwé kankan. Dojú fóònù kọ ojú-ìwé náà.';
-
-  @override
-  String get guideMoveCloser => 'Mú fóònù súnmọ́ ojú-ìwé náà díẹ̀.';
-
-  @override
-  String get guideLiftPhone =>
-      'Gbé fóònù sókè díẹ̀, kí gbogbo ojú-ìwé náà lè wọlé.';
-
-  @override
-  String get guideMoveUp =>
-      'Sún fóònù díẹ̀ sí òkè ojú-ìwé náà. Òkè rẹ̀ ti gé kúrò.';
-
-  @override
-  String get guideMoveDown =>
-      'Sún fóònù díẹ̀ sí ìsàlẹ̀ ojú-ìwé náà. Ìsàlẹ̀ rẹ̀ ti gé kúrò.';
-
-  @override
-  String get guideMoveLeft => 'Sún fóònù díẹ̀ sí apá òsì. Etí òsì ti gé kúrò.';
-
-  @override
-  String get guideMoveRight =>
-      'Sún fóònù díẹ̀ sí apá ọ̀tún. Etí ọ̀tún ti gé kúrò.';
-
-  @override
-  String get guideHoldStill => 'Ó dára. Dúró jẹ́ẹ́.';
-
-  @override
-  String get guideCapturing => 'Mo ń ya fọ́tò náà.';
-
-  @override
   String get autoCapture => 'Ya fọ́tò fúnra rẹ̀';
 
   @override
@@ -431,4 +396,31 @@ class AppLocalizationsYo extends AppLocalizations {
   String msg_line_end_unclear(String where) {
     return 'Mi ò lè ka òpin $where. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà.';
   }
+
+  @override
+  String get cueHigher => 'Sókè';
+
+  @override
+  String get cueLower => 'Sísàlẹ̀';
+
+  @override
+  String get cueLeft => 'Òsì';
+
+  @override
+  String get cueRight => 'Ọ̀tún';
+
+  @override
+  String get cueHoldStill => 'Dúró jẹ́ẹ́';
+
+  @override
+  String get cueCloser => 'Súnmọ́';
+
+  @override
+  String get cueFurther => 'Sẹ́yìn';
+
+  @override
+  String get cueMoreLight => 'Ìmọ́lẹ̀ sí i';
+
+  @override
+  String get cueNoPage => 'Kò sí ojú-ìwé';
 }

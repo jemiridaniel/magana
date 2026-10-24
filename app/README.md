@@ -56,6 +56,7 @@ Every package used (`camera`, `image_picker`, `flutter_tts`, `http`, `flutter_sv
 
 - Framing looks for a near-white page against a darker background. Thresholds are named constants in `lib/capture/frame_analysis.dart`; tune them with testers on real phones and paper.
 - The captured photo's temporary file is deleted as soon as its bytes are read.
+- Guidance after the opening instructions is one-word cues (Higher, Lower, Left, Right, Hold still, Closer, Further, More light, No page), in the app language. A tick with a light vibration repeats faster as the page fits (none without a page, about once a second when an edge is cut off, five a second when ready); taking the photo plays a distinct two-tone sound with a strong vibration. Sounds are generated (`assets/sounds/`, no third-party audio).
 - In browsers there is no live frame analysis or torch: the preview shows, Take photo works, and guidance is spoken once.
 - On the emulator the back camera is a virtual room; `adb emu virtualscene-image table page.png` puts a page in it, but aiming needs the emulator window's keyboard controls.
 

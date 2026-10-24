@@ -43,6 +43,7 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   camera: ^0.12.1
+  audioplayers: ^6.8.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -70,6 +71,7 @@ flutter:
   assets:
     - assets/brand/magana_mark.svg
     - assets/brand/magana_lockup_stacked.svg
+    - assets/sounds/
 
   fonts:
     - family: AtkinsonHyperlegible

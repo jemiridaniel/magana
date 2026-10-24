@@ -102,12 +102,27 @@ class FrameAnalyzer {
 
   LumaGrid? _previous;
   int _steady = 0;
+  Advice? _last;
 
   bool get readyToCapture => _steady >= steadyFramesNeeded;
+
+  /// How well the page fits, 0 (no page) to 1 (ready to capture). Drives the
+  /// framing tone and vibration, which speed up as this rises.
+  double get fit => switch (_last) {
+    null || Advice.noPage || Advice.tooDark => 0,
+    Advice.moveUp ||
+    Advice.moveDown ||
+    Advice.moveLeft ||
+    Advice.moveRight => 0.3,
+    Advice.moveCloser || Advice.liftPhone => 0.5,
+    Advice.holdStill => 0.7 + 0.3 * (_steady / steadyFramesNeeded).clamp(0, 1),
+    Advice.ready => 1,
+  };
 
   void reset() {
     _previous = null;
     _steady = 0;
+    _last = null;
   }
 
   Advice analyze(LumaGrid g) {
@@ -119,10 +134,10 @@ class FrameAnalyzer {
     final advice = _frame(g, moving);
     if (advice == Advice.ready) {
       _steady++;
-      return readyToCapture ? Advice.ready : Advice.holdStill;
+      return _last = readyToCapture ? Advice.ready : Advice.holdStill;
     }
     _steady = 0;
-    return advice;
+    return _last = advice;
   }
 
   Advice _frame(LumaGrid g, bool moving) {

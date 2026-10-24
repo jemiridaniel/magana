@@ -334,43 +334,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Thank you. A nurse will call you back during working hours.';
 
   @override
-  String get guideTooDark =>
-      'It\'s dark. Turn on the torch or find more light.';
-
-  @override
-  String get guideNoPage =>
-      'I can\'t see a page yet. Point the phone down at the page.';
-
-  @override
-  String get guideMoveCloser => 'Bring the phone a little closer to the page.';
-
-  @override
-  String get guideLiftPhone =>
-      'Lift the phone a little higher, so the whole page fits.';
-
-  @override
-  String get guideMoveUp =>
-      'Move the phone a little toward the top of the page. The top is cut off.';
-
-  @override
-  String get guideMoveDown =>
-      'Move the phone a little toward the bottom of the page. The bottom is cut off.';
-
-  @override
-  String get guideMoveLeft =>
-      'Move the phone a little to the left. The left edge is cut off.';
-
-  @override
-  String get guideMoveRight =>
-      'Move the phone a little to the right. The right edge is cut off.';
-
-  @override
-  String get guideHoldStill => 'Good. Hold still.';
-
-  @override
-  String get guideCapturing => 'Taking the photo.';
-
-  @override
   String get autoCapture => 'Auto-capture';
 
   @override
@@ -435,4 +398,31 @@ class AppLocalizationsEn extends AppLocalizations {
   String msg_line_end_unclear(String where) {
     return 'I can\'t read the end of $where. Please check it or retake the photo.';
   }
+
+  @override
+  String get cueHigher => 'Higher';
+
+  @override
+  String get cueLower => 'Lower';
+
+  @override
+  String get cueLeft => 'Left';
+
+  @override
+  String get cueRight => 'Right';
+
+  @override
+  String get cueHoldStill => 'Hold still';
+
+  @override
+  String get cueCloser => 'Closer';
+
+  @override
+  String get cueFurther => 'Further';
+
+  @override
+  String get cueMoreLight => 'More light';
+
+  @override
+  String get cueNoPage => 'No page';
 }

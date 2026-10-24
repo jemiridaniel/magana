@@ -8,6 +8,7 @@ import 'package:image_picker/image_picker.dart';
 import '../api.dart';
 import '../app_scope.dart';
 import '../capture/camera_frames.dart';
+import '../capture/feedback.dart';
 import '../capture/frame_analysis.dart';
 import '../l10n/app_localizations.dart';
 import '../messages.dart';
@@ -22,6 +23,7 @@ class CaptureScreen extends StatefulWidget {
     super.key,
     this.picker,
     this.findCameras = availableCameras,
+    this.feedback,
   });
 
   /// Gallery (and fallback camera) picker; injectable for tests.
@@ -29,6 +31,9 @@ class CaptureScreen extends StatefulWidget {
 
   /// The device's cameras; tests pass none, which uses the system camera instead.
   final Future<List<CameraDescription>> Function() findCameras;
+
+  /// Framing tone, vibration and capture sound; injectable for tests.
+  final CaptureFeedback? feedback;
 
   @override
   State<CaptureScreen> createState() => _CaptureScreenState();
@@ -49,7 +54,9 @@ class _CaptureScreenState extends State<CaptureScreen>
   Advice? _advice;
   String? _status; // replaces guidance: reading, errors, backend tips
   Timer? _guideTimer;
+  Timer? _tickTimer;
   Timer? _statusTimer;
+  late final CaptureFeedback _feedback = widget.feedback ?? CaptureFeedback();
   DateTime _quietSince = DateTime.now();
 
   AppLocalizations get _l => AppLocalizations.of(context);
@@ -66,13 +73,16 @@ class _CaptureScreenState extends State<CaptureScreen>
       const Duration(milliseconds: 250),
       (_) => _guide(),
     );
+    _tick();
   }
 
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     _guideTimer?.cancel();
+    _tickTimer?.cancel();
     _statusTimer?.cancel();
+    if (widget.feedback == null) _feedback.dispose();
     _stopCamera();
     super.dispose();
   }
@@ -186,18 +196,34 @@ class _CaptureScreenState extends State<CaptureScreen>
 
   // ---------- guidance
 
+  /// One-word cues: short enough to repeat every second without talking over the tone.
   String? _adviceText(Advice? a) => switch (a) {
     null => null,
-    Advice.tooDark => _l.guideTooDark,
-    Advice.noPage => _l.guideNoPage,
-    Advice.moveCloser => _l.guideMoveCloser,
-    Advice.liftPhone => _l.guideLiftPhone,
-    Advice.moveUp => _l.guideMoveUp,
-    Advice.moveDown => _l.guideMoveDown,
-    Advice.moveLeft => _l.guideMoveLeft,
-    Advice.moveRight => _l.guideMoveRight,
-    Advice.holdStill || Advice.ready => _l.guideHoldStill,
+    Advice.tooDark => _l.cueMoreLight,
+    Advice.noPage => _l.cueNoPage,
+    Advice.moveCloser => _l.cueCloser,
+    Advice.liftPhone => _l.cueFurther,
+    Advice.moveUp => _l.cueHigher,
+    Advice.moveDown => _l.cueLower,
+    Advice.moveLeft => _l.cueLeft,
+    Advice.moveRight => _l.cueRight,
+    Advice.holdStill || Advice.ready => _l.cueHoldStill,
   };
+
+  /// A tick and light vibration, repeating faster as the page fits; silent
+  /// with no page in view, or while a photo is being read.
+  void _tick() {
+    if (!mounted) return;
+    final interval = (!_busy && _streaming)
+        ? tickInterval(_analyzer.fit)
+        : null;
+    if (interval == null) {
+      _tickTimer = Timer(const Duration(milliseconds: 300), _tick);
+      return;
+    }
+    _feedback.tick();
+    _tickTimer = Timer(interval, _tick);
+  }
 
   /// Speaks the current advice whenever the voice has been quiet for a second.
   void _guide() {
@@ -233,7 +259,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     final camera = _camera;
     if (_busy || camera == null || !camera.value.isInitialized) return;
     setState(() => _busy = true);
-    _say(_l.guideCapturing);
+    _feedback.captured();
     try {
       await _stopFraming();
       final photo = await camera.takePicture();

@@ -256,19 +256,6 @@
   "@msg_nurse_call_working_hours": {
     "description": "CLINICAL DRAFT: needs clinical sign-off before translation."
   },
-  "guideTooDark": "It's dark. Turn on the torch or find more light.",
-  "guideNoPage": "I can't see a page yet. Point the phone down at the page.",
-  "guideMoveCloser": "Bring the phone a little closer to the page.",
-  "guideLiftPhone": "Lift the phone a little higher, so the whole page fits.",
-  "guideMoveUp": "Move the phone a little toward the top of the page. The top is cut off.",
-  "@guideMoveUp": {
-    "description": "Spoken while framing: the page's top edge is outside the camera view."
-  },
-  "guideMoveDown": "Move the phone a little toward the bottom of the page. The bottom is cut off.",
-  "guideMoveLeft": "Move the phone a little to the left. The left edge is cut off.",
-  "guideMoveRight": "Move the phone a little to the right. The right edge is cut off.",
-  "guideHoldStill": "Good. Hold still.",
-  "guideCapturing": "Taking the photo.",
   "autoCapture": "Auto-capture",
   "@autoCapture": {
     "description": "Switch: take the photo by itself when the page is steady and in frame."
@@ -333,5 +320,41 @@
         "type": "String"
       }
     }
+  },
+  "cueHigher": "Higher",
+  "@cueHigher": {
+    "description": "One-word camera cue: move the phone toward the top of the page (its top edge is cut off)."
+  },
+  "cueLower": "Lower",
+  "@cueLower": {
+    "description": "One-word camera cue: move the phone toward the bottom of the page."
+  },
+  "cueLeft": "Left",
+  "@cueLeft": {
+    "description": "One-word camera cue: move the phone left."
+  },
+  "cueRight": "Right",
+  "@cueRight": {
+    "description": "One-word camera cue: move the phone right."
+  },
+  "cueHoldStill": "Hold still",
+  "@cueHoldStill": {
+    "description": "One-word camera cue: the page fits; keep the phone still for the photo."
+  },
+  "cueCloser": "Closer",
+  "@cueCloser": {
+    "description": "One-word camera cue: the page is small in view; bring the phone closer."
+  },
+  "cueFurther": "Further",
+  "@cueFurther": {
+    "description": "One-word camera cue: the page is bigger than the view; lift the phone further away."
+  },
+  "cueMoreLight": "More light",
+  "@cueMoreLight": {
+    "description": "One-word camera cue: too dark."
+  },
+  "cueNoPage": "No page",
+  "@cueNoPage": {
+    "description": "One-word camera cue: no page in view."
   }
 }

@@ -1,6 +1,9 @@
 import 'dart:typed_data';
 
+import 'package:app/capture/feedback.dart';
 import 'package:app/capture/frame_analysis.dart';
+import 'package:app/l10n/app_localizations.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const w = 48, h = 64;
@@ -141,6 +144,64 @@ void main() {
     expect(
       settle(FrameAnalyzer(), page(6, 0, 42, 50, table: 55, paper: 100)),
       Advice.noPage,
+    );
+  });
+
+  test('fit rises as the page fits, and drives the tick rate', () {
+    final a = FrameAnalyzer(steadyFramesNeeded: 4);
+    expect(a.fit, 0);
+    a.analyze(LumaGrid(w, h, Uint8List(w * h)..fillRange(0, w * h, 120)));
+    expect(a.fit, 0); // no page: silent
+    a.analyze(page(6, 0, 42, 50));
+    expect(a.fit, 0.3); // an edge cut off
+    // The first full-page frame after a cut one counts as movement.
+    final fits = [
+      for (var i = 0; i < 5; i++) (a..analyze(page(6, 6, 42, 58))).fit,
+    ];
+    for (var i = 0; i < fits.length - 1; i++) {
+      expect(fits[i], lessThan(fits[i + 1]));
+    }
+    expect(fits.last, 1); // ready
+  });
+
+  test('ticks: none without a page, about 1 s when partly in view, 0.2 s when ready', () {
+    expect(tickInterval(0), isNull);
+    expect(tickInterval(0.3)!.inMilliseconds, 760);
+    expect(tickInterval(1)!.inMilliseconds, 200);
+    expect(tickInterval(0.7)! < tickInterval(0.3)!, isTrue);
+  });
+
+  test('cues are one or two words in every language', () {
+    for (final code in ['en', 'ha', 'yo', 'ig']) {
+      final l = lookupAppLocalizations(Locale(code));
+      final cues = [
+        l.cueHigher,
+        l.cueLower,
+        l.cueLeft,
+        l.cueRight,
+        l.cueHoldStill,
+        l.cueCloser,
+        l.cueFurther,
+        l.cueMoreLight,
+        l.cueNoPage,
+      ];
+      for (final cue in cues) {
+        expect(
+          cue.trim().split(RegExp(r'\s+')).length,
+          lessThanOrEqualTo(3),
+          reason: '$code: $cue',
+        );
+      }
+      expect(
+        cues.toSet().length,
+        cues.length,
+        reason: '$code cues must differ',
+      );
+    }
+    final en = lookupAppLocalizations(const Locale('en'));
+    expect(
+      [en.cueHigher, en.cueLower, en.cueLeft, en.cueRight, en.cueHoldStill],
+      ['Higher', 'Lower', 'Left', 'Right', 'Hold still'],
     );
   });
 }

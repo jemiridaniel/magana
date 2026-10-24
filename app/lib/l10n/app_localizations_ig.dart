@@ -333,43 +333,6 @@ class AppLocalizationsIg extends AppLocalizations {
       'Thank you. A nurse will call you back during working hours.';
 
   @override
-  String get guideTooDark =>
-      'Ọ gbara ọchịchịrị. Gbanye ọkụ ekwentị ma ọ bụ chọọ ìhè karịa.';
-
-  @override
-  String get guideNoPage =>
-      'Ahụbeghị m peeji. Tụgharịa ekwentị ahụ lee peeji ahụ.';
-
-  @override
-  String get guideMoveCloser => 'Bịaruo ekwentị ahụ nso na peeji ahụ ntakịrị.';
-
-  @override
-  String get guideLiftPhone =>
-      'Welie ekwentị ahụ elu ntakịrị, ka peeji ahụ niile pụta.';
-
-  @override
-  String get guideMoveUp =>
-      'Bugharịa ekwentị ahụ ntakịrị gaa n\'elu peeji ahụ. E bipụrụ elu ya.';
-
-  @override
-  String get guideMoveDown =>
-      'Bugharịa ekwentị ahụ ntakịrị gaa n\'okpuru peeji ahụ. E bipụrụ okpuru ya.';
-
-  @override
-  String get guideMoveLeft =>
-      'Bugharịa ekwentị ahụ ntakịrị gaa n\'aka ekpe. E bipụrụ akụkụ aka ekpe.';
-
-  @override
-  String get guideMoveRight =>
-      'Bugharịa ekwentị ahụ ntakịrị gaa n\'aka nri. E bipụrụ akụkụ aka nri.';
-
-  @override
-  String get guideHoldStill => 'Ọ dị mma. Jide ya nke ọma.';
-
-  @override
-  String get guideCapturing => 'Ana m ese foto ahụ.';
-
-  @override
   String get autoCapture => 'See foto n\'onwe ya';
 
   @override
@@ -434,4 +397,31 @@ class AppLocalizationsIg extends AppLocalizations {
   String msg_line_end_unclear(String where) {
     return 'Enweghị m ike ịgụ njedebe $where. Biko lelee ya ma ọ bụ see foto ọzọ.';
   }
+
+  @override
+  String get cueHigher => 'Elu';
+
+  @override
+  String get cueLower => 'Ala';
+
+  @override
+  String get cueLeft => 'Aka ekpe';
+
+  @override
+  String get cueRight => 'Aka nri';
+
+  @override
+  String get cueHoldStill => 'Kwụsị ọtọ';
+
+  @override
+  String get cueCloser => 'Bịaruo nso';
+
+  @override
+  String get cueFurther => 'Pụọ azụ';
+
+  @override
+  String get cueMoreLight => 'Ìhè karịa';
+
+  @override
+  String get cueNoPage => 'Enweghị peeji';
 }
