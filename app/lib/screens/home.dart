@@ -456,7 +456,8 @@ class _SpeakButton extends StatelessWidget {
           ),
           textStyle: const WidgetStatePropertyAll(
             TextStyle(
-              fontFamily: 'AtkinsonHyperlegible',
+              fontFamily: fontFamily,
+              fontFamilyFallback: fontFallback,
               fontSize: 21,
               fontWeight: FontWeight.w700,
             ),

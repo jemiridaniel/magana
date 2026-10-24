@@ -50,4 +50,4 @@ Every package used (`image_picker`, `flutter_tts`, `http`, `flutter_svg`, `share
 
 Live camera preview and torch (image_picker opens the system camera), voice commands, and the Home tiles other than Read a page (they announce "coming soon").
 
-Font: Atkinson Hyperlegible, © Braille Institute, SIL Open Font License (`assets/fonts/OFL.txt`). It has no glyphs for Hausa ɓ ɗ ƙ or the dotted Yorùbá and Igbo vowels (ẹ ọ ṣ ị ụ), so the phone's system font draws those letters.
+Fonts: Atkinson Hyperlegible, with a bundled Noto Sans subset as the fallback for letters Atkinson lacks (Hausa ɓ ɗ ƙ, Yorùbá and Igbo ẹ ọ ṣ ị ụ, ₦). Both are SIL Open Font License; see `assets/fonts/README.md`.

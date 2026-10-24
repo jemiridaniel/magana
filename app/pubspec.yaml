@@ -75,6 +75,13 @@ flutter:
         - asset: assets/fonts/AtkinsonHyperlegible-Regular.ttf
         - asset: assets/fonts/AtkinsonHyperlegible-Bold.ttf
           weight: 700
+    # Fallback for letters Atkinson lacks (ɓ ɗ ƙ ẹ ọ ṣ ị ụ ₦): a Latin subset of
+    # Noto Sans, made with fontTools (see assets/fonts/README.md).
+    - family: NotoSans
+      fonts:
+        - asset: assets/fonts/NotoSans-Regular.ttf
+        - asset: assets/fonts/NotoSans-Bold.ttf
+          weight: 700
 
   # To add assets to your application, add an assets section, like this:
   # assets:

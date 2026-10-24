@@ -14,14 +14,20 @@ abstract final class MaganaColors {
   static const warnInk = Color(0xFF4A2800);
 }
 
+/// Atkinson Hyperlegible first. It has no Hausa hooked letters (ɓ ɗ ƙ), no
+/// dotted Yorùbá/Igbo vowels (ẹ ọ ṣ ị ụ) and no ₦, so those come from the
+/// bundled Noto Sans subset instead of whatever font the phone has.
+const fontFamily = 'AtkinsonHyperlegible';
+const fontFallback = ['NotoSans'];
+
 /// Every control is at least this tall and wide (CLAUDE.md: touch targets >= 64 px).
 const double minTarget = 64;
 
 ThemeData maganaTheme() {
-  const font = 'AtkinsonHyperlegible';
   final base = ThemeData(
     useMaterial3: true,
-    fontFamily: font,
+    fontFamily: fontFamily,
+    fontFamilyFallback: fontFallback,
     scaffoldBackgroundColor: MaganaColors.ground,
     colorScheme: ColorScheme.fromSeed(
       seedColor: MaganaColors.green,
@@ -58,7 +64,8 @@ ButtonStyle outlinedTile({
     side: BorderSide(color: border, width: 2),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(radius)),
     textStyle: const TextStyle(
-      fontFamily: 'AtkinsonHyperlegible',
+      fontFamily: fontFamily,
+      fontFamilyFallback: fontFallback,
       fontSize: 18,
       fontWeight: FontWeight.w700,
     ),

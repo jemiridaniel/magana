@@ -292,7 +292,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         ),
                         textStyle: const WidgetStatePropertyAll(
                           TextStyle(
-                            fontFamily: 'AtkinsonHyperlegible',
+                            fontFamily: fontFamily,
+                            fontFamilyFallback: fontFallback,
                             fontSize: 21,
                             fontWeight: FontWeight.w700,
                           ),
