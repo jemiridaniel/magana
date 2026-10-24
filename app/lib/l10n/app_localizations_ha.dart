@@ -1499,4 +1499,9 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get openSourceLicences => 'Lasisin buɗaɗɗen tushe';
+
+  @override
+  String aboutContact(String email) {
+    return 'Tambayoyi ko matsaloli: aika imel zuwa $email';
+  }
 }

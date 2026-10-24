@@ -1016,5 +1016,13 @@
   "aboutModelsNote": "Magana uses these open models under the N-ATLaS Terms of Use, version 1.0. The credit lines below are quoted as the terms require.",
   "aboutExplain": "Explanations in your language",
   "aboutSpeech": "Speech recognition",
-  "openSourceLicences": "Open-source licences"
+  "openSourceLicences": "Open-source licences",
+  "aboutContact": "Questions or problems: email {email}",
+  "@aboutContact": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }

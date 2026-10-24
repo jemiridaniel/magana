@@ -278,9 +278,10 @@ def page_from_structure(result: Any) -> Page:
     for text, score, box in zip(texts, scores, boxes):
         if not text.strip() or any(_boxes_overlap(r, box) > 0.5 for r in regions):
             continue
-        # PP-OCR scores whole text lines, so each word carries its line's score.
-        words = [Word(w, round(score, 3)) for w in text.split()]
+        # PP-OCR scores whole text lines, so each word carries its line's score, and
+        # gets an approximate box so its numbers can be re-read from a crop.
         x1y1x2y2 = _xyxy(box)
+        words = _split_line_box(text, round(score, 3), x1y1x2y2)
         lines.append(Line(text.strip(), round(score, 3), _top(box), height=int(x1y1x2y2[3] - x1y1x2y2[1]), words=words,
                           left=int(x1y1x2y2[0]), width=int(x1y1x2y2[2] - x1y1x2y2[0])))
     lines.sort(key=lambda l: l.top)
@@ -297,6 +298,22 @@ def _xyxy(box) -> list[float]:
         return flat
     xs, ys = flat[0::2], flat[1::2]
     return [min(xs), min(ys), max(xs), max(ys)]
+
+
+def _split_line_box(text: str, score: float, box: list[float]) -> list[Word]:
+    """Approximate word boxes for an engine that only boxes whole lines (PP-OCR): the line
+    box split in proportion to each word's characters, spaces included. The number re-read
+    crops each number with its whole neighbouring words, so this is close enough."""
+    x1, y1, x2, y2 = box
+    chars = max(len(text), 1)
+    per_char = (x2 - x1) / chars
+    words, at = [], 0
+    for w in text.split():
+        start = text.index(w, at)
+        at = start + len(w)
+        words.append(Word(w, score, int(x1 + start * per_char), int(y1),
+                          max(1, int(len(w) * per_char)), max(1, int(y2 - y1))))
+    return words
 
 
 def _union(boxes: list[list[float]]) -> list[float]:
@@ -472,7 +489,9 @@ def _pick(reread: Page, position: int, count: int) -> Word | None:
 def reread_numbers(image: Image.Image, page: Page, engine: OCREngine) -> None:
     """Re-read a crop around every number word and store the result on the word, so the
     safety layer can flag numbers whose two readings disagree. Runs in every mode."""
-    snippet = engine.snippet_engine() if hasattr(engine, "snippet_engine") else engine
+    # Engines without their own single-line reader (PaddleOCR) are re-read by Tesseract:
+    # always installed, and an independent second reader.
+    snippet = engine.snippet_engine() if hasattr(engine, "snippet_engine") else TesseractEngine(psm=7)
     jobs = []
     for line in page.lines:
         boxed = [w for w in line.words if w.width and w.height]
@@ -523,3 +542,27 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     if second_pass:
         result["second_pass"] = _page_dict(engine.read(second_pass_image(image)))
     return result
+
+
+class NumberRereadMissing(RuntimeError):
+    """An OCR engine left a number without its independent second reading."""
+
+
+def check_number_reread(engine: OCREngine) -> None:
+    """Start-up self-test (CLAUDE.md rule 2): read a rendered dose line with this engine and
+    make sure every number was re-read from its own crop. The server refuses to start if
+    not, so no engine (e.g. OCR_ENGINE=paddle) can silently skip the check."""
+    from PIL import ImageDraw, ImageFont
+
+    img = Image.new("RGB", (900, 160), "white")
+    draw = ImageDraw.Draw(img)
+    draw.text((40, 50), "Take 2 tablets every 6 hours", fill="black", font=ImageFont.load_default(size=44))
+    page = engine.read(img)
+    reread_numbers(img, page, engine)
+    numbers = [w for line in page.lines for w in line.words if _has_digit(w.text)]
+    if not numbers:
+        raise NumberRereadMissing(f"{type(engine).__name__} read no numbers from the self-test line")
+    missing = [w.text for w in numbers if w.reread_text is None]
+    if missing:
+        raise NumberRereadMissing(
+            f"{type(engine).__name__} cannot re-read numbers from crops ({missing}): refusing to run")

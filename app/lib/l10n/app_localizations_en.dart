@@ -1494,4 +1494,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get openSourceLicences => 'Open-source licences';
+
+  @override
+  String aboutContact(String email) {
+    return 'Questions or problems: email $email';
+  }
 }

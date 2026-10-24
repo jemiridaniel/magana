@@ -186,6 +186,10 @@ void main() {
     expectAccessible(tester, 'Settings');
     await tap(tester, RegExp('^${en.aboutTitle}'));
     // The terms' credit lines, verbatim, as each model card words them.
+    expect(
+      find.text(en.aboutContact('maganasupport@gmail.com')),
+      findsOneWidget,
+    );
     expect(find.text(natlasAttribution), findsOneWidget);
     for (final line in asrAttributions) {
       expect(find.text(line), findsOneWidget);

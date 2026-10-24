@@ -22,12 +22,15 @@ from . import asr, explain, policy, safety, triage
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
 from .messages import CodedError
-from .reader import SECOND_PASS_SCALE, OCREngine, default_engine, read_page
+from .reader import SECOND_PASS_SCALE, OCREngine, check_number_reread, default_engine, read_page
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Probe Ibà in the background, so an outage is noticed (and alerted after 10 minutes)
     even when nobody is using the quick check."""
+    # Every number must get its second reading from a crop (CLAUDE.md rule 2). An OCR engine
+    # that can't do that is refused here, before the server takes any requests.
+    await asyncio.to_thread(check_number_reread, get_engine())
     task = None
     interval = float(os.environ.get("IBA_PROBE_S", "60"))
     if IbaClient.from_env() is not None and interval > 0:

@@ -2447,6 +2447,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Open-source licences'**
   String get openSourceLicences;
+
+  /// No description provided for @aboutContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Questions or problems: email {email}'**
+  String aboutContact(String email);
 }
 
 class _AppLocalizationsDelegate

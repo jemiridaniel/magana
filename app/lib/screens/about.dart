@@ -18,6 +18,10 @@ const asrAttributions = [
   'NigerianAccentedEnglish is powered by Awarri Technologies and an initiative of the '
       'Federal Ministry of Communications, Innovation and Digital Economy.',
 ];
+
+/// Where testers and users write to (also in docs/PRIVACY.md and docs/TESTER_INSTALL.md).
+const supportEmail = 'maganasupport@gmail.com';
+
 const termsCondition =
     'Awarri Technologies and the Federal Ministry of Communications, Innovation and '
     'Digital Economy.';
@@ -39,6 +43,7 @@ class AboutScreen extends StatelessWidget {
     return PageScaffold(
       body: [
         ScreenHeader(title: l.aboutTitle, subtitle: version),
+        NoteBox(text: l.aboutContact(supportEmail)),
         heading(l.aboutModels),
         NoteBox(text: l.aboutModelsNote),
         heading('${l.aboutExplain}: N-ATLaS (NCAIR1/N-ATLaS)'),

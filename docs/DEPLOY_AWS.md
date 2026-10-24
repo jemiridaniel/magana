@@ -147,7 +147,7 @@ The containers restart by themselves when the instance starts (`restart: unless-
 
 ## 9. Switching to PaddleOCR (one line in .env)
 
-> **Not yet for real users.** In PaddleOCR mode the per-number crop re-read does not run (docs/FINDINGS.md, "in PaddleOCR mode, numbers are not re-read from crops"). Fix and measure that first. PaddleOCR's memory use on 4 GiB is **not measured yet**.
+> **Measure before real users.** Every number is now re-read from its own crop in PaddleOCR mode too, by Tesseract. The backend runs a start-up self-test and **refuses to start** if any number isn't re-read (docs/FINDINGS.md). PaddleOCR's memory use on 4 GiB and its real word positions have **not been measured** yet: check `docker stats` and read a few test pages first.
 
 1. `scripts/aws-instance.sh stop`.
 2. **EC2 → Instances →** select `magana-backend` → **Actions → Instance settings → Change instance type → c7i-flex.large → Apply.**

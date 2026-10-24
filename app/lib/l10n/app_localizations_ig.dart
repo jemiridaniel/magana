@@ -1495,4 +1495,9 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get openSourceLicences => 'Ikikere isi mmalite mepere emepe';
+
+  @override
+  String aboutContact(String email) {
+    return 'Ajụjụ ma ọ bụ nsogbu: zigara $email ozi email';
+  }
 }

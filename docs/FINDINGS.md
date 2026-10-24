@@ -13,6 +13,23 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-24 · Safety: the per-number re-read now runs for every OCR engine
+
+- **What we tested and how:** `test_number_reread.py`, 9 tests, on the Mac:
+  - `test_every_engine_in_the_reader_is_covered_here` fails if a new OCR engine is added without being tested.
+  - For Tesseract and PaddleOCR: every number on a rendered label must be re-read from a crop (`test_every_number_is_reread_from_a_crop`), and the start-up self-test must pass.
+  - An engine with no word boxes must be refused, and the server must refuse to start with it.
+
+  PaddleOCR isn't installed here, so its engine ran on a stand-in pipeline that returns PP-OCR-style line boxes (no word boxes), located by Tesseract on the same image.
+- **Result:**
+  - Before the fix, the PaddleOCR cases failed: 2 of 9 tests (we restored the old code to check).
+  - After it, all 9 pass. On the label, all 6 numbers (500, 2, 4, 6, 8, 24) got a second reading in both modes, and the readings agreed.
+- **What we changed:**
+  - PaddleOCR's words get approximate boxes: the line box split by characters.
+  - Engines without their own single-line reader are re-read by Tesseract, which is always installed and is an independent second reader.
+  - New start-up self-test (`reader.check_number_reread`): before taking requests, the server reads a rendered dose line with the chosen engine. If any number wasn't re-read, it **refuses to start**. So `OCR_ENGINE=paddle`, or any future engine, can't run without the check.
+- **Status:** fixed. Untested with real PaddleOCR (its line boxes on real photos, memory on 4 GiB); measure on the server before real users.
+
 ## 2026-10-24 · Safety: N-ATLaS engines behind the number guard, and its false-alarm baseline
 
 - **What we tested and how:**
@@ -183,15 +200,11 @@ No real phone and no blind or low-vision tester has been used yet.
   - Not built, by choice: E1's separate label fields ("Directions", "Expiry date", "Prescribed for"). Labelling parts of a label means guessing what each line is. The Reader reads the lines exactly as printed instead.
   - The spoken-answer words in Hausa, Yorùbá and Igbo need native-speaker checks, and recognising them depends on the phone's recogniser.
 
-## 2026-10-24 · Safety: in PaddleOCR mode, numbers are not re-read from crops
+## 2026-10-24 · Safety: in PaddleOCR mode, numbers were not re-read from crops (fixed, see above)
 
-- **What we tested and how:** reading the code while preparing the production deploy: `reader.reread_numbers` and `PaddleStructureEngine`. Not yet measured on a device or a real page.
-- **Result:**
-  - `reread_numbers` only re-reads words that have a box (`w.width and w.height`). PaddleOCR's words carry no boxes (PP-OCR scores whole lines), so in Paddle mode the crop re-read finds no work and silently does nothing.
-  - Paddle has no `snippet_engine` either.
-  - So with `MAGANA_OCR=paddle`, the check that caught the "6" read at 92% (see "Re-reading every number from its own crop") does not run. Numbers fall back to the 0.90 rule, and in health and money modes also to the whole-page second pass.
-- **What we changed:** nothing yet. Production stays on Tesseract until this is fixed and measured.
-- **Status:** open, and it blocks using PaddleOCR in production.
+- **What we tested and how:** reading the code while preparing the production deploy: `reader.reread_numbers` and `PaddleStructureEngine`.
+- **Result:** `reread_numbers` only re-read words with a box, and PaddleOCR's words had none (PP-OCR boxes whole lines). So with `MAGANA_OCR=paddle` the crop re-read silently did nothing. That is the check that caught the "6" read at 92%. Numbers fell back to the 0.90 rule, plus the whole-page second pass in health and money modes.
+- **Status:** fixed in "the per-number re-read now runs for every OCR engine" above.
 
 ## 2026-10-24 · Safety: the Explain preview and the number guard
 

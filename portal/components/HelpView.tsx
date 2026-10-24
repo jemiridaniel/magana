@@ -100,7 +100,7 @@ export default function HelpView() {
       setReportMessage("Describe the problem first.");
       return;
     }
-    setReportMessage("Not sent: problem reports go out once the portal is connected to the Magana server. Your description is still in the box if you want to copy it.");
+    setReportMessage("Not sent: problem reports go out once the portal is connected to the Magana server. Your description is still in the box: copy it into an email to maganasupport@gmail.com.");
   }
 
   return (
@@ -169,8 +169,7 @@ export default function HelpView() {
         <div style={{ display: "grid", gap: 4 }}>
           <h2 id="contact-head">Still need help?</h2>
           <p>
-            Email <span className="placeholder-text">(support email to be added)</span> or WhatsApp{" "}
-            <span className="placeholder-text">(support number to be added)</span>. You can also report a problem with any reading.
+            Email <a href="mailto:maganasupport@gmail.com">maganasupport@gmail.com</a>. You can also report a problem with any reading.
           </p>
         </div>
         <button

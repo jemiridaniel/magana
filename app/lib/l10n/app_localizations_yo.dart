@@ -1493,4 +1493,9 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get openSourceLicences => 'Ìwé-àṣẹ orísun ṣíṣí';
+
+  @override
+  String aboutContact(String email) {
+    return 'Ìbéèrè tàbí ìṣòro: fi ímeèlì ránṣẹ́ sí $email';
+  }
 }
