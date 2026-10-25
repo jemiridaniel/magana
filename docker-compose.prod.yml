@@ -40,6 +40,8 @@ services:
       context: ./backend
       args:
         OCR_ENGINE: ${OCR_ENGINE:-tesseract}
+        # on: Whisper ASR and the WhatsApp voices (docs/DEPLOY_AWS.md §9a; 8 GiB instance).
+        SPEECH: ${SPEECH:-off}
     restart: unless-stopped
     env_file: .env
     environment:
@@ -51,6 +53,8 @@ services:
       MAGANA_CONTENT_DIR: /srv/content
     volumes:
       - magana_data:/data
+      # Downloaded speech models (SPEECH=on), kept across restarts.
+      - hf_cache:/home/magana/.cache/huggingface
       - ./content:/srv/content:ro
     expose:
       - "8000"
@@ -73,6 +77,7 @@ services:
       - /app/.cache
 
 volumes:
+  hf_cache:     # speech models, about 1 GB per Whisper language and 150 MB per voice
   magana_data:  # teachers' quizzes: keep across rebuilds
   caddy_data:   # HTTPS certificates: keep across restarts (Let's Encrypt rate limits)
   caddy_config:

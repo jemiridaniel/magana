@@ -243,6 +243,75 @@ The `deploy` job is skipped until `AWS_DEPLOY_ROLE_ARN` is set. First automatic 
 
 To go back, set `OCR_ENGINE=tesseract`, run the same command, and change the type back to t3.small.
 
+## 9a. Server speech (Whisper ASR, WhatsApp voices) and PaddleOCR: the instance plan
+
+**Plan, not done yet.** It needs your go-ahead, because it uses about half the credit.
+
+**What has to fit in memory:**
+
+| | Memory | Measured? |
+|---|---|---|
+| What runs now (OS, Caddy, Ibà, backend) | 0.7 GB | yes, on the server |
+| Whisper ASR, one language loaded, at its peak (transcribing plus the closed-set scoring) | 2.4 GB | yes, on a Mac |
+| The WhatsApp voices: MMS English plus one of Hausa or Yorùbá, sharing torch with Whisper | about 0.5 GB more | yes, on a Mac (770 MB alone, of which torch is 300 MB) |
+| PaddleOCR PP-StructureV3 | probably 2–3 GB | **no**: measure with `docker stats` after switching |
+| **Total** | **about 5.6–6.6 GB** | |
+
+**Instance: m7i-flex.large** (2 vCPU, 8 GiB). Of the free-plan types (t3.micro, t3.small, t4g.micro, t4g.small, c7i-flex.large, m7i-flex.large), it's the only one with enough memory. c7i-flex.large has 4 GiB, which is too little even without PaddleOCR (0.7 + 2.4 + 0.5 GB leaves no headroom for a reading). Only one Whisper language is loaded at a time (`asr.py`), so 8 GiB holds.
+
+**Cost for 27 Nov to 20 Dec** (24 days, 576 hours, always on):
+
+| | Cost |
+|---|---|
+| m7i-flex.large at $0.1107 an hour (London) | **$63.76** |
+| The same weeks on the t3.small | $13.59 |
+| **Extra for the switch** | **about $50** |
+| Elastic IP ($2.88) and disk (about $2) | the same either way |
+| Disk grown from 20 to 30 GiB for the models (do it first) | about $0.90 a month more |
+
+- **The credit is tight:**
+  - By 27 Nov, the t3.small, IP and disk will have used about $25 of the $100.
+  - The 24 days on m7i-flex.large add about $69, which brings the total to about **$94 by 20 Dec**.
+  - That leaves about $6, or roughly 3 weeks of the t3.small afterwards.
+- **Stopping the instance outside testing hours** (for example 12 hours a day) halves the instance part, to about $32.
+- **Prices:** from third-party pages ([aws-pricing.com](https://aws-pricing.com/m7i-flex.large.html), [devzero](https://www.devzero.io/instances/aws/m7i-flex.large)). Confirm in the AWS Pricing Calculator before switching. The free-plan types are from the [AWS EC2 Free Tier page](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-free-tier-usage.html).
+
+**Before (any day, about 5 minutes, no downtime): grow the disk.** Images and models need about 17 GB of the current 19.
+1. **EC2 → Volumes →** the instance's volume **→ Modify → Size 30 → Modify.**
+2. On the server: `sudo growpart /dev/nvme0n1 1 && sudo resize2fs /dev/nvme0n1p1 && df -h /`
+
+A disk can grow but never shrink.
+
+**Switch up (27 Nov, about 20 minutes, a few minutes offline):**
+1. **EC2 → Instances → `magana-backend` → Instance state → Stop.** Wait for *Stopped*. The Elastic IP stays.
+2. **Actions → Instance settings → Change instance type → `m7i-flex.large` → Apply.**
+3. **Instance state → Start.** When `https://api.magana.ng/health` answers, SSH in:
+   ```bash
+   cd ~/srv/magana
+   sed -i -e 's/^ASR_ENGINE=.*/ASR_ENGINE=local/' -e 's/^OCR_ENGINE=.*/OCR_ENGINE=paddle/' \
+          -e 's/^WHATSAPP_VOICE=.*/WHATSAPP_VOICE=mms/' .env
+   grep -q '^SPEECH=' .env && sed -i 's/^SPEECH=.*/SPEECH=on/' .env || echo 'SPEECH=on' >> .env
+   sudo docker compose -f docker-compose.prod.yml up -d --build   # about 15 minutes, image about 5 GB bigger
+   ```
+   Change `.env` only **after** the type change: the next automatic deploy builds whatever `.env` says, and the t3.small can't build PaddleOCR and torch.
+4. Check:
+   - `/health`
+   - `/asr/available`, which should now list the four languages
+   - a test page read with `OCR_ENGINE=paddle` (the start-up self-test must pass)
+   - a WhatsApp voice note
+   - `sudo docker stats --no-stream` while reading and transcribing; write the memory down in FINDINGS.md
+
+**Switch down (20 Dec):**
+1. On the server, while it's still large (faster to build):
+   ```bash
+   cd ~/srv/magana
+   sed -i -e 's/^ASR_ENGINE=.*/ASR_ENGINE=device/' -e 's/^OCR_ENGINE=.*/OCR_ENGINE=tesseract/' \
+          -e 's/^WHATSAPP_VOICE=.*/WHATSAPP_VOICE=off/' -e 's/^SPEECH=.*/SPEECH=off/' .env
+   sudo docker compose -f docker-compose.prod.yml up -d --build && sudo docker image prune -af
+   ```
+2. **Stop → Change instance type → `t3.small` →** check **Credit specification: Standard** **→ Start.**
+3. Check `/health` and `free -m`. The speech models stay in the `hf_cache` volume for next time; `sudo docker volume rm magana_hf_cache` frees about 5 GB.
+
 ## 10. Explanations (N-ATLaS)
 
 `EXPLAIN_ENGINE=stub` keeps Explain as a preview. To use a served N-ATLaS (docs/MODELS.md), set `EXPLAIN_ENGINE`, `EXPLAIN_URL` and `EXPLAIN_API_KEY` in `.env` and restart:

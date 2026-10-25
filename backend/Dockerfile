@@ -1,9 +1,12 @@
 # Magana backend. OCR_ENGINE=tesseract (default, small) or paddle (PP-StructureV3; about
 # 3 GB bigger, its models are downloaded into the image at build time, not on the first
 # request). docker-compose.prod.yml passes OCR_ENGINE from the server's .env.
+# SPEECH=on adds server speech (requirements-asr.txt: Whisper ASR and the MMS voices for
+# WhatsApp; about 2 GB bigger, and an instance with 8 GiB: docs/DEPLOY_AWS.md §9a).
 FROM python:3.12-slim
 
 ARG OCR_ENGINE=tesseract
+ARG SPEECH=off
 ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 MAGANA_OCR=${OCR_ENGINE}
 
 # Tesseract is always installed: it is the default engine and Paddle mode's fallback.
@@ -15,13 +18,14 @@ RUN apt-get update \
 
 RUN useradd --create-home --uid 10001 magana
 WORKDIR /srv
-COPY requirements.txt requirements-paddle.txt ./
+COPY requirements.txt requirements-paddle.txt requirements-asr.txt ./
 RUN pip install --no-cache-dir -r requirements.txt \
- && if [ "$OCR_ENGINE" = "paddle" ]; then pip install --no-cache-dir -r requirements-paddle.txt; fi
+ && if [ "$OCR_ENGINE" = "paddle" ]; then pip install --no-cache-dir -r requirements-paddle.txt; fi \
+ && if [ "$SPEECH" = "on" ]; then pip install --no-cache-dir -r requirements-asr.txt; fi
 
 COPY app ./app
 # Teachers' quizzes (MAGANA_DATA_DIR): a volume, owned by the app user.
-RUN mkdir -p /data && chown magana /data
+RUN mkdir -p /data /home/magana/.cache/huggingface && chown magana /data /home/magana/.cache /home/magana/.cache/huggingface
 USER magana
 RUN if [ "$OCR_ENGINE" = "paddle" ]; then \
       python -c "from app.reader import PaddleStructureEngine as P; P().pipeline"; fi

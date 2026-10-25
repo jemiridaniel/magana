@@ -25,7 +25,9 @@ function toHtml(md: string): string {
   const marked = new Marked({ gfm: true });
   let html = marked.parse(md, { async: false }) as string;
   // Wide tables scroll inside their own box (focusable, so keyboards can scroll it too).
-  html = html.replace(/<table>/g, '<div class="table-wrap" tabindex="0" role="region" aria-label="Table (scrolls sideways)"><table>')
+  // Each its own name: a page can have several (landmarks must be unique).
+  let n = 0;
+  html = html.replace(/<table>/g, () => `<div class="table-wrap" tabindex="0" role="region" aria-label="Table ${++n} (scrolls sideways)"><table>`)
     .replace(/<\/table>/g, "</table></div>");
   return html;
 }
