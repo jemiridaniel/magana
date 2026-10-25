@@ -1704,4 +1704,13 @@ class AppLocalizationsIg extends AppLocalizations {
   String quizVoiceNotReadyWeb(String language, String letters) {
     return 'Ịza n\'olu n\'asụsụ $language adịbeghị nke ọma. Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa $letters na kiiboodu gị.';
   }
+
+  @override
+  String get quizVoicePrimaryOff =>
+      'Na klaasị praịmarị, pịa azịza gị. Ịza n\'olu ga-abịa ma emechaa.';
+
+  @override
+  String quizVoicePrimaryOffWeb(String letters) {
+    return 'Na klaasị praịmarị, pịa ma ọ bụ kpịa azịza gị, ma ọ bụ pịa $letters na kiiboodu gị.';
+  }
 }

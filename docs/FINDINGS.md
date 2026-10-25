@@ -13,6 +13,31 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · Accessibility: "Say" back on for English (adults, JSS and SSS); list numbering becomes bullets (UNREVIEWED)
+
+> **Unreviewed.** These decisions rest on synthetic voices. They must be revisited with real learners' recordings.
+
+- **"Say" for quiz answers.** It is offered only in English, and only to adults (18+) and JSS or SSS learners. It stays hidden for Hausa, Yorùbá and Igbo, and for Primary classes and Primary packs in every language. Tapping (and the A–D keys on the web) and the "You said B. Is that right?" confirm step stay everywhere. The rule lives in `voice_answers.voiceAnswersOff`, tested for every case in `curriculum_test.dart`.
+- **Why:**
+  - **English.** Closed set got 79% right (82% on clean clips), against 42% for open transcription. That's close to the 80% bar, and the confirm step catches the remaining wrong letters, so a misheard answer costs a "No" and a retry, never a mark.
+  - **Hausa, Yorùbá, Igbo.** Only 51%, 58% and 28%. Letters (9, 10 and 4 of 36 right) are often taken for a *different* letter, so voice would mostly mean confirming wrong guesses. They stay tap-only until real voices are tested.
+  - **Primary.** None of the clips are children's voices, and young children's speech is the hardest case for ASR. A 6-year-old asked to confirm a misheard letter is more likely to say "yes" anyway. Primary learners get "In primary classes, tap your answer. Voice answers come later." A 12-year-old in JSS 1 (Classroom tier) counts as JSS.
+- **List numbering:** before the number check, a line-start "1.", "2)" … becomes "•", but only when it is one plain sequence from 1 (`explain.bullets`). "1. … 3.", "2. … 3." or a restart are left as they are, and the check refuses them. Numbers inside the items are still checked. Tested in `test_numbers_safety.py`.
+- **Re-scored, same saved answers** (`benchmark/explain/results/2026-10-25-q4km-m2pro-rescored-bullets/`):
+
+  | Language | Blocked | Real number problem | False alarm | Passed (numbers left out) |
+  |---|---|---|---|---|
+  | English | 4/5 | 3 | 1 | 1 (1) |
+  | Hausa | 1/5 | 1 | 0 | 4 (2) |
+  | Yorùbá | 5/5 | 3 | 2 | 0 (0) |
+  | Igbo | 2/5 | 2 | 0 | 3 (1) |
+  | **All** | **12/20** | **9** | **3** | **8 (4)** |
+
+  - English fractions now passes: its only problem was the model's own "1. 2. 3. 4.".
+  - The 3 false alarms left: English rainfall repeats ⟦N6⟧ and ⟦N7⟧ in its "subtract … from …" steps, plus Yorùbá "⟦1⟧" and "N1" written without the marker's brackets.
+  - All 9 real problems are still refused.
+- **Status:** open, unreviewed.
+
 ## 2026-10-25 · Languages, accessibility: quiz answers by closed set; Say hidden until a language reaches 80% (UNREVIEWED)
 
 > **Unreviewed, and a best case:** the same synthetic voices as the open-transcription test. The answer forms (`content/answers/closed_sets.json`) are drafts for native review.

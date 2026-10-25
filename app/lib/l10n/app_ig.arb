@@ -445,5 +445,7 @@
   "explainReadAgain": "Gụgharịa peeji ahụ ọzọ",
   "quizNotSure": "Amaghị m nke ọma ihe ị kwuru. Biko kwughachi azịza gị.",
   "quizVoiceNotReady": "Ịza n'olu n'asụsụ {language} adịbeghị nke ọma. Pịa azịza kama.",
-  "quizVoiceNotReadyWeb": "Ịza n'olu n'asụsụ {language} adịbeghị nke ọma. Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa {letters} na kiiboodu gị."
+  "quizVoiceNotReadyWeb": "Ịza n'olu n'asụsụ {language} adịbeghị nke ọma. Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa {letters} na kiiboodu gị.",
+  "quizVoicePrimaryOff": "Na klaasị praịmarị, pịa azịza gị. Ịza n'olu ga-abịa ma emechaa.",
+  "quizVoicePrimaryOffWeb": "Na klaasị praịmarị, pịa ma ọ bụ kpịa azịza gị, ma ọ bụ pịa {letters} na kiiboodu gị."
 }

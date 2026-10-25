@@ -1708,4 +1708,13 @@ class AppLocalizationsHa extends AppLocalizations {
   String quizVoiceNotReadyWeb(String language, String letters) {
     return 'Amsa da murya a $language ba ta da inganci sosai tukuna. Taɓa ko danna amsa, ko ka danna $letters a kan madannai.';
   }
+
+  @override
+  String get quizVoicePrimaryOff =>
+      'A azuzuwan firamare, taɓa amsarka. Amsa da murya za ta zo daga baya.';
+
+  @override
+  String quizVoicePrimaryOffWeb(String letters) {
+    return 'A azuzuwan firamare, taɓa ko danna amsarka, ko ka danna $letters a kan madannai.';
+  }
 }

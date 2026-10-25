@@ -1704,4 +1704,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String quizVoiceNotReadyWeb(String language, String letters) {
     return 'Voice answers in $language aren\'t reliable enough yet. Tap or click an answer, or press $letters on your keyboard.';
   }
+
+  @override
+  String get quizVoicePrimaryOff =>
+      'In primary classes, tap your answer. Voice answers come later.';
+
+  @override
+  String quizVoicePrimaryOffWeb(String letters) {
+    return 'In primary classes, tap or click your answer, or press $letters on your keyboard.';
+  }
 }

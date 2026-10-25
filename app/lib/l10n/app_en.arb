@@ -1199,5 +1199,14 @@
         "type": "String"
       }
     }
+  },
+  "quizVoicePrimaryOff": "In primary classes, tap your answer. Voice answers come later.",
+  "quizVoicePrimaryOffWeb": "In primary classes, tap or click your answer, or press {letters} on your keyboard.",
+  "@quizVoicePrimaryOffWeb": {
+    "placeholders": {
+      "letters": {
+        "type": "String"
+      }
+    }
   }
 }

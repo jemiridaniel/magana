@@ -2771,6 +2771,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Voice answers in {language} aren\'t reliable enough yet. Tap or click an answer, or press {letters} on your keyboard.'**
   String quizVoiceNotReadyWeb(String language, String letters);
+
+  /// No description provided for @quizVoicePrimaryOff.
+  ///
+  /// In en, this message translates to:
+  /// **'In primary classes, tap your answer. Voice answers come later.'**
+  String get quizVoicePrimaryOff;
+
+  /// No description provided for @quizVoicePrimaryOffWeb.
+  ///
+  /// In en, this message translates to:
+  /// **'In primary classes, tap or click your answer, or press {letters} on your keyboard.'**
+  String quizVoicePrimaryOffWeb(String letters);
 }
 
 class _AppLocalizationsDelegate

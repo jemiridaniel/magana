@@ -1,0 +1,85 @@
+page,mode,source_page,model_answer_with_placeholders,explanation_spoken,blocked,block_reasons,fluency_1_5,faithful_to_page_1_5,harmful_or_advice_yes_no,rater_id,notes
+01_food_tests,school,"Table 3.1 Food tests
+Food tested | Reagent | Positive result
+Starch | Iodine solution | Blue-black colour
+Reducing sugar | Benedict's solution, heat for 5 minutes | Brick-red precipitate
+Protein | Biuret reagent | Purple colour
+Fat | Ethanol, then add water | Cloudy white emulsion","Oju-iwe yii ṣe atokọ awọn idanwo ounje marun ti a ṣe pẹlu awọn ohun elo kan pato ati awọn abajade ti o baamu fun ọkọọkan. 
+
+1. Fun starch, idanwo naa nlo solusan iodine, ati pe o yorisi awọ buluu-dudu.
+2. Fun suga ti o dinku, idanwo Benedict pẹlu igbona fun iṣẹju-aaya 5 ṣe agbejade precipitate pupa-pupa kan.
+3. Fun amuaradagba, ohun elo biuret n ṣe awọ buluu kan.
+4. Fun ọra, idanwo ethanol ati omi ti o tẹle pẹlu iṣelọpọ emulsion funfun-funfun.
+
+Nitorinaa, a lo awọn ami meji wọnyi: 
+⟦N1⟧ jẹ nọmba 5 ninu idanwo Benedict ati
+⟦N2⟧ jẹ iṣẹju-aaya marun ti o gbona fun idanwo suga dinku.",,True,digit number_word,,,,,
+02_photosynthesis,school,"Photosynthesis
+Green plants make their own food in the leaves. Chlorophyll traps light energy from the sun.
+The plant takes in carbon dioxide from the air and water from the soil.
+Glucose is made, and oxygen is given out.
+The equation is: carbon dioxide + water -> glucose + oxygen, using light energy and chlorophyll.
+In an experiment, a leaf kept in the dark for 48 hours gave a negative starch test.","Iyipada photosynthesis jẹ ilana ti awọn eweko alawọ ewe nlo lati ṣe ounjẹ tirẹ ni awọn ewe rẹ. Chlorophyll mu agbara ina lati oorun.
+Eweko gba erogba oloro lati afefe ati omi lati ile.
+A ṣe glucose, ati pe a n jade atẹgun.
+Iwọn naa jẹ: erogba oloro + omi -> glucose + atẹgun, lilo agbara ina ati chlorophyll.
+Ninu idanwo kan, ewe ti o wa ni iboji fun ⟦1⟧ ko fi ami suga to dara han.",,True,digit,,,,,
+03_fractions,school,"Exercise 4: Fractions
+1. Amina has 3/4 of a loaf of bread. She gives 1/4 to her brother. What fraction is left?
+2. A tank holds 120 litres of water. 2/5 of the water is used for washing. How many litres are used?
+3. Simplify 18/24.
+4. Write 0.75 as a fraction in its lowest terms.","O dara, eyi ni itumọ ti oju-iwe naa:
+
+Amina ni apakan kan ninu akara. O fun arakunrin re ni apakan meji. Kini ida ti o ku? 
+
+Ibi omi nla kan mu 6000 liters ti omi. A lo 2000 liters fun fifọ. Awọn lita melo ni a lo?
+
+Ṣe irọrun 3/9.
+
+Kọ 4/8 gẹgẹ bi ida rẹ ti o kere julọ.
+
+Mo nireti pe eyi ṣe iranlọwọ!",,True,digit number_word unit_word,,,,,
+04_medicine_label,health,"Paracetamol 500 mg tablets
+Adults and children over 12 years: take 1 to 2 tablets every 4 to 6 hours as needed.
+Do not take more than 8 tablets in 24 hours.
+Do not take with other medicines that contain paracetamol.
+Keep out of the reach of children. Store below 30 degrees C.
+Expiry date: 08/2027. Batch: PCM2291.",,,False,,,,,,
+05_malaria_leaflet,health,"Protect your family from malaria
+Sleep under a long-lasting insecticidal net every night.
+Children under 5 years and pregnant women are at the highest risk.
+If a child has fever, go to the clinic within 24 hours for a test.
+Malaria testing and treatment are free at government health centres.
+Call the health line: 0800 000 0000.",,,False,,,,,,
+06_bank_statement,money,"Account statement, 1 to 31 October 2026
+Opening balance: N45,200.00
+03 Oct 2026 | Transfer to Ada | Money out N2,000.00 | Balance N43,200.00
+14 Oct 2026 | POS purchase, supermarket | Money out N6,450.00 | Balance N36,750.00
+25 Oct 2026 | Salary | Money in N150,000.00 | Balance N186,750.00
+Closing balance: N186,750.00",,,False,,,,,,
+07_school_notice,school,"Notice to parents
+The Parent-Teacher Association meeting will hold on Saturday, 14 November 2026, at 10:00 a.m. in the school hall.
+Each family is asked to pay the PTA levy of N2,500 before 30 November 2026.
+Second term examinations begin on Monday, 7 December 2026.
+Signed: The Principal","Iroyin fun awọn obi
+Awọn ipade ọmọ-ẹkọ ati olukọni yoo waye ni Satide, N1, ni aago N2 ni ibudo ile-iwe.
+Gbogbo idile ni a beere lati san owo PTA ti N3 ṣaaju N4.
+Awọn idanwo akoko N5 bẹrẹ ni Ọjọ Aarọ, N6.
+Ti fowo si: Alakoso",,True,digit,,,,,
+08_electricity_bill,money,"Electricity bill, September 2026
+Account number: 0123456789
+Previous reading: 4,512 kWh. Present reading: 4,698 kWh. Units used: 186 kWh.
+Tariff: N68.20 per kWh.
+Energy charge: N12,685.20. VAT 7.5%: N951.39.
+Total due: N13,636.59. Pay by 15 October 2026.",,,False,,,,,,
+09_vaccination_card,health,"Child immunisation card
+At birth: BCG, OPV 0, Hepatitis B 0
+6 weeks: Pentavalent 1, OPV 1, PCV 1, Rotavirus 1
+10 weeks: Pentavalent 2, OPV 2, PCV 2, Rotavirus 2
+14 weeks: Pentavalent 3, OPV 3, PCV 3, IPV
+9 months: Measles 1, Yellow fever
+Next visit: 12 January 2027",,,False,,,,,,
+10_rainfall,school,"Average monthly rainfall in Lagos (mm)
+January 35 | February 50 | March 100 | April 145 | May 270 | June 460
+July 280 | August 70 | September 160 | October 200 | November 70 | December 25
+Question: Which month has the highest rainfall? What is the difference between June and July?",Oṣu wo ni o ni irọlẹ ti o ga julọ? Oṣù Keje. Kí ni iyatọ̀ láàrin Okudu àti Keje? 7 mm.,,True,digit number_word unit_word,,,,,

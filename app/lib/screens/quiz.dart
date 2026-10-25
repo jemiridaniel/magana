@@ -31,7 +31,7 @@ class _QuizScreenState extends State<QuizScreen> {
   late final VoiceInput _voice = voiceInputFor(context);
   bool? _voiceWorks; // checked when the quiz opens
   bool _toldNoVoice = false;
-  bool _notReady = false; // voice answers aren't reliable in this language yet
+  voice_answers.VoiceOff? _off; // why "Say" isn't offered, if it isn't
   double? _rateBefore; // primary mode slows the voice; restored on leaving
   Quiz? _quiz;
   int _index = 0;
@@ -51,11 +51,17 @@ class _QuizScreenState extends State<QuizScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final profile = AppScope.of(context).profile;
       final quiz = await widget.load();
       // Not offered where spoken answers aren't recognised well enough yet.
-      final ready = voice_answers.voiceAnswersReady.contains(_language);
-      final works = ready && await _voice.init().catchError((_) => false);
-      _notReady = !ready;
+      _off = voice_answers.voiceAnswersOff(
+        language: _language,
+        tier: profile.tier,
+        level: profile.level,
+        primaryQuiz: quiz.primary,
+      );
+      final works =
+          _off == null && await _voice.init().catchError((_) => false);
       if (!mounted) return;
       setState(() {
         _quiz = quiz;
@@ -108,7 +114,12 @@ class _QuizScreenState extends State<QuizScreen> {
   );
 
   String get _noVoice {
-    if (_notReady) {
+    if (_off == voice_answers.VoiceOff.primary) {
+      return runningOnWeb
+          ? _l.quizVoicePrimaryOffWeb(_letters)
+          : _l.quizVoicePrimaryOff;
+    }
+    if (_off == voice_answers.VoiceOff.language) {
       final name = languageFor(Localizations.localeOf(context)).name;
       return runningOnWeb
           ? _l.quizVoiceNotReadyWeb(name, _letters)

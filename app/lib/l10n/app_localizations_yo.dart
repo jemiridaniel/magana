@@ -1702,4 +1702,13 @@ class AppLocalizationsYo extends AppLocalizations {
   String quizVoiceNotReadyWeb(String language, String letters) {
     return 'Ìdáhùn pẹ̀lú ohùn ní $language kò tíì péye tó. Tẹ tàbí kílíkì ìdáhùn kan, tàbí tẹ $letters lórí kíbọ́ọ̀dù rẹ.';
   }
+
+  @override
+  String get quizVoicePrimaryOff =>
+      'Ní kíláàsì alákọ̀ọ́bẹ̀rẹ̀, tẹ ìdáhùn rẹ. Ìdáhùn pẹ̀lú ohùn yóò dé lẹ́yìn náà.';
+
+  @override
+  String quizVoicePrimaryOffWeb(String letters) {
+    return 'Ní kíláàsì alákọ̀ọ́bẹ̀rẹ̀, tẹ tàbí kílíkì ìdáhùn rẹ, tàbí tẹ $letters lórí kíbọ́ọ̀dù rẹ.';
+  }
 }

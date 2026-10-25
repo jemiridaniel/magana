@@ -1,10 +1,33 @@
-/// Languages whose spoken quiz answers are recognised well enough to offer "Say":
-/// at least 80% right in the closed-set test, clean and noisy clips together
-/// (docs/FINDINGS.md, "closed set"). None yet: English 79%, Hausa 51%, Yorùbá
-/// 58%, Igbo 28%, so tapping is the default and the Say button is hidden.
-/// The confirm step ("You said B. Is that right?") stays everywhere.
-/// A variable so tests can turn voice answers on.
-Set<String> voiceAnswersReady = {};
+import 'curriculum.dart';
+import 'policy.dart';
+
+/// Languages whose spoken quiz answers may be offered ("Say"). English only: 79%
+/// right by closed set on synthetic voices (82% clean), close to the 80% bar and
+/// the only language near it. Hausa, Yorùbá and Igbo (51%, 58%, 28%) stay tap-only
+/// until real voices are tested (docs/FINDINGS.md). The confirm step ("You said B.
+/// Is that right?") and tapping stay everywhere. A variable so tests can change it.
+Set<String> voiceAnswersReady = {'en'};
+
+/// Why "Say" is not offered for a quiz.
+enum VoiceOff { language, primary }
+
+/// Null when "Say" may be offered: a ready language, and an adult (18+) or a JSS or
+/// SSS learner. Primary classes and Primary packs never, in any language: young
+/// children's speech is the hardest case and none of it has been tested.
+VoiceOff? voiceAnswersOff({
+  required String language,
+  required Tier? tier,
+  required ClassLevel? level,
+  required bool primaryQuiz,
+}) {
+  if (!voiceAnswersReady.contains(language)) return VoiceOff.language;
+  if (primaryQuiz || (level?.band.primary ?? false)) return VoiceOff.primary;
+  if (tier == Tier.standard) return null;
+  if (level != null && (level.band == Band.jss || level.band == Band.sss)) {
+    return null;
+  }
+  return VoiceOff.primary; // under 18 without a secondary class
+}
 
 /// Spoken quick-check answers, by fixed word rules: yes, no, "I can't tell", or a
 /// number of days. Anything else is null and the question is asked again; never

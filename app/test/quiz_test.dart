@@ -165,10 +165,9 @@ Future<void> say(
 }
 
 void main() {
-  // These tests are about voice answers: switch them on for English, as if it
-  // had passed the closed-set test (voiceAnswersReady is empty today).
+  // Voice answers as shipped: English only (lib/voice_answers.dart).
   setUp(() => voiceAnswersReady = {'en'});
-  tearDown(() => voiceAnswersReady = {});
+  tearDown(() => voiceAnswersReady = {'en'});
 
   group('marking rules', () {
     test('a letter on its own, with or without filler words', () {
@@ -537,7 +536,7 @@ void main() {
       expect(find.bySemanticsLabel(en.quizScoreLabel(0, 0)), findsOneWidget);
     });
 
-    testWidgets('today no language has passed: Say is hidden in English too', (
+    testWidgets('a language not on the ready list: Say is hidden', (
       tester,
     ) async {
       voiceAnswersReady = {};

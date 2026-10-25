@@ -445,5 +445,7 @@
   "explainReadAgain": "Sake karanta shafin",
   "quizNotSure": "Ban tabbatar da abin da ka faɗa ba. Don Allah ka sake faɗar amsarka.",
   "quizVoiceNotReady": "Amsa da murya a {language} ba ta da inganci sosai tukuna. Taɓa amsa maimakon haka.",
-  "quizVoiceNotReadyWeb": "Amsa da murya a {language} ba ta da inganci sosai tukuna. Taɓa ko danna amsa, ko ka danna {letters} a kan madannai."
+  "quizVoiceNotReadyWeb": "Amsa da murya a {language} ba ta da inganci sosai tukuna. Taɓa ko danna amsa, ko ka danna {letters} a kan madannai.",
+  "quizVoicePrimaryOff": "A azuzuwan firamare, taɓa amsarka. Amsa da murya za ta zo daga baya.",
+  "quizVoicePrimaryOffWeb": "A azuzuwan firamare, taɓa ko danna amsarka, ko ka danna {letters} a kan madannai."
 }

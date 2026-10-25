@@ -11,7 +11,7 @@ from fastapi.testclient import TestClient
 
 from app import placeholders as P
 from app import templates as T
-from app.explain import check_answer
+from app.explain import bullets, check_answer
 from app.main import app, get_explain_engine
 
 client = TestClient(app)
@@ -243,3 +243,29 @@ def test_english_needs_no_template_and_unmatched_lines_keep_their_english():
     r = T.translate("Shake well before use. Batch: PCM2291.", "ig", "health", statuses={"draft"})
     assert [l["template"] for l in r["lines"]] == ["shake_well", None, None]
     assert r["fallback"] == "cant_translate_line_health"
+
+
+# ---------- the model's own list numbering
+
+@pytest.mark.parametrize("answer, expected", [
+    ("Steps:\n1. Starch\n2. Sugar\n3. Fat", "Steps:\n• Starch\n• Sugar\n• Fat"),
+    ("1) Starch\n2) Sugar", "• Starch\n• Sugar"),
+    ("  1. indented\n  2. too", "  • indented\n  • too"),
+    # Not a plain sequence from 1: left alone, so the check refuses the digits.
+    ("1. Starch\n3. Fat", "1. Starch\n3. Fat"),
+    ("2. Sugar\n3. Fat", "2. Sugar\n3. Fat"),
+    ("1. Starch\n2. Sugar\n1. Again", "1. Starch\n2. Sugar\n1. Again"),
+    # Not at the start of a line, or not followed by a space: not list numbering.
+    ("Heat for 5. Then wait.", "Heat for 5. Then wait."),
+    ("1.5 litres", "1.5 litres"),
+])
+def test_list_numbering_becomes_bullets_only_as_a_plain_sequence(answer, expected):
+    assert bullets(answer) == expected
+
+
+def test_bullets_then_the_check_still_refuses_numbers_inside_the_items():
+    page = P.mask("Starch | Iodine\nSugar | Benedict, heat for 5 minutes")
+    text, problems = check_answer("1. Starch: iodine.\n2. Sugar: heat for ⟦N1⟧.", page, None, "en")
+    assert problems == [] and text == "• Starch: iodine.\n• Sugar: heat for 5 minutes."
+    _, problems = check_answer("1. Starch: iodine.\n2. Sugar: heat for 5 minutes.", page, None, "en")
+    assert {p.code for p in problems} == {"digit", "unit_word"}  # the 5 the model wrote

@@ -10,7 +10,7 @@ import 'package:app/policy.dart';
 import 'package:app/profile.dart';
 import 'package:app/quiz.dart';
 import 'package:app/screens/quiz.dart';
-import 'package:app/voice_answers.dart' show voiceAnswersReady;
+import 'package:app/voice_answers.dart';
 import 'package:app/voice_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -63,10 +63,9 @@ MaganaApi teacherApi(List<http.Request> sent) => MaganaApi(
 );
 
 void main() {
-  // These tests are about voice answers: switch them on for English, as if it
-  // had passed the closed-set test (voiceAnswersReady is empty today).
+  // Voice answers as shipped: English only (lib/voice_answers.dart).
   setUp(() => voiceAnswersReady = {'en'});
-  tearDown(() => voiceAnswersReady = {});
+  tearDown(() => voiceAnswersReady = {'en'});
 
   test(
     'the app curriculum matches assets/curriculum.json (and so the backend)',
@@ -139,9 +138,12 @@ void main() {
       pack: 'Mathematics practice',
     );
     expect(speaker.rates, [primaryQuizRate]);
-    // Three options: "Say A, B or C", never "A, B, C or D".
-    expect(speaker.said.first, endsWith('A, 5. B, 6. C, 4. Say A, B or C'));
-    expect(find.bySemanticsLabel('Say A, B or C'), findsOneWidget);
+    // Primary: tapping only, in every language; the options are still read out.
+    expect(
+      speaker.said.first,
+      endsWith('A, 5. B, 6. C, 4. ${en.quizVoicePrimaryOff}'),
+    );
+    expect(find.bySemanticsLabel(RegExp('^Say ')), findsNothing);
     expect(find.textContaining(en.quizSamples), findsWidgets);
     expect(speaker.said.first, startsWith('${en.quizSamples} · '));
     // "What is 2 plus 3?": the answer is on A.
@@ -410,5 +412,33 @@ void main() {
               '${f.path}: ${m[0]}',
     ];
     expect(found, isEmpty);
+  });
+
+  test('who is offered "Say": English, adults or JSS/SSS, never Primary', () {
+    voiceAnswersReady = {'en'}; // as shipped
+    VoiceOff? off(
+      String lang,
+      Tier tier,
+      String? level, {
+      bool primaryQuiz = false,
+    }) => voiceAnswersOff(
+      language: lang,
+      tier: tier,
+      level: levelById(level),
+      primaryQuiz: primaryQuiz,
+    );
+    expect(off('en', Tier.standard, null), isNull); // an adult not in school
+    expect(off('en', Tier.standard, 'sss2'), isNull);
+    expect(off('en', Tier.guided, 'jss1'), isNull);
+    expect(off('en', Tier.classroom, 'jss1'), isNull); // a 12-year-old in JSS 1
+    expect(off('en', Tier.classroom, 'p5'), VoiceOff.primary);
+    expect(off('en', Tier.guided, 'p6'), VoiceOff.primary);
+    expect(
+      off('en', Tier.standard, null, primaryQuiz: true),
+      VoiceOff.primary,
+    ); // a Primary pack
+    for (final lang in ['ha', 'yo', 'ig']) {
+      expect(off(lang, Tier.standard, 'sss2'), VoiceOff.language);
+    }
   });
 }

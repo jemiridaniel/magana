@@ -261,11 +261,25 @@ def default_engine() -> Engine:
 
 # ---------- the whole explanation
 
+_LIST_NUMBER = re.compile(r"^(\s*)(\d+)[.)](?=\s)", re.MULTILINE)
+
+
+def bullets(answer: str) -> str:
+    """The model's own list numbering ("1.", "2)" at the start of a line) becomes "•", but
+    only when it is one plain sequence 1, 2, 3 … Anything else is left for the check to
+    refuse: "1. … 3." or "2. … 3." could be numbers about the page."""
+    found = [int(m.group(2)) for m in _LIST_NUMBER.finditer(answer)]
+    if not found or found != list(range(1, len(found) + 1)):
+        return answer
+    return _LIST_NUMBER.sub(lambda m: f"{m.group(1)}•", answer)
+
+
 def check_answer(raw: str, page: "placeholders.Masked", asked: "placeholders.Masked | None",
                  lang: str, allow_left_out: bool = True) -> tuple[str, list]:
     """(the answer with the page's exact text put back, its problems). Each marker may appear
     at most once. Markers left out are not a problem when [allow_left_out]: nothing numeric
     was added (left_out() tells the caller to point to the page)."""
+    raw = bullets(raw)
     n_page = len(page.slots)
     n_asked = len(asked.slots) if asked else 0
     problems = placeholders.check(raw, page.text + "\n" + (asked.text if asked else ""),
