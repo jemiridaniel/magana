@@ -24,7 +24,7 @@ case "${1:-status}" in
     aws ec2 wait instance-running --instance-ids "$MAGANA_INSTANCE_ID"
     echo "running: $(state)"
     if [ -n "${MAGANA_HOST:-}" ]; then
-      domain="${MAGANA_HOST//./-}.sslip.io"
+      domain="api.$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["domain"])' "$(dirname "$0")/../config/public.json")"
       echo -n "waiting for https://$domain/health "
       for _ in $(seq 1 40); do
         curl -fsS "https://$domain/health" >/dev/null 2>&1 && { echo "ok"; exit 0; }

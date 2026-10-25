@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { recentUploads } from "@/lib/data";
+import { SUPPORT_EMAIL } from "@/lib/site";
 
 interface Guide {
   id: string;
@@ -111,7 +112,7 @@ export default function HelpView() {
       setReportMessage("Describe the problem first.");
       return;
     }
-    setReportMessage("Not sent: problem reports go out once the portal is connected to the Magana server. Your description is still in the box: copy it into an email to maganasupport@gmail.com.");
+    setReportMessage(`Not sent: problem reports go out once the portal is connected to the Magana server. Your description is still in the box: copy it into an email to ${SUPPORT_EMAIL}.`);
   }
 
   return (
@@ -180,7 +181,7 @@ export default function HelpView() {
         <div style={{ display: "grid", gap: 4 }}>
           <h2 id="contact-head">Still need help?</h2>
           <p>
-            Email <a href="mailto:maganasupport@gmail.com">maganasupport@gmail.com</a>. You can also report a problem with any reading.
+            Email <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a>. You can also report a problem with any reading.
           </p>
         </div>
         <button

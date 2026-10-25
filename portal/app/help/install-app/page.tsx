@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ANDROID_URL, APP_URL, SUPPORT_EMAIL } from "@/lib/site";
 
 export const metadata: Metadata = { title: "Install the learner app" };
 
@@ -14,7 +15,7 @@ export default function InstallAppPage() {
           <h1>Install the learner app</h1>
           <p>
             Magana runs on the learner&rsquo;s own phone. These steps are for you or a helper to do with the learner the first time.
-            Magana is in testing, so ask the Magana team for the app file or the web address.
+            Magana is in testing: the Android app and the web version are free to try.
           </p>
         </div>
       </header>
@@ -22,7 +23,7 @@ export default function InstallAppPage() {
       <section className="card form-grid" aria-labelledby="android-h">
         <h2 id="android-h">On an Android phone (recommended)</h2>
         <ol className="steps">
-          <li>Save the file <strong>magana-&lt;version&gt;.apk</strong> the Magana team sends you (WhatsApp, email or Google Drive) on the phone.</li>
+          <li>On the phone, open <a href={ANDROID_URL}>{ANDROID_URL.replace("https://", "")}</a> and choose <strong>Download the app</strong>. Or save the file <strong>magana-&lt;version&gt;.apk</strong> the Magana team sends you.</li>
           <li>Open it. When the phone says it can&rsquo;t install apps from this source, choose <strong>Settings</strong>, turn on <strong>Allow from this source</strong>, go back and choose <strong>Install</strong>.</li>
           <li>If Google Play Protect says the app is blocked, choose <strong>More details</strong>, then <strong>Install anyway</strong>. It only blocks Magana because Magana isn&rsquo;t in the Play Store yet.</li>
           <li>Turn on <strong>TalkBack</strong>: hold both volume buttons for 3 seconds, or go to Settings → Accessibility → TalkBack.</li>
@@ -32,7 +33,7 @@ export default function InstallAppPage() {
       <section className="card form-grid" aria-labelledby="iphone-h">
         <h2 id="iphone-h">On an iPhone (the web version, for testing)</h2>
         <ol className="steps">
-          <li>Open the Magana web address in <strong>Safari</strong>.</li>
+          <li>Open <a href={APP_URL}>{APP_URL.replace("https://", "")}</a> in <strong>Safari</strong>.</li>
           <li>Choose <strong>Share</strong> (the square with an arrow pointing up), then <strong>Add to Home Screen</strong>, then <strong>Add</strong>.</li>
           <li>Open Magana from the home screen. Turn on <strong>VoiceOver</strong> in Settings → Accessibility → VoiceOver, or ask Siri.</li>
         </ol>
@@ -42,7 +43,7 @@ export default function InstallAppPage() {
       <section className="card form-grid" aria-labelledby="chrome-h">
         <h2 id="chrome-h">On Android without the APK (the web version)</h2>
         <ol className="steps">
-          <li>Open the Magana web address in <strong>Chrome</strong>.</li>
+          <li>Open <a href={APP_URL}>{APP_URL.replace("https://", "")}</a> in <strong>Chrome</strong>.</li>
           <li>Choose <strong>Install</strong> when Chrome offers it, or the <strong>⋮ menu</strong> (top right) → <strong>Install app</strong> or <strong>Add to Home screen</strong>.</li>
         </ol>
       </section>
@@ -56,7 +57,7 @@ export default function InstallAppPage() {
           <li>Your quizzes only reach learners inside your class session: on each learner&rsquo;s phone, open Practice quiz → &ldquo;Teacher: open your class session&rdquo; and type the session code shown when you assigned the quiz. On their own, learners only get Magana&rsquo;s sample questions.</li>
         </ol>
         <p className="note">
-          Problems? Email <a href="mailto:maganasupport@gmail.com">maganasupport@gmail.com</a> with the screen name, what the learner did and what Magana said.
+          Problems? Email <a href={`mailto:${SUPPORT_EMAIL}`}>{SUPPORT_EMAIL}</a> with the screen name, what the learner did and what Magana said.
         </p>
       </section>
     </>

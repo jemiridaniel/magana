@@ -52,7 +52,7 @@
   -->
   <script src="flutter_bootstrap.js" async></script>
   <script>
-    // Offline screens (magana_sw.js). Registered relative to <base>, so its scope is /app/.
+    // Offline screens (magana_sw.js). Registered relative to <base>, so its scope is the PWA's own folder (/ on app.magana.ng).
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => navigator.serviceWorker.register('magana_sw.js'));
     }

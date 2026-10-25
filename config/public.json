@@ -1,0 +1,5 @@
+{
+  "_about": "Public settings shared by the app, portal, website and docs. Change them with scripts/set_public_config.py, never by hand: it rewrites every copy and backend/tests/test_public_config.py checks they agree.",
+  "support_email": "maganasupport@gmail.com",
+  "domain": "magana.ng"
+}

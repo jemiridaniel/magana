@@ -4,7 +4,9 @@ Thank you for helping test Magana. Magana reads printed pages aloud: schoolwork,
 
 ## 1. Get the app
 
-We will send you a file called something like `magana-0.1.0.apk` by WhatsApp, email or Google Drive. Save it to your phone. It is about 20 MB.
+On your phone, open **https://magana.ng/android/** and tap **Download the app**. Or save the file we send you, called something like `magana-0.1.0+3.apk`, from WhatsApp, email or Google Drive. It is about 21 MB.
+
+**If you already have Magana installed,** install the new version over it, without uninstalling first. Your settings stay. Versions before 0.1.0+3 keep working for now, but please update: they use the old server address.
 
 ## 2. Allow your phone to install it
 
@@ -77,7 +79,7 @@ Please don't send photos of private papers such as your own bank statement or me
 
 ## The web version (for testing on iPhone, or without installing the APK)
 
-Magana also runs in the phone's browser and can be added to the home screen like an app. **It is for testing only.** The real iPhone app comes later through TestFlight. The address will be sent to you with your invitation, for example `https://18-130-12-34.sslip.io/app/`.
+Magana also runs in the phone's browser and can be added to the home screen like an app. **It is for testing only.** The real iPhone app comes later through TestFlight. Its address is **https://app.magana.ng**.
 
 What is different in the web version:
 - **Reminders don't work.** The screen says "Reminders need the Android or iPhone app".
@@ -135,10 +137,11 @@ keytool -genkeypair -v -keystore ~/.magana/magana-upload.jks -storetype PKCS12 \
 **Build for testers:**
 1. Put the server address and API key in `~/.magana/app.env`:
    ```bash
-   MAGANA_API=https://18-130-12-34.sslip.io
+   MAGANA_API=https://api.magana.ng
    MAGANA_API_KEY=<the server's MAGANA_API_KEY>
    ```
 2. Bump `version:` in `app/pubspec.yaml`. The number after `+` must go up with every build you hand out.
 3. Run `scripts/build-apk.sh`. It prints the arm64 APK's path, size and signing fingerprint.
+4. Run `scripts/publish-apk.sh` to put it on the website: **https://magana.ng/downloads/magana.apk**, linked from https://magana.ng/android/.
 
 Send testers `app-arm64-v8a-release.apk`, renamed to `magana-<version>.apk`. It fits almost every phone from the last several years. Very old 32-bit phones need `app-armeabi-v7a-release.apk`.

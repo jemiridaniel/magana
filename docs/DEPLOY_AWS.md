@@ -92,7 +92,30 @@ phone app ──HTTPS──▶ Caddy (ports 80/443, automatic certificates)
 3. Check: the instance's **Details** tab shows the address under both **Elastic IP addresses** and **Public IPv4 address**. Neither step needs the instance stopped.
 4. Note the address, for example `18.130.12.34`. Your HTTPS address is then **`https://18-130-12-34.sslip.io`**: the IP with dashes, plus `.sslip.io`, a free DNS name that points at the IP. With a real domain later, point an A record at the IP and use that name instead.
 
-The live server: **35.178.64.255**, **https://35-178-64-255.sslip.io** (first deployed 25 Oct 2026).
+The live server: **35.178.64.255** (first deployed 25 Oct 2026 at https://35-178-64-255.sslip.io; on **magana.ng** since 25 Oct 2026).
+
+## 6a. The domain (magana.ng)
+
+At the registrar, add four **A** records pointing at the Elastic IP, and no AAAA records:
+
+| Name | Serves |
+|---|---|
+| `magana.ng` | the website, and the Android APK at `/downloads/magana.apk` |
+| `api.magana.ng` | the API and the WhatsApp webhook |
+| `app.magana.ng` | the tester PWA |
+| `teachers.magana.ng` | the teacher portal, behind its login |
+
+Check them with `dig +short A api.magana.ng @1.1.1.1`. Then set these in the server's `.env`:
+```bash
+MAGANA_DOMAIN=magana.ng
+MAGANA_LEGACY_DOMAIN=35-178-64-255.sslip.io
+MAGANA_CORS_ORIGIN_REGEX=https://(app|teachers)\.magana\.ng|https://35-178-64-255\.sslip\.io
+```
+Also set the GitHub variable `MAGANA_DOMAIN` to `magana.ng`. Caddy gets a certificate for each name on its first start.
+
+**The old sslip.io address** keeps serving the API, without a redirect, so APKs built before 0.1.0+3 keep working. Its `/app` and `/teachers` paths redirect to the new subdomains. Once every tester has 0.1.0+3 or later, remove `MAGANA_LEGACY_DOMAIN` and its block in `deploy/Caddyfile`.
+
+**The support address** is `support_email` in `config/public.json`. To switch it once the magana.ng support mailbox exists, run `python3 scripts/set_public_config.py support_email <the new address>`. That rewrites every copy: the app, portal, website and docs. `backend/tests/test_public_config.py` fails if any copy disagrees.
 
 ## 7. Set up the server (about 10 minutes)
 
@@ -103,14 +126,14 @@ nano ~/srv/magana/.env
 ```
 
 In `.env`, set:
-- `MAGANA_DOMAIN=18-130-12-34.sslip.io`
+- `MAGANA_DOMAIN=magana.ng` and `MAGANA_LEGACY_DOMAIN` (§6a). Without a domain, use the sslip.io name for both.
 - `MAGANA_API_KEY=` and `IBA_API_KEY=`, each a different value from `openssl rand -hex 32`.
 
 Keep the `MAGANA_API_KEY` value: the APK is built with it (`docs/TESTER_INSTALL.md`, "For the team"). Then:
 
 ```bash
 cd ~/srv/magana && sudo docker compose -f docker-compose.prod.yml up -d --build
-curl https://18-130-12-34.sslip.io/health
+curl https://api.magana.ng/health
 ```
 
 `/health` answers `{"status":"ok", "iba": {...}}`. The first certificate takes a few seconds. If it fails, check `sudo docker compose -f docker-compose.prod.yml logs caddy`. Port 80 must be open for Let's Encrypt.
@@ -143,7 +166,7 @@ curl https://18-130-12-34.sslip.io/health
    ```
 3. Then:
    ```bash
-   scripts/aws-instance.sh start    # waits until https://…sslip.io/health answers
+   scripts/aws-instance.sh start    # waits until https://api.magana.ng/health answers
    scripts/aws-instance.sh stop     # stop when nobody is testing, to save credit
    scripts/aws-instance.sh status
    scripts/deploy.sh                # pull the latest code on the server and rebuild
@@ -155,10 +178,10 @@ The containers restart by themselves when the instance starts (`restart: unless-
 
 Every push runs the tests in GitHub Actions (`.github/workflows/ci.yml`: backend `pytest`, `flutter analyze`, `flutter test`, portal lint). On `main`, once they all pass, the `deploy` job:
 
-1. Builds the PWA and the teacher portal with **placeholders instead of keys**, and puts them on the `web-build` release (`magana-web.tar.gz`).
+1. Builds the PWA, the teacher portal and the website with **placeholders instead of keys**, and puts them on the `web-build` release (`magana-web.tar.gz`).
 2. Signs in to AWS with **OIDC**: GitHub stores no AWS key, and only `main` of this repository can use the role.
-3. Asks **Systems Manager** to run, on the instance, `git merge --ff-only <commit>` and then `deploy/update.sh`. It pulls Ibà, rebuilds, and waits for `/health`. **If health fails, it goes back to the previous commit.** Then it installs the PWA and portal, filling in the keys from the server's `.env`. GitHub doesn't need SSH, so port 22 stays limited to your IP.
-4. Checks from outside: `/health` answers, a call without the key gets 401, and `/app/` loads.
+3. Asks **Systems Manager** to run, on the instance, `git merge --ff-only <commit>` and then `deploy/update.sh`. It pulls Ibà, rebuilds, and waits for `/health`. **If health fails, it goes back to the previous commit.** Then it installs the PWA, portal and website, filling in the keys from the server's `.env`. GitHub doesn't need SSH, so port 22 stays limited to your IP.
+4. Checks from outside: `https://api.magana.ng/health` answers, a call without the key gets 401, `https://app.magana.ng/` loads, and the portal asks for its login.
 
 No server key is in GitHub. All of this is free: Systems Manager Run Command, IAM and OIDC cost nothing, and Actions is free for a public repository.
 
@@ -200,7 +223,7 @@ No server key is in GitHub. All of this is free: Systems Manager Run Command, IA
    ```bash
    gh variable set AWS_DEPLOY_ROLE_ARN --body arn:aws:iam::<ACCOUNT_ID>:role/magana-github-deploy
    gh variable set MAGANA_INSTANCE_ID --body i-0facf03cdaa771320
-   gh variable set MAGANA_DOMAIN --body 35-178-64-255.sslip.io
+   gh variable set MAGANA_DOMAIN --body magana.ng
    ```
 
 The `deploy` job is skipped until `AWS_DEPLOY_ROLE_ARN` is set. First automatic deploy: 25 Oct 2026, about 1 minute on the server once the build finished. To watch a deploy, run `gh run watch`. `scripts/deploy.sh`, `deploy-web.sh` and `deploy-portal.sh` still work by hand from your Mac over SSH.
@@ -228,15 +251,15 @@ To go back, set `OCR_ENGINE=tesseract`, run the same command, and change the typ
 sudo docker compose -f docker-compose.prod.yml up -d
 ```
 
-## 10a. The web app (PWA) at /app
+## 10a. The web app (PWA) at app.magana.ng
 
-The same Caddy serves the Flutter web build at `https://<host>/app/` from `deploy/web/` on the server (git-ignored, mounted read-only into Caddy). From your Mac, with `MAGANA_API` and `MAGANA_API_KEY` in `~/.magana/app.env` and `MAGANA_HOST` in `~/.magana/aws.env`:
+Every deploy rebuilds it (§8a). By hand: the same Caddy serves the Flutter web build at `https://app.magana.ng/` from `deploy/web/` on the server (git-ignored, mounted read-only into Caddy). From your Mac, with `MAGANA_API` and `MAGANA_API_KEY` in `~/.magana/app.env` and `MAGANA_HOST` in `~/.magana/aws.env`:
 
 ```bash
 scripts/deploy-web.sh
 ```
 
-It builds with `--base-href /app/`, fills in the service worker's file list and copies `build/web/` to the server. No restart is needed. `index.html`, `magana_sw.js`, `flutter_bootstrap.js` and `manifest.json` are served with `Cache-Control: no-cache`, so testers get the new version the next time they open it online.
+It builds with `--base-href /`, fills in the service worker's file list and copies `build/web/` to the server. No restart is needed. `index.html`, `magana_sw.js`, `flutter_bootstrap.js` and `manifest.json` are served with `Cache-Control: no-cache`, so testers get the new version the next time they open it online.
 
 **The web API key is public:** anyone can read it from the JavaScript. The backend therefore limits requests per IP and per device (`X-Magana-Device`), and answers `429 too_many_requests` with `Retry-After`. Defaults are per minute, in `.env`:
 
@@ -249,15 +272,15 @@ It builds with `--base-href /app/`, fills in the service worker's file list and 
 
 A school's testers may share one IP behind a router. If they hit the limit, raise the two IP settings. `/health` is never limited. The limits are kept in memory, so a restart resets them.
 
-## 10c. The teacher portal at /teachers
+## 10c. The teacher portal at teachers.magana.ng
 
-The same Caddy serves the portal as static files at `https://<host>/teachers/`, behind a login (`PORTAL_USER` and `PORTAL_HASH` in `.env`), because its JavaScript carries the teacher key. From your Mac:
+Every deploy rebuilds it (§8a). By hand: the same Caddy serves the portal as static files at `https://teachers.magana.ng/`, behind a login (`PORTAL_USER` and `PORTAL_HASH` in `.env`), because its JavaScript carries the teacher key. From your Mac:
 
 ```bash
 scripts/deploy-portal.sh
 ```
 
-It reads the API and teacher keys from the server's `.env` over SSH, never printing them, builds the portal with `PORTAL_BASE_PATH=/teachers`, copies it to `deploy/teachers/`, and deletes the local build. The login for teachers is in `~/.magana/portal-login.txt` on the deploying Mac. Share it privately, never in a group chat.
+It reads the API and teacher keys from the server's `.env` over SSH, never printing them, builds the portal with `PORTAL_EXPORT=1`, copies it to `deploy/teachers/`, and deletes the local build. The login for teachers is in `~/.magana/portal-login.txt` on the deploying Mac. Share it privately, never in a group chat.
 
 ## 10b. Teacher portal quizzes
 
@@ -277,6 +300,6 @@ sudo docker compose -f docker-compose.prod.yml ps
 sudo docker compose -f docker-compose.prod.yml logs -f magana   # never contains photos or triage answers
 ```
 
-- **No HTTPS:** check that the security group allows 80 and 443, and that `MAGANA_DOMAIN` is exactly the IP with dashes plus `.sslip.io`.
+- **No HTTPS:** check that the security group allows 80 and 443, that each name's A record points at the Elastic IP (§6a), and `sudo docker compose -f docker-compose.prod.yml logs caddy`.
 - **401 `bad_api_key` from the app:** the APK was built with a different `MAGANA_API_KEY`.
 - **Out of memory on t3.small:** check swap (`swapon --show`). The setup script adds 2 GB.

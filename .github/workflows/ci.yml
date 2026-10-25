@@ -78,23 +78,24 @@ jobs:
           cache: npm
           cache-dependency-path: portal/package-lock.json
 
-      - name: Build the PWA and teacher portal (placeholders instead of keys)
+      - name: Build the PWA, teacher portal and website (placeholders instead of keys)
         run: |
-          MAGANA_API="https://$DOMAIN" MAGANA_API_KEY=__MAGANA_API_KEY__ scripts/build-web.sh
-          (cd portal && npm ci && PORTAL_BASE_PATH=/teachers NEXT_PUBLIC_API_URL="https://$DOMAIN" \
+          MAGANA_API="https://api.$DOMAIN" MAGANA_API_KEY=__MAGANA_API_KEY__ scripts/build-web.sh
+          (cd portal && npm ci && PORTAL_EXPORT=1 NEXT_PUBLIC_API_URL="https://api.$DOMAIN" \
             NEXT_PUBLIC_API_KEY=__MAGANA_API_KEY__ NEXT_PUBLIC_TEACHER_KEY=__MAGANA_TEACHER_KEY__ \
             npx next build)
           mkdir -p bundle && cp -r app/build/web bundle/web && cp -r portal/out bundle/teachers
+          if [ -d website ]; then (cd website && npm ci && npx next build) && cp -r website/out bundle/site; fi
           grep -rqF __MAGANA_API_KEY__ bundle/web
           grep -rqF __MAGANA_TEACHER_KEY__ bundle/teachers
-          tar -czf magana-web.tar.gz -C bundle web teachers
+          tar -czf magana-web.tar.gz -C bundle .
           echo "SUM=$(sha256sum magana-web.tar.gz | cut -d' ' -f1)" >> "$GITHUB_ENV"
 
       - name: Upload the bundle to the web-build release
         run: |
           gh release view web-build >/dev/null 2>&1 || gh release create web-build --prerelease \
             --title "Server web bundle (not a release)" \
-            --notes "Built by CI for the server: the PWA and teacher portal, without keys."
+            --notes "Built by CI for the server: the PWA, teacher portal and website, without keys."
           gh release upload web-build magana-web.tar.gz --clobber
 
       - uses: aws-actions/configure-aws-credentials@v4
@@ -126,7 +127,9 @@ jobs:
 
       - name: Check from outside
         run: |
-          curl -fsS --max-time 10 "https://$DOMAIN/health"; echo
-          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "https://$DOMAIN/read")
+          curl -fsS --max-time 10 "https://api.$DOMAIN/health"; echo
+          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "https://api.$DOMAIN/read")
           [ "$code" = 401 ] || { echo "a call without the key gave $code, not 401"; exit 1; }
-          curl -fsS -o /dev/null "https://$DOMAIN/app/"
+          curl -fsS -o /dev/null "https://app.$DOMAIN/"
+          code=$(curl -s -o /dev/null -w '%{http_code}' "https://teachers.$DOMAIN/uploads/")
+          [ "$code" = 401 ] || { echo "the portal without the login gave $code, not 401"; exit 1; }

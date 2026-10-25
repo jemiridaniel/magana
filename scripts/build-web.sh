@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# Build the PWA for testers: served at https://<server>/app/ by Caddy, talking to the API on
-# the same server. Writes app/build/web (and fills in the service worker's file list).
+# Build the PWA for testers: served at https://app.<domain>/ by Caddy, talking to the API at
+# https://api.<domain>. Writes app/build/web (and fills in the service worker's file list).
 #   scripts/build-web.sh                   # uses MAGANA_API and MAGANA_API_KEY from ~/.magana/app.env
 #   MAGANA_API=http://localhost:8765 MAGANA_API_KEY=... scripts/build-web.sh   # local test
 # The key ends up in the page, readable by anyone: the backend's rate limits are what
@@ -12,7 +12,7 @@ if [ -z "${MAGANA_API:-}" ] || [ -z "${MAGANA_API_KEY:-}" ]; then
   source "${MAGANA_APP_ENV:-$HOME/.magana/app.env}"
 fi
 : "${MAGANA_API:?set MAGANA_API}" "${MAGANA_API_KEY:?set MAGANA_API_KEY}"
-BASE="${MAGANA_WEB_BASE:-/app/}"
+BASE="${MAGANA_WEB_BASE:-/}"
 export PATH="$HOME/development/flutter/bin:$PATH"
 cd "$ROOT/app"
 

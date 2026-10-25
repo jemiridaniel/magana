@@ -56,7 +56,8 @@ Until learner accounts exist, consent is recorded on the phone. Real consent rec
 
 ## The Magana server
 
-- **Where it runs:** on Amazon Web Services in London (eu-west-2).
+- **Where it runs:** on Amazon Web Services in London (eu-west-2), at **api.magana.ng**. The web version is at app.magana.ng, the teacher portal at teachers.magana.ng and the website at magana.ng.
+- **The website** (magana.ng) sets no cookies and has no analytics or trackers. "Hear a sample" and "Your name in Braille" run in your browser: nothing you type is sent anywhere.
 - **Connections:** encrypted (HTTPS). The app proves it is Magana with a key.
 - **Server logs** record requests and errors. They never contain photos, recordings, page text or health-check answers.
 

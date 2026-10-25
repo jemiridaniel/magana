@@ -7,7 +7,7 @@
 # 1. Pull Ibà and rebuild the containers.
 # 2. Wait for https://<domain>/health. If it doesn't answer in time, go back to <previous
 #    commit> (and Ibà's previous commit), rebuild, and fail.
-# 3. Only then, install the PWA (/app) and teacher portal (/teachers) from the web bundle:
+# 3. Only then, install the PWA (app.), teacher portal (teachers.) and website from the web bundle:
 #    built by CI with placeholders instead of keys, which are filled in here from .env.
 #    The keys are never printed.
 set -euo pipefail
@@ -19,7 +19,7 @@ main() {
   cd "$HOME/srv/magana"
   local compose="sudo docker compose -f docker-compose.prod.yml"
   local domain
-  domain="$(env_value MAGANA_DOMAIN)"
+  domain="api.$(env_value MAGANA_DOMAIN)"
   local iba_prev
   iba_prev="$(git -C ../iba-natlas rev-parse HEAD)"
 
@@ -70,12 +70,12 @@ install_web() {
   tar -xzf "$tmp/web.tar.gz" -C "$tmp"
   # Fill in the keys (read from .env, never echoed).
   MAGANA_API_KEY="$(env_value MAGANA_API_KEY)" MAGANA_TEACHER_KEY="$(env_value MAGANA_TEACHER_KEY)" \
-    python3 - "$tmp/web" "$tmp/teachers" <<'PY'
+    python3 - "$tmp/web" "$tmp/teachers" "$tmp/site" <<'PY'
 import os, pathlib, sys
 keys = {"__MAGANA_API_KEY__": os.environ["MAGANA_API_KEY"],
         "__MAGANA_TEACHER_KEY__": os.environ["MAGANA_TEACHER_KEY"]}
 assert all(keys.values()), "a key is missing from .env"
-for root in sys.argv[1:]:
+for root in [r for r in sys.argv[1:] if os.path.isdir(r)]:
     for p in pathlib.Path(root).rglob("*"):
         if p.suffix in (".js", ".html", ".txt", ".json") and p.is_file():
             s = p.read_text(encoding="utf-8", errors="surrogateescape")
@@ -86,11 +86,12 @@ for root in sys.argv[1:]:
                 p.write_text(s, encoding="utf-8", errors="surrogateescape")
 PY
   # Copy into the directories Caddy has mounted (replacing them would break the mounts).
-  mkdir -p deploy/web deploy/teachers
+  mkdir -p deploy/web deploy/teachers deploy/site deploy/downloads
   rsync -a --delete "$tmp/web/" deploy/web/
   rsync -a --delete "$tmp/teachers/" deploy/teachers/
+  if [ -d "$tmp/site" ]; then rsync -a --delete "$tmp/site/" deploy/site/; fi
   rm -rf "$tmp"
-  echo "PWA and teacher portal installed"
+  echo "PWA, teacher portal and website installed"
 }
 
 main "$@"

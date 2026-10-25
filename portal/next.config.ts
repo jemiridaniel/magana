@@ -1,13 +1,15 @@
 import type { NextConfig } from "next";
 
-// PORTAL_BASE_PATH=/teachers builds static files for the Caddy on the server
-// (scripts/deploy-portal.sh); without it, the usual `next dev` / `next start`.
+// PORTAL_EXPORT=1 builds static files for the Caddy on the server, served at the root of
+// https://teachers.<domain>/ (CI, scripts/deploy-portal.sh); PORTAL_BASE_PATH puts them under
+// a path instead. Without either, the usual `next dev` / `next start`.
 const basePath = process.env.PORTAL_BASE_PATH ?? "";
+const exported = process.env.PORTAL_EXPORT === "1" || basePath !== "";
 
-const nextConfig: NextConfig = basePath
+const nextConfig: NextConfig = exported
   ? {
       output: "export",
-      basePath,
+      ...(basePath ? { basePath } : {}),
       trailingSlash: true,
       images: { unoptimized: true },
       env: { NEXT_PUBLIC_BASE_PATH: basePath },

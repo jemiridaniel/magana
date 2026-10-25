@@ -198,7 +198,7 @@ void main() {
     await tap(tester, RegExp('^${en.aboutTitle}'));
     // The terms' credit lines, verbatim, as each model card words them.
     expect(
-      find.text(en.aboutContact('maganasupport@gmail.com')),
+      find.text(en.aboutContact(supportEmail)),
       findsOneWidget,
     );
     expect(find.text(natlasAttribution), findsOneWidget);

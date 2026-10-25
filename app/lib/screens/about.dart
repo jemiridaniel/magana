@@ -19,7 +19,8 @@ const asrAttributions = [
       'Federal Ministry of Communications, Innovation and Digital Economy.',
 ];
 
-/// Where testers and users write to (also in docs/PRIVACY.md and docs/TESTER_INSTALL.md).
+/// Where testers and users write to: config/public.json (change it with
+/// scripts/set_public_config.py, which updates every copy).
 const supportEmail = 'maganasupport@gmail.com';
 
 const termsCondition =

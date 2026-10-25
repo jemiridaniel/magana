@@ -14,6 +14,8 @@ kaggle.json
 deploy/web/
 # The built teacher portal (scripts/deploy-portal.sh): carries the keys, never committed
 deploy/teachers/
+deploy/site/
+deploy/downloads/
 
 # Quizzes saved by a local backend (MAGANA_DATA_DIR); the server keeps its own
 backend/data/
