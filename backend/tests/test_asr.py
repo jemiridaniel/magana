@@ -97,6 +97,12 @@ def test_a_transcript_that_loops_counts_as_heard_nothing(engine):
 @pytest.mark.parametrize("text, loops", [
     ("ndị ahụrụma mere ka ndị ahụrụma mere ka ndị ahụrụma mere ka ndị ahụrụma mere ka", True),
     ("akụkọ akụkọ akụkọ akụkọ", True),
+    # Loops inside one word, from the quiz-answer test (Igbo, Yorùbá).
+    ("ee, enwere ọgụ rọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọ", True),
+    ("nne nne, enyo nọọma, ọrịrịrịrịrịrịrịrịrịrịrịrịrị", True),
+    ("ééééééééééééééééééééèéé", True),
+    ("bẹ́ẹ̀ni", False),
+    ("mmiri", False),
     ("B", False),
     ("bẹ́ẹ̀ni bẹ́ẹ̀ni", False),  # said twice is still an answer
     ("no no no", False),

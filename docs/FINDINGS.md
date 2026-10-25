@@ -13,6 +13,46 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · Languages, accessibility: are quiz answers recognised? (synthetic voices, UNREVIEWED)
+
+> **Unreviewed, and a best case.** These are **synthetic voices**, not learners: no one has recorded real answers yet. Real children in noisy classrooms will differ, likely for the worse. The Hausa, Yorùbá and Igbo spoken forms are drafts for native review.
+
+- **What we tested and how:** `benchmark/asr/answers_bench.py` (results in `benchmark/asr/results/2026-10-25-quiz-answers-synthetic/`, 384 clips).
+  - **Answers:** "A, B, C, D, yes, no, true, false" as learners would say them in each language:
+    - English: "ay", "bee"…;
+    - Hausa: "ei, bi, si, di, ee, a'a, gaskiya, ƙarya";
+    - Yorùbá: "à, bí, sí, dí, bẹ́ẹ̀ni, rárá, òótọ́, irọ́";
+    - Igbo: "ei, bi, si, di, ee, mba, eziokwu, ụgha".
+  - **Voices:** Meta's MMS-TTS (English, Hausa, Yorùbá) at 3 speaking rates, plus 4 macOS English voices. MMS has no Igbo voice, so Igbo uses the VITS OpenBible Igbo voice at 3 rates.
+  - **Noise:** each clip clean and at 10 dB and 5 dB white noise.
+  - **Pipeline:** Magana's server ASR (NCAIR1 Whisper per language), then the server's loop guard, then **the app's own answer rules** (`app/test_tool/score_answers_test.dart`).
+  - **Measured:** whether the right answer is understood, not word error rate.
+- **Result** (right / clips; in brackets, how many were taken for a *different* answer, which the app would then confirm):
+
+  | Language | Letters A–D | Yes / no | True / false |
+  |---|---|---|---|
+  | English (clean, 10 dB, 5 dB) | 14/28 (3), 12/28 (5), 6/28 (7) | 8/14, 10/14, 10/14 | 5/14 (1), 4/14, 2/14 |
+  | Hausa | 1/12 (5), 1/12 (4), 1/12 (5) | 3/6, 1/6, 1/6 | 3/6, 1/6, 1/6 |
+  | Yorùbá | 0/12, 0/12, 0/12 | 3/6, 3/6, 3/6 | 0/6, 0/6, 0/6 |
+  | Igbo | 0/12, 0/12, 0/12 | 0/6, 0/6, 0/6 | 0/6, 0/6, 1/6 |
+
+  - **English letters depend heavily on the voice:** 12/16 right from the macOS voices, 2/12 from MMS ("ay" was heard as "c").
+  - **Yorùbá "bẹ́ẹ̀ni" was always recognised** (9/9). "bí", "sí", "dí", "rárá", "òótọ́" and "irọ́" never were.
+  - **Hausa "ƙarya" and "ee" mostly were.** "gaskiya" came back as "naskiya".
+  - **Wrong answers** (heard as a *different* letter) are rare except for Hausa letters: "bi" and "di" were often heard as "eh", which counts as A (14 of 36). The app's "You said A. Is that right?" confirmation is what stops a wrong mark.
+- **Found along the way:**
+  - **On very short clips the recognisers often make things up.** The English model wrote whole sentences for "yes" ("are there cultural rituals that help…"), and the Igbo model looped on most clips ("ọrụ ọrụ ọrụ…", "rọrọrọrọ…"). **31 of 384 transcripts looped** and were turned into "heard nothing".
+  - The loop guard missed loops inside one word ("rọrọrọ…", "ịrịrịrị…"). It now catches 1 to 4 letters repeated 8 or more times. On the FLEURS clips that finds one more real loop ("híhíhí…", 6 in all) and no false ones.
+  - **App bug, fixed:** "No, I haven't" counted as unclear, because "I" was in the yes list (Hausa "i" means yes). "i" now counts only as the whole answer.
+  - **App gap, fixed:** true/false didn't know Yorùbá "òótọ́" or Igbo "eziokwu"/"ụgha". Added as drafts. They didn't change these scores, because the recogniser never wrote them.
+  - **Test artefact, fixed:** macOS reads a capital "B" as "capital B", so the letters are synthesised in lower case.
+  - Candidates for the letter rules, not added on synthetic evidence alone: "bay" (B), "they" (D), and "foss"/"falls"/"fools" (false).
+- **What this means:** for quiz answers, Magana's server ASR is usable in English and **not yet in Hausa, Yorùbá or Igbo**. Tapping, and the A–D keys on the web, must stay the reliable way to answer, and the confirm-before-marking design is essential. Next steps:
+  1. Record real answers (with consent) from learners and teachers in each language, quiet and noisy.
+  2. Try a short-answer mode: shorter padding, a "these are letters" prompt, or matching the audio against a few expected words instead of open transcription.
+  3. Consider fine-tuning the ASR on short answers.
+- **Status:** unreviewed, open.
+
 ## 2026-10-25 · Safety: Explain redesigned so the model never writes numbers or units; the 40-page re-run (UNREVIEWED)
 
 > **Unreviewed.** The classification below is the developer's reading. The phrase templates and number-word lists are drafts. Native speakers and Dr. Amos have checked none of it.

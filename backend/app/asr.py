@@ -13,6 +13,7 @@ from __future__ import annotations
 
 import io
 import os
+import re
 from typing import Protocol
 
 MODELS = {
@@ -27,10 +28,17 @@ SAMPLE_RATE = 16_000
 MAX_SECONDS = 30  # Whisper's window; answers and commands are a few seconds
 
 
+# 1 to 4 letters repeated 8 or more times in a row (no real answer does that).
+_CHAR_LOOP = re.compile(r"(\w{1,4}?)\1{7,}")
+
+
 def looped(text: str, times: int = 4, longest: int = 6) -> bool:
     """Whisper sometimes repeats itself in noise ("ụlọ ụlọ ụlọ ụlọ ..."): the same run of up to
-    `longest` words `times` times in a row. On the 120 benchmark clips this caught all 5
-    loops and nothing else (docs/FINDINGS.md). Such a transcript is not an answer."""
+    `longest` words `times` times in a row. On the 120 FLEURS clips this catches all 6 loops (one, "híhíhí…", inside a
+    single word) and nothing else (docs/FINDINGS.md). Such a transcript is not an answer."""
+    # Inside one "word" too: "ọrịrịrịrịrịrị…", "rọrọrọrọ…", "éééééééé".
+    if _CHAR_LOOP.search(text.lower()):
+        return True
     w = text.lower().split()
     for n in range(1, longest + 1):
         for i in range(len(w) - n * times + 1):

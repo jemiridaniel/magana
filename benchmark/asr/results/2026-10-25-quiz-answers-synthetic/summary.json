@@ -1,0 +1,206 @@
+{
+  "en/clean": {
+    "letters": {
+      "right": 14,
+      "wrong": 3,
+      "unclear": 11
+    },
+    "yes/no": {
+      "right": 8,
+      "wrong": 0,
+      "unclear": 6
+    },
+    "true/false": {
+      "right": 5,
+      "wrong": 1,
+      "unclear": 8
+    }
+  },
+  "en/snr10": {
+    "letters": {
+      "right": 12,
+      "wrong": 5,
+      "unclear": 11
+    },
+    "yes/no": {
+      "right": 10,
+      "wrong": 0,
+      "unclear": 4
+    },
+    "true/false": {
+      "right": 4,
+      "wrong": 0,
+      "unclear": 10
+    }
+  },
+  "en/snr5": {
+    "letters": {
+      "right": 6,
+      "wrong": 7,
+      "unclear": 15
+    },
+    "yes/no": {
+      "right": 10,
+      "wrong": 0,
+      "unclear": 4
+    },
+    "true/false": {
+      "right": 2,
+      "wrong": 0,
+      "unclear": 12
+    }
+  },
+  "ha/clean": {
+    "letters": {
+      "right": 1,
+      "wrong": 5,
+      "unclear": 6
+    },
+    "yes/no": {
+      "right": 3,
+      "wrong": 0,
+      "unclear": 3
+    },
+    "true/false": {
+      "right": 3,
+      "wrong": 0,
+      "unclear": 3
+    }
+  },
+  "ha/snr10": {
+    "letters": {
+      "right": 1,
+      "wrong": 4,
+      "unclear": 7
+    },
+    "yes/no": {
+      "right": 1,
+      "wrong": 0,
+      "unclear": 5
+    },
+    "true/false": {
+      "right": 1,
+      "wrong": 0,
+      "unclear": 5
+    }
+  },
+  "ha/snr5": {
+    "letters": {
+      "right": 1,
+      "wrong": 5,
+      "unclear": 6
+    },
+    "yes/no": {
+      "right": 1,
+      "wrong": 0,
+      "unclear": 5
+    },
+    "true/false": {
+      "right": 1,
+      "wrong": 0,
+      "unclear": 5
+    }
+  },
+  "yo/clean": {
+    "letters": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 12
+    },
+    "yes/no": {
+      "right": 3,
+      "wrong": 0,
+      "unclear": 3
+    },
+    "true/false": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 6
+    }
+  },
+  "yo/snr10": {
+    "letters": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 12
+    },
+    "yes/no": {
+      "right": 3,
+      "wrong": 0,
+      "unclear": 3
+    },
+    "true/false": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 6
+    }
+  },
+  "yo/snr5": {
+    "letters": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 12
+    },
+    "yes/no": {
+      "right": 3,
+      "wrong": 0,
+      "unclear": 3
+    },
+    "true/false": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 6
+    }
+  },
+  "ig/clean": {
+    "letters": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 12
+    },
+    "true/false": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 6
+    },
+    "yes/no": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 6
+    }
+  },
+  "ig/snr10": {
+    "letters": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 12
+    },
+    "true/false": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 6
+    },
+    "yes/no": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 6
+    }
+  },
+  "ig/snr5": {
+    "letters": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 12
+    },
+    "true/false": {
+      "right": 1,
+      "wrong": 0,
+      "unclear": 5
+    },
+    "yes/no": {
+      "right": 0,
+      "wrong": 0,
+      "unclear": 6
+    }
+  }
+}

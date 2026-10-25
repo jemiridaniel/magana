@@ -1,11 +1,11 @@
 /// Spoken quick-check answers, by fixed word rules: yes, no, "I can't tell", or a
 /// number of days. Anything else is null and the question is asked again; never
 /// a guess. The Hausa, Yorùbá and Igbo words are drafts for native-speaker review.
+// Hausa "i" (yes) only counts as the whole answer: in "No, I haven't" it is English "I".
 const _yes = {
   'yes',
   'yeah',
   'yep',
-  'i',
   'eh',
   'ee',
   'beeni',
@@ -42,7 +42,7 @@ Object? yesNo(String transcript) {
   final t = _norm(transcript);
   if (_cantTell.any(t.contains)) return 'cant_tell';
   final words = t.split(' ').toSet();
-  final y = words.any(_yes.contains) || _yes.contains(t);
+  final y = words.any(_yes.contains) || _yes.contains(t) || t == 'i';
   final n = words.any(_no.contains) || _no.contains(t);
   if (y == n) return null; // neither, or both ("yes no")
   return y;

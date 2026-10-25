@@ -203,6 +203,8 @@ const _trueWords = {
   'beeni',
   'bee ni',
   'gaskiya',
+  'ooto', // Yorùbá òótọ́
+  'eziokwu', // Igbo
 };
 const _falseWords = {
   'false',
@@ -215,6 +217,7 @@ const _falseWords = {
   'mba',
   'karya',
   'iro',
+  'ugha', // Igbo ụgha
 };
 
 String _norm(String s) =>

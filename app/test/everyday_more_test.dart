@@ -215,6 +215,9 @@ void main() {
       expect(yesNo("I can't tell"), 'cant_tell');
       expect(yesNo('mba'), false);
       expect(yesNo('yes no'), isNull);
+      // English "I" inside an answer is not Hausa "i" (yes): heard in the ASR test.
+      expect(yesNo("No, I haven't."), false);
+      expect(yesNo('i'), true);
       expect(yesNo('maybe'), isNull);
     });
 

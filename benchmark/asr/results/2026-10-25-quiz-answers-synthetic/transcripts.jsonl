@@ -1,0 +1,384 @@
+{"lang": "en", "intended": "A", "said": "ay", "voice": "mms x0.85", "condition": "clean", "transcript": "c", "looped": false, "seconds": 6.94}
+{"lang": "en", "intended": "A", "said": "ay", "voice": "mms x0.85", "condition": "snr10", "transcript": "seed.", "looped": false, "seconds": 0.67}
+{"lang": "en", "intended": "A", "said": "ay", "voice": "mms x0.85", "condition": "snr5", "transcript": "6 .", "looped": false, "seconds": 0.64}
+{"lang": "en", "intended": "A", "said": "ay", "voice": "mms x1.0", "condition": "clean", "transcript": "c", "looped": false, "seconds": 1.9}
+{"lang": "en", "intended": "A", "said": "ay", "voice": "mms x1.0", "condition": "snr10", "transcript": "c.", "looped": false, "seconds": 0.56}
+{"lang": "en", "intended": "A", "said": "ay", "voice": "mms x1.0", "condition": "snr5", "transcript": "3.", "looped": false, "seconds": 0.6}
+{"lang": "en", "intended": "A", "said": "ay", "voice": "mms x1.2", "condition": "clean", "transcript": "c", "looped": false, "seconds": 0.57}
+{"lang": "en", "intended": "A", "said": "ay", "voice": "mms x1.2", "condition": "snr10", "transcript": "c.", "looped": false, "seconds": 0.56}
+{"lang": "en", "intended": "A", "said": "ay", "voice": "mms x1.2", "condition": "snr5", "transcript": "c.", "looped": false, "seconds": 0.6}
+{"lang": "en", "intended": "B", "said": "bee", "voice": "mms x0.85", "condition": "clean", "transcript": "yeah, it's when it's easier to say the color of a word if it matches the ink than if it doesn't.", "looped": false, "seconds": 1.7}
+{"lang": "en", "intended": "B", "said": "bee", "voice": "mms x0.85", "condition": "snr10", "transcript": "need.", "looped": false, "seconds": 0.59}
+{"lang": "en", "intended": "B", "said": "bee", "voice": "mms x0.85", "condition": "snr5", "transcript": "need.", "looped": false, "seconds": 0.62}
+{"lang": "en", "intended": "B", "said": "bee", "voice": "mms x1.0", "condition": "clean", "transcript": "the", "looped": false, "seconds": 1.82}
+{"lang": "en", "intended": "B", "said": "bee", "voice": "mms x1.0", "condition": "snr10", "transcript": "3.", "looped": false, "seconds": 0.6}
+{"lang": "en", "intended": "B", "said": "bee", "voice": "mms x1.0", "condition": "snr5", "transcript": "needs.", "looped": false, "seconds": 0.79}
+{"lang": "en", "intended": "B", "said": "bee", "voice": "mms x1.2", "condition": "clean", "transcript": "the", "looped": false, "seconds": 0.63}
+{"lang": "en", "intended": "B", "said": "bee", "voice": "mms x1.2", "condition": "snr10", "transcript": "2.", "looped": false, "seconds": 0.59}
+{"lang": "en", "intended": "B", "said": "bee", "voice": "mms x1.2", "condition": "snr5", "transcript": "2.", "looped": false, "seconds": 0.63}
+{"lang": "en", "intended": "C", "said": "see", "voice": "mms x0.85", "condition": "clean", "transcript": "see", "looped": false, "seconds": 0.71}
+{"lang": "en", "intended": "C", "said": "see", "voice": "mms x0.85", "condition": "snr10", "transcript": "see .", "looped": false, "seconds": 0.6}
+{"lang": "en", "intended": "C", "said": "see", "voice": "mms x0.85", "condition": "snr5", "transcript": "she is.", "looped": false, "seconds": 0.7}
+{"lang": "en", "intended": "C", "said": "see", "voice": "mms x1.0", "condition": "clean", "transcript": "see", "looped": false, "seconds": 0.82}
+{"lang": "en", "intended": "C", "said": "see", "voice": "mms x1.0", "condition": "snr10", "transcript": "seed", "looped": false, "seconds": 0.61}
+{"lang": "en", "intended": "C", "said": "see", "voice": "mms x1.0", "condition": "snr5", "transcript": "chef .", "looped": false, "seconds": 0.6}
+{"lang": "en", "intended": "C", "said": "see", "voice": "mms x1.2", "condition": "clean", "transcript": "see the description for details.", "looped": false, "seconds": 0.96}
+{"lang": "en", "intended": "C", "said": "see", "voice": "mms x1.2", "condition": "snr10", "transcript": "see .", "looped": false, "seconds": 0.55}
+{"lang": "en", "intended": "C", "said": "see", "voice": "mms x1.2", "condition": "snr5", "transcript": "c .", "looped": false, "seconds": 0.58}
+{"lang": "en", "intended": "D", "said": "dee", "voice": "mms x0.85", "condition": "clean", "transcript": "the", "looped": false, "seconds": 0.83}
+{"lang": "en", "intended": "D", "said": "dee", "voice": "mms x0.85", "condition": "snr10", "transcript": "d", "looped": false, "seconds": 0.6}
+{"lang": "en", "intended": "D", "said": "dee", "voice": "mms x0.85", "condition": "snr5", "transcript": "d", "looped": false, "seconds": 0.56}
+{"lang": "en", "intended": "D", "said": "dee", "voice": "mms x1.0", "condition": "clean", "transcript": "the", "looped": false, "seconds": 0.88}
+{"lang": "en", "intended": "D", "said": "dee", "voice": "mms x1.0", "condition": "snr10", "transcript": "d", "looped": false, "seconds": 0.55}
+{"lang": "en", "intended": "D", "said": "dee", "voice": "mms x1.0", "condition": "snr5", "transcript": "c .", "looped": false, "seconds": 0.61}
+{"lang": "en", "intended": "D", "said": "dee", "voice": "mms x1.2", "condition": "clean", "transcript": "the", "looped": false, "seconds": 0.75}
+{"lang": "en", "intended": "D", "said": "dee", "voice": "mms x1.2", "condition": "snr10", "transcript": "d", "looped": false, "seconds": 1.33}
+{"lang": "en", "intended": "D", "said": "dee", "voice": "mms x1.2", "condition": "snr5", "transcript": "c", "looped": false, "seconds": 0.6}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "mms x0.85", "condition": "clean", "transcript": "are there cultural rituals that help orphaned individuals commemorate their heritage?", "looped": false, "seconds": 1.17}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "mms x0.85", "condition": "snr10", "transcript": "there is.", "looped": false, "seconds": 0.6}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "mms x0.85", "condition": "snr5", "transcript": "5.", "looped": false, "seconds": 0.63}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "mms x1.0", "condition": "clean", "transcript": "coconut sauce is a perfect match, especially with the sweet and spicy sauce.", "looped": false, "seconds": 1.39}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "mms x1.0", "condition": "snr10", "transcript": "taste.", "looped": false, "seconds": 0.66}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "mms x1.0", "condition": "snr5", "transcript": "6.", "looped": false, "seconds": 0.66}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "mms x1.2", "condition": "clean", "transcript": "it's a great way to reduce the risk of heart failure and reduce the risk of heart failure in a healthy and nutritious way.", "looped": false, "seconds": 1.75}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "mms x1.2", "condition": "snr10", "transcript": "test", "looped": false, "seconds": 0.6}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "mms x1.2", "condition": "snr5", "transcript": "6 .", "looped": false, "seconds": 0.55}
+{"lang": "en", "intended": "no", "said": "no", "voice": "mms x0.85", "condition": "clean", "transcript": "how can we reduce the stigma around seeking mental health support?", "looped": false, "seconds": 1.2}
+{"lang": "en", "intended": "no", "said": "no", "voice": "mms x0.85", "condition": "snr10", "transcript": "no", "looped": false, "seconds": 0.61}
+{"lang": "en", "intended": "no", "said": "no", "voice": "mms x0.85", "condition": "snr5", "transcript": "no", "looped": false, "seconds": 0.55}
+{"lang": "en", "intended": "no", "said": "no", "voice": "mms x1.0", "condition": "clean", "transcript": "how can we reduce the stigma around seeking mental health support?", "looped": false, "seconds": 1.16}
+{"lang": "en", "intended": "no", "said": "no", "voice": "mms x1.0", "condition": "snr10", "transcript": "there is no indication that the patient has been admitted to the hospital, so he", "looped": false, "seconds": 1.22}
+{"lang": "en", "intended": "no", "said": "no", "voice": "mms x1.0", "condition": "snr5", "transcript": "there is no indication that the patient has been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been admitted to the hospital, and so, he has not been", "looped": false, "seconds": 18.27}
+{"lang": "en", "intended": "no", "said": "no", "voice": "mms x1.2", "condition": "clean", "transcript": "ugh, that's a tough one to handle, but i guess i'll just leave it at that.", "looped": false, "seconds": 1.5}
+{"lang": "en", "intended": "no", "said": "no", "voice": "mms x1.2", "condition": "snr10", "transcript": "hmm", "looped": false, "seconds": 0.61}
+{"lang": "en", "intended": "no", "said": "no", "voice": "mms x1.2", "condition": "snr5", "transcript": "hmm", "looped": false, "seconds": 0.62}
+{"lang": "en", "intended": "true", "said": "true", "voice": "mms x0.85", "condition": "clean", "transcript": "real.", "looped": false, "seconds": 0.69}
+{"lang": "en", "intended": "true", "said": "true", "voice": "mms x0.85", "condition": "snr10", "transcript": "3 years .", "looped": false, "seconds": 0.6}
+{"lang": "en", "intended": "true", "said": "true", "voice": "mms x0.85", "condition": "snr5", "transcript": "3 years .", "looped": false, "seconds": 0.6}
+{"lang": "en", "intended": "true", "said": "true", "voice": "mms x1.0", "condition": "clean", "transcript": "real.", "looped": false, "seconds": 0.69}
+{"lang": "en", "intended": "true", "said": "true", "voice": "mms x1.0", "condition": "snr10", "transcript": "3 years .", "looped": false, "seconds": 0.65}
+{"lang": "en", "intended": "true", "said": "true", "voice": "mms x1.0", "condition": "snr5", "transcript": "3 years .", "looped": false, "seconds": 0.64}
+{"lang": "en", "intended": "true", "said": "true", "voice": "mms x1.2", "condition": "clean", "transcript": "real.", "looped": false, "seconds": 0.7}
+{"lang": "en", "intended": "true", "said": "true", "voice": "mms x1.2", "condition": "snr10", "transcript": "reallllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllllll", "looped": false, "seconds": 10.97}
+{"lang": "en", "intended": "true", "said": "true", "voice": "mms x1.2", "condition": "snr5", "transcript": "3.", "looped": false, "seconds": 0.68}
+{"lang": "en", "intended": "false", "said": "false", "voice": "mms x0.85", "condition": "clean", "transcript": "of course.", "looped": false, "seconds": 0.65}
+{"lang": "en", "intended": "false", "said": "false", "voice": "mms x0.85", "condition": "snr10", "transcript": "course .", "looped": false, "seconds": 0.62}
+{"lang": "en", "intended": "false", "said": "false", "voice": "mms x0.85", "condition": "snr5", "transcript": "course .", "looped": false, "seconds": 0.61}
+{"lang": "en", "intended": "false", "said": "false", "voice": "mms x1.0", "condition": "clean", "transcript": "crucial.", "looped": false, "seconds": 1.17}
+{"lang": "en", "intended": "false", "said": "false", "voice": "mms x1.0", "condition": "snr10", "transcript": "chores", "looped": false, "seconds": 0.72}
+{"lang": "en", "intended": "false", "said": "false", "voice": "mms x1.0", "condition": "snr5", "transcript": "coccus .", "looped": false, "seconds": 0.68}
+{"lang": "en", "intended": "false", "said": "false", "voice": "mms x1.2", "condition": "clean", "transcript": "true, with intense performances and intense performances.", "looped": false, "seconds": 1.15}
+{"lang": "en", "intended": "false", "said": "false", "voice": "mms x1.2", "condition": "snr10", "transcript": "crucials.", "looped": false, "seconds": 0.76}
+{"lang": "en", "intended": "false", "said": "false", "voice": "mms x1.2", "condition": "snr5", "transcript": "crucials.", "looped": false, "seconds": 0.71}
+{"lang": "en", "intended": "A", "said": "a", "voice": "macOS Samantha", "condition": "clean", "transcript": "a", "looped": false, "seconds": 0.91}
+{"lang": "en", "intended": "A", "said": "a", "voice": "macOS Samantha", "condition": "snr10", "transcript": "8.", "looped": false, "seconds": 0.76}
+{"lang": "en", "intended": "A", "said": "a", "voice": "macOS Samantha", "condition": "snr5", "transcript": "10.", "looped": false, "seconds": 0.61}
+{"lang": "en", "intended": "A", "said": "a", "voice": "macOS Daniel", "condition": "clean", "transcript": "hey", "looped": false, "seconds": 0.83}
+{"lang": "en", "intended": "A", "said": "a", "voice": "macOS Daniel", "condition": "snr10", "transcript": "hey", "looped": false, "seconds": 0.83}
+{"lang": "en", "intended": "A", "said": "a", "voice": "macOS Daniel", "condition": "snr5", "transcript": "hey", "looped": false, "seconds": 0.85}
+{"lang": "en", "intended": "A", "said": "a", "voice": "macOS Rishi", "condition": "clean", "transcript": "a", "looped": false, "seconds": 2.04}
+{"lang": "en", "intended": "A", "said": "a", "voice": "macOS Rishi", "condition": "snr10", "transcript": "a", "looped": false, "seconds": 1.42}
+{"lang": "en", "intended": "A", "said": "a", "voice": "macOS Rishi", "condition": "snr5", "transcript": "yeah", "looped": false, "seconds": 0.63}
+{"lang": "en", "intended": "A", "said": "a", "voice": "macOS Flo (English (UK))", "condition": "clean", "transcript": "a", "looped": false, "seconds": 1.78}
+{"lang": "en", "intended": "A", "said": "a", "voice": "macOS Flo (English (UK))", "condition": "snr10", "transcript": "a             e", "looped": false, "seconds": 1.31}
+{"lang": "en", "intended": "A", "said": "a", "voice": "macOS Flo (English (UK))", "condition": "snr5", "transcript": "mmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm", "looped": false, "seconds": 8.52}
+{"lang": "en", "intended": "B", "said": "b", "voice": "macOS Samantha", "condition": "clean", "transcript": "p.", "looped": false, "seconds": 0.62}
+{"lang": "en", "intended": "B", "said": "b", "voice": "macOS Samantha", "condition": "snr10", "transcript": "c .\"", "looped": false, "seconds": 1.53}
+{"lang": "en", "intended": "B", "said": "b", "voice": "macOS Samantha", "condition": "snr5", "transcript": "c .\"", "looped": false, "seconds": 1.28}
+{"lang": "en", "intended": "B", "said": "b", "voice": "macOS Daniel", "condition": "clean", "transcript": "bay", "looped": false, "seconds": 0.92}
+{"lang": "en", "intended": "B", "said": "b", "voice": "macOS Daniel", "condition": "snr10", "transcript": "bay", "looped": false, "seconds": 0.7}
+{"lang": "en", "intended": "B", "said": "b", "voice": "macOS Daniel", "condition": "snr5", "transcript": "bay", "looped": false, "seconds": 0.63}
+{"lang": "en", "intended": "B", "said": "b", "voice": "macOS Rishi", "condition": "clean", "transcript": "b", "looped": false, "seconds": 0.58}
+{"lang": "en", "intended": "B", "said": "b", "voice": "macOS Rishi", "condition": "snr10", "transcript": "b.", "looped": false, "seconds": 0.63}
+{"lang": "en", "intended": "B", "said": "b", "voice": "macOS Rishi", "condition": "snr5", "transcript": "b .", "looped": false, "seconds": 1.24}
+{"lang": "en", "intended": "B", "said": "b", "voice": "macOS Flo (English (UK))", "condition": "clean", "transcript": "b", "looped": false, "seconds": 25.42}
+{"lang": "en", "intended": "B", "said": "b", "voice": "macOS Flo (English (UK))", "condition": "snr10", "transcript": "c", "looped": false, "seconds": 1.4}
+{"lang": "en", "intended": "B", "said": "b", "voice": "macOS Flo (English (UK))", "condition": "snr5", "transcript": "c .\"", "looped": false, "seconds": 0.68}
+{"lang": "en", "intended": "C", "said": "c", "voice": "macOS Samantha", "condition": "clean", "transcript": "c", "looped": false, "seconds": 1.12}
+{"lang": "en", "intended": "C", "said": "c", "voice": "macOS Samantha", "condition": "snr10", "transcript": "t", "looped": false, "seconds": 0.56}
+{"lang": "en", "intended": "C", "said": "c", "voice": "macOS Samantha", "condition": "snr5", "transcript": "t", "looped": false, "seconds": 0.56}
+{"lang": "en", "intended": "C", "said": "c", "voice": "macOS Daniel", "condition": "clean", "transcript": "see ?", "looped": false, "seconds": 0.56}
+{"lang": "en", "intended": "C", "said": "c", "voice": "macOS Daniel", "condition": "snr10", "transcript": "see .", "looped": false, "seconds": 0.65}
+{"lang": "en", "intended": "C", "said": "c", "voice": "macOS Daniel", "condition": "snr5", "transcript": "said.", "looped": false, "seconds": 0.61}
+{"lang": "en", "intended": "C", "said": "c", "voice": "macOS Rishi", "condition": "clean", "transcript": "c", "looped": false, "seconds": 1.42}
+{"lang": "en", "intended": "C", "said": "c", "voice": "macOS Rishi", "condition": "snr10", "transcript": "c.", "looped": false, "seconds": 0.75}
+{"lang": "en", "intended": "C", "said": "c", "voice": "macOS Rishi", "condition": "snr5", "transcript": "see?", "looped": false, "seconds": 0.68}
+{"lang": "en", "intended": "C", "said": "c", "voice": "macOS Flo (English (UK))", "condition": "clean", "transcript": "yeah, it's when it's easier to say the color of a word if it matches the ink than if it doesn't.", "looped": false, "seconds": 2.51}
+{"lang": "en", "intended": "C", "said": "c", "voice": "macOS Flo (English (UK))", "condition": "snr10", "transcript": "see?", "looped": false, "seconds": 2.39}
+{"lang": "en", "intended": "C", "said": "c", "voice": "macOS Flo (English (UK))", "condition": "snr5", "transcript": "see?", "looped": false, "seconds": 1.84}
+{"lang": "en", "intended": "D", "said": "d", "voice": "macOS Samantha", "condition": "clean", "transcript": "d.", "looped": false, "seconds": 0.56}
+{"lang": "en", "intended": "D", "said": "d", "voice": "macOS Samantha", "condition": "snr10", "transcript": "deep", "looped": false, "seconds": 0.62}
+{"lang": "en", "intended": "D", "said": "d", "voice": "macOS Samantha", "condition": "snr5", "transcript": "c", "looped": false, "seconds": 1.55}
+{"lang": "en", "intended": "D", "said": "d", "voice": "macOS Daniel", "condition": "clean", "transcript": "they", "looped": false, "seconds": 0.57}
+{"lang": "en", "intended": "D", "said": "d", "voice": "macOS Daniel", "condition": "snr10", "transcript": "day", "looped": false, "seconds": 0.55}
+{"lang": "en", "intended": "D", "said": "d", "voice": "macOS Daniel", "condition": "snr5", "transcript": "day", "looped": false, "seconds": 0.59}
+{"lang": "en", "intended": "D", "said": "d", "voice": "macOS Rishi", "condition": "clean", "transcript": "d", "looped": false, "seconds": 0.55}
+{"lang": "en", "intended": "D", "said": "d", "voice": "macOS Rishi", "condition": "snr10", "transcript": "d", "looped": false, "seconds": 1.41}
+{"lang": "en", "intended": "D", "said": "d", "voice": "macOS Rishi", "condition": "snr5", "transcript": "b.", "looped": false, "seconds": 0.56}
+{"lang": "en", "intended": "D", "said": "d", "voice": "macOS Flo (English (UK))", "condition": "clean", "transcript": "d", "looped": false, "seconds": 0.56}
+{"lang": "en", "intended": "D", "said": "d", "voice": "macOS Flo (English (UK))", "condition": "snr10", "transcript": "hey", "looped": false, "seconds": 0.56}
+{"lang": "en", "intended": "D", "said": "d", "voice": "macOS Flo (English (UK))", "condition": "snr5", "transcript": "3.", "looped": false, "seconds": 0.55}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "macOS Samantha", "condition": "clean", "transcript": "yes,", "looped": false, "seconds": 1.04}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "macOS Samantha", "condition": "snr10", "transcript": "yes,", "looped": false, "seconds": 0.95}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "macOS Samantha", "condition": "snr5", "transcript": "yes,", "looped": false, "seconds": 0.74}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "macOS Daniel", "condition": "clean", "transcript": "yes, it promotes clarity and respect in communication.", "looped": false, "seconds": 1.19}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "macOS Daniel", "condition": "snr10", "transcript": "yes", "looped": false, "seconds": 0.88}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "macOS Daniel", "condition": "snr5", "transcript": "yes", "looped": false, "seconds": 1.01}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "macOS Rishi", "condition": "clean", "transcript": "yes,", "looped": false, "seconds": 1.28}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "macOS Rishi", "condition": "snr10", "transcript": "yes,", "looped": false, "seconds": 1.63}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "macOS Rishi", "condition": "snr5", "transcript": "yes,", "looped": false, "seconds": 0.64}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "macOS Flo (English (UK))", "condition": "clean", "transcript": "yes, it promotes clarity and respect in communication.", "looped": false, "seconds": 1.07}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "macOS Flo (English (UK))", "condition": "snr10", "transcript": "yes,", "looped": false, "seconds": 0.57}
+{"lang": "en", "intended": "yes", "said": "yes", "voice": "macOS Flo (English (UK))", "condition": "snr5", "transcript": "yes,", "looped": false, "seconds": 0.66}
+{"lang": "en", "intended": "no", "said": "no", "voice": "macOS Samantha", "condition": "clean", "transcript": "no, i haven't.", "looped": false, "seconds": 1.37}
+{"lang": "en", "intended": "no", "said": "no", "voice": "macOS Samantha", "condition": "snr10", "transcript": "no", "looped": false, "seconds": 0.77}
+{"lang": "en", "intended": "no", "said": "no", "voice": "macOS Samantha", "condition": "snr5", "transcript": "no", "looped": false, "seconds": 0.82}
+{"lang": "en", "intended": "no", "said": "no", "voice": "macOS Daniel", "condition": "clean", "transcript": "no, i haven't.", "looped": false, "seconds": 0.82}
+{"lang": "en", "intended": "no", "said": "no", "voice": "macOS Daniel", "condition": "snr10", "transcript": "no", "looped": false, "seconds": 0.78}
+{"lang": "en", "intended": "no", "said": "no", "voice": "macOS Daniel", "condition": "snr5", "transcript": "no", "looped": false, "seconds": 0.55}
+{"lang": "en", "intended": "no", "said": "no", "voice": "macOS Rishi", "condition": "clean", "transcript": "no, i'm not.", "looped": false, "seconds": 1.38}
+{"lang": "en", "intended": "no", "said": "no", "voice": "macOS Rishi", "condition": "snr10", "transcript": "no .", "looped": false, "seconds": 0.56}
+{"lang": "en", "intended": "no", "said": "no", "voice": "macOS Rishi", "condition": "snr5", "transcript": "no .", "looped": false, "seconds": 0.54}
+{"lang": "en", "intended": "no", "said": "no", "voice": "macOS Flo (English (UK))", "condition": "clean", "transcript": "no, i'm not.", "looped": false, "seconds": 1.17}
+{"lang": "en", "intended": "no", "said": "no", "voice": "macOS Flo (English (UK))", "condition": "snr10", "transcript": "no,", "looped": false, "seconds": 1.26}
+{"lang": "en", "intended": "no", "said": "no", "voice": "macOS Flo (English (UK))", "condition": "snr5", "transcript": "no .", "looped": false, "seconds": 0.57}
+{"lang": "en", "intended": "true", "said": "true", "voice": "macOS Samantha", "condition": "clean", "transcript": "true,", "looped": false, "seconds": 1.2}
+{"lang": "en", "intended": "true", "said": "true", "voice": "macOS Samantha", "condition": "snr10", "transcript": "true", "looped": false, "seconds": 0.65}
+{"lang": "en", "intended": "true", "said": "true", "voice": "macOS Samantha", "condition": "snr5", "transcript": "true", "looped": false, "seconds": 0.73}
+{"lang": "en", "intended": "true", "said": "true", "voice": "macOS Daniel", "condition": "clean", "transcript": "true.", "looped": false, "seconds": 1.17}
+{"lang": "en", "intended": "true", "said": "true", "voice": "macOS Daniel", "condition": "snr10", "transcript": "true", "looped": false, "seconds": 0.78}
+{"lang": "en", "intended": "true", "said": "true", "voice": "macOS Daniel", "condition": "snr5", "transcript": "froo.", "looped": false, "seconds": 0.65}
+{"lang": "en", "intended": "true", "said": "true", "voice": "macOS Rishi", "condition": "clean", "transcript": "true, but it's crucial for ensuring safety on the highways.", "looped": false, "seconds": 1.23}
+{"lang": "en", "intended": "true", "said": "true", "voice": "macOS Rishi", "condition": "snr10", "transcript": "true", "looped": false, "seconds": 0.78}
+{"lang": "en", "intended": "true", "said": "true", "voice": "macOS Rishi", "condition": "snr5", "transcript": "true", "looped": false, "seconds": 0.88}
+{"lang": "en", "intended": "true", "said": "true", "voice": "macOS Flo (English (UK))", "condition": "clean", "transcript": "true, but community organizations offer guidance.", "looped": false, "seconds": 1.08}
+{"lang": "en", "intended": "true", "said": "true", "voice": "macOS Flo (English (UK))", "condition": "snr10", "transcript": "hmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm", "looped": false, "seconds": 9.0}
+{"lang": "en", "intended": "true", "said": "true", "voice": "macOS Flo (English (UK))", "condition": "snr5", "transcript": "hmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmmm", "looped": false, "seconds": 11.14}
+{"lang": "en", "intended": "false", "said": "false", "voice": "macOS Samantha", "condition": "clean", "transcript": "false", "looped": false, "seconds": 0.61}
+{"lang": "en", "intended": "false", "said": "false", "voice": "macOS Samantha", "condition": "snr10", "transcript": "false", "looped": false, "seconds": 0.69}
+{"lang": "en", "intended": "false", "said": "false", "voice": "macOS Samantha", "condition": "snr5", "transcript": "mild .", "looped": false, "seconds": 0.66}
+{"lang": "en", "intended": "false", "said": "false", "voice": "macOS Daniel", "condition": "clean", "transcript": "foss.", "looped": false, "seconds": 0.64}
+{"lang": "en", "intended": "false", "said": "false", "voice": "macOS Daniel", "condition": "snr10", "transcript": "4. bose", "looped": false, "seconds": 0.65}
+{"lang": "en", "intended": "false", "said": "false", "voice": "macOS Daniel", "condition": "snr5", "transcript": "4. s", "looped": false, "seconds": 0.71}
+{"lang": "en", "intended": "false", "said": "false", "voice": "macOS Rishi", "condition": "clean", "transcript": "falls", "looped": false, "seconds": 0.61}
+{"lang": "en", "intended": "false", "said": "false", "voice": "macOS Rishi", "condition": "snr10", "transcript": "froze", "looped": false, "seconds": 0.65}
+{"lang": "en", "intended": "false", "said": "false", "voice": "macOS Rishi", "condition": "snr5", "transcript": "fun ?", "looped": false, "seconds": 0.55}
+{"lang": "en", "intended": "false", "said": "false", "voice": "macOS Flo (English (UK))", "condition": "clean", "transcript": "fools!", "looped": false, "seconds": 0.6}
+{"lang": "en", "intended": "false", "said": "false", "voice": "macOS Flo (English (UK))", "condition": "snr10", "transcript": "oos!", "looped": false, "seconds": 0.6}
+{"lang": "en", "intended": "false", "said": "false", "voice": "macOS Flo (English (UK))", "condition": "snr5", "transcript": "oom!", "looped": false, "seconds": 0.65}
+{"lang": "ha", "intended": "A", "said": "ei", "voice": "mms x0.85", "condition": "clean", "transcript": "eh", "looped": false, "seconds": 8.13}
+{"lang": "ha", "intended": "A", "said": "ei", "voice": "mms x0.85", "condition": "snr10", "transcript": "eh", "looped": false, "seconds": 0.58}
+{"lang": "ha", "intended": "A", "said": "ei", "voice": "mms x0.85", "condition": "snr5", "transcript": "eh", "looped": false, "seconds": 0.56}
+{"lang": "ha", "intended": "A", "said": "ei", "voice": "mms x1.0", "condition": "clean", "transcript": "ni.", "looped": false, "seconds": 0.56}
+{"lang": "ha", "intended": "A", "said": "ei", "voice": "mms x1.0", "condition": "snr10", "transcript": "ni.", "looped": false, "seconds": 0.56}
+{"lang": "ha", "intended": "A", "said": "ei", "voice": "mms x1.0", "condition": "snr5", "transcript": "ni.", "looped": false, "seconds": 0.6}
+{"lang": "ha", "intended": "A", "said": "ei", "voice": "mms x1.2", "condition": "clean", "transcript": "ni.", "looped": false, "seconds": 0.56}
+{"lang": "ha", "intended": "A", "said": "ei", "voice": "mms x1.2", "condition": "snr10", "transcript": "ni.", "looped": false, "seconds": 0.64}
+{"lang": "ha", "intended": "A", "said": "ei", "voice": "mms x1.2", "condition": "snr5", "transcript": "ni.", "looped": false, "seconds": 0.59}
+{"lang": "ha", "intended": "B", "said": "bi", "voice": "mms x0.85", "condition": "clean", "transcript": "eh", "looped": false, "seconds": 0.56}
+{"lang": "ha", "intended": "B", "said": "bi", "voice": "mms x0.85", "condition": "snr10", "transcript": "me.", "looped": false, "seconds": 0.6}
+{"lang": "ha", "intended": "B", "said": "bi", "voice": "mms x0.85", "condition": "snr5", "transcript": "e.", "looped": false, "seconds": 0.56}
+{"lang": "ha", "intended": "B", "said": "bi", "voice": "mms x1.0", "condition": "clean", "transcript": "ni.", "looped": false, "seconds": 0.54}
+{"lang": "ha", "intended": "B", "said": "bi", "voice": "mms x1.0", "condition": "snr10", "transcript": "e.", "looped": false, "seconds": 0.55}
+{"lang": "ha", "intended": "B", "said": "bi", "voice": "mms x1.0", "condition": "snr5", "transcript": "e.", "looped": false, "seconds": 0.58}
+{"lang": "ha", "intended": "B", "said": "bi", "voice": "mms x1.2", "condition": "clean", "transcript": "eh", "looped": false, "seconds": 0.58}
+{"lang": "ha", "intended": "B", "said": "bi", "voice": "mms x1.2", "condition": "snr10", "transcript": "e.", "looped": false, "seconds": 0.55}
+{"lang": "ha", "intended": "B", "said": "bi", "voice": "mms x1.2", "condition": "snr5", "transcript": "e.", "looped": false, "seconds": 0.55}
+{"lang": "ha", "intended": "C", "said": "si", "voice": "mms x0.85", "condition": "clean", "transcript": "ji", "looped": false, "seconds": 0.55}
+{"lang": "ha", "intended": "C", "said": "si", "voice": "mms x0.85", "condition": "snr10", "transcript": "eh", "looped": false, "seconds": 0.54}
+{"lang": "ha", "intended": "C", "said": "si", "voice": "mms x0.85", "condition": "snr5", "transcript": "eh", "looped": false, "seconds": 0.54}
+{"lang": "ha", "intended": "C", "said": "si", "voice": "mms x1.0", "condition": "clean", "transcript": "je.", "looped": false, "seconds": 0.54}
+{"lang": "ha", "intended": "C", "said": "si", "voice": "mms x1.0", "condition": "snr10", "transcript": "eh", "looped": false, "seconds": 0.56}
+{"lang": "ha", "intended": "C", "said": "si", "voice": "mms x1.0", "condition": "snr5", "transcript": "eh", "looped": false, "seconds": 0.63}
+{"lang": "ha", "intended": "C", "said": "si", "voice": "mms x1.2", "condition": "clean", "transcript": "je.", "looped": false, "seconds": 0.58}
+{"lang": "ha", "intended": "C", "said": "si", "voice": "mms x1.2", "condition": "snr10", "transcript": "eh", "looped": false, "seconds": 0.54}
+{"lang": "ha", "intended": "C", "said": "si", "voice": "mms x1.2", "condition": "snr5", "transcript": "eh", "looped": false, "seconds": 0.6}
+{"lang": "ha", "intended": "D", "said": "di", "voice": "mms x0.85", "condition": "clean", "transcript": "eh", "looped": false, "seconds": 0.56}
+{"lang": "ha", "intended": "D", "said": "di", "voice": "mms x0.85", "condition": "snr10", "transcript": "e.", "looped": false, "seconds": 0.56}
+{"lang": "ha", "intended": "D", "said": "di", "voice": "mms x0.85", "condition": "snr5", "transcript": "kiye.", "looped": false, "seconds": 0.75}
+{"lang": "ha", "intended": "D", "said": "di", "voice": "mms x1.0", "condition": "clean", "transcript": "eh", "looped": false, "seconds": 0.64}
+{"lang": "ha", "intended": "D", "said": "di", "voice": "mms x1.0", "condition": "snr10", "transcript": "eh", "looped": false, "seconds": 0.57}
+{"lang": "ha", "intended": "D", "said": "di", "voice": "mms x1.0", "condition": "snr5", "transcript": "eh", "looped": false, "seconds": 0.58}
+{"lang": "ha", "intended": "D", "said": "di", "voice": "mms x1.2", "condition": "clean", "transcript": "eh", "looped": false, "seconds": 0.6}
+{"lang": "ha", "intended": "D", "said": "di", "voice": "mms x1.2", "condition": "snr10", "transcript": "e.", "looped": false, "seconds": 0.55}
+{"lang": "ha", "intended": "D", "said": "di", "voice": "mms x1.2", "condition": "snr5", "transcript": "eh", "looped": false, "seconds": 0.55}
+{"lang": "ha", "intended": "yes", "said": "ee", "voice": "mms x0.85", "condition": "clean", "transcript": "eh", "looped": false, "seconds": 0.57}
+{"lang": "ha", "intended": "yes", "said": "ee", "voice": "mms x0.85", "condition": "snr10", "transcript": "eh", "looped": false, "seconds": 0.75}
+{"lang": "ha", "intended": "yes", "said": "ee", "voice": "mms x0.85", "condition": "snr5", "transcript": "eh", "looped": false, "seconds": 0.56}
+{"lang": "ha", "intended": "yes", "said": "ee", "voice": "mms x1.0", "condition": "clean", "transcript": "eh", "looped": false, "seconds": 0.59}
+{"lang": "ha", "intended": "yes", "said": "ee", "voice": "mms x1.0", "condition": "snr10", "transcript": "kiya.", "looped": false, "seconds": 0.84}
+{"lang": "ha", "intended": "yes", "said": "ee", "voice": "mms x1.0", "condition": "snr5", "transcript": "kiya.", "looped": false, "seconds": 0.61}
+{"lang": "ha", "intended": "yes", "said": "ee", "voice": "mms x1.2", "condition": "clean", "transcript": "eh", "looped": false, "seconds": 0.57}
+{"lang": "ha", "intended": "yes", "said": "ee", "voice": "mms x1.2", "condition": "snr10", "transcript": "ki!", "looped": false, "seconds": 0.55}
+{"lang": "ha", "intended": "yes", "said": "ee", "voice": "mms x1.2", "condition": "snr5", "transcript": "ki!", "looped": false, "seconds": 0.59}
+{"lang": "ha", "intended": "no", "said": "a'a", "voice": "mms x0.85", "condition": "clean", "transcript": "ana.", "looped": false, "seconds": 0.7}
+{"lang": "ha", "intended": "no", "said": "a'a", "voice": "mms x0.85", "condition": "snr10", "transcript": "kana?", "looped": false, "seconds": 0.61}
+{"lang": "ha", "intended": "no", "said": "a'a", "voice": "mms x0.85", "condition": "snr5", "transcript": "kana?", "looped": false, "seconds": 0.66}
+{"lang": "ha", "intended": "no", "said": "a'a", "voice": "mms x1.0", "condition": "clean", "transcript": "a da.", "looped": false, "seconds": 0.6}
+{"lang": "ha", "intended": "no", "said": "a'a", "voice": "mms x1.0", "condition": "snr10", "transcript": "wata!", "looped": false, "seconds": 0.59}
+{"lang": "ha", "intended": "no", "said": "a'a", "voice": "mms x1.0", "condition": "snr5", "transcript": "wata!", "looped": false, "seconds": 0.6}
+{"lang": "ha", "intended": "no", "said": "a'a", "voice": "mms x1.2", "condition": "clean", "transcript": "kaka?", "looped": false, "seconds": 0.61}
+{"lang": "ha", "intended": "no", "said": "a'a", "voice": "mms x1.2", "condition": "snr10", "transcript": "ta kai.", "looped": false, "seconds": 0.65}
+{"lang": "ha", "intended": "no", "said": "a'a", "voice": "mms x1.2", "condition": "snr5", "transcript": "ta kai.", "looped": false, "seconds": 0.66}
+{"lang": "ha", "intended": "true", "said": "gaskiya", "voice": "mms x0.85", "condition": "clean", "transcript": "naskiya.", "looped": false, "seconds": 0.65}
+{"lang": "ha", "intended": "true", "said": "gaskiya", "voice": "mms x0.85", "condition": "snr10", "transcript": "glaskiya!", "looped": false, "seconds": 0.71}
+{"lang": "ha", "intended": "true", "said": "gaskiya", "voice": "mms x0.85", "condition": "snr5", "transcript": "gana siya.", "looped": false, "seconds": 0.7}
+{"lang": "ha", "intended": "true", "said": "gaskiya", "voice": "mms x1.0", "condition": "clean", "transcript": "naskiya", "looped": false, "seconds": 0.67}
+{"lang": "ha", "intended": "true", "said": "gaskiya", "voice": "mms x1.0", "condition": "snr10", "transcript": "nafiya.", "looped": false, "seconds": 0.76}
+{"lang": "ha", "intended": "true", "said": "gaskiya", "voice": "mms x1.0", "condition": "snr5", "transcript": "nafiya", "looped": false, "seconds": 0.68}
+{"lang": "ha", "intended": "true", "said": "gaskiya", "voice": "mms x1.2", "condition": "clean", "transcript": "naskiya", "looped": false, "seconds": 0.66}
+{"lang": "ha", "intended": "true", "said": "gaskiya", "voice": "mms x1.2", "condition": "snr10", "transcript": "nafiya.", "looped": false, "seconds": 0.66}
+{"lang": "ha", "intended": "true", "said": "gaskiya", "voice": "mms x1.2", "condition": "snr5", "transcript": "nafiya.", "looped": false, "seconds": 0.67}
+{"lang": "ha", "intended": "false", "said": "ƙarya", "voice": "mms x0.85", "condition": "clean", "transcript": "karya!", "looped": false, "seconds": 0.67}
+{"lang": "ha", "intended": "false", "said": "ƙarya", "voice": "mms x0.85", "condition": "snr10", "transcript": "tarya!", "looped": false, "seconds": 0.63}
+{"lang": "ha", "intended": "false", "said": "ƙarya", "voice": "mms x0.85", "condition": "snr5", "transcript": "garbiya.", "looped": false, "seconds": 0.66}
+{"lang": "ha", "intended": "false", "said": "ƙarya", "voice": "mms x1.0", "condition": "clean", "transcript": "karya!", "looped": false, "seconds": 0.65}
+{"lang": "ha", "intended": "false", "said": "ƙarya", "voice": "mms x1.0", "condition": "snr10", "transcript": "karya!", "looped": false, "seconds": 0.64}
+{"lang": "ha", "intended": "false", "said": "ƙarya", "voice": "mms x1.0", "condition": "snr5", "transcript": "karya!", "looped": false, "seconds": 0.6}
+{"lang": "ha", "intended": "false", "said": "ƙarya", "voice": "mms x1.2", "condition": "clean", "transcript": "ƙarya!", "looped": false, "seconds": 0.65}
+{"lang": "ha", "intended": "false", "said": "ƙarya", "voice": "mms x1.2", "condition": "snr10", "transcript": "gariya.", "looped": false, "seconds": 0.63}
+{"lang": "ha", "intended": "false", "said": "ƙarya", "voice": "mms x1.2", "condition": "snr5", "transcript": "garba ya.", "looped": false, "seconds": 0.68}
+{"lang": "yo", "intended": "A", "said": "à", "voice": "mms x0.85", "condition": "clean", "transcript": "mò ń?", "looped": false, "seconds": 8.98}
+{"lang": "yo", "intended": "A", "said": "à", "voice": "mms x0.85", "condition": "snr10", "transcript": "mò ń?", "looped": false, "seconds": 0.99}
+{"lang": "yo", "intended": "A", "said": "à", "voice": "mms x0.85", "condition": "snr5", "transcript": "mò ń?", "looped": false, "seconds": 1.17}
+{"lang": "yo", "intended": "A", "said": "à", "voice": "mms x1.0", "condition": "clean", "transcript": "mò ń?", "looped": false, "seconds": 0.84}
+{"lang": "yo", "intended": "A", "said": "à", "voice": "mms x1.0", "condition": "snr10", "transcript": "ǹjẹ́ o máa ń ṣe ọ̀pọ̀lọpọ̀ ọ̀pọ̀lọpọ̀ ọ̀pọ̀lọpọ̀ ọ̀pọ̀lọpọ̀ ọ̀pọ̀lọpọ̀ ọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀p", "looped": true, "seconds": 25.6}
+{"lang": "yo", "intended": "A", "said": "à", "voice": "mms x1.0", "condition": "snr5", "transcript": "máa!", "looped": false, "seconds": 1.38}
+{"lang": "yo", "intended": "A", "said": "à", "voice": "mms x1.2", "condition": "clean", "transcript": "mò ń?", "looped": false, "seconds": 1.52}
+{"lang": "yo", "intended": "A", "said": "à", "voice": "mms x1.2", "condition": "snr10", "transcript": "máa!", "looped": false, "seconds": 0.69}
+{"lang": "yo", "intended": "A", "said": "à", "voice": "mms x1.2", "condition": "snr5", "transcript": "máa!", "looped": false, "seconds": 0.64}
+{"lang": "yo", "intended": "B", "said": "bí", "voice": "mms x0.85", "condition": "clean", "transcript": "èé?", "looped": false, "seconds": 0.82}
+{"lang": "yo", "intended": "B", "said": "bí", "voice": "mms x0.85", "condition": "snr10", "transcript": "kín?", "looped": false, "seconds": 0.65}
+{"lang": "yo", "intended": "B", "said": "bí", "voice": "mms x0.85", "condition": "snr5", "transcript": "kín?", "looped": false, "seconds": 0.6}
+{"lang": "yo", "intended": "B", "said": "bí", "voice": "mms x1.0", "condition": "clean", "transcript": "e?", "looped": false, "seconds": 0.65}
+{"lang": "yo", "intended": "B", "said": "bí", "voice": "mms x1.0", "condition": "snr10", "transcript": "bẹ́ẹ̀ ni?", "looped": false, "seconds": 1.51}
+{"lang": "yo", "intended": "B", "said": "bí", "voice": "mms x1.0", "condition": "snr5", "transcript": "bẹ́ẹ̀ni", "looped": false, "seconds": 1.51}
+{"lang": "yo", "intended": "B", "said": "bí", "voice": "mms x1.2", "condition": "clean", "transcript": "bẹ́ẹ̀ni, mo fẹ́ lọ sí ibi ìgbéyàwó náà.", "looped": false, "seconds": 2.01}
+{"lang": "yo", "intended": "B", "said": "bí", "voice": "mms x1.2", "condition": "snr10", "transcript": "fín!", "looped": false, "seconds": 0.64}
+{"lang": "yo", "intended": "B", "said": "bí", "voice": "mms x1.2", "condition": "snr5", "transcript": "fún!", "looped": false, "seconds": 0.76}
+{"lang": "yo", "intended": "C", "said": "sí", "voice": "mms x0.85", "condition": "clean", "transcript": "ééééééééééééééééééééèééèééèééèééèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéèéè", "looped": false, "seconds": 26.43}
+{"lang": "yo", "intended": "C", "said": "sí", "voice": "mms x0.85", "condition": "snr10", "transcript": "rii", "looped": false, "seconds": 0.62}
+{"lang": "yo", "intended": "C", "said": "sí", "voice": "mms x0.85", "condition": "snr5", "transcript": "bẹ́ẹ̀ni", "looped": false, "seconds": 1.62}
+{"lang": "yo", "intended": "C", "said": "sí", "voice": "mms x1.0", "condition": "clean", "transcript": "yì yìí.", "looped": false, "seconds": 0.75}
+{"lang": "yo", "intended": "C", "said": "sí", "voice": "mms x1.0", "condition": "snr10", "transcript": "bẹ́ẹ̀ni, bẹ́ẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀ni, bẹ̀rẹ̀", "looped": true, "seconds": 29.75}
+{"lang": "yo", "intended": "C", "said": "sí", "voice": "mms x1.0", "condition": "snr5", "transcript": "mú!", "looped": false, "seconds": 1.07}
+{"lang": "yo", "intended": "C", "said": "sí", "voice": "mms x1.2", "condition": "clean", "transcript": "e", "looped": false, "seconds": 0.59}
+{"lang": "yo", "intended": "C", "said": "sí", "voice": "mms x1.2", "condition": "snr10", "transcript": "fí!", "looped": false, "seconds": 0.6}
+{"lang": "yo", "intended": "C", "said": "sí", "voice": "mms x1.2", "condition": "snr5", "transcript": "bẹ́ẹ̀ni", "looped": false, "seconds": 0.85}
+{"lang": "yo", "intended": "D", "said": "dí", "voice": "mms x0.85", "condition": "clean", "transcript": "kí.", "looped": false, "seconds": 0.6}
+{"lang": "yo", "intended": "D", "said": "dí", "voice": "mms x0.85", "condition": "snr10", "transcript": "fín yóò lọ sí ọ̀dọ̀ ọ̀dọ̀pọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀lọpọ̀pọ̀lọpọ̀pọ̀lọpọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀pọ̀", "looped": false, "seconds": 25.13}
+{"lang": "yo", "intended": "D", "said": "dí", "voice": "mms x0.85", "condition": "snr5", "transcript": "fún bú!", "looped": false, "seconds": 0.75}
+{"lang": "yo", "intended": "D", "said": "dí", "voice": "mms x1.0", "condition": "clean", "transcript": "kí.", "looped": false, "seconds": 0.62}
+{"lang": "yo", "intended": "D", "said": "dí", "voice": "mms x1.0", "condition": "snr10", "transcript": "fi", "looped": false, "seconds": 0.61}
+{"lang": "yo", "intended": "D", "said": "dí", "voice": "mms x1.0", "condition": "snr5", "transcript": "fín!", "looped": false, "seconds": 0.61}
+{"lang": "yo", "intended": "D", "said": "dí", "voice": "mms x1.2", "condition": "clean", "transcript": "kí.", "looped": false, "seconds": 0.6}
+{"lang": "yo", "intended": "D", "said": "dí", "voice": "mms x1.2", "condition": "snr10", "transcript": "fí!", "looped": false, "seconds": 0.61}
+{"lang": "yo", "intended": "D", "said": "dí", "voice": "mms x1.2", "condition": "snr5", "transcript": "fún!", "looped": false, "seconds": 0.62}
+{"lang": "yo", "intended": "yes", "said": "bẹ́ẹ̀ni", "voice": "mms x0.85", "condition": "clean", "transcript": "bẹ́ẹ̀ni", "looped": false, "seconds": 0.88}
+{"lang": "yo", "intended": "yes", "said": "bẹ́ẹ̀ni", "voice": "mms x0.85", "condition": "snr10", "transcript": "bẹ́ẹ̀ni, yóò", "looped": false, "seconds": 1.09}
+{"lang": "yo", "intended": "yes", "said": "bẹ́ẹ̀ni", "voice": "mms x0.85", "condition": "snr5", "transcript": "bẹ́ẹ̀ni, yóò", "looped": false, "seconds": 1.68}
+{"lang": "yo", "intended": "yes", "said": "bẹ́ẹ̀ni", "voice": "mms x1.0", "condition": "clean", "transcript": "bẹ́ẹ̀ni", "looped": false, "seconds": 1.04}
+{"lang": "yo", "intended": "yes", "said": "bẹ́ẹ̀ni", "voice": "mms x1.0", "condition": "snr10", "transcript": "bẹ́ẹ̀ni ni", "looped": false, "seconds": 1.01}
+{"lang": "yo", "intended": "yes", "said": "bẹ́ẹ̀ni", "voice": "mms x1.0", "condition": "snr5", "transcript": "bẹ́ẹ̀ni ni", "looped": false, "seconds": 1.05}
+{"lang": "yo", "intended": "yes", "said": "bẹ́ẹ̀ni", "voice": "mms x1.2", "condition": "clean", "transcript": "bẹ́ẹ̀ni", "looped": false, "seconds": 0.85}
+{"lang": "yo", "intended": "yes", "said": "bẹ́ẹ̀ni", "voice": "mms x1.2", "condition": "snr10", "transcript": "bẹ́ẹ̀ni, yóò", "looped": false, "seconds": 0.98}
+{"lang": "yo", "intended": "yes", "said": "bẹ́ẹ̀ni", "voice": "mms x1.2", "condition": "snr5", "transcript": "bẹ́ẹ̀ni, yóò", "looped": false, "seconds": 1.13}
+{"lang": "yo", "intended": "no", "said": "rárá", "voice": "mms x0.85", "condition": "clean", "transcript": "pa ń ra ọ́.", "looped": false, "seconds": 0.84}
+{"lang": "yo", "intended": "no", "said": "rárá", "voice": "mms x0.85", "condition": "snr10", "transcript": "àwọn ọmọ àwọn.", "looped": false, "seconds": 0.98}
+{"lang": "yo", "intended": "no", "said": "rárá", "voice": "mms x0.85", "condition": "snr5", "transcript": "àwọn ọmọ àwọn.", "looped": false, "seconds": 0.96}
+{"lang": "yo", "intended": "no", "said": "rárá", "voice": "mms x1.0", "condition": "clean", "transcript": "ọ̀rọ̀ ọ̀rọ̀ àná", "looped": false, "seconds": 1.41}
+{"lang": "yo", "intended": "no", "said": "rárá", "voice": "mms x1.0", "condition": "snr10", "transcript": "ọlọ́run.", "looped": false, "seconds": 0.85}
+{"lang": "yo", "intended": "no", "said": "rárá", "voice": "mms x1.0", "condition": "snr5", "transcript": "ọmọ ẹ̀.", "looped": false, "seconds": 0.82}
+{"lang": "yo", "intended": "no", "said": "rárá", "voice": "mms x1.2", "condition": "clean", "transcript": "pàrọ̀ án.", "looped": false, "seconds": 0.99}
+{"lang": "yo", "intended": "no", "said": "rárá", "voice": "mms x1.2", "condition": "snr10", "transcript": "ọmọ", "looped": false, "seconds": 0.79}
+{"lang": "yo", "intended": "no", "said": "rárá", "voice": "mms x1.2", "condition": "snr5", "transcript": "ọmọ", "looped": false, "seconds": 0.83}
+{"lang": "yo", "intended": "true", "said": "òótọ́", "voice": "mms x0.85", "condition": "clean", "transcript": "o sọ́ ọ́.", "looped": false, "seconds": 1.02}
+{"lang": "yo", "intended": "true", "said": "òótọ́", "voice": "mms x0.85", "condition": "snr10", "transcript": "o tọ́ ọ́.", "looped": false, "seconds": 0.85}
+{"lang": "yo", "intended": "true", "said": "òótọ́", "voice": "mms x0.85", "condition": "snr5", "transcript": "o tọ́ ọ́.", "looped": false, "seconds": 0.82}
+{"lang": "yo", "intended": "true", "said": "òótọ́", "voice": "mms x1.0", "condition": "clean", "transcript": "o sọ́ ọ́.", "looped": false, "seconds": 0.88}
+{"lang": "yo", "intended": "true", "said": "òótọ́", "voice": "mms x1.0", "condition": "snr10", "transcript": "o tọ́ ọ́.", "looped": false, "seconds": 0.83}
+{"lang": "yo", "intended": "true", "said": "òótọ́", "voice": "mms x1.0", "condition": "snr5", "transcript": "mo tó ń wọ́n.", "looped": false, "seconds": 0.92}
+{"lang": "yo", "intended": "true", "said": "òótọ́", "voice": "mms x1.2", "condition": "clean", "transcript": "o tún", "looped": false, "seconds": 0.84}
+{"lang": "yo", "intended": "true", "said": "òótọ́", "voice": "mms x1.2", "condition": "snr10", "transcript": "o tún", "looped": false, "seconds": 0.81}
+{"lang": "yo", "intended": "true", "said": "òótọ́", "voice": "mms x1.2", "condition": "snr5", "transcript": "o tún", "looped": false, "seconds": 0.65}
+{"lang": "yo", "intended": "false", "said": "irọ́", "voice": "mms x0.85", "condition": "clean", "transcript": "ìlú ọ̀hùn.", "looped": false, "seconds": 1.06}
+{"lang": "yo", "intended": "false", "said": "irọ́", "voice": "mms x0.85", "condition": "snr10", "transcript": "kí ló ń?", "looped": false, "seconds": 0.79}
+{"lang": "yo", "intended": "false", "said": "irọ́", "voice": "mms x0.85", "condition": "snr5", "transcript": "ṣé máa ń wọ́n?", "looped": false, "seconds": 0.97}
+{"lang": "yo", "intended": "false", "said": "irọ́", "voice": "mms x1.0", "condition": "clean", "transcript": "ìlú ọ́n.", "looped": false, "seconds": 0.84}
+{"lang": "yo", "intended": "false", "said": "irọ́", "voice": "mms x1.0", "condition": "snr10", "transcript": "kí ló ń wọ́n?", "looped": false, "seconds": 0.97}
+{"lang": "yo", "intended": "false", "said": "irọ́", "voice": "mms x1.0", "condition": "snr5", "transcript": "kí ló ń wọ́n?", "looped": false, "seconds": 0.98}
+{"lang": "yo", "intended": "false", "said": "irọ́", "voice": "mms x1.2", "condition": "clean", "transcript": "irun", "looped": false, "seconds": 0.94}
+{"lang": "yo", "intended": "false", "said": "irọ́", "voice": "mms x1.2", "condition": "snr10", "transcript": "ṣé wọ́n wọn?", "looped": false, "seconds": 0.89}
+{"lang": "yo", "intended": "false", "said": "irọ́", "voice": "mms x1.2", "condition": "snr5", "transcript": "ṣé wọ́n wọn?", "looped": false, "seconds": 0.98}
+{"lang": "ig", "intended": "A", "said": "ei", "voice": "VITS onex0.85", "condition": "clean", "transcript": "nne nne nne bụ ọrụ na-enye nwere enere.", "looped": false, "seconds": 10.49}
+{"lang": "ig", "intended": "A", "said": "ei", "voice": "VITS onex0.85", "condition": "snr10", "transcript": "nne nne nne bụ ọrụ dị ghere eghere eghere.", "looped": false, "seconds": 1.83}
+{"lang": "ig", "intended": "A", "said": "ei", "voice": "VITS onex0.85", "condition": "snr5", "transcript": "ị na-enye n'ugwu nwere gị nyere ihe nra.", "looped": false, "seconds": 1.82}
+{"lang": "ig", "intended": "B", "said": "bi", "voice": "VITS onex0.85", "condition": "clean", "transcript": "nne nne nne nne ya bụrụ ụlọ ụmụ nwunye nne nne nne nne nne nne nne nne.", "looped": true, "seconds": 3.02}
+{"lang": "ig", "intended": "B", "said": "bi", "voice": "VITS onex0.85", "condition": "snr10", "transcript": "nne nne nne nne nne bụrụrụ mụ nwunye nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne", "looped": true, "seconds": 25.19}
+{"lang": "ig", "intended": "B", "said": "bi", "voice": "VITS onex0.85", "condition": "snr5", "transcript": "nne nne nne nne nne gburugburu mmụgburu nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne nne", "looped": true, "seconds": 24.82}
+{"lang": "ig", "intended": "C", "said": "si", "voice": "VITS onex0.85", "condition": "clean", "transcript": "ee, enugwu onye nri nri nri nri nri.", "looped": true, "seconds": 1.87}
+{"lang": "ig", "intended": "C", "said": "si", "voice": "VITS onex0.85", "condition": "snr10", "transcript": "nne m enugwu nwunye nri nri nri nri nri nri.", "looped": true, "seconds": 1.89}
+{"lang": "ig", "intended": "C", "said": "si", "voice": "VITS onex0.85", "condition": "snr5", "transcript": "nne m emụrụ onye n'elu egwuregwu n'elu.", "looped": false, "seconds": 1.74}
+{"lang": "ig", "intended": "D", "said": "di", "voice": "VITS onex0.85", "condition": "clean", "transcript": "kpụrụ ehi ya!", "looped": false, "seconds": 1.37}
+{"lang": "ig", "intended": "D", "said": "di", "voice": "VITS onex0.85", "condition": "snr10", "transcript": "kriere a ya!", "looped": false, "seconds": 1.18}
+{"lang": "ig", "intended": "D", "said": "di", "voice": "VITS onex0.85", "condition": "snr5", "transcript": "kriere a ya!", "looped": false, "seconds": 1.09}
+{"lang": "ig", "intended": "false", "said": "ụgha", "voice": "VITS onex0.85", "condition": "clean", "transcript": "e na-eghere eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eghe eg", "looped": true, "seconds": 24.84}
+{"lang": "ig", "intended": "false", "said": "ụgha", "voice": "VITS onex0.85", "condition": "snr10", "transcript": "a na-agaghịrị a na-arịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịr", "looped": false, "seconds": 25.63}
+{"lang": "ig", "intended": "false", "said": "ụgha", "voice": "VITS onex0.85", "condition": "snr5", "transcript": "a na-adịrị na mkparịrị na-enye na-enye na-enye mkpụrụ ihe mụrụ mụrụ n'ọrịrịrị.", "looped": false, "seconds": 3.35}
+{"lang": "ig", "intended": "no", "said": "mba", "voice": "VITS onex0.85", "condition": "clean", "transcript": "n'ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọr", "looped": true, "seconds": 26.26}
+{"lang": "ig", "intended": "no", "said": "mba", "voice": "VITS onex0.85", "condition": "snr10", "transcript": "na nwụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụrụ mkpụ mkpụrụ mkpụ mkpụrụ mkpụ mkpụrụ mkpụ mkpụ mkpụrụ mkpụ mkpụ mkpụ mkpụ mkpụ mk", "looped": true, "seconds": 25.06}
+{"lang": "ig", "intended": "no", "said": "mba", "voice": "VITS onex0.85", "condition": "snr5", "transcript": "na nwụrụ nwere ụlọ ụlọ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọr", "looped": true, "seconds": 25.34}
+{"lang": "ig", "intended": "true", "said": "eziokwu", "voice": "VITS onex0.85", "condition": "clean", "transcript": "enyi mara ahụrụ ihe uwe uwe n'izu m", "looped": false, "seconds": 2.18}
+{"lang": "ig", "intended": "true", "said": "eziokwu", "voice": "VITS onex0.85", "condition": "snr10", "transcript": "enyi m gara ahụrụ ihe uwe uwe n'izu na ya.", "looped": false, "seconds": 1.86}
+{"lang": "ig", "intended": "true", "said": "eziokwu", "voice": "VITS onex0.85", "condition": "snr5", "transcript": "elee m gara agha ihe rụrụ rụrụ n'izu na ya?", "looped": false, "seconds": 1.97}
+{"lang": "ig", "intended": "yes", "said": "ee", "voice": "VITS onex0.85", "condition": "clean", "transcript": "ị ga-enye m okpukpe?", "looped": false, "seconds": 1.3}
+{"lang": "ig", "intended": "yes", "said": "ee", "voice": "VITS onex0.85", "condition": "snr10", "transcript": "ị ga-enye m?", "looped": false, "seconds": 1.32}
+{"lang": "ig", "intended": "yes", "said": "ee", "voice": "VITS onex0.85", "condition": "snr5", "transcript": "ị ga-egbe n'ụlọ?", "looped": false, "seconds": 1.34}
+{"lang": "ig", "intended": "A", "said": "ei", "voice": "VITS onex1.0", "condition": "clean", "transcript": "ee, onye na-eghere eghe.", "looped": false, "seconds": 1.4}
+{"lang": "ig", "intended": "A", "said": "ei", "voice": "VITS onex1.0", "condition": "snr10", "transcript": "ee, onye na-ere n'ihi.", "looped": false, "seconds": 1.28}
+{"lang": "ig", "intended": "A", "said": "ei", "voice": "VITS onex1.0", "condition": "snr5", "transcript": "ee, onye na-ere nri ya.", "looped": false, "seconds": 1.3}
+{"lang": "ig", "intended": "B", "said": "bi", "voice": "VITS onex1.0", "condition": "clean", "transcript": "mmiri nri nri nri na ọrụrụ ọrụrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọr", "looped": true, "seconds": 26.11}
+{"lang": "ig", "intended": "B", "said": "bi", "voice": "VITS onex1.0", "condition": "snr10", "transcript": "mmiri arụrụ arụrụ ọrụ arụrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọ", "looped": true, "seconds": 25.26}
+{"lang": "ig", "intended": "B", "said": "bi", "voice": "VITS onex1.0", "condition": "snr5", "transcript": "mmiri arịrịrịrị n'elu ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọr", "looped": true, "seconds": 24.86}
+{"lang": "ig", "intended": "C", "said": "si", "voice": "VITS onex1.0", "condition": "clean", "transcript": "n'ere ele onyere ihe.", "looped": false, "seconds": 1.38}
+{"lang": "ig", "intended": "C", "said": "si", "voice": "VITS onex1.0", "condition": "snr10", "transcript": "meere elekwunye nri.", "looped": false, "seconds": 1.28}
+{"lang": "ig", "intended": "C", "said": "si", "voice": "VITS onex1.0", "condition": "snr5", "transcript": "merela onye onye.", "looped": false, "seconds": 1.42}
+{"lang": "ig", "intended": "D", "said": "di", "voice": "VITS onex1.0", "condition": "clean", "transcript": "mmiri ahụ enugwu o bule?", "looped": false, "seconds": 1.39}
+{"lang": "ig", "intended": "D", "said": "di", "voice": "VITS onex1.0", "condition": "snr10", "transcript": "nne ya ya nụrụ n'ụlọ ya.", "looped": false, "seconds": 1.61}
+{"lang": "ig", "intended": "D", "said": "di", "voice": "VITS onex1.0", "condition": "snr5", "transcript": "nne ya ya lụrụ ọdụla.", "looped": false, "seconds": 1.42}
+{"lang": "ig", "intended": "false", "said": "ụgha", "voice": "VITS onex1.0", "condition": "clean", "transcript": "n'ọdụla na-arụ n'aheghị a na-arụ n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'aheghị n'ah", "looped": true, "seconds": 25.4}
+{"lang": "ig", "intended": "false", "said": "ụgha", "voice": "VITS onex1.0", "condition": "snr10", "transcript": "n'oge aṅara, ọ na-eghere n'anọrọ ịdịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịr", "looped": false, "seconds": 25.48}
+{"lang": "ig", "intended": "false", "said": "ụgha", "voice": "VITS onex1.0", "condition": "snr5", "transcript": "n'oge gara aga, ọ naghị e gara aga n'idi n'idi n'idi n'idi n'idi n'idi ụwa ọhụrụ.", "looped": true, "seconds": 3.22}
+{"lang": "ig", "intended": "no", "said": "mba", "voice": "VITS onex1.0", "condition": "clean", "transcript": "ụlọ ihe ihe ụlọ ụgụrụ ma ọ bụrụ nwa oghereghere ha eghereghe.", "looped": false, "seconds": 2.51}
+{"lang": "ig", "intended": "no", "said": "mba", "voice": "VITS onex1.0", "condition": "snr10", "transcript": "dịdịrị ya ụlọ gụrụ ọgụmụ gụrụ ọdịdịrị nri agadi.", "looped": false, "seconds": 2.62}
+{"lang": "ig", "intended": "no", "said": "mba", "voice": "VITS onex1.0", "condition": "snr5", "transcript": "dị dị n'ahịa ụlọ ọgwụ ma ọ dị n'ọgwụ mgbe mgbe mgbe gị.", "looped": false, "seconds": 2.62}
+{"lang": "ig", "intended": "true", "said": "eziokwu", "voice": "VITS onex1.0", "condition": "clean", "transcript": "e n'ịrịghị ya nwụrụ onwe dị iri ya.", "looped": false, "seconds": 2.1}
+{"lang": "ig", "intended": "true", "said": "eziokwu", "voice": "VITS onex1.0", "condition": "snr10", "transcript": "e n'ili ya nwara n'ụlọ nwee dị iri ya.", "looped": false, "seconds": 1.86}
+{"lang": "ig", "intended": "true", "said": "eziokwu", "voice": "VITS onex1.0", "condition": "snr5", "transcript": "ee, m niile nwụrụ nwee dị iri ya.", "looped": false, "seconds": 1.81}
+{"lang": "ig", "intended": "yes", "said": "ee", "voice": "VITS onex1.0", "condition": "clean", "transcript": "ee, enwere ọgụ rọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọr", "looped": false, "seconds": 25.32}
+{"lang": "ig", "intended": "yes", "said": "ee", "voice": "VITS onex1.0", "condition": "snr10", "transcript": "ele enwere ugwu mụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụrụ", "looped": false, "seconds": 26.02}
+{"lang": "ig", "intended": "yes", "said": "ee", "voice": "VITS onex1.0", "condition": "snr5", "transcript": "ee, enwere ụgụ mụrụrụ mụrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ", "looped": true, "seconds": 25.2}
+{"lang": "ig", "intended": "A", "said": "ei", "voice": "VITS onex1.2", "condition": "clean", "transcript": "kpọrọ m rụnyere rịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrịrị", "looped": false, "seconds": 24.75}
+{"lang": "ig", "intended": "A", "said": "ei", "voice": "VITS onex1.2", "condition": "snr10", "transcript": "kpọọ m ihe nri nri nri nri nri nri nri nri nri!", "looped": true, "seconds": 2.28}
+{"lang": "ig", "intended": "A", "said": "ei", "voice": "VITS onex1.2", "condition": "snr5", "transcript": "kpọọ m nye nri nri nri nri nri nri nri nri nri!", "looped": true, "seconds": 2.34}
+{"lang": "ig", "intended": "B", "said": "bi", "voice": "VITS onex1.2", "condition": "clean", "transcript": "nnenere ya elena m.", "looped": false, "seconds": 1.39}
+{"lang": "ig", "intended": "B", "said": "bi", "voice": "VITS onex1.2", "condition": "snr10", "transcript": "mmiri na elena m.", "looped": false, "seconds": 1.27}
+{"lang": "ig", "intended": "B", "said": "bi", "voice": "VITS onex1.2", "condition": "snr5", "transcript": "mmiri na ele na mgbe.", "looped": false, "seconds": 1.15}
+{"lang": "ig", "intended": "C", "said": "si", "voice": "VITS onex1.2", "condition": "clean", "transcript": "m ga-enye n'ele n'ụlọ m.", "looped": false, "seconds": 1.54}
+{"lang": "ig", "intended": "C", "said": "si", "voice": "VITS onex1.2", "condition": "snr10", "transcript": "m ga-enwe ebe n'ụlọ m.", "looped": false, "seconds": 1.53}
+{"lang": "ig", "intended": "C", "said": "si", "voice": "VITS onex1.2", "condition": "snr5", "transcript": "m ga-enwe ebe n'ụlọ m.", "looped": false, "seconds": 1.48}
+{"lang": "ig", "intended": "D", "said": "di", "voice": "VITS onex1.2", "condition": "clean", "transcript": "nne bụ arọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọrọ", "looped": false, "seconds": 25.59}
+{"lang": "ig", "intended": "D", "said": "di", "voice": "VITS onex1.2", "condition": "snr10", "transcript": "nne m gwara rụrụ ụlọ ụlọ ọrụ m bụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ ọrụ", "looped": true, "seconds": 25.19}
+{"lang": "ig", "intended": "D", "said": "di", "voice": "VITS onex1.2", "condition": "snr5", "transcript": "mmiri gwara rụrụrụ ụlọ ụlọ ahụrụ ndụ ọgwụ adịghị mmiri.", "looped": false, "seconds": 2.62}
+{"lang": "ig", "intended": "false", "said": "ụgha", "voice": "VITS onex1.2", "condition": "clean", "transcript": "nwee ọrụ hụrụ na-adịghị ihe ụtọ.", "looped": false, "seconds": 2.04}
+{"lang": "ig", "intended": "false", "said": "ụgha", "voice": "VITS onex1.2", "condition": "snr10", "transcript": "onye ọrụ ụzọ na-adịghị niile.", "looped": false, "seconds": 1.78}
+{"lang": "ig", "intended": "false", "said": "ụgha", "voice": "VITS onex1.2", "condition": "snr5", "transcript": "ọrụ ọzọla na-adịghị niile.", "looped": false, "seconds": 1.66}
+{"lang": "ig", "intended": "no", "said": "mba", "voice": "VITS onex1.2", "condition": "clean", "transcript": "ọ̀ ọ̀ ọ̀ ọ̀ ọ̀ ọ̀ ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò ò o", "looped": true, "seconds": 25.02}
+{"lang": "ig", "intended": "no", "said": "mba", "voice": "VITS onex1.2", "condition": "snr10", "transcript": "ụlọ iri nri rụrụ ụmụ rụrụ ụgụrụ.", "looped": false, "seconds": 2.07}
+{"lang": "ig", "intended": "no", "said": "mba", "voice": "VITS onex1.2", "condition": "snr5", "transcript": "ọkwụkwụ ndị enyi gụrụ ụmụrụ gụrụ.", "looped": false, "seconds": 2.1}
+{"lang": "ig", "intended": "true", "said": "eziokwu", "voice": "VITS onex1.2", "condition": "clean", "transcript": "ndị iriwe iriwa azụzụ mere ya.", "looped": false, "seconds": 1.6}
+{"lang": "ig", "intended": "true", "said": "eziokwu", "voice": "VITS onex1.2", "condition": "snr10", "transcript": "ndị mmiri onye nwe na-eri ụwa ozuzo mere nwere.", "looped": false, "seconds": 1.88}
+{"lang": "ig", "intended": "true", "said": "eziokwu", "voice": "VITS onex1.2", "condition": "snr5", "transcript": "ndị nri nwe na iri wọọsụ jụọ merụrụ ya.", "looped": false, "seconds": 1.86}
+{"lang": "ig", "intended": "yes", "said": "ee", "voice": "VITS onex1.2", "condition": "clean", "transcript": "e nweghere eghe.", "looped": false, "seconds": 1.23}
+{"lang": "ig", "intended": "yes", "said": "ee", "voice": "VITS onex1.2", "condition": "snr10", "transcript": "e nweghị dị gị.", "looped": false, "seconds": 1.25}
+{"lang": "ig", "intended": "yes", "said": "ee", "voice": "VITS onex1.2", "condition": "snr5", "transcript": "e nweghị dị ihe.", "looped": false, "seconds": 1.32}

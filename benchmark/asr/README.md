@@ -24,3 +24,22 @@ HF_TOKEN=... backend/.venv/bin/python benchmark/asr/asr_bench.py --langs ha,yo,i
 ```
 Add `--resummarize` to re-score a finished run from its `outputs.jsonl` without the models.
 Needs `backend/requirements-asr.txt` and a Hugging Face token that accepted the N-ATLaS terms.
+
+## Quiz answers: is the right answer understood?
+
+`answers_bench.py` measures what matters for the quiz: whether "A, B, C, D, yes, no, true,
+false" (Yorùbá "à, bí, sí, dí"…) is taken for the answer the learner meant. It scores the
+app's own rules (`app/test_tool/score_answers_test.dart`), not word error rate.
+
+- **Clips:** synthetic, until we have consented recordings. English, Hausa and Yorùbá come
+  from MMS-TTS (CC BY-NC 4.0) at three speaking rates; English also from four macOS voices;
+  Igbo from the VITS OpenBible Igbo voice (CC BY-SA 4.0) through Coqui TTS in its own
+  environment (`synth_igbo_coqui.py`). Each clip is tested clean and at 10 dB and 5 dB SNR.
+- **Outcomes:** right, wrong (the app would then ask "You said C. Is that right?"), or
+  unclear (asked again). Looping transcripts count as heard nothing, as on the server.
+
+```bash
+COQUI_PYTHON=<python with coqui-tts> HF_TOKEN=... backend/.venv/bin/python benchmark/asr/answers_bench.py \
+  --langs en,ha,yo,ig --out benchmark/asr/results/<run>
+backend/.venv/bin/python benchmark/asr/answers_bench.py --rescore --out benchmark/asr/results/<run>
+```

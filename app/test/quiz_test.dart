@@ -266,6 +266,13 @@ void main() {
         ('ee', 0),
         ('mba', 1),
         ("I think it's false", 1),
+        // The words themselves (added after the quiz-answer ASR test).
+        ('gaskiya', 0),
+        ('ƙarya', 1),
+        ('òótọ́', 0),
+        ('irọ́', 1),
+        ('eziokwu', 0),
+        ('ụgha', 1),
       ]) {
         expect(answered(hearOne(said, tf)), want, reason: said);
       }
