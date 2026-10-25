@@ -13,6 +13,22 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · OCR tests: one font everywhere, and run in the production image (CI)
+
+- **What we found:** setting up CI showed that 3 faint-print tests passed on the Mac but failed on Linux, including **inside the production image** (Tesseract 5.5.0).
+  - The cause was the font, not the Tesseract version. macOS drew the generated test pages in Arial, Linux in DejaVu Sans.
+  - With DejaVu, the case "blurred dose line, no text read, report a faint region" (blur 4) read text instead: "Oo not tame more ther **6** im 24 hours". The printed number is **8**.
+- **Safety held:** in every run where the 8 came back as 6 (blur 3 and 4, both fonts, both machines), `/read` flagged the number with `number_mismatch` (the crop re-read disagreed). At blur 4 the line also got `low_confidence`. Nothing was read out as a clean 6.
+- **Changes:**
+  - All generated test pages are now drawn with one shipped font (`backend/tests/fixtures/fonts/DejaVuSans.ttf`, free licence; `tests/pagefont.py`).
+  - The faint-region tests use blur 5, where no text comes back.
+  - The smudge test now covers the real end of the line: with the wider font, "rs" from "hours" was still visible and read as a separate line.
+  - New test: a blurred dose misread as another number must carry a warning.
+  - CI runs the backend tests inside the production Docker image, not on Ubuntu's Tesseract 5.3.4.
+  - Results: 290 passed on the Mac; 287 passed and 4 skipped in the production image (no speech packages there).
+- **Open (not fixed):** when a smudge falls **in the middle** of the line (font size 44: "than 8 in 24" smudged, read as "Do not take more ts -\* “ours"), the dose number disappears. The only warning is line-level `low_confidence`: there is no "a number may be missing here" warning. Next step: report a gap between recognised words that contains ink, as is already done for line ends. Needs Dr. Amos's view on the wording.
+- **Status:** tests fixed; the mid-line gap is open.
+
 ## 2026-10-25 · Deployed: the backend, Ibà, the PWA and the teacher portal on AWS (London)
 
 - **Server:**

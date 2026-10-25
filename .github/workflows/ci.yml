@@ -18,15 +18,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-        with:
-          python-version: "3.12"
-          cache: pip
-          cache-dependency-path: backend/requirements.txt
-      - run: sudo apt-get update -q && sudo apt-get install -yq tesseract-ocr
-      - run: pip install -r backend/requirements.txt
-      - run: python -m pytest -q
-        working-directory: backend
+      # In the production image, so the tests see the server's Tesseract (5.5.0), not
+      # Ubuntu's (5.3.4 reads the faint-print test pages differently).
+      - run: docker build -q -t magana-backend backend
+      - run: docker run --rm --user root -v "$PWD:/m" -w /m/backend magana-backend python -m pytest -q -p no:cacheprovider
 
   app:
     runs-on: ubuntu-latest

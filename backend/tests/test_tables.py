@@ -9,6 +9,7 @@ from PIL import Image
 
 from app import safety
 from app.main import app, get_engine
+import pagefont
 from app.reader import Cell, Line, Page, PaddleStructureEngine, Table, page_from_structure, parse_table_html
 
 FIXTURE = Path(__file__).parent / "fixtures" / "ppstructurev3_lab_report.json"
@@ -144,9 +145,9 @@ def test_read_endpoint_returns_tables_and_cell_warnings(paddle_client):
 # ---------- real engine, only where paddleocr is installed (requirements-paddle.txt)
 def test_real_ppstructurev3_reads_a_table():
     pytest.importorskip("paddleocr")
-    from PIL import ImageDraw, ImageFont
+    from PIL import ImageDraw
 
-    font = ImageFont.truetype("Arial.ttf", 34) if Path("/System/Library/Fonts").exists() else ImageFont.load_default(size=34)
+    font = pagefont.font(34)
     img = Image.new("RGB", (900, 400), "white")
     d = ImageDraw.Draw(img)
     for r, row in enumerate([["Test", "Result"], ["WBC", "6.4"], ["Platelets", "250"]]):

@@ -1,10 +1,11 @@
-from PIL import Image, ImageDraw, ImageFont
+from PIL import Image, ImageDraw
 from fastapi.testclient import TestClient
 import io
 import pytest
 
 from app import policy, safety
 from app.main import app
+import pagefont
 
 client = TestClient(app)
 
@@ -53,15 +54,7 @@ def test_minors_cannot_use_health_money_or_whatsapp():
 def _page_png(text_lines):
     img = Image.new("RGB", (1200, 120 + 70 * len(text_lines)), "white")
     d = ImageDraw.Draw(img)
-    # DejaVu ships on Linux/Docker; macOS has Arial/Helvetica. The bitmap default is too small for OCR.
-    for name in ("DejaVuSans.ttf", "Arial.ttf", "/System/Library/Fonts/Helvetica.ttc"):
-        try:
-            font = ImageFont.truetype(name, 40)
-            break
-        except OSError:
-            continue
-    else:
-        font = ImageFont.load_default(size=40)
+    font = pagefont.font(40)
     for i, t in enumerate(text_lines):
         d.text((40, 40 + 70 * i), t, fill="black", font=font)
     buf = io.BytesIO(); img.save(buf, "PNG"); return buf.getvalue()

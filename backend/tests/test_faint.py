@@ -3,22 +3,17 @@ import io
 
 import pytest
 from fastapi.testclient import TestClient
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageFilter
 
 from app.main import app
 from app.reader import TesseractEngine, ink_bands, ink_map, read_page
+from pagefont import font
 
 client = TestClient(app)
 PAPER = (250, 248, 240)
 
 
-def _font(size):
-    for name in ("DejaVuSans.ttf", "Arial.ttf", "/System/Library/Fonts/Helvetica.ttc"):
-        try:
-            return ImageFont.truetype(name, size)
-        except OSError:
-            continue
-    return ImageFont.load_default(size=size)
+_font = font
 
 
 def label_page(grey: int | None, blur: float = 0.0) -> Image.Image:
@@ -48,7 +43,7 @@ def test_faint_dose_line_is_recovered(grey, blur):
 
 
 def test_ink_without_readable_text_is_reported_as_a_faint_region():
-    result = read_page(label_page(200, blur=4.0), TesseractEngine())
+    result = read_page(label_page(200, blur=5.0), TesseractEngine())
     assert not any("24" in l["text"] for l in result["lines"])
     [region] = result["faint_regions"]
     assert 190 <= region["top"] <= 260 and region["bottom"] > region["top"]
@@ -77,5 +72,19 @@ def test_ink_bands_find_each_printed_line():
 
 
 def test_read_endpoint_returns_faint_regions():
-    body = client.post("/read", files={"file": ("p.png", png(label_page(200, blur=4.0)))}).json()
+    body = client.post("/read", files={"file": ("p.png", png(label_page(200, blur=5.0)))}).json()
     assert len(body["faint_regions"]) == 1
+
+
+@pytest.mark.parametrize("blur", [3.0, 4.0])
+def test_a_blurred_dose_misread_as_another_number_is_flagged(blur):
+    # Between readable and unreadable, Tesseract reads the printed 8 as 6 (DejaVu Sans, both
+    # Tesseract 5.5.0 in the production image and 5.5.3 on a Mac). The re-read must flag it.
+    body = client.post("/read", data={"mode": "health"},
+                       files={"file": ("p.png", png(label_page(200, blur=blur)))}).json()
+    [dose] = [i for i, l in enumerate(body["lines"]) if "24" in l["text"]]
+    words = body["lines"][dose]["text"].split()
+    flagged = {w["word_index"] for w in body["warnings"] if w["block_index"] == dose}
+    for i, w in enumerate(words):
+        if w.isdigit() and w not in ("8", "24"):
+            assert i in flagged, (words, body["warnings"])

@@ -4,23 +4,15 @@ from pathlib import Path
 
 import pytest
 from fastapi.testclient import TestClient
-from PIL import Image, ImageDraw, ImageFilter, ImageFont
+from PIL import Image, ImageDraw, ImageFilter
 
 from app import safety
 from app.main import app
 from app.reader import TesseractEngine, read_page
+from pagefont import font
 
 client = TestClient(app)
 FIXTURE = Path(__file__).parent / "fixtures" / "misreads" / "line_end_damaged.jpg"
-
-
-def font(size):
-    for name in ("DejaVuSans.ttf", "Arial.ttf", "/System/Library/Fonts/Helvetica.ttc"):
-        try:
-            return ImageFont.truetype(name, size)
-        except OSError:
-            continue
-    return ImageFont.load_default(size=size)
 
 
 def page(lines, size=40, smudge_end_of=None):
@@ -29,8 +21,9 @@ def page(lines, size=40, smudge_end_of=None):
     for i, t in enumerate(lines):
         d.text((60, 60 + 100 * i), t, fill="black", font=font(size))
     if smudge_end_of is not None:
+        # From "than" to past the end of the line.
         y = 50 + 100 * smudge_end_of
-        img.paste(img.crop((430, y, 760, y + 65)).filter(ImageFilter.GaussianBlur(4)), (430, y))
+        img.paste(img.crop((430, y, 900, y + 65)).filter(ImageFilter.GaussianBlur(4)), (430, y))
     return img
 
 

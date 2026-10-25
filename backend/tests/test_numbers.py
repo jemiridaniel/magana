@@ -13,6 +13,7 @@ from PIL import Image
 
 from app import safety
 from app.main import app
+import pagefont
 
 client = TestClient(app)
 MISREADS = Path(__file__).parent / "fixtures" / "misreads"
@@ -205,17 +206,10 @@ def test_punctuation_differences_are_not_disagreements():
 
 
 def _render(lines, size):
-    from PIL import ImageDraw, ImageFont
+    from PIL import ImageDraw
     img = Image.new("RGB", (1500, 100 + 70 * len(lines)), "white")
     d = ImageDraw.Draw(img)
-    for name in ("DejaVuSans.ttf", "Arial.ttf"):
-        try:
-            font = ImageFont.truetype(name, size)
-            break
-        except OSError:
-            continue
-    else:
-        font = ImageFont.load_default(size=size)
+    font = pagefont.font(size)
     for i, t in enumerate(lines):
         d.text((50, 40 + 70 * i), t, fill="black", font=font)
     buf = io.BytesIO(); img.save(buf, "PNG"); return buf.getvalue()
