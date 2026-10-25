@@ -42,7 +42,10 @@ def main() -> None:
     model.eval()
 
     def generate(messages, use_adapter: bool) -> str:
-        ids = tok.apply_chat_template(messages, add_generation_prompt=True, return_tensors="pt").to(0)
+        # Render to text first, as train.py does: apply_chat_template's tensor return type
+        # differs across transformers versions (a BatchEncoding in newer ones).
+        text = tok.apply_chat_template(messages, add_generation_prompt=True, tokenize=False)
+        ids = tok(text, add_special_tokens=False, return_tensors="pt")["input_ids"].to(0)
         kw = dict(max_new_tokens=explain.ANSWER_TOKENS, do_sample=False,
                   repetition_penalty=explain.REPETITION_PENALTY, pad_token_id=tok.eos_token_id)
         with torch.no_grad():
