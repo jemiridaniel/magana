@@ -1,7 +1,7 @@
 """Every copy of the support address matches config/public.json (scripts/set_public_config.py)."""
 import json
+import os
 import re
-import subprocess
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -10,9 +10,17 @@ CONFIG = json.loads((ROOT / "config" / "public.json").read_text())
 ADDRESS = re.compile(r"[\w.+-]+@magana\.ng\b|[\w.+-]*magana[\w.+-]*@gmail\.com", re.I)
 
 
+# Built, downloaded or generated: not ours to check. (No git here: CI runs this in the
+# production image, which has none.)
+SKIP_DIRS = {".git", "node_modules", ".venv", "build", "out", ".next", ".dart_tool", "test-results", "__pycache__"}
+
+
 def tracked(*suffixes):
-    out = subprocess.run(["git", "ls-files"], cwd=ROOT, capture_output=True, text=True, check=True).stdout
-    return [ROOT / p for p in out.splitlines() if p.endswith(suffixes) and p != "docs/FINDINGS.md"]
+    found = []
+    for dirpath, dirs, names in os.walk(ROOT):
+        dirs[:] = [d for d in dirs if d not in SKIP_DIRS and not d.startswith(".") or d in (".github",)]
+        found += [Path(dirpath) / n for n in names if n.endswith(suffixes)]
+    return [p for p in found if p.relative_to(ROOT).as_posix() != "docs/FINDINGS.md"]
 
 
 def test_every_support_address_is_the_configured_one():
