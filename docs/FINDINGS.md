@@ -13,6 +13,27 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · Website: the page loader no longer jumps to 100%; timed on video
+
+- **The problem:** on a normal connection, the page loaded in about 100 ms, so the loader showed "100%" at once and vanished at its 0.8 s minimum. No dot was seen popping in order.
+- **The fix** (`website/components/loader.ts`):
+  - The shown % and dots move toward the real progress at most 10% per 100 ms, and never ahead of a minimum fill time: 1.6 s on the first visit in a session, 1 s on a refresh or later visit.
+  - Then "magana" holds complete for 0.3 s, and the loader fades.
+  - Slow connections follow the real progress, and "Slow connection. Still loading…" appears at 8 s.
+  - Reduced motion keeps the fill without the pop or the fade.
+- **Recorded on video** on the live site (`website/scripts/loader_video.mjs`, Chrome, cold cache). Times are from when the loader's script ran:
+
+  | Visit | Dots appear | Full | Gone (then fade) | "Slow connection" |
+  |---|---|---|---|---|
+  | Normal, first visit | one at a time, every 67–117 ms, from 294 ms | **1,610 ms** | 1,910 ms | no |
+  | Normal, refresh | one at a time, every 67–83 ms | **1,213 ms** | 1,513 ms | no |
+  | Slow 3G (2 s latency, 400 kbit/s), first visit | 1–7 by 3.6 s, then pauses while the browser waits for files (8 at 5.5 s, 10 at 7.9 s) | 8,680 ms | 8,980 ms | **yes, at 8 s** |
+
+  - No two dots ever appeared in the same frame.
+  - The loader was first painted at 0.76 s on a first normal visit, 0.26 s on a refresh, and 2.5 s on Slow 3G.
+- **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
+- **Status:** live.
+
 ## 2026-10-25 · Accounts: teacher sign-in, schools and roles, class codes, consent in the portal (UNREVIEWED)
 
 > **Unreviewed.** For Nurse Balogun: the new "waiting for consent" rule, and the data the portal keeps (PRIVACY.md, "Teachers and schools"). Dr. Amos isn't needed for this one.
