@@ -357,7 +357,9 @@ void main() {
     handle.dispose();
   });
 
-  testWidgets('only a teacher changes the class (Settings)', (tester) async {
+  testWidgets('without a class, Settings picks the practice level', (
+    tester,
+  ) async {
     SharedPreferences.setMockInitialValues({});
     tester.view.physicalSize = const Size(390 * 3, 844 * 3);
     tester.view.devicePixelRatio = 3;
@@ -385,15 +387,13 @@ void main() {
 
     await tap(RegExp('^${en.settings}'));
     await tap(RegExp('^${en.settingsClass}. JSS 1'));
-    expect(find.text(en.changeClassConfirmTitle), findsOneWidget);
-    await tap(en.cancel);
-    expect(profile.classLevel, 'jss1');
-    await tap(RegExp('^${en.settingsClass}'));
-    await tap(en.changeClassYes);
+    expect(find.text(en.joinTitle), findsOneWidget);
+    await tap(en.joinNoCode);
     // Guided learners are in school: no "not in school".
     expect(find.bySemanticsLabel(en.classNotInSchool), findsNothing);
     await tap(RegExp('^JSS 2'));
     expect(profile.classLevel, 'jss2');
+    expect(find.text(en.settings), findsWidgets); // back in Settings
     expect(
       (await SharedPreferences.getInstance()).getString('class_level'),
       'jss2',

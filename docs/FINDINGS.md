@@ -72,7 +72,15 @@ No real phone and no blind or low-vision tester has been used yet.
   - A button's accessible name read "Remove from class : New learner".
   - A long email made the sign-in page scroll sideways on phones.
   - The API's 120-a-minute per-IP limit refused the portal's own calls (`429`). A school's teachers often share one connection, so the signed-in portal is now limited per session (300 a minute); sign-in keeps the IP limit.
-- **Not done yet:** SES needs the domain verified and the sandbox lifted (DEPLOY_AWS.md §8b), so sign-in emails won't send on the server until then. The app's side (onboarding, class code keypad, teacher code) comes next.
+- **The app's side** (`app/lib/screens/class_code.dart`, `onboarding.dart`, `settings.dart`, `profile.dart`):
+  - Onboarding asks "Who is using Magana?" (A1): in school (class code), finished school (goals, A5) or university and other (no class).
+  - The class code is typed on a 3×4 keypad with 64 px keys; each press says what's typed so far ("You typed 4, 8, 1, 7. 2 more."), and Read back repeats it. TalkBack reads the six boxes as one item, "Class code: 4, 8, 1, 7, 4 of 6 digits". A3 shows the class, teacher and school.
+  - A 13–17 learner who joins, or has no code yet, goes Home with "Waiting for your parent or guardian to agree": reading pages only, no quiz tiles. The old on-phone "I am the parent… and I agree" step is gone, so the phone can no longer give consent by itself.
+  - On start and on return to the app, a linked phone asks `/learner/me`: consent recorded by the teacher unlocks the rest; "removed" unlinks the phone and shows a note on Home.
+  - "Yes, I'm a teacher" is gone. A linked under-18 changes class with the teacher's code, then the new class code. The test makes 3 wrong tries, then checks that the lockout (`code_locked`) leaves the class unchanged.
+  - Adults who finished school change their goals in Settings with no teacher needed. JAMB or WAEC sets practice at SS3 level.
+  - App: 195 tests passed, including 6 new account tests. `expectAccessible` passes on Who is using Magana, Join your class, Joined, Goals, Teacher code, and Home while waiting. The Hausa, Yorùbá and Igbo wording is a draft for native-speaker review.
+- **Not done yet:** SES needs the domain verified and the sandbox lifted (DEPLOY_AWS.md §8b), so sign-in emails won't send on the server until then. No real phone or TalkBack user has tried the keypad yet.
 - **Status:** open, unreviewed.
 
 ## 2026-10-25 · Hosting: website, PWA and portal to Cloudflare Pages; "the server is sleeping" instead of a blank error

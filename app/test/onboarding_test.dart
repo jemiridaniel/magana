@@ -84,17 +84,18 @@ void main() {
     await tap(tester, 'English');
   });
 
-  testWidgets('18+: language, age, ready, then everything on Home', (
+  testWidgets('18+ university or other: no class, everything on Home', (
     tester,
   ) async {
     final (profile, _, _) = await start(tester);
     await tap(tester, 'Continue');
     expect(find.text('How old are you?'), findsOneWidget);
     await tap(tester, RegExp('^I am 18 or older'));
-    expect(find.text('Which class are you in?'), findsOneWidget);
-    await tap(tester, "I'm not in school");
+    expect(find.text('Who is using Magana?'), findsOneWidget);
+    await tap(tester, RegExp('^University or other'));
     await tap(tester, 'Start');
     expect(profile.tier, Tier.standard);
+    expect(profile.who, 'other');
     expect(profile.classLevel, ProfileController.notInSchool);
     expect(
       (await SharedPreferences.getInstance()).getString('age_tier'),
@@ -110,35 +111,47 @@ void main() {
     });
   });
 
-  testWidgets('13–17: guardian consent first, then school features only', (
+  testWidgets('18+ finished school: goals, JAMB practice at SS3 level', (
+    tester,
+  ) async {
+    final (profile, _, _) = await start(tester);
+    await tap(tester, 'Continue');
+    await tap(tester, RegExp('^I am 18 or older'));
+    await tap(tester, RegExp('^I’ve finished school'));
+    expect(find.text('What would you like to do?'), findsOneWidget);
+    await tap(tester, RegExp('^Prepare for JAMB'));
+    await tap(tester, RegExp('^Just read my papers'));
+    await tap(tester, 'Save');
+    await tap(tester, 'Start');
+    expect((profile.tier, profile.who), (Tier.standard, 'finished'));
+    expect(profile.goals, ['jamb', 'papers']);
+    expect(profile.classLevel, 'sss3');
+  });
+
+  testWidgets('13–17 without a class code: waiting, schoolwork reading only', (
     tester,
   ) async {
     final (profile, _, _) = await start(tester);
     await tap(tester, 'Continue');
     await tap(tester, RegExp('^I am 13 to 17'));
+    await tap(tester, RegExp('^I’m in school'));
+    expect(find.text('Join your class'), findsOneWidget);
+    await tap(tester, 'I don’t have a code yet');
     expect(find.text('Which class are you in?'), findsOneWidget);
     // Learners aged 13 to 17 are in school: no "not in school" choice.
     expect(find.bySemanticsLabel("I'm not in school"), findsNothing);
     await tap(tester, 'SSS 2');
-    expect(find.text('Ask a parent, guardian or teacher'), findsOneWidget);
-    expect(profile.tier, isNull); // nothing until the guardian agrees
-    await tap(tester, 'I am the parent, guardian or teacher, and I agree');
-    expect((profile.tier, profile.guardianConsent), (Tier.guided, true));
+    expect((profile.tier, profile.guardianConsent), (Tier.guided, false));
+    expect(profile.waitingForConsent, isTrue);
     expect(profile.level?.name, 'SSS 2');
     expect(
-      (await SharedPreferences.getInstance()).getString('class_level'),
-      'sss2',
+      find.text(
+        'Waiting for your parent or guardian to agree. Until then you can read pages.',
+      ),
+      findsOneWidget,
     );
-    expect(homeTiles(tester), {
-      'Practice quiz',
-      'My library',
-      'Skills',
-      'My score',
-    });
-    expect(profile.headers, {
-      'X-Magana-Tier': 'guided',
-      'X-Magana-Guardian-Consent': 'yes',
-    });
+    expect(homeTiles(tester), isEmpty); // reading pages only
+    expect(profile.headers, {'X-Magana-Tier': 'guided'});
   });
 
   testWidgets('under 13: only a teacher-started session, never saved', (
@@ -182,13 +195,11 @@ void main() {
     expect(homeTiles(tester), isEmpty);
   });
 
-  testWidgets(
-    'a Guided profile without consent goes back to the consent step',
-    (tester) async {
-      await start(tester, profile: ProfileController(tier: Tier.guided));
-      expect(find.text('Ask a parent, guardian or teacher'), findsOneWidget);
-    },
-  );
+  testWidgets('a Guided profile without consent waits on Home', (tester) async {
+    await start(tester, profile: ProfileController(tier: Tier.guided));
+    expect(find.textContaining('Waiting for your parent'), findsOneWidget);
+    expect(homeTiles(tester), isEmpty);
+  });
 
   test('the app tiers mirror the backend policy', () {
     expect(allows(Tier.guided, Feature.everydayHealth), isFalse);
@@ -231,16 +242,22 @@ void main() {
     await tap(tester, 'Continue');
     expectAccessible(tester, 'Age');
     await tap(tester, RegExp('^I am 13 to 17'));
+    expectAccessible(tester, 'Who is using Magana');
+    await tap(tester, RegExp('^I’m in school'));
+    expectAccessible(tester, 'Join your class');
+    await tap(tester, 'I don’t have a code yet');
     expectAccessible(tester, 'Class');
-    await tap(tester, 'JSS 1');
-    expectAccessible(tester, 'Consent');
+    await tap(tester, 'Back');
+    await tap(tester, 'Back');
+    await tap(tester, RegExp('^I’ve finished school'));
+    expectAccessible(tester, 'Goals');
     await tap(tester, 'Back');
     await tap(tester, 'Back');
     await tap(tester, RegExp('^I am under 13'));
     expectAccessible(tester, 'Classroom');
     await tap(tester, 'Back');
     await tap(tester, RegExp('^I am 18 or older'));
-    await tap(tester, "I'm not in school");
+    await tap(tester, RegExp('^University or other'));
     expectAccessible(tester, 'Ready');
     handle.dispose();
   });

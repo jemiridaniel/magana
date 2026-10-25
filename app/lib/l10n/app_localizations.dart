@@ -2652,18 +2652,6 @@ abstract class AppLocalizations {
   /// **'Change class (teacher)'**
   String get settingsChangeClass;
 
-  /// No description provided for @changeClassConfirmTitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Only a teacher should change the class. Are you a teacher?'**
-  String get changeClassConfirmTitle;
-
-  /// No description provided for @changeClassYes.
-  ///
-  /// In en, this message translates to:
-  /// **'Yes, I\'m a teacher'**
-  String get changeClassYes;
-
   /// No description provided for @quizYourClass.
   ///
   /// In en, this message translates to:
@@ -2843,6 +2831,324 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'In primary classes, tap or click your answer, or press {letters} on your keyboard.'**
   String quizVoicePrimaryOffWeb(String letters);
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Who is using Magana?'**
+  String get whoTitle;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'This helps Magana choose the right lessons and quizzes for you.'**
+  String get whoBody;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'I’m in school'**
+  String get whoInSchool;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary or secondary. You’ll join your class with a code from your teacher.'**
+  String get whoInSchoolDetail;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'I’ve finished school'**
+  String get whoFinished;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Practise for JAMB or WAEC, improve your reading, or learn new skills.'**
+  String get whoFinishedDetail;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'University or other'**
+  String get whoOther;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Read your own books, notes and papers. No class needed.'**
+  String get whoOtherDetail;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Join your class'**
+  String get joinTitle;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask your teacher for the 6-digit class code.'**
+  String get joinBody;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Class code'**
+  String get classCodeLabel;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Teacher code'**
+  String get teacherCodeLabel;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'{label}: {typed}, {count} of 6 digits'**
+  String codeGroup(String label, String typed, int count);
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'No digits yet. Type 6 digits.'**
+  String get codeEmpty;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'You typed {typed}. {left} more.'**
+  String codeProgress(String typed, int left);
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'All 6 digits: {typed}.'**
+  String codeComplete(String typed);
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Type all 6 digits first.'**
+  String get codeNeedsSix;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get keypadDelete;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Read back'**
+  String get keypadReadBack;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Under 18? Your teacher will ask a parent or guardian to agree before your class is linked. Until then you can still read pages.'**
+  String get joinUnder18Note;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Join class'**
+  String get joinButton;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'I don’t have a code yet'**
+  String get joinNoCode;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'You’re in!'**
+  String get joinedTitle;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Teacher: {name}'**
+  String joinedTeacher(String name);
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Is this the right class? If not, tell your teacher. Only your teacher can move you to a different class.'**
+  String get joinedRightClass;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for your parent or guardian to agree. Your teacher will ask them.'**
+  String get joinedWaiting;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Start reading'**
+  String get startReading;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Change class'**
+  String get changeClassTitle;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Your class now'**
+  String get changeClassNow;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Your teacher needs to do this'**
+  String get teacherCodeNeededTitle;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask your teacher to enter their teacher code. It’s on their Magana teacher page.'**
+  String get teacherCodeBody;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Now the new class’s code'**
+  String get newClassCodeTitle;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm'**
+  String get confirmLabel;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Wrong code 3 times? Magana waits 5 minutes before you can try again.'**
+  String get teacherCodeLockNote;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'What would you like to do?'**
+  String get goalsTitle;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose as many as you like.'**
+  String get goalsBody;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Prepare for JAMB'**
+  String get goalJamb;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Past-question style practice: English, Maths and more'**
+  String get goalJambDetail;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Prepare for WAEC or NECO resit'**
+  String get goalWaec;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice by subject, at SS3 level'**
+  String get goalWaecDetail;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Practise reading'**
+  String get goalReading;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Short passages and stories, read with you'**
+  String get goalReadingDetail;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Learn new skills'**
+  String get goalSkills;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone skills, getting around, money basics'**
+  String get goalSkillsDetail;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Just read my papers'**
+  String get goalPapers;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Letters, bills, medicine labels'**
+  String get goalPapersDetail;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'You can change these any time in Settings. No teacher needed.'**
+  String get goalsNote;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get saveLabel;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Waiting for your parent or guardian to agree. Until then you can read pages.'**
+  String get waitingBanner;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Your teacher removed this phone from the class. You can still read pages.'**
+  String get removedNotice;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'My goals'**
+  String get settingsGoals;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Not in a class'**
+  String get settingsNoClass;
+
+  /// Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'My practice level'**
+  String get practiceLevelTitle;
 }
 
 class _AppLocalizationsDelegate

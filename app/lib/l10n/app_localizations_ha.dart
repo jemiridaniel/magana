@@ -1629,13 +1629,6 @@ class AppLocalizationsHa extends AppLocalizations {
   String get settingsChangeClass => 'Canza aji (malami)';
 
   @override
-  String get changeClassConfirmTitle =>
-      'Malami ne kaɗai ya kamata ya canza aji. Kai malami ne?';
-
-  @override
-  String get changeClassYes => 'Ee, ni malami ne';
-
-  @override
   String quizYourClass(String name) {
     return 'Ajinka: $name';
   }
@@ -1755,4 +1748,185 @@ class AppLocalizationsHa extends AppLocalizations {
   String quizVoicePrimaryOffWeb(String letters) {
     return 'A azuzuwan firamare, taɓa ko danna amsarka, ko ka danna $letters a kan madannai.';
   }
+
+  @override
+  String get whoTitle => 'Wane ne ke amfani da Magana?';
+
+  @override
+  String get whoBody =>
+      'Wannan yana taimaka wa Magana zaɓar darussa da tambayoyi da suka dace da kai.';
+
+  @override
+  String get whoInSchool => 'Ina makaranta';
+
+  @override
+  String get whoInSchoolDetail =>
+      'Firamare ko sakandare. Za ka shiga ajinka da lamba daga malaminka.';
+
+  @override
+  String get whoFinished => 'Na gama makaranta';
+
+  @override
+  String get whoFinishedDetail =>
+      'Ka yi shiri don JAMB ko WAEC, ka inganta karatunka, ko ka koyi sababbin ƙwarewa.';
+
+  @override
+  String get whoOther => 'Jami\'a ko wani abu';
+
+  @override
+  String get whoOtherDetail =>
+      'Karanta littattafanka, bayananka da takardunka. Ba a buƙatar aji.';
+
+  @override
+  String get joinTitle => 'Shiga ajinka';
+
+  @override
+  String get joinBody => 'Roƙi malaminka lambar aji mai lambobi 6.';
+
+  @override
+  String get classCodeLabel => 'Lambar aji';
+
+  @override
+  String get teacherCodeLabel => 'Lambar malami';
+
+  @override
+  String codeGroup(String label, String typed, int count) {
+    return '$label: $typed, lambobi $count cikin 6';
+  }
+
+  @override
+  String get codeEmpty => 'Babu lamba tukuna. Rubuta lambobi 6.';
+
+  @override
+  String codeProgress(String typed, int left) {
+    return 'Ka rubuta $typed. Saura $left.';
+  }
+
+  @override
+  String codeComplete(String typed) {
+    return 'Duk lambobi 6: $typed.';
+  }
+
+  @override
+  String get codeNeedsSix => 'Rubuta duk lambobi 6 da farko.';
+
+  @override
+  String get keypadDelete => 'Goge';
+
+  @override
+  String get keypadReadBack => 'Karanta mini';
+
+  @override
+  String get joinUnder18Note =>
+      'Ƙasa da 18? Malaminka zai roƙi iyaye ko mai kula ya amince kafin a haɗa ajinka. Kafin nan har yanzu kana iya karanta shafuka.';
+
+  @override
+  String get joinButton => 'Shiga aji';
+
+  @override
+  String get joinNoCode => 'Ba ni da lamba tukuna';
+
+  @override
+  String get joinedTitle => 'Ka shiga!';
+
+  @override
+  String joinedTeacher(String name) {
+    return 'Malami: $name';
+  }
+
+  @override
+  String get joinedRightClass =>
+      'Wannan ajin daidai ne? Idan ba haka ba, faɗa wa malaminka. Malaminka ne kawai zai iya mayar da kai wani aji.';
+
+  @override
+  String get joinedWaiting =>
+      'Ana jiran iyayenka ko mai kula da kai su amince. Malaminka zai tambaye su.';
+
+  @override
+  String get startReading => 'Fara karatu';
+
+  @override
+  String get changeClassTitle => 'Canza aji';
+
+  @override
+  String get changeClassNow => 'Ajinka yanzu';
+
+  @override
+  String get teacherCodeNeededTitle => 'Malaminka ne zai yi wannan';
+
+  @override
+  String get teacherCodeBody =>
+      'Roƙi malaminka ya shigar da lambar malami. Tana kan shafin malamin Magana.';
+
+  @override
+  String get newClassCodeTitle => 'Yanzu lambar sabon ajin';
+
+  @override
+  String get confirmLabel => 'Tabbatar';
+
+  @override
+  String get teacherCodeLockNote =>
+      'Lamba mara kyau sau 3? Magana tana jira minti 5 kafin ka sake gwadawa.';
+
+  @override
+  String get goalsTitle => 'Me kake so ka yi?';
+
+  @override
+  String get goalsBody => 'Zaɓi duk wanda kake so.';
+
+  @override
+  String get goalJamb => 'Shirya don JAMB';
+
+  @override
+  String get goalJambDetail =>
+      'Atisaye irin na tsofaffin tambayoyi: Turanci, Lissafi da sauransu';
+
+  @override
+  String get goalWaec => 'Shirya don sake WAEC ko NECO';
+
+  @override
+  String get goalWaecDetail => 'Atisaye bisa darasi, a matakin SS3';
+
+  @override
+  String get goalReading => 'Yi atisayen karatu';
+
+  @override
+  String get goalReadingDetail =>
+      'Gajerun rubutu da labarai, ana karanta su tare da kai';
+
+  @override
+  String get goalSkills => 'Koyi sababbin ƙwarewa';
+
+  @override
+  String get goalSkillsDetail => 'Ƙwarewar waya, zirga-zirga, tushen kuɗi';
+
+  @override
+  String get goalPapers => 'Karanta takarduna kawai';
+
+  @override
+  String get goalPapersDetail => 'Wasiƙu, takardun biyan kuɗi, alamomin magani';
+
+  @override
+  String get goalsNote =>
+      'Kana iya canza su kowane lokaci a Saituna. Ba a buƙatar malami.';
+
+  @override
+  String get saveLabel => 'Ajiye';
+
+  @override
+  String get waitingBanner =>
+      'Ana jiran iyayenka ko mai kula da kai su amince. Kafin nan kana iya karanta shafuka.';
+
+  @override
+  String get removedNotice =>
+      'Malaminka ya cire wannan wayar daga ajin. Har yanzu kana iya karanta shafuka.';
+
+  @override
+  String get settingsGoals => 'Burina';
+
+  @override
+  String get settingsNoClass => 'Ba a cikin aji';
+
+  @override
+  String get practiceLevelTitle => 'Matakin atisayena';
 }

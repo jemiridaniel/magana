@@ -1625,13 +1625,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get settingsChangeClass => 'Change class (teacher)';
 
   @override
-  String get changeClassConfirmTitle =>
-      'Only a teacher should change the class. Are you a teacher?';
-
-  @override
-  String get changeClassYes => 'Yes, I\'m a teacher';
-
-  @override
   String quizYourClass(String name) {
     return 'Your class: $name';
   }
@@ -1751,4 +1744,184 @@ class AppLocalizationsEn extends AppLocalizations {
   String quizVoicePrimaryOffWeb(String letters) {
     return 'In primary classes, tap or click your answer, or press $letters on your keyboard.';
   }
+
+  @override
+  String get whoTitle => 'Who is using Magana?';
+
+  @override
+  String get whoBody =>
+      'This helps Magana choose the right lessons and quizzes for you.';
+
+  @override
+  String get whoInSchool => 'I’m in school';
+
+  @override
+  String get whoInSchoolDetail =>
+      'Primary or secondary. You’ll join your class with a code from your teacher.';
+
+  @override
+  String get whoFinished => 'I’ve finished school';
+
+  @override
+  String get whoFinishedDetail =>
+      'Practise for JAMB or WAEC, improve your reading, or learn new skills.';
+
+  @override
+  String get whoOther => 'University or other';
+
+  @override
+  String get whoOtherDetail =>
+      'Read your own books, notes and papers. No class needed.';
+
+  @override
+  String get joinTitle => 'Join your class';
+
+  @override
+  String get joinBody => 'Ask your teacher for the 6-digit class code.';
+
+  @override
+  String get classCodeLabel => 'Class code';
+
+  @override
+  String get teacherCodeLabel => 'Teacher code';
+
+  @override
+  String codeGroup(String label, String typed, int count) {
+    return '$label: $typed, $count of 6 digits';
+  }
+
+  @override
+  String get codeEmpty => 'No digits yet. Type 6 digits.';
+
+  @override
+  String codeProgress(String typed, int left) {
+    return 'You typed $typed. $left more.';
+  }
+
+  @override
+  String codeComplete(String typed) {
+    return 'All 6 digits: $typed.';
+  }
+
+  @override
+  String get codeNeedsSix => 'Type all 6 digits first.';
+
+  @override
+  String get keypadDelete => 'Delete';
+
+  @override
+  String get keypadReadBack => 'Read back';
+
+  @override
+  String get joinUnder18Note =>
+      'Under 18? Your teacher will ask a parent or guardian to agree before your class is linked. Until then you can still read pages.';
+
+  @override
+  String get joinButton => 'Join class';
+
+  @override
+  String get joinNoCode => 'I don’t have a code yet';
+
+  @override
+  String get joinedTitle => 'You’re in!';
+
+  @override
+  String joinedTeacher(String name) {
+    return 'Teacher: $name';
+  }
+
+  @override
+  String get joinedRightClass =>
+      'Is this the right class? If not, tell your teacher. Only your teacher can move you to a different class.';
+
+  @override
+  String get joinedWaiting =>
+      'Waiting for your parent or guardian to agree. Your teacher will ask them.';
+
+  @override
+  String get startReading => 'Start reading';
+
+  @override
+  String get changeClassTitle => 'Change class';
+
+  @override
+  String get changeClassNow => 'Your class now';
+
+  @override
+  String get teacherCodeNeededTitle => 'Your teacher needs to do this';
+
+  @override
+  String get teacherCodeBody =>
+      'Ask your teacher to enter their teacher code. It’s on their Magana teacher page.';
+
+  @override
+  String get newClassCodeTitle => 'Now the new class’s code';
+
+  @override
+  String get confirmLabel => 'Confirm';
+
+  @override
+  String get teacherCodeLockNote =>
+      'Wrong code 3 times? Magana waits 5 minutes before you can try again.';
+
+  @override
+  String get goalsTitle => 'What would you like to do?';
+
+  @override
+  String get goalsBody => 'Choose as many as you like.';
+
+  @override
+  String get goalJamb => 'Prepare for JAMB';
+
+  @override
+  String get goalJambDetail =>
+      'Past-question style practice: English, Maths and more';
+
+  @override
+  String get goalWaec => 'Prepare for WAEC or NECO resit';
+
+  @override
+  String get goalWaecDetail => 'Practice by subject, at SS3 level';
+
+  @override
+  String get goalReading => 'Practise reading';
+
+  @override
+  String get goalReadingDetail => 'Short passages and stories, read with you';
+
+  @override
+  String get goalSkills => 'Learn new skills';
+
+  @override
+  String get goalSkillsDetail => 'Phone skills, getting around, money basics';
+
+  @override
+  String get goalPapers => 'Just read my papers';
+
+  @override
+  String get goalPapersDetail => 'Letters, bills, medicine labels';
+
+  @override
+  String get goalsNote =>
+      'You can change these any time in Settings. No teacher needed.';
+
+  @override
+  String get saveLabel => 'Save';
+
+  @override
+  String get waitingBanner =>
+      'Waiting for your parent or guardian to agree. Until then you can read pages.';
+
+  @override
+  String get removedNotice =>
+      'Your teacher removed this phone from the class. You can still read pages.';
+
+  @override
+  String get settingsGoals => 'My goals';
+
+  @override
+  String get settingsNoClass => 'Not in a class';
+
+  @override
+  String get practiceLevelTitle => 'My practice level';
 }

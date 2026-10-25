@@ -9,7 +9,8 @@ import '../profile.dart';
 import '../widgets.dart';
 import 'about.dart';
 import 'home.dart';
-import 'onboarding.dart' show classLevelChoices;
+import 'class_code.dart';
+import 'onboarding.dart' show GoalsStep, classLevelChoices;
 
 /// The installed build's version; replaceable in tests.
 Future<({String version, String build})> Function() appVersion = () async {
@@ -39,45 +40,48 @@ class _SettingsScreenState extends State<SettingsScreen> {
 
   String? _className(AppLocalizations l) {
     final profile = AppScope.of(context).profile;
+    final link = profile.link;
+    if (link != null) return link.className;
     if (profile.classLevel == ProfileController.notInSchool) {
       return l.classNotInSchool;
     }
     return profile.level?.name;
   }
 
-  /// The class is chosen once in onboarding; afterwards only a teacher should
-  /// change it. Until teachers sign in, the app takes their word for it.
+  /// A 13–17 learner linked to a class changes class only with their teacher's
+  /// own code (checked by the backend, A4). Everyone else joins a class with
+  /// its code; without one, they pick a level for the practice packs.
   Future<void> _changeClass() async {
-    final l = AppLocalizations.of(context);
     final scope = AppScope.of(context);
-    scope.speaker.say(l.changeClassConfirmTitle);
-    final teacher = await showDialog<bool>(
-      context: context,
-      builder: (dialog) => AlertDialog(
-        title: Text(
-          l.changeClassConfirmTitle,
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
-        ),
-        actions: [
-          SecondaryButton(
-            label: l.cancel,
-            onTap: () => Navigator.of(dialog).pop(false),
-          ),
-          const SizedBox(height: 8),
-          PrimaryButton(
-            label: l.changeClassYes,
-            onTap: () => Navigator.of(dialog).pop(true),
-          ),
-        ],
-      ),
-    );
-    if (teacher != true || !mounted) return;
     final profile = scope.profile;
-    await Navigator.of(context).push(
+    final Widget screen;
+    if (profile.link != null && profile.tier == Tier.guided) {
+      screen = const TeacherCodeScreen();
+    } else {
+      screen = JoinClassScreen(
+        tier: profile.tier ?? Tier.standard,
+        onJoined: (page, link) async {
+          await profile.setWho('in_school');
+          await profile.setLink(link);
+          if (page.mounted) Navigator.of(page).pop();
+        },
+        onNoCode: profile.link == null ? _pickLevel : null,
+      );
+    }
+    await Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+    if (mounted) setState(() {});
+  }
+
+  /// Without a class code: the level for practice packs.
+  Future<void> _pickLevel() async {
+    final l = AppLocalizations.of(context);
+    final profile = AppScope.of(context).profile;
+    final nav = Navigator.of(context);
+    await nav.push(
       MaterialPageRoute(
         builder: (page) => PageScaffold(
           body: [
-            ScreenHeader(title: l.settingsClass),
+            ScreenHeader(title: l.practiceLevelTitle),
             if (profile.tier == Tier.standard)
               ChoiceCard(
                 title: l.classNotInSchool,
@@ -100,14 +104,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
         ),
       ),
     );
-    if (mounted) setState(() {});
+    nav.pop(); // back to Settings from the join screen
   }
+
+  String _goalNames(AppLocalizations l, List<String> goals) => [
+    for (final g in goals)
+      switch (g) {
+        'jamb' => l.goalJamb,
+        'waec' => l.goalWaec,
+        'reading' => l.goalReading,
+        'skills' => l.goalSkills,
+        _ => l.goalPapers,
+      },
+  ].join(', ');
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final language = languageFor(Localizations.localeOf(context));
     final v = _version;
+    final profile = AppScope.of(context).profile;
     return PageScaffold(
       body: [
         ScreenHeader(title: l.settings),
@@ -121,11 +137,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
           title: l.settingsClass,
           detail: [
             _className(l),
-            l.settingsChangeClass,
+            profile.link != null && profile.tier == Tier.guided
+                ? l.settingsChangeClass
+                : l.changeClassTitle,
           ].whereType<String>().join('. '),
           leading: const Icon(Icons.school_outlined, size: 30),
           onTap: _changeClass,
         ),
+        if (profile.tier == Tier.standard && profile.who == 'finished')
+          ChoiceCard(
+            title: l.settingsGoals,
+            detail: profile.goals.isEmpty ? null : _goalNames(l, profile.goals),
+            leading: const Icon(Icons.flag_outlined, size: 30),
+            onTap: () async {
+              await Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) =>
+                      const GoalsStep(tier: Tier.standard, inSettings: true),
+                ),
+              );
+              if (mounted) setState(() {});
+            },
+          ),
         if (v != null) ...[
           Semantics(
             header: true,

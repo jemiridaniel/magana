@@ -1623,13 +1623,6 @@ class AppLocalizationsYo extends AppLocalizations {
   String get settingsChangeClass => 'Yí kíláàsì padà (olùkọ́)';
 
   @override
-  String get changeClassConfirmTitle =>
-      'Olùkọ́ nìkan ló yẹ kó yí kíláàsì padà. Ṣé olùkọ́ ni ọ́?';
-
-  @override
-  String get changeClassYes => 'Bẹ́ẹ̀ni, olùkọ́ ni mí';
-
-  @override
   String quizYourClass(String name) {
     return 'Kíláàsì rẹ: $name';
   }
@@ -1749,4 +1742,185 @@ class AppLocalizationsYo extends AppLocalizations {
   String quizVoicePrimaryOffWeb(String letters) {
     return 'Ní kíláàsì alákọ̀ọ́bẹ̀rẹ̀, tẹ tàbí kílíkì ìdáhùn rẹ, tàbí tẹ $letters lórí kíbọ́ọ̀dù rẹ.';
   }
+
+  @override
+  String get whoTitle => 'Ta ni ń lo Magana?';
+
+  @override
+  String get whoBody =>
+      'Èyí ń ran Magana lọ́wọ́ láti yan ẹ̀kọ́ àti ìdánwò tó bá ọ mu.';
+
+  @override
+  String get whoInSchool => 'Mo wà ní ilé-ìwé';
+
+  @override
+  String get whoInSchoolDetail =>
+      'Alákọ̀ọ́bẹ̀rẹ̀ tàbí girama. Wàá darapọ̀ mọ́ kíláàsì rẹ pẹ̀lú kóòdù láti ọ̀dọ̀ olùkọ́ rẹ.';
+
+  @override
+  String get whoFinished => 'Mo ti parí ilé-ìwé';
+
+  @override
+  String get whoFinishedDetail =>
+      'Múra sílẹ̀ fún JAMB tàbí WAEC, mú ìwé kíkà rẹ dára sí i, tàbí kọ́ ọgbọ́n tuntun.';
+
+  @override
+  String get whoOther => 'Yunifásítì tàbí òmíràn';
+
+  @override
+  String get whoOtherDetail =>
+      'Ka àwọn ìwé, àkọsílẹ̀ àti bébà rẹ. Kò sí kíláàsì tí a nílò.';
+
+  @override
+  String get joinTitle => 'Darapọ̀ mọ́ kíláàsì rẹ';
+
+  @override
+  String get joinBody => 'Béèrè kóòdù kíláàsì oní-nọ́ńbà 6 lọ́wọ́ olùkọ́ rẹ.';
+
+  @override
+  String get classCodeLabel => 'Kóòdù kíláàsì';
+
+  @override
+  String get teacherCodeLabel => 'Kóòdù olùkọ́';
+
+  @override
+  String codeGroup(String label, String typed, int count) {
+    return '$label: $typed, nọ́ńbà $count nínú 6';
+  }
+
+  @override
+  String get codeEmpty => 'Kò sí nọ́ńbà kankan síbẹ̀. Tẹ nọ́ńbà 6.';
+
+  @override
+  String codeProgress(String typed, int left) {
+    return 'O ti tẹ $typed. Ó ku $left.';
+  }
+
+  @override
+  String codeComplete(String typed) {
+    return 'Gbogbo nọ́ńbà 6: $typed.';
+  }
+
+  @override
+  String get codeNeedsSix => 'Kọ́kọ́ tẹ gbogbo nọ́ńbà 6.';
+
+  @override
+  String get keypadDelete => 'Pa rẹ́';
+
+  @override
+  String get keypadReadBack => 'Kà á padà';
+
+  @override
+  String get joinUnder18Note =>
+      'Ṣé o kò tíì pé 18? Olùkọ́ rẹ yóò béèrè pé kí òbí tàbí alágbàtọ́ gbà kí a tó so kíláàsì rẹ pọ̀. Títí di ìgbà náà, o ṣì lè ka ojú-ìwé.';
+
+  @override
+  String get joinButton => 'Darapọ̀ mọ́ kíláàsì';
+
+  @override
+  String get joinNoCode => 'Mi ò tíì ní kóòdù';
+
+  @override
+  String get joinedTitle => 'O ti wọlé!';
+
+  @override
+  String joinedTeacher(String name) {
+    return 'Olùkọ́: $name';
+  }
+
+  @override
+  String get joinedRightClass =>
+      'Ṣé kíláàsì tó tọ́ nìyí? Bí kò bá rí bẹ́ẹ̀, sọ fún olùkọ́ rẹ. Olùkọ́ rẹ nìkan ló lè gbé ọ lọ sí kíláàsì mìíràn.';
+
+  @override
+  String get joinedWaiting =>
+      'A ń dúró de òbí tàbí alágbàtọ́ rẹ láti gbà. Olùkọ́ rẹ yóò béèrè lọ́wọ́ wọn.';
+
+  @override
+  String get startReading => 'Bẹ̀rẹ̀ sí í kà';
+
+  @override
+  String get changeClassTitle => 'Yí kíláàsì padà';
+
+  @override
+  String get changeClassNow => 'Kíláàsì rẹ báyìí';
+
+  @override
+  String get teacherCodeNeededTitle => 'Olùkọ́ rẹ ló gbọ́dọ̀ ṣe èyí';
+
+  @override
+  String get teacherCodeBody =>
+      'Ní kí olùkọ́ rẹ tẹ kóòdù olùkọ́ wọn. Ó wà lójú-ìwé olùkọ́ Magana wọn.';
+
+  @override
+  String get newClassCodeTitle => 'Báyìí kóòdù kíláàsì tuntun';
+
+  @override
+  String get confirmLabel => 'Fìdí múlẹ̀';
+
+  @override
+  String get teacherCodeLockNote =>
+      'Kóòdù tí kò tọ̀nà ní ìgbà 3? Magana máa dúró fún ìṣẹ́jú 5 kí o tó lè tún gbìyànjú.';
+
+  @override
+  String get goalsTitle => 'Kí ni o fẹ́ ṣe?';
+
+  @override
+  String get goalsBody => 'Yan iye tí o bá fẹ́.';
+
+  @override
+  String get goalJamb => 'Múra sílẹ̀ fún JAMB';
+
+  @override
+  String get goalJambDetail =>
+      'Ìdánrawò bí ìbéèrè àtijọ́: Gẹ̀ẹ́sì, Ìṣirò àti bẹ́ẹ̀ bẹ́ẹ̀ lọ';
+
+  @override
+  String get goalWaec => 'Múra sílẹ̀ fún àtúnṣe WAEC tàbí NECO';
+
+  @override
+  String get goalWaecDetail => 'Ìdánrawò nípa kókó-ẹ̀kọ́, ní ìpele SS3';
+
+  @override
+  String get goalReading => 'Ṣe ìdánrawò kíkà';
+
+  @override
+  String get goalReadingDetail =>
+      'Àwọn àyọkà kúkúrú àti ìtàn, tí a kà pẹ̀lú rẹ';
+
+  @override
+  String get goalSkills => 'Kọ́ ọgbọ́n tuntun';
+
+  @override
+  String get goalSkillsDetail => 'Ọgbọ́n fóònù, ìrìn-àjò, ìpìlẹ̀ owó';
+
+  @override
+  String get goalPapers => 'Ka àwọn bébà mi nìkan';
+
+  @override
+  String get goalPapersDetail => 'Lẹ́tà, owó-ìnáwó, àmì òògùn';
+
+  @override
+  String get goalsNote =>
+      'O lè yí wọn padà nígbàkúùgbà nínú Ètò. Kò nílò olùkọ́.';
+
+  @override
+  String get saveLabel => 'Fi pamọ́';
+
+  @override
+  String get waitingBanner =>
+      'A ń dúró de òbí tàbí alágbàtọ́ rẹ láti gbà. Títí di ìgbà náà, o lè ka ojú-ìwé.';
+
+  @override
+  String get removedNotice =>
+      'Olùkọ́ rẹ ti yọ fóònù yìí kúrò ní kíláàsì náà. O ṣì lè ka ojú-ìwé.';
+
+  @override
+  String get settingsGoals => 'Àwọn àfojúsùn mi';
+
+  @override
+  String get settingsNoClass => 'Kò sí ní kíláàsì';
+
+  @override
+  String get practiceLevelTitle => 'Ìpele ìdánrawò mi';
 }

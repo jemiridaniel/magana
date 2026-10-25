@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../api.dart' show ClassLink;
 import '../app_scope.dart';
 import '../curriculum.dart';
 import '../l10n/app_localizations.dart';
@@ -7,12 +8,53 @@ import '../language.dart';
 import '../policy.dart';
 import '../profile.dart';
 import '../widgets.dart';
+import 'class_code.dart';
 
-/// Shows onboarding until an age tier is chosen, the consent or classroom step
-/// when a tier can't be used yet, and [home] otherwise.
-class ProfileGate extends StatelessWidget {
+/// Shows onboarding until an age tier is chosen, the classroom step when a
+/// Classroom session hasn't started, and [home] otherwise. A Guided learner whose
+/// guardian hasn't agreed yet goes Home too, where only reading pages works.
+///
+/// On start and whenever the app comes back to the front, a phone linked to a
+/// class asks the backend how the link stands: consent recorded by the teacher,
+/// or removed from the class.
+class ProfileGate extends StatefulWidget {
   const ProfileGate({super.key, required this.home});
   final Widget home;
+
+  @override
+  State<ProfileGate> createState() => _ProfileGateState();
+}
+
+class _ProfileGateState extends State<ProfileGate> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    WidgetsBinding.instance.addPostFrameCallback((_) => _refresh());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _refresh();
+  }
+
+  Future<void> _refresh() async {
+    if (!mounted) return;
+    final scope = AppScope.of(context);
+    if (scope.profile.link == null) return;
+    try {
+      final s = await scope.api.learnerStatus();
+      await scope.profile.applyLinkStatus(s.status, s.classInfo);
+    } catch (_) {
+      // Offline or asleep: keep what the phone knows.
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -21,9 +63,8 @@ class ProfileGate extends StatelessWidget {
       listenable: profile,
       builder: (context, _) => switch (profile.tier) {
         null => const _OnboardingFlow(),
-        Tier.guided when !profile.guardianConsent => const ConsentStep(),
         Tier.classroom when !profile.teacherSession => const ClassroomStep(),
-        _ => home,
+        _ => widget.home,
       },
     );
   }
@@ -143,12 +184,12 @@ class _AgeStepState extends State<AgeStep> {
         ChoiceCard(
           title: l.ageAdult,
           detail: l.ageAdultDetail,
-          onTap: () => _next(const ClassStep(adult: true, next: ReadyStep())),
+          onTap: () => _next(const WhoStep(tier: Tier.standard)),
         ),
         ChoiceCard(
           title: l.ageTeen,
           detail: l.ageTeenDetail,
-          onTap: () => _next(const ClassStep(next: ConsentStep())),
+          onTap: () => _next(const WhoStep(tier: Tier.guided)),
         ),
         ChoiceCard(
           title: l.ageChild,
@@ -167,7 +208,213 @@ class _AgeStepState extends State<AgeStep> {
   }
 }
 
-// ---------- Step 3: ready (18+), guardian consent (13–17) or classroom (under 13)
+// ---------- Step 3 (18+ and 13–17): who is using Magana (A1)
+
+/// In school (join with the class code), finished school (goals) or university
+/// and other (no class).
+class WhoStep extends StatefulWidget {
+  const WhoStep({super.key, required this.tier});
+  final Tier tier;
+
+  @override
+  State<WhoStep> createState() => _WhoStepState();
+}
+
+class _WhoStepState extends State<WhoStep> {
+  String _script(AppLocalizations l) => [
+    l.whoTitle,
+    l.whoBody,
+    '${l.whoInSchool}. ${l.whoInSchoolDetail}',
+    '${l.whoFinished}. ${l.whoFinishedDetail}',
+    '${l.whoOther}. ${l.whoOtherDetail}',
+  ].join(' ');
+
+  @override
+  void initState() {
+    super.initState();
+    speakOnOpen(context, () => _script(AppLocalizations.of(context)));
+  }
+
+  void _push(Widget step) =>
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => step));
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final tier = widget.tier;
+    final adult = tier == Tier.standard;
+    return PageScaffold(
+      body: [
+        _StepTitle(step: 3, total: 4, title: l.whoTitle, body: l.whoBody),
+        ChoiceCard(
+          title: l.whoInSchool,
+          detail: l.whoInSchoolDetail,
+          leading: const Icon(Icons.school_outlined, size: 28),
+          onTap: () => _push(
+            JoinClassScreen(
+              tier: tier,
+              onJoined: (ctx, link) => Navigator.of(ctx).push(
+                MaterialPageRoute(
+                  builder: (_) => JoinedScreen(
+                    link: link,
+                    onStart: () => finishInSchool(ctx, tier, link),
+                  ),
+                ),
+              ),
+              onNoCode: () => _push(
+                ClassStep(
+                  adult: adult,
+                  onChosen: (ctx, level) async {
+                    final profile = AppScope.of(ctx).profile;
+                    await profile.setWho('in_school');
+                    if (adult) {
+                      if (ctx.mounted) {
+                        Navigator.of(ctx).push(
+                          MaterialPageRoute(builder: (_) => const ReadyStep()),
+                        );
+                      }
+                    } else {
+                      await profile.setTier(
+                        Tier.guided,
+                      ); // waiting for a class and consent
+                    }
+                  },
+                ),
+              ),
+            ),
+          ),
+        ),
+        ChoiceCard(
+          title: l.whoFinished,
+          detail: l.whoFinishedDetail,
+          leading: const Icon(Icons.menu_book_outlined, size: 28),
+          onTap: () => _push(GoalsStep(tier: tier)),
+        ),
+        ChoiceCard(
+          title: l.whoOther,
+          detail: l.whoOtherDetail,
+          leading: const Icon(Icons.account_balance_outlined, size: 28),
+          onTap: () async {
+            final profile = AppScope.of(context).profile;
+            await profile.setWho('other');
+            await profile.setClassLevel(ProfileController.notInSchool);
+            if (adult) {
+              _push(const ReadyStep());
+            } else {
+              await profile.setTier(Tier.guided);
+            }
+          },
+        ),
+      ],
+    );
+  }
+}
+
+/// After A3: the age group, then the class link (which, for 13–17, carries the
+/// teacher-recorded consent: until then the learner is waiting).
+Future<void> finishInSchool(
+  BuildContext context,
+  Tier tier,
+  ClassLink link,
+) async {
+  final profile = AppScope.of(context).profile;
+  await profile.setWho('in_school');
+  await profile.setTier(tier);
+  await profile.setLink(link);
+}
+
+// ---------- Step 4 (finished school): goals (A5); adults change them freely
+
+const examGoals = {'jamb', 'waec'};
+
+class GoalsStep extends StatefulWidget {
+  const GoalsStep({super.key, required this.tier, this.inSettings = false});
+  final Tier tier;
+  final bool inSettings;
+
+  @override
+  State<GoalsStep> createState() => _GoalsStepState();
+}
+
+class _GoalsStepState extends State<GoalsStep> {
+  late final Set<String> _chosen = {...AppScope.of(context).profile.goals};
+
+  @override
+  void initState() {
+    super.initState();
+    speakOnOpen(context, () {
+      final l = AppLocalizations.of(context);
+      return '${l.goalsTitle}. ${l.goalsBody}';
+    });
+  }
+
+  List<(String, String, String)> _goals(AppLocalizations l) => [
+    ('jamb', l.goalJamb, l.goalJambDetail),
+    ('waec', l.goalWaec, l.goalWaecDetail),
+    ('reading', l.goalReading, l.goalReadingDetail),
+    ('skills', l.goalSkills, l.goalSkillsDetail),
+    ('papers', l.goalPapers, l.goalPapersDetail),
+  ];
+
+  Future<void> _save() async {
+    final profile = AppScope.of(context).profile;
+    await profile.setGoals(_chosen.toList());
+    // Exam practice is at SS3 level; otherwise no class level.
+    await profile.setClassLevel(
+      _chosen.any(examGoals.contains) ? 'sss3' : ProfileController.notInSchool,
+    );
+    if (!mounted) return;
+    if (widget.inSettings) {
+      Navigator.of(context).pop();
+      return;
+    }
+    await profile.setWho('finished');
+    if (widget.tier == Tier.standard) {
+      if (mounted) {
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (_) => const ReadyStep()));
+      }
+    } else {
+      await profile.setTier(Tier.guided);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return PageScaffold(
+      body: [
+        if (widget.inSettings)
+          ScreenHeader(title: l.goalsTitle, subtitle: l.goalsBody)
+        else
+          _StepTitle(step: 4, total: 4, title: l.goalsTitle, body: l.goalsBody),
+        for (final (id, title, detail) in _goals(l))
+          Semantics(
+            checked: _chosen.contains(id),
+            child: ChoiceCard(
+              title: title,
+              detail: detail,
+              selected: _chosen.contains(id),
+              leading: Icon(
+                _chosen.contains(id)
+                    ? Icons.check_box
+                    : Icons.check_box_outline_blank,
+                size: 28,
+              ),
+              onTap: () => setState(() {
+                if (!_chosen.remove(id)) _chosen.add(id);
+                AppScope.of(context).speaker.say(title);
+              }),
+            ),
+          ),
+        NoteBox(text: l.goalsNote),
+      ],
+      bottom: [PrimaryButton(label: l.saveLabel, onTap: _save)],
+    );
+  }
+}
+
+// ---------- Step 4: ready (18+) or classroom (under 13)
 
 class ReadyStep extends StatefulWidget {
   const ReadyStep({super.key});
@@ -206,11 +453,11 @@ class _ReadyStepState extends State<ReadyStep> {
 
 // ---------- Step 3 (18+ and 13–17): class
 
-/// Chosen once; a teacher can change it in Settings. Picks the quiz packs and
-/// the teacher's quizzes for that level.
+/// Without a class code: the level, which picks the practice packs. With a class
+/// code, the class's own level is used instead.
 class ClassStep extends StatefulWidget {
-  const ClassStep({super.key, required this.next, this.adult = false});
-  final Widget next;
+  const ClassStep({super.key, required this.onChosen, this.adult = false});
+  final Future<void> Function(BuildContext context, String level) onChosen;
 
   /// 18+ may not be in school.
   final bool adult;
@@ -232,7 +479,7 @@ class _ClassStepState extends State<ClassStep> {
   Future<void> _choose(String level) async {
     await AppScope.of(context).profile.setClassLevel(level);
     if (!mounted) return;
-    Navigator.of(context).push(MaterialPageRoute(builder: (_) => widget.next));
+    await widget.onChosen(context, level);
   }
 
   @override
@@ -240,7 +487,7 @@ class _ClassStepState extends State<ClassStep> {
     final l = AppLocalizations.of(context);
     return PageScaffold(
       body: [
-        _StepTitle(step: 3, total: 4, title: l.classTitle, body: l.classBody),
+        _StepTitle(step: 4, total: 4, title: l.classTitle, body: l.classBody),
         if (widget.adult)
           ChoiceCard(
             title: l.classNotInSchool,
@@ -283,58 +530,6 @@ List<Widget> classLevelChoices(
       ),
   ],
 ];
-
-class ConsentStep extends StatefulWidget {
-  const ConsentStep({super.key});
-
-  @override
-  State<ConsentStep> createState() => _ConsentStepState();
-}
-
-class _ConsentStepState extends State<ConsentStep> {
-  String _script(AppLocalizations l) => [
-    l.consentTitle,
-    l.consentBody,
-    l.consentPoint1,
-    l.consentPoint2,
-    l.consentPoint3,
-  ].join(' ');
-
-  @override
-  void initState() {
-    super.initState();
-    speakOnOpen(context, () => _script(AppLocalizations.of(context)));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l = AppLocalizations.of(context);
-    return PageScaffold(
-      body: [
-        _StepTitle(
-          step: 4,
-          total: 4,
-          title: l.consentTitle,
-          body: l.consentBody,
-        ),
-        for (final point in [l.consentPoint1, l.consentPoint2, l.consentPoint3])
-          NoteBox(text: point),
-      ],
-      bottom: [
-        SecondaryButton(
-          label: l.hearAgain,
-          onTap: () => AppScope.of(context).speaker.say(_script(l)),
-        ),
-        PrimaryButton(
-          label: l.consentConfirm,
-          onTap: () =>
-              AppScope.of(context).profile
-                  .setTier(Tier.guided, guardianConsent: true),
-        ),
-      ],
-    );
-  }
-}
 
 class ClassroomStep extends StatefulWidget {
   const ClassroomStep({super.key});

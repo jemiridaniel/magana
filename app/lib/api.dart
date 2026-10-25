@@ -264,8 +264,7 @@ class Explanation {
   /// Said after the explanation: numbers_left_out ("The exact numbers are on the
   /// page. Say 'read again' to hear them.").
   final String? followup;
-  final String
-  code; // explain_preview | explained | numbers_unconfirmed | explain_wrong_language | paper_lines
+  final String code; // explain_preview | explained | numbers_unconfirmed | explain_wrong_language | paper_lines
   final String? text; // the explanation, when it passed the guard
   final String? readInstead; // the page text, when it did not
   final bool preview; // no model yet: the page text itself
@@ -291,10 +290,66 @@ String noAnswerCode() =>
     runningOnWeb && browserIsOnline() ? 'server_sleeping' : 'unreachable';
 
 /// 502, 503 and 504 come from the proxy in front of a backend that isn't running.
-bool serverAsleep(int status) => status == 502 || status == 503 || status == 504;
+bool serverAsleep(int status) =>
+    status == 502 || status == 503 || status == 504;
+
+/// The phone's link to a class (a random token the backend knows only by hash).
+class ClassLink {
+  const ClassLink({
+    required this.token,
+    required this.status,
+    required this.className,
+    required this.level,
+    this.teacher,
+    this.school,
+  });
+
+  factory ClassLink.fromJson(Map<String, dynamic> json, {String? token}) {
+    final c = (json['class'] as Map?)?.cast<String, dynamic>() ?? const {};
+    return ClassLink(
+      token: token ?? json['token'] as String? ?? '',
+      status: json['status'] as String? ?? 'active',
+      className: c['name'] as String? ?? '',
+      level: c['level'] as String? ?? '',
+      teacher: c['teacher'] as String?,
+      school: c['school'] as String?,
+    );
+  }
+
+  final String token;
+  final String status; // active | waiting_consent
+  final String className;
+  final String level; // a curriculum level id (p5, jss2…)
+  final String? teacher;
+  final String? school;
+
+  Map<String, String?> toJson() => {
+    'token': token,
+    'status': status,
+    'class_name': className,
+    'level': level,
+    'teacher': teacher,
+    'school': school,
+  };
+
+  static ClassLink? fromSaved(Map<String, dynamic>? m) {
+    if (m == null || (m['token'] as String? ?? '').isEmpty) return null;
+    return ClassLink(
+      token: m['token'] as String,
+      status: m['status'] as String? ?? 'active',
+      className: m['class_name'] as String? ?? '',
+      level: m['level'] as String? ?? '',
+      teacher: m['teacher'] as String?,
+      school: m['school'] as String?,
+    );
+  }
+}
 
 class ApiException implements Exception {
-  ApiException(this.code);
+  ApiException(this.code, {this.retryAfter});
+
+  /// Seconds to wait, for code_locked and too_many_requests.
+  final int? retryAfter;
 
   /// A backend message code (`unknown_mode`, `not_allowed_for_tier`, ...) or
   /// `unreachable` / `server_sleeping` / `failed` from the app itself.
@@ -316,9 +371,11 @@ class MaganaApi {
     String method,
     String path, {
     Object? body,
+    Map<String, String> extra = const {},
   }) async {
     final req = http.Request(method, Uri.parse('$apiBase$path'))
-      ..headers.addAll(_headers());
+      ..headers.addAll(_headers())
+      ..headers.addAll(extra);
     if (body != null) {
       req.headers['Content-Type'] = 'application/json';
       req.body = jsonEncode(body);
@@ -345,6 +402,9 @@ class MaganaApi {
             : serverAsleep(res.statusCode)
             ? 'server_sleeping'
             : 'failed',
+        retryAfter: detail is Map
+            ? (detail['retry_after'] as num?)?.toInt()
+            : null,
       );
     }
     return decoded is Map<String, dynamic>
@@ -398,6 +458,42 @@ class MaganaApi {
       priority: body['priority'] as String,
       message: body['message'] as String,
     );
+  }
+
+  /// Joins a class with its 6-digit code (backend learner_api.py). Errors come as
+  /// [ApiException] codes: class_code_wrong, code_locked, teacher_code_needed,
+  /// class_has_no_accounts.
+  ///
+  /// [tier] is the age group chosen in onboarding, before it is saved.
+  Future<ClassLink> joinClass(String code, {String? tier}) async {
+    final body = await _json(
+      'POST',
+      '/learner/join',
+      body: {'class_code': code},
+      extra: {'X-Magana-Tier': ?tier},
+    );
+    return ClassLink.fromJson(body);
+  }
+
+  /// The class link's state now: active, waiting_consent, removed or not_linked.
+  Future<({String status, Map<String, dynamic>? classInfo})>
+  learnerStatus() async {
+    final body = await _json('GET', '/learner/me');
+    return (
+      status: body['status'] as String? ?? 'not_linked',
+      classInfo: body['class'] as Map<String, dynamic>?,
+    );
+  }
+
+  /// An under-18 moves class: the teacher types their own code, then the new
+  /// class's code. Errors: teacher_code_wrong, code_locked, class_has_no_accounts.
+  Future<ClassLink> changeClass(String teacherCode, String classCode) async {
+    final body = await _json(
+      'POST',
+      '/learner/change-class',
+      body: {'teacher_code': teacherCode, 'class_code': classCode},
+    );
+    return ClassLink.fromJson(body);
   }
 
   /// Asks the nurse desk for a call back; returns a message code.

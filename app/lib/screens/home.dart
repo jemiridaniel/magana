@@ -52,6 +52,23 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 20),
+                    // Waiting for the guardian (13–17), or removed by the teacher.
+                    ListenableBuilder(
+                      listenable: AppScope.of(context).profile,
+                      builder: (context, _) {
+                        final profile = AppScope.of(context).profile;
+                        final note = profile.waitingForConsent
+                            ? l.waitingBanner
+                            : profile.removedFromClass
+                            ? l.removedNotice
+                            : null;
+                        if (note == null) return const SizedBox.shrink();
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 14),
+                          child: NoteBox(text: note),
+                        );
+                      },
+                    ),
                     _ReadPageButton(onPressed: () => _openCapture(context)),
                     const SizedBox(height: 14),
                     // Only what this age tier may use: a screen-reader user never

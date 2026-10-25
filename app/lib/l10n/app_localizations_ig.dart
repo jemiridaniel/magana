@@ -1625,13 +1625,6 @@ class AppLocalizationsIg extends AppLocalizations {
   String get settingsChangeClass => 'Gbanwee klaasị (onye nkuzi)';
 
   @override
-  String get changeClassConfirmTitle =>
-      'Ọ bụ naanị onye nkuzi kwesịrị ịgbanwe klaasị. Ị bụ onye nkuzi?';
-
-  @override
-  String get changeClassYes => 'Ee, abụ m onye nkuzi';
-
-  @override
   String quizYourClass(String name) {
     return 'Klaasị gị: $name';
   }
@@ -1751,4 +1744,184 @@ class AppLocalizationsIg extends AppLocalizations {
   String quizVoicePrimaryOffWeb(String letters) {
     return 'Na klaasị praịmarị, pịa ma ọ bụ kpịa azịza gị, ma ọ bụ pịa $letters na kiiboodu gị.';
   }
+
+  @override
+  String get whoTitle => 'Onye na-eji Magana?';
+
+  @override
+  String get whoBody =>
+      'Nke a na-enyere Magana aka ịhọrọ ihe ọmụmụ na ajụjụ kwesịrị gị.';
+
+  @override
+  String get whoInSchool => 'Anọ m n\'ụlọ akwụkwọ';
+
+  @override
+  String get whoInSchoolDetail =>
+      'Praịmarị ma ọ bụ sekọndrị. Ị ga-abanye na klaasị gị site na koodu sitere n\'aka onye nkuzi gị.';
+
+  @override
+  String get whoFinished => 'Agụchaala m akwụkwọ';
+
+  @override
+  String get whoFinishedDetail =>
+      'Kwadebe maka JAMB ma ọ bụ WAEC, meziwanye ịgụ akwụkwọ gị, ma ọ bụ mụta nkà ọhụrụ.';
+
+  @override
+  String get whoOther => 'Mahadum ma ọ bụ ihe ọzọ';
+
+  @override
+  String get whoOtherDetail =>
+      'Gụọ akwụkwọ gị, ndetu gị na akwụkwọ gị. Ọ dịghị klaasị achọrọ.';
+
+  @override
+  String get joinTitle => 'Banye na klaasị gị';
+
+  @override
+  String get joinBody => 'Rịọ onye nkuzi gị koodu klaasị nwere ọnụọgụgụ 6.';
+
+  @override
+  String get classCodeLabel => 'Koodu klaasị';
+
+  @override
+  String get teacherCodeLabel => 'Koodu onye nkuzi';
+
+  @override
+  String codeGroup(String label, String typed, int count) {
+    return '$label: $typed, ọnụọgụgụ $count n\'ime 6';
+  }
+
+  @override
+  String get codeEmpty => 'Ọ nweghị ọnụọgụgụ ugbu a. Tinye ọnụọgụgụ 6.';
+
+  @override
+  String codeProgress(String typed, int left) {
+    return 'Ị tinyela $typed. Fọdụrụ $left.';
+  }
+
+  @override
+  String codeComplete(String typed) {
+    return 'Ọnụọgụgụ 6 niile: $typed.';
+  }
+
+  @override
+  String get codeNeedsSix => 'Buru ụzọ tinye ọnụọgụgụ 6 niile.';
+
+  @override
+  String get keypadDelete => 'Hichapụ';
+
+  @override
+  String get keypadReadBack => 'Gụghachi';
+
+  @override
+  String get joinUnder18Note =>
+      'Erubeghị 18? Onye nkuzi gị ga-arịọ nne na nna ma ọ bụ onye na-elekọta gị ka ha kwenye tupu ejikọta klaasị gị. Ruo mgbe ahụ ị ka nwere ike ịgụ peeji.';
+
+  @override
+  String get joinButton => 'Banye na klaasị';
+
+  @override
+  String get joinNoCode => 'Enwebeghị m koodu';
+
+  @override
+  String get joinedTitle => 'Ị banyela!';
+
+  @override
+  String joinedTeacher(String name) {
+    return 'Onye nkuzi: $name';
+  }
+
+  @override
+  String get joinedRightClass =>
+      'Nke a ọ bụ klaasị ziri ezi? Ọ bụrụ na ọ bụghị, gwa onye nkuzi gị. Naanị onye nkuzi gị nwere ike ibuga gị na klaasị ọzọ.';
+
+  @override
+  String get joinedWaiting =>
+      'A na-eche ka nne na nna gị ma ọ bụ onye na-elekọta gị kwenye. Onye nkuzi gị ga-ajụ ha.';
+
+  @override
+  String get startReading => 'Malite ịgụ';
+
+  @override
+  String get changeClassTitle => 'Gbanwee klaasị';
+
+  @override
+  String get changeClassNow => 'Klaasị gị ugbu a';
+
+  @override
+  String get teacherCodeNeededTitle => 'Onye nkuzi gị kwesịrị ime nke a';
+
+  @override
+  String get teacherCodeBody =>
+      'Rịọ onye nkuzi gị ka ha tinye koodu onye nkuzi ha. Ọ dị na peeji onye nkuzi Magana ha.';
+
+  @override
+  String get newClassCodeTitle => 'Ugbu a koodu klaasị ọhụrụ';
+
+  @override
+  String get confirmLabel => 'Kwado';
+
+  @override
+  String get teacherCodeLockNote =>
+      'Koodu ezighị ezi ugboro 3? Magana na-eche nkeji 5 tupu ị nwaa ọzọ.';
+
+  @override
+  String get goalsTitle => 'Gịnị ka ị ga-achọ ime?';
+
+  @override
+  String get goalsBody => 'Họrọ ọnụọgụgụ ọ bụla masịrị gị.';
+
+  @override
+  String get goalJamb => 'Kwadebe maka JAMB';
+
+  @override
+  String get goalJambDetail =>
+      'Omume dị ka ajụjụ ochie: Bekee, Mgbakọ na mwepụ na ndị ọzọ';
+
+  @override
+  String get goalWaec => 'Kwadebe maka iweghachi WAEC ma ọ bụ NECO';
+
+  @override
+  String get goalWaecDetail => 'Omume site n\'isiokwu, n\'ọkwa SS3';
+
+  @override
+  String get goalReading => 'Mee omume ịgụ akwụkwọ';
+
+  @override
+  String get goalReadingDetail => 'Obere akụkụ na akụkọ, a gụrụ ha gị na gị';
+
+  @override
+  String get goalSkills => 'Mụta nkà ọhụrụ';
+
+  @override
+  String get goalSkillsDetail => 'Nkà ekwentị, ịgagharị, ihe ndabere ego';
+
+  @override
+  String get goalPapers => 'Naanị gụọ akwụkwọ m';
+
+  @override
+  String get goalPapersDetail => 'Akwụkwọ ozi, ụgwọ, akara ọgwụ';
+
+  @override
+  String get goalsNote =>
+      'Ị nwere ike ịgbanwe ha oge ọ bụla na Ntọala. Ọ dịghị mkpa onye nkuzi.';
+
+  @override
+  String get saveLabel => 'Chekwaa';
+
+  @override
+  String get waitingBanner =>
+      'A na-eche ka nne na nna gị ma ọ bụ onye na-elekọta gị kwenye. Ruo mgbe ahụ ị nwere ike ịgụ peeji.';
+
+  @override
+  String get removedNotice =>
+      'Onye nkuzi gị wepụrụ ekwentị a na klaasị ahụ. Ị ka nwere ike ịgụ peeji.';
+
+  @override
+  String get settingsGoals => 'Ebumnuche m';
+
+  @override
+  String get settingsNoClass => 'Anọghị na klaasị';
+
+  @override
+  String get practiceLevelTitle => 'Ọkwa omume m';
 }

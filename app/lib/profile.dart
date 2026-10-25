@@ -1,24 +1,37 @@
 // Named constructor parameters can't be private initializing formals.
 // ignore_for_file: prefer_initializing_formals
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'api.dart' show ClassLink;
 import 'curriculum.dart';
 import 'policy.dart';
 
-/// Who is using Magana: their age tier, and (for 13–17) when a guardian agreed.
-/// Saved on the phone. A Classroom session is never saved: a teacher starts it
-/// each time, and it ends when the app closes.
+/// Who is using Magana: their age tier, (for 13–17) whether their guardian agreed,
+/// where they are in life (in school, finished, university or other), adults'
+/// goals, and the phone's link to a class. Saved on the phone. A Classroom
+/// session is never saved: a teacher starts it each time, and it ends when the
+/// app closes.
+///
+/// Consent for 13–17 comes from the class teacher, who records it in the teacher
+/// portal; the app learns it from the class link (/learner/me). Until then the
+/// learner is "waiting": they may read schoolwork pages and nothing else.
 class ProfileController extends ChangeNotifier {
   ProfileController({
     Tier? tier,
     DateTime? consentAt,
     bool teacherSession = false,
     String? classLevel,
+    String? who,
+    ClassLink? link,
   }) : _tier = tier,
        _consentAt = consentAt,
        _teacherSession = teacherSession,
-       _classLevel = classLevel;
+       _classLevel = classLevel,
+       _who = who,
+       _link = link;
 
   Tier? _tier;
   String? _classLevel;
@@ -45,18 +58,43 @@ class ProfileController extends ChangeNotifier {
     Tier.classroom => _teacherSession,
   };
 
-  bool can(Feature f) => active && allows(_tier!, f);
+  /// 13–17 whose guardian hasn't agreed yet: schoolwork reading only.
+  bool get waitingForConsent => _tier == Tier.guided && !guardianConsent;
+
+  bool can(Feature f) => waitingForConsent
+      ? f == Feature.readSchoolwork
+      : active && allows(_tier!, f);
+
+  /// in_school | finished | other (A1, "Who is using Magana?"); null before.
+  String? get who => _who;
+  String? _who;
+
+  /// Adults who finished school: what they want to do (A5); change freely.
+  List<String> get goals => List.unmodifiable(_goals);
+  List<String> _goals = [];
+
+  /// The phone's class link, or null.
+  ClassLink? get link => _link;
+  ClassLink? _link;
+
+  /// Set when the backend says the teacher removed this phone from its class; the
+  /// app says so once.
+  bool removedFromClass = false;
 
   /// Sent with every backend request; the backend enforces the same rules.
   Map<String, String> get headers => {
     if (_tier != null) 'X-Magana-Tier': _tier!.name,
     if (guardianConsent) 'X-Magana-Guardian-Consent': 'yes',
     if (_teacherSession) 'X-Magana-Teacher-Session': 'yes',
+    if (_link != null) 'X-Magana-Learner': _link!.token,
   };
 
   static const _tierKey = 'age_tier';
   static const _consentKey = 'guardian_consent_at';
   static const _classKey = 'class_level';
+  static const _whoKey = 'who';
+  static const _goalsKey = 'goals';
+  static const _linkKey = 'class_link';
 
   Future<void> load() async {
     try {
@@ -66,6 +104,12 @@ class ProfileController extends ChangeNotifier {
           .firstOrNull;
       _consentAt = DateTime.tryParse(prefs.getString(_consentKey) ?? '');
       _classLevel = prefs.getString(_classKey);
+      _who = prefs.getString(_whoKey);
+      _goals = prefs.getStringList(_goalsKey) ?? [];
+      final saved = prefs.getString(_linkKey);
+      _link = saved == null
+          ? null
+          : ClassLink.fromSaved(jsonDecode(saved) as Map<String, dynamic>);
     } catch (_) {
       // Storage unavailable: onboarding runs again.
     }
@@ -85,6 +129,95 @@ class ProfileController extends ChangeNotifier {
         await prefs.remove(_consentKey);
       }
     } catch (_) {}
+  }
+
+  Future<void> setWho(String who) async {
+    _who = who;
+    notifyListeners();
+    try {
+      await (await SharedPreferences.getInstance()).setString(_whoKey, who);
+    } catch (_) {}
+  }
+
+  Future<void> setGoals(List<String> goals) async {
+    _goals = [...goals];
+    notifyListeners();
+    try {
+      await (await SharedPreferences.getInstance()).setStringList(
+        _goalsKey,
+        _goals,
+      );
+    } catch (_) {}
+  }
+
+  /// The class this phone joined (or null to forget it). Its level picks the
+  /// practice packs; for 13–17 its status carries the teacher-recorded consent.
+  Future<void> setLink(ClassLink? link) async {
+    _link = link;
+    if (link != null) {
+      if (levelById(link.level) != null) {
+        _classLevel = link.level;
+      }
+      if (_tier == Tier.guided) {
+        _consentAt = link.status == 'active'
+            ? (_consentAt ?? DateTime.now())
+            : null;
+      }
+    }
+    notifyListeners();
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      if (link == null) {
+        await prefs.remove(_linkKey);
+      } else {
+        await prefs.setString(_linkKey, jsonEncode(link.toJson()));
+        if (levelById(link.level) != null) {
+          await prefs.setString(_classKey, link.level);
+        }
+      }
+      if (_consentAt != null) {
+        await prefs.setString(_consentKey, _consentAt!.toIso8601String());
+      } else {
+        await prefs.remove(_consentKey);
+      }
+    } catch (_) {}
+  }
+
+  /// What /learner/me says now. Removed or unknown: forget the class (and, for
+  /// 13–17, the consent it carried) and say so once.
+  Future<void> applyLinkStatus(
+    String status,
+    Map<String, dynamic>? classInfo,
+  ) async {
+    final link = _link;
+    if (link == null) return;
+    if (status == 'removed' || status == 'not_linked') {
+      removedFromClass = true;
+      await setLink(null);
+      if (_tier == Tier.guided) {
+        _consentAt = null;
+        notifyListeners();
+        try {
+          await (await SharedPreferences.getInstance()).remove(_consentKey);
+        } catch (_) {}
+      }
+      return;
+    }
+    await setLink(
+      classInfo == null
+          ? ClassLink(
+              token: link.token,
+              status: status,
+              className: link.className,
+              level: link.level,
+              teacher: link.teacher,
+              school: link.school,
+            )
+          : ClassLink.fromJson({
+              'status': status,
+              'class': classInfo,
+            }, token: link.token),
+    );
   }
 
   Future<void> setClassLevel(String level) async {
