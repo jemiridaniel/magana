@@ -1,0 +1,99 @@
+[
+ {
+  "id": "medicine",
+  "title": "Medicine label",
+  "alt": "Photo of a medicine box label. Paracetamol 500 mg tablets. Take 1 to 2 tablets every 4 to 6 hours. The next line, about the most you may take in 24 hours, has a smudged number. Then a storage line and the expiry date.",
+  "width": 1400,
+  "height": 510,
+  "lines": [
+   {
+    "shown": "PARACETAMOL 500 mg TABLETS",
+    "said": "PARACETAMOL 500 mg TABLETS",
+    "warning": null
+   },
+   {
+    "shown": "Take 1 to 2 tablets every 4 to 6 hours",
+    "said": "Take 1 to 2 tablets every 4 to 6 hours",
+    "warning": null
+   },
+   {
+    "shown": "Do not take more than [unclear number] in 24 hours",
+    "said": "Do not take more than unclear number in 24 hours. I can't read a number on line 3 clearly. Please check it or retake the photo.",
+    "warning": "I can't read a number on line 3 clearly. Please check it or retake the photo."
+   },
+   {
+    "shown": "Keep out of the reach of children",
+    "said": "Keep out of the reach of children",
+    "warning": null
+   },
+   {
+    "shown": "Expiry 08/2027 Batch PCM2291",
+    "said": "Expiry 08/2027 Batch PCM2291",
+    "warning": null
+   }
+  ]
+ },
+ {
+  "id": "school",
+  "title": "School question",
+  "alt": "Photo of a printed JSS 2 mathematics question: a farmer plants 24 rows of maize with 15 plants in each row. How many plants are there altogether?",
+  "width": 1400,
+  "height": 424,
+  "lines": [
+   {
+    "shown": "JSS 2 Mathematics: Multiplication",
+    "said": "JSS 2 Mathematics: Multiplication",
+    "warning": null
+   },
+   {
+    "shown": "A farmer plants 24 rows of maize.",
+    "said": "A farmer plants 24 rows of maize.",
+    "warning": null
+   },
+   {
+    "shown": "Each row has 15 plants.",
+    "said": "Each row has 15 plants.",
+    "warning": null
+   },
+   {
+    "shown": "How many plants are there altogether?",
+    "said": "How many plants are there altogether?",
+    "warning": null
+   }
+  ]
+ },
+ {
+  "id": "bank",
+  "title": "Bank statement",
+  "alt": "Photo of part of a sample bank statement with an opening balance, two transactions on 3 and 5 October 2026, and the closing balance.",
+  "width": 1400,
+  "height": 498,
+  "lines": [
+   {
+    "shown": "SAMPLE BANK PLC Account statement",
+    "said": "SAMPLE BANK PLC Account statement",
+    "warning": null
+   },
+   {
+    "shown": "Opening balance 01/10/2026 NGN 0.00",
+    "said": "Opening balance 01/10/2026 NGN 0.00",
+    "warning": null
+   },
+   {
+    "shown": "03/10/2026 Transfer from A. Bello NGN 15,000.00",
+    "said": "03/10/2026 Transfer from A. Bello NGN 15,000.00",
+    "warning": null
+   },
+   {
+    "shown": "05/10/2026 POS purchase NGN -2,350.00",
+    "said": "05/10/2026 POS purchase NGN -2,350.00",
+    "warning": null
+   },
+   {
+    "shown": "Closing balance 31/10/2026 NGN 12,650.00",
+    "said": "Closing balance 31/10/2026 NGN 12,650.00",
+    "warning": null
+   }
+  ]
+ }
+]

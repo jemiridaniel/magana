@@ -1,4 +1,4 @@
-# Tests on every push and pull request. On main, once every test passes, deploy to the AWS
+# Tests on every push and pull request (backend, app, portal, website). On main, once every test passes, deploy to the AWS
 # server (docs/DEPLOY_AWS.md §8a): GitHub signs in to AWS with OIDC (no AWS keys stored here)
 # and asks Systems Manager to run deploy/update.sh on the instance (no SSH).
 # No server key is stored in GitHub: the PWA and portal are built with placeholders, which the
@@ -52,8 +52,28 @@ jobs:
       - run: npm run lint
         working-directory: portal
 
+  website:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: website/package-lock.json
+      - run: npm ci
+        working-directory: website
+      - run: npm run lint
+        working-directory: website
+      - run: npx next build
+        working-directory: website
+      # axe (WCAG 2.2 A/AA + 7:1 contrast) at 1280 and 390 px, 64 px controls, the loader,
+      # Braille and samples, in the runner's Google Chrome.
+      - run: npx playwright test --reporter=line
+        working-directory: website
+
   deploy:
-    needs: [backend, app, portal]
+    needs: [backend, app, portal, website]
     # Only main, and only once the AWS role is set up (repository variables).
     if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.AWS_DEPLOY_ROLE_ARN != ''
     runs-on: ubuntu-latest

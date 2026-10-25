@@ -35,5 +35,5 @@ def test_every_support_address_is_the_configured_one():
 
 def test_the_address_reaches_the_app_portal_and_docs():
     email = CONFIG["support_email"]
-    for rel in ("app/lib/screens/about.dart", "portal/lib/site.ts", "docs/PRIVACY.md", "docs/TESTER_INSTALL.md"):
+    for rel in ("app/lib/screens/about.dart", "portal/lib/site.ts", "website/lib/site.ts", "docs/ACCESSIBILITY.md", "docs/PRIVACY.md", "docs/TESTER_INSTALL.md"):
         assert email in (ROOT / rel).read_text(encoding="utf-8"), rel
