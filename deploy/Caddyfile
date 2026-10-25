@@ -90,15 +90,13 @@ teachers.{$MAGANA_DOMAIN} {
 {$MAGANA_LEGACY_DOMAIN} {
 	import common
 	redir / https://{$MAGANA_DOMAIN}/ 302
-	# route keeps this order (a plain handle would run redir before uri).
-	@app path /app /app/*
-	route @app {
-		uri strip_prefix /app
+	# handle_path strips the prefix before the redirect inside it runs.
+	redir /app https://app.{$MAGANA_DOMAIN}/ 308
+	handle_path /app/* {
 		redir https://app.{$MAGANA_DOMAIN}{uri} 308
 	}
-	@teachers path /teachers /teachers/*
-	route @teachers {
-		uri strip_prefix /teachers
+	redir /teachers https://teachers.{$MAGANA_DOMAIN}/ 308
+	handle_path /teachers/* {
 		redir https://teachers.{$MAGANA_DOMAIN}{uri} 308
 	}
 	# Everything else is the API, unchanged, for APKs built before 0.1.0+3.
