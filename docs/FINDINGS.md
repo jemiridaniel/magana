@@ -13,6 +13,62 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · Deployed: the backend, Ibà, the PWA and the teacher portal on AWS (London)
+
+- **Server:**
+  - AWS EC2 **t3.small** (2 vCPU, 1.9 GB) in eu-west-2, Ubuntu 24.04.5 LTS, 20 GB gp3, standard CPU credits, 2 GB swap. Elastic IP **35.178.64.255**.
+  - **https://35-178-64-255.sslip.io**, with a Let's Encrypt certificate from Caddy (valid to 23 Jan 2027).
+  - `MAGANA_ENV=production`, Tesseract, Explain off (stub; no approved host), server ASR off.
+  - New random `MAGANA_API_KEY`, `MAGANA_TEACHER_KEY` and `IBA_API_KEY`, generated on the server and never printed or committed. The dev keys are not used.
+- **Checked from a Mac in Abuja** (curl, times include TLS):
+
+  | Check | Result |
+  |---|---|
+  | `/health` | 200 in 0.87 s; Ibà reachable (after its first probe, about 1 minute from start) |
+  | API call without the key | **401** in 1.2 s |
+  | Read one page: the team's medicine label, rendered as a PNG, health mode | 200 in **4.5–4.7 s** (3 runs). All 6 lines at confidence 0.94–0.96; one `number_mismatch` warning on the expiry and batch line from the health-mode second pass |
+  | The same page, school mode | 200 in **3.6 s**, no warnings |
+  | 3 health reads at once | 5.3 s, 13.4 s, 13.4 s: one worker, so they queue |
+  | PWA `/app/` | 200 in 0.5 s; service worker `no-cache` |
+  | Teacher portal `/teachers/` | **401** without the login; 200 in 1.8 s with it |
+  | Quiz endpoints with and without the teacher key | 200 / **401** |
+
+- **Memory** (the question was whether the PWA and portal fit too):
+  - At idle: backend 65 MB, Ibà 86 MB, Caddy 30 MB. The server uses 680 MB of 1.9 GB (1.2 GB available), with 8 MB of swap used.
+  - During 3 simultaneous reads, the backend peaked at **119 MB**.
+  - The PWA and portal are static files served by Caddy: no extra process.
+  - Disk: 6.9 GB used of 19 GB.
+- **Server ASR doesn't fit.** One NCAIR1 Whisper Small model (242 M parameters) took 360 MB once loaded on the Mac, but **peaked at 2.4 GB** while transcribing and scoring a closed-set answer. With the 0.7 GB the rest already uses, server ASR needs an instance with **at least 4 GB** (for example t3.medium or c7i-flex.large; check free-plan eligibility and price first). It stays off (`ASR_ENGINE=device`).
+- **Problems on the way, now in docs/DEPLOY_AWS.md:**
+  - The security group had no outbound rule, so every download timed out while SSH in still worked.
+  - Two Elastic IPs were allocated (one released).
+  - "My IP" for SSH has to be updated when the deploying Mac changes network.
+- **APK:** version 0.1.0+2 built for the live server, arm64, 21 MB (22,005,490 bytes), signed with the upload key.
+- **Status:** live for testing. No tester has used it yet.
+
+## 2026-10-25 · Explanations: Magana LoRA, base vs adapter in four languages (UNREVIEWED)
+
+> **Unreviewed.** These readings are the developer's; native speakers haven't rated any answer.
+
+- **What we did:** `notebooks/magana-lora` on a Kaggle T4 (private notebook `certifiedsurvey/magana-lora`, version 5).
+  - QLoRA (the Ibà recipe) on the 80 English examples in `data/lora/` (75 train, 5 validation), 3 epochs in 6 minutes. Training loss went from 0.98 to 0.09, validation loss from 0.43 to 0.17.
+  - Then the 20 schoolwork prompts of the 40-page benchmark, on base N-ATLaS and the adapter in the same session (4-bit, greedy decoding, Magana's prompts and checks). Results in `benchmark/explain/results/2026-10-25-kaggle-t4-magana-lora/`.
+- **Result** (answers passed, out of 5 per language):
+
+  | Language | Base | Magana LoRA |
+  |---|---|---|
+  | English | 1 | 4 |
+  | Hausa | 3 | 4 |
+  | Yorùbá | 0 | 3 |
+  | Igbo | 2 | 2 |
+  | **All** | **6/20** | **13/20** |
+
+  - **No digit, invented number, unit word or arithmetic** in any adapter answer, against 60 digits, 42 number words and 18 unit words for the base.
+  - The adapter's 7 blocks are almost all harmless ordinal or count words ("the first column", "two events"), plus one Igbo answer that repeated two markers. It once used the calculation refusal where none was needed.
+- **English-only training does hurt the other languages.** The adapter now **answers in English whatever language is asked for**: every Hausa, Yorùbá and Igbo answer is in English. Its higher pass rate in those languages comes only from English answers being easier to keep clean. For Hausa, Yorùbá and Igbo learners it is a step backwards.
+- **Decision:** don't use this adapter for Hausa, Yorùbá or Igbo. Version 2 needs native-reviewed examples in those languages (the drafts in `data/lora/`), and a language check in the benchmark: an answer not in the requested language counts as a failure. The adapter (`Magana-ATLAS-8B-LoRA-Powered-by-Awarri`, with the N-ATLaS licence and attribution) stays as a Kaggle output. It is not published.
+- **Status:** open, unreviewed.
+
 ## 2026-10-25 · Accessibility: "Say" back on for English (adults, JSS and SSS); list numbering becomes bullets (UNREVIEWED)
 
 > **Unreviewed.** These decisions rest on synthetic voices. They must be revisited with real learners' recordings.

@@ -65,7 +65,10 @@ phone app ──HTTPS──▶ Caddy (ports 80/443, automatic certificates)
    - **HTTP**, port 80, source **Anywhere-IPv4** (`0.0.0.0/0`). Caddy needs port 80 to get certificates and to redirect to HTTPS.
    - **HTTPS**, port 443, source **Anywhere-IPv4**.
    - **SSH**, port 22, source **My IP**. The console fills in your current address. If your IP changes, edit this rule.
-4. Leave outbound as it is (all allowed) and choose **Create security group**.
+4. **Outbound rules:** keep the default **All traffic → 0.0.0.0/0**. If it's missing, the server can't reach GitHub, Docker or even Ubuntu's mirror: every download times out, while SSH in still works (this happened on the first deploy).
+5. Choose **Create security group**.
+
+**SSH from a changing network** (travelling between cities): edit the SSH rule's **Source** to **My IP** again when your address changes, which takes 30 seconds. Don't open port 22 to everyone.
 
 ## 5. Launch the instance
 
@@ -77,16 +80,19 @@ phone app ──HTTPS──▶ Caddy (ports 80/443, automatic certificates)
 6. **Network settings → Edit:**
    - **Auto-assign public IP:** Enable. The Elastic IP in step 6 replaces it.
    - **Firewall:** **Select existing security group**, then `magana-web`.
-7. **Configure storage:** **30** GiB, **gp3**. PaddleOCR images and models need the room.
+7. **Configure storage:** **20** GiB **gp3** is enough for Tesseract (the first deploy uses 6.9 GB). Use **30** GiB if you'll try PaddleOCR.
 8. **Advanced details → Credit specification:** **Standard**. The default, "Unlimited", lets a T3 burst past its baseline and bill extra for it.
 9. Choose **Launch instance**, then **View all instances**. Wait until **Instance state** is *Running* and the **Status check** passes.
 10. Copy the **Instance ID** (`i-…`).
 
 ## 6. Elastic IP (a stable address, so the app's URL never changes)
 
-1. **EC2 → Network & Security → Elastic IPs → Allocate Elastic IP address → Allocate.**
-2. Select the new address, then **Actions → Associate Elastic IP address**. **Instance:** `magana-backend`. Choose **Associate**.
-3. Note the address, for example `18.130.12.34`. Your HTTPS address is then **`https://18-130-12-34.sslip.io`**: the IP with dashes, plus `.sslip.io`, a free DNS name that points at the IP. With a real domain later, point an A record at the IP and use that name instead.
+1. **EC2 → Network & Security → Elastic IPs → Allocate Elastic IP address → Allocate.** Allocate **one**: every allocated address costs about $3.65 a month, attached or not. Release any spare.
+2. Select the new address, then **Actions → Associate Elastic IP address**. **Instance:** pick `magana-backend` from the list (typing the ID isn't enough). Choose **Associate**.
+3. Check: the instance's **Details** tab shows the address under both **Elastic IP addresses** and **Public IPv4 address**. Neither step needs the instance stopped.
+4. Note the address, for example `18.130.12.34`. Your HTTPS address is then **`https://18-130-12-34.sslip.io`**: the IP with dashes, plus `.sslip.io`, a free DNS name that points at the IP. With a real domain later, point an A record at the IP and use that name instead.
+
+The live server: **35.178.64.255**, **https://35-178-64-255.sslip.io** (first deployed 25 Oct 2026).
 
 ## 7. Set up the server (about 10 minutes)
 
@@ -188,6 +194,16 @@ It builds with `--base-href /app/`, fills in the service worker's file list and 
 | `RATE_HEAVY_DEVICE_PER_MIN` | 12 | the same, from one device |
 
 A school's testers may share one IP behind a router. If they hit the limit, raise the two IP settings. `/health` is never limited. The limits are kept in memory, so a restart resets them.
+
+## 10c. The teacher portal at /teachers
+
+The same Caddy serves the portal as static files at `https://<host>/teachers/`, behind a login (`PORTAL_USER` and `PORTAL_HASH` in `.env`), because its JavaScript carries the teacher key. From your Mac:
+
+```bash
+scripts/deploy-portal.sh
+```
+
+It reads the API and teacher keys from the server's `.env` over SSH, never printing them, builds the portal with `PORTAL_BASE_PATH=/teachers`, copies it to `deploy/teachers/`, and deletes the local build. The login for teachers is in `~/.magana/portal-login.txt` on the deploying Mac. Share it privately, never in a group chat.
 
 ## 10b. Teacher portal quizzes
 
