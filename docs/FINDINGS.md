@@ -13,6 +13,17 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · Hosting: website, PWA and portal to Cloudflare Pages; "the server is sleeping" instead of a blank error
+
+- **The move** (docs/DEPLOY_PAGES.md): magana.ng, www and app.magana.ng go to Cloudflare Pages, deployed by GitHub Actions after the tests pass. teachers.magana.ng follows once the portal has its own sign-in. Only api.magana.ng stays on EC2. The DNS changes are waiting for the Cloudflare token.
+- **The PWA's key:** the backend now accepts a second key, `MAGANA_WEB_API_KEY`, for the web app. It is public in the JavaScript, as before, but it can be rotated without new APKs, and the APK key never goes to GitHub. Tested.
+- **When the API is down,** the PWA and the portal now say "Magana's server is sleeping. Please try again later." That replaces "Check the connection" (PWA) and a generic failure (portal).
+  - **PWA:** used when the browser is online but nothing answers, or the proxy answers 502, 503 or 504. A phone with no signal still hears "I couldn't reach Magana. Check the connection."
+  - **Portal:** an alert banner (`role="alert"`) with a 64 px "Try again" button.
+  - **Tests:** the app shows and says it and passes `expectAccessible`; the portal shows it, passes axe at 1280 and 390 px, and "Try again" clears it.
+- **Fixed on the way:** the portal's requests with credentials (needed for sign-in cookies) were blocked by CORS. The backend now allows credentials for the listed origins only; tested, including that another origin gets nothing.
+- **Status:** code live. Pages waits for the token and DNS steps.
+
 ## 2026-10-25 · WhatsApp: the W1–W5 flow; the voice notes would have dropped digits (UNREVIEWED)
 
 > **Unreviewed.** The Hausa, Yorùbá and Igbo wording is a machine-assisted draft for native review. The privacy section is for Nurse Balogun. The quick check stays a draft pending Dr. Amos.

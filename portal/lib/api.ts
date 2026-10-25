@@ -2,7 +2,9 @@
 // do not exist on the backend yet, so without NEXT_PUBLIC_API_URL these resolve with mock results.
 import type { Learner, Version } from "./data";
 
-export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
+import { API_URL } from "./server";
+
+export { API_URL };
 const useMock = !API_URL;
 // The backend's MAGANA_API_KEY. NEXT_PUBLIC_ values ship to the browser, so this is for local
 // development only; a deployed portal needs teacher sign-in and a server-side key instead.

@@ -31,6 +31,7 @@
   "readingPage": "Ina karanta shafin. Don Allah ka jira.",
   "noTextFound": "Ban sami wani rubutu ba. Tabbatar shafin yana fuskantar sama, ka sake gwadawa.",
   "cannotReach": "Na kasa haɗawa da Magana. Duba haɗin intanet, ka sake gwadawa.",
+  "serverSleeping": "Sabar Magana tana barci. Don Allah ka sake gwadawa nan gaba.",
   "readFailed": "An sami matsala wajen karanta shafin. Don Allah ka sake gwadawa.",
   "yourPage": "Shafinka",
   "lineCount": "{count, plural, =1{layi 1} other{layuka {count}}}",

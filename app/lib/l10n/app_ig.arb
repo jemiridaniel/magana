@@ -31,6 +31,7 @@
   "readingPage": "Ana m agụ peeji ahụ. Biko chere.",
   "noTextFound": "Ahụghị m ederede ọ bụla. Lelee na peeji ahụ chere ihu elu, ma nwaa ọzọ.",
   "cannotReach": "Enweghị m ike iru Magana. Lelee njikọ gị ma nwaa ọzọ.",
+  "serverSleeping": "Sava Magana na-ehi ụra. Biko nwaa ọzọ ma emechaa.",
   "readFailed": "Nsogbu mere mgbe m na-agụ peeji ahụ. Biko nwaa ọzọ.",
   "yourPage": "Peeji gị",
   "lineCount": "{count, plural, =1{ahịrị 1} other{ahịrị {count}}}",

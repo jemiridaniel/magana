@@ -110,6 +110,10 @@ class AppLocalizationsIg extends AppLocalizations {
       'Enweghị m ike iru Magana. Lelee njikọ gị ma nwaa ọzọ.';
 
   @override
+  String get serverSleeping =>
+      'Sava Magana na-ehi ụra. Biko nwaa ọzọ ma emechaa.';
+
+  @override
   String get readFailed =>
       'Nsogbu mere mgbe m na-agụ peeji ahụ. Biko nwaa ọzọ.';
 

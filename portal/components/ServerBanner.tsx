@@ -1,0 +1,33 @@
+"use client";
+
+// Shown whenever a call finds Magana's server asleep (stopped to save money, or restarting).
+// role="alert": screen readers hear it once, as soon as it appears.
+import { useEffect, useState } from "react";
+import { checkServer, SERVER_EVENT, type ServerState } from "@/lib/server";
+
+export const SLEEPING = "Magana’s server is sleeping. Please try again later.";
+export const OFFLINE = "You’re offline. Check the internet connection, then try again.";
+
+export default function ServerBanner() {
+  const [state, setState] = useState<ServerState>("ok");
+  const [checking, setChecking] = useState(false);
+
+  useEffect(() => {
+    const on = (e: Event) => setState((e as CustomEvent<ServerState>).detail);
+    window.addEventListener(SERVER_EVENT, on);
+    return () => window.removeEventListener(SERVER_EVENT, on);
+  }, []);
+
+  if (state === "ok") return null;
+  return (
+    <div className="server-banner" role="alert">
+      <p>{state === "offline" ? OFFLINE : SLEEPING}</p>
+      <button
+        type="button" className="btn btn-secondary" disabled={checking}
+        onClick={async () => { setChecking(true); await checkServer(); setChecking(false); }}
+      >
+        {checking ? "Checking…" : "Try again"}
+      </button>
+    </div>
+  );
+}

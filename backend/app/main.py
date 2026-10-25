@@ -84,10 +84,14 @@ async def require_api_key(request, call_next):
     Unset (local development): no key needed. The key ships inside the app, so it keeps
     out casual callers and bots, not a determined attacker."""
     key = os.environ.get("MAGANA_API_KEY", "")
+    # The web app and portal (Cloudflare Pages, built by GitHub Actions) carry their own key,
+    # MAGANA_WEB_API_KEY: it is public in their JavaScript anyway, so it can be rotated without
+    # touching the APKs, and the APK key never goes to GitHub.
+    keys = [k for k in (key, os.environ.get("MAGANA_WEB_API_KEY", "")) if k]
     # The WhatsApp webhook is called by Meta, which proves itself with a signature instead.
     if key and request.method != "OPTIONS" and request.url.path not in ("/health", WHATSAPP_WEBHOOK):
-        sent = request.headers.get("x-magana-key", "")
-        if not hmac.compare_digest(sent.encode(), key.encode()):
+        sent = request.headers.get("x-magana-key", "").encode()
+        if not any(hmac.compare_digest(sent, k.encode()) for k in keys):
             return JSONResponse({"detail": {"code": "bad_api_key"}}, status_code=401)
     return await call_next(request)
 
@@ -99,8 +103,11 @@ async def require_api_key(request, call_next):
 app.add_middleware(
     CORSMiddleware,
     allow_origin_regex=os.environ.get("MAGANA_CORS_ORIGIN_REGEX", r"http://(localhost|127\.0\.0\.1)(:\d+)?"),
-    allow_methods=["GET", "POST", "PUT"],  # PUT: the portal saves changes to a quiz
+    allow_methods=["GET", "POST", "PUT", "DELETE"],  # PUT: the portal saves changes to a quiz
     allow_headers=["*"],
+    # The portal's sign-in cookie (HttpOnly, api.magana.ng only) goes with its requests; only the
+    # origins in the regex above may send it.
+    allow_credentials=True,
 )
 
 # Letters and "read any paper" may hold doses or amounts, so they get the strict checks too.

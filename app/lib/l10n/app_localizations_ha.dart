@@ -111,6 +111,10 @@ class AppLocalizationsHa extends AppLocalizations {
       'Na kasa haɗawa da Magana. Duba haɗin intanet, ka sake gwadawa.';
 
   @override
+  String get serverSleeping =>
+      'Sabar Magana tana barci. Don Allah ka sake gwadawa nan gaba.';
+
+  @override
   String get readFailed =>
       'An sami matsala wajen karanta shafin. Don Allah ka sake gwadawa.';
 

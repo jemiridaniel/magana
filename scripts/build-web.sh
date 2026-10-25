@@ -30,7 +30,7 @@ files = []
 for dirpath, _, names in os.walk("."):
     for name in names:
         path = os.path.join(dirpath, name)[2:]
-        if (name in ("magana_sw.js", "flutter_service_worker.js", ".DS_Store", ".last_build_id", "NOTICES")
+        if (name in ("magana_sw.js", "flutter_service_worker.js", ".DS_Store", ".last_build_id", "NOTICES", "_headers", "_redirects")
                 or path.startswith("canvaskit/") or name.endswith(".symbols")):
             continue
         files.append(path)

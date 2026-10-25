@@ -16,6 +16,7 @@ export const portalMessages: Record<string, string> = {
   quiz_translation_unchecked: "The translation is not yet checked.",
   // The portal's own (no server reply).
   unreachable: "Can't reach the Magana server. Your quiz is still on this page: try again.",
+  server_sleeping: "Magana’s server is sleeping. Please try again later. Your quiz is still on this page.",
 };
 
 export const messageFor = (code: string) => portalMessages[code] ?? "Something went wrong. Please try again.";

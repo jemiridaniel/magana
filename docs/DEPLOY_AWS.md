@@ -96,6 +96,8 @@ The live server: **35.178.64.255** (first deployed 25 Oct 2026 at https://35-178
 
 ## 6a. The domain (magana.ng)
 
+> **Moving:** the website, www, app. and teachers. move to Cloudflare Pages (docs/DEPLOY_PAGES.md). This server keeps **api.magana.ng** (an A record, DNS only), plus the old sslip.io address for older APKs. The table below is the setup before the move.
+
 DNS is on **Cloudflare, DNS only** (grey cloud, not proxied: Caddy needs the requests itself to get its certificates). Add four **A** records pointing at the Elastic IP, a **CNAME** `www` → `magana.ng` (Caddy redirects it to https://magana.ng), and no AAAA records:
 
 | Name | Serves |
@@ -322,6 +324,8 @@ sudo docker compose -f docker-compose.prod.yml up -d
 
 ## 10a. The web app (PWA) at app.magana.ng
 
+> **Moving to Cloudflare Pages** (docs/DEPLOY_PAGES.md). This section applies until the DNS change.
+
 Every deploy rebuilds it (§8a). By hand: the same Caddy serves the Flutter web build at `https://app.magana.ng/` from `deploy/web/` on the server (git-ignored, mounted read-only into Caddy). From your Mac, with `MAGANA_API` and `MAGANA_API_KEY` in `~/.magana/app.env` and `MAGANA_HOST` in `~/.magana/aws.env`:
 
 ```bash
@@ -342,6 +346,8 @@ It builds with `--base-href /`, fills in the service worker's file list and copi
 A school's testers may share one IP behind a router. If they hit the limit, raise the two IP settings. `/health` is never limited. The limits are kept in memory, so a restart resets them.
 
 ## 10c. The teacher portal at teachers.magana.ng
+
+> **Stays here, behind basic auth, until the portal's own sign-in ships;** then it moves to Cloudflare Pages too (docs/DEPLOY_PAGES.md, step 6).
 
 Every deploy rebuilds it (§8a). By hand: the same Caddy serves the portal as static files at `https://teachers.magana.ng/`, behind a login (`PORTAL_USER` and `PORTAL_HASH` in `.env`), because its JavaScript carries the teacher key. From your Mac:
 

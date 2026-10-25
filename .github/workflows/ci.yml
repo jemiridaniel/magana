@@ -1,13 +1,17 @@
-# Tests on every push and pull request (backend, app, portal, website). On main, once every test passes, deploy to the AWS
-# server (docs/DEPLOY_AWS.md §8a): GitHub signs in to AWS with OIDC (no AWS keys stored here)
-# and asks Systems Manager to run deploy/update.sh on the instance (no SSH).
-# No server key is stored in GitHub: the PWA and portal are built with placeholders, which the
-# server fills in.
+# Tests on every push and pull request (backend, app, portal, website). On main, once every
+# test passes, two deploys run side by side:
+# - pages: the website, the PWA and (once it has its own sign-in) the teacher portal go to
+#   Cloudflare Pages (docs/DEPLOY_PAGES.md). Built here; the PWA carries MAGANA_WEB_API_KEY,
+#   the public web key (a GitHub secret). The APK key never comes to GitHub.
+# - deploy: the API on the AWS server (docs/DEPLOY_AWS.md §8a): GitHub signs in to AWS with
+#   OIDC (no AWS keys stored here) and Systems Manager runs deploy/update.sh (no SSH). Until the
+#   portal is on Pages, the server still gets a web bundle with placeholders it fills in.
 name: CI
 
 on:
   push:
   pull_request:
+  workflow_dispatch:  # scripts/publish-apk.sh: redeploy the website with the new APK
 
 concurrency:
   group: ci-${{ github.ref }}
@@ -75,7 +79,7 @@ jobs:
   deploy:
     needs: [backend, app, portal, website]
     # Only main, and only once the AWS role is set up (repository variables).
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push' && vars.AWS_DEPLOY_ROLE_ARN != ''
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.AWS_DEPLOY_ROLE_ARN != ''
     runs-on: ubuntu-latest
     concurrency:
       group: deploy
@@ -88,17 +92,21 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
+      # The server's web bundle: only until the teacher portal is on Cloudflare Pages too.
       - uses: subosito/flutter-action@v2
+        if: vars.PORTAL_ON_PAGES != 'true'
         with:
           flutter-version: "3.47.7"
           cache: true
       - uses: actions/setup-node@v4
+        if: vars.PORTAL_ON_PAGES != 'true'
         with:
           node-version: "22"
           cache: npm
           cache-dependency-path: portal/package-lock.json
 
       - name: Build the PWA, teacher portal and website (placeholders instead of keys)
+        if: vars.PORTAL_ON_PAGES != 'true'
         run: |
           MAGANA_API="https://api.$DOMAIN" MAGANA_API_KEY=__MAGANA_API_KEY__ scripts/build-web.sh
           (cd portal && npm ci && PORTAL_EXPORT=1 NEXT_PUBLIC_API_URL="https://api.$DOMAIN" \
@@ -112,6 +120,7 @@ jobs:
           echo "SUM=$(sha256sum magana-web.tar.gz | cut -d' ' -f1)" >> "$GITHUB_ENV"
 
       - name: Upload the bundle to the web-build release
+        if: vars.PORTAL_ON_PAGES != 'true'
         run: |
           gh release view web-build >/dev/null 2>&1 || gh release create web-build --prerelease \
             --title "Server web bundle (not a release)" \
@@ -127,10 +136,11 @@ jobs:
         env:
           INSTANCE: ${{ vars.MAGANA_INSTANCE_ID }}
         run: |
-          url="https://github.com/${{ github.repository }}/releases/download/web-build/magana-web.tar.gz"
+          url=""
+          [ -n "${SUM:-}" ] && url="https://github.com/${{ github.repository }}/releases/download/web-build/magana-web.tar.gz"
           script="set -e; cd /home/ubuntu/srv/magana; as() { sudo -Hu ubuntu \"\$@\"; }; \
             prev=\$(as git rev-parse HEAD); as git fetch -q origin main; as git merge -q --ff-only $GITHUB_SHA; \
-            as deploy/update.sh \$prev $url $SUM"
+            as deploy/update.sh \$prev $url ${SUM:-}"
           id=$(aws ssm send-command --instance-ids "$INSTANCE" --document-name AWS-RunShellScript \
             --comment "CI ${GITHUB_SHA:0:7}" --timeout-seconds 600 \
             --parameters "$(jq -nc --arg s "$script" '{commands: [$s], executionTimeout: ["1500"]}')" \
@@ -151,5 +161,68 @@ jobs:
           code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "https://api.$DOMAIN/read")
           [ "$code" = 401 ] || { echo "a call without the key gave $code, not 401"; exit 1; }
           curl -fsS -o /dev/null "https://app.$DOMAIN/"
-          code=$(curl -s -o /dev/null -w '%{http_code}' "https://teachers.$DOMAIN/uploads/")
-          [ "$code" = 401 ] || { echo "the portal without the login gave $code, not 401"; exit 1; }
+          if [ "${{ vars.PORTAL_ON_PAGES }}" != "true" ]; then  # still on the server, behind basic auth
+            code=$(curl -s -o /dev/null -w '%{http_code}' "https://teachers.$DOMAIN/uploads/")
+            [ "$code" = 401 ] || { echo "the portal without the login gave $code, not 401"; exit 1; }
+          fi
+
+  pages:
+    needs: [backend, app, portal, website]
+    # Only main, and only once Cloudflare is set up (docs/DEPLOY_PAGES.md, step 2).
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.CLOUDFLARE_ACCOUNT_ID != ''
+    runs-on: ubuntu-latest
+    concurrency:
+      group: pages
+      cancel-in-progress: false
+    env:
+      DOMAIN: ${{ vars.MAGANA_DOMAIN }}
+      GH_TOKEN: ${{ github.token }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      WRANGLER: npx --yes wrangler@4.40.0
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.7"
+          cache: true
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Create the Pages projects (once; already there is fine)
+        run: |
+          for p in magana-website magana-app magana-teachers; do
+            $WRANGLER pages project create "$p" --production-branch main >/dev/null 2>&1 || true
+          done
+
+      - name: Website (magana.ng), with the latest APK
+        run: |
+          (cd website && npm ci && npx next build)
+          mkdir -p website/out/downloads
+          gh release download android-latest -D website/out/downloads -p 'magana*.apk' -p latest.json \
+            || echo "No APK published yet (scripts/publish-apk.sh)."
+          $WRANGLER pages deploy website/out --project-name magana-website --branch main --commit-hash "$GITHUB_SHA"
+
+      - name: PWA (app.magana.ng)
+        env:
+          MAGANA_API_KEY: ${{ secrets.MAGANA_WEB_API_KEY }}
+        run: |
+          [ -n "$MAGANA_API_KEY" ] || { echo "Set the MAGANA_WEB_API_KEY secret (docs/DEPLOY_PAGES.md)"; exit 1; }
+          MAGANA_API="https://api.$DOMAIN" scripts/build-web.sh
+          $WRANGLER pages deploy app/build/web --project-name magana-app --branch main --commit-hash "$GITHUB_SHA"
+
+      - name: Teacher portal (teachers.magana.ng), once it has its own sign-in
+        if: vars.PORTAL_ON_PAGES == 'true'
+        env:
+          NEXT_PUBLIC_API_KEY: ${{ secrets.MAGANA_WEB_API_KEY }}
+        run: |
+          (cd portal && npm ci && PORTAL_EXPORT=1 NEXT_PUBLIC_API_URL="https://api.$DOMAIN" npx next build)
+          $WRANGLER pages deploy portal/out --project-name magana-teachers --branch main --commit-hash "$GITHUB_SHA"
+
+      - name: Check the deployed sites
+        run: |
+          for host in magana-website magana-app; do
+            curl -fsS -o /dev/null --retry 5 --retry-delay 5 "https://$host.pages.dev/" && echo "$host.pages.dev ok"
+          done
+

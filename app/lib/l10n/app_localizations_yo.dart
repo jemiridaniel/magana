@@ -110,6 +110,10 @@ class AppLocalizationsYo extends AppLocalizations {
       'Mi ò lè dé ọ̀dọ̀ Magana. Ṣàyẹ̀wò ìsopọ̀ rẹ, kí o tún gbìyànjú.';
 
   @override
+  String get serverSleeping =>
+      'Sáfà Magana ń sùn. Jọ̀wọ́ tún gbìyànjú lẹ́yìn náà.';
+
+  @override
   String get readFailed =>
       'Ìṣòro kan wáyé nígbà tí mo ń ka ojú-ìwé náà. Jọ̀wọ́ tún gbìyànjú.';
 

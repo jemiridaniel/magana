@@ -4,6 +4,7 @@ import 'package:app/api.dart';
 import 'package:app/l10n/app_localizations.dart';
 import 'package:app/language.dart';
 import 'package:app/main.dart';
+import 'package:app/platform.dart';
 import 'package:app/policy.dart';
 import 'package:app/profile.dart';
 import 'package:app/screens/everyday.dart';
@@ -389,4 +390,45 @@ void main() {
     expect(find.text(en.cannotReach), findsOneWidget);
     expect(speaker.said.last, en.cannotReach);
   });
+
+  testWidgets(
+    'web app, browser online, server down: "Magana\'s server is sleeping", shown and said',
+    (tester) async {
+      runningOnWeb = true;
+      browserIsOnline = () => true;
+      addTearDown(() {
+        runningOnWeb = false;
+        browserIsOnline = () => false;
+      });
+      final (speaker, backend, _) = await open(
+        tester,
+        screen: const SizedBox(),
+      );
+      backend.unreachable = true;
+      tester
+          .state<NavigatorState>(find.byType(Navigator).last)
+          .push(MaterialPageRoute(builder: (_) => const QuickCheckScreen()));
+      await tester.pumpAndSettle();
+      expect(find.text(en.serverSleeping), findsOneWidget);
+      expect(speaker.said.last, en.serverSleeping);
+      expectAccessible(tester, 'Quick check, server sleeping');
+    },
+  );
+
+  test(
+    '503 from the proxy means the server is asleep, on phones too',
+    () async {
+      final api = MaganaApi(
+        client: MockClient(
+          (_) async => http.Response('<html>Bad gateway</html>', 503),
+        ),
+      );
+      await expectLater(
+        api.triageQuestions('en'),
+        throwsA(
+          isA<ApiException>().having((e) => e.code, 'code', 'server_sleeping'),
+        ),
+      );
+    },
+  );
 }

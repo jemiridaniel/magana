@@ -111,6 +111,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'I couldn\'t reach Magana. Check the connection and try again.';
 
   @override
+  String get serverSleeping =>
+      'Magana’s server is sleeping. Please try again later.';
+
+  @override
   String get readFailed =>
       'Something went wrong reading the page. Please try again.';
 

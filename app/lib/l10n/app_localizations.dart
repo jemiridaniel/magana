@@ -282,6 +282,12 @@ abstract class AppLocalizations {
   /// **'I couldn\'t reach Magana. Check the connection and try again.'**
   String get cannotReach;
 
+  /// The web app or portal couldn't reach the API although the browser is online: the EC2 server is stopped or restarting.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana’s server is sleeping. Please try again later.'**
+  String get serverSleeping;
+
   /// No description provided for @readFailed.
   ///
   /// In en, this message translates to:

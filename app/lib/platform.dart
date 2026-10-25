@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 
 import 'platform/activation_stub.dart'
     if (dart.library.js_interop) 'platform/activation_web.dart';
+import 'platform/online_stub.dart'
+    if (dart.library.js_interop) 'platform/online_web.dart';
 import 'platform/discard_stub.dart'
     if (dart.library.io) 'platform/discard_io.dart';
 
@@ -29,6 +31,10 @@ bool get devBuild => kDebugMode || maganaEnv == 'development';
 void Function(String message) devLog = (message) {
   if (devBuild) debugPrint('magana: $message');
 };
+
+/// In a browser that says it is online, a request nobody answers means Magana's server is
+/// down ("sleeping"), not the person's connection. Replaceable in tests.
+bool Function() browserIsOnline = browserOnline;
 
 /// Whether the person has pressed or typed anything on this page yet. Browsers
 /// refuse to speak until they have (Chrome's autoplay rule). Always true on phones.

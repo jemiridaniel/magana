@@ -2,7 +2,7 @@
 // set; otherwise kept in this browser only, as a preview. The checks mirror the backend's
 // quizzes.check(), which has the last word when assigning.
 import { isPrimary, maxOptions, MIN_OPTIONS, PRIMARY_WORD_HINT, type LevelId } from "./curriculum";
-import { API_URL } from "./api";
+import { API_URL, apiFetch, ServerDown } from "./server";
 
 export type Lang = "en" | "ha" | "yo" | "ig";
 export const languageNames: Record<Lang, string> = { en: "English", ha: "Hausa", yo: "Yorùbá", ig: "Igbo" };
@@ -141,13 +141,13 @@ export class QuizError extends Error {
 async function call<T>(method: string, path: string, body?: unknown): Promise<T> {
   let r: Response;
   try {
-    r = await fetch(`${API_URL}${path}`, {
+    r = await apiFetch(path, {
       method,
       headers: { "Content-Type": "application/json", ...apiKeyHeader, ...teacherHeader },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
-  } catch {
-    throw new QuizError("unreachable");
+  } catch (e) {
+    throw new QuizError(e instanceof ServerDown && e.state === "sleeping" ? "server_sleeping" : "unreachable");
   }
   const json = await r.json().catch(() => null);
   if (!r.ok) {

@@ -285,11 +285,19 @@ class Explanation {
   }
 }
 
+/// An unanswered request: on the web with a working connection the server is asleep
+/// (stopped to save money, or restarting); otherwise the connection is the likely cause.
+String noAnswerCode() =>
+    runningOnWeb && browserIsOnline() ? 'server_sleeping' : 'unreachable';
+
+/// 502, 503 and 504 come from the proxy in front of a backend that isn't running.
+bool serverAsleep(int status) => status == 502 || status == 503 || status == 504;
+
 class ApiException implements Exception {
   ApiException(this.code);
 
   /// A backend message code (`unknown_mode`, `not_allowed_for_tier`, ...) or
-  /// `unreachable` / `failed` from the app itself.
+  /// `unreachable` / `server_sleeping` / `failed` from the app itself.
   final String code;
   @override
   String toString() => 'ApiException($code)';
@@ -320,7 +328,7 @@ class MaganaApi {
       res = await http.Response.fromStream(await _client.send(req))
           .timeout(const Duration(seconds: 15));
     } catch (_) {
-      throw ApiException('unreachable');
+      throw ApiException(noAnswerCode());
     }
     final decoded = () {
       try {
@@ -334,6 +342,8 @@ class MaganaApi {
       throw ApiException(
         detail is Map && detail['code'] is String
             ? detail['code'] as String
+            : serverAsleep(res.statusCode)
+            ? 'server_sleeping'
             : 'failed',
       );
     }
@@ -456,10 +466,10 @@ class MaganaApi {
       res = await http.Response.fromStream(await _client.send(req))
           .timeout(const Duration(seconds: 60));
     } catch (_) {
-      throw ApiException('unreachable');
+      throw ApiException(noAnswerCode());
     }
     if (res.statusCode != 200) {
-      String code = 'failed';
+      String code = serverAsleep(res.statusCode) ? 'server_sleeping' : 'failed';
       try {
         final detail = (jsonDecode(res.body) as Map)['detail'];
         if (detail is Map && detail['code'] is String) {

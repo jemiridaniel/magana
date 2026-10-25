@@ -1,0 +1,17 @@
+# Cloudflare Pages headers for https://app.magana.ng (docs/DEPLOY_PAGES.md). The app shell is
+# always checked for a newer version; the service worker caches the rest.
+/*
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/
+  Cache-Control: no-cache
+/index.html
+  Cache-Control: no-cache
+/magana_sw.js
+  Cache-Control: no-cache
+/flutter_bootstrap.js
+  Cache-Control: no-cache
+/manifest.json
+  Cache-Control: no-cache

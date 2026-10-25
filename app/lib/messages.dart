@@ -58,6 +58,7 @@ String messageFor(AppLocalizations l, String code, {String where = ''}) =>
       'q_very_pale_no_sight' => l.msg_q_very_pale_no_sight,
       'q_dark_urine_no_sight' => l.msg_q_dark_urine_no_sight,
       'unreachable' => l.cannotReach,
+      'server_sleeping' => l.serverSleeping,
       _ => l.readFailed,
     };
 

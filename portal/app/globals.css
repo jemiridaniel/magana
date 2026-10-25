@@ -124,6 +124,14 @@ a { color: var(--green-ink); }
 .btn-primary { background: var(--green-ink); color: #fff; }
 .btn-primary:hover { background: var(--ink); border-color: var(--ink); }
 .btn[disabled] { opacity: 0.6; cursor: not-allowed; }
+.btn-secondary { background: var(--surface); }
+
+/* The API didn't answer (components/ServerBanner.tsx). */
+.server-banner {
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px 24px;
+  margin-bottom: 24px; padding: 16px 20px; border-radius: var(--radius);
+  background: #fff1d6; color: #3b2a00; border: 2px solid #8a4b00; font-weight: 700;
+}
 
 .field { display: grid; gap: 8px; }
 .field label, .field-label { font-weight: 700; }

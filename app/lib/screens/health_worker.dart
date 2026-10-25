@@ -102,7 +102,9 @@ class _HealthWorkerScreenState extends State<HealthWorkerScreen> {
         priority: _priority,
       );
     } on ApiException catch (e) {
-      code = e.code == 'unreachable' ? 'callback_unavailable' : e.code;
+      code = e.code == 'unreachable' || e.code == 'server_sleeping'
+          ? 'callback_unavailable'
+          : e.code;
     }
     if (!mounted) return;
     final msg = messageFor(_l, code);

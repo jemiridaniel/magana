@@ -31,6 +31,7 @@
   "readingPage": "Mo ń ka ojú-ìwé náà. Jọ̀wọ́ dúró.",
   "noTextFound": "Mi ò rí ọ̀rọ̀ kankan. Rí i dájú pé ojú-ìwé náà dojú kọ òkè, kí o tún gbìyànjú.",
   "cannotReach": "Mi ò lè dé ọ̀dọ̀ Magana. Ṣàyẹ̀wò ìsopọ̀ rẹ, kí o tún gbìyànjú.",
+  "serverSleeping": "Sáfà Magana ń sùn. Jọ̀wọ́ tún gbìyànjú lẹ́yìn náà.",
   "readFailed": "Ìṣòro kan wáyé nígbà tí mo ń ka ojú-ìwé náà. Jọ̀wọ́ tún gbìyànjú.",
   "yourPage": "Ojú-ìwé rẹ",
   "lineCount": "{count, plural, =1{ìlà 1} other{ìlà {count}}}",

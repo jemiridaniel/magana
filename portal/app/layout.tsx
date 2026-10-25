@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Atkinson_Hyperlegible } from "next/font/google";
+import ServerBanner from "@/components/ServerBanner";
 import Sidebar from "@/components/Sidebar";
 import "./globals.css";
 
@@ -22,6 +23,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <div className="shell">
           <Sidebar />
           <main id="main" className="main" tabIndex={-1}>
+            <ServerBanner />
             <div className="content">{children}</div>
           </main>
         </div>
