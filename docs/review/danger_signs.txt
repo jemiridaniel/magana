@@ -1,0 +1,26 @@
+Ibà self-report questions (the public, through Magana): exact English wording
+Source: iba-natlas app/docs/CLINICAL_REVIEW.md item 7, wording in app/backend/app/questions.py
+Status: pending clinical sign-off by Dr. Oluba Amos
+
+1. Do you have a fever, or does your body feel very hot?
+2. For how many days have you had the fever? (asked if the answer to fever is yes; answer: number of days)
+3. Have you had fits, or shaking of the body you could not stop?
+4. Are you unable to drink anything, or is the baby unable to breastfeed?
+5. Are you vomiting everything you eat or drink?
+6. Are you very sleepy, confused, or hard to wake?
+7. Are you bleeding without a clear reason, from the nose or gums, or in vomit or stool?
+8. Have your eyes or skin turned yellow?
+9. Are you breathing very fast, or struggling to breathe?
+10. Are your palms, lips or inner eyelids very pale?
+11. Is your urine very dark, like cola or tea?
+12. Are you too weak to sit up or stand without help?
+
+Rules (item 7): any of questions 3 to 12 answered yes -> emergency: go to the nearest clinic now, or call 112. Fever for 2 days or more with no danger sign -> urgent: a nurse calls back within 2 hours. Otherwise -> routine: a nurse calls back during working hours.
+
+Magana's versions for blind users, asked instead of the sight-based questions (DRAFT, also for Dr. Amos's sign-off; Magana app/lib/l10n/app_en.arb):
+1. (bleeding) Have you felt or tasted blood, or has anyone told you that you are bleeding, from your nose, gums, vomit or stool?
+2. (yellow_eyes) Has anyone told you that your eyes or skin look yellow?
+3. (very_pale) Has anyone told you that you look very pale? Do you feel very weak, dizzy or out of breath when you stand?
+4. (dark_urine) Has someone near you seen that your urine is very dark, like cola or tea?
+
+Every question in Magana also offers "I can't tell": never counted as no; on a danger sign it raises priority to at least urgent and Magana says: "Please ask someone near you to check, or go to a clinic."
