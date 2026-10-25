@@ -13,6 +13,30 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · magana.ng: each part on its own name; the old address stays the API
+
+- **DNS:** `magana.ng`, `api.`, `app.` and `teachers.` all resolve to the Elastic IP 35.178.64.255 (checked on 1.1.1.1 and 8.8.8.8). There are no AAAA records and no CAA record. `www` is a CNAME to come with the move to Cloudflare (DNS only); it doesn't resolve yet, and Caddy will redirect it once it does.
+- **Certificates:** Let's Encrypt, issued by Caddy within seconds of the deploy for `api.`, `app.` and `teachers.`, valid to 23 Jan 2027.
+- **Measured from a Mac in Abuja** (curl, times include TLS):
+
+  | Check | Result |
+  |---|---|
+  | `https://api.magana.ng/health` | 200 in 0.75 s |
+  | `https://app.magana.ng/` | 200 in 0.71 s |
+  | `https://teachers.magana.ng/` | 308 to `/uploads/`, which is **401** without the login |
+  | CORS from `app.magana.ng` | allowed |
+  | Old address: `/health` and the API | unchanged (200 / 401 without the key), so APKs before 0.1.0+3 keep working |
+  | Old address: `/app/` and `/teachers/…` | 308 to the same path on `app.` and `teachers.` |
+  | APK download, `https://magana.ng/downloads/magana.apk` (21 MB) | 200 in 62 s on this connection |
+
+- **Two Caddy problems found and fixed before testers saw them:**
+  - A redirect inside `handle` runs before a path rewrite in the same block, so `/app/` went to `app.magana.ng/app/`.
+  - `route` runs after `handle`, so the API's catch-all answered `/app` with 401.
+
+  `handle_path` gives the right order. The test was run against a real Caddy on the server.
+- **APK 0.1.0+3:** built against `https://api.magana.ng`, arm64, 22,005,490 bytes, signed with the upload key. It contains the new address and no sslip.io address.
+- **Status:** live. The old address stays until every tester has 0.1.0+3.
+
 ## 2026-10-25 · OCR tests: one font everywhere, and run in the production image (CI)
 
 - **What we found:** setting up CI showed that 3 faint-print tests passed on the Mac but failed on Linux, including **inside the production image** (Tesseract 5.5.0).

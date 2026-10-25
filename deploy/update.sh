@@ -87,6 +87,8 @@ for root in [r for r in sys.argv[1:] if os.path.isdir(r)]:
 PY
   # Copy into the directories Caddy has mounted (replacing them would break the mounts).
   mkdir -p deploy/web deploy/teachers deploy/site deploy/downloads
+  # Docker creates a missing mount folder as root; keep them ours.
+  sudo chown ubuntu:ubuntu deploy/web deploy/teachers deploy/site deploy/downloads
   rsync -a --delete "$tmp/web/" deploy/web/
   rsync -a --delete "$tmp/teachers/" deploy/teachers/
   if [ -d "$tmp/site" ]; then rsync -a --delete "$tmp/site/" deploy/site/; fi
