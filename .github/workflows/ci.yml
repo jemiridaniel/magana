@@ -25,7 +25,7 @@ jobs:
           cache-dependency-path: backend/requirements.txt
       - run: sudo apt-get update -q && sudo apt-get install -yq tesseract-ocr
       - run: pip install -r backend/requirements.txt
-      - run: pytest -q
+      - run: python -m pytest -q
         working-directory: backend
 
   app:
