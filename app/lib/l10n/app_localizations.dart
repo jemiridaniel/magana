@@ -2741,6 +2741,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I can\'t translate this line safely. Please ask someone at your bank.'**
   String get msg_cant_translate_line_money;
+
+  /// No description provided for @msg_numbers_left_out.
+  ///
+  /// In en, this message translates to:
+  /// **'The exact numbers are on the page. Say ‘read again’ to hear them.'**
+  String get msg_numbers_left_out;
+
+  /// No description provided for @explainReadAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Read the page again'**
+  String get explainReadAgain;
 }
 
 class _AppLocalizationsDelegate

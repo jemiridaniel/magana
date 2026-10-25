@@ -113,12 +113,37 @@ def test_the_old_benchmark_problems_are_all_refused(answer, source, lang, expect
     assert expect <= found, found
 
 
-def test_every_placeholder_exactly_once_and_no_others():
+def test_each_placeholder_at_most_once_and_no_others_left_out_is_allowed():
     source = "Take 2 tablets every 4 to 6 hours."  # ⟦N1⟧ every ⟦N2⟧ to ⟦N3⟧
     assert problems_with("Sha ⟦N1⟧ kowane ⟦N2⟧ zuwa ⟦N3⟧.", source, "ha") == set()
-    assert problems_with("Sha ⟦N1⟧ kowane ⟦N2⟧.", source, "ha") == {"placeholder_missing"}
+    # Left out: allowed, nothing numeric was added (the app points to the page).
+    assert problems_with("Sha ⟦N1⟧ kowane ⟦N2⟧.", source, "ha") == set()
+    # Left out and a number added instead: refused.
+    assert problems_with("Sha ⟦N1⟧ kowane ⟦N2⟧ zuwa 8.", source, "ha") == {"digit"}
     assert problems_with("Sha ⟦N1⟧ ⟦N1⟧ kowane ⟦N2⟧ zuwa ⟦N3⟧.", source, "ha") == {"placeholder_repeated"}
     assert problems_with("Sha ⟦N1⟧ kowane ⟦N2⟧ zuwa ⟦N3⟧ ⟦N9⟧.", source, "ha") == {"placeholder_unknown"}
+
+
+def test_an_answer_that_leaves_numbers_out_is_given_and_points_to_the_page(engine):
+    engine.answer = "Sha magani kamar yadda aka rubuta a takardar."  # no markers at all
+    body = client.post("/explain", json={"source_text": "Take 2 tablets every 4 to 6 hours.", "lang": "ha"},
+                       headers={"X-Magana-Tier": "standard"}).json()
+    assert (body["code"], body["followup"]) == ("explained", "numbers_left_out")
+    assert body["explanation"] == "Sha magani kamar yadda aka rubuta a takardar."
+
+
+def test_an_answer_with_every_marker_needs_no_followup(engine):
+    engine.answer = "Sha ⟦N1⟧ kowane ⟦N2⟧ zuwa ⟦N3⟧."
+    body = client.post("/explain", json={"source_text": "Take 2 tablets every 4 to 6 hours.", "lang": "ha"},
+                       headers={"X-Magana-Tier": "standard"}).json()
+    assert body["code"] == "explained" and "followup" not in body
+
+
+def test_an_answer_that_adds_a_number_is_still_refused(engine):
+    engine.answer = "Sha ⟦N1⟧ sau 3 a rana."  # "3 times a day" is not on the page
+    body = client.post("/explain", json={"source_text": "Take 2 tablets every 4 to 6 hours.", "lang": "ha"},
+                       headers={"X-Magana-Tier": "standard"}).json()
+    assert body["code"] == "numbers_unconfirmed" and "followup" not in body
 
 
 def test_the_pages_exact_text_comes_back():
@@ -129,6 +154,25 @@ def test_the_pages_exact_text_comes_back():
     text, problems = check_answer(answer, masked, None, "ha")
     assert problems == []
     assert text == "Biya N2,500 kafin 30 November 2026. VAT 7.5%: N951.39. Ajiye ƙasa da 30 °C."
+
+
+@pytest.mark.parametrize("answer, lang, refused", [
+    ("Kowane minti ⟦N1⟧.", "ha", True),       # every ⟦N1⟧ MINUTES: a unit next to a number
+    ("A bar shi na ⟦N1⟧ days.", "ha", True),  # English unit added after the number
+    ("Ewe ti o wa ni ⟦N1⟧ wákàtí.", "yo", True),
+    ("Shekara tana da ⟦N1⟧.", "ha", False),    # "a year has …": shekara as an ordinary noun
+    ("Fọ ọwọ́ rẹ pẹ̀lú ọṣẹ fún ⟦N1⟧.", "yo", False),  # ọṣẹ (soap), not ọ̀sẹ̀ (week)
+    ("Afọ nwere ⟦N1⟧.", "ig", False),          # "a year has …" in Igbo
+    ("Ṅụọ ya kwa awa ⟦N1⟧.", "ig", True),       # every ⟦N1⟧ HOURS
+])
+def test_unit_words_are_refused_only_next_to_a_number(answer, lang, refused):
+    found = problems_with(answer, "A year has 12 months.", lang)
+    assert ("unit_word" in found) is refused, found
+
+
+def test_a_degree_sign_belongs_to_its_number():
+    masked = P.mask("The angles in a triangle add up to 180°. One angle is 90°.")
+    assert masked.slots == ["180°", "One", "90°"]
 
 
 def test_a_range_is_one_placeholder_so_a_dash_between_two_is_arithmetic():

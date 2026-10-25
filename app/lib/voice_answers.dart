@@ -2,16 +2,7 @@
 /// number of days. Anything else is null and the question is asked again; never
 /// a guess. The Hausa, Yorùbá and Igbo words are drafts for native-speaker review.
 // Hausa "i" (yes) only counts as the whole answer: in "No, I haven't" it is English "I".
-const _yes = {
-  'yes',
-  'yeah',
-  'yep',
-  'eh',
-  'ee',
-  'beeni',
-  'bẹ́ẹ̀ni',
-  'bee ni',
-};
+const _yes = {'yes', 'yeah', 'yep', 'eh', 'ee', 'beeni', 'bẹ́ẹ̀ni', 'bee ni'};
 const _no = {'no', 'nope', "a'a", 'aa', 'rara', 'rárá', 'mba'};
 const _cantTell = [
   "can't tell",

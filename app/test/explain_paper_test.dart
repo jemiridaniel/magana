@@ -7,6 +7,7 @@ import 'package:app/main.dart';
 import 'package:app/policy.dart';
 import 'package:app/profile.dart';
 import 'package:app/screens/explain.dart';
+import 'package:app/voice_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -15,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'a11y.dart';
 import 'app_test.dart' show FakeSpeaker;
+import 'quiz_test.dart' show FakeVoice;
 
 final ha = lookupAppLocalizations(const Locale('ha'));
 
@@ -96,6 +98,66 @@ void main() {
       );
       expectAccessible(tester, 'Explain, health paper');
       handle.dispose();
+    },
+  );
+
+  testWidgets(
+    'numbers left out: the explanation, then "the exact numbers are on the page"; read again reads them',
+    (tester) async {
+      SharedPreferences.setMockInitialValues({});
+      tester.view.physicalSize = const Size(390 * 3, 844 * 3);
+      tester.view.devicePixelRatio = 3;
+      addTearDown(tester.view.reset);
+      final voice = FakeVoice();
+      voiceInput = (_) => voice;
+      final api = MaganaApi(
+        client: MockClient(
+          (req) async => http.Response(
+            jsonEncode({
+              'code': 'explained',
+              'explanation': 'A leaf kept in the dark makes no starch.',
+              'read_instead': null,
+              'preview': false,
+              'followup': 'numbers_left_out',
+            }),
+            200,
+            headers: {'content-type': 'application/json; charset=utf-8'},
+          ),
+        ),
+      );
+      final speaker = FakeSpeaker();
+      await tester.pumpWidget(
+        MaganaApp(
+          api: api,
+          speaker: speaker,
+          language: LanguageController(),
+          profile: ProfileController(tier: Tier.standard),
+        ),
+      );
+      await tester.pumpAndSettle();
+      const page =
+          'A leaf kept in the dark for 48 hours gave a negative starch test.';
+      Navigator.of(tester.element(find.byType(Navigator).first)).push(
+        MaterialPageRoute(
+          builder: (_) =>
+              const ExplainScreen(lines: [page], source: 'Your page'),
+        ),
+      );
+      await tester.pumpAndSettle();
+      final en = lookupAppLocalizations(const Locale('en'));
+      expect(speaker.said.last, endsWith(en.msg_numbers_left_out));
+      expect(find.text(en.msg_numbers_left_out), findsOneWidget);
+
+      await tester.ensureVisible(find.bySemanticsLabel(en.explainReadAgain));
+      await tester.tap(find.bySemanticsLabel(en.explainReadAgain));
+      await tester.pumpAndSettle();
+      expect(speaker.said.last, page);
+
+      speaker.said.clear();
+      voice.replies.add(['read again']);
+      await tester.tap(find.bySemanticsLabel(en.askAQuestion));
+      await tester.pumpAndSettle();
+      expect(speaker.said.last, page);
     },
   );
 }

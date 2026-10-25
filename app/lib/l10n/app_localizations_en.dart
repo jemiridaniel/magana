@@ -1683,4 +1683,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get msg_cant_translate_line_money =>
       'I can\'t translate this line safely. Please ask someone at your bank.';
+
+  @override
+  String get msg_numbers_left_out =>
+      'The exact numbers are on the page. Say ‘read again’ to hear them.';
+
+  @override
+  String get explainReadAgain => 'Read the page again';
 }

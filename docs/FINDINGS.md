@@ -13,6 +13,32 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · Safety: answers that leave numbers out are accepted, and two check fixes (UNREVIEWED)
+
+> **Unreviewed.** The classification is the developer's reading. The explanations still need native-speaker ratings.
+
+- **What changed:**
+  - A schoolwork answer that leaves ⟦N⟧ markers out is now **accepted** if nothing numeric was added. It is followed by "The exact numbers are on the page. Say ‘read again’ to hear them." The app has a "Read the page again" button too, and saying "read again" reads the page exactly as printed.
+  - Answers that add a digit, a number word, arithmetic, or a repeated or made-up marker are still refused.
+- **Two fixes to the check, found while building the LoRA training set:**
+  - A page's "°" ("180°", "90°") stayed outside its placeholder, so an answer copying "⟦N1⟧°" faithfully was refused. It is now part of the number.
+  - **Unit words are refused only next to a number** (a marker, digits or a number word). "kowane minti ⟦N1⟧" (every ⟦N1⟧ *minutes*) and "⟦N1⟧ days" are still refused. "Shekara tana da ⟦N1⟧" ("a year has …"), Igbo "ọnwa" (month) used as an ordinary word, and Yorùbá "ọṣẹ" (soap, which loses its marks to the same letters as "ọ̀sẹ̀", week) are now allowed. Number words are still refused anywhere.
+  - "times" is no longer part of a number's placeholder: it isn't a measurement.
+  - New tests in `test_numbers_safety.py` cover all of these. Every earlier "must fail" case still fails.
+- **Re-scored, no new model run** (the same saved answers, `benchmark/explain/results/2026-10-25-q4km-m2pro-rescored/`):
+
+  | Language | Blocked | Real number problem | False alarm | Passed (numbers left out) |
+  |---|---|---|---|---|
+  | English | 5/5 | 3 | 2 | 0 (0) |
+  | Hausa | 1/5 | 1 | 0 | 4 (2) |
+  | Yorùbá | 5/5 | 3 | 2 | 0 (0) |
+  | Igbo | 2/5 | 2 | 0 | 3 (1) |
+  | **All** | **13/20** | **9** | **4** | **7 (3)** |
+
+  - All 9 real problems are still refused: invented dates, amounts, durations and a wrong answer.
+  - The 4 false alarms are the model's own list numbering, "1. 2. 3." (English fractions and rainfall), "⟦1⟧" without the N, and "N1" without brackets (both Yorùbá). The model now passes 7 of 20, up from 3.
+- **Status:** open, unreviewed. Health and money pages are unchanged: never a model.
+
 ## 2026-10-25 · Languages, accessibility: are quiz answers recognised? (synthetic voices, UNREVIEWED)
 
 > **Unreviewed, and a best case.** These are **synthetic voices**, not learners: no one has recorded real answers yet. Real children in noisy classrooms will differ, likely for the worse. The Hausa, Yorùbá and Igbo spoken forms are drafts for native review.

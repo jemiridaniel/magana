@@ -1681,4 +1681,11 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get msg_cant_translate_line_money =>
       'Mi ò lè túmọ̀ ìlà yìí láìléwu. Jọ̀wọ́ bi ẹnìkan ní báǹkì rẹ léèrè.';
+
+  @override
+  String get msg_numbers_left_out =>
+      'Àwọn nọ́ńbà gangan wà lórí ojú-ìwé náà. Sọ ‘read again’ láti gbọ́ wọn.';
+
+  @override
+  String get explainReadAgain => 'Tún ojú-ìwé náà kà';
 }

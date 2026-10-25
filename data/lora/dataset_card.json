@@ -1,0 +1,35 @@
+{
+  "name": "magana-lora-schoolwork-v1",
+  "licence": "CC BY 4.0 (Magana Learn team)",
+  "train": 75,
+  "val": 5,
+  "counts": {
+    "en_explain": 30,
+    "en_simpler": 30,
+    "en_refusal": 20
+  },
+  "languages_in_training": [
+    "en"
+  ],
+  "drafts": {
+    "used": {},
+    "held_back": {
+      "ha": 2,
+      "yo": 2,
+      "ig": 2
+    },
+    "would_be_refused": {
+      "ha": [
+        "calendar: would be refused: [('unit_word', 'mako')]: Wannan shafi yana magana ne kan kalanda. Shekara tana da ⟦N1⟧, mako kuma yana da ⟦N2⟧. Fabrairu yawanci yana da ⟦N3⟧."
+      ],
+      "yo": [
+        "calendar: would be refused: [('unit_word', 'ọ̀sẹ̀')]: Ojú-ìwé yìí sọ̀rọ̀ nípa kàlẹ́ńdà. Ọdún ní ⟦N1⟧, ọ̀sẹ̀ sì ní ⟦N2⟧. Fẹ́búárì sábà máa ń ní ⟦N3⟧."
+      ],
+      "ig": [
+        "calendar: would be refused: [('unit_word', 'izu')]: Peeji a na-ekwu maka kalenda. Afọ nwere ⟦N1⟧, izu nwere ⟦N2⟧. Febụwarị na-enwekarị ⟦N3⟧."
+      ]
+    }
+  },
+  "rule": "Non-English examples are used only after native review (status native_reviewed).",
+  "benchmark_pages_excluded": "No page or topic from benchmark/explain/pages/ is used."
+}

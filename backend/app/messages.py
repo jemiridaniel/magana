@@ -40,6 +40,7 @@ ENGLISH = {
     "explain_unavailable": "Explanations aren't available right now. Here is the page, read exactly as printed.",
     "explain_bad_source": "There is no page text to explain. Please read a page first.",
     # Health and money papers are never explained by a model (templates.py).
+    "numbers_left_out": "The exact numbers are on the page. Say ‘read again’ to hear them.",
     "paper_lines": "Health and money papers aren't explained by AI. Each line is read exactly, in your language only where a checked translation exists.",
     "cant_translate_line_health": "I can't translate this line safely. Please ask a pharmacist.",
     "cant_translate_line_money": "I can't translate this line safely. Please ask someone at your bank.",

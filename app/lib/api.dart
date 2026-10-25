@@ -258,7 +258,12 @@ class Explanation {
     required this.preview,
     this.lines = const [],
     this.fallback,
+    this.followup,
   });
+
+  /// Said after the explanation: numbers_left_out ("The exact numbers are on the
+  /// page. Say 'read again' to hear them.").
+  final String? followup;
   final String
   code; // explain_preview | explained | numbers_unconfirmed | paper_lines
   final String? text; // the explanation, when it passed the guard
@@ -429,6 +434,7 @@ class MaganaApi {
           PaperLine(l['source'] as String, l['text'] as String?),
       ],
       fallback: body['fallback'] as String?,
+      followup: body['followup'] as String?,
       preview: body['preview'] == true,
     );
   }

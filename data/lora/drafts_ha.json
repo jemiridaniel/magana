@@ -1,0 +1,29 @@
+[
+  {
+    "id": "teeth",
+    "lang": "ha",
+    "style": "explain",
+    "explanation": "Wannan shafi yana magana ne kan hakora. Yara suna da hakoran madara 20, manya kuma suna da hakora 32. Ya ce a goge hakora sau 2 a rana.",
+    "status": "draft",
+    "review": "NEEDS NATIVE REVIEW: written by the developer; not used in training until a native speaker checks it and sets status to native_reviewed.",
+    "note": "Numbers keep their units exactly as printed on the page (e.g. '12 months'): Magana puts the page's exact text back."
+  },
+  {
+    "id": "calendar",
+    "lang": "ha",
+    "style": "explain",
+    "explanation": "Wannan shafi yana magana ne kan kalanda. Shekara tana da 12 months, mako kuma yana da 7 days. Fabrairu yawanci yana da 28 days.",
+    "status": "draft",
+    "review": "NEEDS NATIVE REVIEW: written by the developer; not used in training until a native speaker checks it and sets status to native_reviewed.",
+    "note": "Numbers keep their units exactly as printed on the page (e.g. '12 months'): Magana puts the page's exact text back."
+  },
+  {
+    "id": "hygiene",
+    "lang": "ha",
+    "style": "explain",
+    "explanation": "Wannan shafi yana koyar da wanke hannu. A wanke hannu da sabulu na 20 seconds, kafin cin abinci da bayan amfani da bayan gida, sannan a goge su da tsabtataccen kyalle.",
+    "status": "draft",
+    "review": "NEEDS NATIVE REVIEW: written by the developer; not used in training until a native speaker checks it and sets status to native_reviewed.",
+    "note": "Numbers keep their units exactly as printed on the page (e.g. '12 months'): Magana puts the page's exact text back."
+  }
+]

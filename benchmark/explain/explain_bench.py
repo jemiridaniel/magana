@@ -75,7 +75,7 @@ def run(args) -> None:
                 continue
             parts = explain.sections(text)
             system = explain.system_prompt(lang, guided=False)
-            raws, finals, problems, t0, error = [], [], [], time.monotonic(), None
+            raws, finals, problems, t0, error, left = [], [], [], time.monotonic(), None, False
             for n, section in enumerate(parts, 1):
                 masked = placeholders.mask(section)
                 markers = [f"⟦N{k}⟧" for k in range(1, len(masked.slots) + 1)]
@@ -88,6 +88,7 @@ def run(args) -> None:
                     error = str(e)
                     break
                 final, found = explain.check_answer(raw, masked, None, lang)
+                left = left or (not found and explain.left_out(raw, masked))
                 if not found and not safety.guard_explanation(section, final).ok:
                     found = [placeholders.Problem("old_guard")]
                 raws.append(raw)
@@ -98,6 +99,7 @@ def run(args) -> None:
                 "page": page.stem, "lang": lang, "mode": "school", "model_called": True,
                 "raw_answer": "\n\n".join(raws), "explanation": "" if problems else "\n\n".join(finals),
                 "blocked": bool(problems), "problems": problems, "error": error, "seconds": seconds,
+                "numbers_left_out": left and not problems,
                 "sections": len(parts), "source": text,
             }
             rows.append(row)
@@ -105,6 +107,33 @@ def run(args) -> None:
                                           if problems else "ok")
             print(f"{lang} {page.stem:22} {seconds:6.1f}s  {flag}", flush=True)
 
+    write(rows, out, langs, args)
+
+
+def rescore(args) -> None:
+    """Score a finished run's saved answers again with the current rules, without the model."""
+    src = Path(args.rescore)
+    rows = [json.loads(line) for line in open(src / "outputs.jsonl")]
+    for r in rows:
+        if r["mode"] != "school" or r["error"]:
+            continue
+        assert r["sections"] == 1, "rescoring handles one-section pages"
+        masked = placeholders.mask(r["source"])
+        final, found = explain.check_answer(r["raw_answer"], masked, None, r["lang"])
+        if not found and not safety.guard_explanation(r["source"], final).ok:
+            found = [placeholders.Problem("old_guard")]
+        r["problems"] = [{"code": p.code, "detail": p.detail} for p in found]
+        r["blocked"] = bool(found)
+        r["explanation"] = "" if found else final
+        r["numbers_left_out"] = not found and explain.left_out(r["raw_answer"], masked)
+    meta = json.loads((src / "summary.json").read_text())["run"]
+    args.engine, args.model = meta["engine"], meta["model"]
+    args.note = f"{meta.get('note', '')} Re-scored from {src.name}: markers left out are allowed when nothing numeric was added."
+    write(rows, Path(args.out), sorted({r["lang"] for r in rows}, key="en ha yo ig".split().index), args)
+
+
+def write(rows, out: Path, langs, args) -> None:
+    out.mkdir(parents=True, exist_ok=True)
     with open(out / "outputs.jsonl", "w") as f:
         for r in rows:
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
@@ -123,6 +152,7 @@ def run(args) -> None:
             "school_pages": len(school),
             "blocked": len(blocked),
             "passed": len(school) - len(blocked),
+            "passed_numbers_left_out": sum(1 for r in school if not r["blocked"] and r.get("numbers_left_out")),
             "blocked_pages": [r["page"] for r in blocked],
             "block_reasons": dict(sorted(reasons.items())),
             "paper_pages": len(papers),
@@ -149,12 +179,12 @@ def run(args) -> None:
                                                  ensure_ascii=False))
     lines = [f"# Explanation benchmark: {args.engine} {args.model} (placeholders + templates)", "",
              args.note or "", "",
-             "| Language | School pages | Blocked | Passed | Block reasons | Paper pages: model calls | "
+             "| Language | School pages | Blocked | Passed (numbers left out) | Block reasons | Paper pages: model calls | "
              "Paper sentences: approved / drafts would cover / total |",
              "|---|---|---|---|---|---|---|"]
     for lang, s in summary.items():
         reasons = ", ".join(f"{k} {v}" for k, v in s["block_reasons"].items()) or "—"
-        lines.append(f"| {lang} | {s['school_pages']} | {s['blocked']} | {s['passed']} | {reasons} | "
+        lines.append(f"| {lang} | {s['school_pages']} | {s['blocked']} | {s['passed']} ({s['passed_numbers_left_out']}) | {reasons} | "
                      f"{s['paper_model_calls']} | {s['paper_translated_approved']} / "
                      f"{s['paper_would_match_drafts'] if s['paper_would_match_drafts'] is not None else '—'} / "
                      f"{s['paper_sentences']} |")
@@ -175,4 +205,6 @@ if __name__ == "__main__":
     p.add_argument("--timeout", type=float, default=120.0,
                    help="per call; the app uses 20 s for the whole explanation")
     p.add_argument("--note", default="")
-    run(p.parse_args())
+    p.add_argument("--rescore", help="a finished run's folder: score its saved answers again into --out")
+    a = p.parse_args()
+    rescore(a) if a.rescore else run(a)

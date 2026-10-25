@@ -5,9 +5,12 @@ becomes a numbered placeholder: "Take 2 tablets every 4 to 6 hours" ->
 "Take ⟦N1⟧ tablets every ⟦N2⟧ to ⟦N3⟧". The model is told to copy each placeholder exactly
 once. Its answer is rejected unless:
 - every placeholder appears exactly once, and no others;
-- no digit, number word or unit word appears outside the placeholders, in the answer's
-  language or English (content/number_words/, needs native review), unless the page itself
-  has that word outside its numbers;
+- no digit or number word appears outside the placeholders, in the answer's language or
+  English (content/number_words/, needs native review), unless the page itself has that
+  word outside its numbers;
+- no unit word stands next to a number (a placeholder, digits or a number word): "kowane
+  minti ⟦N1⟧" (every ⟦N1⟧ minutes) is refused, but "Shekara tana da ⟦N1⟧" (a year has …)
+  may use "shekara" as an ordinary noun;
 - no arithmetic links two placeholders (=, +, -, −, ×, ÷ …).
 Only then is each placeholder put back with the page's exact text.
 
@@ -69,6 +72,7 @@ def word_list(lang: str) -> WordList:
 # Letters with any combining marks (Yorùbá "ọ̀sẹ̀" has accents with no precomposed form).
 _LETTERS = r"[^\W\d_](?:[^\W\d_]|[\u0300-\u036f])*"
 _WORD = re.compile(rf"{_LETTERS}(?:['’-]{_LETTERS})*")
+_TOKEN = re.compile(rf"⟦N\d+⟧|\d+(?:[.,]\d+)*|{_LETTERS}(?:['’-]{_LETTERS})*")
 
 
 def words(text: str) -> list[str]:
@@ -81,11 +85,11 @@ _MONTH = (r"(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|june?|july?|
           r"|sep(?:t(?:ember)?)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\.?")
 _DAY = r"\d{1,2}(?:st|nd|rd|th)?"
 _NUM = r"\d+(?:,\d{3})*(?:\.\d+)?(?:\s?/\s?\d+(?:\.\d+)?)?"  # 1,250.50  3/4
-_UNIT = (r"(?:°\s?C\b|%|per\s?cent\b|degrees?(?:\s+(?:celsius|c)\b)?"
+_UNIT = (r"(?:°\s?C\b|°|%|per\s?cent\b|degrees?(?:\s+(?:celsius|c)\b)?"
          r"|(?:kwh|mmol/l|g/dl|mg|mcg|ml|kg|km|cm|mm|g|l|m)\b"
          r"|(?:hours?|minutes?|seconds?|days?|weeks?|months?|years?|litres?|liters?|millilitres?"
          r"|metres?|meters?|centimetres?|millimetres?|kilometres?|grams?|milligrams?|kilograms?"
-         r"|kilos?|naira|kobo|units?|tablets?|capsules?|times)\b)")
+         r"|kilos?|naira|kobo|units?|tablets?|capsules?)\b)")
 _CURRENCY = r"(?:₦|\bNGN\s?|\bN(?=\d)|\$|£)"
 _EN_NUMBER_WORDS = (r"\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen"
                     r"|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty"
@@ -173,17 +177,31 @@ def check(answer: str, masked_source: str, required: range, optional: range = ra
     # Words the page itself prints (outside its numbers) may be repeated.
     on_page_plain = {plain(w) for w in words(masked_source)}
     on_page_marked = {marked(w) for w in words(masked_source)}
-    rest_plain = " ".join(plain(w) for w in words(rest))
-    for lst in {word_list(lang), word_list("en")}:
-        for w in words(rest):
-            p, mk = plain(w), marked(w)
-            if mk in lst.exact and mk not in on_page_marked:
-                problems.append(Problem("number_word", w))
-            elif p in lst.words and p not in on_page_plain:
-                problems.append(Problem("number_word", w))
-            elif p in lst.units and p not in on_page_plain:
-                problems.append(Problem("unit_word", w))
+    lists = {word_list(lang), word_list("en")}
+
+    def number_word(w: str) -> bool:
+        p, mk = plain(w), marked(w)
+        return any((mk in lst.exact and mk not in on_page_marked) or (p in lst.words and p not in on_page_plain)
+                   for lst in lists)
+
+    # The answer as tokens: placeholders, digit runs and words, so "next to a number" can be seen.
+    tokens = _TOKEN.findall(answer)
+    numeric = [bool(PLACEHOLDER.fullmatch(t) or t[0].isdigit() or number_word(t)) for t in tokens]
+    for i, t in enumerate(tokens):
+        if PLACEHOLDER.fullmatch(t) or t[0].isdigit():
+            continue
+        if number_word(t):
+            problems.append(Problem("number_word", t))
+            continue
+        p = plain(t)
+        beside = (i > 0 and numeric[i - 1]) or (i + 1 < len(tokens) and numeric[i + 1])
+        if beside and any(p in lst.units for lst in lists) and p not in on_page_plain:
+            problems.append(Problem("unit_word", t))
+    page_text_plain = " ".join(plain(w) for w in words(masked_source))
+    for lst in lists:
         for phrase in lst.unit_phrases:
-            if re.search(rf"\b{re.escape(phrase)}\b", rest_plain) and phrase not in " ".join(on_page_plain):
+            if re.search(rf"(⟦⟧|\d)\s*{re.escape(phrase)}\b|\b{re.escape(phrase)}\s*(⟦⟧|\d)",
+                         PLACEHOLDER.sub("⟦⟧", answer).lower()) and not re.search(
+                    rf"\b{re.escape(phrase)}\b", page_text_plain):
                 problems.append(Problem("unit_word", phrase))
     return problems

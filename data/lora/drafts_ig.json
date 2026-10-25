@@ -1,0 +1,29 @@
+[
+  {
+    "id": "teeth",
+    "lang": "ig",
+    "style": "explain",
+    "explanation": "Peeji a na-ekwu maka ezé. Ụmụaka nwere ezé mmiri ara 20, ndị okenye nwere ezé 32. Ọ sị ka e hichaa ezé ugboro 2 n'ụbọchị.",
+    "status": "draft",
+    "review": "NEEDS NATIVE REVIEW: written by the developer; not used in training until a native speaker checks it and sets status to native_reviewed.",
+    "note": "Numbers keep their units exactly as printed on the page (e.g. '12 months'): Magana puts the page's exact text back."
+  },
+  {
+    "id": "calendar",
+    "lang": "ig",
+    "style": "explain",
+    "explanation": "Peeji a na-ekwu maka kalenda. Afọ nwere 12 months, izu nwere 7 days. Febụwarị na-enwekarị 28 days.",
+    "status": "draft",
+    "review": "NEEDS NATIVE REVIEW: written by the developer; not used in training until a native speaker checks it and sets status to native_reviewed.",
+    "note": "Numbers keep their units exactly as printed on the page (e.g. '12 months'): Magana puts the page's exact text back."
+  },
+  {
+    "id": "hygiene",
+    "lang": "ig",
+    "style": "explain",
+    "explanation": "Peeji a na-akụzi ịsa aka. Jiri ncha saa aka gị maka 20 seconds, tupu i rie nri na mgbe i jiri ụlọ mposi, ma jiri akwa dị ọcha hichaa ha.",
+    "status": "draft",
+    "review": "NEEDS NATIVE REVIEW: written by the developer; not used in training until a native speaker checks it and sets status to native_reviewed.",
+    "note": "Numbers keep their units exactly as printed on the page (e.g. '12 months'): Magana puts the page's exact text back."
+  }
+]

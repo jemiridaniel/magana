@@ -8,9 +8,11 @@ EXPLAIN_ENGINE selects how N-ATLaS is reached (docs/MODELS.md):
 - llamacpp  a llama.cpp server (GGUF); Magana renders the model's chat template itself
 
 Only schoolwork reaches the model, and never its numbers: every number, with its unit or
-currency, is replaced by a placeholder (⟦N1⟧ …) first. An answer is used only if each
-placeholder appears exactly once and no digit, number word, unit word or arithmetic was
-added (placeholders.py); then the page's exact text is put back, and it also goes through
+currency, is replaced by a placeholder (⟦N1⟧ …) first. An answer is used only if no digit,
+number word, unit word or arithmetic was added and no placeholder is repeated or made up
+(placeholders.py). Placeholders it leaves out are allowed: the answer is then followed by
+"The exact numbers are on the page. Say 'read again' to hear them." The page's exact text
+is put back, and it also goes through
 safety.guard_explanation. Otherwise, or if the model is slow or down, the app reads the page
 instead (CLAUDE.md rule 1). Health and money papers never reach a model (templates.py). Page text is data, never instructions (rule 6): it is
 fenced in <page> tags, stripped of the model's control tokens, and the system prompt says so.
@@ -82,6 +84,7 @@ class Explanation:
     explanation: str | None
     read_instead: str | None
     preview: bool
+    followup: str | None = None  # numbers_left_out: said after the explanation
 
 
 # ---------- prompts
@@ -259,17 +262,26 @@ def default_engine() -> Engine:
 # ---------- the whole explanation
 
 def check_answer(raw: str, page: "placeholders.Masked", asked: "placeholders.Masked | None",
-                 lang: str) -> tuple[str, list]:
-    """(the answer with the page's exact text put back, its problems). The page's markers
-    must each appear once; the question's (numbered after them) at most once."""
+                 lang: str, allow_left_out: bool = True) -> tuple[str, list]:
+    """(the answer with the page's exact text put back, its problems). Each marker may appear
+    at most once. Markers left out are not a problem when [allow_left_out]: nothing numeric
+    was added (left_out() tells the caller to point to the page)."""
     n_page = len(page.slots)
     n_asked = len(asked.slots) if asked else 0
     problems = placeholders.check(raw, page.text + "\n" + (asked.text if asked else ""),
                                   required=range(1, n_page + 1),
                                   optional=range(n_page + 1, n_page + n_asked + 1), lang=lang)
+    if allow_left_out:
+        problems = [p for p in problems if p.code != "placeholder_missing"]
     if problems:
         return raw, problems
     return placeholders.unmask(raw, page.slots + (asked.slots if asked else [])), []
+
+
+def left_out(raw: str, page: "placeholders.Masked") -> bool:
+    """Some of the page's markers are not in the answer."""
+    used = {int(m.group(1)) for m in placeholders.PLACEHOLDER.finditer(raw)}
+    return any(n not in used for n in range(1, len(page.slots) + 1))
 
 def explain(engine: Engine, source_text: str, question: str | None, lang: str, style: str,
             guided: bool, timeout_s: float = TIMEOUT_S) -> Explanation:
@@ -279,6 +291,7 @@ def explain(engine: Engine, source_text: str, question: str | None, lang: str, s
     parts = sections(source_text)
     system = system_prompt(lang, guided)
     answers = []
+    missing = False
     try:
         for n, section in enumerate(parts, 1):
             left = deadline - time.monotonic()
@@ -295,8 +308,10 @@ def explain(engine: Engine, source_text: str, question: str | None, lang: str, s
             text, problems = check_answer(raw, page, asked, lang)
             if problems or not safety.guard_explanation(section, text).ok:
                 return Explanation("numbers_unconfirmed", None, source_text, engine.preview)
+            missing = missing or left_out(raw, page)
             answers.append(text)
     except ExplainUnavailable:
         return Explanation("explain_unavailable", None, source_text, engine.preview)
     code = "explain_preview" if engine.preview else "explained"
-    return Explanation(code, "\n\n".join(answers), None, engine.preview)
+    return Explanation(code, "\n\n".join(answers), None, engine.preview,
+                       followup="numbers_left_out" if missing else None)

@@ -1177,5 +1177,7 @@
   "@msg_cant_translate_line_health": {
     "description": "CLINICAL DRAFT, pending Dr. Amos: said after a health-paper line read in English because no clinically approved template matched."
   },
-  "msg_cant_translate_line_money": "I can't translate this line safely. Please ask someone at your bank."
+  "msg_cant_translate_line_money": "I can't translate this line safely. Please ask someone at your bank.",
+  "msg_numbers_left_out": "The exact numbers are on the page. Say ‘read again’ to hear them.",
+  "explainReadAgain": "Read the page again"
 }

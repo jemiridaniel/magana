@@ -1687,4 +1687,11 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get msg_cant_translate_line_money =>
       'Ba zan iya fassara wannan layin lafiya ba. Don Allah ka tambayi wani a bankinka.';
+
+  @override
+  String get msg_numbers_left_out =>
+      'Ainihin lambobin suna kan shafin. Faɗi ‘read again’ don jin su.';
+
+  @override
+  String get explainReadAgain => 'Sake karanta shafin';
 }

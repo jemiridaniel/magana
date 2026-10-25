@@ -1,0 +1,29 @@
+[
+  {
+    "id": "teeth",
+    "lang": "yo",
+    "style": "explain",
+    "explanation": "Ojú-ìwé yìí sọ̀rọ̀ nípa eyín. Àwọn ọmọdé ní eyín wàrà 20, àwọn àgbàlagbà sì ní eyín 32. Ó sọ pé kí a fọ eyín ní ìgbà 2 lójúmọ́.",
+    "status": "draft",
+    "review": "NEEDS NATIVE REVIEW: written by the developer; not used in training until a native speaker checks it and sets status to native_reviewed.",
+    "note": "Numbers keep their units exactly as printed on the page (e.g. '12 months'): Magana puts the page's exact text back."
+  },
+  {
+    "id": "calendar",
+    "lang": "yo",
+    "style": "explain",
+    "explanation": "Ojú-ìwé yìí sọ̀rọ̀ nípa kàlẹ́ńdà. Ọdún ní 12 months, ọ̀sẹ̀ sì ní 7 days. Fẹ́búárì sábà máa ń ní 28 days.",
+    "status": "draft",
+    "review": "NEEDS NATIVE REVIEW: written by the developer; not used in training until a native speaker checks it and sets status to native_reviewed.",
+    "note": "Numbers keep their units exactly as printed on the page (e.g. '12 months'): Magana puts the page's exact text back."
+  },
+  {
+    "id": "hygiene",
+    "lang": "yo",
+    "style": "explain",
+    "explanation": "Ojú-ìwé yìí kọ́ wa bí a ṣe ń fọ ọwọ́. Fọ ọwọ́ rẹ pẹ̀lú ọṣẹ fún 20 seconds, kí o tó jẹun àti lẹ́yìn tí o bá lo ilé-ìgbọ̀nsẹ̀, kí o sì fi aṣọ mímọ́ nù ún.",
+    "status": "draft",
+    "review": "NEEDS NATIVE REVIEW: written by the developer; not used in training until a native speaker checks it and sets status to native_reviewed.",
+    "note": "Numbers keep their units exactly as printed on the page (e.g. '12 months'): Magana puts the page's exact text back."
+  }
+]

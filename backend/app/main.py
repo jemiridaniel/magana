@@ -233,8 +233,11 @@ def explain_page(body: ExplainRequest, tier: policy.Tier = Depends(caller_tier),
                 "lines": t["lines"], "fallback": t["fallback"]}
     r = explain.explain(engine, body.source_text, body.question, body.lang, body.style,
                         guided=tier is policy.Tier.GUIDED)
-    return {"code": r.code, "explanation": r.explanation, "read_instead": r.read_instead,
+    body = {"code": r.code, "explanation": r.explanation, "read_instead": r.read_instead,
             "preview": r.preview}
+    if r.followup:
+        body["followup"] = r.followup  # numbers_left_out: "The exact numbers are on the page…"
+    return body
 
 
 @lru_cache(maxsize=1)

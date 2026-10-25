@@ -88,6 +88,7 @@ class _ExplainScreenState extends State<ExplainScreen> {
           if (_question != null && a.preview) _l.explainQuestionPreview,
           messageFor(_l, a.code),
           a.spoken((code) => messageFor(_l, code)),
+          if (a.followup case final f?) messageFor(_l, f),
         ].join(' '),
       );
     } on ApiException catch (e) {
@@ -132,6 +133,12 @@ class _ExplainScreenState extends State<ExplainScreen> {
       speaker.say(_l.commandNothingHeard);
       return;
     }
+    // "read again": the page exactly as printed, numbers and all.
+    if (RegExp(r'\bread\b.*\bagain\b|\bread the page\b')
+        .hasMatch(heard.first.toLowerCase())) {
+      _readPage();
+      return;
+    }
     setState(() => _question = heard.first);
     if (_hasPage) {
       _ask();
@@ -139,6 +146,8 @@ class _ExplainScreenState extends State<ExplainScreen> {
       speaker.say(_l.explainNoPage);
     }
   }
+
+  void _readPage() => AppScope.of(context).speaker.say(widget.lines.join('\n'));
 
   void _nextLanguage() {
     final i = appLanguages.indexWhere((a) => a.code == _language);
@@ -273,6 +282,16 @@ class _ExplainScreenState extends State<ExplainScreen> {
                     answer.spoken((code) => messageFor(l, code)),
                     style: const TextStyle(fontSize: 19, height: 1.45),
                   ),
+                  if (answer.followup case final f?) ...[
+                    const SizedBox(height: 10),
+                    Text(
+                      messageFor(l, f),
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
                   const Divider(height: 24),
                   Text(
                     l.basedOnPage(widget.lines.length),
@@ -301,6 +320,8 @@ class _ExplainScreenState extends State<ExplainScreen> {
             label: l.giveExample,
             onTap: _busy ? null : () => _ask(style: 'example'),
           ),
+          if (answer?.followup != null)
+            SecondaryButton(label: l.explainReadAgain, onTap: _readPage),
           SecondaryButton(label: l.reportProblem, onTap: _report),
         ],
         Text(

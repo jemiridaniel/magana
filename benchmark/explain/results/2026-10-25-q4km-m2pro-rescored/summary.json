@@ -1,0 +1,106 @@
+{
+  "run": {
+    "engine": "llamacpp",
+    "model": "NCAIR1/N-ATLaS",
+    "design": "placeholders + templates",
+    "temperature": 0.1,
+    "repetition_penalty": 1.12,
+    "note": "N-ATLaS base model, QuantFactory Q4_K_M GGUF (sha256 71de156e...), llama.cpp on an Apple M2 Pro (Metal), temperature 0.1, repeat penalty 1.12. New design: schoolwork with numbers as placeholders and the strict check; health and money pages never sent to the model (phrase templates). Team-written test pages only. Re-scored from 2026-10-24-q4km-m2pro-placeholders: markers left out are allowed when nothing numeric was added."
+  },
+  "by_language": {
+    "en": {
+      "school_pages": 5,
+      "blocked": 5,
+      "passed": 0,
+      "passed_numbers_left_out": 0,
+      "blocked_pages": [
+        "01_food_tests",
+        "02_photosynthesis",
+        "03_fractions",
+        "07_school_notice",
+        "10_rainfall"
+      ],
+      "block_reasons": {
+        "digit": 4,
+        "number_word": 1,
+        "placeholder_repeated": 1,
+        "unit_word": 2
+      },
+      "paper_pages": 5,
+      "paper_model_calls": 0,
+      "paper_sentences": 37,
+      "paper_translated_approved": 37,
+      "paper_would_match_drafts": null,
+      "median_seconds": 4.28,
+      "errors": 0
+    },
+    "ha": {
+      "school_pages": 5,
+      "blocked": 1,
+      "passed": 4,
+      "passed_numbers_left_out": 2,
+      "blocked_pages": [
+        "07_school_notice"
+      ],
+      "block_reasons": {
+        "digit": 1,
+        "number_word": 1,
+        "unit_word": 1
+      },
+      "paper_pages": 5,
+      "paper_model_calls": 0,
+      "paper_sentences": 57,
+      "paper_translated_approved": 0,
+      "paper_would_match_drafts": 6,
+      "median_seconds": 6.25,
+      "errors": 0
+    },
+    "yo": {
+      "school_pages": 5,
+      "blocked": 5,
+      "passed": 0,
+      "passed_numbers_left_out": 0,
+      "blocked_pages": [
+        "01_food_tests",
+        "02_photosynthesis",
+        "03_fractions",
+        "07_school_notice",
+        "10_rainfall"
+      ],
+      "block_reasons": {
+        "digit": 5,
+        "number_word": 3,
+        "unit_word": 2
+      },
+      "paper_pages": 5,
+      "paper_model_calls": 0,
+      "paper_sentences": 57,
+      "paper_translated_approved": 0,
+      "paper_would_match_drafts": 6,
+      "median_seconds": 5.46,
+      "errors": 0
+    },
+    "ig": {
+      "school_pages": 5,
+      "blocked": 2,
+      "passed": 3,
+      "passed_numbers_left_out": 1,
+      "blocked_pages": [
+        "03_fractions",
+        "07_school_notice"
+      ],
+      "block_reasons": {
+        "digit": 2,
+        "number_word": 2,
+        "unit_word": 1
+      },
+      "paper_pages": 5,
+      "paper_model_calls": 0,
+      "paper_sentences": 57,
+      "paper_translated_approved": 0,
+      "paper_would_match_drafts": 6,
+      "median_seconds": 7.72,
+      "errors": 0
+    }
+  }
+}

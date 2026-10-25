@@ -26,6 +26,7 @@ String messageFor(AppLocalizations l, String code, {String where = ''}) =>
       'too_many_requests' => l.msg_too_many_requests,
       'session_code_invalid' => l.msg_session_code_invalid,
       'paper_lines' => l.msg_paper_lines,
+      'numbers_left_out' => l.msg_numbers_left_out,
       'cant_translate_line_health' => l.msg_cant_translate_line_health,
       'cant_translate_line_money' => l.msg_cant_translate_line_money,
       'asr_unavailable' => l.msg_asr_unavailable,

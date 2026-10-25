@@ -1,6 +1,6 @@
 # Magana Learn: data sources tracker
 
-The one tracker for every learning material, dataset and piece of content Magana plans to use, ships, tests with or benchmarks on. It replaces the spreadsheet `Magana_Learn_Data_Sources_Tracker.xlsx` (last updated 23 Oct 2026), merged here on 24 Oct 2026.
+The tracker for every learning material, dataset and piece of content Magana plans to use, ships, tests with or benchmarks on. The team's spreadsheet is **[`docs/data_sources_tracker.xlsx`](data_sources_tracker.xlsx)**, with its Sources, Capture log, Permissions and Credits tabs; its Credits tab and page counts are formulas. This page mirrors it so it can be read on GitHub, and a test (`backend/tests/test_data_sources.py`) fails if the two list different sources.
 
 **When you add, collect or start using something, update its row in the same commit.**
 
@@ -50,6 +50,7 @@ The one tracker for every learning material, dataset and piece of content Magana
 | S29 | Number and unit word lists | Own content | English, Hausa, Yorùbá, Igbo | `content/number_words/` | Our own, released CC BY 4.0 | N/A, our own | Yes | The explanation number check | Magana Learn team, CC BY 4.0 | Daniel | Draft | — | — | **Needs native-speaker review.** |
 | S31 | MMS-TTS voices (facebook/mms-tts-eng, -hau, -yor) | Model (speech synthesis) | English, Hausa, Yorùbá | https://huggingface.co/facebook/mms-tts-hau | CC BY-NC 4.0 | Model card, 25 Oct 2026 | No: non-commercial testing only | Synthetic quiz-answer clips for the recognition test (`benchmark/asr/answers_bench.py`) | MMS: Scaling Speech Technology to 1000+ Languages, Meta AI, CC BY-NC 4.0 | Daniel | In use (testing) | — | — | Clips cached outside the repo, never published. |
 | S32 | VITS OpenBible Igbo voice (multilingual-tts/VITS-OpenBible-Igbo) | Model (speech synthesis) | Igbo | https://huggingface.co/multilingual-tts/VITS-OpenBible-Igbo | CC BY-SA 4.0 | Model card, 25 Oct 2026 | Clips: share-alike, but we don't publish them | Igbo quiz-answer clips (MMS has no Igbo voice) | VITS-OpenBible-Igbo, multilingual-tts, CC BY-SA 4.0 | Daniel | In use (testing) | — | — | |
+| S33 | Magana LoRA training set | Own content | English (Hausa, Yorùbá, Igbo drafts) | `data/lora/` | Our own, released CC BY 4.0 | N/A, our own | Yes | Training the Magana-ATLAS LoRA (placeholder explanations, refusals) | Magana Learn team, CC BY 4.0 | Daniel | In use: 30 pages, 80 English examples | — | — | Non-English examples only after native review. No benchmark page or topic used. |
 | S30 | Teacher-made quizzes (portal) | Teacher materials | Any | The Magana server (`MAGANA_DATA_DIR`), never the repo | Teacher's own work | — | No: used only in that teacher's sessions | That teacher's class sessions | — | — | Pilot | — | — | Never in the benchmark without the teacher's written permission (log it under Permissions). |
 
 ## Capture log

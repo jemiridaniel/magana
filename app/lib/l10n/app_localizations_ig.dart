@@ -1683,4 +1683,11 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get msg_cant_translate_line_money =>
       'Enweghị m ike ịtụgharị ahịrị a n\'enweghị nsogbu. Biko jụọ mmadụ n\'ụlọ akụ gị.';
+
+  @override
+  String get msg_numbers_left_out =>
+      'Ọnụọgụgụ kpọmkwem dị na peeji ahụ. Kwuo ‘read again’ ka ị nụ ha.';
+
+  @override
+  String get explainReadAgain => 'Gụgharịa peeji ahụ ọzọ';
 }
