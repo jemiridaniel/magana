@@ -27,6 +27,11 @@ main() {
   git -C ../iba-natlas pull -q --ff-only
   echo "iba:    $(git -C ../iba-natlas log --oneline -1)"
   $compose up -d --build --quiet-pull 2>&1 | tail -5
+  # Caddy mounts the Caddyfile as a single file: a pull replaces the file, so Caddy keeps the
+  # old one until it restarts.
+  if ! git diff --quiet "$prev" HEAD -- deploy/Caddyfile; then
+    $compose restart caddy >/dev/null && echo "caddy restarted (Caddyfile changed)"
+  fi
 
   if ! healthy "$domain"; then
     echo "health check failed: going back to ${prev:0:7}"
@@ -34,6 +39,7 @@ main() {
     git reset -q --hard "$prev"
     git -C ../iba-natlas reset -q --hard "$iba_prev"
     $compose up -d --build --quiet-pull 2>&1 | tail -5
+    $compose restart caddy >/dev/null
     healthy "$domain" && echo "rolled back, healthy" || echo "rolled back, STILL NOT HEALTHY"
     exit 1
   fi

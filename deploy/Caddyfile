@@ -7,6 +7,9 @@
 		-Server
 	}
 
+	# The bare address opens the PWA, not the API's "bad_api_key".
+	redir / /app/ 302
+
 	# The PWA for testers at /app/ (scripts/deploy-web.sh copies it to deploy/web).
 	redir /app /app/ 308
 	handle_path /app/* {
