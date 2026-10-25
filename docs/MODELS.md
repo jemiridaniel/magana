@@ -101,6 +101,13 @@ The terms are at the bottom of each model card; there is no separate LICENSE fil
 - **Wrong-language answers are refused** (`language.wrong_language`, word lists in `content/language_words/`, draft). The app says "I couldn't explain this in your language" and reads the page.
 - **Base model first:** a Magana LoRA is decided from the benchmark (`benchmark/explain/`): its number-change rate per language, and native-speaker ratings of the saved outputs.
 
+## Voice notes for WhatsApp (MMS-TTS)
+
+- `facebook/mms-tts-eng`, `-hau`, `-yor` (VITS, 36 M parameters each), **licence CC BY-NC 4.0**: non-commercial use only. That fits a free pilot; a paid service would need another voice.
+- **There is no MMS Igbo voice.** Igbo users get the exact text, plus a note that voice notes aren't ready.
+- **The voices can't say most digits.** The English voice knows only 0–6, Hausa only 6, Yorùbá none. A dose of 8 would vanish from the audio. So `spoken.for_voice` spells every number out in English words first, and refuses any text with a character the voice can't say. Then no voice note is sent, and Magana says so.
+- **Memory:** about 0.8 GB with two voices loaded (FINDINGS.md), so `WHATSAPP_VOICE=off` on the t3.small.
+
 ## Approved explanation hosts
 
 In **tester and production builds** (`MAGANA_ENV=tester` or `production`; unset counts as production), Explain only runs when `EXPLAIN_URL` points at a host listed here. Otherwise the app says **"Explain isn't available yet"** and reads the page exactly as printed. That covers the preview stub too, and no page text leaves the Magana server.

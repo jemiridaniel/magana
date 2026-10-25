@@ -10,6 +10,7 @@
 - **Readings, reminders and your score stay on your phone** unless you choose otherwise.
 - Magana never asks for your PIN or password.
 - Magana has no adverts, no tracking and no crash reporting.
+- **On WhatsApp (adults only), your photos pass through Meta's servers** before Magana reads them. See "WhatsApp" below.
 
 ## What happens to each kind of information
 
@@ -60,6 +61,25 @@ Until learner accounts exist, consent is recorded on the phone. Real consent rec
 - **The website** (magana.ng) sets no cookies and has no analytics or trackers. "Hear a sample" and "Your name in Braille" run in your browser: nothing you type is sent anywhere.
 - **Connections:** encrypted (HTTPS). The app proves it is Magana with a key.
 - **Server logs** record requests and errors. They never contain photos, recordings, page text or health-check answers.
+
+## WhatsApp
+
+> **For review by Oluremi O. Balogun** (consent and safeguarding) before WhatsApp is opened to testers.
+
+Magana on WhatsApp is **for adults (18 and over)** only.
+- **Under 18:** Magana gets the answer "under 18", sends one reply pointing to the app with a teacher or guardian, and one goodbye. After that **nothing they send is read or answered**, and their photos are never fetched. Magana keeps only "under 18" for that number.
+- **Photos pass through Meta's servers.** WhatsApp messages to a business are delivered through Meta's WhatsApp Cloud API. Meta, not Magana, decides how long they stay on its servers to deliver them; its documentation says up to 30 days. This is the main difference from the app, where photos go straight to the Magana server. People who don't want that should use the app.
+- **On the Magana server:**
+
+  | What | Kept? |
+  |---|---|
+  | **Your photo** | **No.** Read in memory and deleted at once. Never written to disk. |
+  | **The text Magana read** | In memory for 30 minutes, for "Read again". Then gone. |
+  | **Your language and age group** ("adult" or "under 18") | Yes, under a coded form of your number (a keyed hash), not the number itself |
+  | **Quick health check answers** | **No.** In memory only until the check ends. Never written down or logged. |
+  | **A call-back request** | Reference, phone number (the nurse needs it to call you), language, priority, time and status. **Deleted after 30 days.** You can cancel it or change the number. |
+  | **Message text and phone numbers in the server logs** | **Never.** Logs show only the kind of message and a short coded id. |
+- **Messages are counted per month** (a number only) to stay within the free WhatsApp allowance.
 
 ## Teachers
 

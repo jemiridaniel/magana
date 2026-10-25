@@ -3,14 +3,15 @@ from __future__ import annotations
 
 import asyncio
 import hmac
+import json
 import io
 from contextlib import asynccontextmanager
 from functools import lru_cache
 import os
 
-from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
+from fastapi import BackgroundTasks, Depends, FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
+from fastapi.responses import JSONResponse, PlainTextResponse
 from PIL import Image
 import logging
 from typing import Literal
@@ -18,7 +19,8 @@ from typing import Literal
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import asr, curriculum, explain, policy, quizzes, ratelimit, safety, templates, triage
+from . import asr, curriculum, explain, policy, quizzes, ratelimit, safety, templates, triage, wa_flow
+from .wa_client import WhatsAppClient
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
 from .messages import CodedError
@@ -60,6 +62,9 @@ app = FastAPI(
     version="0.2.0",
     description="Responses carry message codes, never sentences; see app/messages.py for the English reference.",
 )
+WHATSAPP_WEBHOOK = "/whatsapp/webhook"
+
+
 @app.middleware("http")
 async def rate_limit(request, call_next):
     """Per-IP and per-device limits (app/ratelimit.py): the web app's key is public."""
@@ -79,7 +84,8 @@ async def require_api_key(request, call_next):
     Unset (local development): no key needed. The key ships inside the app, so it keeps
     out casual callers and bots, not a determined attacker."""
     key = os.environ.get("MAGANA_API_KEY", "")
-    if key and request.method != "OPTIONS" and request.url.path != "/health":
+    # The WhatsApp webhook is called by Meta, which proves itself with a signature instead.
+    if key and request.method != "OPTIONS" and request.url.path not in ("/health", WHATSAPP_WEBHOOK):
         sent = request.headers.get("x-magana-key", "")
         if not hmac.compare_digest(sent.encode(), key.encode()):
             return JSONResponse({"detail": {"code": "bad_api_key"}}, status_code=401)
@@ -433,3 +439,59 @@ async def request_callback(body: CallbackRequest) -> dict:
         raise HTTPException(503, {"code": "callback_unavailable"})
     log.info("callback booked reason=%s priority=%s", body.reason, body.priority)
     return {"code": "callback_booked"}
+
+
+# ---------- WhatsApp (docs/WHATSAPP_SETUP.md; the conversation is in app/wa_flow.py)
+
+_seen_messages: dict[str, None] = {}
+
+
+def _first_delivery(message_id: str) -> bool:
+    """Meta may deliver a message more than once: handle each id once."""
+    if not message_id or message_id in _seen_messages:
+        return False
+    _seen_messages[message_id] = None
+    while len(_seen_messages) > 2000:
+        _seen_messages.pop(next(iter(_seen_messages)))
+    return True
+
+
+@lru_cache(maxsize=1)
+def get_whatsapp_flow() -> wa_flow.Flow | None:
+    client = WhatsAppClient.from_env()
+    return wa_flow.Flow(client, get_engine) if client else None
+
+
+@app.get(WHATSAPP_WEBHOOK)
+def whatsapp_verify(mode: str = Query("", alias="hub.mode"), token: str = Query("", alias="hub.verify_token"),
+                    challenge: str = Query("", alias="hub.challenge")):
+    """Meta's one-time check when the webhook is registered: echo the challenge."""
+    expected = os.environ.get("WHATSAPP_VERIFY_TOKEN", "")
+    if not expected or mode != "subscribe" or not hmac.compare_digest(token.encode(), expected.encode()):
+        raise HTTPException(403, {"code": "verify_token_wrong"})
+    return PlainTextResponse(challenge)
+
+
+@app.post(WHATSAPP_WEBHOOK)
+async def whatsapp_webhook(request: Request, background: BackgroundTasks,
+                           flow: wa_flow.Flow | None = Depends(get_whatsapp_flow)) -> dict:
+    """Messages from WhatsApp. Only requests signed with the app secret (X-Hub-Signature-256)
+    are accepted. The reply is sent in the background, so Meta gets its 200 at once."""
+    secret = os.environ.get("WHATSAPP_APP_SECRET", "")
+    if not secret or flow is None:
+        raise HTTPException(503, {"code": "whatsapp_not_configured"})
+    body = await request.body()
+    expected = "sha256=" + hmac.new(secret.encode(), body, "sha256").hexdigest()
+    if not hmac.compare_digest(request.headers.get("x-hub-signature-256", "").encode(), expected.encode()):
+        raise HTTPException(401, {"code": "bad_signature"})
+    try:
+        payload = json.loads(body)
+        messages = [m for e in payload.get("entry", []) for c in e.get("changes", [])
+                    for m in c.get("value", {}).get("messages", [])]
+    except (ValueError, AttributeError, TypeError):
+        return {"ok": True}  # signed but not a message delivery (e.g. a status update)
+    fresh = [m for m in messages if _first_delivery(str(m.get("id", "")))]
+    if fresh:
+        background.add_task(wa_flow.process, flow, fresh)
+    return {"ok": True}
+

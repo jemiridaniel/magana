@@ -13,6 +13,31 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · WhatsApp: the W1–W5 flow; the voice notes would have dropped digits (UNREVIEWED)
+
+> **Unreviewed.** The Hausa, Yorùbá and Igbo wording is a machine-assisted draft for native review. The privacy section is for Nurse Balogun. The quick check stays a draft pending Dr. Amos.
+
+- **Built** (`backend/app/wa_flow.py`, `wa_client.py`, `wa_store.py`, `tts.py`, `spoken.py`; webhook `https://api.magana.ng/whatsapp/webhook`), following boards W1–W5:
+  - **W1:** a language list, then the age check with buttons.
+  - **W2:** under 18 get one reply and one goodbye, then nothing; their photos are never fetched.
+  - **W3:** a photo is read with the strictest checks (the second pass for every paper), sent as numbered lines with "[unclear number]", then the warnings, a voice note, and Read again / Health worker / Help. Nothing is ever explained.
+  - **W4:** Ibà's questions. A number question comes as a list, sight-based signs in blind-user wording, and "I can't tell" is offered on every question and sent as unanswered. A danger sign answered Yes ends the check with the emergency message at once.
+  - **W5:** a call-back request with an `MG-1234` reference, with OK / Change my number / Cancel.
+- **Security and privacy:**
+  - Every delivery must carry Meta's `X-Hub-Signature-256` (HMAC of the body with the app secret), or it gets 401. Redeliveries are handled once. Secrets live only in the server `.env`.
+  - The photo lives in memory only; the reading stays in memory for 30 minutes, for Read again. Triage answers stay in memory until the check ends.
+  - On disk: only language and age group, under a keyed hash of the number, plus call-back requests (deleted after 30 days).
+  - A test checks that no phone number or message text appears in the logs or on disk.
+- **Limits:** messages sent are counted per month. At 800 there is one warning (log, and the alert webhook if set); at 950, "limit reached" for new photos and checks; at 1,000 nothing more except the emergency message.
+- **Meta's 20-character button limit:** "Talk to a health worker" (23) and most Hausa, Yorùbá and Igbo labels didn't fit. Every language now has short button labels ("Health worker"), and a test checks each one against Meta's limits.
+- **Safety finding: the MMS voices can't say most digits.** Their character sets hold English 0–6, Hausa only "6", Yorùbá none, and there's no Igbo MMS voice at all. Read as given, "Do not take more than 8 in 24 hours" would have been spoken without the 8 (and without the 9 in "2291").
+  - Now every number is spelled out in English words first ("2,350.00" → "two thousand three hundred and fifty point zero zero", "08" → "zero eight", codes digit by digit).
+  - Any segment with a character the voice can't say stops the whole voice note: no voice note, and the user is told "this page is text only". Tested, including a check that no digit is left in what the voice is given.
+- **Measured (MMS on a Mac M2 Pro, CPU):** an English and a Hausa voice together take about **770 MB** (torch alone about 300 MB). A 4-part voice note (intro, a line, its warning, the expiry line) takes 2.7 s, including loading, and is 62 KB as OGG/Opus. That doesn't fit beside reading on the t3.small (1.2 GB free), so **production runs `WHATSAPP_VOICE=off`**: users get the exact text and are told once that voice notes aren't ready. Step 5's instance plan includes the voices.
+- **Tests:** 44 in `test_whatsapp.py`. Backend: 367 passed, 1 skipped.
+- **Not done:** no message has gone through Meta yet. That needs the app and test number (docs/WHATSAPP_SETUP.md).
+- **Status:** built, not live.
+
 ## 2026-10-25 · Explanations: the Magana LoRA for English only, and a wrong-language check (UNREVIEWED)
 
 > **Unreviewed.** The word lists are drafts. Native speakers haven't checked them.

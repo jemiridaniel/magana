@@ -15,7 +15,7 @@ import time
 from dataclasses import dataclass, field
 
 HEAVY_PATHS = ("/read", "/asr", "/asr/choose", "/explain")
-EXEMPT_PATHS = ("/health",)
+EXEMPT_PATHS = ("/health", "/whatsapp/webhook")  # Meta signs its calls; usage is capped instead
 _DEVICE = re.compile(r"^[A-Za-z0-9-]{8,64}$")
 
 

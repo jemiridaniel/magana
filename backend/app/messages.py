@@ -93,6 +93,14 @@ PORTAL = {
 }
 PORTAL_CODES = frozenset(PORTAL)
 
+# Codes only Meta's servers see, from the WhatsApp webhook (app/wa_flow.py): no app wording.
+WEBHOOK = {
+    "bad_signature": "The request isn't signed with the WhatsApp app secret.",
+    "verify_token_wrong": "The webhook verify token doesn't match.",
+    "whatsapp_not_configured": "WhatsApp isn't set up on this server.",
+}
+WEBHOOK_CODES = frozenset(WEBHOOK)
+
 
 class CodedError(PermissionError):
     """A refusal the app explains in the user's language."""
