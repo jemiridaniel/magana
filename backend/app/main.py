@@ -231,8 +231,8 @@ def explain_page(body: ExplainRequest, tier: policy.Tier = Depends(caller_tier),
         t = templates.translate(body.source_text, body.lang, body.mode)
         return {"code": "paper_lines", "explanation": None, "read_instead": None, "preview": False,
                 "lines": t["lines"], "fallback": t["fallback"]}
-    r = explain.explain(engine, body.source_text, body.question, body.lang, body.style,
-                        guided=tier is policy.Tier.GUIDED)
+    r = explain.explain(explain.for_language(engine, body.lang), body.source_text, body.question, body.lang,
+                        body.style, guided=tier is policy.Tier.GUIDED)
     body = {"code": r.code, "explanation": r.explanation, "read_instead": r.read_instead,
             "preview": r.preview}
     if r.followup:

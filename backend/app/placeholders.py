@@ -145,7 +145,7 @@ _SYMBOLS = re.compile(r"[%₦$£°]")
 @dataclass
 class Problem:
     code: str  # placeholder_missing | placeholder_repeated | placeholder_unknown | digit |
-    #            number_word | unit_word | arithmetic
+    #            number_word | unit_word | arithmetic | wrong_language (explain.check_answer)
     detail: str = ""
 
 

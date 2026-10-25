@@ -321,6 +321,10 @@ class AppLocalizationsHa extends AppLocalizations {
       'Ban iya tabbatar da wasu lambobi a wannan bayanin ba, don haka zan karanta shafin daidai yadda yake.';
 
   @override
+  String get msg_explain_wrong_language =>
+      'Ban iya bayyana wannan da harshenka ba, don haka zan karanta shafin daidai yadda yake.';
+
+  @override
   String get msg_go_to_clinic_now =>
       'Wannan zai iya zama mai tsanani. Don Allah ka je asibiti mafi kusa yanzu, ko ka kira 112. Kada ka jira a kira ka.';
 

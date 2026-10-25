@@ -284,3 +284,117 @@ def test_a_tester_build_never_sends_page_text_to_an_unapproved_host(monkeypatch)
         app.dependency_overrides.clear()
     assert requests == []
     assert body["code"] == "explain_not_available" and body["read_instead"] == private
+
+
+# ---------- the Magana LoRA: English only; the language check
+
+def _vllm_models(engine):
+    seen = []
+
+    def handler(request):
+        seen.append(json.loads(request.content)["model"])
+        return httpx.Response(200, json={"choices": [{"message": {"content": "ok"}}]})
+
+    engine.transport = httpx.MockTransport(handler)
+    return seen
+
+
+def test_the_adapter_answers_english_and_base_n_atlas_the_other_languages():
+    base = explain.OpenAIChatEngine("http://gpu:8000", "", "NCAIR1/N-ATLaS", adapter="magana-lora")
+    seen = _vllm_models(base)
+    for lang in ("en", "ha", "yo", "ig"):
+        explain.for_language(base, lang).complete("s", "u", 5)
+    assert seen == ["magana-lora", "NCAIR1/N-ATLaS", "NCAIR1/N-ATLaS", "NCAIR1/N-ATLaS"]
+
+
+def test_without_an_adapter_every_language_uses_the_base_model():
+    base = explain.OpenAIChatEngine("http://gpu:8000", "", "NCAIR1/N-ATLaS")
+    seen = _vllm_models(base)
+    explain.for_language(base, "en").complete("s", "u", 5)
+    assert seen == ["NCAIR1/N-ATLaS"]
+
+
+def test_llamacpp_turns_the_adapter_on_for_english_only():
+    seen = []
+
+    def handler(request):
+        seen.append(json.loads(request.content).get("lora"))
+        return httpx.Response(200, json={"content": "ok"})
+
+    e = explain.LlamaCppEngine("http://cpu:8080", "", transport=httpx.MockTransport(handler), lora_id=0)
+    explain.for_language(e, "en").complete("s", "u", 5)
+    explain.for_language(e, "yo").complete("s", "u", 5)
+    explain.LlamaCppEngine("http://cpu:8080", "", transport=httpx.MockTransport(handler)).complete("s", "u", 5)
+    assert seen == [[{"id": 0, "scale": 1.0}], [{"id": 0, "scale": 0.0}], None]
+
+
+def test_the_adapter_comes_from_the_environment(monkeypatch):
+    monkeypatch.setenv("EXPLAIN_ENGINE", "vllm")
+    monkeypatch.setenv("EXPLAIN_URL", "http://gpu:8000")
+    monkeypatch.setenv("EXPLAIN_ADAPTER", "magana-lora")
+    e = explain.default_engine()
+    assert (e.model, e.adapter) == ("NCAIR1/N-ATLaS", "magana-lora")
+    monkeypatch.setenv("EXPLAIN_ENGINE", "llamacpp")
+    monkeypatch.setenv("EXPLAIN_LORA_ID", "0")
+    assert explain.default_engine().lora_id == 0
+
+
+ENGLISH = ("This page explains how green plants make their own food in their leaves. They use the energy "
+           "from sunlight and take in water from the soil, which is then used to make glucose.")
+HAUSA = ("Wannan shafin ya nuna yadda tsire-tsire masu launin kore ke samar da abincinsu a cikin ganyen su "
+         "ta hanyar photosynthesis. Suna amfani da chlorophyll wajen kama makamashin hasken rana.")
+
+
+def test_an_english_answer_to_a_hausa_request_is_refused_and_the_page_is_read(engine):
+    engine(Fixed(ENGLISH))
+    body = post({"source_text": "Green plants make food in their leaves.", "lang": "ha"}).json()
+    assert body["code"] == "explain_wrong_language"
+    assert body["explanation"] is None
+    assert body["read_instead"] == "Green plants make food in their leaves."
+
+
+def test_an_answer_in_the_asked_language_passes(engine):
+    engine(Fixed(HAUSA))
+    body = post({"source_text": "Green plants make food in their leaves.", "lang": "ha"}).json()
+    assert body["code"] == "explained"
+
+
+@pytest.mark.parametrize("text, lang, expected", [
+    (ENGLISH, "ha", "en"), (ENGLISH, "yo", "en"), (ENGLISH, "ig", "en"), (ENGLISH, "en", None),
+    (HAUSA, "ha", None), (HAUSA, "en", "ha"),
+    ("Ìwé yìí ṣe àlàyé bí àwọn ewéko ṣe ń ṣe oúnjẹ wọn nínú ewé wọn, pẹ̀lú agbára oòrùn.", "yo", None),
+    ("Oju-iwe yii ṣe alaye bi awọn eweko ṣe n ṣe ounje won ninu ewe won.", "yo", None),  # no tone marks
+    ("Peeji a na-akọwa otú osisi si eme nri ha n'ime akwụkwọ ha site n'ike anyanwụ.", "ig", None),
+    ("ok ⟦N1⟧ ⟦N2⟧", "ha", None),  # too little to tell: never refused for that
+    ("The starch test uses iodine solution.", "yo", None),  # short: below MIN_POINTS
+])
+def test_wrong_language(text, lang, expected):
+    from app import language
+    assert language.wrong_language(text, lang) == expected
+
+
+def test_saved_benchmark_answers_the_check_refuses_the_adapters_english_and_nothing_in_the_right_language():
+    """Every answer saved by the Explain benchmarks (docs/FINDINGS.md): the Magana LoRA's English
+    answers to Hausa, Yorùbá and Igbo requests are all refused; no answer written in the language
+    asked for is. (Base N-ATLaS once answered an Igbo request in English: refused too.)"""
+    import glob
+    from pathlib import Path
+    from app import language
+    root = Path(__file__).resolve().parents[2] / "benchmark" / "explain" / "results"
+    lora, right, base_wrong = [], [], []
+    for f in sorted(glob.glob(str(root / "*" / "*.jsonl"))):
+        for line in open(f, encoding="utf-8"):
+            r = json.loads(line)
+            text = r.get("raw_answer") or r.get("explanation") or ""
+            if not text.strip():
+                continue
+            refused = language.wrong_language(text, r["lang"]) is not None
+            if r.get("model") == "magana-lora" and r["lang"] != "en":
+                lora.append(refused)
+            elif (r["lang"], r.get("page")) == ("ig", "10_rainfall") and text.startswith("The page shows"):
+                base_wrong.append(refused)
+            else:
+                right.append((refused, r["lang"], r.get("page")))
+    assert lora and all(lora), lora
+    assert base_wrong == [True]
+    assert len(right) >= 80 and not [x for x in right if x[0]], [x for x in right if x[0]]

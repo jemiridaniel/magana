@@ -1,0 +1,36 @@
+# Igbo function words (with and without dots)
+letters: ịụṅỊỤṄ
+prefix: na-
+prefix: ga-
+nke
+bụ
+ndị
+ndi
+maka
+n'ime
+n’ime
+gị
+anyị
+nwere
+dị
+mana
+ọzọ
+site
+iji
+mgbe
+ebe
+otu
+ihe
+ga
+ji
+banyere
+peeji
+ahụ
+ahu
+niile
+nile
+ọ
+ha
+ya
+dịka
+ka

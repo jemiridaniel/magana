@@ -81,6 +81,7 @@
   "msg_teacher_session_required": "Àwọn akẹ́kọ̀ọ́ tí kò tíì pé ọdún 13 lè lo Magana nínú ìpàdé tí olùkọ́ ń darí nìkan.",
   "msg_unreadable_image": "Mi ò lè ṣí fọ́tò yẹn. Jọ̀wọ́ tún gbìyànjú.",
   "msg_numbers_unconfirmed": "Mi ò lè fìdí àwọn nọ́ńbà kan nínú àlàyé yìí múlẹ̀, nítorí náà màá ka ojú-ìwé náà gẹ́gẹ́ bí ó ṣe wà.",
+  "msg_explain_wrong_language": "Mi ò lè ṣàlàyé èyí ní èdè rẹ, nítorí náà màá ka ojú-ìwé náà gẹ́gẹ́ bí ó ṣe wà.",
   "autoCapture": "Ya fọ́tò fúnra rẹ̀",
   "torchOn": "Tan iná fóònù",
   "torchOff": "Pa iná fóònù",

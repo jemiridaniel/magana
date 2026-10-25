@@ -244,6 +244,7 @@
   "msg_teacher_session_required": "Learners under 13 can only use Magana in a teacher-run session.",
   "msg_unreadable_image": "I couldn't open that photo. Please try again.",
   "msg_numbers_unconfirmed": "I can't confirm some numbers in this explanation, so I'll read the page exactly instead.",
+  "msg_explain_wrong_language": "I couldn't explain this in your language, so I'll read the page exactly instead.",
   "msg_go_to_clinic_now": "This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.",
   "@msg_go_to_clinic_now": {
     "description": "CLINICAL DRAFT, pending Dr. Amos's sign-off. Hausa, Yoruba and Igbo are drafts for native-speaker review."

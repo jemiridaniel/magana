@@ -13,6 +13,29 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · Explanations: the Magana LoRA for English only, and a wrong-language check (UNREVIEWED)
+
+> **Unreviewed.** The word lists are drafts. Native speakers haven't checked them.
+
+- **Routing:** the Magana LoRA is used for **English Explain only** (`explain.ADAPTER_LANGS = {"en"}`); Hausa, Yorùbá and Igbo always go to base N-ATLaS.
+  - vLLM: `EXPLAIN_ADAPTER` picks the adapter by its served name.
+  - llama.cpp: `EXPLAIN_LORA_ID` gives the adapter's index; it gets scale 1 for English and 0 for the others.
+  - Tested for both engines and for the environment settings. Production still has Explain off.
+- **The wrong-language check** (`backend/app/language.py`). Each answer is scored per language by common function words, letters only that language uses (Hausa ɓ ɗ ƙ ƴ, Yorùbá ẹ ṣ, Igbo ị ụ ṅ) and the Igbo `na-` beginning. A word in two lists counts for neither.
+  - An answer is refused when another language scores at least **4** points and **twice** the asked language's score. Single English words ("starch", "photosynthesis", month names) never decide.
+  - A refused answer gets the new code `explain_wrong_language` ("I couldn't explain this in your language, so I'll read the page exactly instead."), worded in all four app languages (Hausa, Yorùbá and Igbo are drafts), and the app reads the page.
+- **Measured on every answer the Explain benchmarks saved** (5 runs, 140 non-empty answers; some answers were saved by more than one run):
+
+  | Answers | Refused |
+  |---|---|
+  | The adapter's answers to Hausa, Yorùbá and Igbo requests (all in English) | **15 of 15** |
+  | Base N-ATLaS answering an Igbo request (10_rainfall) entirely in English | 1 of 1 |
+  | Answers written in the language asked for | **0 of 124** (84 different answers) |
+
+  The test `test_saved_benchmark_answers_…` keeps these results from changing silently.
+- **Re-scoring the 40 pages with list bullets** and **"Say" for English only** were already done (entries below), so they are unchanged.
+- **Status:** open, unreviewed. The adapter isn't served anywhere yet. Explain stays off outside development.
+
 ## 2026-10-25 · Website magana.ng: accessibility checks and the page loader on Slow 3G
 
 - **What:** the website in `website/` (Next.js static export, served by Caddy at https://magana.ng), built to the canvas boards "Page loader", "Home (desktop)" and "Home (phone)".

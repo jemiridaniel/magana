@@ -321,6 +321,10 @@ class AppLocalizationsIg extends AppLocalizations {
       'Enweghị m ike ikwenye ụfọdụ nọmba na nkọwa a, ya mere aga m agụ peeji ahụ otú o si dị.';
 
   @override
+  String get msg_explain_wrong_language =>
+      'Enweghị m ike ịkọwa nke a n\'asụsụ gị, ya mere aga m agụ peeji ahụ otú o si dị.';
+
+  @override
   String get msg_go_to_clinic_now =>
       'Nke a nwere ike ịdị njọ. Biko gaa n\'ụlọ ọgwụ kacha nso ugbu a, ma ọ bụ kpọọ 112. Echerela ka a kpọọ gị.';
 

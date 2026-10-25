@@ -322,6 +322,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'I can\'t confirm some numbers in this explanation, so I\'ll read the page exactly instead.';
 
   @override
+  String get msg_explain_wrong_language =>
+      'I couldn\'t explain this in your language, so I\'ll read the page exactly instead.';
+
+  @override
   String get msg_go_to_clinic_now =>
       'This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.';
 

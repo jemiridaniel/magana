@@ -2,8 +2,8 @@
 
 EXPLAIN_ENGINE selects how N-ATLaS is reached (docs/MODELS.md):
 - stub      no model: the page text itself, so the app can show Explain as a preview
-- vllm      an OpenAI-compatible vLLM server (`--enable-lora`): EXPLAIN_MODEL picks the base
-            model or a LoRA adapter served beside it
+- vllm      an OpenAI-compatible vLLM server (`--enable-lora`): EXPLAIN_MODEL is the base
+            model; EXPLAIN_ADAPTER, a LoRA adapter served beside it, used for English only
 - hf_space  an OpenAI-compatible server on a Hugging Face Space (Bearer = HF token)
 - llamacpp  a llama.cpp server (GGUF); Magana renders the model's chat template itself
 
@@ -29,7 +29,7 @@ from typing import Protocol
 
 import httpx
 
-from . import placeholders, safety
+from . import language, placeholders, safety
 
 # The page text Magana accepts for one explanation (several sections).
 MAX_SOURCE_CHARS = 12_000
@@ -188,15 +188,23 @@ class OpenAIChatEngine:
 
     preview = False
 
-    def __init__(self, url: str, api_key: str, model: str, transport: httpx.BaseTransport | None = None):
+    def __init__(self, url: str, api_key: str, model: str, transport: httpx.BaseTransport | None = None,
+                 adapter: str = ""):
         self.url = url.rstrip("/")
         self.api_key = api_key
         self.model = model
+        self.adapter = adapter  # the Magana LoRA's name on the server; English only
         self.transport = transport
+        self.lang = ""
+
+    def for_language(self, lang: str) -> "OpenAIChatEngine":
+        e = OpenAIChatEngine(self.url, self.api_key, self.model, self.transport, self.adapter)
+        e.lang = lang
+        return e
 
     def complete(self, system: str, user: str, timeout: float) -> str:
         body = {
-            "model": self.model,
+            "model": self.adapter if self.adapter and self.lang in ADAPTER_LANGS else self.model,
             "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
             "temperature": TEMPERATURE,
             "repetition_penalty": REPETITION_PENALTY,
@@ -218,13 +226,21 @@ class LlamaCppEngine:
 
     preview = False
 
-    def __init__(self, url: str, api_key: str, transport: httpx.BaseTransport | None = None):
+    def __init__(self, url: str, api_key: str, transport: httpx.BaseTransport | None = None,
+                 lora_id: int | None = None):
         self.url = url.rstrip("/")
         self.api_key = api_key
         self.transport = transport
+        self.lora_id = lora_id  # the Magana LoRA loaded with --lora: on for English, off otherwise
+        self.lang = ""
+
+    def for_language(self, lang: str) -> "LlamaCppEngine":
+        e = LlamaCppEngine(self.url, self.api_key, self.transport, self.lora_id)
+        e.lang = lang
+        return e
 
     def complete(self, system: str, user: str, timeout: float) -> str:
-        body = {
+        body: dict = {
             "prompt": render_llama31(system, user, today()),
             "temperature": TEMPERATURE,
             "repeat_penalty": REPETITION_PENALTY,
@@ -232,6 +248,8 @@ class LlamaCppEngine:
             "stop": ["<|eot_id|>"],
             "cache_prompt": True,
         }
+        if self.lora_id is not None:
+            body["lora"] = [{"id": self.lora_id, "scale": 1.0 if self.lang in ADAPTER_LANGS else 0.0}]
         headers = {"Authorization": f"Bearer {self.api_key}"} if self.api_key else {}
         try:
             with httpx.Client(timeout=timeout, transport=self.transport) as c:
@@ -242,8 +260,21 @@ class LlamaCppEngine:
             raise ExplainUnavailable(type(e).__name__) from e
 
 
+# The Magana LoRA was trained on English only and answers every language in English
+# (docs/FINDINGS.md), so it serves English; Hausa, Yorùbá and Igbo stay on base N-ATLaS.
+ADAPTER_LANGS = frozenset({"en"})
+
+
+def for_language(engine: Engine, lang: str) -> Engine:
+    """The engine set up for one request's language (base model or the English adapter)."""
+    pick = getattr(engine, "for_language", None)
+    return pick(lang) if pick else engine
+
+
 def default_engine() -> Engine:
-    """From EXPLAIN_ENGINE (stub by default), EXPLAIN_URL, EXPLAIN_API_KEY, EXPLAIN_MODEL."""
+    """From EXPLAIN_ENGINE (stub by default), EXPLAIN_URL, EXPLAIN_API_KEY, EXPLAIN_MODEL, and
+    the English adapter: EXPLAIN_ADAPTER (vllm, its served name) or EXPLAIN_LORA_ID (llamacpp,
+    the index of the adapter loaded with --lora)."""
     kind = os.environ.get("EXPLAIN_ENGINE", "stub").lower()
     url = os.environ.get("EXPLAIN_URL", "")
     key = os.environ.get("EXPLAIN_API_KEY", "")
@@ -253,9 +284,10 @@ def default_engine() -> Engine:
     if not url:
         raise RuntimeError(f"EXPLAIN_ENGINE={kind} needs EXPLAIN_URL")
     if kind in ("vllm", "hf_space"):
-        return OpenAIChatEngine(url, key, model)
+        return OpenAIChatEngine(url, key, model, adapter=os.environ.get("EXPLAIN_ADAPTER", ""))
     if kind == "llamacpp":
-        return LlamaCppEngine(url, key)
+        lora = os.environ.get("EXPLAIN_LORA_ID", "")
+        return LlamaCppEngine(url, key, lora_id=int(lora) if lora else None)
     raise RuntimeError(f"EXPLAIN_ENGINE={kind!r}: use stub, vllm, hf_space or llamacpp")
 
 
@@ -287,6 +319,8 @@ def check_answer(raw: str, page: "placeholders.Masked", asked: "placeholders.Mas
                                   optional=range(n_page + 1, n_page + n_asked + 1), lang=lang)
     if allow_left_out:
         problems = [p for p in problems if p.code != "placeholder_missing"]
+    if (other := language.wrong_language(raw, lang)) is not None:
+        problems.append(placeholders.Problem("wrong_language", other))
     if problems:
         return raw, problems
     return placeholders.unmask(raw, page.slots + (asked.slots if asked else [])), []
@@ -320,6 +354,8 @@ def explain(engine: Engine, source_text: str, question: str | None, lang: str, s
             if not raw:
                 raise ExplainUnavailable("empty")
             text, problems = check_answer(raw, page, asked, lang)
+            if any(p.code == "wrong_language" for p in problems):
+                return Explanation("explain_wrong_language", None, source_text, engine.preview)
             if problems or not safety.guard_explanation(section, text).ok:
                 return Explanation("numbers_unconfirmed", None, source_text, engine.preview)
             missing = missing or left_out(raw, page)

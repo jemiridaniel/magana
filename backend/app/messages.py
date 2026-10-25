@@ -34,6 +34,7 @@ ENGLISH = {
     "session_code_invalid": "That session code isn't right. Check it in the teacher portal.",
     # Explanations
     "numbers_unconfirmed": "I can't confirm some numbers in this explanation, so I'll read the page exactly instead.",
+    "explain_wrong_language": "I couldn't explain this in your language, so I'll read the page exactly instead.",
     "explain_preview": "This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",
     "explained": "Here is the explanation.",
     "explain_not_available": "Explain isn't available yet. Here is the page, read exactly as printed.",

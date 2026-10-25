@@ -18,6 +18,7 @@ String messageFor(AppLocalizations l, String code, {String where = ''}) =>
       'teacher_session_required' => l.msg_teacher_session_required,
       'unreadable_image' => l.msg_unreadable_image,
       'numbers_unconfirmed' => l.msg_numbers_unconfirmed,
+      'explain_wrong_language' => l.msg_explain_wrong_language,
       'callback_booked' => l.msg_callback_booked,
       'callback_unavailable' => l.msg_callback_unavailable,
       'unknown_tier' => l.msg_unknown_tier,

@@ -582,6 +582,12 @@ abstract class AppLocalizations {
   /// **'I can\'t confirm some numbers in this explanation, so I\'ll read the page exactly instead.'**
   String get msg_numbers_unconfirmed;
 
+  /// No description provided for @msg_explain_wrong_language.
+  ///
+  /// In en, this message translates to:
+  /// **'I couldn\'t explain this in your language, so I\'ll read the page exactly instead.'**
+  String get msg_explain_wrong_language;
+
   /// CLINICAL DRAFT, pending Dr. Amos's sign-off. Hausa, Yoruba and Igbo are drafts for native-speaker review.
   ///
   /// In en, this message translates to:

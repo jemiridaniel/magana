@@ -320,6 +320,10 @@ class AppLocalizationsYo extends AppLocalizations {
       'Mi ò lè fìdí àwọn nọ́ńbà kan nínú àlàyé yìí múlẹ̀, nítorí náà màá ka ojú-ìwé náà gẹ́gẹ́ bí ó ṣe wà.';
 
   @override
+  String get msg_explain_wrong_language =>
+      'Mi ò lè ṣàlàyé èyí ní èdè rẹ, nítorí náà màá ka ojú-ìwé náà gẹ́gẹ́ bí ó ṣe wà.';
+
+  @override
   String get msg_go_to_clinic_now =>
       'Èyí lè le. Jọ̀wọ́ lọ sí ilé-ìwòsàn tó súnmọ́ ọ jù lọ báyìí, tàbí pe 112. Má ṣe dúró kí wọ́n pè ọ́ padà.';
 

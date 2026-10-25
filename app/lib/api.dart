@@ -265,7 +265,7 @@ class Explanation {
   /// page. Say 'read again' to hear them.").
   final String? followup;
   final String
-  code; // explain_preview | explained | numbers_unconfirmed | paper_lines
+  code; // explain_preview | explained | numbers_unconfirmed | explain_wrong_language | paper_lines
   final String? text; // the explanation, when it passed the guard
   final String? readInstead; // the page text, when it did not
   final bool preview; // no model yet: the page text itself
