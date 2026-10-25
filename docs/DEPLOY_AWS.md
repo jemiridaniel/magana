@@ -96,7 +96,7 @@ The live server: **35.178.64.255** (first deployed 25 Oct 2026 at https://35-178
 
 ## 6a. The domain (magana.ng)
 
-At the registrar, add four **A** records pointing at the Elastic IP, and no AAAA records:
+DNS is on **Cloudflare, DNS only** (grey cloud, not proxied: Caddy needs the requests itself to get its certificates). Add four **A** records pointing at the Elastic IP, a **CNAME** `www` → `magana.ng` (Caddy redirects it to https://magana.ng), and no AAAA records:
 
 | Name | Serves |
 |---|---|

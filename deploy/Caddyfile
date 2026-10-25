@@ -1,5 +1,6 @@
 # Automatic HTTPS for Magana (certificates from Let's Encrypt, one per name below).
 #   magana.ng            the website (deploy/site) and the Android download (deploy/downloads)
+#   www.magana.ng        redirects to magana.ng
 #   api.magana.ng        the API and the WhatsApp webhook
 #   app.magana.ng        the tester PWA (deploy/web)
 #   teachers.magana.ng   the teacher portal (deploy/teachers), behind a login
@@ -51,6 +52,11 @@
 	}
 }
 
+# www is a CNAME to the bare domain (Cloudflare, DNS only): send it there.
+www.{$MAGANA_DOMAIN} {
+	redir https://{$MAGANA_DOMAIN}{uri} 308
+}
+
 api.{$MAGANA_DOMAIN} {
 	import common
 	# The bare address is for people: send them to the website, not "bad_api_key".
@@ -84,13 +90,14 @@ teachers.{$MAGANA_DOMAIN} {
 {$MAGANA_LEGACY_DOMAIN} {
 	import common
 	redir / https://{$MAGANA_DOMAIN}/ 302
+	# route keeps this order (a plain handle would run redir before uri).
 	@app path /app /app/*
-	handle @app {
+	route @app {
 		uri strip_prefix /app
 		redir https://app.{$MAGANA_DOMAIN}{uri} 308
 	}
 	@teachers path /teachers /teachers/*
-	handle @teachers {
+	route @teachers {
 		uri strip_prefix /teachers
 		redir https://teachers.{$MAGANA_DOMAIN}{uri} 308
 	}
