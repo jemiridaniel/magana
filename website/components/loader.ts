@@ -4,10 +4,14 @@
 //
 // All of it is in the first HTML: markup (set with dangerouslySetInnerHTML, so React never
 // diffs it), inline CSS and a small inline script, so it shows before any bundle arrives.
-// - No fake delay: at least 0.8 s on screen (no flash), then a fade into the page.
+// - Never jumps: the % and the dots move toward the real progress at most 10% per 100 ms, so
+//   each dot pops in order and the bar grows.
+// - A minimum fill time, so it never flashes: the first visit in a session fills over at least
+//   1.6 s, a refresh or later visit over at least 1 s. Then "magana" holds complete for 0.3 s and
+//   the loader fades. A slow connection follows the real progress, which is slower than that.
 // - "Slow connection. Still loading…" after 8 s.
 // - role="progressbar", labelled "Loading Magana"; its value moves one dot at a time, so a
-//   screen reader is not counting out loud. Reduced motion: no pop, no fade.
+//   screen reader is not counting out loud. Reduced motion: the fill stays, without pop or fade.
 // - Without JavaScript it never shows; if something breaks, CSS hides it after 30 s.
 // - Scripts marked nomodule are skipped: modern browsers never load them, so they would never finish.
 import { LETTER_DOTS, dotPosition } from "@/lib/braille";
@@ -62,7 +66,7 @@ export const LOADER_CSS = `
 #mg-loader [data-letter][data-on]{opacity:1;transform:none}
 .mg-pct{font-size:30px;font-weight:700;font-variant-numeric:tabular-nums}
 .mg-bar{width:min(400px,70vw);height:8px;border-radius:4px;background:#3A3F45;overflow:hidden}
-.mg-bar i{display:block;height:100%;width:0;border-radius:4px;background:#FFC94A;transition:width .2s linear}
+.mg-bar i{display:block;height:100%;width:0;border-radius:4px;background:#FFC94A}
 .mg-progress{display:flex;flex-direction:column;align-items:center;gap:20px}
 .mg-slow{margin:8px 0 0;font-size:22px;font-weight:700}
 .mg-slow:empty{display:none}
@@ -70,23 +74,30 @@ export const LOADER_CSS = `
 `;
 
 // Kept small and plain (ES2017): it runs before anything else on the page.
+// window.__mgLoader keeps the timeline (when each dot appeared), for the timing checks.
 export const LOADER_JS = `(function(){
 var L=document.getElementById("mg-loader");if(!L)return;
 var dots=L.querySelectorAll("[data-dot]"),letters=L.querySelectorAll("[data-letter]"),cells=[3,1,4,1,4,1];
 var P=L.querySelector("[data-progress]"),pct=L.querySelector("[data-pct]"),bar=L.querySelector("[data-bar]"),slow=L.querySelector("[data-slow]");
-var t0=performance.now(),total=0,done=0,shown=0,best=0,domDone=false,ended=false;
+var t0=performance.now(),total=0,done=0,real=0,shown=0,last=t0,domDone=false,full=0,ended=false;
 var still=matchMedia("(prefers-reduced-motion: reduce)").matches;
-function draw(){
- var p=total?done/total:0;if(p<best)p=best;best=p;
- var n=Math.min(14,Math.floor(p*14+1e-9));
- for(var i=shown;i<n;i++)dots[i].setAttribute("data-on","");
- if(n!==shown)P.setAttribute("aria-valuenow",String(Math.round(n/14*100)));
- shown=n;
+var first=true;try{first=!sessionStorage.getItem("mg-loaded");sessionStorage.setItem("mg-loaded","1");}catch(e){}
+var MIN=first?1600:1000,RATE=0.001,HOLD=300;
+var log=window.__mgLoader={firstVisit:first,frames:[],slow:false};
+function target(){var p=total?done/total:0;if(domDone&&done>=total)p=1;return Math.max(real,p);}
+function frame(now){
+ real=target();
+ var d=Math.min(real,shown+RATE*(now-last),(now-t0)/MIN);if(d<shown)d=shown;last=now;
+ var before=Math.floor(shown*14+1e-9),n=Math.min(14,Math.floor(d*14+1e-9));shown=d;
+ for(var i=before;i<n;i++){dots[i].setAttribute("data-on","");log.frames.push([Math.round(now-t0),i+1,Math.round(d*100)]);}
+ if(n!==before)P.setAttribute("aria-valuenow",String(Math.round(n/14*100)));
  for(var c=0,k=0;c<6;c++){k+=cells[c];if(n>=k)letters[c].setAttribute("data-on","");}
- var shownPct=Math.round(p*100);pct.textContent=shownPct;bar.style.width=shownPct+"%";
+ var v=Math.round(d*100);pct.textContent=v;bar.style.width=v+"%";
+ if(d>=1){if(!full)full=now;if(now-full>=HOLD){hide(now);return;}}
+ requestAnimationFrame(frame);
 }
-function tick(){done++;draw();if(domDone&&done>=total)finish();}
-function add(promise){total++;draw();promise.then(tick,tick);}
+function tick(){done++;}
+function add(promise){total++;promise.then(tick,tick);}
 function settle(el,ev){return new Promise(function(r){el.addEventListener(ev||"load",r);el.addEventListener("error",r);});}
 function loaded(url){try{return performance.getEntriesByName(url).length>0;}catch(e){return false;}}
 if(document.fonts&&document.fonts.load){
@@ -101,17 +112,15 @@ document.addEventListener("DOMContentLoaded",function(){
   if((el.tagName==="IMG"&&el.complete)||(url&&loaded(url))){total++;done++;}
   else add(settle(el));
  }
- domDone=true;draw();if(done>=total)finish();
+ domDone=true;
 });
-function finish(){
- if(ended)return;ended=true;best=1;draw();
- setTimeout(hide,Math.max(0,800-(performance.now()-t0)));
-}
-function hide(){
- window.__mgLoader={shownMs:Math.round(performance.now()-t0),slow:slow.textContent!==""};
+function hide(now){
+ if(ended)return;ended=true;
+ log.shownMs=Math.round(now-t0);log.fullAt=Math.round(full-t0);
  if(still){L.hidden=true;return;}
  L.classList.add("mg-out");setTimeout(function(){L.hidden=true;},450);
 }
-setTimeout(function(){if(!ended)slow.textContent="Slow connection. Still loading\u2026";},8000);
-setTimeout(finish,20000);
+setTimeout(function(){if(!ended){slow.textContent="Slow connection. Still loading\\u2026";log.slow=true;}},8000);
+setTimeout(function(){real=1;domDone=true;total=done;},20000);
+requestAnimationFrame(frame);
 })();`;

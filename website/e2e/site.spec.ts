@@ -38,20 +38,41 @@ for (const size of WIDTHS) {
   }
 }
 
-test("loader: a progressbar in the first HTML, at least 0.8 s on screen, then gone", async ({ page, request }) => {
+type Timeline = { firstVisit: boolean; frames: [number, number, number][]; shownMs: number; fullAt: number; slow: boolean };
+const timeline = (page: Page) => page.evaluate(() => (window as unknown as { __mgLoader: Timeline }).__mgLoader);
+
+function smooth(t: Timeline) {
+  // Every dot, in order, never more than about 10% per 100 ms (a dot is 1/14 ≈ 7.1%).
+  expect(t.frames.map((f) => f[1])).toEqual(Array.from({ length: 14 }, (_, i) => i + 1));
+  for (let i = 1; i < t.frames.length; i++) {
+    const [ms, , pct] = t.frames[i];
+    const [ms0, , pct0] = t.frames[i - 1];
+    expect(pct - pct0, `dot ${i + 1}`).toBeLessThanOrEqual(Math.max(8, ((ms - ms0) / 100) * 10 + 2));
+  }
+}
+
+test("loader: a progressbar in the first HTML, fills smoothly over at least 1.6 s, holds, then goes", async ({ page, request }) => {
   const html = await (await request.get("/")).text();
   expect(html).toContain('role="progressbar"');
   expect(html).toContain('aria-label="Loading Magana"');
-  expect(html.indexOf('id="mg-loader"')).toBeLessThan(html.indexOf("/_next/static/chunks/") === -1 ? Infinity : html.lastIndexOf("<main"));
   await ready(page, "/");
-  const info = await page.evaluate(() => (window as unknown as { __mgLoader: { shownMs: number; slow: boolean } }).__mgLoader);
-  expect(info.shownMs).toBeGreaterThanOrEqual(800);
-  // Finished on real progress, not on the 20 s fallback (a nomodule script once held it there).
-  expect(info.shownMs).toBeLessThan(8000);
-  expect(info.slow).toBe(false);
-  expect(await page.locator("[data-dot][data-on]").count()).toBe(14);
+  const t = await timeline(page);
+  expect(t.firstVisit).toBe(true);
+  smooth(t);
+  expect(t.fullAt).toBeGreaterThanOrEqual(1600);
+  expect(t.shownMs - t.fullAt).toBeGreaterThanOrEqual(300);  // "magana" held complete
+  expect(t.shownMs).toBeLessThan(8000);                      // finished on real progress
+  expect(t.slow).toBe(false);
   expect(await page.locator("[data-letter][data-on]").count()).toBe(6);
   expect(await page.locator("[data-progress]").getAttribute("aria-valuenow")).toBe("100");
+
+  await page.reload();
+  await expect(page.locator("#mg-loader")).toBeHidden({ timeout: 25_000 });
+  const again = await timeline(page);
+  expect(again.firstVisit).toBe(false);
+  smooth(again);
+  expect(again.fullAt).toBeGreaterThanOrEqual(1000);
+  expect(again.fullAt).toBeLessThan(1600);
 });
 
 test("loader: with reduced motion, no pop and no fade", async ({ browser }) => {
@@ -63,6 +84,10 @@ test("loader: with reduced motion, no pop and no fade", async ({ browser }) => {
   });
   expect(transitions).toEqual(["0s", "0s"]);
   await expect(page.locator("#mg-loader")).toBeHidden({ timeout: 25_000 });
+  // The fill stays (only pop and fade go): still in order, still at least 1.6 s.
+  const t = await page.evaluate(() => (window as unknown as { __mgLoader: Timeline }).__mgLoader);
+  smooth(t);
+  expect(t.fullAt).toBeGreaterThanOrEqual(1600);
   await page.close();
 });
 
