@@ -151,6 +151,43 @@ curl https://18-130-12-34.sslip.io/health
 
 The containers restart by themselves when the instance starts (`restart: unless-stopped`).
 
+## 8a. Automatic deploys from GitHub (CI/CD)
+
+Every push runs the tests in GitHub Actions (`.github/workflows/ci.yml`: backend `pytest`, `flutter analyze`, `flutter test`, portal lint). On `main`, once they all pass, the `deploy` job:
+
+1. Builds the PWA and the teacher portal with **placeholders instead of keys**, and puts them on the `web-build` release (`magana-web.tar.gz`).
+2. Signs in to AWS with **OIDC**: GitHub stores no AWS key, and only `main` of this repository can use the role.
+3. Asks **Systems Manager** to run, on the instance, `git merge --ff-only <commit>` and then `deploy/update.sh`. It pulls Ibà, rebuilds, and waits for `/health`. **If health fails, it goes back to the previous commit.** Then it installs the PWA and portal, filling in the keys from the server's `.env`. GitHub doesn't need SSH, so port 22 stays limited to your IP.
+4. Checks from outside: `/health` answers, a call without the key gets 401, and `/app/` loads.
+
+No server key is in GitHub. All of this is free: Systems Manager Run Command, IAM and OIDC cost nothing, and Actions is free for a public repository.
+
+**One-time setup** (console, account "Magana"):
+
+1. **IAM → Identity providers → Add provider → OpenID Connect.** Provider URL `https://token.actions.githubusercontent.com`, audience `sts.amazonaws.com`.
+2. **IAM → Roles → Create role → Web identity.** Pick that provider and audience `sts.amazonaws.com`, then GitHub organization `jemiridaniel`, repository `magana`, branch `main`. Add no permissions, and name it `magana-github-deploy`. Then open the role and choose **Add permissions → Create inline policy → JSON** (fill in your account ID):
+   ```json
+   {
+     "Version": "2012-10-17",
+     "Statement": [
+       {"Effect": "Allow", "Action": "ssm:SendCommand", "Resource": [
+         "arn:aws:ec2:eu-west-2:<ACCOUNT_ID>:instance/i-0facf03cdaa771320",
+         "arn:aws:ssm:eu-west-2::document/AWS-RunShellScript"]},
+       {"Effect": "Allow", "Action": "ssm:GetCommandInvocation", "Resource": "*"}
+     ]
+   }
+   ```
+   Name it `magana-run-deploy`.
+3. **IAM → Roles → Create role → AWS service → EC2**, with the policy `AmazonSSMManagedInstanceCore`. Name it `magana-ec2-ssm`. Then go to **EC2 → the instance → Actions → Security → Modify IAM role**, choose `magana-ec2-ssm` and click **Update**. The SSM agent is already on Ubuntu. Within a few minutes the instance appears in **Systems Manager → Fleet Manager**.
+4. Set the repository variables (variables, not secrets: none of them is a key):
+   ```bash
+   gh variable set AWS_DEPLOY_ROLE_ARN --body arn:aws:iam::<ACCOUNT_ID>:role/magana-github-deploy
+   gh variable set MAGANA_INSTANCE_ID --body i-0facf03cdaa771320
+   gh variable set MAGANA_DOMAIN --body 35-178-64-255.sslip.io
+   ```
+
+The `deploy` job is skipped until `AWS_DEPLOY_ROLE_ARN` is set. To watch a deploy, run `gh run watch`. `scripts/deploy.sh`, `deploy-web.sh` and `deploy-portal.sh` still work by hand from your Mac over SSH.
+
 ## 9. Switching to PaddleOCR (one line in .env)
 
 > **Measure before real users.** Every number is now re-read from its own crop in PaddleOCR mode too, by Tesseract. The backend runs a start-up self-test and **refuses to start** if any number isn't re-read (docs/FINDINGS.md). PaddleOCR's memory use on 4 GiB and its real word positions have **not been measured** yet: check `docker stats` and read a few test pages first.
