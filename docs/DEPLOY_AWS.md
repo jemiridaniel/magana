@@ -178,7 +178,24 @@ No server key is in GitHub. All of this is free: Systems Manager Run Command, IA
    }
    ```
    Name it `magana-run-deploy`.
-3. **IAM → Roles → Create role → AWS service → EC2**, with the policy `AmazonSSMManagedInstanceCore`. Name it `magana-ec2-ssm`. Then go to **EC2 → the instance → Actions → Security → Modify IAM role**, choose `magana-ec2-ssm` and click **Update**. The SSM agent is already on Ubuntu. Within a few minutes the instance appears in **Systems Manager → Fleet Manager**.
+
+   Then **Trust relationships → Edit trust policy** (not a permissions policy: those refuse `Principal`). This repository uses GitHub's *immutable* subject, which carries the account and repo IDs, so the wizard's `repo:jemiridaniel/magana:…` never matches. Check the prefix with `gh api repos/jemiridaniel/magana/actions/oidc/customization/sub`:
+   ```json
+   {
+     "Version": "2012-10-17",
+     "Statement": [{
+       "Effect": "Allow",
+       "Principal": {"Federated": "arn:aws:iam::<ACCOUNT_ID>:oidc-provider/token.actions.githubusercontent.com"},
+       "Action": "sts:AssumeRoleWithWebIdentity",
+       "Condition": {"StringEquals": {
+         "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
+         "token.actions.githubusercontent.com:sub": "repo:jemiridaniel@94388185/magana@1431292597:ref:refs/heads/main"
+       }}
+     }]
+   }
+   ```
+   The symptom of a wrong `sub` is "Not authorized to perform sts:AssumeRoleWithWebIdentity".
+3. **IAM → Roles → Create role → AWS service → EC2**, with the policy `AmazonSSMManagedInstanceCore`. Name it `magana-ec2-ssm`. Then go to **EC2 → the instance → Actions → Security → Modify IAM role**, choose `magana-ec2-ssm` and click **Update**. The SSM agent is already on Ubuntu. Within a few minutes the instance appears in **Systems Manager → Fleet Manager**. The agent backs off after failing without a role: if the instance doesn't appear, reboot it (or run `sudo snap restart amazon-ssm-agent`).
 4. Set the repository variables (variables, not secrets: none of them is a key):
    ```bash
    gh variable set AWS_DEPLOY_ROLE_ARN --body arn:aws:iam::<ACCOUNT_ID>:role/magana-github-deploy
@@ -186,7 +203,7 @@ No server key is in GitHub. All of this is free: Systems Manager Run Command, IA
    gh variable set MAGANA_DOMAIN --body 35-178-64-255.sslip.io
    ```
 
-The `deploy` job is skipped until `AWS_DEPLOY_ROLE_ARN` is set. To watch a deploy, run `gh run watch`. `scripts/deploy.sh`, `deploy-web.sh` and `deploy-portal.sh` still work by hand from your Mac over SSH.
+The `deploy` job is skipped until `AWS_DEPLOY_ROLE_ARN` is set. First automatic deploy: 25 Oct 2026, about 1 minute on the server once the build finished. To watch a deploy, run `gh run watch`. `scripts/deploy.sh`, `deploy-web.sh` and `deploy-portal.sh` still work by hand from your Mac over SSH.
 
 ## 9. Switching to PaddleOCR (one line in .env)
 
