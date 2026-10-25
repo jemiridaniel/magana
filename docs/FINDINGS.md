@@ -13,6 +13,33 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · Website magana.ng: accessibility checks and the page loader on Slow 3G
+
+- **What:** the website in `website/` (Next.js static export, served by Caddy at https://magana.ng), built to the canvas boards "Page loader", "Home (desktop)" and "Home (phone)".
+  - Two additions to the boards: "Hear a sample" and "Your name in Braille".
+  - Three more pages: the privacy notice, the accessibility statement (new: `docs/ACCESSIBILITY.md`) and "Get the Android app", each built from its doc at build time.
+  - No cookies, analytics or trackers; the CSP allows the site's own origin only.
+- **axe** (WCAG 2.2 A and AA, best practices, and the 7:1 `color-contrast-enhanced` rule) at 1280 and 390 px on all 4 pages, with the phone menu open:
+  - First run: two best-practice findings, no WCAG or contrast failure. The accessibility bar was outside any landmark (now inside the header), and the doc pages skipped from h1 to h3 (headings no longer pushed down).
+  - Now **0 violations**, both locally and on the live site.
+- **64 px rule:** every visible button, form field and button-styled link is at least 64 px tall, and nothing scrolls sideways at 390 px. Checked on every page and width; passes.
+- **Lighthouse** (12.8.2, live site): **accessibility 100** on all 4 pages, mobile and desktop. Best practices 100 and SEO 100. Performance 97–100 on mobile and 80–82 on desktop: the loader's minimum 0.8 s counts against it.
+- **The loader: the first version finished on its 20 s fallback, not on real progress.** Next.js adds a `nomodule` script that modern browsers never load, so its load event never came. Fixed by skipping `nomodule` scripts. Locally the loader now finishes in about 1 s, and a test fails if it ever needs the fallback again.
+- **The loader on Slow 3G** (Chrome preset: 2 s latency, 400 kbit/s; cold cache; live site; 3 runs each at phone and desktop size; `website/scripts/slow3g.mjs`):
+
+  | | Before | After |
+  |---|---|---|
+  | Loader first paint | 4.7–19.9 s | **2.6–3.7 s** |
+  | Page ready | 13–28 s | **11.7–12.7 s** |
+
+  - "After" means with the CSS inline (`experimental.inlineCss`): the external stylesheet had been blocking the first paint.
+  - The first paint now comes about 2.0 s after the first byte: the emulated latency.
+  - The dots fill in steps as fonts, scripts and React arrive, and "Slow connection. Still loading…" shows at 8 s in every run, as designed.
+  - The HTML is 25 KB gzipped.
+- **Screen readers:** the accessibility tree was reviewed with Playwright's ARIA snapshot. The loader is a progressbar named "Loading Magana"; then come the skip link (the first Tab stop), banner, main with one h1 and h2/h3 sections, images with descriptions, named buttons and the footer. The Braille result is read once through a live region after typing pauses; the samples say exactly Magana's lines, including "unclear number" (a test checks this).
+- **Not done yet: a real VoiceOver pass.** It needs a person at a Mac or iPhone, not an automated check.
+- **Status:** live. Unreviewed by testers.
+
 ## 2026-10-25 · Safety: a smudged 8 read as "®" passed with no warning (fixed)
 
 - **What happened:** while making the website's sample pages, a team-made medicine label had the 8 of "Do not take more than 8 in 24 hours" smudged (Gaussian blur, radius 3).

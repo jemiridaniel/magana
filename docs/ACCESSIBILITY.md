@@ -25,7 +25,7 @@ Every release of the website is checked with:
 - a pass with a screen reader;
 - the page loader timed on a slow (3G) connection.
 
-The latest results are in the project's findings log (docs/FINDINGS.md).
+**Latest results (25 October 2026):** axe found no problems on any page at either width. Every button and field is at least 64 px tall. Lighthouse accessibility scores 100 on every page. On a slow 3G connection the loader appears within 2.6 to 3.7 seconds and the page is ready in about 12 seconds. A full VoiceOver pass by a person is still to come. Details are in the project's findings log (docs/FINDINGS.md).
 
 ## Known limits
 
