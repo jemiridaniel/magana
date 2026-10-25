@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
   images: { unoptimized: true },
   reactCompiler: true,
   poweredByHeader: false,
+  // CSS inline in the HTML: an external stylesheet blocks the first paint, which held the page
+  // loader back by 2–10 s on Slow 3G (docs/FINDINGS.md).
+  experimental: { inlineCss: true },
 };
 
 export default nextConfig;
