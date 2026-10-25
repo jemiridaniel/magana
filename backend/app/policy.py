@@ -1,8 +1,13 @@
 """Age tiers and what each tier may use.
 
 Standard  (18+)    own account, all features including WhatsApp, health and money papers
-Guided    (13-17)  account created by a school or guardian after consent; curriculum only
+Guided    (13-17)  linked to a class; curriculum only, once a guardian has agreed
 Classroom (<13)    no personal account; only teacher-run sessions
+
+A Guided learner whose guardian hasn't agreed yet (the teacher records consent in the portal)
+is "waiting": they may read schoolwork pages, and nothing else (no quiz, Explain, skills,
+library or class link). DRAFT, for Nurse Balogun's review (docs/FINDINGS.md, 25 Oct 2026):
+the design boards (A2) allow reading while waiting; before, nothing worked without consent.
 """
 from __future__ import annotations
 
@@ -15,6 +20,7 @@ class Tier(str, Enum):
     STANDARD = "standard"
     GUIDED = "guided"
     CLASSROOM = "classroom"
+    GUIDED_WAITING = "guided_waiting"  # never sent by the app: a Guided request without consent
 
 
 class Feature(str, Enum):
@@ -35,6 +41,7 @@ _ALLOWED = {
     Tier.STANDARD: set(Feature),
     Tier.GUIDED: {Feature.READ_SCHOOLWORK, Feature.EXPLAIN, Feature.QUIZ, Feature.SKILLS},
     Tier.CLASSROOM: {Feature.READ_SCHOOLWORK, Feature.QUIZ},
+    Tier.GUIDED_WAITING: {Feature.READ_SCHOOLWORK},
 }
 
 
@@ -56,20 +63,21 @@ def allowed(tier: Tier, feature: Feature) -> bool:
 
 def require(tier: Tier, feature: Feature) -> None:
     if not allowed(tier, feature):
-        raise CodedError("not_allowed_for_tier")
+        # Waiting for a guardian: say so, rather than "not for your account".
+        raise CodedError("consent_required" if tier is Tier.GUIDED_WAITING else "not_allowed_for_tier")
 
 
 def check_request(tier: Tier, guardian_consent: bool, teacher_session: bool) -> Tier:
-    """What a request may claim: a Guided tier needs a guardian's consent and a Classroom
-    tier a teacher-run session, or it is refused.
+    """What a request may claim: a Guided tier without a guardian's consent is "waiting"
+    (schoolwork reading only), and a Classroom tier needs a teacher-run session.
 
-    The app sends these with every request. Until accounts exist (consent recorded by the
-    school in the teacher portal), this is the app's word for it; the rule is still enforced
-    on both sides so a buggy or modified client can't open health or money features to a
-    child.
+    For a learner linked to a class, consent is what the teacher recorded in the portal: the
+    caller (main.caller_tier) ignores the app's consent header when the link says otherwise.
+    The rule is enforced on both sides so a buggy or modified client can't open health or
+    money features to a child.
     """
     if tier is Tier.GUIDED and not guardian_consent:
-        raise CodedError("consent_required")
+        return Tier.GUIDED_WAITING
     if tier is Tier.CLASSROOM and not teacher_session:
         raise CodedError("teacher_session_required")
     return tier

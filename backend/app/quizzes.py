@@ -1,6 +1,9 @@
 """Teacher-made quizzes: saved by the teacher portal and assigned to one class session.
 A teacher's quiz reaches only that session: the teacher opens it on a learner's phone with
-the session's code (shown in the portal when assigning). Never everyone at a class level. Bundled sample packs use the same question shape
+the session's code (shown in the portal when assigning). Never everyone at a class level.
+Each quiz belongs to the teacher who wrote it (and their school); a teacher sees only their
+own, a school admin the school's. Session codes are 6 digits (codes.py), stored as a keyed
+hash plus a sealed copy for their teacher. Bundled sample packs use the same question shape
 (app/assets/quiz/).
 
 Quizzes are teacher content, never learner data: no names, answers or scores are stored
@@ -19,7 +22,7 @@ from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-from . import curriculum
+from . import codes, curriculum
 
 LANGUAGES = ("en", "ha", "yo", "ig")
 
@@ -83,19 +86,18 @@ class QuizIn(BaseModel):
 
 class Quiz(QuizIn):
     id: str
+    owner: str | None = None       # the teacher (staff id) who wrote it
+    school_id: str | None = None
     status: Literal["draft", "assigned"] = "draft"
     session: str | None = None
-    session_code: str | None = None  # the code that opens this class session in the app
+    session_lookup: str | None = None  # keyed hash of the session's code (codes.lookup)
+    session_sealed: str | None = None  # the code itself, sealed, for its teacher only
     updated_at: str
 
-
-# Session codes: 6 characters without look-alikes (no 0/O, 1/I/L), easy to read aloud.
-CODE_ALPHABET = "ABCDEFGHJKMNPQRSTUVWXYZ23456789"
-CODE_RE = re.compile(rf"^[{CODE_ALPHABET}]{{6}}$")
-
-
-def new_code() -> str:
-    return "".join(secrets.choice(CODE_ALPHABET) for _ in range(6))
+    def for_teacher(self) -> dict:
+        out = self.model_dump(exclude={"session_lookup", "session_sealed"})
+        out["session_code"] = codes.unseal(self.session_sealed) if self.session_sealed else None
+        return out
 
 
 class Problem(BaseModel):
@@ -197,9 +199,10 @@ class QuizStore:
     def _now() -> str:
         return datetime.now(timezone.utc).isoformat(timespec="seconds")
 
-    def create(self, data: QuizIn) -> Quiz:
+    def create(self, data: QuizIn, owner: str | None = None, school_id: str | None = None) -> Quiz:
         with self._lock:
-            return self._write(Quiz(**data.model_dump(), id=secrets.token_hex(6), updated_at=self._now()))
+            return self._write(Quiz(**data.model_dump(), id=secrets.token_hex(6), updated_at=self._now(),
+                                    owner=owner, school_id=school_id))
 
     def get(self, quiz_id: str) -> Quiz:
         try:
@@ -210,11 +213,12 @@ class QuizStore:
     def update(self, quiz_id: str, data: QuizIn) -> Quiz:
         with self._lock:
             old = self.get(quiz_id)
-            quiz = Quiz(**data.model_dump(), id=quiz_id, updated_at=self._now(), status=old.status, session=old.session)
-            quiz.session_code = old.session_code
+            quiz = Quiz(**data.model_dump(), id=quiz_id, updated_at=self._now(), status=old.status, session=old.session,
+                        owner=old.owner, school_id=old.school_id, session_lookup=old.session_lookup,
+                        session_sealed=old.session_sealed)
             if quiz.status == "assigned" and not ready(quiz):
                 # An assigned quiz must stay ready: a broken edit takes it out of the session.
-                quiz.status, quiz.session, quiz.session_code = "draft", None, None
+                quiz.status, quiz.session, quiz.session_lookup, quiz.session_sealed = "draft", None, None, None
             return self._write(quiz)
 
     def _codes(self) -> dict[str, str]:
@@ -224,27 +228,40 @@ class QuizStore:
         except FileNotFoundError:
             return {}
 
-    def session_code(self, class_id: str, session: str) -> str:
-        """One code per class session, the same for every quiz assigned to it."""
-        codes = self._codes()
+    def session_code(self, class_id: str, session: str) -> tuple[str, str]:
+        """One code per class session, the same for every quiz assigned to it: (lookup, sealed)."""
+        known = self._codes()
         key = f"{class_id}|{session}"
-        if key not in codes:
-            taken = set(codes.values())
-            code = new_code()
-            while code in taken:
-                code = new_code()
-            codes[key] = code
+        if not isinstance(known.get(key), dict):  # new, or an old letters code: make a digits one
+            taken = {v["lookup"] for v in known.values() if isinstance(v, dict)}
+            code = codes.new_code(lambda lk: lk in taken)
+            known[key] = {"lookup": codes.lookup(code), "sealed": codes.seal(code)}
             self.root.mkdir(parents=True, exist_ok=True)
             tmp = self.root / "session_codes.tmp"
-            tmp.write_text(json.dumps(codes, indent=2), encoding="utf-8")
+            tmp.write_text(json.dumps(known, indent=2), encoding="utf-8")
             tmp.replace(self.root / "session_codes.json")
-        return codes[key]
+        return known[key]["lookup"], known[key]["sealed"]
+
+    def rotate_session_code(self, class_id: str, session: str) -> None:
+        """A new code for the session; every quiz in it moves to the new one."""
+        with self._lock:
+            known = self._codes()
+            known.pop(f"{class_id}|{session}", None)
+            tmp = self.root / "session_codes.tmp"
+            self.root.mkdir(parents=True, exist_ok=True)
+            tmp.write_text(json.dumps(known, indent=2), encoding="utf-8")
+            tmp.replace(self.root / "session_codes.json")
+            lookup, sealed = self.session_code(class_id, session)
+            for q in self.all():
+                if q.class_id == class_id and q.session == session:
+                    q.session_lookup, q.session_sealed = lookup, sealed
+                    self._write(q)
 
     def assign(self, quiz_id: str, session: str) -> Quiz:
         with self._lock:
             quiz = self.get(quiz_id)
             quiz.status, quiz.session, quiz.updated_at = "assigned", session, self._now()
-            quiz.session_code = self.session_code(quiz.class_id, session)
+            quiz.session_lookup, quiz.session_sealed = self.session_code(quiz.class_id, session)
             return self._write(quiz)
 
     def all(self) -> list[Quiz]:

@@ -1,7 +1,5 @@
 import type { Metadata } from "next";
 import { Atkinson_Hyperlegible } from "next/font/google";
-import ServerBanner from "@/components/ServerBanner";
-import Sidebar from "@/components/Sidebar";
 import "./globals.css";
 
 const atkinson = Atkinson_Hyperlegible({
@@ -20,13 +18,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html lang="en-NG" className={atkinson.variable}>
       <body>
         <a className="skip-link" href="#main">Skip to main content</a>
-        <div className="shell">
-          <Sidebar />
-          <main id="main" className="main" tabIndex={-1}>
-            <ServerBanner />
-            <div className="content">{children}</div>
-          </main>
-        </div>
+        {children}
       </body>
     </html>
   );

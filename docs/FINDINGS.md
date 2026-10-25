@@ -13,6 +13,47 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · Accounts: teacher sign-in, schools and roles, class codes, consent in the portal (UNREVIEWED)
+
+> **Unreviewed.** For Nurse Balogun: the new "waiting for consent" rule, and the data the portal keeps (PRIVACY.md, "Teachers and schools"). Dr. Amos isn't needed for this one.
+
+- **Built** (`backend/app/portal_api.py`, `learner_api.py`, `accounts.py`, `codes.py`, `mailer.py`, `places.py`; portal pages Sign in, Register your school, Home, My classes, Learner, Teachers, School details, Consent records, Attendance, Learner progress, and the team's Schools to approve):
+  - **Sign-in:** email, then a 6-digit code valid for 10 minutes (SES from no-reply@magana.ng). Only invited emails get one, and the answer is the same either way, so the form doesn't reveal who has an account.
+    - 3 wrong codes lock that email for 5 minutes.
+    - A new code can be sent only after 45 s, and at most 5 an hour per email (sign-in requests are also limited per IP).
+    - The session is an HttpOnly, SameSite=Lax cookie (Secure in production), ended after 30 minutes idle or 12 hours.
+  - **Schools:** register with any email and a Nigerian mobile number. A new school stays pending until the Magana team approves it.
+    - Admins invite, edit and remove teachers; a teacher sees only their own classes.
+    - Removing or demoting an admin is refused if it leaves fewer than 2 (or the last one). Invitations expire after 7 days.
+    - Removing a teacher is refused until each of their classes has a new teacher; it then ends their sessions at once.
+    - Every change goes in the audit log.
+  - **Codes:** class, session and teacher codes are 6 digits, never an easy pattern. 804,062 of the 1,000,000 six-digit codes are allowed: none with a digit three times, two doubles (112233), a run of 4 (1234), a repeated unit (121212) or a mirror (123321).
+    - Stored as an HMAC (MAGANA_CODE_KEY), plus an AES-GCM copy for their own teacher. A test checks that no code is in the database in clear. Teachers can rotate any code.
+    - 3 wrong codes on a phone lock it for 5 minutes.
+  - **The class link:** a phone joins with the class code and gets a random token; the server keeps only its hash, and the teacher names the learner. Under 13 can't join (teacher sessions only).
+    - An under-18 can change class only with a teacher's own code, checked by the backend; adults change class freely.
+    - "Remove from class" needs a reason, unlinks the phone at once and keeps the term's records.
+    - "Guardian asked us to delete their data" creates a deletion request; once a school admin confirms, nothing about the learner remains. A test searches the whole database for the learner's ID, name, formats and figures; the first version of that test found the ID still in the audit log as the actor of "learner_joined" (fixed).
+  - **States and LGAs:** a bundled list (MIT, S34): 37 states and FCT, 774 LGAs, per-state counts tested.
+    - The source gives three same-name LGAs in different states the same Wikidata ID (Obi, Nasarawa, Surulere), so codes are Magana's own state-scoped ones (NG-LA-IKEJA).
+    - LGA is an ARIA combobox filtered by state: arrow keys, Enter, Escape, and "2 of Lagos’s 20 LGAs" announced.
+  - **The shared teacher key is gone:** quizzes belong to their teacher (a school admin sees the school's), and session codes are 6 digits, hashed. Quizzes saved under the old key have no teacher and are no longer shown (pilot test data only).
+- **Safety and consent change (DRAFT):**
+  - A learner aged 13 to 17 waiting for consent may **read schoolwork pages only**. Explain, quizzes, health, money and the class link stay closed until the teacher records the guardian's agreement (how and when; no guardian details). Before this, nothing worked without consent; the A2 board allows reading while waiting.
+  - For a linked learner, the app's consent header can't override the portal: a test sends "consent: yes" with a pending link and Explain is still refused.
+- **Checks:**
+  - Backend: 405 passed (34 new account tests, quizzes reworked for accounts).
+  - Portal end-to-end, desktop and phone: 38 passed. Every new page passes axe (WCAG 2.2 A/AA, AAA contrast, best practices) and the 64 px rule.
+  - The remove dialogs keep focus inside (Tab and Shift+Tab cycle), close on Escape and return focus to the button.
+- **Bugs the checks found, fixed:**
+  - Chrome's native modal let Tab leave the dialog (added a focus trap).
+  - Dialogs shared one title ID, so the Edit dialog was announced with the Remove dialog's title (each dialog now gets its own ID).
+  - A button's accessible name read "Remove from class : New learner".
+  - A long email made the sign-in page scroll sideways on phones.
+  - The API's 120-a-minute per-IP limit refused the portal's own calls (`429`). A school's teachers often share one connection, so the signed-in portal is now limited per session (300 a minute); sign-in keeps the IP limit.
+- **Not done yet:** SES needs the domain verified and the sandbox lifted (DEPLOY_AWS.md §8b), so sign-in emails won't send on the server until then. The app's side (onboarding, class code keypad, teacher code) comes next.
+- **Status:** open, unreviewed.
+
 ## 2026-10-25 · Hosting: website, PWA and portal to Cloudflare Pages; "the server is sleeping" instead of a blank error
 
 - **The move** (docs/DEPLOY_PAGES.md): magana.ng, www and app.magana.ng go to Cloudflare Pages, deployed by GitHub Actions after the tests pass. teachers.magana.ng follows once the portal has its own sign-in. Only api.magana.ng stays on EC2. The DNS changes are waiting for the Cloudflare token.

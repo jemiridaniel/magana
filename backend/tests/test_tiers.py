@@ -42,9 +42,18 @@ def test_adults_can(mode):
     assert read(ADULT, mode).status_code == 200
 
 
-def test_guided_without_guardian_consent_is_refused():
-    r = read({"X-Magana-Tier": "guided"})
+WAITING = {"X-Magana-Tier": "guided"}  # 13–17, guardian hasn't agreed yet
+
+
+def test_guided_waiting_for_consent_may_read_schoolwork_only():
+    # The A2 board: "Until then you can still read pages." Nothing else (DRAFT, Nurse Balogun).
+    assert read(WAITING).status_code == 200
+    for mode in ("health", "money", "letter"):
+        r = read(WAITING, mode)
+        assert r.status_code == 403 and r.json()["detail"] == {"code": "consent_required"}
+    r = client.post("/explain", json={"source_text": "Plants make food.", "lang": "en"}, headers=WAITING)
     assert r.status_code == 403 and r.json()["detail"] == {"code": "consent_required"}
+    assert client.get("/triage/questions", headers=WAITING).status_code == 403
 
 
 def test_classroom_without_a_teacher_session_is_refused():
@@ -66,8 +75,10 @@ def test_triage_is_for_adults_only(headers):
 
 def test_check_request_rules():
     assert policy.check_request(policy.Tier.STANDARD, False, False) is policy.Tier.STANDARD
+    assert policy.check_request(policy.Tier.GUIDED, True, False) is policy.Tier.GUIDED
+    assert policy.check_request(policy.Tier.GUIDED, False, False) is policy.Tier.GUIDED_WAITING
     with pytest.raises(policy.CodedError):
-        policy.check_request(policy.Tier.GUIDED, False, False)
+        policy.check_request(policy.Tier.CLASSROOM, False, False)
 
 
 def test_letter_mode_is_adults_only_and_gets_the_second_pass(monkeypatch):

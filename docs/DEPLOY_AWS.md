@@ -230,6 +230,50 @@ No server key is in GitHub. All of this is free: Systems Manager Run Command, IA
 
 The `deploy` job is skipped until `AWS_DEPLOY_ROLE_ARN` is set. First automatic deploy: 25 Oct 2026, about 1 minute on the server once the build finished. To watch a deploy, run `gh run watch`. `scripts/deploy.sh`, `deploy-web.sh` and `deploy-portal.sh` still work by hand from your Mac over SSH.
 
+## 8b. Email: AWS SES for teacher sign-in codes
+
+Teachers sign in with a 6-digit code sent from **no-reply@magana.ng** through Amazon SES in London. The server sends it with the instance's IAM role, so no email password is stored anywhere. Until this is done, "Send me a code" answers "We couldn’t send the email just now".
+
+**SES pricing:** $0.10 per 1,000 emails, which is a few cents a month for sign-ins (taken from the credit).
+
+1. **Verify the domain (DKIM)** in the console, region **Europe (London) eu-west-2**:
+   1. Go to **Amazon SES → Configuration → Identities → Create identity → Domain**, and enter `magana.ng`.
+   2. Under **Advanced DKIM settings**, choose **Easy DKIM**, **RSA_2048_BIT**, and tick **Enabled**. Don't tick "Publish DNS records to Route 53": the DNS is on Cloudflare.
+   3. Choose **Create identity**. SES shows **three CNAME records**, of the form `xxxx._domainkey.magana.ng` → `xxxx.dkim.amazonses.com`.
+2. **Add them in Cloudflare:**
+   1. Go to **dash.cloudflare.com → magana.ng → DNS → Records → Add record**, and add each one as a **CNAME**.
+   2. **Name:** only the part before `.magana.ng`, for example `xxxx._domainkey`. **Target:** the `…dkim.amazonses.com` value. **Proxy status: DNS only** (grey cloud). This matters: proxied DKIM records don't work.
+   3. Back in SES, the identity shows **Verified** and DKIM **Successful**, usually within an hour.
+3. **SPF and DMARC** (so Gmail and Yahoo trust the mail), in Cloudflare DNS:
+   - **TXT** `@` → `v=spf1 include:amazonses.com ~all`. If an SPF record already exists, add `include:amazonses.com` to it rather than making a second one.
+   - **TXT** `_dmarc` → `v=DMARC1; p=none; rua=mailto:maganasupport@gmail.com`.
+4. **Let the server send:** in **IAM → Roles → `magana-ec2-ssm` → Add permissions → Create inline policy → JSON**, paste this, with your account ID:
+   ```json
+   {
+     "Version": "2012-10-17",
+     "Statement": [{
+       "Effect": "Allow",
+       "Action": "ses:SendEmail",
+       "Resource": "arn:aws:ses:eu-west-2:<ACCOUNT_ID>:identity/magana.ng",
+       "Condition": {"StringEquals": {"ses:FromAddress": "no-reply@magana.ng"}}
+     }]
+   }
+   ```
+   Name it `magana-send-signin-email`.
+5. **Ask AWS to lift the sandbox.** A new SES account can only send to addresses you have verified.
+   1. Go to **SES → Account dashboard → Request production access**.
+   2. **Mail type:** Transactional. **Website URL:** `https://magana.ng`.
+   3. **Use case description**, for example: *"Magana for Teachers (teachers.magana.ng) sends one-time 6-digit sign-in codes and invitations to teachers that a school admin has invited. No marketing email. About 50–500 emails a month during the pilot. Recipients are only addresses a school admin entered; bounces and complaints are handled by removing the address from the school."*
+   4. AWS usually answers within a day. Until then, test with your own address: verify it under **Identities → Create identity → Email address**.
+6. **On the server** (`.env`), then `sudo docker compose -f docker-compose.prod.yml up -d`:
+   ```bash
+   MAGANA_MAIL=ses
+   MAIL_FROM=Magana for Teachers <no-reply@magana.ng>
+   MAGANA_PORTAL_URL=https://teachers.magana.ng
+   MAGANA_TEAM_EMAILS=<your email>          # the Magana team: approves new schools at /admin/
+   ```
+   `MAGANA_CODE_KEY` (which keys the class, session and teacher codes) is made by the deploy itself the first time (`deploy/update.sh`). Never change it later: every code would stop working.
+
 ## 9. Switching to PaddleOCR (one line in .env)
 
 > **Measure before real users.** Every number is now re-read from its own crop in PaddleOCR mode too, by Tesseract. The backend runs a start-up self-test and **refuses to start** if any number isn't re-read (docs/FINDINGS.md). PaddleOCR's memory use on 4 GiB and its real word positions have **not been measured** yet: check `docker stats` and read a few test pages first.

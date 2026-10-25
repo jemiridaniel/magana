@@ -2,8 +2,8 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore, type ChangeEvent } from "react";
-import { isPrimary, level as levelOf, maxOptions, PRIMARY_WORD_HINT, subjectNames, subjectsFor } from "@/lib/curriculum";
-import { classes, sessions } from "@/lib/data";
+import { isPrimary, level as levelOf, maxOptions, PRIMARY_WORD_HINT, subjectNames, subjectsFor, type LevelId } from "@/lib/curriculum";
+import { portal, type ClassInfo } from "@/lib/portal";
 import { messageFor } from "@/lib/messages";
 import {
   assignQuiz,
@@ -36,14 +36,21 @@ const languageChoices: { id: string; label: string; langs: Lang[] }[] = [
 
 const noSubscribe = () => () => {};
 
-const firstClass = classes.find((c) => c.mode === "Classroom") ?? classes[0];
+const today = () => new Date().toISOString().slice(0, 10);
+/** "2026-10-30" → "Thu 30 Oct 2026": the session's name in the portal and on the code. */
+const DAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const sessionName = (day: string) => {
+  const d = new Date(`${day}T12:00:00`);
+  return `${DAYS[d.getDay()]} ${d.getDate()} ${MONTHS[d.getMonth()]} ${d.getFullYear()}`;
+};
 
 function blankQuiz(): QuizDraft {
   return {
     title: "",
-    class_id: firstClass.id,
-    level: firstClass.level,
-    subject: subjectsFor(firstClass.level)[0],
+    class_id: "",
+    level: "p5",
+    subject: subjectsFor("p5")[0],
     languages: ["en"],
     questions: [newQuestion("q1")], // a fixed id: this runs while rendering
   };
@@ -59,7 +66,9 @@ export default function QuizEditor() {
   const [status, setStatus] = useState<"draft" | "assigned">("draft");
   const [code, setCode] = useState<string | null>(null);
   const [index, setIndex] = useState(0);
-  const [sessionPick, setSession] = useState("");
+  const [classes, setClasses] = useState<ClassInfo[]>([]);
+  const [sessionDay, setSessionDay] = useState(today());
+  const [assignedTo, setAssignedTo] = useState<string | null>(null);
   const [message, setMessage] = useState<{ text: string; error?: boolean } | null>(null);
   const [busy, setBusy] = useState(false);
   // Known only in the browser: false while rendering on the server.
@@ -77,21 +86,31 @@ export default function QuizEditor() {
         setId(q.id);
         setStatus(q.status);
         setCode(q.session_code);
-        setSession(sessions.find((s) => s.label === q.session)?.id ?? "");
+        setAssignedTo(q.session);
       })
       .catch((e) => setMessage({ text: messageFor(e instanceof QuizError ? e.code : "failed"), error: true }));
   }, []);
 
-  const cls = classes.find((c) => c.id === quiz.class_id) ?? firstClass;
+  // Your classes (My classes); a new quiz starts on the first one.
+  useEffect(() => {
+    portal.classes().then((cs) => {
+      setClasses(cs);
+      setQuiz((old) => {
+        if (old.class_id || !cs.length) return old;
+        const c = cs[0];
+        const subjects = subjectsFor(c.level as LevelId);
+        return { ...old, class_id: c.id, level: c.level as LevelId, subject: subjects.includes(old.subject) ? old.subject : subjects[0] };
+      });
+    }).catch(() => setClasses([]));
+  }, []);
+
+  const cls = classes.find((c) => c.id === quiz.class_id);
   const primary = isPrimary(quiz.level);
   const most = maxOptions(quiz.level);
   const problems = useMemo(() => check(quiz), [quiz]);
   const q = quiz.questions[index];
   const second = quiz.languages.find((l) => l !== "en");
-  const classSessions = sessions.filter((s) => s.classId === cls.id);
-  // The picked session if it belongs to this class, else the class's first.
-  const session = classSessions.some((s) => s.id === sessionPick) ? sessionPick : (classSessions[0]?.id ?? "");
-  const sessionLabel = classSessions.find((s) => s.id === session)?.label ?? session;
+  const sessionLabel = sessionName(sessionDay);
 
   const update = (change: Partial<QuizDraft>) => {
     setQuiz((old) => ({ ...old, ...change }));
@@ -102,10 +121,10 @@ export default function QuizEditor() {
 
   function chooseClass(classId: string) {
     const c = classes.find((x) => x.id === classId)!;
-    const subjects = subjectsFor(c.level);
+    const subjects = subjectsFor(c.level as LevelId);
     update({
       class_id: c.id,
-      level: c.level,
+      level: c.level as LevelId,
       subject: subjects.includes(quiz.subject) ? quiz.subject : subjects[0],
     });
   }
@@ -169,8 +188,9 @@ export default function QuizEditor() {
       const assigned = await assignQuiz(saved, sessionLabel);
       setStatus(assigned.status);
       setCode(assigned.session_code);
+      setAssignedTo(sessionLabel);
       setMessage({
-        text: `Assigned to ${cls.name} for ${sessionLabel}. Session code: ${assigned.session_code}.${
+        text: `Assigned to ${cls?.name ?? "the class"} for ${sessionLabel}. Session code: ${assigned.session_code}.${
           savesToServer() ? "" : " (Preview: saved in this browser only.)"
         }`,
       });
@@ -303,7 +323,7 @@ export default function QuizEditor() {
             </span>
           </div>
         </div>
-        {cls.mode === "Classroom" && (
+        {cls?.mode === "classroom" && (
           <div className="callout" role="note">
             <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M12 10.5v6M12 7v.5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" /></svg>
             <p>
@@ -311,7 +331,7 @@ export default function QuizEditor() {
             </p>
           </div>
         )}
-        {primary && cls.mode !== "Classroom" && (
+        {primary && cls?.mode !== "classroom" && (
           <div className="callout" role="note">
             <p><strong>{levelOf(quiz.level).name} is a primary class.</strong> Magana uses a slower voice, short sentences and two or three options.</p>
           </div>
@@ -405,7 +425,7 @@ export default function QuizEditor() {
             disabled={q.options.length >= most}
             onClick={() => updateQuestion({ options: [...q.options, ""] })}
           >
-            {q.options.length >= most ? `+ Add option · ${most} is the most for ${cls.name}` : "+ Add option"}
+            {q.options.length >= most ? `+ Add option · ${most} is the most for ${cls?.name ?? "this class"}` : "+ Add option"}
           </button>
           <div className="form-row">
             <div className="field">
@@ -495,18 +515,17 @@ export default function QuizEditor() {
           </section>
           <section className="card form-grid" aria-labelledby="assign-h">
             <h2 id="assign-h">Assign</h2>
-            {classSessions.length ? (
+            {cls ? (
               <div className="field">
-                <label htmlFor="quiz-session">Session</label>
-                <select id="quiz-session" className="select" value={session} onChange={(e) => setSession(e.target.value)}>
-                  {classSessions.map((s) => (
-                    <option key={s.id} value={s.id}>{s.label}</option>
-                  ))}
-                </select>
+                <label htmlFor="quiz-session">Class session (date)</label>
+                <input id="quiz-session" type="date" className="input" value={sessionDay} min={today()}
+                       onChange={(e) => setSessionDay(e.target.value || today())} aria-describedby="quiz-session-hint" />
+                <span id="quiz-session-hint" className="hint">Quizzes for the same class and day share one session code.</span>
               </div>
             ) : (
-              <p className="note">{cls.name} has no sessions yet. Add one in Attendance.</p>
+              <p className="note">Add a class in My classes first: a quiz belongs to one of your classes.</p>
             )}
+            {assignedTo && status === "assigned" && <p className="note">Assigned for {assignedTo}.</p>}
             {status === "assigned" && code && (
               <div className="session-code-box">
                 <p>

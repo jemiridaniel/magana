@@ -120,9 +120,6 @@ export function spokenQuestion(quiz: QuizDraft, index: number): string {
 // ---------- saving
 
 const KEY = "magana.portal.quizzes"; // the offline preview only
-const teacherHeader: Record<string, string> = process.env.NEXT_PUBLIC_TEACHER_KEY
-  ? { "X-Magana-Teacher-Key": process.env.NEXT_PUBLIC_TEACHER_KEY }
-  : {};
 const apiKeyHeader: Record<string, string> = process.env.NEXT_PUBLIC_API_KEY
   ? { "X-Magana-Key": process.env.NEXT_PUBLIC_API_KEY }
   : {};
@@ -143,7 +140,7 @@ async function call<T>(method: string, path: string, body?: unknown): Promise<T>
   try {
     r = await apiFetch(path, {
       method,
-      headers: { "Content-Type": "application/json", ...apiKeyHeader, ...teacherHeader },
+      headers: { "Content-Type": "application/json", ...apiKeyHeader },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   } catch (e) {

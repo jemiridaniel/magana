@@ -16,8 +16,8 @@ const nextConfig: NextConfig = exported
       reactCompiler: true,
     }
   : {
-      cacheComponents: true,
-      partialPrefetching: true,
+      // The same app as the static export (no server components to cache: every page is a
+      // client page that calls the API).
       reactCompiler: true,
     };
 

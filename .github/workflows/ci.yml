@@ -110,12 +110,11 @@ jobs:
         run: |
           MAGANA_API="https://api.$DOMAIN" MAGANA_API_KEY=__MAGANA_API_KEY__ scripts/build-web.sh
           (cd portal && npm ci && PORTAL_EXPORT=1 NEXT_PUBLIC_API_URL="https://api.$DOMAIN" \
-            NEXT_PUBLIC_API_KEY=__MAGANA_API_KEY__ NEXT_PUBLIC_TEACHER_KEY=__MAGANA_TEACHER_KEY__ \
+            NEXT_PUBLIC_API_KEY=__MAGANA_API_KEY__ \
             npx next build)
           mkdir -p bundle && cp -r app/build/web bundle/web && cp -r portal/out bundle/teachers
           if [ -d website ]; then (cd website && npm ci && npx next build) && cp -r website/out bundle/site; fi
           grep -rqF __MAGANA_API_KEY__ bundle/web
-          grep -rqF __MAGANA_TEACHER_KEY__ bundle/teachers
           tar -czf magana-web.tar.gz -C bundle .
           echo "SUM=$(sha256sum magana-web.tar.gz | cut -d' ' -f1)" >> "$GITHUB_ENV"
 

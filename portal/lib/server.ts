@@ -13,7 +13,12 @@ export class ServerDown extends Error {
   }
 }
 
+let last: ServerState = "ok";
+/** The last state seen, for a banner that appears after the failed call. */
+export const lastServerState = () => last;
+
 function announce(state: ServerState) {
+  last = state;
   if (typeof window !== "undefined") window.dispatchEvent(new CustomEvent<ServerState>(SERVER_EVENT, { detail: state }));
 }
 

@@ -325,6 +325,36 @@ class AppLocalizationsIg extends AppLocalizations {
       'Enweghị m ike ikwenye ụfọdụ nọmba na nkọwa a, ya mere aga m agụ peeji ahụ otú o si dị.';
 
   @override
+  String get msg_class_code_wrong =>
+      'Koodu klaasị ahụ ezighị ezi. Lelee ya na onye nkuzi gị.';
+
+  @override
+  String get msg_code_locked =>
+      'Koodu ezighị ezi adịla ọtụtụ. Biko chere nkeji 5, wee nwaa ọzọ.';
+
+  @override
+  String get msg_teacher_code_needed =>
+      'Naanị onye nkuzi gị nwere ike ibuga gị na klaasị ọzọ. Rịọ ha ka ha tinye koodu onye nkuzi ha.';
+
+  @override
+  String get msg_teacher_code_wrong =>
+      'Koodu onye nkuzi ahụ ezighị ezi. Rịọ onye nkuzi gị ka o lelee ya.';
+
+  @override
+  String get msg_class_has_no_accounts =>
+      'Klaasị a nwere naanị nkuzi onye nkuzi gị na-eduzi. Jụọ onye nkuzi gị.';
+
+  @override
+  String get msg_not_linked =>
+      'Ekwentị a anọghị na klaasị ugbu a. Ị ka nwere ike ịgụ peeji.';
+
+  @override
+  String get msg_class_joined => 'Ị banyela na klaasị ahụ.';
+
+  @override
+  String get msg_class_changed => 'Agbanweela klaasị gị.';
+
+  @override
   String get msg_explain_wrong_language =>
       'Enweghị m ike ịkọwa nke a n\'asụsụ gị, ya mere aga m agụ peeji ahụ otú o si dị.';
 

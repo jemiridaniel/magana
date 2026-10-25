@@ -324,6 +324,36 @@ class AppLocalizationsYo extends AppLocalizations {
       'Mi ò lè fìdí àwọn nọ́ńbà kan nínú àlàyé yìí múlẹ̀, nítorí náà màá ka ojú-ìwé náà gẹ́gẹ́ bí ó ṣe wà.';
 
   @override
+  String get msg_class_code_wrong =>
+      'Nọ́ńbà kíláàsì yẹn kò tọ̀nà. Yẹ̀ ẹ́ wò pẹ̀lú olùkọ́ rẹ.';
+
+  @override
+  String get msg_code_locked =>
+      'Àwọn kóòdù tí kò tọ̀nà ti pọ̀ jù. Jọ̀wọ́ dúró fún ìṣẹ́jú 5, lẹ́yìn náà tún gbìyànjú.';
+
+  @override
+  String get msg_teacher_code_needed =>
+      'Olùkọ́ rẹ nìkan ló lè gbé ọ lọ sí kíláàsì mìíràn. Ní kí wọ́n tẹ kóòdù olùkọ́ wọn.';
+
+  @override
+  String get msg_teacher_code_wrong =>
+      'Kóòdù olùkọ́ yẹn kò tọ̀nà. Ní kí olùkọ́ rẹ yẹ̀ ẹ́ wò.';
+
+  @override
+  String get msg_class_has_no_accounts =>
+      'Kíláàsì yìí ní ẹ̀kọ́ tí olùkọ́ rẹ ń darí nìkan. Béèrè lọ́wọ́ olùkọ́ rẹ.';
+
+  @override
+  String get msg_not_linked =>
+      'Fóònù yìí kò sí ní kíláàsì kankan báyìí. O ṣì lè ka ojú-ìwé.';
+
+  @override
+  String get msg_class_joined => 'O ti wọ kíláàsì náà.';
+
+  @override
+  String get msg_class_changed => 'A ti yí kíláàsì rẹ padà.';
+
+  @override
   String get msg_explain_wrong_language =>
       'Mi ò lè ṣàlàyé èyí ní èdè rẹ, nítorí náà màá ka ojú-ìwé náà gẹ́gẹ́ bí ó ṣe wà.';
 

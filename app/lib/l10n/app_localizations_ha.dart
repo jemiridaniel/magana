@@ -325,6 +325,36 @@ class AppLocalizationsHa extends AppLocalizations {
       'Ban iya tabbatar da wasu lambobi a wannan bayanin ba, don haka zan karanta shafin daidai yadda yake.';
 
   @override
+  String get msg_class_code_wrong =>
+      'Lambar ajin nan ba daidai ba ce. Duba ta tare da malaminka.';
+
+  @override
+  String get msg_code_locked =>
+      'Lambobi marasa kyau sun yi yawa. Don Allah jira minti 5, sannan ka sake gwadawa.';
+
+  @override
+  String get msg_teacher_code_needed =>
+      'Malaminka ne kawai zai iya mayar da kai wani aji. Roƙe shi ya shigar da lambar malami.';
+
+  @override
+  String get msg_teacher_code_wrong =>
+      'Lambar malamin nan ba daidai ba ce. Roƙi malaminka ya duba ta.';
+
+  @override
+  String get msg_class_has_no_accounts =>
+      'Wannan ajin yana da darussan da malaminka ke jagoranta kawai. Tambayi malaminka.';
+
+  @override
+  String get msg_not_linked =>
+      'Wannan wayar ba ta cikin aji yanzu. Har yanzu kana iya karanta shafuka.';
+
+  @override
+  String get msg_class_joined => 'Ka shiga ajin.';
+
+  @override
+  String get msg_class_changed => 'An canza ajinka.';
+
+  @override
   String get msg_explain_wrong_language =>
       'Ban iya bayyana wannan da harshenka ba, don haka zan karanta shafin daidai yadda yake.';
 

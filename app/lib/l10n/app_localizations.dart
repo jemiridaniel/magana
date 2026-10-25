@@ -588,6 +588,54 @@ abstract class AppLocalizations {
   /// **'I can\'t confirm some numbers in this explanation, so I\'ll read the page exactly instead.'**
   String get msg_numbers_unconfirmed;
 
+  /// No description provided for @msg_class_code_wrong.
+  ///
+  /// In en, this message translates to:
+  /// **'That class code isn\'t right. Check it with your teacher.'**
+  String get msg_class_code_wrong;
+
+  /// No description provided for @msg_code_locked.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many wrong codes. Please wait 5 minutes, then try again.'**
+  String get msg_code_locked;
+
+  /// No description provided for @msg_teacher_code_needed.
+  ///
+  /// In en, this message translates to:
+  /// **'Only your teacher can move you to another class. Ask them to enter their teacher code.'**
+  String get msg_teacher_code_needed;
+
+  /// No description provided for @msg_teacher_code_wrong.
+  ///
+  /// In en, this message translates to:
+  /// **'That teacher code isn\'t right. Ask your teacher to check it.'**
+  String get msg_teacher_code_wrong;
+
+  /// No description provided for @msg_class_has_no_accounts.
+  ///
+  /// In en, this message translates to:
+  /// **'This class only has lessons your teacher runs. Ask your teacher.'**
+  String get msg_class_has_no_accounts;
+
+  /// No description provided for @msg_not_linked.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone isn\'t in a class now. You can still read pages.'**
+  String get msg_not_linked;
+
+  /// No description provided for @msg_class_joined.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re in the class.'**
+  String get msg_class_joined;
+
+  /// No description provided for @msg_class_changed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your class has changed.'**
+  String get msg_class_changed;
+
   /// No description provided for @msg_explain_wrong_language.
   ///
   /// In en, this message translates to:

@@ -3,13 +3,13 @@
 // Shown whenever a call finds Magana's server asleep (stopped to save money, or restarting).
 // role="alert": screen readers hear it once, as soon as it appears.
 import { useEffect, useState } from "react";
-import { checkServer, SERVER_EVENT, type ServerState } from "@/lib/server";
+import { checkServer, lastServerState, SERVER_EVENT, type ServerState } from "@/lib/server";
 
 export const SLEEPING = "Magana’s server is sleeping. Please try again later.";
 export const OFFLINE = "You’re offline. Check the internet connection, then try again.";
 
 export default function ServerBanner() {
-  const [state, setState] = useState<ServerState>("ok");
+  const [state, setState] = useState<ServerState>(lastServerState);
   const [checking, setChecking] = useState(false);
 
   useEffect(() => {

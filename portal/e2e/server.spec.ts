@@ -15,6 +15,9 @@ test("API down: the portal says the server is sleeping, in an alert, and Try aga
   await page.unroute(`${apiUrl}/**`);
   await alert.getByRole("button", { name: "Try again" }).click();
   await expect(alert).toBeHidden();
+  // Awake again: the portal carries on (to sign in, as nobody is signed in here).
+  await page.getByRole("button", { name: "Open the portal again" }).click();
+  await expect(page).toHaveURL(/\/sign-in\/?$/);
 });
 
 test("a 503 page from the proxy counts as asleep too", async ({ page }) => {

@@ -1,34 +1,17 @@
 // Quizzes in the teacher portal, against a real backend: the design's rules (64 px targets,
 // 7:1 contrast through axe's AAA rules), the "Before you assign" checks, saving, assigning,
 // and the quiz reaching the learner app's endpoint for that class level.
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import { apiUrl } from "../playwright.config";
+import { addClass, designChecks, newSchool } from "./helpers";
 
-async function designChecks(page: Page) {
-  const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);
-  expect(overflow, "no sideways scrolling").toBeLessThanOrEqual(0);
-  const small = await page.evaluate(() =>
-    [...document.querySelectorAll("a[href], button, select, input:not([type=hidden]), textarea, label.check")]
-      .filter((e) => {
-        const s = getComputedStyle(e);
-        if (s.display === "none" || s.visibility === "hidden" || e.closest(".visually-hidden")) return false;
-        if (e.matches("input[type=checkbox], input[type=radio]") && e.closest("label")) return false; // the label is the target
-        if (e.matches("a.skip-link")) return false;
-        // WCAG's inline exception: a link inside a sentence.
-        if (e.matches("a") && (e.parentElement?.textContent ?? "").trim().length > (e.textContent ?? "").trim().length + 10) return false;
-        const r = e.getBoundingClientRect();
-        if (r.width === 0 && r.height === 0) return false;
-        return r.height < 64 || r.width < 64;
-      })
-      .map((e) => `${e.tagName} "${(e.getAttribute("aria-label") || e.textContent || "").trim().slice(0, 40)}"`),
-  );
-  expect(small, "touch targets at least 64 px").toEqual([]);
-  const axe = await new AxeBuilder({ page: page as never })
-    .withTags(["wcag2a", "wcag2aa", "wcag2aaa", "wcag21aa", "wcag22aa", "best-practice"])
-    .analyze();
-  expect(axe.violations.map((v) => `${v.id}: ${v.nodes.map((n) => n.target.join(" ")).join(", ")}`)).toEqual([]);
-}
+let primary5 = "";
+
+test.beforeEach(async ({ page }) => {
+  await newSchool(page);
+  primary5 = (await addClass(page, "Primary 5", "p5", "classroom")).id;
+  await addClass(page, "SS2 Science", "sss2", "guided");
+});
 
 /** The editor works once React has hydrated it; "Listen as a learner" only appears then. */
 async function openEditor(page: Page) {
@@ -47,12 +30,13 @@ async function sessionQuizzes(page: Page, code: string) {
 
 test("the sidebar starts with the Magana mark and has Quizzes after My classes", async ({ page }) => {
   await page.goto("/quizzes/new");
-  const home = page.getByRole("link", { name: "Magana for Teachers, home" });
-  await expect(home).toHaveAttribute("href", "/uploads");
+  const home = page.getByRole("link", { name: "Magana for Teachers, Home" });
+  await expect(home).toHaveAttribute("href", "/");
   await expect(home.locator("img")).toHaveAttribute("alt", ""); // decorative
   await expect(home.locator("img")).toHaveAttribute("src", "/brand/magana_mark_on_ink.svg");
   const nav = page.getByRole("navigation", { name: "Main" }).getByRole("link");
-  await expect(nav).toHaveText(["Uploads", "My classes", "Quizzes", "Attendance", "Learner progress", "Consent records", "Help"]);
+  await expect(nav).toHaveText(["Home", "Uploads", "My classes", "Quizzes", "Attendance", "Learner progress", "Consent records",
+    "Teachers", "School details", "Help"]);
   await expect(page.getByRole("link", { name: "Quizzes", exact: true })).toHaveAttribute("aria-current", "page");
   await expect(page).toHaveTitle("Create a quiz · Magana for Teachers");
   // Our icons, not Next.js's.
@@ -72,7 +56,8 @@ test("create, check and assign a Primary 5 quiz; it reaches learners at that lev
   });
   await openEditor(page);
   await page.getByLabel("Quiz title").fill(title);
-  await expect(page.getByLabel("Class")).toHaveValue("pri5");
+  await page.getByLabel("Class", { exact: true }).selectOption({ label: "Primary 5" });
+  await expect(page.getByLabel("Class", { exact: true })).toHaveValue(primary5);
   await page.getByLabel("Subject").selectOption({ label: "Basic Science" });
   await page.getByLabel("Questions read in").selectOption({ label: "Yorùbá and English" });
   await expect(page.getByText("2 or 3 options", { exact: true })).toBeVisible();
@@ -125,11 +110,9 @@ test("create, check and assign a Primary 5 quiz; it reaches learners at that lev
   await expect(list.getByRole("button").nth(0)).toContainText("Ready");
   await expect(list.getByRole("button").nth(1)).toContainText("Editing");
 
-  await page.getByLabel("Session").selectOption({ label: "Thu 30 Oct 2026 · 10:00" });
+  await page.getByLabel("Class session (date)").fill("2026-10-30");
   await page.getByRole("button", { name: "Assign to class" }).click();
-  await expect(page.getByRole("status").first()).toHaveText(
-    /^Assigned to Primary 5 for Thu 30 Oct 2026 · 10:00\. Session code: [A-Z2-9]{6}\.$/,
-  );
+  await expect(page.getByRole("status").first()).toHaveText(/^Assigned to Primary 5 for Fri 30 Oct 2026\. Session code: \d{6}\.$/);
   const code = (await page.locator(".session-code").textContent())!;
 
   // Only that session's code opens it in the learner app. The translation isn't checked
@@ -137,7 +120,7 @@ test("create, check and assign a Primary 5 quiz; it reaches learners at that lev
   const mine = (await sessionQuizzes(page, code)).find((q) => q.title === title)!;
   expect(mine.questions[0].translations).toEqual({});
   expect(mine.questions[1].picture).toBe("A brown bean seed, about the size of a fingernail.");
-  expect(await sessionQuizzes(page, code === "ZZZZZZ" ? "YYYYYY" : "ZZZZZZ")).toEqual([]);
+  expect(await sessionQuizzes(page, code === "730913" ? "815204" : "730913")).toEqual([]);
   const alone = await page.request.get(`${apiUrl}/learner/quizzes?session_code=${code}`, {
     headers: { "X-Magana-Tier": "standard" },
   });
@@ -155,7 +138,7 @@ test("create, check and assign a Primary 5 quiz; it reaches learners at that lev
   await page.getByRole("link", { name: "‹ All quizzes" }).click();
   await expect(page).toHaveTitle("All quizzes · Magana for Teachers");
   const row = page.getByRole("row").filter({ hasText: title });
-  await expect(row).toContainText(`Assigned · Thu 30 Oct 2026 · 10:00 · code ${code}`);
+  await expect(row).toContainText(`Assigned · Fri 30 Oct 2026 · code ${code}`);
   await designChecks(page);
   await row.getByRole("link", { name: `Edit ${title}` }).click();
   await expect(page.getByRole("heading", { name: "Edit quiz" })).toBeVisible();
@@ -164,7 +147,7 @@ test("create, check and assign a Primary 5 quiz; it reaches learners at that lev
 
 test("a JSS class allows four options and needs no primary note", async ({ page }) => {
   await openEditor(page);
-  await page.getByLabel("Class").selectOption({ label: "SS2 Science" });
+  await page.getByLabel("Class", { exact: true }).selectOption({ label: "SS2 Science" });
   await expect(page.getByText("2 to 4 options", { exact: true })).toBeVisible();
   await expect(page.getByText("Classroom mode class")).toHaveCount(0);
   await expect(page.getByLabel("Subject")).toContainText("Biology");

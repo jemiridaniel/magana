@@ -24,6 +24,7 @@ main() {
   iba_prev="$(git -C ../iba-natlas rev-parse HEAD)"
 
   echo "magana: $(git log --oneline -1)"
+  ensure_secrets
   git -C ../iba-natlas pull -q --ff-only
   echo "iba:    $(git -C ../iba-natlas log --oneline -1)"
   $compose up -d --build --quiet-pull 2>&1 | tail -5
@@ -62,6 +63,16 @@ healthy() {
   return 1
 }
 
+# Server-only secrets the code needs, made here on first deploy so they never pass through
+# GitHub, chat or SSH: MAGANA_CODE_KEY keys the class, session and teacher codes (codes.py).
+ensure_secrets() {
+  if ! grep -q '^MAGANA_CODE_KEY=.' .env; then
+    sed -i '/^MAGANA_CODE_KEY=/d' .env
+    echo "MAGANA_CODE_KEY=$(openssl rand -hex 32)" >> .env
+    echo "made MAGANA_CODE_KEY"
+  fi
+}
+
 install_web() {
   local tmp
   tmp="$(mktemp -d)"
@@ -69,11 +80,10 @@ install_web() {
   echo "$2  $tmp/web.tar.gz" | sha256sum -c --quiet -
   tar -xzf "$tmp/web.tar.gz" -C "$tmp"
   # Fill in the keys (read from .env, never echoed).
-  MAGANA_API_KEY="$(env_value MAGANA_API_KEY)" MAGANA_TEACHER_KEY="$(env_value MAGANA_TEACHER_KEY)" \
+  MAGANA_API_KEY="$(env_value MAGANA_API_KEY)" \
     python3 - "$tmp/web" "$tmp/teachers" "$tmp/site" <<'PY'
 import os, pathlib, sys
-keys = {"__MAGANA_API_KEY__": os.environ["MAGANA_API_KEY"],
-        "__MAGANA_TEACHER_KEY__": os.environ["MAGANA_TEACHER_KEY"]}
+keys = {"__MAGANA_API_KEY__": os.environ["MAGANA_API_KEY"]}
 assert all(keys.values()), "a key is missing from .env"
 for root in [r for r in sys.argv[1:] if os.path.isdir(r)]:
     for p in pathlib.Path(root).rglob("*"):

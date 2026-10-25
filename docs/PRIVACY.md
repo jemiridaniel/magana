@@ -53,7 +53,7 @@ During development the team runs the explanation model on temporary Kaggle noteb
 - **13 to 17:** school subjects only, after a parent, guardian or teacher agrees. No health or money papers, no open questions, no descriptions of people.
 - **Under 13:** only in a session a teacher starts. Nothing is saved after it.
 
-Until learner accounts exist, consent is recorded on the phone. Real consent records belong in the teacher portal (see "Consent records"). When consent is withdrawn, the account closes and the learner's data is deleted.
+**Consent is recorded by the class teacher in the teacher portal** (how and when the parent or guardian agreed: signed form, in person or by phone). Magana keeps no guardian name or phone number. Until a teacher records it, a learner aged 13 to 17 who joined a class is "waiting for consent": they can read schoolwork pages, and nothing else. Their class isn't linked: no quizzes, notes or progress. *(DRAFT, for Oluremi O. Balogun: before, nothing worked without consent; the design now allows reading while waiting.)* When a guardian asks for deletion, a school admin confirms it and everything about the learner is deleted within 7 days.
 
 ## The Magana server
 
@@ -81,12 +81,30 @@ Magana on WhatsApp is **for adults (18 and over)** only.
   | **Message text and phone numbers in the server logs** | **Never.** Logs show only the kind of message and a short coded id. |
 - **Messages are counted per month** (a number only) to stay within the free WhatsApp allowance.
 
-## Teachers
+## Teachers and schools
 
-Quizzes a teacher writes in the portal are saved on the Magana server so learners in that class level can take them. They hold the teacher's questions only: no learner names, answers or scores.
+> **For review by Oluremi O. Balogun** (consent and safeguarding) before schools use the portal.
 
-Teachers see summaries only: attendance, and progress if a learner chooses to share it. They never see the pages learners photograph or the questions they ask.
+Schools register in the teacher portal (teachers.magana.ng). A school goes live only after the Magana team has called the principal to confirm it.
+
+| What | Who it's about | Kept? |
+|---|---|---|
+| **The school**: name, state and local government area (as codes) | the school | while the school uses Magana |
+| **The principal's contact**: name, role, email, phone number | the person who registered the school | while the school uses Magana; the phone number is only for the Magana team to confirm the school |
+| **Teacher accounts**: name, email, role (teacher or school admin), the classes they teach | each teacher | while they work at the school; when removed, they're signed out at once and their name stays in the audit log |
+| **Sign-in codes** | each teacher | 10 minutes, stored only in a form that can't be read back (a keyed hash) |
+| **Sign-in sessions** | each teacher | until sign-out, 30 minutes without activity, or 12 hours |
+| **Classes**: name, level, mode, the class code | the school | while the class exists. Codes are stored as a keyed hash, plus an encrypted copy only that class's teacher and the school's admins can see |
+| **Learner–class links**: the name the teacher gives, preferred formats, language, whether under 18, consent status (how and when, no guardian details) | each learner who joined a class | while they're in the class; "Remove from class" unlinks the phone at once and keeps the term's records for the school |
+| **The linked phone** | each learner | a random token the app keeps; the server stores only its hash. No phone number, no name from the phone |
+| **Attendance marks, and figures a learner chooses to share** (pages read, help, quiz scores) | each learner | this term |
+| **Audit log**: who invited, removed or changed whom, and when | teachers and learners | while the school uses Magana; mentions of a deleted learner are blanked |
+
+- **Who sees what:** a teacher sees only their own classes and learners; a school's admins see the whole school; the Magana team sees school registrations (to confirm them), not learners. Teachers never see the pages learners photograph or the questions they ask.
+- **Quizzes** a teacher writes are saved on the Magana server and reach only that teacher's class sessions. They hold the teacher's questions only: no learner names, answers or scores.
+- **Deleting a learner's data:** a guardian asks the teacher; the teacher records it with "Remove from class"; a school admin confirms; everything about the learner is deleted at once (always within 7 days), and the audit log keeps only that "a learner's data was deleted".
+- **Emails** (sign-in codes, invitations) are sent through Amazon SES from no-reply@magana.ng.
 
 ## Questions, or to delete something
 
-Email **maganasupport@gmail.com**. Everything Magana keeps is on your phone: uninstalling the app deletes it.
+Email **maganasupport@gmail.com**. For a learner in a class, the class teacher or school admin can delete everything (above). Everything else Magana keeps is on your phone: uninstalling the app deletes it.

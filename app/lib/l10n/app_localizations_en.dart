@@ -326,6 +326,36 @@ class AppLocalizationsEn extends AppLocalizations {
       'I can\'t confirm some numbers in this explanation, so I\'ll read the page exactly instead.';
 
   @override
+  String get msg_class_code_wrong =>
+      'That class code isn\'t right. Check it with your teacher.';
+
+  @override
+  String get msg_code_locked =>
+      'Too many wrong codes. Please wait 5 minutes, then try again.';
+
+  @override
+  String get msg_teacher_code_needed =>
+      'Only your teacher can move you to another class. Ask them to enter their teacher code.';
+
+  @override
+  String get msg_teacher_code_wrong =>
+      'That teacher code isn\'t right. Ask your teacher to check it.';
+
+  @override
+  String get msg_class_has_no_accounts =>
+      'This class only has lessons your teacher runs. Ask your teacher.';
+
+  @override
+  String get msg_not_linked =>
+      'This phone isn\'t in a class now. You can still read pages.';
+
+  @override
+  String get msg_class_joined => 'You\'re in the class.';
+
+  @override
+  String get msg_class_changed => 'Your class has changed.';
+
+  @override
   String get msg_explain_wrong_language =>
       'I couldn\'t explain this in your language, so I\'ll read the page exactly instead.';
 

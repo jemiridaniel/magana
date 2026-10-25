@@ -19,7 +19,7 @@ from typing import Literal
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import asr, curriculum, explain, policy, quizzes, ratelimit, safety, templates, triage, wa_flow
+from . import asr, codes, curriculum, explain, learner_api, policy, portal_api, quizzes, ratelimit, safety, templates, triage, wa_flow
 from .wa_client import WhatsAppClient
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
@@ -62,6 +62,9 @@ app = FastAPI(
     version="0.2.0",
     description="Responses carry message codes, never sentences; see app/messages.py for the English reference.",
 )
+app.include_router(portal_api.router)
+app.include_router(learner_api.router)
+
 WHATSAPP_WEBHOOK = "/whatsapp/webhook"
 
 
@@ -70,7 +73,8 @@ async def rate_limit(request, call_next):
     """Per-IP and per-device limits (app/ratelimit.py): the web app's key is public."""
     if request.method != "OPTIONS":
         ip = request.client.host if request.client else "unknown"
-        wait = ratelimit.limiter.check(request.url.path, ip, request.headers.get("x-magana-device"))
+        wait = ratelimit.limiter.check(request.url.path, ip, request.headers.get("x-magana-device"),
+                                       request.cookies.get(portal_api.COOKIE))
         if wait:
             return JSONResponse({"detail": {"code": "too_many_requests"}}, status_code=429,
                                 headers={"Retry-After": str(max(1, round(wait)))})
@@ -131,14 +135,20 @@ def caller_tier(
     x_magana_tier: str = Header("standard"),
     x_magana_guardian_consent: str | None = Header(None),
     x_magana_teacher_session: str | None = Header(None),
+    x_magana_learner: str | None = Header(None),
 ) -> policy.Tier:
-    """The age tier the app says this user is in (headers on every request)."""
+    """The age tier the app says this user is in (headers on every request). A phone linked to
+    a class carries its link (X-Magana-Learner): then consent is what the teacher recorded in
+    the portal, whatever the app's header says."""
     try:
         tier = policy.Tier(x_magana_tier)
     except ValueError:
         raise HTTPException(400, {"code": "unknown_tier"})
+    consent = x_magana_guardian_consent == "yes"
+    if tier is policy.Tier.GUIDED and (portal := learner_api.consent_confirmed(x_magana_learner)) is not None:
+        consent = portal
     try:
-        return policy.check_request(tier, x_magana_guardian_consent == "yes", x_magana_teacher_session == "yes")
+        return policy.check_request(tier, consent, x_magana_teacher_session == "yes")
     except CodedError as e:
         raise HTTPException(403, {"code": e.code})
 
@@ -291,27 +301,28 @@ def get_quiz_store() -> quizzes.QuizStore:
     return quizzes.default_store()
 
 
-def teacher(x_magana_teacher_key: str = Header("")) -> None:
-    """Quiz writes reach children, and the app's API key is public, so the portal also sends
-    MAGANA_TEACHER_KEY (until teachers sign in). Unset: only development servers accept writes."""
-    key = os.environ.get("MAGANA_TEACHER_KEY", "")
-    if not key:
-        if explain.deployment() != "development":
-            raise HTTPException(503, {"code": "teacher_portal_off"})
-        return
-    if not hmac.compare_digest(x_magana_teacher_key.encode(), key.encode()):
-        raise HTTPException(401, {"code": "teacher_key_required"})
+def teacher(who: portal_api.Who = Depends(portal_api.staff)) -> portal_api.Who:
+    """Quiz writes reach children: only a signed-in teacher of an approved school (portal_api)."""
+    return who
+
+
+def _mine(who: portal_api.Who, quiz: quizzes.Quiz) -> bool:
+    """A teacher's own quizzes; a school admin sees the school's."""
+    return quiz.owner == who.staff["id"] or (who.admin and quiz.school_id == who.school["id"])
 
 
 def _with_problems(quiz: quizzes.Quiz) -> dict:
-    return {"quiz": quiz.model_dump(), "problems": [p.model_dump() for p in quizzes.check(quiz)]}
+    return {"quiz": quiz.for_teacher(), "problems": [p.model_dump() for p in quizzes.check(quiz)]}
 
 
-def _quiz(store: quizzes.QuizStore, quiz_id: str) -> quizzes.Quiz:
+def _quiz(store: quizzes.QuizStore, quiz_id: str, who: portal_api.Who | None = None) -> quizzes.Quiz:
     try:
-        return store.get(quiz_id)
+        quiz = store.get(quiz_id)
     except KeyError:
         raise HTTPException(404, {"code": "quiz_not_found"})
+    if who is not None and not _mine(who, quiz):
+        raise HTTPException(404, {"code": "quiz_not_found"})
+    return quiz
 
 
 class Assign(BaseModel):
@@ -324,33 +335,49 @@ def get_curriculum() -> dict:
     return curriculum.as_json()
 
 
-@app.get("/quizzes", dependencies=[Depends(teacher)])
-def list_quizzes(class_id: str | None = None, store: quizzes.QuizStore = Depends(get_quiz_store)) -> list[dict]:
-    return [_with_problems(q) for q in store.all() if class_id in (None, q.class_id)]
+@app.get("/quizzes")
+def list_quizzes(class_id: str | None = None, store: quizzes.QuizStore = Depends(get_quiz_store),
+                 who: portal_api.Who = Depends(teacher)) -> list[dict]:
+    return [_with_problems(q) for q in store.all() if class_id in (None, q.class_id) and _mine(who, q)]
 
 
-@app.post("/quizzes", dependencies=[Depends(teacher)], status_code=201)
-def create_quiz(body: quizzes.QuizIn, store: quizzes.QuizStore = Depends(get_quiz_store)) -> dict:
+@app.post("/quizzes", status_code=201)
+def create_quiz(body: quizzes.QuizIn, store: quizzes.QuizStore = Depends(get_quiz_store),
+                who: portal_api.Who = Depends(teacher)) -> dict:
     """Saved as a draft whatever its problems; only assigning needs it ready."""
-    return _with_problems(store.create(body))
+    return _with_problems(store.create(body, owner=who.staff["id"], school_id=who.school["id"]))
 
 
-@app.get("/quizzes/{quiz_id}", dependencies=[Depends(teacher)])
-def get_quiz(quiz_id: str, store: quizzes.QuizStore = Depends(get_quiz_store)) -> dict:
-    return _with_problems(_quiz(store, quiz_id))
+@app.get("/quizzes/{quiz_id}")
+def get_quiz(quiz_id: str, store: quizzes.QuizStore = Depends(get_quiz_store),
+             who: portal_api.Who = Depends(teacher)) -> dict:
+    return _with_problems(_quiz(store, quiz_id, who))
 
 
-@app.put("/quizzes/{quiz_id}", dependencies=[Depends(teacher)])
-def update_quiz(quiz_id: str, body: quizzes.QuizIn, store: quizzes.QuizStore = Depends(get_quiz_store)) -> dict:
-    _quiz(store, quiz_id)
+@app.put("/quizzes/{quiz_id}")
+def update_quiz(quiz_id: str, body: quizzes.QuizIn, store: quizzes.QuizStore = Depends(get_quiz_store),
+                who: portal_api.Who = Depends(teacher)) -> dict:
+    _quiz(store, quiz_id, who)
     return _with_problems(store.update(quiz_id, body))
 
 
-@app.post("/quizzes/{quiz_id}/assign", dependencies=[Depends(teacher)])
-def assign_quiz(quiz_id: str, body: Assign, store: quizzes.QuizStore = Depends(get_quiz_store)) -> dict:
+@app.post("/quizzes/{quiz_id}/rotate-session-code")
+def rotate_session_code(quiz_id: str, store: quizzes.QuizStore = Depends(get_quiz_store),
+                        who: portal_api.Who = Depends(teacher)) -> dict:
+    """A new code for this quiz's class session; the old one stops working at once."""
+    quiz = _quiz(store, quiz_id, who)
+    if quiz.status != "assigned":
+        raise HTTPException(409, {"code": "quiz_not_assigned"})
+    store.rotate_session_code(quiz.class_id, quiz.session)
+    return _with_problems(store.get(quiz_id))
+
+
+@app.post("/quizzes/{quiz_id}/assign")
+def assign_quiz(quiz_id: str, body: Assign, store: quizzes.QuizStore = Depends(get_quiz_store),
+                who: portal_api.Who = Depends(teacher)) -> dict:
     """Refused while any blocking problem is left: no right answer, a picture without a
     description, too few or too many options."""
-    quiz = _quiz(store, quiz_id)
+    quiz = _quiz(store, quiz_id, who)
     problems = quizzes.check(quiz)
     if any(p.blocking for p in problems):
         raise HTTPException(422, {"code": "quiz_not_ready", "problems": [p.model_dump() for p in problems]})
@@ -363,16 +390,17 @@ def learner_quizzes(session_code: str, tier: policy.Tier = Depends(caller_tier),
                     store: quizzes.QuizStore = Depends(get_quiz_store)) -> dict:
     """The quizzes assigned to one class session, for any age group, only inside a session
     the teacher opened on this phone with the session's code. Learners on their own get
-    the app's sample packs only. Until class codes and teacher accounts exist, the code is
-    what keeps teacher A's quiz inside teacher A's session."""
+    the app's sample packs only. The session's code (6 digits, matched by its keyed hash)
+    keeps teacher A's quiz inside teacher A's session."""
     require(tier, policy.Feature.QUIZ)
     if x_magana_teacher_session != "yes":
         raise HTTPException(403, {"code": "teacher_session_required"})
-    code = session_code.strip().upper()
-    if not quizzes.CODE_RE.match(code):
+    code = codes.normalise(session_code)
+    if len(code) != codes.LENGTH:
         raise HTTPException(422, {"code": "session_code_invalid"})
+    lookup = codes.lookup(code)
     return {"quizzes": [quizzes.for_learner(q) for q in store.all()
-                        if q.status == "assigned" and q.session_code == code and quizzes.ready(q)]}
+                        if q.status == "assigned" and q.session_lookup == lookup and quizzes.ready(q)]}
 
 
 @app.post("/asr/choose")

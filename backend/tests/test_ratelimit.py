@@ -99,3 +99,16 @@ def test_a_browser_can_read_the_429_and_the_401(clock, monkeypatch):
     r = client.get("/asr/available", headers={"Origin": "http://localhost:5173"})
     assert r.status_code == 401
     assert r.headers["access-control-allow-origin"] == "http://localhost:5173"
+
+
+def test_the_signed_in_portal_is_limited_per_session_not_per_shared_ip(monkeypatch):
+    monkeypatch.setenv("RATE_IP_PER_MIN", "3")
+    monkeypatch.setenv("RATE_PORTAL_SESSION_PER_MIN", "5")
+    lim = ratelimit.RateLimiter(clock=lambda: 0.0)
+    # Two teachers behind one school router: each session has its own allowance.
+    assert all(lim.check("/portal/classes", "10.0.0.1", None, "teacher-a") == 0 for _ in range(5))
+    assert lim.check("/portal/classes", "10.0.0.1", None, "teacher-a") > 0
+    assert lim.check("/portal/classes", "10.0.0.1", None, "teacher-b") == 0
+    # Sign-in keeps the IP limit, cookie or not.
+    assert all(lim.check("/portal/auth/request-code", "10.0.0.2", None, "x") == 0 for _ in range(3))
+    assert lim.check("/portal/auth/request-code", "10.0.0.2", None, "x") > 0

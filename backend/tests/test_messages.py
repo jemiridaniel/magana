@@ -93,3 +93,15 @@ def test_fallback_triage_wording_exists_in_all_four_languages():
             assert text.strip() and text != english[f"msg_{code}"], f"{lang}: msg_{code}"
     for code in codes:
         assert "CLINICAL DRAFT" in english[f"@msg_{code}"]["description"]
+
+
+def test_every_code_the_portal_and_class_link_apis_can_return_is_registered():
+    import re
+    from pathlib import Path
+    app_dir = Path(__file__).parents[1] / "app"
+    for name, known in (("portal_api.py", messages.PORTAL_CODES | messages.CODES),
+                        ("learner_api.py", messages.CODES)):
+        src = (app_dir / name).read_text()
+        used = set(re.findall(r'fail\(\d+,\s*"(\w+)"', src)) | set(re.findall(r'\{"code":\s*"(\w+)"', src))
+        used |= set(re.findall(r'_wrong\(key,\s*"(\w+)"\)', src))
+        assert used and not used - known, f"{name}: register {sorted(used - known)}"

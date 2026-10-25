@@ -3,17 +3,18 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { level, subjectNames } from "@/lib/curriculum";
-import { classes } from "@/lib/data";
+import { portal, type ClassInfo } from "@/lib/portal";
 import { messageFor } from "@/lib/messages";
 import { blocking, check, listQuizzes, QuizError, savesToServer, type Quiz } from "@/lib/quizzes";
-
-const className = (id: string) => classes.find((c) => c.id === id)?.name ?? id;
 
 export default function QuizList() {
   const [quizzes, setQuizzes] = useState<Quiz[] | null>(null);
   const [error, setError] = useState("");
+  const [classes, setClasses] = useState<ClassInfo[]>([]);
+  const className = (id: string) => classes.find((c) => c.id === id)?.name ?? "A class you no longer teach";
 
   useEffect(() => {
+    portal.classes().then(setClasses).catch(() => null);
     listQuizzes()
       .then(setQuizzes)
       .catch((e) => {

@@ -1,263 +1,124 @@
 "use client";
 
-import { useMemo, useState, type KeyboardEvent } from "react";
-import { saveRegister } from "@/lib/api";
-import { classes, FOLLOW_UP_BELOW, marks, registers as initialRegisters, sessions, type Learner, type Mark } from "@/lib/data";
+// Attendance: a register per class and day, saved to the Magana server. Keyboard: P, L or A on
+// a learner's row marks them present, late or absent. Learners under 60% show on Home.
+import { useEffect, useState, type KeyboardEvent } from "react";
+import { messageFor } from "@/lib/messages";
+import { portal, PortalError, type ClassInfo, type Learner } from "@/lib/portal";
 
-type SessionType = "in-class" | "remote";
-
-const pct = (n: number) => `${Math.round(n * 100)}%`;
-
-function Ring({ value }: { value: number }) {
-  const r = 44;
-  const c = 2 * Math.PI * r;
-  return (
-    <svg width="112" height="112" viewBox="0 0 112 112" aria-hidden="true">
-      <circle cx="56" cy="56" r={r} fill="none" stroke="var(--processing-bg)" strokeWidth="14" />
-      <circle
-        cx="56" cy="56" r={r} fill="none" stroke="var(--green)" strokeWidth="14"
-        strokeDasharray={`${c * value} ${c}`} strokeLinecap="round" transform="rotate(-90 56 56)"
-      />
-      <text x="56" y="63" textAnchor="middle" fontSize="22" fontWeight="700" fill="var(--ink)">{pct(value)}</text>
-    </svg>
-  );
-}
+type Mark = "present" | "late" | "absent";
+const MARKS: { id: Mark; label: string; key: string }[] = [
+  { id: "present", label: "Present", key: "p" }, { id: "late", label: "Late", key: "l" }, { id: "absent", label: "Absent", key: "a" },
+];
+const today = () => new Date().toISOString().slice(0, 10);
 
 export default function AttendanceView() {
-  const firstSession = (id: string) => sessions.find((s) => s.classId === id)?.id ?? "";
-  const [classId, setClassId] = useState(classes[0].id);
-  const [sessionId, setSessionId] = useState(firstSession(classes[0].id));
-  const [type, setType] = useState<SessionType>("in-class");
-  const [registers, setRegisters] = useState<Record<string, Learner[]>>(initialRegisters);
+  const [classes, setClasses] = useState<ClassInfo[]>([]);
+  const [classId, setClassId] = useState("");
+  const [day, setDay] = useState(today());
+  const [learners, setLearners] = useState<Learner[]>([]);
+  const [marks, setMarks] = useState<Record<string, Mark>>({});
   const [message, setMessage] = useState("");
+  const [error, setError] = useState("");
   const [saving, setSaving] = useState(false);
 
-  const cls = classes.find((c) => c.id === classId)!;
-  const classSessions = sessions.filter((s) => s.classId === classId);
-  const learners = useMemo(() => registers[classId] ?? [], [registers, classId]);
-  const setLearners = (update: (ls: Learner[]) => Learner[]) =>
-    setRegisters((r) => ({ ...r, [classId]: update(r[classId] ?? []) }));
+  useEffect(() => {
+    portal.classes().then((cs) => {
+      const usable = cs.filter((c) => c.mode !== "classroom");
+      setClasses(usable);
+      setClassId((id) => id || usable[0]?.id || "");
+    }).catch((e) => setError((e as PortalError).code));
+  }, []);
 
-  function changeClass(id: string) {
-    setClassId(id);
-    setSessionId(firstSession(id));
-    setMessage("");
+  useEffect(() => {
+    if (!classId) return;
+    Promise.all([portal.learners(classId), portal.attendance(classId, day)]).then(([ls, reg]) => {
+      setLearners(ls.filter((l) => l.status === "active"));
+      setMarks(reg.marks as Record<string, Mark>);
+    }).catch(() => null);
+  }, [classId, day]);
+
+  function setMark(l: Learner, m: Mark) {
+    setMarks((ms) => ({ ...ms, [l.id]: m }));
   }
 
-  const counts = useMemo(() => {
-    const out: Record<Mark, number> = { present: 0, late: 0, absent: 0, excused: 0 };
-    learners.forEach((l) => out[l.mark]++);
-    return out;
-  }, [learners]);
-  const attended = counts.present + counts.late;
-  const rate = learners.length ? attended / learners.length : 0;
-  const termAverage = learners.length
-    ? learners.reduce((s, l) => s + l.termAttended / l.termSessions, 0) / learners.length
-    : 0;
-
-  const setMark = (id: string, mark: Mark) => setLearners((ls) => ls.map((l) => (l.id === id ? { ...l, mark } : l)));
-
-  function onRowKey(e: KeyboardEvent, l: Learner) {
+  function onRowKey(e: KeyboardEvent<HTMLTableRowElement>, l: Learner) {
     if (e.altKey || e.ctrlKey || e.metaKey) return;
-    const m = marks.find((x) => x.key === e.key.toLowerCase());
+    const m = MARKS.find((x) => x.key === e.key.toLowerCase());
     if (!m) return;
     e.preventDefault();
-    setMark(l.id, m.id);
+    setMark(l, m.id);
     setMessage(`${l.name}: ${m.label}`);
-    // Keep keyboard focus on the option that is now selected, so arrow keys continue from there.
     e.currentTarget.querySelector<HTMLInputElement>(`input[value="${m.id}"]`)?.focus();
   }
 
-  function markAllPresent() {
-    setLearners((ls) => ls.map((l) => ({ ...l, mark: "present" })));
-    setMessage("Everyone marked present. Check anyone who is late, absent or excused.");
-  }
-
   async function save() {
+    const missing = learners.filter((l) => !marks[l.id]);
+    if (missing.length) { setMessage(`Mark everyone first: ${missing.map((l) => l.name).join(", ")}.`); return; }
     setSaving(true);
     try {
-      await saveRegister(sessionId, learners);
-      setMessage("Register saved.");
+      await portal.saveAttendance(classId, day, learners.map((l) => ({ learner_id: l.id, mark: marks[l.id] })));
+      setMessage(messageFor("register_saved"));
     } catch (e) {
-      setMessage(e instanceof Error ? e.message : "Could not save. Please try again.");
+      setMessage(messageFor((e as PortalError).code));
     } finally {
       setSaving(false);
     }
   }
 
-  function exportCsv() {
-    const rows = [
-      ["Learner", "This session", "Used Magana", "Term attended", "Term sessions", "Attendance"],
-      ...learners.map((l) => [
-        l.name,
-        marks.find((m) => m.id === l.mark)!.label,
-        type === "remote" ? (l.usedMagana ? "Yes" : "No") : "",
-        String(l.termAttended),
-        String(l.termSessions),
-        pct(l.termAttended / l.termSessions),
-      ]),
-    ];
-    const csv = rows.map((r) => r.map((v) => `"${v.replace(/"/g, '""')}"`).join(",")).join("\n");
-    const url = URL.createObjectURL(new Blob([csv], { type: "text/csv" }));
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${cls.name} term report.csv`;
-    a.click();
-    setTimeout(() => URL.revokeObjectURL(url), 1000); // some browsers read the blob after click() returns
-    setMessage("Term report downloaded.");
-  }
-
-  const comingSoon = (what: string) => setMessage(`${what} is not available yet in this preview.`);
+  if (error) return error === "server_sleeping" ? null : <p role="alert">{messageFor(error)}</p>;
+  const present = learners.filter((l) => marks[l.id] === "present" || marks[l.id] === "late").length;
 
   return (
     <>
-      <div className="page-head">
-        <div>
-          <h1>Attendance</h1>
-          <p>Take the register for each session and see attendance build up over the term.</p>
-        </div>
-        <div className="actions no-print">
-          <button type="button" className="btn" onClick={() => comingSoon("Taking the register by voice")}>Take register by voice</button>
-          <button type="button" className="btn btn-primary" onClick={() => comingSoon("Adding a new session")}>+ New session</button>
-        </div>
-      </div>
-
-      <section className="card session-bar" aria-label="Session">
-        <div className="field">
-          <label htmlFor="att-class">Class</label>
-          <select id="att-class" className="select" value={classId} onChange={(e) => changeClass(e.target.value)}>
-            {classes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-          </select>
-        </div>
-        <div className="field">
-          {classSessions.length ? (
+      <div className="page-head"><div><h1>Attendance</h1>
+        <p>Take the register for a class session. Learners who miss many sessions show on Home.</p></div></div>
+      {classes.length === 0 ? <p className="empty">No classes with learner accounts yet. Add one in My classes.</p> : (
+        <section className="card form-grid" aria-labelledby="reg-h">
+          <h2 id="reg-h">Register</h2>
+          <div className="place-grid">
+            <div className="field"><label htmlFor="a-class">Class</label>
+              <select id="a-class" className="select" value={classId} onChange={(e) => { setClassId(e.target.value); setMessage(""); }}>
+                {classes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
+              </select></div>
+            <div className="field"><label htmlFor="a-day">Date</label>
+              <input id="a-day" type="date" className="input" value={day} max={today()} onChange={(e) => setDay(e.target.value)} /></div>
+          </div>
+          {learners.length === 0 ? <p className="empty">No learners in this class yet.</p> : (
             <>
-              <label htmlFor="att-session">Session</label>
-              <select id="att-session" className="select" value={sessionId} onChange={(e) => setSessionId(e.target.value)}>
-                {classSessions.map((s) => <option key={s.id} value={s.id}>{s.label}</option>)}
-              </select>
-            </>
-          ) : (
-            <>
-              <span className="field-label">Session</span>
-              <p className="field-empty note">No sessions yet</p>
+              <div className="actions">
+                <button type="button" className="btn" onClick={() => {
+                  setMarks(Object.fromEntries(learners.map((l) => [l.id, "present" as Mark])));
+                  setMessage("Everyone marked present. Change anyone who is late or absent.");
+                }}>Mark all present</button>
+                <p>{present} of {learners.length} here</p>
+              </div>
+              <p className="hint">Tip: on a learner’s row, press P, L or A.</p>
+              <div className="table-wrap" role="region" aria-label="Register" tabIndex={0}>
+                <table>
+                  <thead><tr><th scope="col">Learner</th><th scope="col">Mark</th></tr></thead>
+                  <tbody>
+                    {learners.map((l) => (
+                      <tr key={l.id} onKeyDown={(e) => onRowKey(e, l)}>
+                        <th scope="row">{l.name}</th>
+                        <td>
+                          <fieldset className="marks"><legend className="visually-hidden">{l.name}</legend>
+                            {MARKS.map((m) => (
+                              <label key={m.id} className="check"><input type="radio" name={`mark-${l.id}`} value={m.id}
+                                checked={marks[l.id] === m.id} onChange={() => setMark(l, m.id)} /> <span>{m.label}</span></label>
+                            ))}
+                          </fieldset>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+              <button type="button" className="btn btn-primary" onClick={save} disabled={saving}>{saving ? "Saving…" : "Save register"}</button>
             </>
           )}
-        </div>
-        <div className="field">
-          <label htmlFor="att-type">Type</label>
-          <select id="att-type" className="select" value={type} onChange={(e) => setType(e.target.value as SessionType)}>
-            <option value="in-class">In class</option>
-            <option value="remote">Remote (in app)</option>
-          </select>
-        </div>
-        <p className="seats">Seats used {attended} of {cls.seats}</p>
-      </section>
-
-      {learners.length === 0 ? (
-        <section className="card" aria-labelledby="empty-head">
-          <h2 id="empty-head">No register yet</h2>
-          <p className="note" style={{ marginTop: 8 }}>
-            {cls.name} has no sessions yet. Use &lsquo;+ New session&rsquo; to start its register.
-          </p>
+          <p role="status" className="status-msg">{message}</p>
         </section>
-      ) : (
-        <>
-      <section className="card summary" aria-labelledby="summary-head">
-        <h2 id="summary-head" className="visually-hidden">This session</h2>
-        <div className="ring-block">
-          <Ring value={rate} />
-          <p className="ring-text">
-            <strong>{attended} of {learners.length} learners attended</strong>
-            {pct(rate)} this session. Term average: {pct(termAverage)}
-          </p>
-        </div>
-        <ul className="tiles" style={{ listStyle: "none", margin: 0, padding: 0 }}>
-          {marks.map((m) => (
-            <li key={m.id} className="tile">
-              <span className="tile-num">{counts[m.id]}</span>
-              <span className="tile-label">{m.label}</span>
-            </li>
-          ))}
-        </ul>
-      </section>
-
-      <section className="card" aria-labelledby="register-head">
-        <div className="card-head">
-          <h2 id="register-head">Register</h2>
-          <button type="button" className="btn no-print" onClick={markAllPresent}>Mark all present</button>
-        </div>
-        <div className="table-wrap" role="region" aria-label="Register table" tabIndex={0}>
-          <table className="register-table" aria-describedby="register-help">
-            <thead>
-              <tr>
-                <th scope="col">Learner</th>
-                <th scope="col">This session</th>
-                <th scope="col">Used Magana</th>
-                <th scope="col">Term total</th>
-                <th scope="col">Attendance</th>
-              </tr>
-            </thead>
-            <tbody>
-              {learners.map((l) => {
-                const termRate = l.termAttended / l.termSessions;
-                return (
-                  <tr key={l.id}>
-                    <th scope="row">{l.name}</th>
-                    <td>
-                      <fieldset className="marks" onKeyDown={(e) => onRowKey(e, l)}>
-                        <legend className="visually-hidden">This session for {l.name}</legend>
-                        {marks.map((m) => (
-                          <label key={m.id} className={`mark mark-${m.id}`}>
-                            <input
-                              type="radio"
-                              name={`mark-${l.id}`}
-                              value={m.id}
-                              checked={l.mark === m.id}
-                              onChange={() => setMark(l.id, m.id)}
-                            />
-                            {m.label}
-                          </label>
-                        ))}
-                      </fieldset>
-                    </td>
-                    <td>
-                      {type === "remote" ? (l.usedMagana ? "Yes" : "No") : (
-                        <>
-                          <span aria-hidden="true">—</span>
-                          <span className="visually-hidden">Not tracked in class</span>
-                        </>
-                      )}
-                    </td>
-                    <td>{l.termAttended} of {l.termSessions}</td>
-                    <td className={termRate < FOLLOW_UP_BELOW ? "follow-up" : undefined}>
-                      {pct(termRate)}{termRate < FOLLOW_UP_BELOW ? " · follow up" : ""}
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-        </div>
-        <p id="register-help" className="note" style={{ marginTop: 16 }}>
-          &lsquo;Used Magana&rsquo; fills in automatically for remote sessions. You always confirm the register.
-          Keyboard: P present, L late, A absent, E excused.
-        </p>
-      </section>
-
-        </>
-      )}
-
-      <p className="status-msg" role="status" aria-live="polite">{message}</p>
-
-      {learners.length > 0 && (
-      <div className="footer-actions no-print">
-        <button type="button" className="btn" onClick={exportCsv}>Export term report (CSV)</button>
-        <button type="button" className="btn" onClick={() => window.print()}>Print register</button>
-        <button type="button" className="btn btn-primary" onClick={save} disabled={saving}>
-          {saving ? "Saving…" : "Save register"}
-        </button>
-      </div>
       )}
     </>
   );

@@ -1,0 +1,4097 @@
+{
+ "_source": "xosasx/nigerian-local-government-areas (MIT licence, (c) 2022 Osas Obazee), lgas.json of 2022-07-27. State codes are ISO 3166-2:NG. LGA codes are Magana's own: the state code and the LGA name in capitals (NG-LA-IKEJA). The source's Wikidata IDs are kept as 'wikidata'; three are shared by same-name LGAs in two states (Obi, Nasarawa, Surulere), so they are not used as codes. See docs/DATA_SOURCES.md.",
+ "states": [
+  {
+   "code": "NG-AB",
+   "name": "Abia",
+   "lgas": [
+    {
+     "code": "NG-AB-ABA-NORTH",
+     "name": "Aba North",
+     "wikidata": "Q4663114"
+    },
+    {
+     "code": "NG-AB-ABA-SOUTH",
+     "name": "Aba South",
+     "wikidata": "Q4663117"
+    },
+    {
+     "code": "NG-AB-AROCHUKWU",
+     "name": "Arochukwu",
+     "wikidata": "Q965036"
+    },
+    {
+     "code": "NG-AB-BENDE",
+     "name": "Bende",
+     "wikidata": "Q4887027"
+    },
+    {
+     "code": "NG-AB-IKWUANO",
+     "name": "Ikwuano",
+     "wikidata": "Q5996447"
+    },
+    {
+     "code": "NG-AB-ISIALA-NGWA-NORTH",
+     "name": "Isiala Ngwa North",
+     "wikidata": "Q13140544"
+    },
+    {
+     "code": "NG-AB-ISIALA-NGWA-SOUTH",
+     "name": "Isiala Ngwa South",
+     "wikidata": "Q6080818"
+    },
+    {
+     "code": "NG-AB-ISUIKWUATO",
+     "name": "Isuikwuato",
+     "wikidata": "Q6089443"
+    },
+    {
+     "code": "NG-AB-OBI-NGWA",
+     "name": "Obi Ngwa",
+     "wikidata": "Q7074920"
+    },
+    {
+     "code": "NG-AB-OHAFIA",
+     "name": "Ohafia",
+     "wikidata": "Q7080605"
+    },
+    {
+     "code": "NG-AB-OSISIOMA",
+     "name": "Osisioma",
+     "wikidata": "Q7106876"
+    },
+    {
+     "code": "NG-AB-UGWUNAGBO",
+     "name": "Ugwunagbo",
+     "wikidata": "Q7877949"
+    },
+    {
+     "code": "NG-AB-UKWA-EAST",
+     "name": "Ukwa East",
+     "wikidata": "Q7878633"
+    },
+    {
+     "code": "NG-AB-UKWA-WEST",
+     "name": "Ukwa West",
+     "wikidata": "Q11058273"
+    },
+    {
+     "code": "NG-AB-UMU-NNEOCHI",
+     "name": "Umu-Nneochi",
+     "wikidata": "Q7881822"
+    },
+    {
+     "code": "NG-AB-UMUAHIA-NORTH",
+     "name": "Umuahia North",
+     "wikidata": "Q7881829"
+    },
+    {
+     "code": "NG-AB-UMUAHIA-SOUTH",
+     "name": "Umuahia South",
+     "wikidata": "Q7881831"
+    }
+   ]
+  },
+  {
+   "code": "NG-AD",
+   "name": "Adamawa",
+   "lgas": [
+    {
+     "code": "NG-AD-DEMSA",
+     "name": "Demsa",
+     "wikidata": "Q5256418"
+    },
+    {
+     "code": "NG-AD-FUFORE",
+     "name": "Fufore",
+     "wikidata": "Q5507236"
+    },
+    {
+     "code": "NG-AD-GANYE",
+     "name": "Ganye",
+     "wikidata": "Q5521544"
+    },
+    {
+     "code": "NG-AD-GIREI",
+     "name": "Girei",
+     "wikidata": "Q5564220"
+    },
+    {
+     "code": "NG-AD-GOMBI",
+     "name": "Gombi",
+     "wikidata": "Q5608733"
+    },
+    {
+     "code": "NG-AD-GUYUK",
+     "name": "Guyuk",
+     "wikidata": "Q5622887"
+    },
+    {
+     "code": "NG-AD-HONG",
+     "name": "Hong",
+     "wikidata": "Q5894008"
+    },
+    {
+     "code": "NG-AD-JADA",
+     "name": "Jada",
+     "wikidata": "Q6121167"
+    },
+    {
+     "code": "NG-AD-LAMURDE",
+     "name": "Lamurde",
+     "wikidata": "Q13140505"
+    },
+    {
+     "code": "NG-AD-MADAGALI",
+     "name": "Madagali",
+     "wikidata": "Q6726121"
+    },
+    {
+     "code": "NG-AD-MAIHA",
+     "name": "Maiha",
+     "wikidata": "Q6735584"
+    },
+    {
+     "code": "NG-AD-MAYO-BELWA",
+     "name": "Mayo Belwa",
+     "wikidata": "Q6797493"
+    },
+    {
+     "code": "NG-AD-MICHIKA",
+     "name": "Michika",
+     "wikidata": "Q6837873"
+    },
+    {
+     "code": "NG-AD-MUBI-NORTH",
+     "name": "Mubi North",
+     "wikidata": "Q10969312"
+    },
+    {
+     "code": "NG-AD-MUBI-SOUTH",
+     "name": "Mubi South",
+     "wikidata": "Q6930892"
+    },
+    {
+     "code": "NG-AD-NUMAN",
+     "name": "Numan",
+     "wikidata": "Q3510590"
+    },
+    {
+     "code": "NG-AD-SHELLENG",
+     "name": "Shelleng",
+     "wikidata": "Q4713068"
+    },
+    {
+     "code": "NG-AD-SONG",
+     "name": "Song",
+     "wikidata": "Q7560957"
+    },
+    {
+     "code": "NG-AD-TOUNGO",
+     "name": "Toungo",
+     "wikidata": "Q7828915"
+    },
+    {
+     "code": "NG-AD-YOLA-NORTH",
+     "name": "Yola North",
+     "wikidata": "Q8054712"
+    },
+    {
+     "code": "NG-AD-YOLA-SOUTH",
+     "name": "Yola South",
+     "wikidata": "Q8054714"
+    }
+   ]
+  },
+  {
+   "code": "NG-AK",
+   "name": "Akwa Ibom",
+   "lgas": [
+    {
+     "code": "NG-AK-ABAK",
+     "name": "Abak",
+     "wikidata": "Q2820150"
+    },
+    {
+     "code": "NG-AK-EASTERN-OBOLO",
+     "name": "Eastern Obolo",
+     "wikidata": "Q5330341"
+    },
+    {
+     "code": "NG-AK-EKET",
+     "name": "Eket",
+     "wikidata": "Q3321199"
+    },
+    {
+     "code": "NG-AK-ESIT-EKET",
+     "name": "Esit Eket",
+     "wikidata": "Q5397964"
+    },
+    {
+     "code": "NG-AK-ESSIEN-UDIM",
+     "name": "Essien Udim",
+     "wikidata": "Q5399896"
+    },
+    {
+     "code": "NG-AK-ETIM-EKPO",
+     "name": "Etim Ekpo",
+     "wikidata": "Q5404590"
+    },
+    {
+     "code": "NG-AK-ETINAN",
+     "name": "Etinan",
+     "wikidata": "Q5404600"
+    },
+    {
+     "code": "NG-AK-IBENO",
+     "name": "Ibeno",
+     "wikidata": "Q5983812"
+    },
+    {
+     "code": "NG-AK-IBESIKPO-ASUTAN",
+     "name": "Ibesikpo Asutan",
+     "wikidata": "Q5983991"
+    },
+    {
+     "code": "NG-AK-IBIONO-IBOM",
+     "name": "Ibiono Ibom",
+     "wikidata": "Q5984067"
+    },
+    {
+     "code": "NG-AK-IKA",
+     "name": "Ika",
+     "wikidata": "Q5995269"
+    },
+    {
+     "code": "NG-AK-IKONO",
+     "name": "Ikono",
+     "wikidata": "Q5996152"
+    },
+    {
+     "code": "NG-AK-IKOT-ABASI",
+     "name": "Ikot Abasi",
+     "wikidata": "Q5996219"
+    },
+    {
+     "code": "NG-AK-IKOT-EKPENE",
+     "name": "Ikot Ekpene",
+     "wikidata": "Q680926"
+    },
+    {
+     "code": "NG-AK-INI",
+     "name": "Ini",
+     "wikidata": "Q13140466"
+    },
+    {
+     "code": "NG-AK-ITU",
+     "name": "Itu",
+     "wikidata": "Q6095095"
+    },
+    {
+     "code": "NG-AK-MBO",
+     "name": "Mbo",
+     "wikidata": "Q6799703"
+    },
+    {
+     "code": "NG-AK-MKPAT-ENIN",
+     "name": "Mkpat Enin",
+     "wikidata": "Q6885516"
+    },
+    {
+     "code": "NG-AK-NSIT-ATAI",
+     "name": "Nsit Atai",
+     "wikidata": "Q7067566"
+    },
+    {
+     "code": "NG-AK-NSIT-IBOM",
+     "name": "Nsit Ibom",
+     "wikidata": "Q7067567"
+    },
+    {
+     "code": "NG-AK-NSIT-UBIUM",
+     "name": "Nsit Ubium",
+     "wikidata": "Q10494314"
+    },
+    {
+     "code": "NG-AK-OBOT-AKARA",
+     "name": "Obot Akara",
+     "wikidata": "Q7075311"
+    },
+    {
+     "code": "NG-AK-OKOBO",
+     "name": "Okobo",
+     "wikidata": "Q7082466"
+    },
+    {
+     "code": "NG-AK-ONNA",
+     "name": "Onna",
+     "wikidata": "Q7094369"
+    },
+    {
+     "code": "NG-AK-ORON",
+     "name": "Oron",
+     "wikidata": "Q1277335"
+    },
+    {
+     "code": "NG-AK-ORUK-ANAM",
+     "name": "Oruk Anam",
+     "wikidata": "Q7105162"
+    },
+    {
+     "code": "NG-AK-UDUNG-UKO",
+     "name": "Udung Uko",
+     "wikidata": "Q7877346"
+    },
+    {
+     "code": "NG-AK-UKANAFUN",
+     "name": "Ukanafun",
+     "wikidata": "Q7878266"
+    },
+    {
+     "code": "NG-AK-URUAN",
+     "name": "Uruan",
+     "wikidata": "Q11058133"
+    },
+    {
+     "code": "NG-AK-URUE-OFFONG-ORUKO",
+     "name": "Urue Offong/Oruko",
+     "wikidata": "Q7901410"
+    },
+    {
+     "code": "NG-AK-UYO",
+     "name": "Uyo",
+     "wikidata": "Q1999000"
+    }
+   ]
+  },
+  {
+   "code": "NG-AN",
+   "name": "Anambra",
+   "lgas": [
+    {
+     "code": "NG-AN-AGUATA",
+     "name": "Aguata",
+     "wikidata": "Q4694513"
+    },
+    {
+     "code": "NG-AN-ANAMBRA-EAST",
+     "name": "Anambra East",
+     "wikidata": "Q3509614"
+    },
+    {
+     "code": "NG-AN-ANAMBRA-WEST",
+     "name": "Anambra West",
+     "wikidata": "Q3510446"
+    },
+    {
+     "code": "NG-AN-ANAOCHA",
+     "name": "Anaocha",
+     "wikidata": "Q4751505"
+    },
+    {
+     "code": "NG-AN-AWKA-NORTH",
+     "name": "Awka North",
+     "wikidata": "Q4830080"
+    },
+    {
+     "code": "NG-AN-AWKA-SOUTH",
+     "name": "Awka South",
+     "wikidata": "Q4830081"
+    },
+    {
+     "code": "NG-AN-AYAMELUM",
+     "name": "Ayamelum",
+     "wikidata": "Q4830907"
+    },
+    {
+     "code": "NG-AN-DUNUKOFIA",
+     "name": "Dunukofia",
+     "wikidata": "Q5315776"
+    },
+    {
+     "code": "NG-AN-EKWUSIGO",
+     "name": "Ekwusigo",
+     "wikidata": "Q5350637"
+    },
+    {
+     "code": "NG-AN-IDEMILI-NORTH",
+     "name": "Idemili North",
+     "wikidata": "Q11058846"
+    },
+    {
+     "code": "NG-AN-IDEMILI-SOUTH",
+     "name": "Idemili South",
+     "wikidata": "Q5988156"
+    },
+    {
+     "code": "NG-AN-IHIALA",
+     "name": "Ihiala",
+     "wikidata": "Q3056230"
+    },
+    {
+     "code": "NG-AN-NJIKOKA",
+     "name": "Njikoka",
+     "wikidata": "Q13653675"
+    },
+    {
+     "code": "NG-AN-NNEWI-NORTH",
+     "name": "Nnewi North",
+     "wikidata": "Q11058181"
+    },
+    {
+     "code": "NG-AN-NNEWI-SOUTH",
+     "name": "Nnewi South",
+     "wikidata": "Q7042725"
+    },
+    {
+     "code": "NG-AN-OGBARU",
+     "name": "Ogbaru",
+     "wikidata": "Q7079872"
+    },
+    {
+     "code": "NG-AN-ONITSHA-NORTH",
+     "name": "Onitsha North",
+     "wikidata": "Q3509391"
+    },
+    {
+     "code": "NG-AN-ONITSHA-SOUTH",
+     "name": "Onitsha South",
+     "wikidata": "Q3510413"
+    },
+    {
+     "code": "NG-AN-ORUMBA-NORTH",
+     "name": "Orumba North",
+     "wikidata": "Q7105167"
+    },
+    {
+     "code": "NG-AN-ORUMBA-SOUTH",
+     "name": "Orumba South",
+     "wikidata": "Q7105169"
+    },
+    {
+     "code": "NG-AN-OYI",
+     "name": "Oyi",
+     "wikidata": "Q7116267"
+    }
+   ]
+  },
+  {
+   "code": "NG-BA",
+   "name": "Bauchi",
+   "lgas": [
+    {
+     "code": "NG-BA-ALKALERI",
+     "name": "Alkaleri",
+     "wikidata": "Q4727632"
+    },
+    {
+     "code": "NG-BA-BAUCHI",
+     "name": "Bauchi",
+     "wikidata": "Q811144"
+    },
+    {
+     "code": "NG-BA-BOGORO",
+     "name": "Bogoro",
+     "wikidata": "Q4937728"
+    },
+    {
+     "code": "NG-BA-DAMBAN",
+     "name": "Damban",
+     "wikidata": "Q5212083"
+    },
+    {
+     "code": "NG-BA-DARAZO",
+     "name": "Darazo",
+     "wikidata": "Q5222130"
+    },
+    {
+     "code": "NG-BA-DASS",
+     "name": "Dass",
+     "wikidata": "Q5226825"
+    },
+    {
+     "code": "NG-BA-GAMAWA",
+     "name": "Gamawa",
+     "wikidata": "Q5519589"
+    },
+    {
+     "code": "NG-BA-GANJUWA",
+     "name": "Ganjuwa",
+     "wikidata": "Q5521392"
+    },
+    {
+     "code": "NG-BA-GIADE",
+     "name": "Giade",
+     "wikidata": "Q5557957"
+    },
+    {
+     "code": "NG-BA-ITAS-GADAU",
+     "name": "Itas/Gadau",
+     "wikidata": "Q13140468"
+    },
+    {
+     "code": "NG-BA-JAMA-ARE",
+     "name": "Jama'are",
+     "wikidata": "Q6127132"
+    },
+    {
+     "code": "NG-BA-KATAGUM",
+     "name": "Katagum",
+     "wikidata": "Q6375000"
+    },
+    {
+     "code": "NG-BA-KIRFI",
+     "name": "Kirfi",
+     "wikidata": "Q6415063"
+    },
+    {
+     "code": "NG-BA-MISAU",
+     "name": "Misau",
+     "wikidata": "Q2078475"
+    },
+    {
+     "code": "NG-BA-NINGI",
+     "name": "Ningi",
+     "wikidata": "Q7038694"
+    },
+    {
+     "code": "NG-BA-SHIRA",
+     "name": "Shira",
+     "wikidata": "Q7498205"
+    },
+    {
+     "code": "NG-BA-TAFAWA-BALEWA",
+     "name": "Tafawa Balewa",
+     "wikidata": "Q7674928"
+    },
+    {
+     "code": "NG-BA-TORO",
+     "name": "Toro",
+     "wikidata": "Q11058424"
+    },
+    {
+     "code": "NG-BA-WARJI",
+     "name": "Warji",
+     "wikidata": "Q7969461"
+    },
+    {
+     "code": "NG-BA-ZAKI",
+     "name": "Zaki",
+     "wikidata": "Q8065082"
+    }
+   ]
+  },
+  {
+   "code": "NG-BY",
+   "name": "Bayelsa",
+   "lgas": [
+    {
+     "code": "NG-BY-BRASS",
+     "name": "Brass",
+     "wikidata": "Q2923946"
+    },
+    {
+     "code": "NG-BY-EKEREMOR",
+     "name": "Ekeremor",
+     "wikidata": "Q5350399"
+    },
+    {
+     "code": "NG-BY-KOLOKUMA-OPOKUMA",
+     "name": "Kolokuma/Opokuma",
+     "wikidata": "Q6427473"
+    },
+    {
+     "code": "NG-BY-NEMBE",
+     "name": "Nembe",
+     "wikidata": "Q3510576"
+    },
+    {
+     "code": "NG-BY-OGBIA",
+     "name": "Ogbia",
+     "wikidata": "Q7079876"
+    },
+    {
+     "code": "NG-BY-SAGBAMA",
+     "name": "Sagbama",
+     "wikidata": "Q7399088"
+    },
+    {
+     "code": "NG-BY-SOUTHERN-IJAW",
+     "name": "Southern Ijaw",
+     "wikidata": "Q11058325"
+    },
+    {
+     "code": "NG-BY-YENAGOA",
+     "name": "Yenagoa",
+     "wikidata": "Q648749"
+    }
+   ]
+  },
+  {
+   "code": "NG-BE",
+   "name": "Benue",
+   "lgas": [
+    {
+     "code": "NG-BE-ADO",
+     "name": "Ado",
+     "wikidata": "Q4683957"
+    },
+    {
+     "code": "NG-BE-AGATU",
+     "name": "Agatu",
+     "wikidata": "Q3399397"
+    },
+    {
+     "code": "NG-BE-APA",
+     "name": "Apa",
+     "wikidata": "Q4778862"
+    },
+    {
+     "code": "NG-BE-BURUKU",
+     "name": "Buruku",
+     "wikidata": "Q5000980"
+    },
+    {
+     "code": "NG-BE-GBOKO",
+     "name": "Gboko",
+     "wikidata": "Q2425179"
+    },
+    {
+     "code": "NG-BE-GUMA",
+     "name": "Guma",
+     "wikidata": "Q13140438"
+    },
+    {
+     "code": "NG-BE-GWER-EAST",
+     "name": "Gwer East",
+     "wikidata": "Q5623550"
+    },
+    {
+     "code": "NG-BE-GWER-WEST",
+     "name": "Gwer West",
+     "wikidata": "Q5623546"
+    },
+    {
+     "code": "NG-BE-KATSINA-ALA",
+     "name": "Katsina Ala",
+     "wikidata": "Q6378033"
+    },
+    {
+     "code": "NG-BE-KONSHISHA",
+     "name": "Konshisha",
+     "wikidata": "Q6429829"
+    },
+    {
+     "code": "NG-BE-KWANDE",
+     "name": "Kwande",
+     "wikidata": "Q6450151"
+    },
+    {
+     "code": "NG-BE-LOGO",
+     "name": "Logo",
+     "wikidata": "Q6667711"
+    },
+    {
+     "code": "NG-BE-MAKURDI",
+     "name": "Makurdi",
+     "wikidata": "Q994096"
+    },
+    {
+     "code": "NG-BE-OBI",
+     "name": "Obi",
+     "wikidata": "Q4207508"
+    },
+    {
+     "code": "NG-BE-OGBADIBO",
+     "name": "Ogbadibo",
+     "wikidata": "Q7079868"
+    },
+    {
+     "code": "NG-BE-OHIMINI",
+     "name": "Ohimini",
+     "wikidata": "Q7080670"
+    },
+    {
+     "code": "NG-BE-OJU",
+     "name": "Oju",
+     "wikidata": "Q7081668"
+    },
+    {
+     "code": "NG-BE-OKPOKWU",
+     "name": "Okpokwu",
+     "wikidata": "Q7082560"
+    },
+    {
+     "code": "NG-BE-OTUKPO",
+     "name": "Otukpo",
+     "wikidata": "Q3511323"
+    },
+    {
+     "code": "NG-BE-TARKA",
+     "name": "Tarka",
+     "wikidata": "Q7686233"
+    },
+    {
+     "code": "NG-BE-UKUM",
+     "name": "Ukum",
+     "wikidata": "Q7878615"
+    },
+    {
+     "code": "NG-BE-USHONGO",
+     "name": "Ushongo",
+     "wikidata": "Q7901973"
+    },
+    {
+     "code": "NG-BE-VANDEIKYA",
+     "name": "Vandeikya",
+     "wikidata": "Q7914377"
+    }
+   ]
+  },
+  {
+   "code": "NG-BO",
+   "name": "Borno",
+   "lgas": [
+    {
+     "code": "NG-BO-ABADAM",
+     "name": "Abadam",
+     "wikidata": "Q3509646"
+    },
+    {
+     "code": "NG-BO-ASKIRA-UBA",
+     "name": "Askira/Uba",
+     "wikidata": "Q3509469"
+    },
+    {
+     "code": "NG-BO-BAMA",
+     "name": "Bama",
+     "wikidata": "Q3331583"
+    },
+    {
+     "code": "NG-BO-BAYO",
+     "name": "Bayo",
+     "wikidata": "Q4874676"
+    },
+    {
+     "code": "NG-BO-BIU",
+     "name": "Biu",
+     "wikidata": "Q2904965"
+    },
+    {
+     "code": "NG-BO-CHIBOK",
+     "name": "Chibok",
+     "wikidata": "Q5095348"
+    },
+    {
+     "code": "NG-BO-DAMBOA",
+     "name": "Damboa",
+     "wikidata": "Q5212096"
+    },
+    {
+     "code": "NG-BO-DIKWA",
+     "name": "Dikwa",
+     "wikidata": "Q5276586"
+    },
+    {
+     "code": "NG-BO-GUBIO",
+     "name": "Gubio",
+     "wikidata": "Q5610675"
+    },
+    {
+     "code": "NG-BO-GUZAMALA",
+     "name": "Guzamala",
+     "wikidata": "Q5622902"
+    },
+    {
+     "code": "NG-BO-GWOZA",
+     "name": "Gwoza",
+     "wikidata": "Q5623719"
+    },
+    {
+     "code": "NG-BO-HAWUL",
+     "name": "Hawul",
+     "wikidata": "Q5685688"
+    },
+    {
+     "code": "NG-BO-JERE",
+     "name": "Jere",
+     "wikidata": "Q13140477"
+    },
+    {
+     "code": "NG-BO-KAGA",
+     "name": "Kaga",
+     "wikidata": "Q6346306"
+    },
+    {
+     "code": "NG-BO-KALA-BALGE",
+     "name": "Kala/Balge",
+     "wikidata": "Q6349919"
+    },
+    {
+     "code": "NG-BO-KONDUGA",
+     "name": "Konduga",
+     "wikidata": "Q6429051"
+    },
+    {
+     "code": "NG-BO-KUKAWA",
+     "name": "Kukawa",
+     "wikidata": "Q128665"
+    },
+    {
+     "code": "NG-BO-KWAYA-KUSAR",
+     "name": "Kwaya Kusar",
+     "wikidata": "Q6450273"
+    },
+    {
+     "code": "NG-BO-MAFA",
+     "name": "Mafa",
+     "wikidata": "Q6729409"
+    },
+    {
+     "code": "NG-BO-MAGUMERI",
+     "name": "Magumeri",
+     "wikidata": "Q6732527"
+    },
+    {
+     "code": "NG-BO-MAIDUGURI",
+     "name": "Maiduguri",
+     "wikidata": "Q221436"
+    },
+    {
+     "code": "NG-BO-MARTE",
+     "name": "Marte",
+     "wikidata": "Q295517"
+    },
+    {
+     "code": "NG-BO-MOBBAR",
+     "name": "Mobbar",
+     "wikidata": "Q6886647"
+    },
+    {
+     "code": "NG-BO-MONGUNO",
+     "name": "Monguno",
+     "wikidata": "Q15043599"
+    },
+    {
+     "code": "NG-BO-NGALA",
+     "name": "Ngala",
+     "wikidata": "Q7021892"
+    },
+    {
+     "code": "NG-BO-NGANZAI",
+     "name": "Nganzai",
+     "wikidata": "Q7022015"
+    },
+    {
+     "code": "NG-BO-SHANI",
+     "name": "Shani",
+     "wikidata": "Q7488621"
+    }
+   ]
+  },
+  {
+   "code": "NG-CR",
+   "name": "Cross River",
+   "lgas": [
+    {
+     "code": "NG-CR-ABI",
+     "name": "Abi",
+     "wikidata": "Q3510527"
+    },
+    {
+     "code": "NG-CR-AKAMKPA",
+     "name": "Akamkpa",
+     "wikidata": "Q4700237"
+    },
+    {
+     "code": "NG-CR-AKPABUYO",
+     "name": "Akpabuyo",
+     "wikidata": "Q4701571"
+    },
+    {
+     "code": "NG-CR-BAKASSI",
+     "name": "Bakassi",
+     "wikidata": "Q804272"
+    },
+    {
+     "code": "NG-CR-BEKWARRA",
+     "name": "Bekwarra",
+     "wikidata": "Q4881684"
+    },
+    {
+     "code": "NG-CR-BIASE",
+     "name": "Biase",
+     "wikidata": "Q4902588"
+    },
+    {
+     "code": "NG-CR-BOKI",
+     "name": "Boki",
+     "wikidata": "Q4938771"
+    },
+    {
+     "code": "NG-CR-CALABAR-MUNICIPAL",
+     "name": "Calabar Municipal",
+     "wikidata": "Q5018280"
+    },
+    {
+     "code": "NG-CR-CALABAR-SOUTH",
+     "name": "Calabar South",
+     "wikidata": "Q5018279"
+    },
+    {
+     "code": "NG-CR-ETUNG",
+     "name": "Etung",
+     "wikidata": "Q5405088"
+    },
+    {
+     "code": "NG-CR-IKOM",
+     "name": "Ikom",
+     "wikidata": "Q5996091"
+    },
+    {
+     "code": "NG-CR-OBANLIKU",
+     "name": "Obanliku",
+     "wikidata": "Q7074630"
+    },
+    {
+     "code": "NG-CR-OBUBRA",
+     "name": "Obubra",
+     "wikidata": "Q7075578"
+    },
+    {
+     "code": "NG-CR-OBUDU",
+     "name": "Obudu",
+     "wikidata": "Q7075580"
+    },
+    {
+     "code": "NG-CR-ODUKPANI",
+     "name": "Odukpani",
+     "wikidata": "Q7078367"
+    },
+    {
+     "code": "NG-CR-OGOJA",
+     "name": "Ogoja",
+     "wikidata": "Q3509254"
+    },
+    {
+     "code": "NG-CR-YAKURR",
+     "name": "Yakurr",
+     "wikidata": "Q8047268"
+    },
+    {
+     "code": "NG-CR-YALA",
+     "name": "Yala",
+     "wikidata": "Q8047286"
+    }
+   ]
+  },
+  {
+   "code": "NG-DE",
+   "name": "Delta",
+   "lgas": [
+    {
+     "code": "NG-DE-ANIOCHA-NORTH",
+     "name": "Aniocha North",
+     "wikidata": "Q4765241"
+    },
+    {
+     "code": "NG-DE-ANIOCHA-SOUTH",
+     "name": "Aniocha South",
+     "wikidata": "Q4765242"
+    },
+    {
+     "code": "NG-DE-BOMADI",
+     "name": "Bomadi",
+     "wikidata": "Q4940347"
+    },
+    {
+     "code": "NG-DE-BURUTU",
+     "name": "Burutu",
+     "wikidata": "Q3510499"
+    },
+    {
+     "code": "NG-DE-ETHIOPE-EAST",
+     "name": "Ethiope East",
+     "wikidata": "Q5403503"
+    },
+    {
+     "code": "NG-DE-ETHIOPE-WEST",
+     "name": "Ethiope West",
+     "wikidata": "Q5403511"
+    },
+    {
+     "code": "NG-DE-IKA-NORTH-EAST",
+     "name": "Ika North East",
+     "wikidata": "Q5995280"
+    },
+    {
+     "code": "NG-DE-IKA-SOUTH",
+     "name": "Ika South",
+     "wikidata": "Q17139912"
+    },
+    {
+     "code": "NG-DE-ISOKO-NORTH",
+     "name": "Isoko North",
+     "wikidata": "Q6085814"
+    },
+    {
+     "code": "NG-DE-ISOKO-SOUTH",
+     "name": "Isoko South",
+     "wikidata": "Q6085820"
+    },
+    {
+     "code": "NG-DE-NDOKWA-EAST",
+     "name": "Ndokwa East",
+     "wikidata": "Q6983780"
+    },
+    {
+     "code": "NG-DE-NDOKWA-WEST",
+     "name": "Ndokwa West",
+     "wikidata": "Q17109187"
+    },
+    {
+     "code": "NG-DE-OKPE",
+     "name": "Okpe",
+     "wikidata": "Q7082548"
+    },
+    {
+     "code": "NG-DE-OSHIMILI-NORTH",
+     "name": "Oshimili North",
+     "wikidata": "Q7106622"
+    },
+    {
+     "code": "NG-DE-OSHIMILI-SOUTH",
+     "name": "Oshimili South",
+     "wikidata": "Q7106620"
+    },
+    {
+     "code": "NG-DE-PATANI",
+     "name": "Patani",
+     "wikidata": "Q2478838"
+    },
+    {
+     "code": "NG-DE-SAPELE",
+     "name": "Sapele",
+     "wikidata": "Q3495356"
+    },
+    {
+     "code": "NG-DE-UDU",
+     "name": "Udu",
+     "wikidata": "Q7877316"
+    },
+    {
+     "code": "NG-DE-UGHELLI-NORTH",
+     "name": "Ughelli North",
+     "wikidata": "Q15043628"
+    },
+    {
+     "code": "NG-DE-UGHELLI-SOUTH",
+     "name": "Ughelli South",
+     "wikidata": "Q7877752"
+    },
+    {
+     "code": "NG-DE-UKWUANI",
+     "name": "Ukwuani",
+     "wikidata": "Q7878637"
+    },
+    {
+     "code": "NG-DE-UVWIE",
+     "name": "Uvwie",
+     "wikidata": "Q7903753"
+    },
+    {
+     "code": "NG-DE-WARRI-NORTH",
+     "name": "Warri North",
+     "wikidata": "Q7970686"
+    },
+    {
+     "code": "NG-DE-WARRI-SOUTH",
+     "name": "Warri South",
+     "wikidata": "Q7970687"
+    },
+    {
+     "code": "NG-DE-WARRI-SOUTH-WEST",
+     "name": "Warri South West",
+     "wikidata": "Q7970689"
+    }
+   ]
+  },
+  {
+   "code": "NG-EB",
+   "name": "Ebonyi",
+   "lgas": [
+    {
+     "code": "NG-EB-ABAKALIKI",
+     "name": "Abakaliki",
+     "wikidata": "Q304976"
+    },
+    {
+     "code": "NG-EB-AFIKPO-NORTH",
+     "name": "Afikpo North",
+     "wikidata": "Q4689249"
+    },
+    {
+     "code": "NG-EB-AFIKPO-SOUTH",
+     "name": "Afikpo South",
+     "wikidata": "Q4689251"
+    },
+    {
+     "code": "NG-EB-EBONYI",
+     "name": "Ebonyi",
+     "wikidata": "Q506808"
+    },
+    {
+     "code": "NG-EB-EZZA-NORTH",
+     "name": "Ezza North",
+     "wikidata": "Q5423453"
+    },
+    {
+     "code": "NG-EB-EZZA-SOUTH",
+     "name": "Ezza South",
+     "wikidata": "Q5423452"
+    },
+    {
+     "code": "NG-EB-IKWO",
+     "name": "Ikwo",
+     "wikidata": "Q5996451"
+    },
+    {
+     "code": "NG-EB-ISHIELU",
+     "name": "Ishielu",
+     "wikidata": "Q6080174"
+    },
+    {
+     "code": "NG-EB-IVO",
+     "name": "Ivo",
+     "wikidata": "Q11058348"
+    },
+    {
+     "code": "NG-EB-IZZI",
+     "name": "Izzi",
+     "wikidata": "Q24263985"
+    },
+    {
+     "code": "NG-EB-OHAOZARA",
+     "name": "Ohaozara",
+     "wikidata": "Q7080620"
+    },
+    {
+     "code": "NG-EB-OHAUKWU",
+     "name": "Ohaukwu",
+     "wikidata": "Q7080634"
+    },
+    {
+     "code": "NG-EB-ONICHA",
+     "name": "Onicha",
+     "wikidata": "Q7093889"
+    }
+   ]
+  },
+  {
+   "code": "NG-ED",
+   "name": "Edo",
+   "lgas": [
+    {
+     "code": "NG-ED-AKOKO-EDO",
+     "name": "Akoko Edo",
+     "wikidata": "Q4701504"
+    },
+    {
+     "code": "NG-ED-EGOR",
+     "name": "Egor",
+     "wikidata": "Q5348227"
+    },
+    {
+     "code": "NG-ED-ESAN-CENTRAL",
+     "name": "Esan Central",
+     "wikidata": "Q5396712"
+    },
+    {
+     "code": "NG-ED-ESAN-NORTH-EAST",
+     "name": "Esan North East",
+     "wikidata": "Q5396720"
+    },
+    {
+     "code": "NG-ED-ESAN-SOUTH-EAST",
+     "name": "Esan South East",
+     "wikidata": "Q5396716"
+    },
+    {
+     "code": "NG-ED-ESAN-WEST",
+     "name": "Esan West",
+     "wikidata": "Q5396721"
+    },
+    {
+     "code": "NG-ED-ETSAKO-CENTRAL",
+     "name": "Etsako Central",
+     "wikidata": "Q5404912"
+    },
+    {
+     "code": "NG-ED-ETSAKO-EAST",
+     "name": "Etsako East",
+     "wikidata": "Q5404915"
+    },
+    {
+     "code": "NG-ED-ETSAKO-WEST",
+     "name": "Etsako West",
+     "wikidata": "Q5404913"
+    },
+    {
+     "code": "NG-ED-IGUEBEN",
+     "name": "Igueben",
+     "wikidata": "Q15043602"
+    },
+    {
+     "code": "NG-ED-IKPOBA-OKHA",
+     "name": "Ikpoba Okha",
+     "wikidata": "Q5996228"
+    },
+    {
+     "code": "NG-ED-OREDO",
+     "name": "Oredo",
+     "wikidata": "Q7101001"
+    },
+    {
+     "code": "NG-ED-ORHIONMWON",
+     "name": "Orhionmwon",
+     "wikidata": "Q7102189"
+    },
+    {
+     "code": "NG-ED-OVIA-NORTH-EAST",
+     "name": "Ovia North East",
+     "wikidata": "Q7114106"
+    },
+    {
+     "code": "NG-ED-OVIA-SOUTH-WEST",
+     "name": "Ovia South West",
+     "wikidata": "Q7114107"
+    },
+    {
+     "code": "NG-ED-OWAN-EAST",
+     "name": "Owan East",
+     "wikidata": "Q7114274"
+    },
+    {
+     "code": "NG-ED-OWAN-WEST",
+     "name": "Owan West",
+     "wikidata": "Q7114275"
+    },
+    {
+     "code": "NG-ED-UHUNMWONDE",
+     "name": "Uhunmwonde",
+     "wikidata": "Q7878024"
+    }
+   ]
+  },
+  {
+   "code": "NG-EK",
+   "name": "Ekiti",
+   "lgas": [
+    {
+     "code": "NG-EK-ADO-EKITI",
+     "name": "Ado-Ekiti",
+     "wikidata": "Q359955"
+    },
+    {
+     "code": "NG-EK-EFON",
+     "name": "Efon",
+     "wikidata": "Q5347554"
+    },
+    {
+     "code": "NG-EK-EKITI-EAST",
+     "name": "Ekiti East",
+     "wikidata": "Q3511633"
+    },
+    {
+     "code": "NG-EK-EKITI-SOUTH-WEST",
+     "name": "Ekiti South West",
+     "wikidata": "Q3511702"
+    },
+    {
+     "code": "NG-EK-EKITI-WEST",
+     "name": "Ekiti West",
+     "wikidata": "Q3331544"
+    },
+    {
+     "code": "NG-EK-EMURE",
+     "name": "Emure",
+     "wikidata": "Q5374891"
+    },
+    {
+     "code": "NG-EK-GBONYIN",
+     "name": "Gbonyin",
+     "wikidata": "Q5529352"
+    },
+    {
+     "code": "NG-EK-IDO-OSI",
+     "name": "Ido-Osi",
+     "wikidata": "Q5989257"
+    },
+    {
+     "code": "NG-EK-IJERO",
+     "name": "Ijero",
+     "wikidata": "Q5995177"
+    },
+    {
+     "code": "NG-EK-IKERE",
+     "name": "Ikere",
+     "wikidata": "Q946097"
+    },
+    {
+     "code": "NG-EK-IKOLE",
+     "name": "Ikole",
+     "wikidata": "Q5996084"
+    },
+    {
+     "code": "NG-EK-ILEJEMEJE",
+     "name": "Ilejemeje",
+     "wikidata": "Q5997498"
+    },
+    {
+     "code": "NG-EK-IREPODUN-IFELODUN",
+     "name": "Irepodun/Ifelodun",
+     "wikidata": "Q6069392"
+    },
+    {
+     "code": "NG-EK-ISE-ORUN",
+     "name": "Ise/Orun",
+     "wikidata": "Q6079560"
+    },
+    {
+     "code": "NG-EK-MOBA",
+     "name": "Moba",
+     "wikidata": "Q6886588"
+    },
+    {
+     "code": "NG-EK-OYE",
+     "name": "Oye",
+     "wikidata": "Q7116252"
+    }
+   ]
+  },
+  {
+   "code": "NG-EN",
+   "name": "Enugu",
+   "lgas": [
+    {
+     "code": "NG-EN-ANINRI",
+     "name": "Aninri",
+     "wikidata": "Q4765240"
+    },
+    {
+     "code": "NG-EN-AWGU",
+     "name": "Awgu",
+     "wikidata": "Q4830051"
+    },
+    {
+     "code": "NG-EN-ENUGU-EAST",
+     "name": "Enugu East",
+     "wikidata": "Q5380873"
+    },
+    {
+     "code": "NG-EN-ENUGU-NORTH",
+     "name": "Enugu North",
+     "wikidata": "Q5380874"
+    },
+    {
+     "code": "NG-EN-ENUGU-SOUTH",
+     "name": "Enugu South",
+     "wikidata": "Q5380875"
+    },
+    {
+     "code": "NG-EN-EZEAGU",
+     "name": "Ezeagu",
+     "wikidata": "Q5423113"
+    },
+    {
+     "code": "NG-EN-IGBO-ETITI",
+     "name": "Igbo Etiti",
+     "wikidata": "Q5991568"
+    },
+    {
+     "code": "NG-EN-IGBO-EZE-NORTH",
+     "name": "Igbo Eze North",
+     "wikidata": "Q5991578"
+    },
+    {
+     "code": "NG-EN-IGBO-EZE-SOUTH",
+     "name": "Igbo Eze South",
+     "wikidata": "Q5991584"
+    },
+    {
+     "code": "NG-EN-ISI-UZO",
+     "name": "Isi-Uzo",
+     "wikidata": "Q11274430"
+    },
+    {
+     "code": "NG-EN-NKANU-EAST",
+     "name": "Nkanu East",
+     "wikidata": "Q7042529"
+    },
+    {
+     "code": "NG-EN-NKANU-WEST",
+     "name": "Nkanu West",
+     "wikidata": "Q11058668"
+    },
+    {
+     "code": "NG-EN-NSUKKA",
+     "name": "Nsukka",
+     "wikidata": "Q681198"
+    },
+    {
+     "code": "NG-EN-OJI-RIVER",
+     "name": "Oji-River",
+     "wikidata": "Q7081610"
+    },
+    {
+     "code": "NG-EN-UDENU",
+     "name": "Udenu",
+     "wikidata": "Q7877168"
+    },
+    {
+     "code": "NG-EN-UDI",
+     "name": "Udi",
+     "wikidata": "Q7877213"
+    },
+    {
+     "code": "NG-EN-UZO-UWANI",
+     "name": "Uzo-Uwani",
+     "wikidata": "Q7905110"
+    }
+   ]
+  },
+  {
+   "code": "NG-FC",
+   "name": "Federal Capital Territory",
+   "lgas": [
+    {
+     "code": "NG-FC-ABAJI",
+     "name": "Abaji",
+     "wikidata": "Q1053237"
+    },
+    {
+     "code": "NG-FC-ABUJA",
+     "name": "Abuja",
+     "wikidata": "Q3787"
+    },
+    {
+     "code": "NG-FC-BWARI",
+     "name": "Bwari",
+     "wikidata": "Q5003670"
+    },
+    {
+     "code": "NG-FC-GWAGWALADA",
+     "name": "Gwagwalada",
+     "wikidata": "Q2285343"
+    },
+    {
+     "code": "NG-FC-KUJE",
+     "name": "Kuje",
+     "wikidata": "Q6442341"
+    },
+    {
+     "code": "NG-FC-KWALI",
+     "name": "Kwali",
+     "wikidata": "Q6450057"
+    }
+   ]
+  },
+  {
+   "code": "NG-GO",
+   "name": "Gombe",
+   "lgas": [
+    {
+     "code": "NG-GO-AKKO",
+     "name": "Akko",
+     "wikidata": "Q126084"
+    },
+    {
+     "code": "NG-GO-BALANGA",
+     "name": "Balanga",
+     "wikidata": "Q4374738"
+    },
+    {
+     "code": "NG-GO-BILLIRI",
+     "name": "Billiri",
+     "wikidata": "Q3510517"
+    },
+    {
+     "code": "NG-GO-DUKKU",
+     "name": "Dukku",
+     "wikidata": "Q5313235"
+    },
+    {
+     "code": "NG-GO-FUNAKAYE",
+     "name": "Funakaye",
+     "wikidata": "Q5508725"
+    },
+    {
+     "code": "NG-GO-GOMBE",
+     "name": "Gombe",
+     "wikidata": "Q591598"
+    },
+    {
+     "code": "NG-GO-KALTUNGO",
+     "name": "Kaltungo",
+     "wikidata": "Q6354502"
+    },
+    {
+     "code": "NG-GO-KWAMI",
+     "name": "Kwami",
+     "wikidata": "Q6450109"
+    },
+    {
+     "code": "NG-GO-NAFADA",
+     "name": "Nafada",
+     "wikidata": "Q6958144"
+    },
+    {
+     "code": "NG-GO-SHONGOM",
+     "name": "Shongom",
+     "wikidata": "Q7500408"
+    },
+    {
+     "code": "NG-GO-YAMALTU-DEBA",
+     "name": "Yamaltu/Deba",
+     "wikidata": "Q3510505"
+    }
+   ]
+  },
+  {
+   "code": "NG-IM",
+   "name": "Imo",
+   "lgas": [
+    {
+     "code": "NG-IM-ABOH-MBAISE",
+     "name": "Aboh Mbaise",
+     "wikidata": "Q4668212"
+    },
+    {
+     "code": "NG-IM-AHIAZU-MBAISE",
+     "name": "Ahiazu Mbaise",
+     "wikidata": "Q4695100"
+    },
+    {
+     "code": "NG-IM-EHIME-MBANO",
+     "name": "Ehime Mbano",
+     "wikidata": "Q5348582"
+    },
+    {
+     "code": "NG-IM-EZINIHITTE-MBAISE",
+     "name": "Ezinihitte Mbaise",
+     "wikidata": "Q5423295"
+    },
+    {
+     "code": "NG-IM-IDEATO-NORTH",
+     "name": "Ideato North",
+     "wikidata": "Q5988103"
+    },
+    {
+     "code": "NG-IM-IDEATO-SOUTH",
+     "name": "Ideato South",
+     "wikidata": "Q5988113"
+    },
+    {
+     "code": "NG-IM-IHITTE-UBOMA",
+     "name": "Ihitte/Uboma",
+     "wikidata": "Q5994706"
+    },
+    {
+     "code": "NG-IM-IKEDURU",
+     "name": "Ikeduru",
+     "wikidata": "Q5995775"
+    },
+    {
+     "code": "NG-IM-ISIALA-MBANO",
+     "name": "Isiala Mbano",
+     "wikidata": "Q6080814"
+    },
+    {
+     "code": "NG-IM-ISU",
+     "name": "Isu",
+     "wikidata": "Q11058579"
+    },
+    {
+     "code": "NG-IM-MBAITOLI",
+     "name": "Mbaitoli",
+     "wikidata": "Q11057544"
+    },
+    {
+     "code": "NG-IM-NGOR-OKPALA",
+     "name": "Ngor Okpala",
+     "wikidata": "Q7022569"
+    },
+    {
+     "code": "NG-IM-NJABA",
+     "name": "Njaba",
+     "wikidata": "Q10491509"
+    },
+    {
+     "code": "NG-IM-NKWERRE",
+     "name": "Nkwerre",
+     "wikidata": "Q3509029"
+    },
+    {
+     "code": "NG-IM-NWANGELE",
+     "name": "Nwangele",
+     "wikidata": "Q7070734"
+    },
+    {
+     "code": "NG-IM-OBOWO",
+     "name": "Obowo",
+     "wikidata": "Q7075319"
+    },
+    {
+     "code": "NG-IM-OGUTA",
+     "name": "Oguta",
+     "wikidata": "Q3510973"
+    },
+    {
+     "code": "NG-IM-OHAJI-EGBEMA",
+     "name": "Ohaji/Egbema",
+     "wikidata": "Q7080607"
+    },
+    {
+     "code": "NG-IM-OKIGWE",
+     "name": "Okigwe",
+     "wikidata": "Q3509182"
+    },
+    {
+     "code": "NG-IM-ONUIMO",
+     "name": "Onuimo",
+     "wikidata": "Q7095088"
+    },
+    {
+     "code": "NG-IM-ORLU",
+     "name": "Orlu",
+     "wikidata": "Q3508985"
+    },
+    {
+     "code": "NG-IM-ORSU",
+     "name": "Orsu",
+     "wikidata": "Q7104193"
+    },
+    {
+     "code": "NG-IM-ORU-EAST",
+     "name": "Oru East",
+     "wikidata": "Q7105120"
+    },
+    {
+     "code": "NG-IM-ORU-WEST",
+     "name": "Oru West",
+     "wikidata": "Q7105149"
+    },
+    {
+     "code": "NG-IM-OWERRI-MUNICIPAL",
+     "name": "Owerri Municipal",
+     "wikidata": "Q7114779"
+    },
+    {
+     "code": "NG-IM-OWERRI-NORTH",
+     "name": "Owerri North",
+     "wikidata": "Q7114782"
+    },
+    {
+     "code": "NG-IM-OWERRI-WEST",
+     "name": "Owerri West",
+     "wikidata": "Q7114784"
+    }
+   ]
+  },
+  {
+   "code": "NG-JI",
+   "name": "Jigawa",
+   "lgas": [
+    {
+     "code": "NG-JI-AUYO",
+     "name": "Auyo",
+     "wikidata": "Q4827336"
+    },
+    {
+     "code": "NG-JI-BABURA",
+     "name": "Babura",
+     "wikidata": "Q4838099"
+    },
+    {
+     "code": "NG-JI-BIRINIWA",
+     "name": "Biriniwa",
+     "wikidata": "Q13140398"
+    },
+    {
+     "code": "NG-JI-BIRNIN-KUDU",
+     "name": "Birnin Kudu",
+     "wikidata": "Q4916902"
+    },
+    {
+     "code": "NG-JI-BUJI",
+     "name": "Buji",
+     "wikidata": "Q4986741"
+    },
+    {
+     "code": "NG-JI-DUTSE",
+     "name": "Dutse",
+     "wikidata": "Q1023713"
+    },
+    {
+     "code": "NG-JI-GAGARAWA",
+     "name": "Gagarawa",
+     "wikidata": "Q5516809"
+    },
+    {
+     "code": "NG-JI-GARKI",
+     "name": "Garki",
+     "wikidata": "Q5523392"
+    },
+    {
+     "code": "NG-JI-GUMEL",
+     "name": "Gumel",
+     "wikidata": "Q1023716"
+    },
+    {
+     "code": "NG-JI-GURI",
+     "name": "Guri",
+     "wikidata": "Q42071"
+    },
+    {
+     "code": "NG-JI-GWARAM",
+     "name": "Gwaram",
+     "wikidata": "Q5623339"
+    },
+    {
+     "code": "NG-JI-GWIWA",
+     "name": "Gwiwa",
+     "wikidata": "Q5623681"
+    },
+    {
+     "code": "NG-JI-HADEJIA",
+     "name": "Hadejia",
+     "wikidata": "Q5637733"
+    },
+    {
+     "code": "NG-JI-JAHUN",
+     "name": "Jahun",
+     "wikidata": "Q6123326"
+    },
+    {
+     "code": "NG-JI-KAFIN-HAUSA",
+     "name": "Kafin Hausa",
+     "wikidata": "Q218744"
+    },
+    {
+     "code": "NG-JI-KAUGAMA",
+     "name": "Kaugama",
+     "wikidata": "Q6378697"
+    },
+    {
+     "code": "NG-JI-KAZAURE",
+     "name": "Kazaure",
+     "wikidata": "Q6380928"
+    },
+    {
+     "code": "NG-JI-KIRI-KASAMA",
+     "name": "Kiri Kasama",
+     "wikidata": "Q6415076"
+    },
+    {
+     "code": "NG-JI-KIYAWA",
+     "name": "Kiyawa",
+     "wikidata": "Q6418966"
+    },
+    {
+     "code": "NG-JI-MAIGATARI",
+     "name": "Maigatari",
+     "wikidata": "Q7682218"
+    },
+    {
+     "code": "NG-JI-MALAM-MADORI",
+     "name": "Malam Madori",
+     "wikidata": "Q6741213"
+    },
+    {
+     "code": "NG-JI-MIGA",
+     "name": "Miga",
+     "wikidata": "Q3857126"
+    },
+    {
+     "code": "NG-JI-RINGIM",
+     "name": "Ringim",
+     "wikidata": "Q7334893"
+    },
+    {
+     "code": "NG-JI-RONI",
+     "name": "Roni",
+     "wikidata": "Q7365684"
+    },
+    {
+     "code": "NG-JI-SULE-TANKARKAR",
+     "name": "Sule Tankarkar",
+     "wikidata": "Q7636102"
+    },
+    {
+     "code": "NG-JI-TAURA",
+     "name": "Taura",
+     "wikidata": "Q71057"
+    },
+    {
+     "code": "NG-JI-YANKWASHI",
+     "name": "Yankwashi",
+     "wikidata": "Q8048834"
+    }
+   ]
+  },
+  {
+   "code": "NG-KD",
+   "name": "Kaduna",
+   "lgas": [
+    {
+     "code": "NG-KD-BIRNIN-GWARI",
+     "name": "Birnin Gwari",
+     "wikidata": "Q13140400"
+    },
+    {
+     "code": "NG-KD-CHIKUN",
+     "name": "Chikun",
+     "wikidata": "Q5097501"
+    },
+    {
+     "code": "NG-KD-GIWA",
+     "name": "Giwa",
+     "wikidata": "Q5565892"
+    },
+    {
+     "code": "NG-KD-IGABI",
+     "name": "Igabi",
+     "wikidata": "Q5991414"
+    },
+    {
+     "code": "NG-KD-IKARA",
+     "name": "Ikara",
+     "wikidata": "Q5995371"
+    },
+    {
+     "code": "NG-KD-JABA",
+     "name": "Jaba",
+     "wikidata": "Q13140472"
+    },
+    {
+     "code": "NG-KD-JEMA-A",
+     "name": "Jema'a",
+     "wikidata": "Q6177061"
+    },
+    {
+     "code": "NG-KD-KACHIA",
+     "name": "Kachia",
+     "wikidata": "Q6344670"
+    },
+    {
+     "code": "NG-KD-KADUNA-NORTH",
+     "name": "Kaduna North",
+     "wikidata": "Q13140547"
+    },
+    {
+     "code": "NG-KD-KADUNA-SOUTH",
+     "name": "Kaduna South",
+     "wikidata": "Q6345763"
+    },
+    {
+     "code": "NG-KD-KAGARKO",
+     "name": "Kagarko",
+     "wikidata": "Q6346376"
+    },
+    {
+     "code": "NG-KD-KAJURU",
+     "name": "Kajuru",
+     "wikidata": "Q6349067"
+    },
+    {
+     "code": "NG-KD-KAURA",
+     "name": "Kaura",
+     "wikidata": "Q6378873"
+    },
+    {
+     "code": "NG-KD-KAURU",
+     "name": "Kauru",
+     "wikidata": "Q6378904"
+    },
+    {
+     "code": "NG-KD-KUBAU",
+     "name": "Kubau",
+     "wikidata": "Q6441191"
+    },
+    {
+     "code": "NG-KD-KUDAN",
+     "name": "Kudan",
+     "wikidata": "Q6441647"
+    },
+    {
+     "code": "NG-KD-LERE",
+     "name": "Lere",
+     "wikidata": "Q6528787"
+    },
+    {
+     "code": "NG-KD-MAKARFI",
+     "name": "Makarfi",
+     "wikidata": "Q6738780"
+    },
+    {
+     "code": "NG-KD-SABON-GARI",
+     "name": "Sabon Gari",
+     "wikidata": "Q7396283"
+    },
+    {
+     "code": "NG-KD-SANGA",
+     "name": "Sanga",
+     "wikidata": "Q5290125"
+    },
+    {
+     "code": "NG-KD-SOBA",
+     "name": "Soba",
+     "wikidata": "Q7549885"
+    },
+    {
+     "code": "NG-KD-ZANGON-KATAF",
+     "name": "Zangon Kataf",
+     "wikidata": "Q8066201"
+    },
+    {
+     "code": "NG-KD-ZARIA",
+     "name": "Zaria",
+     "wikidata": "Q147975"
+    }
+   ]
+  },
+  {
+   "code": "NG-KN",
+   "name": "Kano",
+   "lgas": [
+    {
+     "code": "NG-KN-AJINGI",
+     "name": "Ajingi",
+     "wikidata": "Q4699747"
+    },
+    {
+     "code": "NG-KN-ALBASU",
+     "name": "Albasu",
+     "wikidata": "Q4709434"
+    },
+    {
+     "code": "NG-KN-BAGWAI",
+     "name": "Bagwai",
+     "wikidata": "Q4842187"
+    },
+    {
+     "code": "NG-KN-BEBEJI",
+     "name": "Bebeji",
+     "wikidata": "Q4878426"
+    },
+    {
+     "code": "NG-KN-BICHI",
+     "name": "Bichi",
+     "wikidata": "Q4903607"
+    },
+    {
+     "code": "NG-KN-BUNKURE",
+     "name": "Bunkure",
+     "wikidata": "Q13140410"
+    },
+    {
+     "code": "NG-KN-DALA",
+     "name": "Dala",
+     "wikidata": "Q5210142"
+    },
+    {
+     "code": "NG-KN-DAMBATTA",
+     "name": "Dambatta",
+     "wikidata": "Q5212087"
+    },
+    {
+     "code": "NG-KN-DAWAKIN-KUDU",
+     "name": "Dawakin Kudu",
+     "wikidata": "Q5242270"
+    },
+    {
+     "code": "NG-KN-DAWAKIN-TOFA",
+     "name": "Dawakin Tofa",
+     "wikidata": "Q5242271"
+    },
+    {
+     "code": "NG-KN-DOGUWA",
+     "name": "Doguwa",
+     "wikidata": "Q5288494"
+    },
+    {
+     "code": "NG-KN-FAGGE",
+     "name": "Fagge",
+     "wikidata": "Q5429405"
+    },
+    {
+     "code": "NG-KN-GABASAWA",
+     "name": "Gabasawa",
+     "wikidata": "Q5515278"
+    },
+    {
+     "code": "NG-KN-GARKO",
+     "name": "Garko",
+     "wikidata": "Q5523394"
+    },
+    {
+     "code": "NG-KN-GARUN-MALAM",
+     "name": "Garun Malam",
+     "wikidata": "Q5524488"
+    },
+    {
+     "code": "NG-KN-GAYA",
+     "name": "Gaya",
+     "wikidata": "Q5528692"
+    },
+    {
+     "code": "NG-KN-GEZAWA",
+     "name": "Gezawa",
+     "wikidata": "Q5555061"
+    },
+    {
+     "code": "NG-KN-GWALE",
+     "name": "Gwale",
+     "wikidata": "Q5623248"
+    },
+    {
+     "code": "NG-KN-GWARZO",
+     "name": "Gwarzo",
+     "wikidata": "Q5623352"
+    },
+    {
+     "code": "NG-KN-KABO",
+     "name": "Kabo",
+     "wikidata": "Q2428075"
+    },
+    {
+     "code": "NG-KN-KANO-MUNICIPAL",
+     "name": "Kano Municipal",
+     "wikidata": "Q10313749"
+    },
+    {
+     "code": "NG-KN-KARAYE",
+     "name": "Karaye",
+     "wikidata": "Q6368888"
+    },
+    {
+     "code": "NG-KN-KIBIYA",
+     "name": "Kibiya",
+     "wikidata": "Q6404045"
+    },
+    {
+     "code": "NG-KN-KIRU",
+     "name": "Kiru",
+     "wikidata": "Q6416264"
+    },
+    {
+     "code": "NG-KN-KUNCHI",
+     "name": "Kunchi",
+     "wikidata": "Q6444225"
+    },
+    {
+     "code": "NG-KN-KURA",
+     "name": "Kura",
+     "wikidata": "Q6445487"
+    },
+    {
+     "code": "NG-KN-MADOBI",
+     "name": "Madobi",
+     "wikidata": "Q6728324"
+    },
+    {
+     "code": "NG-KN-MAKODA",
+     "name": "Makoda",
+     "wikidata": "Q6739854"
+    },
+    {
+     "code": "NG-KN-MINJIBIR",
+     "name": "Minjibir",
+     "wikidata": "Q6867755"
+    },
+    {
+     "code": "NG-KN-NASARAWA",
+     "name": "Nasarawa",
+     "wikidata": "Q836645"
+    },
+    {
+     "code": "NG-KN-RANO",
+     "name": "Rano",
+     "wikidata": "Q7293412"
+    },
+    {
+     "code": "NG-KN-RIMIN-GADO",
+     "name": "Rimin Gado",
+     "wikidata": "Q3432111"
+    },
+    {
+     "code": "NG-KN-ROGO",
+     "name": "Rogo",
+     "wikidata": "Q7359427"
+    },
+    {
+     "code": "NG-KN-SHANONO",
+     "name": "Shanono",
+     "wikidata": "Q7489007"
+    },
+    {
+     "code": "NG-KN-SUMAILA",
+     "name": "Sumaila",
+     "wikidata": "Q7636917"
+    },
+    {
+     "code": "NG-KN-TAKAI",
+     "name": "Takai",
+     "wikidata": "Q48723575"
+    },
+    {
+     "code": "NG-KN-TARAUNI",
+     "name": "Tarauni",
+     "wikidata": "Q9081916"
+    },
+    {
+     "code": "NG-KN-TOFA",
+     "name": "Tofa",
+     "wikidata": "Q7812950"
+    },
+    {
+     "code": "NG-KN-TSANYAWA",
+     "name": "Tsanyawa",
+     "wikidata": "Q7849383"
+    },
+    {
+     "code": "NG-KN-TUDUN-WADA",
+     "name": "Tudun Wada",
+     "wikidata": "Q7851355"
+    },
+    {
+     "code": "NG-KN-UNGOGO",
+     "name": "Ungogo",
+     "wikidata": "Q3510251"
+    },
+    {
+     "code": "NG-KN-WARAWA",
+     "name": "Warawa",
+     "wikidata": "Q7968824"
+    },
+    {
+     "code": "NG-KN-WUDIL",
+     "name": "Wudil",
+     "wikidata": "Q8039048"
+    },
+    {
+     "code": "NG-KN-KUMBOTSO",
+     "name": "kumbotso",
+     "wikidata": "Q6443769"
+    }
+   ]
+  },
+  {
+   "code": "NG-KT",
+   "name": "Katsina",
+   "lgas": [
+    {
+     "code": "NG-KT-BAKORI",
+     "name": "Bakori",
+     "wikidata": "Q4849509"
+    },
+    {
+     "code": "NG-KT-BATAGARAWA",
+     "name": "Batagarawa",
+     "wikidata": "Q4868527"
+    },
+    {
+     "code": "NG-KT-BATSARI",
+     "name": "Batsari",
+     "wikidata": "Q4869633"
+    },
+    {
+     "code": "NG-KT-BAURE",
+     "name": "Baure",
+     "wikidata": "Q4873577"
+    },
+    {
+     "code": "NG-KT-BINDAWA",
+     "name": "Bindawa",
+     "wikidata": "Q4913977"
+    },
+    {
+     "code": "NG-KT-CHARANCHI",
+     "name": "Charanchi",
+     "wikidata": "Q5073921"
+    },
+    {
+     "code": "NG-KT-DAN-MUSA",
+     "name": "Dan Musa",
+     "wikidata": "Q5214083"
+    },
+    {
+     "code": "NG-KT-DANDUME",
+     "name": "DanDume",
+     "wikidata": "Q5215754"
+    },
+    {
+     "code": "NG-KT-DANJA",
+     "name": "Danja",
+     "wikidata": "Q5219922"
+    },
+    {
+     "code": "NG-KT-DAURA",
+     "name": "Daura",
+     "wikidata": "Q1173023"
+    },
+    {
+     "code": "NG-KT-DUTSI",
+     "name": "Dutsi",
+     "wikidata": "Q5317531"
+    },
+    {
+     "code": "NG-KT-DUTSIN-MA",
+     "name": "Dutsin-Ma",
+     "wikidata": "Q5317533"
+    },
+    {
+     "code": "NG-KT-FASKARI",
+     "name": "Faskari",
+     "wikidata": "Q5436812"
+    },
+    {
+     "code": "NG-KT-FUNTUA",
+     "name": "Funtua",
+     "wikidata": "Q3056264"
+    },
+    {
+     "code": "NG-KT-INGAWA",
+     "name": "Ingawa",
+     "wikidata": "Q15043610"
+    },
+    {
+     "code": "NG-KT-JIBIA",
+     "name": "Jibia",
+     "wikidata": "Q6192032"
+    },
+    {
+     "code": "NG-KT-KAFUR",
+     "name": "Kafur",
+     "wikidata": "Q6346293"
+    },
+    {
+     "code": "NG-KT-KAITA",
+     "name": "Kaita",
+     "wikidata": "Q6348575"
+    },
+    {
+     "code": "NG-KT-KANKARA",
+     "name": "Kankara",
+     "wikidata": "Q6363677"
+    },
+    {
+     "code": "NG-KT-KANKIA",
+     "name": "Kankia",
+     "wikidata": "Q6363735"
+    },
+    {
+     "code": "NG-KT-KATSINA",
+     "name": "Katsina",
+     "wikidata": "Q937487"
+    },
+    {
+     "code": "NG-KT-KURFI",
+     "name": "Kurfi",
+     "wikidata": "Q6445904"
+    },
+    {
+     "code": "NG-KT-KUSADA",
+     "name": "Kusada",
+     "wikidata": "Q6447735"
+    },
+    {
+     "code": "NG-KT-MAI-ADUA",
+     "name": "Mai'Adua",
+     "wikidata": "Q6735083"
+    },
+    {
+     "code": "NG-KT-MALUMFASHI",
+     "name": "Malumfashi",
+     "wikidata": "Q6744962"
+    },
+    {
+     "code": "NG-KT-MANI",
+     "name": "Mani",
+     "wikidata": "Q6749389"
+    },
+    {
+     "code": "NG-KT-MASHI",
+     "name": "Mashi",
+     "wikidata": "Q6783140"
+    },
+    {
+     "code": "NG-KT-MATAZU",
+     "name": "Matazu",
+     "wikidata": "Q6786185"
+    },
+    {
+     "code": "NG-KT-MUSAWA",
+     "name": "Musawa",
+     "wikidata": "Q10474195"
+    },
+    {
+     "code": "NG-KT-RIMI",
+     "name": "Rimi",
+     "wikidata": "Q7334455"
+    },
+    {
+     "code": "NG-KT-SABUWA",
+     "name": "Sabuwa",
+     "wikidata": "Q7396498"
+    },
+    {
+     "code": "NG-KT-SAFANA",
+     "name": "Safana",
+     "wikidata": "Q7398366"
+    },
+    {
+     "code": "NG-KT-SANDAMU",
+     "name": "Sandamu",
+     "wikidata": "Q7415981"
+    },
+    {
+     "code": "NG-KT-ZANGO",
+     "name": "Zango",
+     "wikidata": "Q8066198"
+    }
+   ]
+  },
+  {
+   "code": "NG-KE",
+   "name": "Kebbi",
+   "lgas": [
+    {
+     "code": "NG-KE-ALIERO",
+     "name": "Aliero",
+     "wikidata": "Q4714427"
+    },
+    {
+     "code": "NG-KE-AREWA-DANDI",
+     "name": "Arewa Dandi",
+     "wikidata": "Q4789123"
+    },
+    {
+     "code": "NG-KE-ARGUNGU",
+     "name": "Argungu",
+     "wikidata": "Q652068"
+    },
+    {
+     "code": "NG-KE-AUGIE",
+     "name": "Augie",
+     "wikidata": "Q4820393"
+    },
+    {
+     "code": "NG-KE-BAGUDO",
+     "name": "Bagudo",
+     "wikidata": "Q800145"
+    },
+    {
+     "code": "NG-KE-BIRNIN-KEBBI",
+     "name": "Birnin Kebbi",
+     "wikidata": "Q865828"
+    },
+    {
+     "code": "NG-KE-BUNZA",
+     "name": "Bunza",
+     "wikidata": "Q1707615"
+    },
+    {
+     "code": "NG-KE-DANDI",
+     "name": "Dandi",
+     "wikidata": "Q9285759"
+    },
+    {
+     "code": "NG-KE-DANKO-WASAGU",
+     "name": "Danko-Wasagu",
+     "wikidata": "Q7971327"
+    },
+    {
+     "code": "NG-KE-FAKAI",
+     "name": "Fakai",
+     "wikidata": "Q5431445"
+    },
+    {
+     "code": "NG-KE-GWANDU",
+     "name": "Gwandu",
+     "wikidata": "Q1337777"
+    },
+    {
+     "code": "NG-KE-JEGA",
+     "name": "Jega",
+     "wikidata": "Q1707534"
+    },
+    {
+     "code": "NG-KE-KALGO",
+     "name": "Kalgo",
+     "wikidata": "Q13140479"
+    },
+    {
+     "code": "NG-KE-KOKO-BESSE",
+     "name": "Koko/Besse",
+     "wikidata": "Q6426701"
+    },
+    {
+     "code": "NG-KE-MAIYAMA",
+     "name": "Maiyama",
+     "wikidata": "Q6737240"
+    },
+    {
+     "code": "NG-KE-NGASKI",
+     "name": "Ngaski",
+     "wikidata": "Q7022112"
+    },
+    {
+     "code": "NG-KE-SAKABA",
+     "name": "Sakaba",
+     "wikidata": "Q7402731"
+    },
+    {
+     "code": "NG-KE-SHANGA",
+     "name": "Shanga",
+     "wikidata": "Q11058523"
+    },
+    {
+     "code": "NG-KE-SURU",
+     "name": "Suru",
+     "wikidata": "Q7646970"
+    },
+    {
+     "code": "NG-KE-YAURI",
+     "name": "Yauri",
+     "wikidata": "Q8050359"
+    },
+    {
+     "code": "NG-KE-ZURU",
+     "name": "Zuru",
+     "wikidata": "Q8075416"
+    }
+   ]
+  },
+  {
+   "code": "NG-KO",
+   "name": "Kogi",
+   "lgas": [
+    {
+     "code": "NG-KO-ADAVI",
+     "name": "Adavi",
+     "wikidata": "Q4680897"
+    },
+    {
+     "code": "NG-KO-AJAOKUTA",
+     "name": "Ajaokuta",
+     "wikidata": "Q3509230"
+    },
+    {
+     "code": "NG-KO-ANKPA",
+     "name": "Ankpa",
+     "wikidata": "Q4766098"
+    },
+    {
+     "code": "NG-KO-BASSA",
+     "name": "Bassa",
+     "wikidata": "Q4867995"
+    },
+    {
+     "code": "NG-KO-DEKINA",
+     "name": "Dekina",
+     "wikidata": "Q5252818"
+    },
+    {
+     "code": "NG-KO-IBAJI",
+     "name": "Ibaji",
+     "wikidata": "Q5983615"
+    },
+    {
+     "code": "NG-KO-IDAH",
+     "name": "Idah",
+     "wikidata": "Q3048500"
+    },
+    {
+     "code": "NG-KO-IGALAMELA-ODOLU",
+     "name": "Igalamela Odolu",
+     "wikidata": "Q5991434"
+    },
+    {
+     "code": "NG-KO-IJUMU",
+     "name": "Ijumu",
+     "wikidata": "Q5995233"
+    },
+    {
+     "code": "NG-KO-KABBA-BUNU",
+     "name": "Kabba/Bunu",
+     "wikidata": "Q6343980"
+    },
+    {
+     "code": "NG-KO-KOGI",
+     "name": "Kogi",
+     "wikidata": "Q387745"
+    },
+    {
+     "code": "NG-KO-LOKOJA",
+     "name": "Lokoja",
+     "wikidata": "Q994085"
+    },
+    {
+     "code": "NG-KO-MOPA-MURO",
+     "name": "Mopa-Muro",
+     "wikidata": "Q6908772"
+    },
+    {
+     "code": "NG-KO-OFU",
+     "name": "Ofu",
+     "wikidata": "Q10676724"
+    },
+    {
+     "code": "NG-KO-OGORI-MAGONGO",
+     "name": "Ogori/Magongo",
+     "wikidata": "Q7080208"
+    },
+    {
+     "code": "NG-KO-OKEHI",
+     "name": "Okehi",
+     "wikidata": "Q7081917"
+    },
+    {
+     "code": "NG-KO-OKENE",
+     "name": "Okene",
+     "wikidata": "Q2017187"
+    },
+    {
+     "code": "NG-KO-OLAMABORO",
+     "name": "Olamaboro",
+     "wikidata": "Q7083067"
+    },
+    {
+     "code": "NG-KO-OMALA",
+     "name": "Omala",
+     "wikidata": "Q7089500"
+    },
+    {
+     "code": "NG-KO-YAGBA-EAST",
+     "name": "Yagba East",
+     "wikidata": "Q8046693"
+    },
+    {
+     "code": "NG-KO-YAGBA-WEST",
+     "name": "Yagba West",
+     "wikidata": "Q8046694"
+    }
+   ]
+  },
+  {
+   "code": "NG-KW",
+   "name": "Kwara",
+   "lgas": [
+    {
+     "code": "NG-KW-ASA",
+     "name": "Asa",
+     "wikidata": "Q3510490"
+    },
+    {
+     "code": "NG-KW-BARUTEN",
+     "name": "Baruten",
+     "wikidata": "Q4865926"
+    },
+    {
+     "code": "NG-KW-EDU",
+     "name": "Edu",
+     "wikidata": "Q5340346"
+    },
+    {
+     "code": "NG-KW-EKITI",
+     "name": "Ekiti",
+     "wikidata": "Q3511682"
+    },
+    {
+     "code": "NG-KW-IFELODUN",
+     "name": "Ifelodun",
+     "wikidata": "Q5991150"
+    },
+    {
+     "code": "NG-KW-ILORIN-EAST",
+     "name": "Ilorin East",
+     "wikidata": "Q6001095"
+    },
+    {
+     "code": "NG-KW-ILORIN-SOUTH",
+     "name": "Ilorin South",
+     "wikidata": "Q16733661"
+    },
+    {
+     "code": "NG-KW-ILORIN-WEST",
+     "name": "Ilorin West",
+     "wikidata": "Q6001104"
+    },
+    {
+     "code": "NG-KW-IREPODUN",
+     "name": "Irepodun",
+     "wikidata": "Q10303589"
+    },
+    {
+     "code": "NG-KW-ISIN",
+     "name": "Isin",
+     "wikidata": "Q501259"
+    },
+    {
+     "code": "NG-KW-KAIAMA",
+     "name": "Kaiama",
+     "wikidata": "Q14653808"
+    },
+    {
+     "code": "NG-KW-MORO",
+     "name": "Moro",
+     "wikidata": "Q6913056"
+    },
+    {
+     "code": "NG-KW-OFFA",
+     "name": "Offa",
+     "wikidata": "Q2015456"
+    },
+    {
+     "code": "NG-KW-OKE-ERO",
+     "name": "Oke-Ero",
+     "wikidata": "Q7081881"
+    },
+    {
+     "code": "NG-KW-OYUN",
+     "name": "Oyun",
+     "wikidata": "Q7116389"
+    },
+    {
+     "code": "NG-KW-PATEGI",
+     "name": "Pategi",
+     "wikidata": "Q7144399"
+    }
+   ]
+  },
+  {
+   "code": "NG-LA",
+   "name": "Lagos",
+   "lgas": [
+    {
+     "code": "NG-LA-AGEGE",
+     "name": "Agege",
+     "wikidata": "Q3509545"
+    },
+    {
+     "code": "NG-LA-AJEROMI-IFELODUN",
+     "name": "Ajeromi-Ifelodun",
+     "wikidata": "Q3509013"
+    },
+    {
+     "code": "NG-LA-ALIMOSHO",
+     "name": "Alimosho",
+     "wikidata": "Q3509580"
+    },
+    {
+     "code": "NG-LA-AMUWO-ODOFIN",
+     "name": "Amuwo-Odofin",
+     "wikidata": "Q3509621"
+    },
+    {
+     "code": "NG-LA-APAPA",
+     "name": "Apapa",
+     "wikidata": "Q617618"
+    },
+    {
+     "code": "NG-LA-BADAGRY",
+     "name": "Badagry",
+     "wikidata": "Q798812"
+    },
+    {
+     "code": "NG-LA-EPE",
+     "name": "Epe",
+     "wikidata": "Q1023707"
+    },
+    {
+     "code": "NG-LA-ETI-OSA",
+     "name": "Eti-Osa",
+     "wikidata": "Q5404527"
+    },
+    {
+     "code": "NG-LA-IBEJU-LEKKI",
+     "name": "Ibeju-Lekki",
+     "wikidata": "Q5983804"
+    },
+    {
+     "code": "NG-LA-IFAKO-IJAIYE",
+     "name": "Ifako-Ijaiye",
+     "wikidata": "Q5991116"
+    },
+    {
+     "code": "NG-LA-IKEJA",
+     "name": "Ikeja",
+     "wikidata": "Q1024647"
+    },
+    {
+     "code": "NG-LA-IKORODU",
+     "name": "Ikorodu",
+     "wikidata": "Q1658159"
+    },
+    {
+     "code": "NG-LA-KOSOFE",
+     "name": "Kosofe",
+     "wikidata": "Q6433326"
+    },
+    {
+     "code": "NG-LA-LAGOS-ISLAND",
+     "name": "Lagos Island",
+     "wikidata": "Q605583"
+    },
+    {
+     "code": "NG-LA-LAGOS-MAINLAND",
+     "name": "Lagos Mainland",
+     "wikidata": "Q6472602"
+    },
+    {
+     "code": "NG-LA-MUSHIN",
+     "name": "Mushin",
+     "wikidata": "Q3139881"
+    },
+    {
+     "code": "NG-LA-OJO",
+     "name": "Ojo",
+     "wikidata": "Q623249"
+    },
+    {
+     "code": "NG-LA-OSHODI-ISOLO",
+     "name": "Oshodi-Isolo",
+     "wikidata": "Q7106648"
+    },
+    {
+     "code": "NG-LA-SOMOLU",
+     "name": "Somolu",
+     "wikidata": "Q280585"
+    },
+    {
+     "code": "NG-LA-SURULERE",
+     "name": "Surulere",
+     "wikidata": "Q994119"
+    }
+   ]
+  },
+  {
+   "code": "NG-NA",
+   "name": "Nasarawa",
+   "lgas": [
+    {
+     "code": "NG-NA-AKWANGA",
+     "name": "Akwanga",
+     "wikidata": "Q4702008"
+    },
+    {
+     "code": "NG-NA-AWE",
+     "name": "Awe",
+     "wikidata": "Q11010622"
+    },
+    {
+     "code": "NG-NA-DOMA",
+     "name": "Doma",
+     "wikidata": "Q5289773"
+    },
+    {
+     "code": "NG-NA-KARU",
+     "name": "Karu",
+     "wikidata": "Q6373591"
+    },
+    {
+     "code": "NG-NA-KEANA",
+     "name": "Keana",
+     "wikidata": "Q6382153"
+    },
+    {
+     "code": "NG-NA-KEFFI",
+     "name": "Keffi",
+     "wikidata": "Q3510599"
+    },
+    {
+     "code": "NG-NA-KOKONA",
+     "name": "Kokona",
+     "wikidata": "Q6426774"
+    },
+    {
+     "code": "NG-NA-LAFIA",
+     "name": "Lafia",
+     "wikidata": "Q1023721"
+    },
+    {
+     "code": "NG-NA-NASARAWA",
+     "name": "Nasarawa",
+     "wikidata": "Q836645"
+    },
+    {
+     "code": "NG-NA-NASARAWA-EGON",
+     "name": "Nasarawa Egon",
+     "wikidata": "Q17109172"
+    },
+    {
+     "code": "NG-NA-OBI",
+     "name": "Obi",
+     "wikidata": "Q4207508"
+    },
+    {
+     "code": "NG-NA-TOTO",
+     "name": "Toto",
+     "wikidata": "Q7828363"
+    },
+    {
+     "code": "NG-NA-WAMBA",
+     "name": "Wamba",
+     "wikidata": "Q3331559"
+    }
+   ]
+  },
+  {
+   "code": "NG-NI",
+   "name": "Niger",
+   "lgas": [
+    {
+     "code": "NG-NI-AGAIE",
+     "name": "Agaie",
+     "wikidata": "Q3510662"
+    },
+    {
+     "code": "NG-NI-AGWARA",
+     "name": "Agwara",
+     "wikidata": "Q4694720"
+    },
+    {
+     "code": "NG-NI-BIDA",
+     "name": "Bida",
+     "wikidata": "Q3320844"
+    },
+    {
+     "code": "NG-NI-BORGU",
+     "name": "Borgu",
+     "wikidata": "Q893575"
+    },
+    {
+     "code": "NG-NI-BOSSO",
+     "name": "Bosso",
+     "wikidata": "Q13140406"
+    },
+    {
+     "code": "NG-NI-CHANCHAGA",
+     "name": "Chanchaga",
+     "wikidata": "Q5070843"
+    },
+    {
+     "code": "NG-NI-EDATI",
+     "name": "Edati",
+     "wikidata": "Q5335717"
+    },
+    {
+     "code": "NG-NI-GBAKO",
+     "name": "Gbako",
+     "wikidata": "Q5529303"
+    },
+    {
+     "code": "NG-NI-GURARA",
+     "name": "Gurara",
+     "wikidata": "Q13140440"
+    },
+    {
+     "code": "NG-NI-KATCHA",
+     "name": "Katcha",
+     "wikidata": "Q6375298"
+    },
+    {
+     "code": "NG-NI-KONTAGORA",
+     "name": "Kontagora",
+     "wikidata": "Q994129"
+    },
+    {
+     "code": "NG-NI-LAPAI",
+     "name": "Lapai",
+     "wikidata": "Q13140504"
+    },
+    {
+     "code": "NG-NI-LAVUN",
+     "name": "Lavun",
+     "wikidata": "Q6502882"
+    },
+    {
+     "code": "NG-NI-MAGAMA",
+     "name": "Magama",
+     "wikidata": "Q6729655"
+    },
+    {
+     "code": "NG-NI-MARIGA",
+     "name": "Mariga",
+     "wikidata": "Q13140509"
+    },
+    {
+     "code": "NG-NI-MASHEGU",
+     "name": "Mashegu",
+     "wikidata": "Q6783100"
+    },
+    {
+     "code": "NG-NI-MOKWA",
+     "name": "Mokwa",
+     "wikidata": "Q6895614"
+    },
+    {
+     "code": "NG-NI-MUNYA",
+     "name": "Munya",
+     "wikidata": "Q6937031"
+    },
+    {
+     "code": "NG-NI-PAIKORO",
+     "name": "Paikoro",
+     "wikidata": "Q7124754"
+    },
+    {
+     "code": "NG-NI-RAFI",
+     "name": "Rafi",
+     "wikidata": "Q7282616"
+    },
+    {
+     "code": "NG-NI-RIJAU",
+     "name": "Rijau",
+     "wikidata": "Q7333948"
+    },
+    {
+     "code": "NG-NI-SHIRORO",
+     "name": "Shiroro",
+     "wikidata": "Q7498951"
+    },
+    {
+     "code": "NG-NI-SULEJA",
+     "name": "Suleja",
+     "wikidata": "Q3505231"
+    },
+    {
+     "code": "NG-NI-TAFA",
+     "name": "Tafa",
+     "wikidata": "Q7674909"
+    },
+    {
+     "code": "NG-NI-WUSHISHI",
+     "name": "Wushishi",
+     "wikidata": "Q8039343"
+    }
+   ]
+  },
+  {
+   "code": "NG-OG",
+   "name": "Ogun",
+   "lgas": [
+    {
+     "code": "NG-OG-ABEOKUTA-NORTH",
+     "name": "Abeokuta North",
+     "wikidata": "Q3509588"
+    },
+    {
+     "code": "NG-OG-ABEOKUTA-SOUTH",
+     "name": "Abeokuta South",
+     "wikidata": "Q3509517"
+    },
+    {
+     "code": "NG-OG-ADO-ODO-OTA",
+     "name": "Ado-Odo/Ota",
+     "wikidata": "Q3510345"
+    },
+    {
+     "code": "NG-OG-EWEKORO",
+     "name": "Ewekoro",
+     "wikidata": "Q5418952"
+    },
+    {
+     "code": "NG-OG-IFO",
+     "name": "Ifo",
+     "wikidata": "Q5991216"
+    },
+    {
+     "code": "NG-OG-IJEBU-EAST",
+     "name": "Ijebu East",
+     "wikidata": "Q5995157"
+    },
+    {
+     "code": "NG-OG-IJEBU-NORTH",
+     "name": "Ijebu North",
+     "wikidata": "Q5995160"
+    },
+    {
+     "code": "NG-OG-IJEBU-NORTH-EAST",
+     "name": "Ijebu North East",
+     "wikidata": "Q10301003"
+    },
+    {
+     "code": "NG-OG-IJEBU-ODE",
+     "name": "Ijebu Ode",
+     "wikidata": "Q1023726"
+    },
+    {
+     "code": "NG-OG-IKENNE",
+     "name": "Ikenne",
+     "wikidata": "Q5995826"
+    },
+    {
+     "code": "NG-OG-IMEKO-AFON",
+     "name": "Imeko Afon",
+     "wikidata": "Q6003726"
+    },
+    {
+     "code": "NG-OG-IPOKIA",
+     "name": "Ipokia",
+     "wikidata": "Q6065226"
+    },
+    {
+     "code": "NG-OG-OBAFEMI-OWODE",
+     "name": "Obafemi Owode",
+     "wikidata": "Q7074576"
+    },
+    {
+     "code": "NG-OG-ODEDA",
+     "name": "Odeda",
+     "wikidata": "Q7077620"
+    },
+    {
+     "code": "NG-OG-ODOGBOLU",
+     "name": "Odogbolu",
+     "wikidata": "Q10667640"
+    },
+    {
+     "code": "NG-OG-OGUN-WATERSIDE",
+     "name": "Ogun Waterside",
+     "wikidata": "Q7080284"
+    },
+    {
+     "code": "NG-OG-REMO-NORTH",
+     "name": "Remo North",
+     "wikidata": "Q7312042"
+    },
+    {
+     "code": "NG-OG-SHAGAMU",
+     "name": "Shagamu",
+     "wikidata": "Q2276423"
+    },
+    {
+     "code": "NG-OG-YEWA-NORTH",
+     "name": "Yewa North",
+     "wikidata": "Q8053331"
+    },
+    {
+     "code": "NG-OG-YEWA-SOUTH",
+     "name": "Yewa South",
+     "wikidata": "Q3511626"
+    }
+   ]
+  },
+  {
+   "code": "NG-ON",
+   "name": "Ondo",
+   "lgas": [
+    {
+     "code": "NG-ON-AKOKO-NORTH-EAST",
+     "name": "Akoko North East",
+     "wikidata": "Q4701505"
+    },
+    {
+     "code": "NG-ON-AKOKO-NORTH-WEST",
+     "name": "Akoko North West",
+     "wikidata": "Q4701507"
+    },
+    {
+     "code": "NG-ON-AKOKO-SOUTH-EAST",
+     "name": "Akoko South East",
+     "wikidata": "Q4701508"
+    },
+    {
+     "code": "NG-ON-AKOKO-SOUTH-WEST",
+     "name": "Akoko South West",
+     "wikidata": "Q4701509"
+    },
+    {
+     "code": "NG-ON-AKURE-NORTH",
+     "name": "Akure North",
+     "wikidata": "Q4701973"
+    },
+    {
+     "code": "NG-ON-AKURE-SOUTH",
+     "name": "Akure South",
+     "wikidata": "Q4701976"
+    },
+    {
+     "code": "NG-ON-ESE-ODO",
+     "name": "Ese Odo",
+     "wikidata": "Q5397549"
+    },
+    {
+     "code": "NG-ON-IDANRE",
+     "name": "Idanre",
+     "wikidata": "Q5987687"
+    },
+    {
+     "code": "NG-ON-IFEDORE",
+     "name": "Ifedore",
+     "wikidata": "Q5991144"
+    },
+    {
+     "code": "NG-ON-ILAJE",
+     "name": "Ilaje",
+     "wikidata": "Q5996946"
+    },
+    {
+     "code": "NG-ON-ILE-OLUJI-OKEIGBO",
+     "name": "Ile Oluji/Okeigbo",
+     "wikidata": "Q5997398"
+    },
+    {
+     "code": "NG-ON-IRELE",
+     "name": "Irele",
+     "wikidata": "Q6068743"
+    },
+    {
+     "code": "NG-ON-ODIGBO",
+     "name": "Odigbo",
+     "wikidata": "Q7077787"
+    },
+    {
+     "code": "NG-ON-OKITIPUPA",
+     "name": "Okitipupa",
+     "wikidata": "Q11441396"
+    },
+    {
+     "code": "NG-ON-ONDO-EAST",
+     "name": "Ondo East",
+     "wikidata": "Q7092206"
+    },
+    {
+     "code": "NG-ON-ONDO-WEST",
+     "name": "Ondo West",
+     "wikidata": "Q7092211"
+    },
+    {
+     "code": "NG-ON-OSE",
+     "name": "Ose",
+     "wikidata": "Q7106447"
+    },
+    {
+     "code": "NG-ON-OWO",
+     "name": "Owo",
+     "wikidata": "Q1788128"
+    }
+   ]
+  },
+  {
+   "code": "NG-OS",
+   "name": "Osun",
+   "lgas": [
+    {
+     "code": "NG-OS-AIYEDIRE",
+     "name": "Aiyedire",
+     "wikidata": "Q4699407"
+    },
+    {
+     "code": "NG-OS-ATAKUNMOSA-EAST",
+     "name": "Atakunmosa East",
+     "wikidata": "Q4812674"
+    },
+    {
+     "code": "NG-OS-ATAKUNMOSA-WEST",
+     "name": "Atakunmosa West",
+     "wikidata": "Q4812675"
+    },
+    {
+     "code": "NG-OS-AYEDAADE",
+     "name": "Ayedaade",
+     "wikidata": "Q4699405"
+    },
+    {
+     "code": "NG-OS-BOLUWADURO",
+     "name": "Boluwaduro",
+     "wikidata": "Q4940287"
+    },
+    {
+     "code": "NG-OS-BORIPE",
+     "name": "Boripe",
+     "wikidata": "Q4945164"
+    },
+    {
+     "code": "NG-OS-EDE-NORTH",
+     "name": "Ede North",
+     "wikidata": "Q5336721"
+    },
+    {
+     "code": "NG-OS-EDE-SOUTH",
+     "name": "Ede South",
+     "wikidata": "Q5336722"
+    },
+    {
+     "code": "NG-OS-EGBEDORE",
+     "name": "Egbedore",
+     "wikidata": "Q3511620"
+    },
+    {
+     "code": "NG-OS-EJIGBO",
+     "name": "Ejigbo",
+     "wikidata": "Q5350128"
+    },
+    {
+     "code": "NG-OS-IFE-CENTRAL",
+     "name": "Ife Central",
+     "wikidata": "Q3509568"
+    },
+    {
+     "code": "NG-OS-IFE-EAST",
+     "name": "Ife East",
+     "wikidata": "Q5991130"
+    },
+    {
+     "code": "NG-OS-IFE-NORTH",
+     "name": "Ife North",
+     "wikidata": "Q11008758"
+    },
+    {
+     "code": "NG-OS-IFE-SOUTH",
+     "name": "Ife South",
+     "wikidata": "Q5991132"
+    },
+    {
+     "code": "NG-OS-IFEDAYO",
+     "name": "Ifedayo",
+     "wikidata": "Q5991148"
+    },
+    {
+     "code": "NG-OS-IFELODUN",
+     "name": "Ifelodun",
+     "wikidata": "Q3509603"
+    },
+    {
+     "code": "NG-OS-ILA",
+     "name": "Ila",
+     "wikidata": "Q3305665"
+    },
+    {
+     "code": "NG-OS-ILESA-EAST",
+     "name": "Ilesa East",
+     "wikidata": "Q3509533"
+    },
+    {
+     "code": "NG-OS-ILESA-WEST",
+     "name": "Ilesa West",
+     "wikidata": "Q3509434"
+    },
+    {
+     "code": "NG-OS-IREPODUN",
+     "name": "Irepodun",
+     "wikidata": "Q3509552"
+    },
+    {
+     "code": "NG-OS-IREWOLE",
+     "name": "Irewole",
+     "wikidata": "Q3509478"
+    },
+    {
+     "code": "NG-OS-ISOKAN",
+     "name": "Isokan",
+     "wikidata": "Q3510368"
+    },
+    {
+     "code": "NG-OS-IWO",
+     "name": "Iwo",
+     "wikidata": "Q1665608"
+    },
+    {
+     "code": "NG-OS-OBOKUN",
+     "name": "Obokun",
+     "wikidata": "Q7075260"
+    },
+    {
+     "code": "NG-OS-ODO-OTIN",
+     "name": "Odo-Otin",
+     "wikidata": "Q3509495"
+    },
+    {
+     "code": "NG-OS-OLA-OLUWA",
+     "name": "Ola-Oluwa",
+     "wikidata": "Q3510394"
+    },
+    {
+     "code": "NG-OS-OLORUNDA",
+     "name": "Olorunda",
+     "wikidata": "Q3509362"
+    },
+    {
+     "code": "NG-OS-ORIADE",
+     "name": "Oriade",
+     "wikidata": "Q3510511"
+    },
+    {
+     "code": "NG-OS-OROLU",
+     "name": "Orolu",
+     "wikidata": "Q3509498"
+    },
+    {
+     "code": "NG-OS-OSOGBO",
+     "name": "Osogbo",
+     "wikidata": "Q868203"
+    }
+   ]
+  },
+  {
+   "code": "NG-OY",
+   "name": "Oyo",
+   "lgas": [
+    {
+     "code": "NG-OY-AFIJIO",
+     "name": "Afijio",
+     "wikidata": "Q4689246"
+    },
+    {
+     "code": "NG-OY-AKINYELE",
+     "name": "Akinyele",
+     "wikidata": "Q4701091"
+    },
+    {
+     "code": "NG-OY-ATIBA",
+     "name": "Atiba",
+     "wikidata": "Q4815763"
+    },
+    {
+     "code": "NG-OY-ATISBO",
+     "name": "Atisbo",
+     "wikidata": "Q4815853"
+    },
+    {
+     "code": "NG-OY-EGBEDA",
+     "name": "Egbeda",
+     "wikidata": "Q5347703"
+    },
+    {
+     "code": "NG-OY-IBADAN-NORTH",
+     "name": "Ibadan North",
+     "wikidata": "Q5983592"
+    },
+    {
+     "code": "NG-OY-IBADAN-NORTH-EAST",
+     "name": "Ibadan North East",
+     "wikidata": "Q5983595"
+    },
+    {
+     "code": "NG-OY-IBADAN-NORTH-WEST",
+     "name": "Ibadan North West",
+     "wikidata": "Q5983588"
+    },
+    {
+     "code": "NG-OY-IBADAN-SOUTH-EAST",
+     "name": "Ibadan South East",
+     "wikidata": "Q11058510"
+    },
+    {
+     "code": "NG-OY-IBADAN-SOUTH-WEST",
+     "name": "Ibadan South West",
+     "wikidata": "Q5983608"
+    },
+    {
+     "code": "NG-OY-IBARAPA-CENTRAL",
+     "name": "Ibarapa Central",
+     "wikidata": "Q11290392"
+    },
+    {
+     "code": "NG-OY-IBARAPA-EAST",
+     "name": "Ibarapa East",
+     "wikidata": "Q11290895"
+    },
+    {
+     "code": "NG-OY-IBARAPA-NORTH",
+     "name": "Ibarapa North",
+     "wikidata": "Q5983733"
+    },
+    {
+     "code": "NG-OY-IDO",
+     "name": "Ido",
+     "wikidata": "Q3331530"
+    },
+    {
+     "code": "NG-OY-IREPO",
+     "name": "Irepo",
+     "wikidata": "Q6069380"
+    },
+    {
+     "code": "NG-OY-ISEYIN",
+     "name": "Iseyin",
+     "wikidata": "Q1673881"
+    },
+    {
+     "code": "NG-OY-ITESIWAJU",
+     "name": "Itesiwaju",
+     "wikidata": "Q6094439"
+    },
+    {
+     "code": "NG-OY-IWAJOWA",
+     "name": "Iwajowa",
+     "wikidata": "Q6100332"
+    },
+    {
+     "code": "NG-OY-KAJOLA",
+     "name": "Kajola",
+     "wikidata": "Q11282187"
+    },
+    {
+     "code": "NG-OY-LAGELU",
+     "name": "Lagelu",
+     "wikidata": "Q6471977"
+    },
+    {
+     "code": "NG-OY-OGBOMOSHO-NORTH",
+     "name": "Ogbomosho North",
+     "wikidata": "Q7079884"
+    },
+    {
+     "code": "NG-OY-OGBOMOSHO-SOUTH",
+     "name": "Ogbomosho South",
+     "wikidata": "Q7079886"
+    },
+    {
+     "code": "NG-OY-OGO-OLUWA",
+     "name": "Ogo Oluwa",
+     "wikidata": "Q7080182"
+    },
+    {
+     "code": "NG-OY-OLORUNSOGO",
+     "name": "Olorunsogo",
+     "wikidata": "Q7088523"
+    },
+    {
+     "code": "NG-OY-OLUYOLE",
+     "name": "Oluyole",
+     "wikidata": "Q7088882"
+    },
+    {
+     "code": "NG-OY-ONA-ARA",
+     "name": "Ona Ara",
+     "wikidata": "Q11275966"
+    },
+    {
+     "code": "NG-OY-OORELOPE",
+     "name": "Oorelope",
+     "wikidata": "Q7101528"
+    },
+    {
+     "code": "NG-OY-ORI-IRE",
+     "name": "Ori Ire",
+     "wikidata": "Q7102202"
+    },
+    {
+     "code": "NG-OY-OYO-EAST",
+     "name": "Oyo East",
+     "wikidata": "Q7116295"
+    },
+    {
+     "code": "NG-OY-OYO-WEST",
+     "name": "Oyo West",
+     "wikidata": "Q7116297"
+    },
+    {
+     "code": "NG-OY-SAKI-EAST",
+     "name": "Saki East",
+     "wikidata": "Q7402968"
+    },
+    {
+     "code": "NG-OY-SAKI-WEST",
+     "name": "Saki West",
+     "wikidata": "Q7402971"
+    },
+    {
+     "code": "NG-OY-SURULERE",
+     "name": "Surulere",
+     "wikidata": "Q994119"
+    }
+   ]
+  },
+  {
+   "code": "NG-PL",
+   "name": "Plateau",
+   "lgas": [
+    {
+     "code": "NG-PL-BARKIN-LADI",
+     "name": "Barkin Ladi",
+     "wikidata": "Q11279375"
+    },
+    {
+     "code": "NG-PL-BASSA",
+     "name": "Bassa",
+     "wikidata": "Q4867996"
+    },
+    {
+     "code": "NG-PL-BOKKOS",
+     "name": "Bokkos",
+     "wikidata": "Q4938795"
+    },
+    {
+     "code": "NG-PL-JOS-EAST",
+     "name": "Jos East",
+     "wikidata": "Q6279114"
+    },
+    {
+     "code": "NG-PL-JOS-NORTH",
+     "name": "Jos North",
+     "wikidata": "Q10967141"
+    },
+    {
+     "code": "NG-PL-JOS-SOUTH",
+     "name": "Jos South",
+     "wikidata": "Q6279136"
+    },
+    {
+     "code": "NG-PL-KANAM",
+     "name": "Kanam",
+     "wikidata": "Q50319543"
+    },
+    {
+     "code": "NG-PL-KANKE",
+     "name": "Kanke",
+     "wikidata": "Q660473"
+    },
+    {
+     "code": "NG-PL-LANGTANG-NORTH",
+     "name": "Langtang North",
+     "wikidata": "Q6486557"
+    },
+    {
+     "code": "NG-PL-LANGTANG-SOUTH",
+     "name": "Langtang South",
+     "wikidata": "Q6486563"
+    },
+    {
+     "code": "NG-PL-MANGU",
+     "name": "Mangu",
+     "wikidata": "Q6749158"
+    },
+    {
+     "code": "NG-PL-MIKANG",
+     "name": "Mikang",
+     "wikidata": "Q6845702"
+    },
+    {
+     "code": "NG-PL-PANKSHIN",
+     "name": "Pankshin",
+     "wikidata": "Q7131329"
+    },
+    {
+     "code": "NG-PL-QUA-AN-PAN",
+     "name": "Qua'an Pan",
+     "wikidata": "Q7268217"
+    },
+    {
+     "code": "NG-PL-RIYOM",
+     "name": "Riyom",
+     "wikidata": "Q4771953"
+    },
+    {
+     "code": "NG-PL-SHENDAM",
+     "name": "Shendam",
+     "wikidata": "Q3481875"
+    },
+    {
+     "code": "NG-PL-WASE",
+     "name": "Wase",
+     "wikidata": "Q7971377"
+    }
+   ]
+  },
+  {
+   "code": "NG-RI",
+   "name": "Rivers",
+   "lgas": [
+    {
+     "code": "NG-RI-ABUA-ODUAL",
+     "name": "Abua-Odual",
+     "wikidata": "Q4670480"
+    },
+    {
+     "code": "NG-RI-AHOADA-EAST",
+     "name": "Ahoada East",
+     "wikidata": "Q4696271"
+    },
+    {
+     "code": "NG-RI-AHOADA-WEST",
+     "name": "Ahoada West",
+     "wikidata": "Q4696272"
+    },
+    {
+     "code": "NG-RI-AKUKU-TORU",
+     "name": "Akuku-Toru",
+     "wikidata": "Q4701936"
+    },
+    {
+     "code": "NG-RI-ANDONI",
+     "name": "Andoni",
+     "wikidata": "Q4754534"
+    },
+    {
+     "code": "NG-RI-ASARI-TORU",
+     "name": "Asari-Toru",
+     "wikidata": "Q4803607"
+    },
+    {
+     "code": "NG-RI-BONNY",
+     "name": "Bonny",
+     "wikidata": "Q604978"
+    },
+    {
+     "code": "NG-RI-DEGEMA",
+     "name": "Degema",
+     "wikidata": "Q5251767"
+    },
+    {
+     "code": "NG-RI-ELEME",
+     "name": "Eleme",
+     "wikidata": "Q5358807"
+    },
+    {
+     "code": "NG-RI-EMOHUA",
+     "name": "Emohua",
+     "wikidata": "Q5373664"
+    },
+    {
+     "code": "NG-RI-ETCHE",
+     "name": "Etche",
+     "wikidata": "Q5402485"
+    },
+    {
+     "code": "NG-RI-GOKANA",
+     "name": "Gokana",
+     "wikidata": "Q5578033"
+    },
+    {
+     "code": "NG-RI-IKWERRE",
+     "name": "Ikwerre",
+     "wikidata": "Q5996439"
+    },
+    {
+     "code": "NG-RI-KHANA",
+     "name": "Khana",
+     "wikidata": "Q11008655"
+    },
+    {
+     "code": "NG-RI-OBIO-AKPOR",
+     "name": "Obio/Akpor",
+     "wikidata": "Q7074973"
+    },
+    {
+     "code": "NG-RI-OGBA-EGBEMA-NDONI",
+     "name": "Ogba/Egbema/Ndoni",
+     "wikidata": "Q7079867"
+    },
+    {
+     "code": "NG-RI-OGU-BOLO",
+     "name": "Ogu/Bolo",
+     "wikidata": "Q7080271"
+    },
+    {
+     "code": "NG-RI-OKRIKA",
+     "name": "Okrika",
+     "wikidata": "Q7082573"
+    },
+    {
+     "code": "NG-RI-OMUMA",
+     "name": "Omuma",
+     "wikidata": "Q7090801"
+    },
+    {
+     "code": "NG-RI-OPOBO-NKORO",
+     "name": "Opobo/Nkoro",
+     "wikidata": "Q7098375"
+    },
+    {
+     "code": "NG-RI-OYIGBO",
+     "name": "Oyigbo",
+     "wikidata": "Q7116269"
+    },
+    {
+     "code": "NG-RI-PORT-HARCOURT",
+     "name": "Port Harcourt",
+     "wikidata": "Q217432"
+    },
+    {
+     "code": "NG-RI-TAI",
+     "name": "Tai",
+     "wikidata": "Q7675709"
+    }
+   ]
+  },
+  {
+   "code": "NG-SO",
+   "name": "Sokoto",
+   "lgas": [
+    {
+     "code": "NG-SO-BINJI",
+     "name": "Binji",
+     "wikidata": "Q4914402"
+    },
+    {
+     "code": "NG-SO-BODINGA",
+     "name": "Bodinga",
+     "wikidata": "Q13140401"
+    },
+    {
+     "code": "NG-SO-DANGE-SHUNI",
+     "name": "Dange/Shuni",
+     "wikidata": "Q5215972"
+    },
+    {
+     "code": "NG-SO-GADA",
+     "name": "Gada",
+     "wikidata": "Q5516271"
+    },
+    {
+     "code": "NG-SO-GORONYO",
+     "name": "Goronyo",
+     "wikidata": "Q5586824"
+    },
+    {
+     "code": "NG-SO-GUDU",
+     "name": "Gudu",
+     "wikidata": "Q3331551"
+    },
+    {
+     "code": "NG-SO-GWADABAWA",
+     "name": "Gwadabawa",
+     "wikidata": "Q5623224"
+    },
+    {
+     "code": "NG-SO-ILLELA",
+     "name": "Illela",
+     "wikidata": "Q5999073"
+    },
+    {
+     "code": "NG-SO-ISA",
+     "name": "Isa",
+     "wikidata": "Q6075662"
+    },
+    {
+     "code": "NG-SO-KEBBE",
+     "name": "Kebbe",
+     "wikidata": "Q6382383"
+    },
+    {
+     "code": "NG-SO-KWARE",
+     "name": "Kware",
+     "wikidata": "Q6450223"
+    },
+    {
+     "code": "NG-SO-RABAH",
+     "name": "Rabah",
+     "wikidata": "Q7278481"
+    },
+    {
+     "code": "NG-SO-SABON-BIRNI",
+     "name": "Sabon Birni",
+     "wikidata": "Q7396282"
+    },
+    {
+     "code": "NG-SO-SHAGARI",
+     "name": "Shagari",
+     "wikidata": "Q7461162"
+    },
+    {
+     "code": "NG-SO-SILAME",
+     "name": "Silame",
+     "wikidata": "Q7514068"
+    },
+    {
+     "code": "NG-SO-SOKOTO-NORTH",
+     "name": "Sokoto North",
+     "wikidata": "Q7555307"
+    },
+    {
+     "code": "NG-SO-SOKOTO-SOUTH",
+     "name": "Sokoto South",
+     "wikidata": "Q7555313"
+    },
+    {
+     "code": "NG-SO-TAMBUWAL",
+     "name": "Tambuwal",
+     "wikidata": "Q7681093"
+    },
+    {
+     "code": "NG-SO-TANGAZA",
+     "name": "Tangaza",
+     "wikidata": "Q7682831"
+    },
+    {
+     "code": "NG-SO-TURETA",
+     "name": "Tureta",
+     "wikidata": "Q7854847"
+    },
+    {
+     "code": "NG-SO-WAMAKO",
+     "name": "Wamako",
+     "wikidata": "Q7966899"
+    },
+    {
+     "code": "NG-SO-WURNO",
+     "name": "Wurno",
+     "wikidata": "Q8039303"
+    },
+    {
+     "code": "NG-SO-YABO",
+     "name": "Yabo",
+     "wikidata": "Q8046387"
+    }
+   ]
+  },
+  {
+   "code": "NG-TA",
+   "name": "Taraba",
+   "lgas": [
+    {
+     "code": "NG-TA-ARDO-KOLA",
+     "name": "Ardo Kola",
+     "wikidata": "Q4788221"
+    },
+    {
+     "code": "NG-TA-BALI",
+     "name": "Bali",
+     "wikidata": "Q3125978"
+    },
+    {
+     "code": "NG-TA-DONGA",
+     "name": "Donga",
+     "wikidata": "Q5295795"
+    },
+    {
+     "code": "NG-TA-GASHAKA",
+     "name": "Gashaka",
+     "wikidata": "Q5603451"
+    },
+    {
+     "code": "NG-TA-GASSOL",
+     "name": "Gassol",
+     "wikidata": "Q3510096"
+    },
+    {
+     "code": "NG-TA-IBI",
+     "name": "Ibi",
+     "wikidata": "Q5984020"
+    },
+    {
+     "code": "NG-TA-JALINGO",
+     "name": "Jalingo",
+     "wikidata": "Q1023720"
+    },
+    {
+     "code": "NG-TA-KARIM-LAMIDO",
+     "name": "Karim Lamido",
+     "wikidata": "Q6370612"
+    },
+    {
+     "code": "NG-TA-KURMI",
+     "name": "Kurmi",
+     "wikidata": "Q6446184"
+    },
+    {
+     "code": "NG-TA-LAU",
+     "name": "Lau",
+     "wikidata": "Q6497586"
+    },
+    {
+     "code": "NG-TA-SARDAUNA",
+     "name": "Sardauna",
+     "wikidata": "Q7423783"
+    },
+    {
+     "code": "NG-TA-TAKUM",
+     "name": "Takum",
+     "wikidata": "Q7678554"
+    },
+    {
+     "code": "NG-TA-USSA",
+     "name": "Ussa",
+     "wikidata": "Q3331575"
+    },
+    {
+     "code": "NG-TA-WUKARI",
+     "name": "Wukari",
+     "wikidata": "Q3509190"
+    },
+    {
+     "code": "NG-TA-YORRO",
+     "name": "Yorro",
+     "wikidata": "Q8055852"
+    },
+    {
+     "code": "NG-TA-ZING",
+     "name": "Zing",
+     "wikidata": "Q8072371"
+    }
+   ]
+  },
+  {
+   "code": "NG-YO",
+   "name": "Yobe",
+   "lgas": [
+    {
+     "code": "NG-YO-BADE",
+     "name": "Bade",
+     "wikidata": "Q4840705"
+    },
+    {
+     "code": "NG-YO-BURSARI",
+     "name": "Bursari",
+     "wikidata": "Q13140409"
+    },
+    {
+     "code": "NG-YO-DAMATURU",
+     "name": "Damaturu",
+     "wikidata": "Q1023722"
+    },
+    {
+     "code": "NG-YO-FIKA",
+     "name": "Fika",
+     "wikidata": "Q5448220"
+    },
+    {
+     "code": "NG-YO-FUNE",
+     "name": "Fune",
+     "wikidata": "Q5509089"
+    },
+    {
+     "code": "NG-YO-GEIDAM",
+     "name": "Geidam",
+     "wikidata": "Q5530097"
+    },
+    {
+     "code": "NG-YO-GUJBA",
+     "name": "Gujba",
+     "wikidata": "Q5617047"
+    },
+    {
+     "code": "NG-YO-GULANI",
+     "name": "Gulani",
+     "wikidata": "Q13140437"
+    },
+    {
+     "code": "NG-YO-JAKUSKO",
+     "name": "Jakusko",
+     "wikidata": "Q13140476"
+    },
+    {
+     "code": "NG-YO-KARASUWA",
+     "name": "Karasuwa",
+     "wikidata": "Q15043631"
+    },
+    {
+     "code": "NG-YO-MACHINA",
+     "name": "Machina",
+     "wikidata": "Q6723600"
+    },
+    {
+     "code": "NG-YO-NANGERE",
+     "name": "Nangere",
+     "wikidata": "Q6963508"
+    },
+    {
+     "code": "NG-YO-NGURU",
+     "name": "Nguru",
+     "wikidata": "Q3508977"
+    },
+    {
+     "code": "NG-YO-POTISKUM",
+     "name": "Potiskum",
+     "wikidata": "Q3309364"
+    },
+    {
+     "code": "NG-YO-TARMUWA",
+     "name": "Tarmuwa",
+     "wikidata": "Q7686367"
+    },
+    {
+     "code": "NG-YO-YUNUSARI",
+     "name": "Yunusari",
+     "wikidata": "Q8061404"
+    },
+    {
+     "code": "NG-YO-YUSUFARI",
+     "name": "Yusufari",
+     "wikidata": "Q8062007"
+    }
+   ]
+  },
+  {
+   "code": "NG-ZA",
+   "name": "Zamfara",
+   "lgas": [
+    {
+     "code": "NG-ZA-ANKA",
+     "name": "Anka",
+     "wikidata": "Q4765937"
+    },
+    {
+     "code": "NG-ZA-BAKURA",
+     "name": "Bakura",
+     "wikidata": "Q4849604"
+    },
+    {
+     "code": "NG-ZA-BIRNIN-MAGAJI-KIYAW",
+     "name": "Birnin Magaji/Kiyaw",
+     "wikidata": "Q4916899"
+    },
+    {
+     "code": "NG-ZA-BUKKUYUM",
+     "name": "Bukkuyum",
+     "wikidata": "Q13140404"
+    },
+    {
+     "code": "NG-ZA-BUNGUDU",
+     "name": "Bungudu",
+     "wikidata": "Q4997683"
+    },
+    {
+     "code": "NG-ZA-GUMMI",
+     "name": "Gummi",
+     "wikidata": "Q13140441"
+    },
+    {
+     "code": "NG-ZA-GUSAU",
+     "name": "Gusau",
+     "wikidata": "Q600405"
+    },
+    {
+     "code": "NG-ZA-KAURA-NAMODA",
+     "name": "Kaura Namoda",
+     "wikidata": "Q6378876"
+    },
+    {
+     "code": "NG-ZA-MARADUN",
+     "name": "Maradun",
+     "wikidata": "Q6754606"
+    },
+    {
+     "code": "NG-ZA-MARU",
+     "name": "Maru",
+     "wikidata": "Q6777871"
+    },
+    {
+     "code": "NG-ZA-SHINKAFI",
+     "name": "Shinkafi",
+     "wikidata": "Q7497631"
+    },
+    {
+     "code": "NG-ZA-TALATA-MAFARA",
+     "name": "Talata Mafara",
+     "wikidata": "Q7678957"
+    },
+    {
+     "code": "NG-ZA-TSAFE",
+     "name": "Tsafe",
+     "wikidata": "Q255961"
+    },
+    {
+     "code": "NG-ZA-ZURMI",
+     "name": "Zurmi",
+     "wikidata": "Q8075410"
+    }
+   ]
+  }
+ ]
+}

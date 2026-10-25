@@ -6,5 +6,7 @@ numpy>=1.26
 pytesseract>=0.3.10
 pydantic>=2.6
 httpx>=0.27  # Ibà triage API client
+cryptography>=43  # class and teacher codes: encrypted so their teacher can see them (accounts.py)
+boto3>=1.35  # sign-in codes by email through AWS SES, with the instance's IAM role (mailer.py)
 # dev
 pytest>=8.0
