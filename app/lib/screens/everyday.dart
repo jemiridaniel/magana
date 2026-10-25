@@ -7,6 +7,7 @@ import '../policy.dart';
 import '../widgets.dart';
 import 'capture.dart';
 import 'health_worker.dart';
+import 'pdf.dart';
 import 'reminders.dart';
 
 /// Everyday papers hub (18+): medicine labels, medical reports, bank statements.
@@ -46,6 +47,15 @@ class _EverydayScreenState extends State<EverydayScreen> {
                 builder: (_) => const CaptureScreen(detect: true),
               ),
             ),
+          ),
+        if (profile.can(Feature.everydayLetters))
+          ChoiceCard(
+            title: l.readPdf,
+            detail: l.readPdfDetail,
+            leading: const Icon(Icons.picture_as_pdf_outlined, size: 34),
+            onTap: () =>
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (_) => const PdfScreen())),
           ),
         for (final paper in Paper.values)
           if (profile.can(paper.feature))

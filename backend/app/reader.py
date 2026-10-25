@@ -41,6 +41,8 @@ class Line:
     width: int = 0  # horizontal extent of the recognised text; 0 if unknown
     # Ink carries on past the last recognised word: the end of this line was not read.
     end_unclear: bool = False
+    # Text-sized ink inside this row that no recognised word covers (a dropped "7.50").
+    part_unclear: bool = False
 
 
 @dataclass
@@ -339,6 +341,20 @@ def capture_check(image: Image.Image) -> list[str]:
     return tips
 
 
+SMALL_PRINT_PX = 10  # median word height below this: too small to read every number
+
+
+def small_print(page: Page) -> list[str]:
+    """'small_print' from the OCR's first pass, before faint-print recovery: its words are
+    tiny, or it read almost nothing. Sharp 14 px digits (a statement at 300 dpi) read well; a
+    phone-like copy at half that size gave the first pass no words at all, and what recovery
+    found lost 300 of 1,998 numbers with no other warning (docs/FINDINGS.md)."""
+    heights = sorted(w.height for l in page.lines for w in l.words if w.height and len(w.text) >= 2)
+    if len(heights) < 5:
+        return ["read_little"]  # read_page keeps it only if faint recovery then found text
+    return ["small_print"] if heights[len(heights) // 2] < SMALL_PRINT_PX else []
+
+
 # ---------- Faint print
 
 INK_DELTA = 10  # grey levels darker than the local paper that count as ink
@@ -452,6 +468,50 @@ def mark_unclear_line_ends(image: Image.Image, page: Page) -> None:
             line.end_unclear = True
 
 
+# ---------- Parts of a row: ink between or beside the words that nothing read
+
+PART_MIN_WIDTH = 0.6  # unread ink at least this many line-heights wide flags the row
+PART_MIN_HEIGHT = 0.4  # ...and at least this tall at its highest: glyphs, not a ruled line
+PART_JOIN = 0.3  # gaps up to this many line-heights join one unread run (the "." in 7.50)
+
+
+def mark_unread_parts(image: Image.Image, page: Page) -> None:
+    """Flag a line when text-sized ink in its row is covered by no recognised word. On a
+    statement Tesseract read a row's date and balance but silently dropped a small amount
+    ("7.50") between them (docs/FINDINGS.md). The nearest line on that row is flagged,
+    once; ink just past a line's end is mark_unclear_line_ends' job."""
+    import numpy as np
+
+    ink = np.asarray(ink_map(image)) > INK_DELTA
+    boxes = [(w.left, w.top, w.left + w.width, w.top + w.height) for l in page.lines for w in l.words if w.width]
+    lines = [l for l in page.lines if l.width and l.height]
+    for line in lines:
+        top, bottom, h = line.top, line.top + line.height, line.height
+        row = [l for l in lines if min(bottom, l.top + l.height) - max(top, l.top) >= 0.5 * min(h, l.height)]
+        covered = np.zeros(ink.shape[1], dtype=bool)
+        for x0, y0, x1, y1 in boxes:
+            if min(bottom, y1) - max(top, y0) >= 0.5 * (y1 - y0):
+                covered[max(0, x0 - 2): x1 + 2] = True
+        counts = ink[top:bottom].sum(axis=0)
+        unread = (counts >= max(2, h // 10)) & ~covered
+        runs, start, gap = [], None, 0
+        for x, on in enumerate(list(unread) + [False] * (int(h * PART_JOIN) + 2)):
+            if on:
+                start, gap = (x if start is None else start), 0
+            elif start is not None:
+                gap += 1
+                if gap > h * PART_JOIN:
+                    runs.append((start, x - gap + 1))
+                    start, gap = None, 0
+        for x0, x1 in runs:
+            if x1 - x0 < h * PART_MIN_WIDTH or counts[x0:x1].max() < h * PART_MIN_HEIGHT:
+                continue
+            nearest = min(row, key=lambda l: max(0, l.left - x1, x0 - (l.left + l.width)))
+            end = nearest.left + nearest.width
+            if nearest is line and not (line.end_unclear and end <= x0 <= end + h * END_GAP):
+                line.part_unclear = True
+
+
 # ---------- Numbers: a second, independent reading of every number
 
 REREAD_HEIGHT = 36  # crops are scaled so text is about this tall (Tesseract misreads larger, e.g. 5 as 9)
@@ -535,10 +595,16 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     safety layer can compare every number between the two readings."""
     engine = engine or default_engine()
     page = engine.read(image)
+    tiny = small_print(page)
+    first = len(page.lines)
     faint = recover_faint(image, page, engine)
+    if tiny == ["read_little"]:
+        # A short label is just short; a page whose text only recovery could find is not.
+        tiny = ["small_print"] if len(page.lines) > first else []
     mark_unclear_line_ends(image, page)
+    mark_unread_parts(image, page)
     reread_numbers(image, page, engine)
-    result = {"tips": capture_check(image), **_page_dict(page), "faint_regions": faint}
+    result = {"tips": capture_check(image) + tiny, **_page_dict(page), "faint_regions": faint}
     if second_pass:
         result["second_pass"] = _page_dict(engine.read(second_pass_image(image)))
     return result

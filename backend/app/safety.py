@@ -172,8 +172,34 @@ def number_accepted(w: dict, threshold: float = CRITICAL_WORD_THRESHOLD,
     if w["confidence"] >= threshold:
         return True
     reread = w.get("reread_text")
-    return (reread is not None and _digits(reread) == _digits(w["text"])
+    return (reread is not None and _number(reread) == _number(w["text"])
             and w["confidence"] >= pair_threshold and (w.get("reread_confidence") or 0) >= pair_threshold)
+
+
+_MONTHS = {"jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "sept", "oct", "nov", "dec", "january",
+           "february", "march", "april", "june", "july", "august", "september", "october", "november", "december"}
+# Letters OCR gives for a whole number it half-read ("02" as "OZ", "10" as "lO").
+_ALL_LOOKALIKE = set(_LOOKALIKES) | set("zZ")
+_REAL_SHORT = {"is", "so", "do", "go", "oz", "os", "io", "sos", "dog", "god", "zoo", "boss", "glob", "bid", "lbs"}
+
+
+def letters_for_number(words: list[dict], i: int, threshold: float = CRITICAL_WORD_THRESHOLD) -> bool:
+    """A low-confidence word made only of digit look-alikes beside a number or a month name:
+    "OZ Sep 2026". It stands where a number belongs, so it is unreadable; never repaired."""
+    core = _core(words[i]["text"])
+    if not core or len(core) > 4 or words[i]["confidence"] >= threshold:
+        return False
+    # Right before a month name is where the day goes ("OZ Sep 2026", "oe Sep"): any unsure
+    # word of one or two characters there, whatever letters OCR chose.
+    if len(core) <= 2 and i + 1 < len(words) and _core(words[i + 1]["text"]).lower() in _MONTHS:
+        return True
+    if not set(core) <= _ALL_LOOKALIKE:
+        return False
+    near = [_core(w["text"]) for w in words[max(0, i - 1):i] + words[i + 1:i + 2]]
+    if any(n.lower() in _MONTHS for n in near):
+        return True
+    # Beside a number, only two letters or more that aren't a real word: "I take 2", "2 oz".
+    return len(core) >= 2 and core.lower() not in _REAL_SHORT and any(_has_digit(n) for n in near)
 
 
 def number_warnings(lines: list[dict], threshold: float = CRITICAL_WORD_THRESHOLD) -> list[Warning]:
@@ -186,8 +212,10 @@ def number_warnings(lines: list[dict], threshold: float = CRITICAL_WORD_THRESHOL
         texts = [w["text"] for w in words]
         for j, w in enumerate(words):
             problem = number_problem(texts, j)
+            if problem is None and not _has_digit(w["text"]) and letters_for_number(words, j, threshold):
+                problem = "unreadable_number"
             if problem is None and _has_digit(w["text"]):
-                if w["reread_text"] is not None and _digits(w["reread_text"]) != _digits(w["text"]):
+                if w["reread_text"] is not None and _number(w["reread_text"]) != _number(w["text"]):
                     problem = "number_mismatch"  # the two readings disagree: never pick one
                 elif not number_accepted(w, threshold):
                     problem = "low_confidence_number"
@@ -210,6 +238,14 @@ def cell_number_warnings(tables: list[dict], threshold: float = CRITICAL_WORD_TH
     return out
 
 
+def _number(token: str) -> str:
+    """A number as it would be spoken: its digits and decimal point, without thousands
+    commas. Two readings agree only if these match: "999" and "9.99" have the same digits
+    but are not the same amount (a statement's 9.99 was accepted as 999, docs/FINDINGS.md)."""
+    core = re.sub(r"[^\d.,:/-]", "", token).strip(".,:/-")
+    return re.sub(r",(?=\d{3}\b)", "", core)  # other commas stay: "5,00" may be 5.00
+
+
 def _digits(token: str) -> str:
     return re.sub(r"\D", "", token)
 
@@ -219,23 +255,23 @@ def number_mismatches(first: dict, second: dict, scale: float = 1.5) -> tuple[li
     the passes disagree on is flagged; the first reading is never replaced."""
     found: list[tuple[str, tuple]] = []  # (digits, where) from the first pass
     for i, line in enumerate(first.get("lines", [])):
-        found += [(_digits(w), ("line", i)) for w in line.get("text", "").split() if _has_digit(w)]
+        found += [(_number(w), ("line", i)) for w in line.get("text", "").split() if _has_digit(w)]
     for t_i, t in enumerate(first.get("tables", [])):
         for row in t.get("rows", []):
             for c in row:
-                found += [(_digits(w), ("cell", t_i, c["row"], c["col"])) for w in c.get("text", "").split() if _has_digit(w)]
+                found += [(_number(w), ("cell", t_i, c["row"], c["col"])) for w in c.get("text", "").split() if _has_digit(w)]
 
     others: dict[str, list[int]] = {}  # digits -> tops (first-pass scale) in the second pass
     for line in second.get("lines", []):
         for w in line.get("text", "").split():
             if _has_digit(w):
-                others.setdefault(_digits(w), []).append(int(line.get("top", 0) / scale))
+                others.setdefault(_number(w), []).append(int(line.get("top", 0) / scale))
     for t in second.get("tables", []):
         for row in t.get("rows", []):
             for c in row:
                 for w in c.get("text", "").split():
                     if _has_digit(w):
-                        others.setdefault(_digits(w), []).append(int(t.get("top", 0) / scale))
+                        others.setdefault(_number(w), []).append(int(t.get("top", 0) / scale))
 
     flagged: set[tuple] = set()
     for digits, where in found:
@@ -264,3 +300,8 @@ def number_mismatches(first: dict, second: dict, scale: float = 1.5) -> tuple[li
 def line_end_warnings(lines: list[dict]) -> list[Warning]:
     """Lines whose ink carries on past the recognised text: the end was not read."""
     return [Warning(i, code="line_end_unclear") for i, l in enumerate(lines) if l.get("end_unclear")]
+
+
+def line_part_warnings(lines: list[dict]) -> list[Warning]:
+    """Lines with print in their row that no word covers: part of the line was not read."""
+    return [Warning(i, code="line_part_unclear") for i, l in enumerate(lines) if l.get("part_unclear")]

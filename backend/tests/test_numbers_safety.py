@@ -269,3 +269,50 @@ def test_bullets_then_the_check_still_refuses_numbers_inside_the_items():
     assert problems == [] and text == "• Starch: iodine.\n• Sugar: heat for 5 minutes."
     _, problems = check_answer("1. Starch: iodine.\n2. Sugar: heat for 5 minutes.", page, None, "en")
     assert {p.code for p in problems} == {"digit", "unit_word"}  # the 5 the model wrote
+
+
+# ---------- A number read entirely as letters (bank statement, docs/FINDINGS.md)
+
+def _line(*words):
+    return {"text": " ".join(t for t, _ in words), "confidence": 0.8,
+            "words": [{"text": t, "confidence": c} for t, c in words]}
+
+
+def test_a_date_read_as_letters_is_unreadable_never_repaired():
+    from app import safety
+
+    warned = safety.number_warnings([_line(("OZ", 0.5), ("Sep", 0.95), ("2026", 0.96))])
+    assert [(w.code, w.word_index) for w in warned] == [("unreadable_number", 0)]
+    warned = safety.number_warnings([_line(("Balance", 0.96), ("lO", 0.6), ("500", 0.97))])
+    assert ("unreadable_number", 1) in [(w.code, w.word_index) for w in warned]
+
+
+def test_real_words_beside_numbers_are_not_flagged():
+    from app import safety
+
+    for line in [_line(("I", 0.6), ("take", 0.95), ("2", 0.97), ("tablets", 0.95)),
+                 _line(("2", 0.97), ("oz", 0.6)),
+                 _line(("Do", 0.6), ("2", 0.97), ("sums", 0.95)),
+                 _line(("OZ", 0.97), ("Sep", 0.95), ("2026", 0.96))]:  # confident: not a half-read
+        assert [w for w in safety.number_warnings([line]) if w.code == "unreadable_number"] == []
+
+
+def test_two_readings_agree_only_with_the_decimal_point_in_the_same_place():
+    from app import safety
+
+    line = {"text": "Debit 999", "confidence": 0.85, "words": [
+        {"text": "Debit", "confidence": 0.95},
+        {"text": "999", "confidence": 0.85, "reread_text": "9.99", "reread_confidence": 0.9}]}
+    assert [(w.code, w.word_index) for w in safety.number_warnings([line])] == [("number_mismatch", 1)]
+    line["words"][1]["reread_text"] = "999"
+    assert safety.number_warnings([line]) == []  # both readings 999 and both ≥ 0.80
+    commas = {"text": "45,250.50", "confidence": 0.85, "words": [
+        {"text": "45,250.50", "confidence": 0.85, "reread_text": "45250.50", "reread_confidence": 0.9}]}
+    assert safety.number_warnings([commas]) == []  # the same amount
+
+
+def test_an_unsure_day_before_a_month_is_unreadable():
+    from app import safety
+
+    warned = safety.number_warnings([_line(("oe", 0.6), ("Sep", 0.95), ("2026", 0.96))])
+    assert [(w.code, w.word_index) for w in warned] == [("unreadable_number", 0)]

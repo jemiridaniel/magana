@@ -1924,4 +1924,91 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get practiceLevelTitle => 'My practice level';
+
+  @override
+  String get msg_unreadable_pdf =>
+      'I couldn\'t open that PDF. Please try another file.';
+
+  @override
+  String get msg_pdf_password_needed =>
+      'This PDF is locked. Type its password: it is often in the email that came with it.';
+
+  @override
+  String get msg_pdf_password_wrong =>
+      'That password didn\'t open the PDF. Please check it and try again.';
+
+  @override
+  String get msg_pdf_too_long =>
+      'This PDF is too long. I can read up to 20 pages at a time.';
+
+  @override
+  String get readPdf => 'Read a PDF';
+
+  @override
+  String get readPdfDetail =>
+      'A bank statement, result or letter sent to your phone';
+
+  @override
+  String get pdfTitle => 'Read a PDF';
+
+  @override
+  String get pdfBody =>
+      'Choose a PDF on your phone. You can also open one from WhatsApp, Gmail or Files with “Open with Magana” or Share.';
+
+  @override
+  String get pdfChoose => 'Choose a PDF';
+
+  @override
+  String get pdfReading =>
+      'Reading the PDF. Long statements take a little while.';
+
+  @override
+  String get pdfPasswordTitle => 'This PDF is locked';
+
+  @override
+  String get pdfPasswordBody =>
+      'Type its password. Banks often send it in the same email, or it\'s part of your phone number or date of birth.';
+
+  @override
+  String get pdfPasswordLabel => 'PDF password';
+
+  @override
+  String get pdfPasswordNote =>
+      'Magana uses this password only to open this file, then forgets it. It is never saved. Magana never asks for your bank PIN or app password.';
+
+  @override
+  String get pdfOpen => 'Open the PDF';
+
+  @override
+  String get pdfPasswordEmpty => 'Type the password first.';
+
+  @override
+  String get pdfPasswordReadBack => 'Read back';
+
+  @override
+  String pdfPasswordSays(String spelled) {
+    return 'You typed: $spelled';
+  }
+
+  @override
+  String get pdfNotChosen => 'No PDF chosen.';
+
+  @override
+  String pageOf(int page, int count) {
+    return 'Page $page of $count';
+  }
+
+  @override
+  String pdfShared(String name) {
+    return 'A PDF was shared with Magana: $name';
+  }
+
+  @override
+  String msg_line_part_unclear(String where) {
+    return 'Part of $where wasn\'t read: there\'s print I couldn\'t make out. Please check it or retake the photo.';
+  }
+
+  @override
+  String get msg_small_print =>
+      'The print is very small or faint in this photo, so I may miss some of it. Move the phone closer, or open the PDF itself if you have it.';
 }

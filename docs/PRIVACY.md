@@ -8,7 +8,7 @@
 
 - **Photos of your pages are read and then deleted.** They are never saved on the server or on your phone.
 - **Readings, reminders and your score stay on your phone** unless you choose otherwise.
-- Magana never asks for your PIN or password.
+- Magana never asks for your bank PIN or any account password. The only password it asks for is a locked PDF's own, to open that one file; it is never saved (see "PDFs" below).
 - Magana has no adverts, no tracking and no crash reporting.
 - **On WhatsApp (adults only), your photos pass through Meta's servers** before Magana reads them. See "WhatsApp" below.
 
@@ -17,6 +17,8 @@
 | What | Where it goes | Kept? |
 |---|---|---|
 | **Photo of a page** | Sent over HTTPS to the Magana server, read in memory | **No.** Deleted as soon as it is read. The phone's own copy is deleted once its bytes are sent. |
+| **A PDF you open with Magana** (a statement, result or letter) | Sent over HTTPS to the Magana server, read in memory, page by page | **No.** Deleted as soon as it is read, like a photo. Its reading comes back to your phone and is kept only if you save it |
+| **A locked PDF's password** | Typed on the phone, sent with that PDF only, used to open it | **No.** Never saved on the phone or the server, never logged, never sent back. The field is cleared after each try |
 | **The text Magana read** | Back to your phone | Only if you choose **Save to my library**: on your phone, deleted after 30 days |
 | **Text you ask Magana to explain** | In tester and production builds, only to an explanation server **approved** in docs/MODELS.md. None is approved yet, so today **no page text leaves the Magana server**: the app says "Explain isn't available yet" and reads the page. When a server is approved, it gets the page text (unclear numbers already masked) and your question. | Not stored by Magana. An approved server must not keep or log it. |
 | **Spoken answers and commands** | See "Speech recognition" below. In short: on the phone where possible, otherwise Magana's own server. Only adults' audio may go to Google or the phone maker, as a last resort | Magana deletes any recording at once and never stores it |
@@ -104,6 +106,16 @@ Schools register in the teacher portal (teachers.magana.ng). A school goes live 
 - **Quizzes** a teacher writes are saved on the Magana server and reach only that teacher's class sessions. They hold the teacher's questions only: no learner names, answers or scores.
 - **Deleting a learner's data:** a guardian asks the teacher; the teacher records it with "Remove from class"; a school admin confirms; everything about the learner is deleted at once (always within 7 days), and the audit log keeps only that "a learner's data was deleted".
 - **Emails** (sign-in codes, invitations) are sent through Amazon SES from no-reply@magana.ng.
+
+## PDFs
+
+> **For Nurse Balogun to review:** Magana now asks for one kind of password, a locked PDF's own.
+
+- **Read a PDF** (Everyday papers, or "Open with Magana" and Share from WhatsApp, Gmail or Files) sends the PDF to the Magana server, the same way a photo is sent. It is read in memory and deleted at once.
+- A page with its own text (most bank PDFs) is read from the file's characters, so no picture of it is made. A scanned page is made into a picture in memory, read like a photo, and deleted.
+- Many banks lock statement PDFs. Magana then asks for **that PDF's password**, says it is used only to open the file, and never stores it. It is never the bank PIN, the banking app's password or a one-time code. The screen says so: "Magana never asks for your bank PIN or app password."
+- The password is shown as it's typed, so TalkBack can say it and a low-vision user can check it. "Read back" says it character by character, so say it only when no one is listening.
+- Health, money and letter PDFs follow the same rules as photos: no model, numbers read exactly as printed.
 
 ## Questions, or to delete something
 

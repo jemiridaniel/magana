@@ -104,7 +104,10 @@ class _ReaderScreenState extends State<ReaderScreen> {
   String _spoken(ReadItem item) {
     final body = _body(item);
     final warning = _warning(item);
-    final spoken = [if (body.isNotEmpty) body, ?warning].join('. ');
+    final page = item.pageStart
+        ? _l.pageOf(item.page!, widget.result.pageCount)
+        : null;
+    final spoken = [?page, if (body.isNotEmpty) body, ?warning].join('. ');
     return item.isRow && warning == null ? '$spoken.' : spoken;
   }
 

@@ -19,3 +19,6 @@ deploy/downloads/
 
 # Quizzes saved by a local backend (MAGANA_DATA_DIR); the server keeps its own
 backend/data/
+
+# Private test papers: never commit (bank statements, handwriting, prescriptions)
+magana-private-pages/

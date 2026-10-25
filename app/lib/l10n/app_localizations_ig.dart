@@ -1924,4 +1924,90 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get practiceLevelTitle => 'Ọkwa omume m';
+
+  @override
+  String get msg_unreadable_pdf =>
+      'Enweghị m ike imeghe PDF ahụ. Biko nwalee faịlụ ọzọ.';
+
+  @override
+  String get msg_pdf_password_needed =>
+      'Akpọchiri PDF a. Pịnye okwuntughe ya: ọ na-anọkarị n\'ozi ịmeel bịara ya.';
+
+  @override
+  String get msg_pdf_password_wrong =>
+      'Okwuntughe ahụ emegheghị PDF ahụ. Biko lelee ya ma nwaa ọzọ.';
+
+  @override
+  String get msg_pdf_too_long =>
+      'PDF a dị ogologo karịa. Enwere m ike ịgụ ihe ruru peeji 20 n\'otu oge.';
+
+  @override
+  String get readPdf => 'Gụọ PDF';
+
+  @override
+  String get readPdfDetail =>
+      'Akwụkwọ ndekọ ụlọ akụ, nsonaazụ ma ọ bụ akwụkwọ ozi e zitere na ekwentị gị';
+
+  @override
+  String get pdfTitle => 'Gụọ PDF';
+
+  @override
+  String get pdfBody =>
+      'Họrọ PDF na ekwentị gị. Ị nwekwara ike imeghe ya site na WhatsApp, Gmail ma ọ bụ Files site na “Mepee na Magana” ma ọ bụ Kesaa.';
+
+  @override
+  String get pdfChoose => 'Họrọ PDF';
+
+  @override
+  String get pdfReading => 'A na-agụ PDF ahụ. Ndekọ ogologo na-ewe obere oge.';
+
+  @override
+  String get pdfPasswordTitle => 'Akpọchiri PDF a';
+
+  @override
+  String get pdfPasswordBody =>
+      'Pịnye okwuntughe ya. Ụlọ akụ na-ezitekarị ya n\'otu ozi ịmeel ahụ, ma ọ bụ ọ bụ akụkụ nke nọmba ekwentị gị ma ọ bụ ụbọchị ọmụmụ gị.';
+
+  @override
+  String get pdfPasswordLabel => 'Okwuntughe PDF';
+
+  @override
+  String get pdfPasswordNote =>
+      'Magana na-eji okwuntughe a naanị imeghe faịlụ a, wee chefuo ya. A naghị echekwa ya. Magana anaghị ajụ PIN ụlọ akụ gị ma ọ bụ okwuntughe ngwa gị.';
+
+  @override
+  String get pdfOpen => 'Mepee PDF ahụ';
+
+  @override
+  String get pdfPasswordEmpty => 'Buru ụzọ pịnye okwuntughe.';
+
+  @override
+  String get pdfPasswordReadBack => 'Gụghachi ya';
+
+  @override
+  String pdfPasswordSays(String spelled) {
+    return 'Ị pịnyere: $spelled';
+  }
+
+  @override
+  String get pdfNotChosen => 'A họrọghị PDF ọ bụla.';
+
+  @override
+  String pageOf(int page, int count) {
+    return 'Peeji $page n\'ime $count';
+  }
+
+  @override
+  String pdfShared(String name) {
+    return 'E kesara PDF na Magana: $name';
+  }
+
+  @override
+  String msg_line_part_unclear(String where) {
+    return 'Agụghị akụkụ nke $where: e nwere ihe e dere m na-enweghị ike ịmata. Biko lelee ya ma ọ bụ see foto ọzọ.';
+  }
+
+  @override
+  String get msg_small_print =>
+      'Ihe e dere na foto a pere mpe nke ukwuu ma ọ bụ adịghị ahụ nke ọma, ya mere enwere m ike ịhapụ ụfọdụ. Bịaruo ekwentị nso, ma ọ bụ mepee PDF ahụ n\'onwe ya ma ọ bụrụ na i nwere ya.';
 }

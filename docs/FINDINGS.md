@@ -34,6 +34,45 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-25 · Read a PDF, and a private bank statement benchmark: two silent number errors found and fixed (UNREVIEWED)
+
+> **Unreviewed.** For Dr. Amos and Nurse Balogun: the number rules changed (below). For Nurse Balogun: Magana now asks for one kind of password, a locked PDF's own (PRIVACY.md, "PDFs"; CLAUDE.md rule 5).
+
+- **Paper:** "Bank A statement", a real 2-month statement PDF owned by a team member, kept private on one Mac (`~/magana-private-pages/`, in .gitignore). It was never committed, uploaded or sent to any service; OCR ran locally. Only totals are recorded here. Script: `backend/scripts/bank_benchmark.py`, which prints totals only.
+- **The statement:** 13 pages, all with a text layer, 286 transactions. 1,998 numbers were scored: 568 amounts and 1,430 date and time parts, from the date, value date, debit, credit and balance cells. Everything else was masked before OCR and not scored: the name, address and account block, descriptions, references and channels.
+- **Read a PDF** (new; `backend/app/pdfs.py`, `POST /read-pdf`; app `screens/pdf.dart`, "Open with Magana" and Share on Android):
+  - **Text layer:** read from the file's own characters, with each transaction table read row by row under its column names. **1,998 of 1,998 numbers exact, no warnings, 0.8 s** for 13 pages.
+  - Getting there took four layout fixes, all found on this statement:
+    - The Balance column's name was split over three lines ("Balance After(" above the header line, "₦)" below it).
+    - Descriptions were centred in tall rows, with wrapped text above and below the date line.
+    - The header appeared on page 1 only.
+    - A second account's header started halfway down page 7, with a summary above it that must not become rows.
+    - Synthetic regression tests (`test_pdfs.py`) cover each fix.
+  - A page that is mostly a picture is read with Magana's own OCR, even if a scanner app added a hidden text layer. That layer is another program's guess.
+  - **Locked PDFs:** the password is asked for by name, shown as typed so TalkBack can say it, with a Read back button. It is sent once to open that file, then cleared; it is never saved, logged or returned. A test checks the response never contains it.
+- **The same pages as a scan** (rendered at 300 dpi, through the money-mode OCR, second pass and re-read crops):
+  - Amounts: 370 correct; 158 correct but flagged; 13 misread and flagged; 27 missed but flagged; **0 misread or missed without a warning.**
+  - Dates and times: 1,000 correct; 396 correct but flagged; 34 misread and flagged; **0 unflagged.**
+  - Before the fixes below, the same run had **22 numbers misread with no warning and 27 amounts dropped with no warning.**
+- **Safety bugs the benchmark found (fixed, with tests):**
+  1. **Two readings "agreed" on digits only:** a 9.99 read as 999 by the page, and as 9.99 by its re-read crop, counted as two agreeing readings above 0.80, so the amount was accepted at 100 times its value (4 cases). Readings, and the second-pass check, now agree only if the decimal point is in the same place; thousands commas are ignored ("9999.99," is 9,999.99).
+  2. **Small amounts dropped from a row with no warning:** OCR read a row's date and balance and skipped a small amount between them (27 cases). New check `reader.mark_unread_parts`: text-sized ink in a row that no recognised word covers flags the line ("Part of line 4 wasn't read"). Thin ruled lines don't count.
+  3. **A date's day read as letters ("02" as two letters, confidence 0.42–0.81), with no warning** (18 cases). An unsure word of one or two characters right before a month name, or a low-confidence run of digit look-alikes beside a number, is now unreadable and never repaired. Real words aren't flagged ("I take 2", "2 oz", "Do 2 sums").
+- **Benchmark mistakes, fixed before the numbers above:**
+  - Black masks made Tesseract read the dates as letters (1,261 of 1,605 date parts misread); masks are now white.
+  - Masking the month word made the day beside it vanish.
+  - "7.50" under Debit was counted as a date.
+  - At 200 dpi, 23 of 34 amounts on a test page were read; at 300 dpi, 31 (`pdfs.DPI` is now 300).
+- **SIMULATED phone photo** (not a real phone: the same masked page at 150 dpi, tilted 1°, blurred, unevenly lit, JPEG):
+  - Magana's first OCR pass read **no words at all** on these pages. What faint-print recovery found: 4 amounts correct but flagged; 184 misread and flagged; 282 missed but flagged; **97 missed silently; 1 misread with no warning.** Dates: 109 correct but flagged; 721 misread and flagged; 397 missed but flagged; **203 missed silently.**
+  - New page tip `small_print`: "The print is very small or faint in this photo… open the PDF itself if you have it." It went to **12 of 13** simulated photo pages and **0 of 13** scans; a short label doesn't get it.
+  - So a phone photo of a whole statement page is not a safe way to read it. The PDF is.
+- **Not measured yet:** real phone photos of a statement (no `opay_photo_*.jpg` files were provided), PaddleOCR on these pages, and any real phone. Second statements from other banks would show whether the column-name list (`pdfs.HEADER_KINDS`) is enough.
+- **Checks:** backend 424 passed (12 new PDF tests, 7 new safety tests); app 199 passed (4 new Read a PDF tests, with `expectAccessible` on the PDF and password screens); debug APK builds with the new share handler.
+- **Status:** open, unreviewed. The rule changes in items 1 and 3 change what is flagged on every paper: for Dr. Amos's sign-off.
+
+---
+
 ## 2026-10-25 · Accounts: teacher sign-in, schools and roles, class codes, consent in the portal (UNREVIEWED)
 
 > **Unreviewed.** For Nurse Balogun: the new "waiting for consent" rule, and the data the portal keeps (PRIVACY.md, "Teachers and schools"). Dr. Amos isn't needed for this one.

@@ -1923,4 +1923,91 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get practiceLevelTitle => 'Ìpele ìdánrawò mi';
+
+  @override
+  String get msg_unreadable_pdf =>
+      'Mi ò lè ṣí PDF yìí. Jọ̀wọ́ gbìyànjú fáìlì míì.';
+
+  @override
+  String get msg_pdf_password_needed =>
+      'A ti tì PDF yìí. Tẹ ọ̀rọ̀ aṣínà rẹ̀: ó sábà máa ń wà nínú ímeèlì tó bá a wá.';
+
+  @override
+  String get msg_pdf_password_wrong =>
+      'Ọ̀rọ̀ aṣínà yẹn kò ṣí PDF náà. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ kí o tún gbìyànjú.';
+
+  @override
+  String get msg_pdf_too_long =>
+      'PDF yìí ti gùn jù. Mo lè ka ojú-ìwé 20 lẹ́ẹ̀kan.';
+
+  @override
+  String get readPdf => 'Ka PDF';
+
+  @override
+  String get readPdfDetail =>
+      'Ìwé àkọsílẹ̀ báǹkì, èsì tàbí lẹ́tà tí a fi ránṣẹ́ sí fóònù rẹ';
+
+  @override
+  String get pdfTitle => 'Ka PDF';
+
+  @override
+  String get pdfBody =>
+      'Yan PDF kan lórí fóònù rẹ. O tún lè ṣí i láti WhatsApp, Gmail tàbí Files pẹ̀lú “Ṣí pẹ̀lú Magana” tàbí Pín.';
+
+  @override
+  String get pdfChoose => 'Yan PDF';
+
+  @override
+  String get pdfReading =>
+      'À ń ka PDF náà. Àkọsílẹ̀ gígùn máa ń gba ìgbà díẹ̀.';
+
+  @override
+  String get pdfPasswordTitle => 'A ti tì PDF yìí';
+
+  @override
+  String get pdfPasswordBody =>
+      'Tẹ ọ̀rọ̀ aṣínà rẹ̀. Àwọn báǹkì sábà máa ń fi ránṣẹ́ nínú ímeèlì kan náà, tàbí ó jẹ́ apá kan nọ́ńbà fóònù rẹ tàbí ọjọ́ ìbí rẹ.';
+
+  @override
+  String get pdfPasswordLabel => 'Ọ̀rọ̀ aṣínà PDF';
+
+  @override
+  String get pdfPasswordNote =>
+      'Magana máa ń lo ọ̀rọ̀ aṣínà yìí láti ṣí fáìlì yìí nìkan, lẹ́yìn náà ó máa gbàgbé rẹ̀. A kì í tọ́jú rẹ̀. Magana kì í béèrè PIN báǹkì rẹ tàbí ọ̀rọ̀ aṣínà áàpù rẹ.';
+
+  @override
+  String get pdfOpen => 'Ṣí PDF náà';
+
+  @override
+  String get pdfPasswordEmpty => 'Kọ́kọ́ tẹ ọ̀rọ̀ aṣínà.';
+
+  @override
+  String get pdfPasswordReadBack => 'Kà á padà';
+
+  @override
+  String pdfPasswordSays(String spelled) {
+    return 'O tẹ̀: $spelled';
+  }
+
+  @override
+  String get pdfNotChosen => 'A kò yan PDF kankan.';
+
+  @override
+  String pageOf(int page, int count) {
+    return 'Ojú-ìwé $page nínú $count';
+  }
+
+  @override
+  String pdfShared(String name) {
+    return 'A pín PDF kan pẹ̀lú Magana: $name';
+  }
+
+  @override
+  String msg_line_part_unclear(String where) {
+    return 'A kò ka apá kan $where: ọ̀rọ̀ kan wà tí mi ò lè dá mọ̀. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí tún ya fọ́tò.';
+  }
+
+  @override
+  String get msg_small_print =>
+      'Ọ̀rọ̀ inú fọ́tò yìí kéré jù tàbí kò hàn dáadáa, nítorí náà mo lè fo apá kan. Sún fóònù sún mọ́ ọn, tàbí ṣí PDF fúnra rẹ̀ tí o bá ní i.';
 }

@@ -1929,4 +1929,91 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get practiceLevelTitle => 'Matakin atisayena';
+
+  @override
+  String get msg_unreadable_pdf =>
+      'Ban iya buɗe wannan PDF ɗin ba. Don Allah gwada wani fayil.';
+
+  @override
+  String get msg_pdf_password_needed =>
+      'An kulle wannan PDF ɗin. Rubuta kalmar sirrinsa: sau da yawa tana cikin imel ɗin da ya zo da shi.';
+
+  @override
+  String get msg_pdf_password_wrong =>
+      'Wannan kalmar sirri ba ta buɗe PDF ɗin ba. Don Allah duba ka sake gwadawa.';
+
+  @override
+  String get msg_pdf_too_long =>
+      'Wannan PDF ɗin ya yi tsawo. Zan iya karanta shafi 20 a lokaci ɗaya.';
+
+  @override
+  String get readPdf => 'Karanta PDF';
+
+  @override
+  String get readPdfDetail =>
+      'Bayanin banki, sakamako ko wasiƙa da aka aiko zuwa wayarka';
+
+  @override
+  String get pdfTitle => 'Karanta PDF';
+
+  @override
+  String get pdfBody =>
+      'Zaɓi PDF a wayarka. Hakanan za ka iya buɗe shi daga WhatsApp, Gmail ko Files da “Buɗe da Magana” ko Raba.';
+
+  @override
+  String get pdfChoose => 'Zaɓi PDF';
+
+  @override
+  String get pdfReading =>
+      'Ana karanta PDF ɗin. Dogayen bayanai suna ɗaukar ɗan lokaci.';
+
+  @override
+  String get pdfPasswordTitle => 'An kulle wannan PDF ɗin';
+
+  @override
+  String get pdfPasswordBody =>
+      'Rubuta kalmar sirrinsa. Bankuna sukan aiko ta a cikin imel ɗin, ko kuma wani ɓangare ne na lambar wayarka ko ranar haihuwarka.';
+
+  @override
+  String get pdfPasswordLabel => 'Kalmar sirrin PDF';
+
+  @override
+  String get pdfPasswordNote =>
+      'Magana tana amfani da wannan kalmar sirri don buɗe wannan fayil kawai, sannan ta manta da ita. Ba a ajiye ta ba. Magana ba ta taɓa tambayar PIN ɗin bankinka ko kalmar sirrin manhaja ba.';
+
+  @override
+  String get pdfOpen => 'Buɗe PDF ɗin';
+
+  @override
+  String get pdfPasswordEmpty => 'Rubuta kalmar sirri tukuna.';
+
+  @override
+  String get pdfPasswordReadBack => 'Karanta abin da na rubuta';
+
+  @override
+  String pdfPasswordSays(String spelled) {
+    return 'Ka rubuta: $spelled';
+  }
+
+  @override
+  String get pdfNotChosen => 'Ba a zaɓi PDF ba.';
+
+  @override
+  String pageOf(int page, int count) {
+    return 'Shafi $page cikin $count';
+  }
+
+  @override
+  String pdfShared(String name) {
+    return 'An raba PDF da Magana: $name';
+  }
+
+  @override
+  String msg_line_part_unclear(String where) {
+    return 'Ba a karanta wani ɓangare na $where ba: akwai rubutu da ban iya gane shi ba. Don Allah duba shi ko ka sake ɗaukar hoto.';
+  }
+
+  @override
+  String get msg_small_print =>
+      'Rubutun ƙanana ne sosai ko ba ya fitowa sosai a wannan hoton, don haka zan iya tsallake wani ɓangare. Matsar da wayar kusa, ko ka buɗe PDF ɗin kansa idan kana da shi.';
 }

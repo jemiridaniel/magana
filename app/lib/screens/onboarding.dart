@@ -8,7 +8,9 @@ import '../language.dart';
 import '../policy.dart';
 import '../profile.dart';
 import '../widgets.dart';
+import '../platform/shared_pdf.dart';
 import 'class_code.dart';
+import 'pdf.dart';
 
 /// Shows onboarding until an age tier is chosen, the classroom step when a
 /// Classroom session hasn't started, and [home] otherwise. A Guided learner whose
@@ -30,7 +32,26 @@ class _ProfileGateState extends State<ProfileGate> with WidgetsBindingObserver {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
-    WidgetsBinding.instance.addPostFrameCallback((_) => _refresh());
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _refresh();
+      _sharedPdfs();
+    });
+  }
+
+  /// A PDF opened with Magana (or shared to it) goes to Read a PDF, once the
+  /// profile is set up and its tier may read pages (not a Classroom phone).
+  Future<void> _sharedPdfs() async {
+    void open(SharedPdf pdf) {
+      if (!mounted) return;
+      final profile = AppScope.of(context).profile;
+      if (profile.tier == null || profile.tier == Tier.classroom) return;
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (_) => PdfScreen(shared: pdf)));
+    }
+
+    listenForSharedPdfs(open);
+    final pdf = await takeSharedPdf();
+    if (pdf != null) open(pdf);
   }
 
   @override

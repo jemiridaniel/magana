@@ -18,6 +18,7 @@ ENGLISH = {
     "unreadable_number": "I can't read a number on {where} clearly. Please check it or retake the photo.",
     "number_mismatch": "I can't read a number on {where} clearly. Please check it or retake the photo.",
     "line_end_unclear": "I can't read the end of {where}. Please check it or retake the photo.",
+    "line_part_unclear": "Part of {where} wasn't read: there's print I couldn't make out. Please check it or retake the photo.",
     "faint_region": "There is faint print {where} that I can't read. Try more light, or retake the photo.",
     # Request errors (HTTP detail)
     "unknown_mode": "Choose schoolwork, health or money.",
@@ -31,6 +32,11 @@ ENGLISH = {
     "consent_required": "Learners aged 13 to 17 need a parent's or guardian's consent first.",
     "teacher_session_required": "Learners under 13 can only use Magana in a teacher-run session.",
     "unreadable_image": "I couldn't open that photo. Please try again.",
+    "small_print": "The print is very small or faint in this photo, so I may miss some of it. Move the phone closer, or open the PDF itself if you have it.",
+    "unreadable_pdf": "I couldn't open that PDF. Please try another file.",
+    "pdf_password_needed": "This PDF is locked. Type its password: it is often in the email that came with it.",
+    "pdf_password_wrong": "That password didn't open the PDF. Please check it and try again.",
+    "pdf_too_long": "This PDF is too long. I can read up to 20 pages at a time.",
     # Class link (learner_api.py)
     "class_code_wrong": "That class code isn't right. Check it with your teacher.",
     "code_locked": "Too many wrong codes. Please wait 5 minutes, then try again.",

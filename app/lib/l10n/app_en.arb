@@ -1221,109 +1221,359 @@
     }
   },
   "whoTitle": "Who is using Magana?",
-  "@whoTitle": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@whoTitle": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "whoBody": "This helps Magana choose the right lessons and quizzes for you.",
-  "@whoBody": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@whoBody": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "whoInSchool": "I’m in school",
-  "@whoInSchool": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@whoInSchool": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "whoInSchoolDetail": "Primary or secondary. You’ll join your class with a code from your teacher.",
-  "@whoInSchoolDetail": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@whoInSchoolDetail": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "whoFinished": "I’ve finished school",
-  "@whoFinished": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@whoFinished": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "whoFinishedDetail": "Practise for JAMB or WAEC, improve your reading, or learn new skills.",
-  "@whoFinishedDetail": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@whoFinishedDetail": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "whoOther": "University or other",
-  "@whoOther": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@whoOther": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "whoOtherDetail": "Read your own books, notes and papers. No class needed.",
-  "@whoOtherDetail": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@whoOtherDetail": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "joinTitle": "Join your class",
-  "@joinTitle": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@joinTitle": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "joinBody": "Ask your teacher for the 6-digit class code.",
-  "@joinBody": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@joinBody": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "classCodeLabel": "Class code",
-  "@classCodeLabel": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@classCodeLabel": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "teacherCodeLabel": "Teacher code",
-  "@teacherCodeLabel": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@teacherCodeLabel": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "codeGroup": "{label}: {typed}, {count} of 6 digits",
-  "@codeGroup": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.", "placeholders": {"label": {"type": "String"}, "typed": {"type": "String"}, "count": {"type": "int"}}},
+  "@codeGroup": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.",
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "typed": {
+        "type": "String"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "codeEmpty": "No digits yet. Type 6 digits.",
-  "@codeEmpty": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@codeEmpty": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "codeProgress": "You typed {typed}. {left} more.",
-  "@codeProgress": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.", "placeholders": {"typed": {"type": "String"}, "left": {"type": "int"}}},
+  "@codeProgress": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.",
+    "placeholders": {
+      "typed": {
+        "type": "String"
+      },
+      "left": {
+        "type": "int"
+      }
+    }
+  },
   "codeComplete": "All 6 digits: {typed}.",
-  "@codeComplete": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.", "placeholders": {"typed": {"type": "String"}}},
+  "@codeComplete": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.",
+    "placeholders": {
+      "typed": {
+        "type": "String"
+      }
+    }
+  },
   "codeNeedsSix": "Type all 6 digits first.",
-  "@codeNeedsSix": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@codeNeedsSix": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "keypadDelete": "Delete",
-  "@keypadDelete": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@keypadDelete": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "keypadReadBack": "Read back",
-  "@keypadReadBack": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@keypadReadBack": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "joinUnder18Note": "Under 18? Your teacher will ask a parent or guardian to agree before your class is linked. Until then you can still read pages.",
-  "@joinUnder18Note": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@joinUnder18Note": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "joinButton": "Join class",
-  "@joinButton": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@joinButton": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "joinNoCode": "I don’t have a code yet",
-  "@joinNoCode": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@joinNoCode": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "joinedTitle": "You’re in!",
-  "@joinedTitle": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@joinedTitle": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "joinedTeacher": "Teacher: {name}",
-  "@joinedTeacher": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.", "placeholders": {"name": {"type": "String"}}},
+  "@joinedTeacher": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
   "joinedRightClass": "Is this the right class? If not, tell your teacher. Only your teacher can move you to a different class.",
-  "@joinedRightClass": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@joinedRightClass": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "joinedWaiting": "Waiting for your parent or guardian to agree. Your teacher will ask them.",
-  "@joinedWaiting": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@joinedWaiting": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "startReading": "Start reading",
-  "@startReading": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@startReading": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "changeClassTitle": "Change class",
-  "@changeClassTitle": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@changeClassTitle": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "changeClassNow": "Your class now",
-  "@changeClassNow": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@changeClassNow": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "teacherCodeNeededTitle": "Your teacher needs to do this",
-  "@teacherCodeNeededTitle": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@teacherCodeNeededTitle": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "teacherCodeBody": "Ask your teacher to enter their teacher code. It’s on their Magana teacher page.",
-  "@teacherCodeBody": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@teacherCodeBody": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "newClassCodeTitle": "Now the new class’s code",
-  "@newClassCodeTitle": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@newClassCodeTitle": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "confirmLabel": "Confirm",
-  "@confirmLabel": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@confirmLabel": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "teacherCodeLockNote": "Wrong code 3 times? Magana waits 5 minutes before you can try again.",
-  "@teacherCodeLockNote": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@teacherCodeLockNote": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "goalsTitle": "What would you like to do?",
-  "@goalsTitle": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@goalsTitle": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "goalsBody": "Choose as many as you like.",
-  "@goalsBody": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@goalsBody": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "goalJamb": "Prepare for JAMB",
-  "@goalJamb": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@goalJamb": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "goalJambDetail": "Past-question style practice: English, Maths and more",
-  "@goalJambDetail": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@goalJambDetail": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "goalWaec": "Prepare for WAEC or NECO resit",
-  "@goalWaec": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@goalWaec": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "goalWaecDetail": "Practice by subject, at SS3 level",
-  "@goalWaecDetail": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@goalWaecDetail": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "goalReading": "Practise reading",
-  "@goalReading": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@goalReading": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "goalReadingDetail": "Short passages and stories, read with you",
-  "@goalReadingDetail": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@goalReadingDetail": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "goalSkills": "Learn new skills",
-  "@goalSkills": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@goalSkills": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "goalSkillsDetail": "Phone skills, getting around, money basics",
-  "@goalSkillsDetail": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@goalSkillsDetail": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "goalPapers": "Just read my papers",
-  "@goalPapers": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@goalPapers": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "goalPapersDetail": "Letters, bills, medicine labels",
-  "@goalPapersDetail": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@goalPapersDetail": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "goalsNote": "You can change these any time in Settings. No teacher needed.",
-  "@goalsNote": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@goalsNote": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "saveLabel": "Save",
-  "@saveLabel": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@saveLabel": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "waitingBanner": "Waiting for your parent or guardian to agree. Until then you can read pages.",
-  "@waitingBanner": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@waitingBanner": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "removedNotice": "Your teacher removed this phone from the class. You can still read pages.",
-  "@removedNotice": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@removedNotice": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "settingsGoals": "My goals",
-  "@settingsGoals": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@settingsGoals": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "settingsNoClass": "Not in a class",
-  "@settingsNoClass": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."},
+  "@settingsNoClass": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
   "practiceLevelTitle": "My practice level",
-  "@practiceLevelTitle": {"description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."}
+  "@practiceLevelTitle": {
+    "description": "Accounts and sign-in boards (A1–A5). Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "msg_unreadable_pdf": "I couldn't open that PDF. Please try another file.",
+  "@msg_unreadable_pdf": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "msg_pdf_password_needed": "This PDF is locked. Type its password: it is often in the email that came with it.",
+  "@msg_pdf_password_needed": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "msg_pdf_password_wrong": "That password didn't open the PDF. Please check it and try again.",
+  "@msg_pdf_password_wrong": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "msg_pdf_too_long": "This PDF is too long. I can read up to 20 pages at a time.",
+  "@msg_pdf_too_long": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "readPdf": "Read a PDF",
+  "@readPdf": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "readPdfDetail": "A bank statement, result or letter sent to your phone",
+  "@readPdfDetail": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "pdfTitle": "Read a PDF",
+  "@pdfTitle": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "pdfBody": "Choose a PDF on your phone. You can also open one from WhatsApp, Gmail or Files with “Open with Magana” or Share.",
+  "@pdfBody": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "pdfChoose": "Choose a PDF",
+  "@pdfChoose": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "pdfReading": "Reading the PDF. Long statements take a little while.",
+  "@pdfReading": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "pdfPasswordTitle": "This PDF is locked",
+  "@pdfPasswordTitle": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "pdfPasswordBody": "Type its password. Banks often send it in the same email, or it's part of your phone number or date of birth.",
+  "@pdfPasswordBody": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "pdfPasswordLabel": "PDF password",
+  "@pdfPasswordLabel": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "pdfPasswordNote": "Magana uses this password only to open this file, then forgets it. It is never saved. Magana never asks for your bank PIN or app password.",
+  "@pdfPasswordNote": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "pdfOpen": "Open the PDF",
+  "@pdfOpen": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "pdfPasswordEmpty": "Type the password first.",
+  "@pdfPasswordEmpty": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "pdfPasswordReadBack": "Read back",
+  "@pdfPasswordReadBack": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "pdfPasswordSays": "You typed: {spelled}",
+  "@pdfPasswordSays": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.",
+    "placeholders": {
+      "spelled": {
+        "type": "String"
+      }
+    }
+  },
+  "pdfNotChosen": "No PDF chosen.",
+  "@pdfNotChosen": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review."
+  },
+  "pageOf": "Page {page} of {count}",
+  "@pageOf": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.",
+    "placeholders": {
+      "page": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "pdfShared": "A PDF was shared with Magana: {name}",
+  "@pdfShared": {
+    "description": "Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "msg_line_part_unclear": "Part of {where} wasn't read: there's print I couldn't make out. Please check it or retake the photo.",
+  "@msg_line_part_unclear": {
+    "description": "A row on a page had print no word covered (a dropped amount).",
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "msg_small_print": "The print is very small or faint in this photo, so I may miss some of it. Move the phone closer, or open the PDF itself if you have it.",
+  "@msg_small_print": {
+    "description": "Capture tip: the print in the photo is too small to read every number."
+  }
 }

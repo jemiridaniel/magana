@@ -19,7 +19,7 @@ from typing import Literal
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import asr, codes, curriculum, explain, learner_api, policy, portal_api, quizzes, ratelimit, safety, templates, triage, wa_flow
+from . import asr, codes, curriculum, explain, learner_api, pdfs, policy, portal_api, quizzes, ratelimit, safety, templates, triage, wa_flow
 from .wa_client import WhatsAppClient
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
@@ -187,14 +187,41 @@ async def read(file: UploadFile = File(...), mode: str = Form("school"),
     # Health and money papers get a second OCR pass so every number is read twice.
     result = read_page(image, engine, second_pass=mode in SECOND_PASS_MODES)
     # The uploaded photo is never stored: it only lives in memory for this request.
+    return checked(result)
+
+
+def checked(result: dict) -> dict:
+    """A page's reading with its safety warnings: confidence, each number, line ends,
+    table cells, and the second pass when there is one."""
     warnings = (safety.confidence_warnings(result["lines"]) + safety.number_warnings(result["lines"])
-                + safety.line_end_warnings(result["lines"]))
+                + safety.line_end_warnings(result["lines"]) + safety.line_part_warnings(result["lines"]))
     cell_warnings = safety.table_warnings(result["tables"]) + safety.cell_number_warnings(result["tables"])
     if "second_pass" in result:
         line_mm, cell_mm = safety.number_mismatches(result, result.pop("second_pass"), scale=SECOND_PASS_SCALE)
         warnings += line_mm
         cell_warnings += cell_mm
     return {**result, "warnings": [w.__dict__ for w in warnings], "cell_warnings": [w.__dict__ for w in cell_warnings]}
+
+
+@app.post("/read-pdf")
+async def read_pdf(file: UploadFile = File(...), mode: str = Form("money"), password: str = Form(""),
+                   tier: policy.Tier = Depends(caller_tier), engine: OCREngine = Depends(get_engine)) -> dict:
+    """A shared or downloaded PDF, every page in one reading (pdfs.py). Held in memory only;
+    the password opens the file for this request and is never stored or logged."""
+    feature = MODE_FEATURE.get(mode)
+    if feature is None:
+        raise HTTPException(400, {"code": "unknown_mode"})
+    require(tier, feature)
+    data = await file.read(pdfs.MAX_BYTES + 1)
+    try:
+        return pdfs.read_pdf(data, password or None, engine, mode in SECOND_PASS_MODES, checked)
+    except pdfs.PdfError as e:
+        status = {"pdf_password_needed": 401, "pdf_password_wrong": 401, "pdf_too_long": 413}.get(e.code, 400)
+        raise HTTPException(status, {"code": e.code}) from None
+    except Exception:  # an odd file: no traceback, nothing about the request in the logs
+        raise HTTPException(400, {"code": "unreadable_pdf"}) from None
+    finally:
+        del data, password
 
 
 class ExplainCheck(BaseModel):

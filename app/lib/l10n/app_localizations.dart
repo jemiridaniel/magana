@@ -3149,6 +3149,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'My practice level'**
   String get practiceLevelTitle;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'I couldn\'t open that PDF. Please try another file.'**
+  String get msg_unreadable_pdf;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'This PDF is locked. Type its password: it is often in the email that came with it.'**
+  String get msg_pdf_password_needed;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'That password didn\'t open the PDF. Please check it and try again.'**
+  String get msg_pdf_password_wrong;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'This PDF is too long. I can read up to 20 pages at a time.'**
+  String get msg_pdf_too_long;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Read a PDF'**
+  String get readPdf;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'A bank statement, result or letter sent to your phone'**
+  String get readPdfDetail;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Read a PDF'**
+  String get pdfTitle;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a PDF on your phone. You can also open one from WhatsApp, Gmail or Files with “Open with Magana” or Share.'**
+  String get pdfBody;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a PDF'**
+  String get pdfChoose;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Reading the PDF. Long statements take a little while.'**
+  String get pdfReading;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'This PDF is locked'**
+  String get pdfPasswordTitle;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Type its password. Banks often send it in the same email, or it\'s part of your phone number or date of birth.'**
+  String get pdfPasswordBody;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'PDF password'**
+  String get pdfPasswordLabel;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana uses this password only to open this file, then forgets it. It is never saved. Magana never asks for your bank PIN or app password.'**
+  String get pdfPasswordNote;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Open the PDF'**
+  String get pdfOpen;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Type the password first.'**
+  String get pdfPasswordEmpty;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Read back'**
+  String get pdfPasswordReadBack;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'You typed: {spelled}'**
+  String pdfPasswordSays(String spelled);
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'No PDF chosen.'**
+  String get pdfNotChosen;
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'Page {page} of {count}'**
+  String pageOf(int page, int count);
+
+  /// Read a PDF. Hausa, Yoruba and Igbo are drafts for native-speaker review.
+  ///
+  /// In en, this message translates to:
+  /// **'A PDF was shared with Magana: {name}'**
+  String pdfShared(String name);
+
+  /// A row on a page had print no word covered (a dropped amount).
+  ///
+  /// In en, this message translates to:
+  /// **'Part of {where} wasn\'t read: there\'s print I couldn\'t make out. Please check it or retake the photo.'**
+  String msg_line_part_unclear(String where);
+
+  /// Capture tip: the print in the photo is too small to read every number.
+  ///
+  /// In en, this message translates to:
+  /// **'The print is very small or faint in this photo, so I may miss some of it. Move the phone closer, or open the PDF itself if you have it.'**
+  String get msg_small_print;
 }
 
 class _AppLocalizationsDelegate

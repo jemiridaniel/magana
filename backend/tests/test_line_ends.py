@@ -70,3 +70,67 @@ def test_read_endpoint_warns_line_end_unclear():
 def test_line_end_warnings():
     assert [(w.block_index, w.code) for w in safety.line_end_warnings([{"end_unclear": False}, {"end_unclear": True}])] == [
         (1, "line_end_unclear")]
+
+
+# ---------- Part of a row not read (a statement's small amount dropped, docs/FINDINGS.md)
+
+def _row_page(drop: str | None, underline: bool = False):
+    """A statement row drawn at known places; the 'OCR' reads every word except `drop`."""
+    from PIL import Image, ImageDraw
+
+    from app.reader import Line, Page, Word
+
+    f = font(40)
+    img = Image.new("RGB", (1600, 200), "white")
+    d = ImageDraw.Draw(img)
+    words = []
+    for text, x in [("02", 40), ("Sep", 110), ("2026", 210), ("7.50", 700), ("45,250.50", 1200)]:
+        d.text((x, 60), text, fill="black", font=f)
+        l, t, r, b = d.textbbox((x, 60), text, font=f)
+        if text != drop:
+            words.append(Word(text, 0.97, l, t, r - l, b - t))
+    if underline:
+        d.line((40, 120, 1500, 120), fill="black", width=3)
+    top = min(w.top for w in words)
+    height = max(w.top + w.height for w in words) - top
+    line = Line(" ".join(w.text for w in words), 0.97, top, height=height, words=words,
+                left=words[0].left, width=words[-1].left + words[-1].width - words[0].left)
+    return img, Page(lines=[line])
+
+
+def test_a_dropped_amount_in_the_middle_of_a_row_is_flagged():
+    from app.reader import mark_unread_parts
+
+    img, page = _row_page(drop="7.50")
+    mark_unread_parts(img, page)
+    assert page.lines[0].part_unclear is True
+
+
+def test_a_fully_read_row_and_a_ruled_line_are_not_flagged():
+    from app.reader import mark_unread_parts
+
+    for underline in (False, True):
+        img, page = _row_page(drop=None, underline=underline)
+        mark_unread_parts(img, page)
+        assert page.lines[0].part_unclear is False
+
+
+def test_tiny_print_in_a_photo_gets_a_tip():
+    from app.reader import Line, Page, Word, small_print
+
+    def page(h):
+        return Page(lines=[Line("ab cd", 0.9, i * 40, height=h + 4,
+                                words=[Word("ab", 0.9, 0, i * 40, 30, h), Word("cd", 0.9, 40, i * 40, 30, h)])
+                           for i in range(5)])
+    assert small_print(page(7)) == ["small_print"]
+    assert small_print(page(14)) == []
+    assert small_print(Page(lines=[Line("Paracetamol 500 mg", 0.9, 0, height=30,
+                                        words=[Word("Paracetamol", 0.9, 0, 0, 200, 30)])])) == ["read_little"]
+
+
+def test_a_short_label_gets_no_small_print_tip():
+    from PIL import Image, ImageDraw
+
+    img = Image.new("RGB", (900, 300), "white")
+    ImageDraw.Draw(img).text((60, 100), "Paracetamol 500 mg", fill="black", font=font(56))
+    assert "small_print" not in read_page(img, TesseractEngine())["tips"]

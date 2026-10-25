@@ -65,6 +65,7 @@ class ReadItem {
     this.cells = const [],
     this.codes = const [],
     this.where = '',
+    this.page,
   });
 
   final ItemKind kind;
@@ -77,6 +78,10 @@ class ReadItem {
   final List<Cell> cells; // a table row's cells
   final List<String> codes; // backend warning codes for this item
   final String where; // faint region: top | middle | bottom
+  final int? page; // a PDF's page number (1-based); null for a photo
+
+  /// The first item on a new PDF page: the reader says "Page 2 of 13" first.
+  bool pageStart = false;
 
   bool get isRow => kind == ItemKind.row;
   bool get isFaint => kind == ItemKind.faint;
@@ -98,7 +103,15 @@ class Cell {
 }
 
 class ReadResult {
-  ReadResult({required this.tips, required this.items, this.json});
+  ReadResult({
+    required this.tips,
+    required this.items,
+    this.json,
+    this.pageCount = 1,
+  });
+
+  /// Pages in a PDF; 1 for a photo.
+  final int pageCount;
 
   final List<String> tips; // capture tip codes: too_dark, blurry
   final List<ReadItem> items;
@@ -144,6 +157,7 @@ class ReadResult {
               : (lines[i]['text'] as String? ?? '').split(' '),
           unclearWords: unclear[i] ?? const {},
           codes: lineCodes[i] ?? const [],
+          page: lines[i]['page'] as int?,
         ),
       );
     }
@@ -195,6 +209,7 @@ class ReadResult {
                 r, // keeps rows in order and after anything above the table
             cells: cells,
             codes: codes,
+            page: tables[t]['page'] as int?,
           ),
         );
       }
@@ -207,6 +222,7 @@ class ReadResult {
           top: (f['top'] as num?)?.toInt() ?? 0,
           codes: [f['code'] as String? ?? 'faint_region'],
           where: f['where'] as String? ?? '',
+          page: f['page'] as int?,
         ),
       );
     }
@@ -218,10 +234,20 @@ class ReadResult {
             ? a.$2.top.compareTo(b.$2.top)
             : a.$1.compareTo(b.$1),
       );
+    final sorted = [for (final e in indexed) e.$2];
+    final pageCount = json['page_count'] as int? ?? 1;
+    if (pageCount > 1) {
+      for (var i = 0; i < sorted.length; i++) {
+        sorted[i].pageStart =
+            sorted[i].page != null &&
+            (i == 0 || sorted[i - 1].page != sorted[i].page);
+      }
+    }
     return ReadResult(
       tips: (json['tips'] as List? ?? const []).cast<String>(),
-      items: [for (final e in indexed) e.$2],
+      items: sorted,
       json: json,
+      pageCount: pageCount,
     );
   }
 }
@@ -545,6 +571,27 @@ class MaganaApi {
     );
   }
 
+  /// Sends a PDF to /read-pdf: every page in one reading. The PDF and its password
+  /// are only held in memory for the request; the password is never saved.
+  /// Errors: pdf_password_needed, pdf_password_wrong, unreadable_pdf, pdf_too_long.
+  Future<ReadResult> readPdf(
+    Uint8List bytes, {
+    String filename = 'document.pdf',
+    String mode = 'letter',
+    String? password,
+  }) async {
+    final req = http.MultipartRequest('POST', Uri.parse('$apiBase/read-pdf'))
+      ..headers.addAll(_headers())
+      ..fields['mode'] = mode
+      ..files.add(
+        http.MultipartFile.fromBytes('file', bytes, filename: filename),
+      );
+    if (password != null && password.isNotEmpty) {
+      req.fields['password'] = password;
+    }
+    return _readResult(req, const Duration(seconds: 180));
+  }
+
   /// Sends the photo to /read. The photo is only held in memory for the request.
   Future<ReadResult> read(
     Uint8List bytes, {
@@ -557,10 +604,17 @@ class MaganaApi {
       ..files.add(
         http.MultipartFile.fromBytes('file', bytes, filename: filename),
       );
+    return _readResult(req, const Duration(seconds: 60));
+  }
+
+  Future<ReadResult> _readResult(
+    http.MultipartRequest req,
+    Duration timeout,
+  ) async {
     final http.Response res;
     try {
       res = await http.Response.fromStream(await _client.send(req))
-          .timeout(const Duration(seconds: 60));
+          .timeout(timeout);
     } catch (_) {
       throw ApiException(noAnswerCode());
     }
