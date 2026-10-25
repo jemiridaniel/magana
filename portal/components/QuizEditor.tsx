@@ -141,7 +141,7 @@ export default function QuizEditor() {
       setId(saved.id);
       setStatus(saved.status);
       setCode(saved.session_code);
-      if (!id) window.history.replaceState(null, "", `/quizzes/new?id=${saved.id}`);
+      if (!id) window.history.replaceState(null, "", `${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/quizzes/new/?id=${saved.id}`);
       setMessage({
         text: savesToServer()
           ? "Draft saved."

@@ -12,6 +12,8 @@ kaggle.json
 
 # The built PWA copied to the server (scripts/deploy-web.sh)
 deploy/web/
+# The built teacher portal (scripts/deploy-portal.sh): carries the keys, never committed
+deploy/teachers/
 
 # Quizzes saved by a local backend (MAGANA_DATA_DIR); the server keeps its own
 backend/data/

@@ -20,7 +20,7 @@ export default function Sidebar() {
       <Link className="brand" href="/uploads" aria-label="Magana for Teachers, home">
         {/* The Magana mark (brand kit, on-ink colours): decorative, the link has its own name. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="brand-mark" src="/brand/magana_mark_on_ink.svg" alt="" width={44} height={44} />
+        <img className="brand-mark" src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/magana_mark_on_ink.svg`} alt="" width={44} height={44} />
         <span className="brand-text">
           <span className="brand-name">Magana</span>
           <span className="brand-sub">Teachers</span>

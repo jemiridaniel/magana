@@ -15,10 +15,15 @@ services:
       - "443:443"
     environment:
       MAGANA_DOMAIN: ${MAGANA_DOMAIN:?set MAGANA_DOMAIN in .env, e.g. 18-130-12-34.sslip.io}
+      # The teacher portal's login (bcrypt hash from `caddy hash-password`; in .env, single-quoted).
+      PORTAL_USER: ${PORTAL_USER:?set PORTAL_USER in .env}
+      PORTAL_HASH: ${PORTAL_HASH:?set PORTAL_HASH in .env}
     volumes:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
       # The tester PWA, served at /app/ (scripts/deploy-web.sh fills it).
       - ./deploy/web:/srv/app:ro
+      # The teacher portal, served at /teachers/ (scripts/deploy-portal.sh fills it).
+      - ./deploy/teachers:/srv/teachers:ro
       - caddy_data:/data
       - caddy_config:/config
     depends_on:
