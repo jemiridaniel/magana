@@ -362,6 +362,28 @@ def learner_quizzes(session_code: str, tier: policy.Tier = Depends(caller_tier),
                         if q.status == "assigned" and q.session_code == code and quizzes.ready(q)]}
 
 
+@app.post("/asr/choose")
+async def choose_answer(file: UploadFile = File(...), lang: Literal["en", "ha", "yo", "ig"] = Form("en"),
+                        kind: Literal["letters", "yes_no", "true_false"] = Form("letters"),
+                        count: int = Form(4, ge=2, le=4),
+                        engine: asr.ASREngine = Depends(get_asr_engine)) -> dict:
+    """A quiz answer by closed set (closed_set.py): the audio is scored against each allowed
+    answer (letters in the UI language and English, yes/no, true/false) instead of being
+    transcribed. "answer" is null below the confidence cut-off: the app asks again. The app
+    confirms every answer before it counts. The audio is never stored."""
+    audio = await file.read()
+    if len(audio) > 2_000_000:
+        raise HTTPException(413, {"code": "audio_too_long"})
+    try:
+        result = await asyncio.to_thread(engine.choose, audio, lang, kind, count)
+    except asr.ASRUnavailable:
+        raise HTTPException(503, {"code": "asr_unavailable"})
+    except Exception:
+        log.exception("asr choose failed")
+        raise HTTPException(400, {"code": "unreadable_audio"})
+    return {**result, "engine": engine.name}
+
+
 def get_iba() -> IbaClient | None:
     """The Ibà triage service, from IBA_API_URL / IBA_API_KEY; None when not configured."""
     return IbaClient.from_env()

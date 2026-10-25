@@ -442,5 +442,8 @@
   "msg_cant_translate_line_health": "Enweghị m ike ịtụgharị ahịrị a n'enweghị nsogbu. Biko jụọ onye na-ere ọgwụ (pharmacist).",
   "msg_cant_translate_line_money": "Enweghị m ike ịtụgharị ahịrị a n'enweghị nsogbu. Biko jụọ mmadụ n'ụlọ akụ gị.",
   "msg_numbers_left_out": "Ọnụọgụgụ kpọmkwem dị na peeji ahụ. Kwuo ‘read again’ ka ị nụ ha.",
-  "explainReadAgain": "Gụgharịa peeji ahụ ọzọ"
+  "explainReadAgain": "Gụgharịa peeji ahụ ọzọ",
+  "quizNotSure": "Amaghị m nke ọma ihe ị kwuru. Biko kwughachi azịza gị.",
+  "quizVoiceNotReady": "Ịza n'olu n'asụsụ {language} adịbeghị nke ọma. Pịa azịza kama.",
+  "quizVoiceNotReadyWeb": "Ịza n'olu n'asụsụ {language} adịbeghị nke ọma. Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa {letters} na kiiboodu gị."
 }

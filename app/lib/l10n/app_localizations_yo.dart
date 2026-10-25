@@ -1688,4 +1688,18 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get explainReadAgain => 'Tún ojú-ìwé náà kà';
+
+  @override
+  String get quizNotSure =>
+      'Kò dá mi lójú ohun tí o sọ. Jọ̀wọ́ tún ìdáhùn rẹ sọ.';
+
+  @override
+  String quizVoiceNotReady(String language) {
+    return 'Ìdáhùn pẹ̀lú ohùn ní $language kò tíì péye tó. Tẹ ìdáhùn kan dípò rẹ̀.';
+  }
+
+  @override
+  String quizVoiceNotReadyWeb(String language, String letters) {
+    return 'Ìdáhùn pẹ̀lú ohùn ní $language kò tíì péye tó. Tẹ tàbí kílíkì ìdáhùn kan, tàbí tẹ $letters lórí kíbọ́ọ̀dù rẹ.';
+  }
 }

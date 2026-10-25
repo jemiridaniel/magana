@@ -160,6 +160,72 @@ def run(args) -> None:
     score(out)
 
 
+KIND = {**{k: "letters" for k in "ABCD"}, "yes": "yes_no", "no": "yes_no", "true": "true_false", "false": "true_false"}
+
+
+def run_closed(args) -> None:
+    """The same clips (same synthesis, same noise seeds), scored by closed set instead of
+    transcribed: backend/app/closed_set.py. Below the cut-off the answer is unclear."""
+    from app import closed_set
+
+    out = Path(args.out).resolve()
+    out.mkdir(parents=True, exist_ok=True)
+    engine = asr.LocalWhisper()
+    rows = []
+    for lang in args.langs.split(","):
+        clips = (synth_igbo() if lang == "ig" else synth_mms(lang)) + (synth_say() if lang == "en" else [])
+        for i, clip in enumerate(clips):
+            base = pad(clip["samples"])
+            for name, snr in (("clean", None), ("snr10", 10), ("snr5", 5)):
+                samples = base if snr is None else with_noise(base, snr, seed=i)
+                r = engine.choose(wav_bytes(samples), lang, KIND[clip["intended"]], 4)
+                outcome = "unclear" if r["answer"] is None else ("right" if r["answer"] == clip["intended"] else "wrong")
+                rows.append({"lang": lang, "intended": clip["intended"], "said": clip["said"], "voice": clip["voice"],
+                             "condition": name, "answer": r["answer"], "confidence": r["confidence"],
+                             "confidences": r["confidences"], "outcome": outcome})
+                print(f"{lang} {clip['voice']:22} {clip['intended']:5} {name:6} -> {r['answer']} {r['confidence']}", flush=True)
+    with open(out / "closed_set.jsonl", "w") as f:
+        for r in rows:
+            f.write(json.dumps(r, ensure_ascii=False) + "\n")
+    summarise_closed(out)
+
+
+def summarise_closed(out: Path) -> None:
+    from app import closed_set
+
+    rows = [json.loads(line) for line in open(out / "closed_set.jsonl")]
+    summary: dict = {}
+    for r in rows:
+        kind = KIND[r["intended"]]
+        s = summary.setdefault(r["lang"], {}).setdefault(r["condition"], {}).setdefault(kind, {"right": 0, "wrong": 0, "unclear": 0})
+        s[r["outcome"]] += 1
+    overall = {}
+    for lang in summary:
+        mine = [r for r in rows if r["lang"] == lang]
+        overall[lang] = {"right": sum(r["outcome"] == "right" for r in mine), "clips": len(mine),
+                         "wrong": sum(r["outcome"] == "wrong" for r in mine)}
+    # How the cut-off trades answers for safety (the cut-off itself was fixed beforehand).
+    curve = {lang: {str(c): {"answered": sum(r["confidence"] >= c for r in rows if r["lang"] == lang),
+                             "right": sum(r["confidence"] >= c and (r["answer"] or max(r["confidences"], key=r["confidences"].get)) == r["intended"]
+                                          for r in rows if r["lang"] == lang)}
+                    for c in (0.0, 0.5, 0.6, 0.8, 0.9)} for lang in summary}
+    (out / "closed_set_summary.json").write_text(json.dumps(
+        {"min_confidence": closed_set.MIN_CONFIDENCE, "by_language": summary, "overall": overall, "cut_off_curve": curve},
+        indent=2, ensure_ascii=False))
+    lines = [f"Cut-off {closed_set.MIN_CONFIDENCE} (fixed before the run). Right / clips, (wrong).", "",
+             "| Language / condition | Letters A–D | Yes/no | True/false |", "|---|---|---|---|"]
+    for lang, conds in summary.items():
+        for cond, kinds in conds.items():
+            cells = [f"{k['right']}/{sum(k.values())} ({k['wrong']})" for k in
+                     (kinds.get(x, {"right": 0, "wrong": 0, "unclear": 0}) for x in ("letters", "yes_no", "true_false"))]
+            lines.append(f"| {lang}/{cond} | " + " | ".join(cells) + " |")
+    lines += ["", "| Language | Right overall | Wrong overall |", "|---|---|---|"]
+    lines += [f"| {lang} | {o['right']}/{o['clips']} ({100 * o['right'] / o['clips']:.0f}%) | {o['wrong']} |"
+              for lang, o in overall.items()]
+    (out / "closed_set_summary.md").write_text("# Quiz answers by closed set (synthetic voices)\n\n" + "\n".join(lines) + "\n")
+    print("\n".join(lines))
+
+
 def score(out: Path) -> None:
     """The app's rules decide: right, wrong or unclear (app/test_tool/score_answers_test.dart)."""
     out = out.resolve()  # the Dart scorer runs in app/
@@ -202,5 +268,9 @@ if __name__ == "__main__":
     p.add_argument("--langs", default="en,ha,yo,ig")
     p.add_argument("--out", required=True)
     p.add_argument("--rescore", action="store_true", help="score --out/transcripts.jsonl again (after rule changes)")
+    p.add_argument("--closed-set", action="store_true", help="score the same clips by closed set instead")
     a = p.parse_args()
-    score(Path(a.out)) if a.rescore else run(a)
+    if a.closed_set:
+        run_closed(a)
+    else:
+        score(Path(a.out)) if a.rescore else run(a)

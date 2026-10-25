@@ -442,5 +442,8 @@
   "msg_cant_translate_line_health": "Ba zan iya fassara wannan layin lafiya ba. Don Allah ka tambayi mai harhaɗa magani.",
   "msg_cant_translate_line_money": "Ba zan iya fassara wannan layin lafiya ba. Don Allah ka tambayi wani a bankinka.",
   "msg_numbers_left_out": "Ainihin lambobin suna kan shafin. Faɗi ‘read again’ don jin su.",
-  "explainReadAgain": "Sake karanta shafin"
+  "explainReadAgain": "Sake karanta shafin",
+  "quizNotSure": "Ban tabbatar da abin da ka faɗa ba. Don Allah ka sake faɗar amsarka.",
+  "quizVoiceNotReady": "Amsa da murya a {language} ba ta da inganci sosai tukuna. Taɓa amsa maimakon haka.",
+  "quizVoiceNotReadyWeb": "Amsa da murya a {language} ba ta da inganci sosai tukuna. Taɓa ko danna amsa, ko ka danna {letters} a kan madannai."
 }

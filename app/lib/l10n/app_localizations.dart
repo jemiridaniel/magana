@@ -2753,6 +2753,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read the page again'**
   String get explainReadAgain;
+
+  /// No description provided for @quizNotSure.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'m not sure what you said. Please say your answer again.'**
+  String get quizNotSure;
+
+  /// No description provided for @quizVoiceNotReady.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice answers in {language} aren\'t reliable enough yet. Tap an answer instead.'**
+  String quizVoiceNotReady(String language);
+
+  /// No description provided for @quizVoiceNotReadyWeb.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice answers in {language} aren\'t reliable enough yet. Tap or click an answer, or press {letters} on your keyboard.'**
+  String quizVoiceNotReadyWeb(String language, String letters);
 }
 
 class _AppLocalizationsDelegate

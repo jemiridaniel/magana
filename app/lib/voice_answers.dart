@@ -1,3 +1,11 @@
+/// Languages whose spoken quiz answers are recognised well enough to offer "Say":
+/// at least 80% right in the closed-set test, clean and noisy clips together
+/// (docs/FINDINGS.md, "closed set"). None yet: English 79%, Hausa 51%, Yorùbá
+/// 58%, Igbo 28%, so tapping is the default and the Say button is hidden.
+/// The confirm step ("You said B. Is that right?") stays everywhere.
+/// A variable so tests can turn voice answers on.
+Set<String> voiceAnswersReady = {};
+
 /// Spoken quick-check answers, by fixed word rules: yes, no, "I can't tell", or a
 /// number of days. Anything else is null and the question is asked again; never
 /// a guess. The Hausa, Yorùbá and Igbo words are drafts for native-speaker review.

@@ -34,8 +34,9 @@ _CHAR_LOOP = re.compile(r"(\w{1,4}?)\1{7,}")
 
 def looped(text: str, times: int = 4, longest: int = 6) -> bool:
     """Whisper sometimes repeats itself in noise ("ụlọ ụlọ ụlọ ụlọ ..."): the same run of up to
-    `longest` words `times` times in a row. On the 120 FLEURS clips this catches all 6 loops (one, "híhíhí…", inside a
-    single word) and nothing else (docs/FINDINGS.md). Such a transcript is not an answer."""
+    `longest` words `times` times in a row, or a few letters repeated inside one word. On the
+    120 FLEURS clips this catches all 6 loops (one, "híhíhí…", inside a word) and nothing
+    else (docs/FINDINGS.md). Such a transcript is not an answer."""
     # Inside one "word" too: "ọrịrịrịrịrịrị…", "rọrọrọrọ…", "éééééééé".
     if _CHAR_LOOP.search(text.lower()):
         return True
@@ -56,6 +57,10 @@ class ASREngine(Protocol):
 
     def transcribe(self, audio: bytes, lang: str) -> str: ...
 
+    def choose(self, audio: bytes, lang: str, kind: str, count: int = 4) -> dict:
+        """Closed-set answer (closed_set.py): {"answer", "confidence", "confidences"}."""
+        ...
+
 
 class DeviceOnly:
     """No server ASR: the phone's own recogniser is used."""
@@ -63,6 +68,9 @@ class DeviceOnly:
     name = "device"
 
     def transcribe(self, audio: bytes, lang: str) -> str:
+        raise ASRUnavailable("asr_unavailable")
+
+    def choose(self, audio: bytes, lang: str, kind: str, count: int = 4) -> dict:
         raise ASRUnavailable("asr_unavailable")
 
 
@@ -105,6 +113,18 @@ class LocalWhisper:
             kwargs["language"] = WHISPER_LANGUAGE[lang]
         out = self._pipeline(lang)({"raw": samples, "sampling_rate": SAMPLE_RATE}, generate_kwargs=kwargs)
         return out["text"].strip()
+
+    def choose(self, audio: bytes, lang: str, kind: str, count: int = 4) -> dict:
+        """Which allowed answer was said: scored against each, not transcribed."""
+        from . import closed_set
+
+        options = closed_set.choices(kind, lang, count)
+        pipe = self._pipeline(lang)
+        samples = decode(audio)
+        scores = {a: closed_set.score_forms(pipe, samples, lang, forms) for a, forms in options.items()}
+        answer, confidence, confidences = closed_set.decide(scores)
+        return {"answer": answer, "confidence": round(confidence, 3),
+                "confidences": {a: round(c, 3) for a, c in confidences.items()}}
 
 
 def default_engine() -> ASREngine:

@@ -1,0 +1,158 @@
+{
+  "status": "draft",
+  "review": "NEEDS NATIVE REVIEW: how learners say each answer in each language. English forms are always included, because many learners say the letters in English.",
+  "letters": {
+    "en": {
+      "A": [
+        "A",
+        "a",
+        "ay",
+        "eh"
+      ],
+      "B": [
+        "B",
+        "b",
+        "bee"
+      ],
+      "C": [
+        "C",
+        "c",
+        "see",
+        "sea"
+      ],
+      "D": [
+        "D",
+        "d",
+        "dee"
+      ]
+    },
+    "ha": {
+      "A": [
+        "ei",
+        "e"
+      ],
+      "B": [
+        "bi"
+      ],
+      "C": [
+        "si"
+      ],
+      "D": [
+        "di"
+      ]
+    },
+    "yo": {
+      "A": [
+        "à",
+        "a"
+      ],
+      "B": [
+        "bí",
+        "bi"
+      ],
+      "C": [
+        "sí",
+        "si"
+      ],
+      "D": [
+        "dí",
+        "di"
+      ]
+    },
+    "ig": {
+      "A": [
+        "ei",
+        "a"
+      ],
+      "B": [
+        "bi"
+      ],
+      "C": [
+        "si"
+      ],
+      "D": [
+        "di"
+      ]
+    }
+  },
+  "yes_no": {
+    "en": {
+      "yes": [
+        "yes",
+        "yeah"
+      ],
+      "no": [
+        "no"
+      ]
+    },
+    "ha": {
+      "yes": [
+        "ee",
+        "i",
+        "eh"
+      ],
+      "no": [
+        "a'a",
+        "aa"
+      ]
+    },
+    "yo": {
+      "yes": [
+        "bẹ́ẹ̀ni",
+        "bẹ́ẹ̀"
+      ],
+      "no": [
+        "rárá",
+        "rara"
+      ]
+    },
+    "ig": {
+      "yes": [
+        "ee",
+        "eh"
+      ],
+      "no": [
+        "mba",
+        "mba nu"
+      ]
+    }
+  },
+  "true_false": {
+    "en": {
+      "true": [
+        "true"
+      ],
+      "false": [
+        "false"
+      ]
+    },
+    "ha": {
+      "true": [
+        "gaskiya"
+      ],
+      "false": [
+        "ƙarya",
+        "karya"
+      ]
+    },
+    "yo": {
+      "true": [
+        "òótọ́",
+        "ooto"
+      ],
+      "false": [
+        "irọ́",
+        "iro"
+      ]
+    },
+    "ig": {
+      "true": [
+        "eziokwu"
+      ],
+      "false": [
+        "ụgha",
+        "ugha"
+      ]
+    }
+  }
+}

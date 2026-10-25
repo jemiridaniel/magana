@@ -6,6 +6,7 @@ import 'package:app/platform.dart';
 import 'package:app/policy.dart';
 import 'package:app/profile.dart';
 import 'package:app/quiz.dart';
+import 'package:app/voice_answers.dart' show voiceAnswersReady;
 import 'package:app/voice_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -31,6 +32,7 @@ class FakeVoice extends VoiceInput {
   final replies = <List<String>>[];
   int listens = 0;
   final languages = <String>[];
+  final choices = <AnswerChoices?>[]; // what the quiz asked to choose between
   final tiers = <Tier>[]; // which account asked for a recogniser
 
   @override
@@ -40,9 +42,13 @@ class FakeVoice extends VoiceInput {
   }
 
   @override
-  Future<List<String>> listen({String language = 'en'}) async {
+  Future<List<String>> listen({
+    String language = 'en',
+    AnswerChoices? choices,
+  }) async {
     listens++;
     languages.add(language);
+    this.choices.add(choices);
     if (fails) throw VoiceStepFailed('every step failed');
     return replies.isEmpty ? const [] : replies.removeAt(0);
   }
@@ -94,6 +100,7 @@ Future<(FakeSpeaker, FakeVoice)> openQuiz(
   String classLevel = 'sss2',
   String pack = 'Biology practice',
   MaganaApi? api,
+  Locale locale = const Locale('en'),
 }) async {
   SharedPreferences.setMockInitialValues({});
   tester.view.physicalSize = const Size(390 * 3, 844 * 3);
@@ -112,12 +119,13 @@ Future<(FakeSpeaker, FakeVoice)> openQuiz(
     MaganaApp(
       api: api ?? MaganaApi(headers: () => profile.headers),
       speaker: speaker,
-      language: LanguageController(),
+      language: LanguageController(locale),
       profile: profile,
     ),
   );
   await tester.pumpAndSettle();
-  await tester.tap(find.bySemanticsLabel(RegExp('^${en.practiceQuiz}')));
+  final l = lookupAppLocalizations(locale);
+  await tester.tap(find.bySemanticsLabel(RegExp('^${l.practiceQuiz}')));
   await tester.pumpAndSettle();
   speaker.said.clear(); // the list's own announcement
   final card = find.bySemanticsLabel(RegExp('^$pack'));
@@ -157,6 +165,11 @@ Future<void> say(
 }
 
 void main() {
+  // These tests are about voice answers: switch them on for English, as if it
+  // had passed the closed-set test (voiceAnswersReady is empty today).
+  setUp(() => voiceAnswersReady = {'en'});
+  tearDown(() => voiceAnswersReady = {});
+
   group('marking rules', () {
     test('a letter on its own, with or without filler words', () {
       for (final (said, want) in [
@@ -499,4 +512,63 @@ void main() {
       expect(voice.tiers.toSet(), {tier});
     });
   }
+
+  group('closed set', () {
+    testWidgets(
+      'the quiz asks the recogniser to choose between its own answers',
+      (tester) async {
+        final (_, voice) = await openQuiz(tester);
+        await say(tester, voice, ['B']);
+        expect(voice.choices.last?.kind, 'letters');
+        expect(voice.choices.last?.count, 4);
+        await say(tester, voice, ['yes'], button: en.quizSayYesOrNo);
+        expect(voice.choices.last?.kind, 'yes_no'); // the confirm step
+        expect(voice.languages.toSet(), {'en'});
+      },
+    );
+
+    testWidgets('not sure: asked again, never "I did not hear an answer"', (
+      tester,
+    ) async {
+      final (speaker, voice) = await openQuiz(tester);
+      await say(tester, voice, [notSure]);
+      expect(speaker.said.last, en.quizNotSure);
+      expect(speaker.said, isNot(contains(startsWith('I did not hear'))));
+      expect(find.bySemanticsLabel(en.quizScoreLabel(0, 0)), findsOneWidget);
+    });
+
+    testWidgets('today no language has passed: Say is hidden in English too', (
+      tester,
+    ) async {
+      voiceAnswersReady = {};
+      final (speaker, voice) = await openQuiz(tester);
+      expect(voice.inits, 0);
+      expect(
+        find.bySemanticsLabel(en.quizSayAnswer('A, B, C or D')),
+        findsNothing,
+      );
+      expect(speaker.said.first, endsWith(en.quizVoiceNotReady('English')));
+    });
+
+    testWidgets(
+      'a language under 80% in the closed-set test: tapping by default',
+      (tester) async {
+        final ha = lookupAppLocalizations(const Locale('ha'));
+        final (speaker, voice) = await openQuiz(
+          tester,
+          locale: const Locale('ha'),
+          pack: ha.quizSubjectTitle('Biology'),
+        );
+        expect(voice.inits, 0); // not even tried
+        expect(
+          find.bySemanticsLabel(ha.quizSayAnswer('A, B, C ko D')),
+          findsNothing,
+        );
+        expect(speaker.said.first, endsWith(ha.quizVoiceNotReady('Hausa')));
+        await tester.tap(find.bySemanticsLabel(RegExp(r'^B\. ')));
+        await tester.pumpAndSettle();
+        expect(find.bySemanticsLabel(ha.quizScoreLabel(1, 1)), findsOneWidget);
+      },
+    );
+  });
 }

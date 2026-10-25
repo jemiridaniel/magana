@@ -14,7 +14,7 @@ import re
 import time
 from dataclasses import dataclass, field
 
-HEAVY_PATHS = ("/read", "/asr", "/explain")
+HEAVY_PATHS = ("/read", "/asr", "/asr/choose", "/explain")
 EXEMPT_PATHS = ("/health",)
 _DEVICE = re.compile(r"^[A-Za-z0-9-]{8,64}$")
 

@@ -13,6 +13,44 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · Languages, accessibility: quiz answers by closed set; Say hidden until a language reaches 80% (UNREVIEWED)
+
+> **Unreviewed, and a best case:** the same synthetic voices as the open-transcription test. The answer forms (`content/answers/closed_sets.json`) are drafts for native review.
+
+- **What changed:** Magana's server can score a quiz answer by **closed set** (`backend/app/closed_set.py`, `POST /asr/choose`) instead of transcribing it.
+  - Each allowed answer has its spoken forms: the letter names in the UI language and in English, yes/no, true/false. Each form is scored as a whole NCAIR1 Whisper transcript, from its start token to its end token. An answer's score combines its forms, and the confidence is a softmax across answers.
+  - Below **0.6**, a cut-off fixed before the run and not tuned on it, the result is "not sure". The app then says "I'm not sure what you said. Please say your answer again.", never "I did not hear an answer".
+  - The quiz asks for the question's own choices (A–C for three options, yes/no while confirming, true/false), in the learner's language.
+  - **The confirm step stays everywhere.**
+- **Result**, on the same 384 clips (right / clips, with how many were taken for a *different* answer):
+
+  | Language | Open transcription | **Closed set** | Wrong with closed set |
+  |---|---|---|---|
+  | English | 71/168 (42%) | **132/168 (79%)** | 28 |
+  | Hausa | 13/72 (18%) | **37/72 (51%)** | 32 |
+  | Yorùbá | 9/72 (13%) | **42/72 (58%)** | 21 |
+  | Igbo | 1/72 (1%) | **20/72 (28%)** | 23 |
+
+  - **Where it improves:**
+    - true/false: Hausa 18/18, Yorùbá 18/18;
+    - yes/no: English 37/42 (it was 28/42); Yorùbá "rárá" now recognised.
+  - **Where it doesn't:** letters in Hausa, Yorùbá and Igbo stay weak (9, 10 and 4 of 36 right), and are often taken for a different letter. Hausa "bi" and "di" are confidently heard as A.
+  - **Closed sets always pick something,** so they give more wrong answers than open transcription, which mostly said "unclear". Raising the cut-off removes some: English at 0.9 answers 129 of 168 and gets 116 right. **The confirm step is what keeps a wrong letter from counting.**
+  - English: 82% on clean clips alone, 79% clean and noisy together.
+- **Decision, per the rule "hide Say under 80%":** no language reaches 80% clean and noisy together, so **"Say" is hidden in every language**, and tapping (or the A–D keys on the web) is the default (`voice_answers.voiceAnswersReady`, empty). The app says "Voice answers in Hausa aren't reliable enough yet. Tap an answer instead." English misses by 1 point; switching it on is one line, if you'd rather count clean clips only.
+- **Tests:** `test_asr.py` covers the closed sets (UI language and English forms, 2 to 4 letters), the cut-off, and the endpoint. `quiz_test.dart` covers the choices the quiz asks for, "not sure" not being "did not hear", and Say hidden where a language isn't ready, including English today.
+- **Next:** real recordings (with consent). Letter names in each language checked by native speakers. A per-language cut-off from held-out recordings, not these clips.
+- **Status:** open, unreviewed.
+
+## 2026-10-25 · Explanations: the Magana LoRA training set and Kaggle notebook (UNREVIEWED)
+
+- **Built:**
+  - `data/lora/`: 30 team-written schoolwork pages (Primary to SSS, none from the benchmark) giving 80 English examples (an explanation and a simpler one per page, plus 20 refusals for calculations, unclear numbers and instructions on a page). Every target passes Magana's own check, with each ⟦N⟧ exactly once.
+  - Hausa, Yorùbá and Igbo drafts, held back until native review. 3 of them would even be refused by the check today (a unit word right after a number, after a comma).
+  - `notebooks/magana-lora/`: the Ibà QLoRA recipe on a Kaggle T4, and the 40-page benchmark for base and adapter in the same session. The model card for **Magana-ATLAS-8B-LoRA-Powered-by-Awarri** carries the N-ATLaS Terms of Use and attribution.
+- **Not trained yet.** The first Kaggle run (`certifiedsurvey/magana-lora`, private) stopped at login: "No user secrets exist for kernel … and label HF_TOKEN". Kaggle secrets have to be attached to each notebook in its settings. The cells before that ran without error. There are no base-versus-adapter results yet.
+- **Status:** waiting for the HF_TOKEN secret to be attached to the notebook; then run it again.
+
 ## 2026-10-25 · Safety: answers that leave numbers out are accepted, and two check fixes (UNREVIEWED)
 
 > **Unreviewed.** The classification is the developer's reading. The explanations still need native-speaker ratings.

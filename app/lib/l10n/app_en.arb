@@ -1179,5 +1179,25 @@
   },
   "msg_cant_translate_line_money": "I can't translate this line safely. Please ask someone at your bank.",
   "msg_numbers_left_out": "The exact numbers are on the page. Say ‘read again’ to hear them.",
-  "explainReadAgain": "Read the page again"
+  "explainReadAgain": "Read the page again",
+  "quizNotSure": "I'm not sure what you said. Please say your answer again.",
+  "quizVoiceNotReady": "Voice answers in {language} aren't reliable enough yet. Tap an answer instead.",
+  "@quizVoiceNotReady": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "quizVoiceNotReadyWeb": "Voice answers in {language} aren't reliable enough yet. Tap or click an answer, or press {letters} on your keyboard.",
+  "@quizVoiceNotReadyWeb": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      },
+      "letters": {
+        "type": "String"
+      }
+    }
+  }
 }

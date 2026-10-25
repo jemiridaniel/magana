@@ -39,12 +39,28 @@ abstract class VoiceInput {
 
   /// Listens until the person pauses. Returns what was heard, best guess
   /// first, or nothing. [language] is the speech to expect (en, ha, yo, ig).
+  /// With [choices] (a quiz answer), a recogniser that can score a closed set
+  /// (Magana's server) returns the chosen answer ("B", "yes", "true"), or
+  /// [notSure] below its confidence cut-off; others transcribe as usual.
   /// Audio is never saved by Magana. Throws [VoiceStepFailed] if this
   /// recogniser failed (not merely heard nothing).
-  Future<List<String>> listen({String language = 'en'});
+  Future<List<String>> listen({String language = 'en', AnswerChoices? choices});
 
   Future<void> stop();
 }
+
+/// The allowed answers for a closed-set listen: letters (2 to 4), yes/no, or true/false.
+class AnswerChoices {
+  const AnswerChoices.letters(this.count) : kind = 'letters';
+  const AnswerChoices.yesNo() : kind = 'yes_no', count = 2;
+  const AnswerChoices.trueFalse() : kind = 'true_false', count = 2;
+  final String kind;
+  final int count;
+}
+
+/// Something was heard, but not clearly one of the answers (below the server's
+/// confidence cut-off): ask again, but never say "I did not hear an answer".
+const notSure = '\u0000not-sure';
 
 class VoiceStepFailed implements Exception {
   VoiceStepFailed(this.reason);
@@ -130,7 +146,10 @@ class ChainVoiceInput extends VoiceInput {
   }
 
   @override
-  Future<List<String>> listen({String language = 'en'}) async {
+  Future<List<String>> listen({
+    String language = 'en',
+    AnswerChoices? choices,
+  }) async {
     _logSkipped();
     for (final step in steps) {
       if (_usable[step] == false) {
@@ -140,7 +159,7 @@ class ChainVoiceInput extends VoiceInput {
       if (!await _ready(step)) continue;
       try {
         _current = step;
-        final heard = await step.listen(language: language);
+        final heard = await step.listen(language: language, choices: choices);
         devLog(
           'voice: ${step.name} listened ($language): '
           '${heard.isEmpty ? 'heard nothing' : 'heard $heard'}',
@@ -260,7 +279,10 @@ class SpeechVoiceInput extends VoiceInput {
   }
 
   @override
-  Future<List<String>> listen({String language = 'en'}) async {
+  Future<List<String>> listen({
+    String language = 'en',
+    AnswerChoices? choices,
+  }) async {
     _finish(const []);
     final locale = _localeFor(language);
     _heard = const [];
@@ -360,7 +382,10 @@ class ServerVoiceInput extends VoiceInput {
   }
 
   @override
-  Future<List<String>> listen({String language = 'en'}) async {
+  Future<List<String>> listen({
+    String language = 'en',
+    AnswerChoices? choices,
+  }) async {
     // Phones record to a temporary file; browsers to an in-memory blob.
     final path = kIsWeb
         ? ''
@@ -401,20 +426,32 @@ class ServerVoiceInput extends VoiceInput {
       final bytes = kIsWeb
           ? await _client.readBytes(Uri.parse(recorded))
           : await File(recorded).readAsBytes();
-      final req = http.MultipartRequest('POST', Uri.parse('$apiBase/asr'))
-        ..fields['lang'] = language
-        ..headers.addAll(serverHeaders)
-        ..files.add(
-          http.MultipartFile.fromBytes('file', bytes, filename: 'answer.wav'),
-        );
+      final closed = choices != null;
+      final req =
+          http.MultipartRequest(
+              'POST',
+              Uri.parse('$apiBase${closed ? '/asr/choose' : '/asr'}'),
+            )
+            ..fields['lang'] = language
+            ..headers.addAll(serverHeaders);
+      if (choices != null) {
+        req.fields['kind'] = choices.kind;
+        req.fields['count'] = '${choices.count}';
+      }
+      req.files.add(
+        http.MultipartFile.fromBytes('file', bytes, filename: 'answer.wav'),
+      );
       final res = await http.Response.fromStream(await _client.send(req))
           .timeout(const Duration(seconds: 15));
       if (res.statusCode != 200) {
         throw VoiceStepFailed('server answered ${res.statusCode} ${res.body}');
       }
-      final text =
-          (jsonDecode(utf8.decode(res.bodyBytes)) as Map)['text'] as String? ??
-          '';
+      final body = jsonDecode(utf8.decode(res.bodyBytes)) as Map;
+      if (closed) {
+        // The chosen answer, or not sure (heard something, below the cut-off).
+        return [body['answer'] as String? ?? notSure];
+      }
+      final text = body['text'] as String? ?? '';
       return text.trim().isEmpty ? const [] : [text.trim()];
     } finally {
       // The audio is never kept.

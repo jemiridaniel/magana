@@ -1,0 +1,329 @@
+{
+  "min_confidence": 0.6,
+  "by_language": {
+    "en": {
+      "clean": {
+        "letters": {
+          "right": 22,
+          "wrong": 5,
+          "unclear": 1
+        },
+        "yes_no": {
+          "right": 11,
+          "wrong": 3,
+          "unclear": 0
+        },
+        "true_false": {
+          "right": 13,
+          "wrong": 1,
+          "unclear": 0
+        }
+      },
+      "snr10": {
+        "letters": {
+          "right": 20,
+          "wrong": 7,
+          "unclear": 1
+        },
+        "yes_no": {
+          "right": 13,
+          "wrong": 0,
+          "unclear": 1
+        },
+        "true_false": {
+          "right": 13,
+          "wrong": 1,
+          "unclear": 0
+        }
+      },
+      "snr5": {
+        "letters": {
+          "right": 16,
+          "wrong": 8,
+          "unclear": 4
+        },
+        "yes_no": {
+          "right": 13,
+          "wrong": 1,
+          "unclear": 0
+        },
+        "true_false": {
+          "right": 11,
+          "wrong": 2,
+          "unclear": 1
+        }
+      }
+    },
+    "ha": {
+      "clean": {
+        "letters": {
+          "right": 3,
+          "wrong": 9,
+          "unclear": 0
+        },
+        "yes_no": {
+          "right": 4,
+          "wrong": 2,
+          "unclear": 0
+        },
+        "true_false": {
+          "right": 6,
+          "wrong": 0,
+          "unclear": 0
+        }
+      },
+      "snr10": {
+        "letters": {
+          "right": 3,
+          "wrong": 9,
+          "unclear": 0
+        },
+        "yes_no": {
+          "right": 3,
+          "wrong": 2,
+          "unclear": 1
+        },
+        "true_false": {
+          "right": 6,
+          "wrong": 0,
+          "unclear": 0
+        }
+      },
+      "snr5": {
+        "letters": {
+          "right": 3,
+          "wrong": 9,
+          "unclear": 0
+        },
+        "yes_no": {
+          "right": 3,
+          "wrong": 1,
+          "unclear": 2
+        },
+        "true_false": {
+          "right": 6,
+          "wrong": 0,
+          "unclear": 0
+        }
+      }
+    },
+    "yo": {
+      "clean": {
+        "letters": {
+          "right": 3,
+          "wrong": 8,
+          "unclear": 1
+        },
+        "yes_no": {
+          "right": 6,
+          "wrong": 0,
+          "unclear": 0
+        },
+        "true_false": {
+          "right": 6,
+          "wrong": 0,
+          "unclear": 0
+        }
+      },
+      "snr10": {
+        "letters": {
+          "right": 4,
+          "wrong": 5,
+          "unclear": 3
+        },
+        "yes_no": {
+          "right": 4,
+          "wrong": 1,
+          "unclear": 1
+        },
+        "true_false": {
+          "right": 6,
+          "wrong": 0,
+          "unclear": 0
+        }
+      },
+      "snr5": {
+        "letters": {
+          "right": 3,
+          "wrong": 5,
+          "unclear": 4
+        },
+        "yes_no": {
+          "right": 4,
+          "wrong": 2,
+          "unclear": 0
+        },
+        "true_false": {
+          "right": 6,
+          "wrong": 0,
+          "unclear": 0
+        }
+      }
+    },
+    "ig": {
+      "clean": {
+        "letters": {
+          "right": 1,
+          "wrong": 4,
+          "unclear": 7
+        },
+        "true_false": {
+          "right": 4,
+          "wrong": 1,
+          "unclear": 1
+        },
+        "yes_no": {
+          "right": 3,
+          "wrong": 3,
+          "unclear": 0
+        }
+      },
+      "snr10": {
+        "letters": {
+          "right": 2,
+          "wrong": 3,
+          "unclear": 7
+        },
+        "true_false": {
+          "right": 2,
+          "wrong": 2,
+          "unclear": 2
+        },
+        "yes_no": {
+          "right": 3,
+          "wrong": 3,
+          "unclear": 0
+        }
+      },
+      "snr5": {
+        "letters": {
+          "right": 1,
+          "wrong": 2,
+          "unclear": 9
+        },
+        "true_false": {
+          "right": 2,
+          "wrong": 2,
+          "unclear": 2
+        },
+        "yes_no": {
+          "right": 2,
+          "wrong": 3,
+          "unclear": 1
+        }
+      }
+    }
+  },
+  "overall": {
+    "en": {
+      "right": 132,
+      "clips": 168,
+      "wrong": 28
+    },
+    "ha": {
+      "right": 37,
+      "clips": 72,
+      "wrong": 32
+    },
+    "yo": {
+      "right": 42,
+      "clips": 72,
+      "wrong": 21
+    },
+    "ig": {
+      "right": 20,
+      "clips": 72,
+      "wrong": 23
+    }
+  },
+  "cut_off_curve": {
+    "en": {
+      "0.0": {
+        "answered": 168,
+        "right": 134
+      },
+      "0.5": {
+        "answered": 165,
+        "right": 134
+      },
+      "0.6": {
+        "answered": 160,
+        "right": 132
+      },
+      "0.8": {
+        "answered": 143,
+        "right": 123
+      },
+      "0.9": {
+        "answered": 129,
+        "right": 116
+      }
+    },
+    "ha": {
+      "0.0": {
+        "answered": 72,
+        "right": 38
+      },
+      "0.5": {
+        "answered": 72,
+        "right": 38
+      },
+      "0.6": {
+        "answered": 69,
+        "right": 37
+      },
+      "0.8": {
+        "answered": 67,
+        "right": 36
+      },
+      "0.9": {
+        "answered": 65,
+        "right": 36
+      }
+    },
+    "yo": {
+      "0.0": {
+        "answered": 72,
+        "right": 45
+      },
+      "0.5": {
+        "answered": 68,
+        "right": 44
+      },
+      "0.6": {
+        "answered": 63,
+        "right": 42
+      },
+      "0.8": {
+        "answered": 53,
+        "right": 42
+      },
+      "0.9": {
+        "answered": 46,
+        "right": 39
+      }
+    },
+    "ig": {
+      "0.0": {
+        "answered": 72,
+        "right": 32
+      },
+      "0.5": {
+        "answered": 57,
+        "right": 27
+      },
+      "0.6": {
+        "answered": 43,
+        "right": 20
+      },
+      "0.8": {
+        "answered": 21,
+        "right": 8
+      },
+      "0.9": {
+        "answered": 14,
+        "right": 7
+      }
+    }
+  }
+}

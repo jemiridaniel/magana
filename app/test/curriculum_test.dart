@@ -10,6 +10,7 @@ import 'package:app/policy.dart';
 import 'package:app/profile.dart';
 import 'package:app/quiz.dart';
 import 'package:app/screens/quiz.dart';
+import 'package:app/voice_answers.dart' show voiceAnswersReady;
 import 'package:app/voice_input.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -62,6 +63,11 @@ MaganaApi teacherApi(List<http.Request> sent) => MaganaApi(
 );
 
 void main() {
+  // These tests are about voice answers: switch them on for English, as if it
+  // had passed the closed-set test (voiceAnswersReady is empty today).
+  setUp(() => voiceAnswersReady = {'en'});
+  tearDown(() => voiceAnswersReady = {});
+
   test(
     'the app curriculum matches assets/curriculum.json (and so the backend)',
     () {

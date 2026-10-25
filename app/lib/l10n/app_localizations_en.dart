@@ -1690,4 +1690,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get explainReadAgain => 'Read the page again';
+
+  @override
+  String get quizNotSure =>
+      'I\'m not sure what you said. Please say your answer again.';
+
+  @override
+  String quizVoiceNotReady(String language) {
+    return 'Voice answers in $language aren\'t reliable enough yet. Tap an answer instead.';
+  }
+
+  @override
+  String quizVoiceNotReadyWeb(String language, String letters) {
+    return 'Voice answers in $language aren\'t reliable enough yet. Tap or click an answer, or press $letters on your keyboard.';
+  }
 }

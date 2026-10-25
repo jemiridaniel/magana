@@ -1694,4 +1694,18 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get explainReadAgain => 'Sake karanta shafin';
+
+  @override
+  String get quizNotSure =>
+      'Ban tabbatar da abin da ka faɗa ba. Don Allah ka sake faɗar amsarka.';
+
+  @override
+  String quizVoiceNotReady(String language) {
+    return 'Amsa da murya a $language ba ta da inganci sosai tukuna. Taɓa amsa maimakon haka.';
+  }
+
+  @override
+  String quizVoiceNotReadyWeb(String language, String letters) {
+    return 'Amsa da murya a $language ba ta da inganci sosai tukuna. Taɓa ko danna amsa, ko ka danna $letters a kan madannai.';
+  }
 }

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 
 import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
+import '../language.dart';
 import '../platform.dart';
 import '../quiz.dart';
 import '../speech.dart';
@@ -30,6 +31,7 @@ class _QuizScreenState extends State<QuizScreen> {
   late final VoiceInput _voice = voiceInputFor(context);
   bool? _voiceWorks; // checked when the quiz opens
   bool _toldNoVoice = false;
+  bool _notReady = false; // voice answers aren't reliable in this language yet
   double? _rateBefore; // primary mode slows the voice; restored on leaving
   Quiz? _quiz;
   int _index = 0;
@@ -50,7 +52,10 @@ class _QuizScreenState extends State<QuizScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       final quiz = await widget.load();
-      final works = await _voice.init().catchError((_) => false);
+      // Not offered where spoken answers aren't recognised well enough yet.
+      final ready = voice_answers.voiceAnswersReady.contains(_language);
+      final works = ready && await _voice.init().catchError((_) => false);
+      _notReady = !ready;
       if (!mounted) return;
       setState(() {
         _quiz = quiz;
@@ -102,9 +107,17 @@ class _QuizScreenState extends State<QuizScreen> {
     ].join(' '),
   );
 
-  String get _noVoice => runningOnWeb
-      ? _l.quizVoiceUnavailableWeb(_letters)
-      : _l.quizVoiceUnavailable;
+  String get _noVoice {
+    if (_notReady) {
+      final name = languageFor(Localizations.localeOf(context)).name;
+      return runningOnWeb
+          ? _l.quizVoiceNotReadyWeb(name, _letters)
+          : _l.quizVoiceNotReady(name);
+    }
+    return runningOnWeb
+        ? _l.quizVoiceUnavailableWeb(_letters)
+        : _l.quizVoiceUnavailable;
+  }
 
   /// This question's letters: "A or B", "A, B or C", "A, B, C or D".
   String get _letters {
@@ -222,7 +235,16 @@ class _QuizScreenState extends State<QuizScreen> {
     });
     final List<String> heard;
     try {
-      heard = await _voice.listen(language: 'en'); // the quiz is in English
+      // The learner's own language: Magana's server scores the answer against
+      // the letter names in that language and in English (a closed set).
+      heard = await _voice.listen(
+        language: _language,
+        choices: _pending != null
+            ? const AnswerChoices.yesNo()
+            : _q.trueFalse
+            ? const AnswerChoices.trueFalse()
+            : AnswerChoices.letters(_q.options.length),
+      );
     } on VoiceStepFailed {
       // Every recogniser this account may use failed: tapping still works, and
       // the Say button goes. Never "I did not hear an answer": nothing listened.
@@ -238,6 +260,11 @@ class _QuizScreenState extends State<QuizScreen> {
     setState(() => _listening = false);
     final q = _q;
 
+    if (heard.length == 1 && heard.single == notSure) {
+      // Something was said, but not clearly an answer: ask again (never "did not hear").
+      _failed(_l.quizNotSure);
+      return;
+    }
     if (_pending case final pending?) {
       // Confirming: only a clear yes counts the answer.
       switch (voice_answers.yesNo(heard.isEmpty ? '' : heard.first)) {

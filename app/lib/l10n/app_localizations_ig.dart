@@ -1690,4 +1690,18 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get explainReadAgain => 'Gụgharịa peeji ahụ ọzọ';
+
+  @override
+  String get quizNotSure =>
+      'Amaghị m nke ọma ihe ị kwuru. Biko kwughachi azịza gị.';
+
+  @override
+  String quizVoiceNotReady(String language) {
+    return 'Ịza n\'olu n\'asụsụ $language adịbeghị nke ọma. Pịa azịza kama.';
+  }
+
+  @override
+  String quizVoiceNotReadyWeb(String language, String letters) {
+    return 'Ịza n\'olu n\'asụsụ $language adịbeghị nke ọma. Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa $letters na kiiboodu gị.';
+  }
 }

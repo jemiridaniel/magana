@@ -117,3 +117,44 @@ def test_the_app_can_ask_first_whether_the_server_recognises_speech(engine):
     assert r.json() == {"available": False, "engine": "device"}
     engine(Echo())
     assert client.get("/asr/available").json() == {"available": True, "engine": "fake"}
+
+
+# ---------- closed set: which allowed answer was said
+
+from app import closed_set  # noqa: E402
+
+
+def test_closed_sets_have_the_ui_language_and_english_forms():
+    yo = closed_set.choices("letters", "yo", count=3)
+    assert list(yo) == ["A", "B", "C"]  # a 3-option question: only A to C
+    assert yo["B"][:2] == ["bí", "bi"] and "bee" in yo["B"]  # Yorùbá first, then English
+    assert closed_set.choices("yes_no", "ha")["no"][:1] == ["a'a"]
+    assert "eziokwu" in closed_set.choices("true_false", "ig")["true"]
+
+
+def test_below_the_cut_off_the_answer_is_unclear():
+    assert closed_set.decide({"A": [-1.0], "B": [-9.0]})[0] == "A"
+    answer, conf, _ = closed_set.decide({"A": [-2.0], "B": [-2.2], "C": [-2.4]})
+    assert answer is None and conf < closed_set.MIN_CONFIDENCE
+    # Several forms of one answer add up (log-sum-exp): two at -3.0 beat one at -2.9.
+    assert closed_set.decide({"yes": [-3.0, -3.0], "no": [-2.9]})[0] == "yes"
+
+
+class Chooser(Echo):
+    def choose(self, audio, lang, kind, count=4):
+        self.calls.append((lang, kind, count))
+        return {"answer": "B", "confidence": 0.91, "confidences": {"A": 0.05, "B": 0.91, "C": 0.04}}
+
+
+def test_choose_endpoint(engine):
+    e = Chooser()
+    engine(e)
+    r = client.post("/asr/choose", files={"file": ("a.wav", wav())}, data={"lang": "yo", "kind": "letters", "count": 3})
+    assert r.json()["answer"] == "B" and e.calls == [("yo", "letters", 3)]
+    assert client.post("/asr/choose", files={"file": ("a.wav", wav())},
+                       data={"kind": "letters", "count": 7}).status_code == 422
+
+
+def test_choose_without_server_asr_is_unavailable():
+    r = client.post("/asr/choose", files={"file": ("a.wav", wav())}, data={"lang": "ha", "kind": "yes_no"})
+    assert (r.status_code, r.json()["detail"]) == (503, {"code": "asr_unavailable"})

@@ -28,7 +28,10 @@ class Scripted extends VoiceInput {
   Future<bool> init() async => works;
 
   @override
-  Future<List<String>> listen({String language = 'en'}) async {
+  Future<List<String>> listen({
+    String language = 'en',
+    AnswerChoices? choices,
+  }) async {
     languages.add(language);
     if (fails) throw VoiceStepFailed('$name failed');
     return reply;
