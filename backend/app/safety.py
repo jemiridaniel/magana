@@ -118,8 +118,12 @@ _BROKEN_NUMBER_RE = re.compile(
     rf"|\d[.,]?[{re.escape(_TRAILING)}]+$"      # 50O, 12.O, 38,75O
     r"|^[@§&]\d"                                # @5 (letters before digits are often real: B12, O2)
 )
-# A lone symbol where a number belongs ("more than @ in 24 hours").
-_NUMBER_SYMBOLS = set("@§#&?*~")
+# A lone symbol where a number belongs ("more than @ in 24 hours", "more than ® in 24"): any
+# token of one or two characters with no letter or digit, except punctuation that really
+# sits between numbers ("4 - 6", "1 / 2", "38 ° C") and a currency sign before an amount.
+# Not a closed list of symbols: a smudged 8 came back as "®", which no list had (FINDINGS.md).
+_NUMBER_PUNCT = set("-–—/+%:.,;()[]'\"×=<>°")
+_CURRENCY = set("₦$£€")
 _DOSE_WORDS = {
     "than", "every", "take", "times", "x", "daily", "per", "hour", "hours", "hrs", "day", "days", "week", "weeks",
     "tablet", "tablets", "tabs", "capsule", "capsules", "caps", "mg", "mcg", "ml", "g", "kg", "iu", "units", "drops",
@@ -143,7 +147,10 @@ def number_problem(words: list[str], i: int) -> str | None:
         return None
     if _has_digit(core) and _BROKEN_NUMBER_RE.search(core):
         return "unreadable_number"
-    if len(core) <= 2 and all(ch in _NUMBER_SYMBOLS for ch in core):
+    symbols = not any(ch.isalnum() for ch in core) and not all(ch in _NUMBER_PUNCT for ch in core)
+    if len(core) <= 2 and symbols:
+        if all(ch in _CURRENCY for ch in core) and i + 1 < len(words) and _has_digit(words[i + 1]):
+            return None  # "₦ 15,000"
         near = words[max(0, i - 2):i] + words[i + 1:i + 3]
         if any(_has_digit(n) or _core(n).lower() in _DOSE_WORDS for n in near):
             return "unreadable_number"

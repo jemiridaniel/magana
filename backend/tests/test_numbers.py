@@ -28,6 +28,10 @@ def words(*pairs):
 @pytest.mark.parametrize("text, index", [
     ("Do not lake more than @ in 24 hours", 5),   # real misread of 8
     ("Do not lake more than & in 24 hours", 5),   # real misread of 8
+    ("Do not take more than ® in 24 hours", 5),   # real misread of a smudged 8 (dose_smudged_registered.png)
+    ("Do not take more than © in 24 hours", 5),
+    ("Take ¤ tablets daily", 1),
+    ("Do not take more than $ in 24 hours", 5),   # a currency sign with no amount after it
     ("Paracetamol 5O0 mg tablets", 1),
     ("Take 1l2 tablets", 1),
     ("Balance ₦38,75O", 1),
@@ -43,6 +47,13 @@ def test_non_digit_in_a_number_is_unreadable(text, index):
     "Questions & answers",
     "Discount 50 % today",
     "Expiry 08/2027",
+    "Take 4 - 6 hours apart",
+    "Every 4 – 6 hours",
+    "Take ½ tablet",
+    "Fever above 38 ° C",
+    "Balance ₦ 15,000.00",
+    "Fee $ 20",
+    "Dose: 1 / 2 tablet",
 ])
 def test_ordinary_words_and_numbers_are_not_flagged(text):
     tokens = text.split()
@@ -132,7 +143,7 @@ def _dose_line_flagged(body: dict) -> bool:
     return any(i in flagged for i, l in enumerate(body["lines"]) if "24" in l["text"])
 
 
-@pytest.mark.parametrize("name", ["dose_faint.png", "dose_faint_q88.jpg", "dose_broken_q88.jpg", "dose_broken_q85.jpg"])
+@pytest.mark.parametrize("name", ["dose_faint.png", "dose_faint_q88.jpg", "dose_broken_q88.jpg", "dose_broken_q85.jpg", "dose_smudged_registered.png"])
 def test_misread_dose_photos_never_pass_silently_in_health_mode(name):
     """Whatever this Tesseract build reads, the dose line is either exactly right or flagged."""
     data = (MISREADS / name).read_bytes()
@@ -145,7 +156,7 @@ def test_misread_dose_photos_never_pass_silently_in_health_mode(name):
     assert read_correctly or _dose_line_flagged(body), dose
 
 
-@pytest.mark.parametrize("name", ["dose_faint.png", "dose_faint_q88.jpg", "dose_broken_q88.jpg", "dose_broken_q85.jpg"])
+@pytest.mark.parametrize("name", ["dose_faint.png", "dose_faint_q88.jpg", "dose_broken_q88.jpg", "dose_broken_q85.jpg", "dose_smudged_registered.png"])
 def test_misread_dose_photos_are_flagged_in_school_mode_without_a_second_pass(name):
     # dose_faint.png ("6" at 92%) is caught by re-reading the number's crop, in every mode.
     data = (MISREADS / name).read_bytes()

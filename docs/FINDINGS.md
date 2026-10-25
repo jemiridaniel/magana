@@ -13,6 +13,20 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-25 · Safety: a smudged 8 read as "®" passed with no warning (fixed)
+
+- **What happened:** while making the website's sample pages, a team-made medicine label had the 8 of "Do not take more than 8 in 24 hours" smudged (Gaussian blur, radius 3).
+  - In **health mode**, Tesseract read "Do not take more than **®** in 24 hours", and `/read` gave **no warning**: the app would have read it out as if it were fine.
+  - **Why:** the check for "a symbol where a number belongs" knew only a fixed list (`@ § # & ? * ~`). "®" isn't a digit, so neither the per-word confidence check nor the second reading looked at it.
+- **Fix** (`safety.number_problem`): any token of one or two characters with **no letter or digit**, next to a number or a dose word, is `unreadable_number`, whatever the symbol. Two exceptions, each tested so they aren't flagged:
+  - punctuation that really sits between numbers: "4 - 6", "4 – 6", "1 / 2", "38 ° C";
+  - a currency sign directly before an amount: "₦ 15,000.00", "$ 20".
+  
+  A currency sign with no amount after it ("more than $ in 24") is flagged.
+- **Regression photo:** `backend/tests/fixtures/misreads/dose_smudged_registered.png`, added to both "misread dose photos never pass silently" tests (health and school mode). It and 4 new word-level cases fail without the fix and pass with it.
+- **Result:** the page now reads "Do not take more than **unclear number** in 24 hours. I can't read a number on line 3 clearly. Please check it or retake the photo." Backend tests: 305 passed, 1 skipped.
+- **Status:** fixed; part of the number rules pending clinical sign-off (Dr. Amos, Nurse Balogun).
+
 ## 2026-10-25 · magana.ng: each part on its own name; the old address stays the API
 
 - **DNS:** `magana.ng`, `api.`, `app.` and `teachers.` all resolve to the Elastic IP 35.178.64.255 (checked on 1.1.1.1 and 8.8.8.8). There are no AAAA records and no CAA record. `www` is a CNAME to come with the move to Cloudflare (DNS only); it doesn't resolve yet, and Caddy will redirect it once it does.
