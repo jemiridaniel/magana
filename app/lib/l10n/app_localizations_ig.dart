@@ -2010,4 +2010,21 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get msg_small_print =>
       'Ihe e dere na foto a pere mpe nke ukwuu ma ọ bụ adịghị ahụ nke ọma, ya mere enwere m ike ịhapụ ụfọdụ. Bịaruo ekwentị nso, ma ọ bụ mepee PDF ahụ n\'onwe ya ma ọ bụrụ na i nwere ya.';
+
+  @override
+  String get msg_handwritten_page =>
+      'Peeji a dị ka e ji aka dee ya. Ihe e ji aka dee na-esiri m ike, ya mere enwere m ike ịgụhie okwu. A na-agụ nọmba naanị mgbe o doro m anya.';
+
+  @override
+  String get msg_mixed_page =>
+      'Akụkụ peeji a dị ka e ji aka dee ya. Enwere m ike ịgụhie akụkụ ndị ahụ. A na-agụ nọmba ebe ahụ naanị mgbe o doro m anya.';
+
+  @override
+  String get msg_handwritten_prescription =>
+      'Nke a dị ka e ji aka dee ya n\'akwụkwọ ahụike. Agaghị m agụ ọgwụ ma ọ bụ ọnụọgụ e ji aka dee. Biko rịọ onye na-ere ọgwụ ma ọ bụ nọọsụ ka ha gụọrọ gị ya.';
+
+  @override
+  String msg_handwritten_number(String where) {
+    return 'Na $where, nọmba e ji aka dee. Agaghị m echere ya: biko jụọ onye na-ere ọgwụ ma ọ bụ nọọsụ.';
+  }
 }

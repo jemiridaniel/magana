@@ -43,6 +43,9 @@ class Line:
     end_unclear: bool = False
     # Text-sized ink inside this row that no recognised word covers (a dropped "7.50").
     part_unclear: bool = False
+    # "handwritten" or "printed" (handwriting.classify); which engine read a handwritten line.
+    script: str = ""
+    reader: str = ""
 
 
 @dataclass
@@ -590,9 +593,13 @@ def _page_dict(page: Page) -> dict:
     return {"lines": [asdict(l) for l in page.lines], "tables": [asdict(t) for t in page.tables]}
 
 
-def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: bool = False) -> dict:
+def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: bool = False,
+              handwriting=None) -> dict:
     """OCR one photo. With second_pass, also read a differently prepared copy so the
-    safety layer can compare every number between the two readings."""
+    safety layer can compare every number between the two readings. `handwriting` is an
+    optional second reader for handwritten lines (handwriting.py; schoolwork only)."""
+    from . import handwriting as hw
+
     engine = engine or default_engine()
     page = engine.read(image)
     tiny = small_print(page)
@@ -604,7 +611,11 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     mark_unclear_line_ends(image, page)
     mark_unread_parts(image, page)
     reread_numbers(image, page, engine)
-    result = {"tips": capture_check(image) + tiny, **_page_dict(page), "faint_regions": faint}
+    script = hw.classify(page)
+    if handwriting is not None and script != "printed":
+        hw.reread_handwritten(image, page, handwriting)
+    tips = capture_check(image) + tiny + ([f"{script}_page"] if script != "printed" else [])
+    result = {"tips": tips, **_page_dict(page), "faint_regions": faint, "script": script}
     if second_pass:
         result["second_pass"] = _page_dict(engine.read(second_pass_image(image)))
     return result

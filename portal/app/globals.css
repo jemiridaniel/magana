@@ -558,3 +558,10 @@ fieldset { border: 0; margin: 0; padding: 0; }
 @media print {
   .sidebar, .page-head .btn, .actions .btn, .card:not(:has(.code-row)), .server-banner { display: none !important; }
 }
+
+/* Uploads: Check each line */
+.check-lines { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
+.check-lines li { display: grid; gap: 8px; padding: 12px; border-radius: 12px; border: 2px solid transparent; }
+.check-lines li.needs-check { border-color: var(--amber); background: var(--check-bg); }
+.check-lines label { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-weight: 700; }
+.check-lines textarea { font-size: 1.125rem; line-height: 1.5; min-height: 64px; resize: vertical; }

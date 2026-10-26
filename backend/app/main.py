@@ -19,7 +19,7 @@ from typing import Literal
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import asr, codes, curriculum, explain, learner_api, pdfs, policy, portal_api, quizzes, ratelimit, safety, templates, triage, wa_flow
+from . import asr, codes, curriculum, explain, handwriting, learner_api, pdfs, policy, portal_api, quizzes, ratelimit, safety, templates, triage, uploads_api, wa_flow
 from .wa_client import WhatsAppClient
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
@@ -64,6 +64,7 @@ app = FastAPI(
 )
 app.include_router(portal_api.router)
 app.include_router(learner_api.router)
+app.include_router(uploads_api.router)
 
 WHATSAPP_WEBHOOK = "/whatsapp/webhook"
 
@@ -185,16 +186,37 @@ async def read(file: UploadFile = File(...), mode: str = Form("school"),
     except Exception:
         raise HTTPException(400, {"code": "unreadable_image"})
     # Health and money papers get a second OCR pass so every number is read twice.
-    result = read_page(image, engine, second_pass=mode in SECOND_PASS_MODES)
+    result = read_page(image, engine, second_pass=mode in SECOND_PASS_MODES,
+                       handwriting=handwriting_reader(mode, tier))
     # The uploaded photo is never stored: it only lives in memory for this request.
-    return checked(result)
+    return checked(result, mode)
 
 
-def checked(result: dict) -> dict:
+@lru_cache(maxsize=1)
+def _handwriting_engine():
+    return handwriting.reader_from_env()
+
+
+def handwriting_reader(mode: str, tier: policy.Tier):
+    """The optional handwriting engine: schoolwork only, and Azure (images leave Magana)
+    for adults only."""
+    if mode != "school":
+        return None
+    reader = _handwriting_engine()
+    if reader is not None and reader.name == "azure" and tier != policy.Tier.STANDARD:
+        return None
+    return reader
+
+
+def checked(result: dict, mode: str = "school") -> dict:
     """A page's reading with its safety warnings: confidence, each number, line ends,
     table cells, and the second pass when there is one."""
     warnings = (safety.confidence_warnings(result["lines"]) + safety.number_warnings(result["lines"])
                 + safety.line_end_warnings(result["lines"]) + safety.line_part_warnings(result["lines"]))
+    if mode == "health":
+        hand, tips = safety.handwritten_health(result)
+        warnings += hand
+        result = {**result, "tips": result.get("tips", []) + tips}
     cell_warnings = safety.table_warnings(result["tables"]) + safety.cell_number_warnings(result["tables"])
     if "second_pass" in result:
         line_mm, cell_mm = safety.number_mismatches(result, result.pop("second_pass"), scale=SECOND_PASS_SCALE)
@@ -214,7 +236,8 @@ async def read_pdf(file: UploadFile = File(...), mode: str = Form("money"), pass
     require(tier, feature)
     data = await file.read(pdfs.MAX_BYTES + 1)
     try:
-        return pdfs.read_pdf(data, password or None, engine, mode in SECOND_PASS_MODES, checked)
+        return pdfs.read_pdf(data, password or None, engine, mode in SECOND_PASS_MODES,
+                             lambda result: checked(result, mode))
     except pdfs.PdfError as e:
         status = {"pdf_password_needed": 401, "pdf_password_wrong": 401, "pdf_too_long": 413}.get(e.code, 400)
         raise HTTPException(status, {"code": e.code}) from None

@@ -2016,4 +2016,21 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get msg_small_print =>
       'Rubutun ƙanana ne sosai ko ba ya fitowa sosai a wannan hoton, don haka zan iya tsallake wani ɓangare. Matsar da wayar kusa, ko ka buɗe PDF ɗin kansa idan kana da shi.';
+
+  @override
+  String get msg_handwritten_page =>
+      'Wannan shafin kamar rubutun hannu ne. Rubutun hannu yana mini wahala, don haka zan iya kuskure a kalmomi. Ana karanta lambobi ne kawai idan na tabbata.';
+
+  @override
+  String get msg_mixed_page =>
+      'Wani ɓangare na wannan shafin kamar rubutun hannu ne. Zan iya kuskure a waɗannan wuraren. Ana karanta lambobin can ne kawai idan na tabbata.';
+
+  @override
+  String get msg_handwritten_prescription =>
+      'Wannan kamar rubutun hannu ne a takardar lafiya. Ba zan karanta magunguna ko adadin da aka rubuta da hannu ba. Don Allah ka roƙi mai harhaɗa magunguna ko nas su karanta maka.';
+
+  @override
+  String msg_handwritten_number(String where) {
+    return 'A $where, lambar rubutun hannu. Ba zan yi hasashe ba: don Allah ka tambayi mai harhaɗa magunguna ko nas.';
+  }
 }

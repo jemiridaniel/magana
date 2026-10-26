@@ -87,7 +87,7 @@ def test_letter_mode_is_adults_only_and_gets_the_second_pass(monkeypatch):
 
     calls = []
 
-    def fake_read_page(image, engine, second_pass=False):
+    def fake_read_page(image, engine, second_pass=False, **_):
         calls.append(second_pass)
         return {"tips": [], "lines": [], "tables": [], "faint_regions": []}
 

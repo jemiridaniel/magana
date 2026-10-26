@@ -3287,6 +3287,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The print is very small or faint in this photo, so I may miss some of it. Move the phone closer, or open the PDF itself if you have it.'**
   String get msg_small_print;
+
+  /// Handwriting (DRAFT, pending Dr. Amos for health papers).
+  ///
+  /// In en, this message translates to:
+  /// **'This page looks handwritten. Handwriting is hard for me, so I may get words wrong. Numbers are only read when I\'m sure.'**
+  String get msg_handwritten_page;
+
+  /// Handwriting (DRAFT, pending Dr. Amos for health papers).
+  ///
+  /// In en, this message translates to:
+  /// **'Some of this page looks handwritten. I may get those parts wrong. Numbers there are only read when I\'m sure.'**
+  String get msg_mixed_page;
+
+  /// Handwriting (DRAFT, pending Dr. Amos for health papers).
+  ///
+  /// In en, this message translates to:
+  /// **'This looks like handwriting on a health paper. I won\'t read handwritten medicines or doses. Please ask the pharmacist or nurse to read it to you.'**
+  String get msg_handwritten_prescription;
+
+  /// Handwriting (DRAFT, pending Dr. Amos for health papers).
+  ///
+  /// In en, this message translates to:
+  /// **'On {where}, a handwritten number. I won\'t guess it: please ask the pharmacist or nurse.'**
+  String msg_handwritten_number(String where);
 }
 
 class _AppLocalizationsDelegate

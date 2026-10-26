@@ -1,6 +1,14 @@
 // The portal's wording for the backend's message codes (backend/app/messages.py, PORTAL).
 // backend/tests/test_curriculum.py checks that every portal code is here.
 export const portalMessages: Record<string, string> = {
+  upload_saved: "Uploaded. Magana read it and kept only the text.",
+  upload_approved: "Approved. Learners can now use this text.",
+  upload_corrections_saved: "Corrections saved. It stays at Check until you approve it.",
+  upload_unreadable: "Magana couldn't read that file. Try a photo or a PDF.",
+  upload_locked: "That PDF is locked. Please upload a copy without a password.",
+  upload_no_text: "Magana found no text in that file.",
+  upload_too_big: "That file is too big. Please keep it under 15 MB.",
+  upload_lines_changed: "The lines changed while you were checking. Please reload and try again.",
   quiz_not_assigned: "Assign the quiz to a class session first.",
   quiz_not_found: "That quiz wasn't found. It may have been removed.",
   quiz_not_ready: "Fix the problems in “Before you assign” first.",

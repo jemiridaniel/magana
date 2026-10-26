@@ -210,6 +210,8 @@ def number_warnings(lines: list[dict], threshold: float = CRITICAL_WORD_THRESHOL
     for i, line in enumerate(lines):
         words = _line_words(line)
         texts = [w["text"] for w in words]
+        # Handwriting: one confident reading is never enough (handwriting.py).
+        hand = line.get("script") == "handwritten"
         for j, w in enumerate(words):
             problem = number_problem(texts, j)
             if problem is None and not _has_digit(w["text"]) and letters_for_number(words, j, threshold):
@@ -217,6 +219,8 @@ def number_warnings(lines: list[dict], threshold: float = CRITICAL_WORD_THRESHOL
             if problem is None and _has_digit(w["text"]):
                 if w["reread_text"] is not None and _number(w["reread_text"]) != _number(w["text"]):
                     problem = "number_mismatch"  # the two readings disagree: never pick one
+                elif hand and not number_accepted(w, threshold=2.0):  # two agreeing readings only
+                    problem = "low_confidence_number"
                 elif not number_accepted(w, threshold):
                     problem = "low_confidence_number"
             if problem:
@@ -300,6 +304,19 @@ def number_mismatches(first: dict, second: dict, scale: float = 1.5) -> tuple[li
 def line_end_warnings(lines: list[dict]) -> list[Warning]:
     """Lines whose ink carries on past the recognised text: the end was not read."""
     return [Warning(i, code="line_end_unclear") for i, l in enumerate(lines) if l.get("end_unclear")]
+
+
+def handwritten_health(result: dict) -> tuple[list[Warning], list[str]]:
+    """A health paper's handwritten lines: none of their numbers is read (a handwritten dose
+    is never guessed) and the page asks for the pharmacist or nurse. PENDING CLINICAL
+    SIGN-OFF (Dr. Amos; docs/review/handwriting_signoff.md)."""
+    out = []
+    hand = [i for i, l in enumerate(result.get("lines", [])) if l.get("script") == "handwritten"]
+    for i in hand:
+        for j, w in enumerate(_line_words(result["lines"][i])):
+            if _has_digit(w["text"]):
+                out.append(Warning(i, code="handwritten_number", word_index=j))
+    return out, (["handwritten_prescription"] if hand else [])
 
 
 def line_part_warnings(lines: list[dict]) -> list[Warning]:

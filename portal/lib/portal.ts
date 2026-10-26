@@ -78,7 +78,35 @@ export interface HomeData {
 
 export interface Place { code: string; name: string; lgas: { code: string; name: string }[] }
 
+export interface UploadInfo {
+  id: string; title: string; status: "processing" | "check" | "ready" | "shared"; note: string;
+  class_id: string | null; created_at: string; approved_at: string | null; script: "printed" | "handwritten" | "mixed";
+}
+export interface UploadLine { text: string; handwritten: boolean; flags: string[]; page: number | null; corrected?: boolean }
+
+/** A teacher's file goes up as a form (not JSON); Magana keeps only the text it read. */
+async function sendUpload(file: File, classId: string, title: string): Promise<{ code: string; upload: UploadInfo }> {
+  const body = new FormData();
+  body.append("file", file);
+  body.append("class_id", classId);
+  body.append("title", title);
+  let r: Response;
+  try {
+    r = await apiFetch("/portal/uploads", { method: "POST", body, headers: apiKeyHeader });
+  } catch (e) {
+    throw new PortalError(e instanceof ServerDown && e.state === "sleeping" ? "server_sleeping" : "unreachable");
+  }
+  const json = await r.json().catch(() => null);
+  if (!r.ok) throw new PortalError(typeof json?.detail?.code === "string" ? json.detail.code : "failed");
+  return json;
+}
+
 export const portal = {
+  uploads: () => call<UploadInfo[]>("GET", "/portal/uploads"),
+  upload: (id: string) => call<UploadInfo & { lines: UploadLine[] }>("GET", `/portal/uploads/${id}`),
+  sendUpload,
+  checkUpload: (id: string, lines: string[], approve: boolean) =>
+    call<{ code: string; upload: UploadInfo & { lines: UploadLine[] } }>("PUT", `/portal/uploads/${id}`, { lines, approve }),
   me: () => call<Me>("GET", "/portal/me"),
   requestCode: (email: string) => call<{ retry_after: number; minutes: number }>("POST", "/portal/auth/request-code", { email }),
   verify: (email: string, code: string) => call<{ me: Me }>("POST", "/portal/auth/verify", { email, code }),

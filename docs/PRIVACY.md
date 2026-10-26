@@ -117,6 +117,16 @@ Schools register in the teacher portal (teachers.magana.ng). A school goes live 
 - The password is shown as it's typed, so TalkBack can say it and a low-vision user can check it. "Read back" says it character by character, so say it only when no one is listening.
 - Health, money and letter PDFs follow the same rules as photos: no model, numbers read exactly as printed.
 
+## Handwriting
+
+> **For Nurse Balogun to review:** the optional Azure reader would send crops of handwritten lines to Microsoft.
+
+- Magana marks lines that look handwritten. Their numbers are read only when two separate readings agree. On a health paper, handwritten numbers are never read; Magana asks you to have the pharmacist or nurse read them.
+- Two optional readers for handwritten **schoolwork** exist in the code. Both are **off**:
+  - **TrOCR** runs on Magana's own server, so nothing leaves it.
+  - **Azure AI Vision Read** sends a crop of each handwritten line to Microsoft. It would be for adults (18+) only, never for health, money or letters, never for under-18s, and only after this note is approved. It also costs money per page, so it stays off until the team decides.
+- Teachers' handwritten uploads: the portal keeps the **text** Magana read (never the photo) and marks it "Check" until the teacher corrects and approves it. Learners get only approved text.
+
 ## Questions, or to delete something
 
 Email **maganasupport@gmail.com**. For a learner in a class, the class teacher or school admin can delete everything (above). Everything else Magana keeps is on your phone: uninstalling the app deletes it.

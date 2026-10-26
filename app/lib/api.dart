@@ -48,6 +48,7 @@ const numberCodes = {
   'unreadable_number',
   'low_confidence_number',
   'number_mismatch',
+  'handwritten_number',
 };
 
 /// One thing the Reader speaks: a line of text, one row of a table, or a band

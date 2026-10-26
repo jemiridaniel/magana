@@ -2010,4 +2010,21 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get msg_small_print =>
       'Ọ̀rọ̀ inú fọ́tò yìí kéré jù tàbí kò hàn dáadáa, nítorí náà mo lè fo apá kan. Sún fóònù sún mọ́ ọn, tàbí ṣí PDF fúnra rẹ̀ tí o bá ní i.';
+
+  @override
+  String get msg_handwritten_page =>
+      'Ojú-ìwé yìí dà bí ìkọ̀wé ọwọ́. Ìkọ̀wé ọwọ́ ṣòro fún mi, nítorí náà mo lè ṣi ọ̀rọ̀ kà. Mo máa ń ka nọ́ńbà nígbà tí ó dá mi lójú nìkan.';
+
+  @override
+  String get msg_mixed_page =>
+      'Apá kan ojú-ìwé yìí dà bí ìkọ̀wé ọwọ́. Mo lè ṣi àwọn apá yẹn kà. Mo máa ń ka nọ́ńbà ibẹ̀ nígbà tí ó dá mi lójú nìkan.';
+
+  @override
+  String get msg_handwritten_prescription =>
+      'Èyí dà bí ìkọ̀wé ọwọ́ lórí ìwé ìlera. Mi ò ní ka oògùn tàbí ìwọ̀n tí a fi ọwọ́ kọ. Jọ̀wọ́ ní kí oníṣègùn-oògùn tàbí nọ́ọ̀sì kà á fún ọ.';
+
+  @override
+  String msg_handwritten_number(String where) {
+    return 'Lórí $where, nọ́ńbà tí a fi ọwọ́ kọ. Mi ò ní fojú inú wò ó: jọ̀wọ́ béèrè lọ́wọ́ oníṣègùn-oògùn tàbí nọ́ọ̀sì.';
+  }
 }

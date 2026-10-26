@@ -1575,5 +1575,26 @@
   "msg_small_print": "The print is very small or faint in this photo, so I may miss some of it. Move the phone closer, or open the PDF itself if you have it.",
   "@msg_small_print": {
     "description": "Capture tip: the print in the photo is too small to read every number."
+  },
+  "msg_handwritten_page": "This page looks handwritten. Handwriting is hard for me, so I may get words wrong. Numbers are only read when I'm sure.",
+  "msg_mixed_page": "Some of this page looks handwritten. I may get those parts wrong. Numbers there are only read when I'm sure.",
+  "msg_handwritten_prescription": "This looks like handwriting on a health paper. I won't read handwritten medicines or doses. Please ask the pharmacist or nurse to read it to you.",
+  "msg_handwritten_number": "On {where}, a handwritten number. I won't guess it: please ask the pharmacist or nurse.",
+  "@msg_handwritten_page": {
+    "description": "Handwriting (DRAFT, pending Dr. Amos for health papers)."
+  },
+  "@msg_mixed_page": {
+    "description": "Handwriting (DRAFT, pending Dr. Amos for health papers)."
+  },
+  "@msg_handwritten_prescription": {
+    "description": "Handwriting (DRAFT, pending Dr. Amos for health papers)."
+  },
+  "@msg_handwritten_number": {
+    "description": "Handwriting (DRAFT, pending Dr. Amos for health papers).",
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
   }
 }

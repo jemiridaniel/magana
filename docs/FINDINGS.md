@@ -34,6 +34,38 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-26 · Handwriting: built and tested on synthetic lines only; not measured (UNREVIEWED)
+
+> **Unreviewed, and not yet measured.** For Dr. Amos: the health rules (docs/review/handwriting_signoff.md, rules 2–4). For Nurse Balogun: the wording, and the optional Azure reader (PRIVACY.md, "Handwriting").
+
+- **No handwritten pages were provided.** `~/magana-private-pages/handwriting/` doesn't exist yet, so nothing here is a measurement. To measure, add 15–20 photos there:
+  - name each `printed_…`, `hand_…` or `mixed_…`;
+  - optionally add a typed `.txt` transcript beside each one;
+  - then run `backend/scripts/handwriting_benchmark.py`, which prints totals only, sends nothing, and keeps the pages private.
+- **Built** (`backend/app/handwriting.py`):
+  - **Printed or handwritten, per line**, from what the OCR already gives. A line is handwritten when the median word confidence is under 0.50, or under 0.70 while word heights or baselines wander by 18% or more. The page is printed, handwritten or mixed.
+  - The thresholds are DRAFT. They err towards "handwritten", which only adds warnings. A rendered printed page is checked not to count as handwritten.
+  - Handwritten and mixed pages say so first.
+  - **Numbers on a handwritten line** need two agreeing readings, each at least 0.80. One confident reading is not enough, because Tesseract can be confidently wrong on handwriting.
+  - **Health papers:** no number on a handwritten line is read (`handwritten_number`, spoken as "unclear number"). The page starts with "I won't read handwritten medicines or doses. Please ask the pharmacist or nurse."
+  - **Optional readers, off by default, schoolwork only:**
+    - TrOCR (`microsoft/trocr-base-handwritten`, MIT; `requirements-trocr.txt`) runs on Magana's server. It needs about 1.5 GB of memory, so it won't fit the t3.small.
+    - Azure AI Vision Read is for adults only, sends line crops to Microsoft, and costs money per page; it stays off.
+    - With either reader, each number must still agree with Tesseract's own reading of it.
+- **Portal uploads, now real** (`uploads_api.py`; Uploads and a new Check screen):
+  - A photo or PDF is read, and only its text is kept. A test checks that no file is in the database or on disk.
+  - Handwriting, or anything Magana was unsure of, stays at "Check". The teacher corrects line by line and approves; learners get only approved text.
+  - Home shows uploads waiting at Check. Every change goes in the audit log.
+  - The mock-up's "versions" and downloads are gone, because nothing makes audio, Braille or large print yet.
+  - axe and the 64 px rule pass on both pages, desktop and phone. A "Back to uploads" link under 64 px was fixed.
+- **Checks:**
+  - Backend: 437 passed (9 handwriting tests, 4 upload tests).
+  - Portal end-to-end: 40 passed.
+  - App: 200 passed.
+- **Status:** open. Needs real pages to measure, and Dr. Amos's sign-off on rules 2–4.
+
+---
+
 ## 2026-10-25 · Read a PDF, and a private bank statement benchmark: two silent number errors found and fixed (UNREVIEWED)
 
 > **Unreviewed.** For Dr. Amos and Nurse Balogun: the number rules changed (below). For Nurse Balogun: Magana now asks for one kind of password, a locked PDF's own (PRIVACY.md, "PDFs"; CLAUDE.md rule 5).

@@ -32,6 +32,10 @@ ENGLISH = {
     "consent_required": "Learners aged 13 to 17 need a parent's or guardian's consent first.",
     "teacher_session_required": "Learners under 13 can only use Magana in a teacher-run session.",
     "unreadable_image": "I couldn't open that photo. Please try again.",
+    "handwritten_page": "This page looks handwritten. Handwriting is hard for me, so I may get words wrong. Numbers are only read when I'm sure.",
+    "mixed_page": "Some of this page looks handwritten. I may get those parts wrong. Numbers there are only read when I'm sure.",
+    "handwritten_prescription": "This looks like handwriting on a health paper. I won't read handwritten medicines or doses. Please ask the pharmacist or nurse to read it to you.",
+    "handwritten_number": "On {where}, a handwritten number. I won't guess it: please ask the pharmacist or nurse.",
     "small_print": "The print is very small or faint in this photo, so I may miss some of it. Move the phone closer, or open the PDF itself if you have it.",
     "unreadable_pdf": "I couldn't open that PDF. Please try another file.",
     "pdf_password_needed": "This PDF is locked. Type its password: it is often in the email that came with it.",
@@ -92,6 +96,14 @@ CODES = frozenset(ENGLISH)
 
 # Codes only the teacher portal sees (portal/lib/messages.ts words each one; a test checks).
 PORTAL = {
+    "upload_saved": "Uploaded. Magana read it and kept only the text.",
+    "upload_approved": "Approved. Learners can now use this text.",
+    "upload_corrections_saved": "Corrections saved. It stays at Check until you approve it.",
+    "upload_unreadable": "Magana couldn't read that file. Try a photo or a PDF.",
+    "upload_locked": "That PDF is locked. Please upload a copy without a password.",
+    "upload_no_text": "Magana found no text in that file.",
+    "upload_too_big": "That file is too big. Please keep it under 15 MB.",
+    "upload_lines_changed": "The lines changed while you were checking. Please reload and try again.",
     "quiz_not_assigned": "Assign the quiz to a class session first.",
     "quiz_not_found": "That quiz wasn't found. It may have been removed.",
     "quiz_not_ready": "Fix the problems in “Before you assign” first.",

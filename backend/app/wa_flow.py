@@ -38,7 +38,7 @@ from .wa_client import WhatsAppClient, WhatsAppError
 log = logging.getLogger("magana.whatsapp")
 
 LANGS = ("en", "ha", "yo", "ig")
-NUMBER_CODES = {"unreadable_number", "low_confidence_number", "number_mismatch"}
+NUMBER_CODES = {"unreadable_number", "low_confidence_number", "number_mismatch", "handwritten_number"}
 # Below the hard limit, keep a few messages for people already mid-conversation: new photos
 # and checks get "limit reached" instead.
 SOFT_MARGIN = 50
@@ -113,7 +113,7 @@ def read_photo(data: bytes, engine) -> dict | None:
         return None
     result = read_page(image, engine, second_pass=True)
     warnings = (safety.confidence_warnings(result["lines"]) + safety.number_warnings(result["lines"])
-                + safety.line_end_warnings(result["lines"]))
+                + safety.line_end_warnings(result["lines"]) + safety.line_part_warnings(result["lines"]))
     if "second_pass" in result:
         warnings += safety.number_mismatches(result, result.pop("second_pass"), scale=SECOND_PASS_SCALE)[0]
     return {"lines": result["lines"], "warnings": [w.__dict__ for w in warnings],

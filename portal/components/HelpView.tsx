@@ -1,8 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, type FormEvent } from "react";
-import { recentUploads } from "@/lib/data";
+import { useEffect, useState, type FormEvent } from "react";
+import { portal, type UploadInfo } from "@/lib/portal";
 import { SUPPORT_EMAIL } from "@/lib/site";
 
 interface Guide {
@@ -95,6 +95,8 @@ const fold = (s: string) => s.normalize("NFD").replace(/\p{Diacritic}/gu, "").to
 
 export default function HelpView() {
   const [query, setQuery] = useState("");
+  const [uploads, setUploads] = useState<UploadInfo[]>([]);
+  useEffect(() => { portal.uploads().then(setUploads).catch(() => null); }, []);
   const [openGuide, setOpenGuide] = useState<string | null>(null);
   const [reporting, setReporting] = useState(false);
   const [reportMessage, setReportMessage] = useState("");
@@ -196,7 +198,7 @@ export default function HelpView() {
               <label htmlFor="report-item">Which reading?</label>
               <select id="report-item" name="item" className="select" defaultValue="">
                 <option value="">Not about one upload</option>
-                {recentUploads.map((u) => <option key={u.id} value={u.id}>{u.name}</option>)}
+                {uploads.map((u) => <option key={u.id} value={u.id}>{u.title}</option>)}
               </select>
             </div>
             <div className="field">

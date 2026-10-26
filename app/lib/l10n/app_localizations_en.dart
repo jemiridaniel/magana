@@ -2011,4 +2011,21 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get msg_small_print =>
       'The print is very small or faint in this photo, so I may miss some of it. Move the phone closer, or open the PDF itself if you have it.';
+
+  @override
+  String get msg_handwritten_page =>
+      'This page looks handwritten. Handwriting is hard for me, so I may get words wrong. Numbers are only read when I\'m sure.';
+
+  @override
+  String get msg_mixed_page =>
+      'Some of this page looks handwritten. I may get those parts wrong. Numbers there are only read when I\'m sure.';
+
+  @override
+  String get msg_handwritten_prescription =>
+      'This looks like handwriting on a health paper. I won\'t read handwritten medicines or doses. Please ask the pharmacist or nurse to read it to you.';
+
+  @override
+  String msg_handwritten_number(String where) {
+    return 'On $where, a handwritten number. I won\'t guess it: please ask the pharmacist or nurse.';
+  }
 }
