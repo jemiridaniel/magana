@@ -98,6 +98,8 @@ CODES = frozenset(ENGLISH)
 
 # Codes only the teacher portal sees (portal/lib/messages.ts words each one; a test checks).
 PORTAL = {
+    "use_reset_my_authenticator": "To reset your own authenticator, use Reset my authenticator.",
+    "authenticator_reset": "Your authenticator is reset. Sign in again to set up a new one.",
     "school_email_resent": "Email sent again to the principal.",
     "team_invite_cancelled": "Invitation cancelled.",
     "team_member_removed": "Removed. They’re signed out everywhere.",

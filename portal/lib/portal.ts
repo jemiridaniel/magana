@@ -182,6 +182,9 @@ export const portal = {
   removeTeamMember: (id: string) => call<{ code: string }>("POST", `/portal/team/members/${id}/remove`),
   resendTeamInvite: (id: string) => call<{ code: string }>("POST", `/portal/team/members/${id}/resend`),
   cancelTeamInvite: (id: string) => call<{ code: string }>("POST", `/portal/team/members/${id}/cancel`),
+  resetMyAuthenticator: (body: { code?: string; backup_code?: string }) =>
+    call<{ code: string }>("POST", "/portal/team/me/authenticator/reset", body),
+  resetMemberAuthenticator: (id: string) => call<{ code: string }>("POST", `/portal/team/members/${id}/reset-authenticator`),
 };
 
 export const modeLabel: Record<Mode, string> = {

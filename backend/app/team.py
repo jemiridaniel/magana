@@ -119,3 +119,11 @@ def create(con, email: str, name: str, role: str, status: str, invited_by: str |
                 (mid, email.strip().lower(), name.strip(), role, status, invited_by, A.iso(t),
                  A.iso(t + A.timedelta(days=A.INVITE_DAYS)), A.iso(t)))
     return mid
+
+
+def reset_authenticator(con, member_id: str) -> None:
+    """Forget the authenticator key and backup codes and end every session: the old key stops
+    working at once, and the next sign-in sets up a new one (a leaked key, a lost phone)."""
+    con.execute("UPDATE team_members SET totp_sealed = NULL, totp_confirmed_at = NULL, totp_last_counter = NULL,"
+                " backup_codes = '[]' WHERE id = ?", (member_id,))
+    con.execute("DELETE FROM sessions WHERE who IN (?, ?)", (f"team:{member_id}", f"team2fa:{member_id}"))

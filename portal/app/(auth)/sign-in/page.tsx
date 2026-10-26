@@ -21,7 +21,8 @@ function SignIn() {
   const [team, setTeam] = useState("");
   const [code, setCode] = useState("");
   const [busy, setBusy] = useState(false);
-  const [error, setError] = useState(params.get("expired") ? messageFor("session_expired") : "");
+  const [error, setError] = useState(params.get("expired") ? messageFor("session_expired")
+    : params.get("reset") ? messageFor("authenticator_reset") : "");
   const [wait, setWait] = useState(0);
   const heading = useRef<HTMLHeadingElement>(null);
 

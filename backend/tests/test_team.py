@@ -1,6 +1,7 @@
 """Magana team accounts (team.py, team_api.py): roles, the first owner made on the server, sign-in
 with an email code plus an authenticator code, 15 minutes idle, one role per email, the activity
 log, and the proof that team accounts can't see learners."""
+import json
 import re
 from datetime import timedelta
 
@@ -181,3 +182,40 @@ def test_team_accounts_cant_see_any_learner_data(fresh):
     # The learner, class, progress and consent pages in particular say why.
     for path in (f"/portal/classes/{cls['id']}/learners", f"/portal/learners/{learner['id']}", "/portal/home", "/portal/classes"):
         assert owner.get(path).json()["detail"]["code"] == "not_for_team"
+
+
+# ---------- resetting the authenticator (a leaked key, a lost phone)
+
+def test_reset_my_authenticator_needs_a_current_code_and_kills_the_old_key(fresh):
+    c = sign_in(fresh, TEAM)
+    assert c.post("/portal/team/me/authenticator/reset", json={"code": "000000"}).json()["detail"]["code"] == "totp_wrong"
+    assert c.post("/portal/team/me/authenticator/reset", json={"code": totp_code(TEAM)}).json()["code"] == "authenticator_reset"
+    assert c.get("/portal/me").status_code == 401  # signed out everywhere
+    c2, step = email_step(fresh, TEAM)
+    assert step["code"] == "totp_setup" and step["key"].replace(" ", "") != TOTP_SECRET  # a new key
+    assert c2.post("/portal/auth/totp", json={"code": totp.code_at(TOTP_SECRET, totp.counter_now())}).json()["detail"]["code"] == "totp_wrong"
+    new = step["key"].replace(" ", "")
+    assert c2.post("/portal/auth/totp", json={"code": totp_code(TEAM, new)}).json()["code"] == "signed_in"
+    log = c2.get("/portal/admin/activity").json()
+    assert any(a["action"] == "team_authenticator_reset" and a["detail"]["by"] == "self" for a in log)
+
+
+def test_an_owner_resets_another_members_authenticator_and_the_server_command_is_the_fallback(fresh, capsys):
+    make_team("rev@magana.test", "reviewer")
+    rev = sign_in(fresh, "rev@magana.test")
+    owner = sign_in(fresh, TEAM)
+    rid = next(m["id"] for m in owner.get("/portal/team/members").json() if m["email"] == "rev@magana.test")
+    me = next(m["id"] for m in owner.get("/portal/team/members").json() if m["email"] == TEAM)
+    assert owner.post(f"/portal/team/members/{me}/reset-authenticator").json()["detail"]["code"] == "use_reset_my_authenticator"
+    assert rev.post(f"/portal/team/members/{me}/reset-authenticator").status_code == 403  # owners only
+    assert owner.post(f"/portal/team/members/{rid}/reset-authenticator").json()["code"] == "authenticator_reset"
+    assert rev.get("/portal/me").status_code == 401
+    assert email_step(fresh, "rev@magana.test")[1]["code"] == "totp_setup"
+    # The server command: for an owner locked out with no other owner to help.
+    assert team_setup.main(["--email", TEAM, "--reset-authenticator"]) == 0
+    assert "authenticator is reset" in capsys.readouterr().out
+    assert owner.get("/portal/me").status_code == 401
+    with accounts.db() as con:
+        actions = [(r["actor"], json.loads(r["detail"])["by"]) for r in
+                   con.execute("SELECT actor, detail FROM audit WHERE action = 'team_authenticator_reset' ORDER BY id")]
+    assert actions == [(f"team:{TEAM}", "owner"), ("server", "server command")]

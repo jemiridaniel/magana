@@ -34,6 +34,18 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-26 · Resetting a team authenticator (a setup key was seen in a screenshot)
+
+- **Why:** an owner's authenticator setup key appeared in a screenshot. Anyone with the key can make that account's authenticator codes, so it must be replaceable at once.
+- **Built:**
+  - **Reset my authenticator** (My account, any team member). It needs a current authenticator code or a backup code. It forgets the key and backup codes and ends every session, so the old key stops working immediately. The next sign-in sets up a new key.
+  - **An owner can reset another member** (Magana team).
+  - **The fallback** for a lone owner with no phone: `python -m app.team_setup --email … --reset-authenticator` on the server.
+  - All three go in the activity log, with who did it and how.
+- **Tests:** backend 2 new (the old key refused after a reset, the new key works, owners only for others, the server command). Portal end-to-end 46 passed (the reset from My account through to the new setup screen, axe and 64 px).
+
+---
+
 ## 2026-10-26 · Magana team accounts: roles, authenticator codes, and no learner data (UNREVIEWED)
 
 > For Nurse Balogun: the team's separation from learner data (PRIVACY.md, "The Magana team's own accounts").

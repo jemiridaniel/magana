@@ -16,7 +16,7 @@ export const dataDir = process.env.MAGANA_E2E_DATA;
 export const TOTP_SECRET = "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP";
 export const TEAM_ACCOUNTS: [string, string][] = [
   ["team@magana.test", "owner"], ["team-phone@magana.test", "owner"], ["approver@magana.test", "reviewer"],
-  ["support@magana.test", "support"],
+  ["support@magana.test", "support"], ["reset-desktop@magana.test", "owner"], ["reset-phone@magana.test", "owner"],
 ];
 
 export default defineConfig({

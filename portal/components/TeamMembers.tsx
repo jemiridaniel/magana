@@ -57,6 +57,30 @@ function ChangeRole({ m, onDone }: { m: TeamMember; onDone: (msg: string) => voi
   );
 }
 
+function ResetAuthenticator({ m, onDone }: { m: TeamMember; onDone: (msg: string) => void }) {
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState("");
+  async function go() {
+    try { await portal.resetMemberAuthenticator(m.id); setOpen(false); onDone(`${m.name}’s authenticator is reset. They’re signed out and set it up again at their next sign-in.`); }
+    catch (err) { setError(messageFor((err as PortalError).code)); }
+  }
+  return (
+    <>
+      <button type="button" className="btn" onClick={() => { setError(""); setOpen(true); }}>
+        Reset authenticator<span className="visually-hidden">: {m.name}</span></button>
+      <Dialog open={open} title={`Reset ${m.name}’s authenticator?`} onClose={() => setOpen(false)}>
+        <div className="form-grid">
+          <p>Their old key and backup codes stop working at once and they’re signed out everywhere. At their next sign-in
+            they set up the authenticator again. It goes in the activity log.</p>
+          <p role="alert" className="form-error">{error}</p>
+          <div className="actions"><button type="button" className="btn" onClick={() => setOpen(false)}>Cancel</button>
+            <button type="button" className="btn btn-primary" onClick={go}>Reset authenticator</button></div>
+        </div>
+      </Dialog>
+    </>
+  );
+}
+
 function RemoveMember({ m, onDone }: { m: TeamMember; onDone: (msg: string) => void }) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
@@ -126,7 +150,7 @@ export default function TeamMembers() {
               <td><span className={`pill ${m.status === "active" ? "pill-ready" : "pill-check"}`}>{STATUS[m.status]}</span></td>
               <td className="row-actions">
                 {m.email === me.email ? <span>You</span> : m.status === "active" ? (
-                  <><ChangeRole m={m} onDone={done} /><RemoveMember m={m} onDone={done} /></>
+                  <><ChangeRole m={m} onDone={done} /><ResetAuthenticator m={m} onDone={done} /><RemoveMember m={m} onDone={done} /></>
                 ) : (
                   <>
                     <button type="button" className="btn" onClick={async () => {

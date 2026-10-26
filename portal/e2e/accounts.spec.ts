@@ -3,7 +3,7 @@
 // axe (WCAG 2.2 AA + AAA contrast), 64 px targets, the dialog's focus, the LGA combobox.
 import { expect, test } from "@playwright/test";
 import { apiUrl } from "../playwright.config";
-import { addClass, approve, designChecks, emailedCode, joinOnPhone, newSchool, registerSchool, signIn, signInTeam,
+import { addClass, approve, designChecks, emailedCode, joinOnPhone, newSchool, nextTotp, registerSchool, signIn, signInTeam,
          totpAt, uniqueEmail } from "./helpers";
 
 test("sign in: the email, then the code; a wrong code says so; both pages pass the checks", async ({ page }) => {
@@ -323,4 +323,25 @@ test("Support (view only): sees schools and their teachers and can resend emails
   // Learner pages aren't for the team: the portal sends them back to their own pages.
   await page.goto("/classes/");
   await expect(page).toHaveURL(/\/admin\/?$/);
+});
+
+test("My account: Reset my authenticator needs a current code, signs you out, and the next sign-in sets up a new key", async ({ page }, info) => {
+  const email = `reset-${info.project.name}@magana.test`;
+  await signInTeam(page, email);
+  await page.getByRole("link", { name: "My account" }).click();
+  await expect(page.getByRole("heading", { name: "Reset my authenticator" })).toBeVisible();
+  await designChecks(page);
+  await page.getByLabel("Your current authenticator code").fill("000000");
+  await page.getByRole("button", { name: "Reset my authenticator" }).click();
+  await expect(page.locator(".form-error")).toHaveText(/authenticator code isn’t right/);
+  await page.getByLabel("Your current authenticator code").fill(await nextTotp(email));
+  await page.getByRole("button", { name: "Reset my authenticator" }).click();
+  await expect(page).toHaveURL(/\/sign-in\/?\?reset=1/);
+  await expect(page.locator(".form-error")).toHaveText(/Your authenticator is reset/);
+  await page.getByLabel("Email address").fill(email);
+  const asked = Date.now();
+  await page.getByRole("button", { name: "Send me a code" }).click();
+  await page.getByLabel("Sign-in code").fill(await emailedCode(email, asked));
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page.getByRole("heading", { name: "Set up your authenticator" })).toBeFocused();
 });

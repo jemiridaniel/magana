@@ -7,6 +7,13 @@ It refuses if an owner already exists: from then on, owners add team members in 
 (Magana team). The new owner signs in at teachers.magana.ng with that email; the first sign-in
 sets up the authenticator app and shows the backup codes once.
 
+If an owner's authenticator key leaks or their phone is lost and no other owner can help:
+
+    sudo docker compose -f docker-compose.prod.yml exec magana \\
+        python -m app.team_setup --email you@example.com --reset-authenticator
+
+forgets that member's key and backup codes and signs them out; the next sign-in sets up a new one.
+
 Development only (MAGANA_ENV=development): --role and --totp-secret make test accounts whose
 authenticator is already set up, for the portal's end-to-end tests.
 """
@@ -23,10 +30,24 @@ from . import portal_api, team
 def main(argv: list[str] | None = None) -> int:
     p = argparse.ArgumentParser(prog="python -m app.team_setup", description="Make the first Magana team owner.")
     p.add_argument("--email", required=True)
-    p.add_argument("--name", required=True)
+    p.add_argument("--name", default=None)
+    p.add_argument("--reset-authenticator", action="store_true",
+                   help="forget this team member's authenticator key and backup codes, and sign them out")
     p.add_argument("--role", default="owner", choices=team.ROLES, help=argparse.SUPPRESS)
     p.add_argument("--totp-secret", default=None, help=argparse.SUPPRESS)
     a = p.parse_args(argv)
+    if a.reset_authenticator:
+        with A.db() as con:
+            m = team.member_by_email(con, a.email)
+            if m is None:
+                print("No team member has that email.", file=sys.stderr)
+                return 1
+            team.reset_authenticator(con, m["id"])
+            A.audit(con, None, "server", "team_authenticator_reset", m["id"], by="server command", email=m["email"])
+        print(f"Done: {m['email']}'s authenticator is reset and they're signed out. Their next sign-in sets up a new one.")
+        return 0
+    if not a.name:
+        p.error("--name is needed to make the first owner")
     dev = os.environ.get("MAGANA_ENV") == "development"
     if (a.role != "owner" or a.totp_secret) and not dev:
         print("--role and --totp-secret are for development only.", file=sys.stderr)

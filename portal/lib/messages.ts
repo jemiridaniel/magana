@@ -1,6 +1,8 @@
 // The portal's wording for the backend's message codes (backend/app/messages.py, PORTAL).
 // backend/tests/test_curriculum.py checks that every portal code is here.
 export const portalMessages: Record<string, string> = {
+  authenticator_reset: "Your authenticator is reset. Sign in again to set up a new one.",
+  use_reset_my_authenticator: "To reset your own authenticator, use Reset my authenticator.",
   school_email_resent: "Email sent again to the principal.",
   team_invite_cancelled: "Invitation cancelled.",
   team_member_removed: "Removed. They’re signed out everywhere.",

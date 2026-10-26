@@ -121,6 +121,45 @@ def cancel_member_invite(member_id: str, who: Who = Depends(owner)) -> dict:
     return {"code": "team_invite_cancelled"}
 
 
+class ResetIn(BaseModel):
+    code: str = Field("", max_length=12)
+    backup_code: str = Field("", max_length=12)
+
+
+@router.post("/team/me/authenticator/reset")
+def reset_my_authenticator(body: ResetIn, who: Who = Depends(any_team)) -> dict:
+    """Reset your own authenticator (a key seen by someone else, a new phone). Proves it's you with
+    a current authenticator code or a backup code first. Signs you out everywhere."""
+    from . import codes
+    key = f"totp:{who.member['id']}"
+    if (wait := codes.attempts.locked_for(key)) > 0:
+        fail(429, "code_locked", retry_after=int(wait) + 1)
+    with db() as con:
+        m = team.member(con, who.member["id"])
+        ok = team.use_backup_code(con, m, body.backup_code) if body.backup_code else team.check_totp(con, m, body.code)
+        if ok:
+            team.reset_authenticator(con, m["id"])
+            A.audit(con, None, who.id, "team_authenticator_reset", m["id"], by="self",
+                    proof="backup code" if body.backup_code else "authenticator code")
+    if not ok:
+        wait = codes.attempts.failed(key)
+        fail(429 if wait else 400, "code_locked" if wait else "totp_wrong", **({"retry_after": int(wait)} if wait else {}))
+    codes.attempts.succeeded(key)
+    return {"code": "authenticator_reset"}
+
+
+@router.post("/team/members/{member_id}/reset-authenticator")
+def reset_member_authenticator(member_id: str, who: Who = Depends(owner)) -> dict:
+    """An owner resets another member's authenticator: they're signed out and set it up again."""
+    with db() as con:
+        m = _member_or_404(con, member_id)
+        if m["id"] == who.member["id"]:
+            fail(409, "use_reset_my_authenticator")
+        team.reset_authenticator(con, m["id"])
+        A.audit(con, None, who.id, "team_authenticator_reset", m["id"], by="owner", email=m["email"])
+    return {"code": "authenticator_reset"}
+
+
 # ---------- what Support can do: see a school's teachers, resend its email
 
 @router.get("/admin/schools/{school_id}/teachers")
