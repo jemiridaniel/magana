@@ -2,7 +2,8 @@
 
 // An accessible modal: the native <dialog> opened with showModal() makes the page behind inert;
 // Tab and Shift+Tab cycle inside it (browsers would otherwise let focus leave for the address
-// bar); Escape closes it; focus goes back to the button that opened it.
+// bar); Escape or a click on the dimmed backdrop closes it; focus starts on [data-autofocus] if
+// there is one and goes back to the button that opened it. The page behind doesn't scroll (globals.css).
 import { useEffect, useId, useRef } from "react";
 
 export default function Dialog({ open, title, onClose, children, describedBy, className = "dialog", closeButton = false }: {
@@ -20,6 +21,7 @@ export default function Dialog({ open, title, onClose, children, describedBy, cl
     if (open && !d.open) {
       opener.current = document.activeElement;
       d.showModal();
+      d.querySelector<HTMLElement>("[data-autofocus]")?.focus();
     } else if (!open && d.open) {
       d.close();
     }
@@ -33,6 +35,12 @@ export default function Dialog({ open, title, onClose, children, describedBy, cl
         (opener.current as HTMLElement | null)?.focus?.();
       }}
       onCancel={(e) => { e.preventDefault(); ref.current?.close(); }}
+      onMouseDown={(e) => {  // the backdrop is the dialog element itself, outside its box
+        const d = ref.current;
+        if (!d || e.target !== d) return;
+        const r = d.getBoundingClientRect();
+        if (e.clientX < r.left || e.clientX > r.right || e.clientY < r.top || e.clientY > r.bottom) d.close();
+      }}
       onKeyDown={(e) => {
         if (e.key !== "Tab" || !ref.current) return;
         const items = [...ref.current.querySelectorAll<HTMLElement>(

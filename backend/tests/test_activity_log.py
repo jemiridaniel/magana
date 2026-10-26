@@ -41,7 +41,7 @@ def test_search_filter_pages_and_an_approvals_details(fresh):
     assert two["page"] == two["pages"]  # past the end: the last page
 
     d = team.get(f"/portal/admin/activity/{top['id']}").json()
-    assert d["who"] == "Magana Owner" and d["who_role"] == "Owner" and d["reference"] == "SCH-1047"
+    assert d["who"] == "Magana Owner" and d["who_role"] == "Magana admin" and d["reference"] == "SCH-1047"
     assert d["signed_in_from"] == {"browser": "Chrome on a Mac", "place": "Nigeria"}  # never an IP address
     assert {"field": "Status", "before": "Waiting", "after": "Approved"} in d["changes"]
     assert d["call_notes"] == "Called 11:05, confirmed."

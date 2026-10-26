@@ -34,6 +34,24 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-26 · Add a team member: a modal, at most 2 Magana admins, no duplicate invites (UNREVIEWED)
+
+- **Modal** (board "Team members + Add member modal"): "+ Add team member" (`aria-haspopup="dialog"`) opens a native modal `<dialog>` in place of the inline form. The "Extra protection" box stays.
+  - Fields: Full name, Email (format checked) and Role, a native `<select>` (TalkBack and VoiceOver read it well) with the chosen role's one-line description under it.
+  - Focus starts on Full name and stays inside. Escape, ×, Cancel and a click on the dimmed backdrop all close it, and focus goes back to the button.
+  - The backdrop covers the sidebar too, and the page behind doesn't scroll.
+  - Errors show under their field, linked by `aria-describedby` and announced. On success, "Invite sent to …" is announced and the row shows "Invited".
+  - The × is 64 px, not the board's 44 px: the portal's rule is 64 px touch targets, and the design check fails anything smaller.
+- **Server:**
+  - Only Magana admins can invite (403 for reviewers and support).
+  - A third Magana admin is refused, by invitation or by a role change: "There are already 2 Magana admins…". Invitations that haven't expired count toward the 2.
+  - An email that's already a member or already invited gets its own error, and no second invitation goes out.
+  - The log reads "Invited <email> as <role>".
+- **"Owner" is now shown as "Magana admin"** everywhere, so it isn't confused with a school admin. The stored role is unchanged.
+- **Tests:** backend 4 new (non-admin can't invite, third admin blocked, duplicate rejected, log entry); the portal end-to-end test checks the four ways to close, focus, the role descriptions, inline errors and axe with the modal open.
+
+---
+
 ## 2026-10-26 · Authenticator QR, the activity log, and the sign-in code email (UNREVIEWED)
 
 - **Authenticator setup** (board "Authenticator setup (QR)"):

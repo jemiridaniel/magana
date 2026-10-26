@@ -136,6 +136,51 @@ def test_owners_invite_change_and_remove_and_one_owner_always_stays(fresh):
     assert {"team_member_invited", "team_authenticator_set_up", "team_role_changed", "team_member_removed"} <= set(log)
 
 
+def test_only_magana_admins_can_invite_and_the_server_checks(fresh):
+    make_team("rev@magana.test", "reviewer")
+    make_team("sup@magana.test", "support")
+    body = {"email": "new@magana.test", "name": "New Person", "role": "support"}
+    for email in ("rev@magana.test", "sup@magana.test"):
+        r = sign_in(fresh, email).post("/portal/team/members", json=body)
+        assert (r.status_code, r.json()["detail"]["code"]) == (403, "team_role_needed")
+    assert TestClient(app).post("/portal/team/members", json=body).status_code == 401
+    assert outbox(fresh, "new@magana.test") == []
+
+
+def test_a_third_magana_admin_is_blocked(fresh):
+    owner = sign_in(fresh, TEAM)
+    r = owner.post("/portal/team/members", json={"email": "two@magana.test", "name": "Second Admin", "role": "owner"})
+    assert r.status_code == 201  # an invitation counts toward the 2
+    r = owner.post("/portal/team/members", json={"email": "three@magana.test", "name": "Third Admin", "role": "owner"})
+    assert (r.status_code, r.json()["detail"]["code"]) == (409, "team_admins_max")
+    assert outbox(fresh, "three@magana.test") == []
+    rev = owner.post("/portal/team/members", json={"email": "rev3@magana.test", "name": "A Reviewer", "role": "reviewer"}).json()["id"]
+    r = owner.patch(f"/portal/team/members/{rev}", json={"role": "owner"})  # nor by changing a role
+    assert (r.status_code, r.json()["detail"]["code"]) == (409, "team_admins_max")
+    assert team.ROLE_LABEL["owner"] == "Magana admin"
+    assert [m["role_label"] for m in owner.get("/portal/team/members").json() if m["role"] == "owner"] == ["Magana admin"] * 2
+
+
+def test_inviting_a_member_or_an_invited_email_again_is_rejected(fresh):
+    owner = sign_in(fresh, TEAM)
+    body = {"email": "amos@magana.test", "name": "Dr. Oluba Amos", "role": "reviewer"}
+    assert owner.post("/portal/team/members", json=body).status_code == 201
+    r = owner.post("/portal/team/members", json={**body, "email": " AMOS@magana.test "})
+    assert (r.status_code, r.json()["detail"]["code"]) == (409, "team_already_invited")
+    r = owner.post("/portal/team/members", json={**body, "email": TEAM})
+    assert (r.status_code, r.json()["detail"]["code"]) == (409, "team_already_member")
+    assert len(outbox(fresh, "amos@magana.test")) == 1
+    assert [m["email"] for m in owner.get("/portal/team/members").json()].count("amos@magana.test") == 1
+
+
+def test_an_invitation_goes_in_the_activity_log(fresh):
+    owner = sign_in(fresh, TEAM)
+    owner.post("/portal/team/members", json={"email": "sup2@magana.test", "name": "Support Person", "role": "support"})
+    [entry] = [a for a in owner.get("/portal/admin/activity").json()["items"] if a["action"] == "team_member_invited"]
+    assert entry["about"] == "Invited sup2@magana.test as Support (view only)"
+    assert entry["who_email"] == TEAM
+
+
 # ---------- one role per email
 
 def test_a_team_email_cant_be_a_teacher_and_a_teacher_cant_join_the_team(fresh):

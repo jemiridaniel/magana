@@ -50,8 +50,10 @@ def add_member(body: MemberIn, who: Who = Depends(owner)) -> dict:
     with db() as con:
         if team.is_staff_email(con, body.email):
             fail(409, "email_is_teacher")  # one role per email
-        if team.member_by_email(con, body.email):
-            fail(409, "email_taken")
+        if m := team.member_by_email(con, body.email):
+            fail(409, "team_already_member" if m["status"] == "active" else "team_already_invited")
+        if body.role == "owner" and team.admins(con) >= team.MAX_ADMINS:
+            fail(409, "team_admins_max")
         mid = team.create(con, body.email, body.name, body.role, "invited", who.member["id"])
         team_audit(con, None, who, "team_member_invited", mid, role=body.role, email=body.email)
         m = team.member(con, mid)
@@ -80,6 +82,8 @@ def change_role(member_id: str, body: RoleIn, who: Who = Depends(owner)) -> dict
     with db() as con:
         m = _member_or_404(con, member_id)
         _keeps_an_owner(con, m, body.role)
+        if body.role == "owner" and m["role"] != "owner" and team.admins(con) >= team.MAX_ADMINS:
+            fail(409, "team_admins_max")
         con.execute("UPDATE team_members SET role = ? WHERE id = ?", (body.role, member_id))
         team_audit(con, None, who, "team_role_changed", member_id, email=m["email"], role=body.role, was=m["role"])
     return {"code": "team_role_changed"}

@@ -677,7 +677,7 @@ def _about(r: dict, people: dict) -> str:
     if r["action"] in ("team_signed_in", "team_backup_code_used"):
         return "Email code + " + ("backup code" if r["action"] == "team_backup_code_used" else "authenticator")
     if r["action"] == "team_member_invited":
-        return f"{target.get('name') or d.get('email', '')} as {tm.ROLE_LABEL.get(d.get('role', ''), '')}"
+        return f"Invited {d.get('email') or target.get('email', '')} as {tm.ROLE_LABEL.get(d.get('role', ''), '')}"
     if r["action"] == "team_role_changed":
         return f"{target.get('name') or d.get('email', '')} → {tm.ROLE_LABEL.get(d.get('role', ''), '')}"
     if r["action"] == "team_authenticator_reset":

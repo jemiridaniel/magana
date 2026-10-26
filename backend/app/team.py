@@ -19,10 +19,12 @@ from . import accounts as A
 from . import codes, totp
 
 ROLES = ("owner", "reviewer", "support")
-ROLE_LABEL = {"owner": "Owner", "reviewer": "School reviewer", "support": "Support (view only)"}
-ROLE_CAN = {"owner": "All, including team members",
-            "reviewer": "Approve or reject schools, view proof documents, see the activity log",
-            "support": "See schools and teachers, resend emails"}
+# "owner" is shown as "Magana admin", so it isn't confused with a school admin.
+ROLE_LABEL = {"owner": "Magana admin", "reviewer": "School reviewer", "support": "Support (view only)"}
+ROLE_CAN = {"owner": "Everything, including adding and removing team members. Keep to 2 people.",
+            "reviewer": "Approve or reject schools, view proof documents, see the activity log.",
+            "support": "See schools and teachers, resend emails. Can’t approve or change anything."}
+MAX_ADMINS = 2
 IDLE_MINUTES = 15
 BACKUP_CODES = 8
 
@@ -51,6 +53,12 @@ def can_sign_in(m: dict | None) -> bool:
     if m is None or m["status"] == "removed":
         return False
     return m["status"] == "active" or A.parse(m["invite_expires"]) > A.now()
+
+
+def admins(con) -> int:
+    """Magana admins, counting invitations that haven't expired (MAX_ADMINS)."""
+    return con.execute("SELECT COUNT(*) FROM team_members WHERE role = 'owner' AND (status = 'active'"
+                       " OR (status = 'invited' AND invite_expires > ?))", (A.iso(A.now()),)).fetchone()[0]
 
 
 def active_owners(con) -> int:

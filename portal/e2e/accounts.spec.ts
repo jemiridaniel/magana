@@ -279,11 +279,45 @@ test("Magana team (owner): invite a reviewer, their first sign-in sets up the au
   await expect(page.getByText("No access to learners’ names, progress or consent.")).toBeVisible();
   await designChecks(page);
   const email = uniqueEmail("reviewer").replace("@gmail.com", "@magana.test");
-  await page.getByLabel("Full name").fill("Oluremi Balogun");
-  await page.getByLabel("Email", { exact: true }).fill(email);
-  await page.getByRole("radio", { name: /School reviewer/ }).check();
-  await page.getByRole("button", { name: "Send invite" }).click();
-  await expect(page.getByRole("status").filter({ hasText: `Invitation sent to ${email}` })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "Add a team member" })).toHaveCount(0);  // no inline form
+  const add = page.getByRole("button", { name: "+ Add team member" });
+  await expect(add).toHaveAttribute("aria-haspopup", "dialog");
+  const modal = page.getByRole("dialog", { name: "Add a team member" });
+  // Escape, ×, Cancel and the backdrop each close it, and focus goes back to the button.
+  for (const close of [() => page.keyboard.press("Escape"), () => modal.getByRole("button", { name: "Close" }).click(),
+                       () => modal.getByRole("button", { name: "Cancel" }).click(), () => page.mouse.click(5, 5)]) {
+    await add.click();
+    await expect(modal).toBeVisible();
+    await expect(modal.getByLabel("Full name")).toBeFocused();
+    await close();
+    await expect(modal).toBeHidden();
+    await expect(add).toBeFocused();
+  }
+  await add.click();
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).overflow)).toBe("hidden");
+  const roleSelect = modal.getByLabel("Role");
+  await expect(roleSelect).toHaveValue("reviewer");
+  await expect(modal.getByText("Approve or reject schools, view proof documents, see the activity log.")).toBeVisible();
+  await roleSelect.selectOption("owner");
+  await expect(modal.getByText("Everything, including adding and removing team members. Keep to 2 people.")).toBeVisible();
+  await roleSelect.selectOption("reviewer");
+  await expect(modal.getByText("They get an email invitation, valid for 7 days.")).toBeVisible();
+  for (let i = 0; i < 8; i++) await page.keyboard.press("Tab");  // focus stays inside
+  expect(await modal.evaluate((d) => d.contains(document.activeElement))).toBe(true);
+  await modal.getByLabel("Full name").fill("Oluremi Balogun");
+  await modal.getByLabel("Email", { exact: true }).fill("not-an-email");
+  await modal.getByRole("button", { name: "Send invite" }).click();
+  await expect(modal.getByLabel("Email", { exact: true })).toHaveAccessibleDescription(/like name@example.com/);
+  await expect(modal.getByLabel("Email", { exact: true })).toBeFocused();
+  await designChecks(page);
+  await modal.getByLabel("Email", { exact: true }).fill(owner);  // already a member
+  await modal.getByRole("button", { name: "Send invite" }).click();
+  await expect(modal.getByLabel("Email", { exact: true })).toHaveAccessibleDescription("This email is already on the Magana team.");
+  await modal.getByLabel("Email", { exact: true }).fill(email);
+  await modal.getByRole("button", { name: "Send invite" }).click();
+  await expect(modal).toBeHidden();
+  await expect(add).toBeFocused();
+  await expect(page.getByRole("status").filter({ hasText: `Invite sent to ${email}` })).toBeVisible();
   const row = page.getByRole("row").filter({ hasText: email });
   await expect(row).toContainText("Invited");
 

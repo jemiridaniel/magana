@@ -63,7 +63,7 @@ export default function Sidebar() {
               ) : item(l))}</ul>
             {me.role === "owner" && (
               <>
-                <p className="nav-section" id="nav-owner">Owner only</p>
+                <p className="nav-section" id="nav-owner">Magana admin only</p>
                 <ul className="nav-list" aria-labelledby="nav-owner">{item({ href: "/admin/team/", label: "Magana team" })}</ul>
               </>
             )}
