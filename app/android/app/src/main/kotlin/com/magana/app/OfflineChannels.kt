@@ -18,8 +18,8 @@ import javax.crypto.spec.GCMParameterSpec
 
 /**
  * Offline basic reading (board 5e; lib/offline/): nothing here leaves the phone.
- * - "magana/offline": an upright copy of a photo for on-device text recognition, and crops of
- *   it so each number can be read a second time. Files live in the app's private cache and the
+ * - "magana/offline": an upright copy of a photo for on-device text recognition, crops of it so
+ *   each number can be read a second time, and a flattened copy for faint print. Files live in the app's private cache and the
  *   app deletes each one as soon as it is read.
  * - "magana/vault": AES-GCM with a key that never leaves the Android Keystore, for photos
  *   waiting for a full reading when the phone is back online (lib/offline/photo_queue.dart).
@@ -44,6 +44,7 @@ object OfflineChannels {
                             call.argument<Double>("scale")!!,
                         )
                     )
+                    "flatten" -> result.success(flatten(context, call.argument<String>("path")!!))
                     "delete" -> result.success(File(call.argument<String>("path")!!).delete())
                     else -> result.notImplemented()
                 }
@@ -111,6 +112,89 @@ object OfflineChannels {
         val out = cacheFile(context, ".png")
         out.outputStream().use { framed.compress(Bitmap.CompressFormat.PNG, 100, it) }
         return out.path
+    }
+
+    /**
+     * Thermal or faint print (as the server's reader.flatten_contrast): each pixel divided by the
+     * blurred paper around it, so uneven light goes and the paper turns even white, then stretched
+     * to full contrast (1% clipped at each end). Cheap on a phone: the blur is three small box blurs
+     * on an image an eighth of the size (about the server's Gaussian of 25 px), sampled back
+     * bilinearly. Returns a grey private JPEG, like [upright].
+     */
+    private fun flatten(context: Context, path: String): Map<String, Any> {
+        val src = BitmapFactory.decodeFile(path) ?: throw IllegalArgumentException("not an image")
+        val w = src.width
+        val h = src.height
+        val px = IntArray(w * h)
+        src.getPixels(px, 0, w, 0, 0, w, h)
+        val gray = FloatArray(w * h)
+        for (i in px.indices) {
+            val c = px[i]
+            gray[i] = 0.299f * ((c shr 16) and 255) + 0.587f * ((c shr 8) and 255) + 0.114f * (c and 255)
+        }
+        val s = 8
+        val sw = (w + s - 1) / s
+        val sh = (h + s - 1) / s
+        var small = FloatArray(sw * sh)
+        val count = IntArray(sw * sh)
+        for (y in 0 until h) for (x in 0 until w) {
+            val i = (y / s) * sw + x / s
+            small[i] += gray[y * w + x]
+            count[i]++
+        }
+        for (i in small.indices) small[i] /= count[i]
+        repeat(3) { small = boxBlur(small, sw, sh, 3) }
+        val v = FloatArray(w * h)
+        val hist = IntArray(256)
+        for (y in 0 until h) {
+            val fy = ((y + 0.5f) / s - 0.5f).coerceIn(0f, (sh - 1).toFloat())
+            val y0 = fy.toInt()
+            val y1 = minOf(y0 + 1, sh - 1)
+            val ty = fy - y0
+            for (x in 0 until w) {
+                val fx = ((x + 0.5f) / s - 0.5f).coerceIn(0f, (sw - 1).toFloat())
+                val x0 = fx.toInt()
+                val x1 = minOf(x0 + 1, sw - 1)
+                val tx = fx - x0
+                val bg = small[y0 * sw + x0] * (1 - ty) * (1 - tx) + small[y0 * sw + x1] * (1 - ty) * tx +
+                    small[y1 * sw + x0] * ty * (1 - tx) + small[y1 * sw + x1] * ty * tx
+                val f = (gray[y * w + x] / (bg + 1) * 235f).coerceIn(0f, 255f)
+                v[y * w + x] = f
+                hist[f.toInt().coerceIn(0, 255)]++
+            }
+        }
+        var lo = 0
+        var hi = 255
+        var acc = 0
+        for (i in 0..255) { acc += hist[i]; if (acc >= px.size / 100) { lo = i; break } }
+        acc = 0
+        for (i in 255 downTo 0) { acc += hist[i]; if (acc >= px.size / 100) { hi = i; break } }
+        val span = maxOf(1, hi - lo).toFloat()
+        for (i in px.indices) {
+            val g = ((v[i] - lo) * 255f / span).toInt().coerceIn(0, 255)
+            px[i] = (0xFF shl 24) or (g shl 16) or (g shl 8) or g
+        }
+        val out = cacheFile(context, ".jpg")
+        out.outputStream().use { Bitmap.createBitmap(px, w, h, Bitmap.Config.ARGB_8888).compress(Bitmap.CompressFormat.JPEG, 92, it) }
+        return mapOf("path" to out.path, "width" to w, "height" to h)
+    }
+
+    /** A box blur of radius [r], across then down (edges repeat). */
+    private fun boxBlur(a: FloatArray, w: Int, h: Int, r: Int): FloatArray {
+        val k = 2 * r + 1
+        val across = FloatArray(a.size)
+        for (y in 0 until h) for (x in 0 until w) {
+            var sum = 0f
+            for (d in -r..r) sum += a[y * w + (x + d).coerceIn(0, w - 1)]
+            across[y * w + x] = sum / k
+        }
+        val down = FloatArray(a.size)
+        for (y in 0 until h) for (x in 0 until w) {
+            var sum = 0f
+            for (d in -r..r) sum += across[(y + d).coerceIn(0, h - 1) * w + x]
+            down[y * w + x] = sum / k
+        }
+        return down
     }
 
     private fun key(): SecretKey {

@@ -5,8 +5,8 @@ import UIKit
 
 /// The iPhone side of the channels Android has in OfflineChannels.kt and MainActivity.kt.
 /// Nothing here leaves the phone.
-/// - "magana/offline": an upright copy of a photo for on-device text recognition (ML Kit), and
-///   crops of it so each number is read a second time. Files live in the app's private caches
+/// - "magana/offline": an upright copy of a photo for on-device text recognition (ML Kit),
+///   crops of it so each number is read a second time, and a flattened copy for faint print. Files live in the app's private caches
 ///   folder and the app deletes each one as soon as it is read.
 /// - "magana/vault": AES-GCM with a 256-bit key kept in the Keychain (this device only), for
 ///   photos waiting for a full reading (lib/offline/photo_queue.dart). Same format as Android:
@@ -33,6 +33,9 @@ enum MaganaChannels {
                 let width = a["width"] as? Int, let height = a["height"] as? Int, let scale = a["scale"] as? Double
           else { throw ChannelError.badArguments }
           result(try crop(path: path, left: left, top: top, width: width, height: height, scale: scale))
+        case "flatten":
+          guard let path = a["path"] as? String else { throw ChannelError.badArguments }
+          result(try flatten(path: path))
         case "delete":
           guard let path = a["path"] as? String else { throw ChannelError.badArguments }
           result((try? FileManager.default.removeItem(atPath: path)) != nil)
@@ -132,6 +135,83 @@ enum MaganaChannels {
     let out = try cacheFile("png")
     try png.write(to: out, options: .completeFileProtection)
     return out.path
+  }
+
+  /// Thermal or faint print (as the server's reader.flatten_contrast and OfflineChannels.kt):
+  /// each pixel divided by the blurred paper around it, then stretched to full contrast (1%
+  /// clipped at each end). The blur is three small box blurs on an image an eighth of the size,
+  /// sampled back bilinearly. Returns a grey private JPEG, like upright().
+  static func flatten(path: String) throws -> [String: Any] {
+    guard let cg = UIImage(contentsOfFile: path)?.cgImage else { throw ChannelError.notAnImage }
+    let w = cg.width, h = cg.height
+    var bytes = [UInt8](repeating: 0, count: w * h)
+    guard let ctx = CGContext(data: &bytes, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w,
+                              space: CGColorSpaceCreateDeviceGray(), bitmapInfo: CGImageAlphaInfo.none.rawValue)
+    else { throw ChannelError.notAnImage }
+    ctx.draw(cg, in: CGRect(x: 0, y: 0, width: w, height: h))
+    let s = 8, sw = (w + s - 1) / s, sh = (h + s - 1) / s
+    var small = [Float](repeating: 0, count: sw * sh)
+    var count = [Float](repeating: 0, count: sw * sh)
+    for y in 0..<h {
+      for x in 0..<w {
+        let i = (y / s) * sw + x / s
+        small[i] += Float(bytes[y * w + x])
+        count[i] += 1
+      }
+    }
+    for i in 0..<small.count { small[i] /= count[i] }
+    for _ in 0..<3 { small = boxBlur(small, sw, sh, 3) }
+    var v = [Float](repeating: 0, count: w * h)
+    var hist = [Int](repeating: 0, count: 256)
+    for y in 0..<h {
+      let fy = min(max((Float(y) + 0.5) / Float(s) - 0.5, 0), Float(sh - 1))
+      let y0 = Int(fy), y1 = min(y0 + 1, sh - 1), ty = fy - Float(y0)
+      for x in 0..<w {
+        let fx = min(max((Float(x) + 0.5) / Float(s) - 0.5, 0), Float(sw - 1))
+        let x0 = Int(fx), x1 = min(x0 + 1, sw - 1), tx = fx - Float(x0)
+        let bg = small[y0 * sw + x0] * (1 - ty) * (1 - tx) + small[y0 * sw + x1] * (1 - ty) * tx
+          + small[y1 * sw + x0] * ty * (1 - tx) + small[y1 * sw + x1] * ty * tx
+        let f = min(max(Float(bytes[y * w + x]) / (bg + 1) * 235, 0), 255)
+        v[y * w + x] = f
+        hist[min(255, Int(f))] += 1
+      }
+    }
+    let clip = (w * h) / 100
+    var lo = 0, hi = 255, acc = 0
+    for i in 0...255 { acc += hist[i]; if acc >= clip { lo = i; break } }
+    acc = 0
+    for i in stride(from: 255, through: 0, by: -1) { acc += hist[i]; if acc >= clip { hi = i; break } }
+    let span = Float(max(1, hi - lo))
+    for i in 0..<(w * h) { bytes[i] = UInt8(min(max((v[i] - Float(lo)) * 255 / span, 0), 255)) }
+    guard let outCtx = CGContext(data: &bytes, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w,
+                                 space: CGColorSpaceCreateDeviceGray(), bitmapInfo: CGImageAlphaInfo.none.rawValue),
+          let flat = outCtx.makeImage(), let jpeg = UIImage(cgImage: flat).jpegData(compressionQuality: 0.92)
+    else { throw ChannelError.notAnImage }
+    let out = try cacheFile("jpg")
+    try jpeg.write(to: out, options: .completeFileProtection)
+    return ["path": out.path, "width": w, "height": h]
+  }
+
+  /// A box blur of radius r, across then down (edges repeat).
+  static func boxBlur(_ a: [Float], _ w: Int, _ h: Int, _ r: Int) -> [Float] {
+    let k = Float(2 * r + 1)
+    var across = [Float](repeating: 0, count: a.count)
+    for y in 0..<h {
+      for x in 0..<w {
+        var sum: Float = 0
+        for d in -r...r { sum += a[y * w + min(max(x + d, 0), w - 1)] }
+        across[y * w + x] = sum / k
+      }
+    }
+    var down = [Float](repeating: 0, count: a.count)
+    for y in 0..<h {
+      for x in 0..<w {
+        var sum: Float = 0
+        for d in -r...r { sum += across[min(max(y + d, 0), h - 1) * w + x] }
+        down[y * w + x] = sum / k
+      }
+    }
+    return down
   }
 
   /// The queue's key: made once, kept in the Keychain for this device only (never backed up).

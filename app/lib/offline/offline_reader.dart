@@ -57,6 +57,10 @@ abstract class OfflinePhoto {
     double scale,
   );
 
+  /// A flattened copy for faint print (the paper evened out, then full contrast), or null if
+  /// this phone can't make one. Its reading replaces this one only if it finds more words.
+  Future<OfflinePhoto?> flattened();
+
   /// Deletes every file made for this photo.
   Future<void> close();
 }
@@ -149,6 +153,18 @@ class _MlKitPhoto implements OfflinePhoto {
   }
 
   @override
+  Future<OfflinePhoto?> flattened() async {
+    final flat = await MlKitRecognizer._channel
+        .invokeMapMethod<String, Object?>('flatten', {'path': path});
+    if (flat == null) return null;
+    return _MlKitPhoto(
+      flat['path']! as String,
+      flat['width']! as int,
+      flat['height']! as int,
+    );
+  }
+
+  @override
   Future<void> close() async {
     await _recognizer.close();
     for (final f in [path, ..._files]) {
@@ -184,17 +200,62 @@ Future<ReadResult?> readOnPhone(
   required String mode,
   PageRecognizer? recognizer,
 }) async {
-  final photo = await (recognizer ?? pageRecognizer).open(bytes);
-  if (photo == null) return null;
+  final opened = await (recognizer ?? pageRecognizer).open(bytes);
+  if (opened == null) return null;
+  var photo = opened;
   try {
-    return ReadResult.fromJson(await _reading(photo, mode));
+    var seen = await photo.read();
+    // Thermal or faint print (as the server): a reading that is nearly empty or unsure is
+    // tried again on a flattened copy, kept only if it finds more words. Every later step,
+    // each number's second reading included, then uses that copy.
+    var enhanced = false;
+    if (offlineFlatten && readsFaint(seen)) {
+      final flat = await photo.flattened();
+      if (flat != null) {
+        final again = await flat.read();
+        if (_wordCount(again) > _wordCount(seen)) {
+          await photo.close();
+          (photo, seen, enhanced) = (flat, again, true);
+        } else {
+          await flat.close();
+        }
+      }
+    }
+    return ReadResult.fromJson(
+      await _reading(photo, mode, seen, enhanced: enhanced),
+    );
   } finally {
     await photo.close();
   }
 }
 
-Future<Map<String, dynamic>> _reading(OfflinePhoto photo, String mode) async {
-  final seen = (await photo.read())..sort((a, b) => a.top.compareTo(b.top));
+/// Faint-print retry on the phone: on unless a measurement turns it off.
+bool offlineFlatten = true;
+
+int _wordCount(List<SeenLine> lines) =>
+    [for (final l in lines) ...l.words]
+        .where((w) => w.text.trim().length >= 2)
+        .length;
+
+/// Nearly empty (under 5 words) or unsure (mean confidence under 0.75, when the phone gives
+/// confidence: ML Kit on iOS doesn't), as the server's reader.reads_faint.
+bool readsFaint(List<SeenLine> lines) {
+  final words = [for (final l in lines) ...l.words]
+      .where((w) => w.text.trim().length >= 2)
+      .toList();
+  if (words.length < 5) return true;
+  final confs = [for (final w in words) ?w.confidence];
+  if (confs.isEmpty) return false;
+  return confs.reduce((a, b) => a + b) / confs.length < 0.75;
+}
+
+Future<Map<String, dynamic>> _reading(
+  OfflinePhoto photo,
+  String mode,
+  List<SeenLine> read, {
+  bool enhanced = false,
+}) async {
+  final seen = [...read]..sort((a, b) => a.top.compareTo(b.top));
   final lines = <Map<String, dynamic>>[];
   final warnings = <Map<String, dynamic>>[];
   // A Hausa, Yorùbá or Igbo page (as the server finds it): one warning for the page, and
@@ -254,6 +315,7 @@ Future<Map<String, dynamic>> _reading(OfflinePhoto photo, String mode) async {
     'columns': 1,
     'tips': [
       if (!sure && seen.isNotEmpty) 'offline_no_confidence',
+      if (enhanced) 'faint_print',
       ..._cutOff(photo, seen),
       if (language != null) 'letters_$language',
     ],

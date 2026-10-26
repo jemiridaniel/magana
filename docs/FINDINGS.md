@@ -13,6 +13,48 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-27 · The two real iPhone photos, before and after; faint print on the phone too (UNREVIEWED)
+
+- **The photos** (IMG_2041 and IMG_2042, the tester's own):
+  - Converted from HEIC to JPG with the orientation applied and every EXIF tag removed (12 before, 0 after).
+  - Kept only in `~/magana-private-pages/testset/work/`, outside the repository. Never committed or uploaded.
+  - Read locally only: Tesseract on the Mac, and ML Kit on the local emulator. The emulator copies were deleted after the run.
+  - Below are counts only, because one photo carries the tester's name.
+- **The size the app really sends:** the camera uses `ResolutionPreset.high`, so photos are about **720 px wide**, not the phone's full 4284 × 5712. The gallery path sends up to 2400. So each photo was read at 720, 1080 and 2400 wide.
+- **Server, before (e47a33f) and after (ffc379e)**, in school mode:
+
+  | Photo, width | Before: words / lines / warnings | After: words / lines / warnings | Tips after |
+  |---|---|---|---|
+  | IMG_2041 @720 | 25 / 6 / 10 | 25 / 6 / 7 | mixed_page |
+  | IMG_2041 @1080 | 26 / 5 / 8 | 26 / 5 / 6 | mixed_page |
+  | IMG_2041 @2400 | 28 / 6 / 10 | 28 / 6 / 4 | mixed_page |
+  | **IMG_2042 @720 (what the app sent)** | **0 / 0 / 0** | **22 / 9 / 25** | faint_print, mixed_page |
+  | IMG_2042 @1080 | 11 / 6 / 11 | 11 / 6 / 8 | mixed_page |
+  | IMG_2042 @2400 | 34 / 14 / 39 | 34 / 14 / 32 | edge_cut_left, mixed_page |
+
+  - **IMG_2042 at the app's size read nothing before and 22 words after** (the faint-print retry). That is the failure as the tester saw it.
+  - IMG_2041 was read at every size, before and after. Its failure was the camera never firing (fixed in ffc379e).
+  - Only false warnings went down (line ends and parts of lines). Every number warning stayed: 6 number_mismatch, 1 unreadable_number and 1–2 low_confidence_number on IMG_2042.
+  - IMG_2042 reads worse at 1080 (11 words) than at 720 (22) or 2400 (34). A 0.85 trigger instead of 0.75 changed nothing, and normal pages still never trigger (0 of 40), so 0.75 stays.
+  - Both photos are classed "mixed_page" (some lines handwritten). That may be wrong for printed items; it needs a look with the tester.
+- **Offline on the phone** (ML Kit, emulator API 36): before = without the faint retry, after = with it.
+
+  | Photo, width | Before: words / lines / warnings | After: words / lines / warnings | Time before → after |
+  |---|---|---|---|
+  | IMG_2041 @720 | 24 / 5 / 2 | 24 / 5 / 2 | 138 → 131 ms |
+  | IMG_2041 @2400 | 24 / 5 / 2 | 24 / 5 / 2 | 958 → 340 ms |
+  | IMG_2042 @720 | 28 / 14 / 11 | 28 / 14 / 11 (retry tried, not kept) | 772 → 681 ms |
+  | IMG_2042 @2400 | 28 / 16 / 13 | 29 / 15 / 13 (flattened copy kept, "faint_print") | 641 → 1,356 ms |
+
+  - ML Kit reads both photos well even at 720 wide, unlike Tesseract.
+  - The retry costs about 0.7 s on a 2400 px photo. It runs only when the first reading is faint, and it is kept only if it finds more words. On IMG_2042 at 2400, two number mismatches became low-confidence numbers; both are still "unclear number".
+  - The first run times include warm-up, so they are rough.
+- **The faint-print retry offline:** it uses the same flattening as the server, with the blur done on an image 1/8 the size: `OfflineChannels.kt` and `MaganaChannels.swift` ("flatten"), `offline_reader.dart` (`readsFaint`, `offlineFlatten`).
+  - On the slip fixture the small blur matches the server's: 0 words plain, 18 with either method (Tesseract proxy).
+  - Tests: `app/test/offline_faint_test.dart` (5). The Swift version is compiled but not yet run on an iPhone.
+- **Open question for the team:** the camera's `high` preset sends 720 px photos. The slip read 34 words at 2400 against 22 at 720. Sending larger photos (the "veryHigh" or "max" preset, scaled to 2400 on the phone) would read more, but each page would cost more mobile data than the 37–98 KB measured in the audit. Not changed: the team should decide.
+- **Measuring again:** `app/tool/measure_offline.dart` prints counts only and deletes the photos it read.
+
 ## 2026-10-27 · Small cards and torn, faint slips: why the iPhone failed, and the fixes (UNREVIEWED)
 
 - **What happened:** on a real iPhone, Magana failed on two easy items:

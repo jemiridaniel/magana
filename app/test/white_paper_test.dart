@@ -103,8 +103,16 @@ const hausaJson = {
 // ---------- offline fakes
 
 class FakePhoto implements OfflinePhoto {
-  FakePhoto(this.lines, {this.crop});
+  FakePhoto(this.lines, {this.crop, this.flat});
   final List<SeenLine> lines;
+  final FakePhoto? flat; // what the flattened copy reads (faint print)
+  int flattenedCalls = 0;
+  @override
+  Future<OfflinePhoto?> flattened() async {
+    flattenedCalls++;
+    return flat;
+  }
+
   final List<SeenLine>? Function(int left, int top, int width, int height)?
   crop;
   bool closed = false;
