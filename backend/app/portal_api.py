@@ -69,6 +69,7 @@ class Who:
     school: dict | None
     email: str
     member: dict | None = None  # a Magana team member (team.py)
+    origin: dict | None = None  # the session's browser and rough place, for the activity log
 
     @property
     def role(self) -> str | None:
@@ -105,7 +106,8 @@ def _who(request: Request) -> Who:
             if m is None or m["status"] != "active":
                 con.execute("DELETE FROM sessions WHERE token_lookup = ?", (s["token_lookup"],))
                 fail(401, "not_signed_in")
-            return Who("team", None, None, m["email"], m)
+            origin = {k: s[k] for k in ("browser", "place") if s[k]}
+            return Who("team", None, None, m["email"], m, origin or None)
         staff = A.row(con.execute("SELECT * FROM staff WHERE id = ?", (s["who"],)).fetchone())
         if staff is None or staff["status"] != "active":
             con.execute("DELETE FROM sessions WHERE token_lookup = ?", (s["token_lookup"],))
@@ -145,6 +147,13 @@ def reviewer(who: Who = Depends(team)) -> Who:
     if who.role not in ("owner", "reviewer"):
         fail(403, "team_role_needed")
     return who
+
+
+def team_audit(con, school_id: str | None, who: Who, action: str, target: str | None = None, **detail) -> None:
+    """A Magana team action in the activity log, with where the session signed in from."""
+    if who.origin:
+        detail["from"] = who.origin
+    A.audit(con, school_id, who.id, action, target, **detail)
 
 
 def owner(who: Who = Depends(team)) -> Who:
@@ -272,7 +281,9 @@ def verify(body: VerifyIn, request: Request, response: Response) -> dict:
             if not m["totp_confirmed_at"]:
                 secret = totp.new_secret()
                 con.execute("UPDATE team_members SET totp_sealed = ? WHERE id = ?", (tm.seal(secret), m["id"]))
-                out = {"code": "totp_setup", "key": totp.grouped(secret), "uri": totp.uri(secret, m["email"])}
+                link = totp.uri(secret, m["email"])
+                out = {"code": "totp_setup", "key": totp.grouped(secret), "uri": link, "account": m["email"],
+                       "qr": totp.qr_data_uri(link)}
         else:
             s = con.execute("SELECT * FROM staff WHERE email = ? AND status != 'removed'", (body.email,)).fetchone()
             if s is None:
@@ -286,6 +297,7 @@ def verify(body: VerifyIn, request: Request, response: Response) -> dict:
     codes.attempts.succeeded(key)
     secure = os.environ.get("MAGANA_ENV", "production") != "development"
     response.set_cookie(COOKIE, token, httponly=True, secure=secure, samesite="lax", path="/")
+    response.headers["Cache-Control"] = "no-store"  # the setup key and QR never sit in a cache
     return out or {"code": "signed_in", "me": me(_who_from(token))}
 
 
@@ -304,7 +316,7 @@ class TotpIn(BaseModel):
 
 
 @router.post("/auth/totp")
-def verify_totp(body: TotpIn, request: Request) -> dict:
+def verify_totp(body: TotpIn, request: Request, response: Response) -> dict:
     """The authenticator step for the Magana team. First time: the code confirms the new key and
     the 8 backup codes are returned, once. After that: an authenticator code or a backup code.
     3 wrong tries lock it for 5 minutes."""
@@ -335,17 +347,20 @@ def verify_totp(body: TotpIn, request: Request) -> dict:
                 con.execute("UPDATE team_members SET totp_confirmed_at = ?, backup_codes = ? WHERE id = ?",
                             (iso(t), stored, m["id"]))
             con.execute("UPDATE team_members SET status = 'active', last_sign_in = ? WHERE id = ?", (iso(t), m["id"]))
-            con.execute("UPDATE sessions SET who = ?, created_at = ?, last_seen = ? WHERE token_lookup = ?",
-                        (f"team:{m['id']}", iso(t), iso(t), s["token_lookup"]))
+            origin = {"browser": mailer.device(request.headers.get("user-agent", "")),
+                      "place": mailer.rough_place(request.headers.get("x-magana-timezone", ""))}
+            con.execute("UPDATE sessions SET who = ?, created_at = ?, last_seen = ?, browser = ?, place = ? WHERE token_lookup = ?",
+                        (f"team:{m['id']}", iso(t), iso(t), origin["browser"], origin["place"], s["token_lookup"]))
             A.audit(con, None, f"team:{m['email']}",
                     "team_authenticator_set_up" if first else ("team_backup_code_used" if body.backup_code else "team_signed_in"),
-                    m["id"])
+                    m["id"], **{"from": {k: v for k, v in origin.items() if v}})
             if m["status"] == "invited":
                 A.audit(con, None, f"team:{m['email']}", "team_invite_accepted", m["id"])
     if not ok:
         wait = codes.attempts.failed(key)
         fail(429 if wait else 400, "code_locked" if wait else "totp_wrong", **({"retry_after": int(wait)} if wait else {}))
     codes.attempts.succeeded(key)
+    response.headers["Cache-Control"] = "no-store"  # backup codes are shown once, never cached
     return {"code": "signed_in", "me": me(_who_from(token)), **({"backup_codes": backup} if backup else {})}
 
 
@@ -441,16 +456,17 @@ def register_school(body: RegisterIn, request: Request) -> dict:
         con.execute("INSERT INTO staff(id, school_id, name, email, role, title, status, created_at, code_lookup, code_sealed)"
                     " VALUES (?,?,?,?,?,?,?,?,?,?)",
                     (aid, sid, body.name.strip(), body.email, "admin", body.role, "active", iso(t), lk, sealed))
-        A.audit(con, sid, aid, "school_registered", sid, proof=bool(proof))
     place = f"{places.lga_name(body.lga)}, {places.state_name(body.state)}"
-    _mail(body.email, mailer.registration_received(body.name.strip(), body.school.strip(), place, body.role,
-                                                   body.phone, mailer.ref(n), t))
+    first = mailer.registration_received(body.name.strip(), body.school.strip(), place, body.role, body.phone, mailer.ref(n), t)
+    emails = [{"subject": first.subject, "to": "principal", "sent": _mail(body.email, first)}]
     with db() as con:
         alerts = tm.alert_emails(con)
     for team_email in alerts:
-        _mail(team_email, mailer.new_school_request(body.school.strip(), place, body.name.strip(), body.role, body.email,
-                                                    body.phone, mailer.ref(n), t, portal_url(), bool(proof),
-                                                    body.ministry_no.strip()))
+        alert = mailer.new_school_request(body.school.strip(), place, body.name.strip(), body.role, body.email, body.phone,
+                                          mailer.ref(n), t, portal_url(), bool(proof), body.ministry_no.strip())
+        emails.append({"subject": alert.subject, "to": "Magana team", "sent": _mail(team_email, alert)})
+    with db() as con:
+        A.audit(con, sid, aid, "school_registered", sid, proof=bool(proof), emails=emails)
     return {"code": "school_registered", "school_id": sid, "reference": mailer.ref(n)}
 
 
@@ -529,10 +545,13 @@ class NotesIn(BaseModel):
 @router.put("/admin/schools/{school_id}/notes")
 def save_notes(school_id: str, body: NotesIn, who: Who = Depends(reviewer)) -> dict:
     with db() as con:
-        _pending_school(con, school_id)
+        s = _pending_school(con, school_id)
         con.execute("UPDATE schools SET call_notes = ?, checks = ? WHERE id = ?",
                     (body.call_notes.strip(), ",".join(sorted(set(body.checks))), school_id))
-        A.audit(con, school_id, who.id, "school_call_noted", school_id)
+        team_audit(con, school_id, who, "school_call_noted", school_id,
+                   changes=[{"field": "Call notes", "before": s["call_notes"] or "", "after": body.call_notes.strip()},
+                            {"field": "Checks", "before": f"{len([c for c in (s['checks'] or '').split(',') if c])} of 3 ticked",
+                             "after": f"{len(set(body.checks))} of 3 ticked"}])
     return {"code": "notes_saved"}
 
 
@@ -573,15 +592,25 @@ def decide_school(school_id: str, body: DecisionIn, who: Who = Depends(reviewer)
                     " reason = ?, proof_type = NULL WHERE id = ?",
                     (status, iso(now()), who.email, body.call_notes.strip() or s["call_notes"] or "",
                      ",".join(sorted(set(body.checks))), body.reason if status == "rejected" else None, school_id))
-        A.audit(con, school_id, who.id, f"school_{status}", school_id,
-                **({"reason": body.reason} if body.reason and status == "rejected" else {}))
-    proofs.delete(school_id)
+    had_proof = proofs.delete(school_id)
     place = f"{places.lga_name(s['lga'])}, {places.state_name(s['state'])}"
     if status == "approved":
-        sent = _mail(s["contact_email"], mailer.school_approved(s["contact_name"], s["name"], portal_url()))
+        email = mailer.school_approved(s["contact_name"], s["name"], portal_url())
     else:
-        sent = _mail(s["contact_email"], mailer.school_not_approved(s["contact_name"], s["name"], s["contact_phone"] or "",
-                                                                   place, body.reason, mailer.ref(s["ref"])))
+        email = mailer.school_not_approved(s["contact_name"], s["name"], s["contact_phone"] or "", place, body.reason,
+                                           mailer.ref(s["ref"]))
+    sent = _mail(s["contact_email"], email)
+    with db() as con:
+        changes = [{"field": "Status", "before": "Waiting", "after": "Approved" if status == "approved" else "Not approved"},
+                   {"field": "Checks", "before": "", "after": f"{len(set(body.checks))} of 3 ticked"}]
+        if body.reason and status == "rejected":
+            changes.append({"field": "Reason", "before": "", "after": mailer.REASONS[body.reason]})
+        if had_proof:
+            changes.append({"field": "Proof file", "before": "Stored", "after": "Deleted automatically"})
+        team_audit(con, school_id, who, f"school_{status}", school_id, changes=changes,
+                   call_notes=body.call_notes.strip() or s["call_notes"] or "",
+                   emails=[{"subject": email.subject, "to": "principal", "sent": sent}],
+                   **({"reason": body.reason} if body.reason and status == "rejected" else {}))
     return {"code": f"school_{status}", "emailed": sent}
 
 
@@ -594,30 +623,117 @@ def school_proof(school_id: str, who: Who = Depends(reviewer)) -> Response:
     if data is None:
         fail(404, "not_found")
     with db() as con:
-        A.audit(con, school_id, who.id, "school_proof_viewed", school_id)
+        team_audit(con, school_id, who, "school_proof_viewed", school_id, file=s["proof_type"])
     return Response(data, media_type=s["proof_type"], headers={
         "Cache-Control": "no-store", "Content-Disposition": "inline", "X-Content-Type-Options": "nosniff"})
 
 
+# What each action is called in the log (the Action tag), as the board names them.
+ACTION_LABELS = {
+    "school_registered": "School registered", "school_call_noted": "Call notes", "school_approved": "Approved school",
+    "school_rejected": "Not approved", "school_proof_viewed": "Viewed proof", "school_details_deleted": "Details deleted",
+    "school_email_resent": "Email resent", "team_viewed_teachers": "Viewed teachers", "team_signed_in": "Sign-in",
+    "team_authenticator_set_up": "Authenticator set up", "team_backup_code_used": "Backup code used",
+    "team_authenticator_reset": "Authenticator reset", "team_invite_accepted": "Joined the team",
+    "team_member_invited": "Invited member", "team_role_changed": "Role changed", "team_member_removed": "Removed member",
+    "team_invite_resent": "Invite resent", "team_invite_cancelled": "Invite cancelled", "team_owner_created": "First owner made",
+    "team_member_created": "Member made",
+}
+LOG_YEARS = 2
+
+
+def _purge_old_log(con) -> None:
+    """Activity entries are kept 2 years, then deleted."""
+    con.execute("DELETE FROM audit WHERE at < ?", (iso(now() - timedelta(days=365 * LOG_YEARS)),))
+
+
+def _log_rows(con, where: str = "", args: tuple = ()) -> list[dict]:
+    return [dict(r) for r in con.execute(
+        "SELECT a.*, s.name AS school_name, s.ref AS ref FROM audit a LEFT JOIN schools s ON s.id = a.school_id"
+        " WHERE (a.action LIKE 'school_%' OR a.action LIKE 'team_%')" + where + " ORDER BY a.id DESC", args)]
+
+
+def _people(con) -> dict[str, dict]:
+    """Who an actor or target id is: name, email and role."""
+    people = {f"team:{r['email']}": {"name": r["name"], "email": r["email"], "role": tm.ROLE_LABEL[r["role"]]}
+              for r in con.execute("SELECT * FROM team_members")}
+    people.update({r["id"]: {"name": r["name"], "email": r["email"], "role": tm.ROLE_LABEL[r["role"]]}
+                   for r in con.execute("SELECT * FROM team_members")})
+    people.update({r["id"]: {"name": r["name"], "email": r["email"], "role": "School admin" if r["role"] == "admin" else "Teacher"}
+                   for r in con.execute("SELECT id, name, email, role FROM staff")})
+    for key, name in (("server", "Magana server"), ("system", "Magana")):
+        people[key] = {"name": name, "email": "", "role": ""}
+    return people
+
+
+def _about(r: dict, people: dict) -> str:
+    d = json.loads(r["detail"] or "{}")
+    ref = f" · {mailer.ref(r['ref'])}" if r.get("ref") else ""
+    target = people.get(r["target"] or "", {})
+    if r["action"].startswith("school_") or r["action"] == "team_viewed_teachers":
+        if r["action"] == "school_proof_viewed":
+            return f"{'PDF' if d.get('file') == 'application/pdf' else 'Photo'} of proof{ref}"
+        return f"{r['school_name'] or 'A school'}{ref}"
+    if r["action"] in ("team_signed_in", "team_backup_code_used"):
+        return "Email code + " + ("backup code" if r["action"] == "team_backup_code_used" else "authenticator")
+    if r["action"] == "team_member_invited":
+        return f"{target.get('name') or d.get('email', '')} as {tm.ROLE_LABEL.get(d.get('role', ''), '')}"
+    if r["action"] == "team_role_changed":
+        return f"{target.get('name') or d.get('email', '')} → {tm.ROLE_LABEL.get(d.get('role', ''), '')}"
+    if r["action"] == "team_authenticator_reset":
+        return f"{target.get('name', '')}’s authenticator ({d.get('by', '')})"
+    return target.get("name") or d.get("email") or ""
+
+
+def _entry(r: dict, people: dict) -> dict:
+    at = parse(r["at"]).astimezone(mailer.LAGOS)
+    who = people.get(r["actor"] or "", {"name": "(deleted)", "email": "", "role": ""})
+    return {"id": r["id"], "date": f"{at.day} {at:%b %Y}", "time": f"{at:%H:%M}", "action": r["action"],
+            "label": ACTION_LABELS.get(r["action"], r["action"]), "who": who["name"], "who_email": who["email"],
+            "about": _about(r, people)}
+
+
 @router.get("/admin/activity")
-def activity(who: Who = Depends(reviewer), limit: int = 200) -> list[dict]:
-    """Who did what to which school, and when: registrations, calls, decisions, proof views."""
+def activity(who: Who = Depends(reviewer), q: str = "", action: str = "", page: int = 1, size: int = 25) -> dict:
+    """The activity log, newest first: search (name, email, school or reference), an action filter
+    and pages. Read only: there is no way to edit or delete an entry."""
+    size = size if size in (10, 25, 50, 100) else 25
     with db() as con:
-        rows = con.execute(
-            "SELECT a.*, s.name AS school_name, s.ref AS ref FROM audit a LEFT JOIN schools s ON s.id = a.school_id"
-            " WHERE a.action LIKE 'school_%' OR a.action LIKE 'team_%' ORDER BY a.id DESC LIMIT ?",
-            (min(limit, 500),)).fetchall()
-        names = {r["id"]: r["name"] for r in con.execute("SELECT id, name FROM staff")}
-        names.update({r["id"]: r["email"] for r in con.execute("SELECT id, email FROM team_members")})
-    out = []
-    for r in rows:
-        actor = r["actor"] or ""
-        target = names.get(r["target"]) if r["action"].startswith("team_") else None
-        out.append({"action": r["action"], "school": r["school_name"], "reference": mailer.ref(r["ref"]) if r["ref"] else None,
-                    "target": target,
-                    "who": actor[5:] if actor.startswith("team:") else names.get(actor, "Magana" if actor in ("system", "server") else actor),
-                    "at": mailer.lagos_time(parse(r["at"])), "detail": json.loads(r["detail"])})
-    return out
+        _purge_old_log(con)
+        people = _people(con)
+        rows = _log_rows(con, " AND a.action = ?" if action else "", (action,) if action else ())
+    entries = [_entry(r, people) for r in rows]
+    if q.strip():
+        needle = q.strip().lower()
+        entries = [e for e in entries if needle in " ".join([e["who"], e["who_email"], e["about"], e["label"]]).lower()]
+    total = len(entries)
+    pages = max(1, -(-total // size))
+    page = min(max(1, page), pages)
+    return {"items": entries[(page - 1) * size: page * size], "total": total, "page": page, "pages": pages, "size": size,
+            "actions": [{"action": k, "label": v} for k, v in ACTION_LABELS.items()]}
+
+
+@router.get("/admin/activity/{entry_id}")
+def activity_entry(entry_id: int, who: Who = Depends(reviewer)) -> dict:
+    """One entry's details: when, who and role, what it was about, where the session signed in
+    from, what changed (before and after), call notes and emails sent."""
+    with db() as con:
+        rows = _log_rows(con, " AND a.id = ?", (entry_id,))
+        people = _people(con)
+    if not rows:
+        fail(404, "not_found")
+    r = rows[0]
+    d = json.loads(r["detail"] or "{}")
+    at = parse(r["at"]).astimezone(mailer.LAGOS)
+    actor = people.get(r["actor"] or "", {"name": "(deleted)", "email": "", "role": ""})
+    changes = d.get("changes") or ([{"field": "Role", "before": tm.ROLE_LABEL.get(d["was"], d["was"]),
+                                     "after": tm.ROLE_LABEL.get(d["role"], d["role"])}] if "was" in d else [])
+    target = people.get(r["target"] or "")
+    return {**_entry(r, people), "when": f"{at:%a} {at.day} {at:%b %Y}, {at:%H:%M:%S}",
+            "who_role": actor["role"], "school": r["school_name"], "reference": mailer.ref(r["ref"]) if r["ref"] else None,
+            "target": ({"name": target["name"], "email": target["email"], "role": target["role"]} if target else None),
+            "signed_in_from": d.get("from") or None, "changes": changes, "call_notes": d.get("call_notes") or None,
+            "emails": d.get("emails") or [], "kept_for": f"{LOG_YEARS} years"}
 
 
 # ---------- staff (school admins)

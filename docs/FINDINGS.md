@@ -34,6 +34,27 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-26 · Authenticator QR, the activity log, and the sign-in code email (UNREVIEWED)
+
+- **Authenticator setup** (board "Authenticator setup (QR)"):
+  - The `otpauth://` link (issuer Magana, account name the member's email) is drawn as a QR image by `segno` (BSD) on Magana's own server: no outside QR service sees the key.
+  - The setup key is behind "Can't scan? Enter a setup key instead", and screen readers hear it in groups of four.
+  - The sign-in responses carrying the key, QR and backup codes are sent `Cache-Control: no-store`. Tests check that none of them reach a log or the activity log.
+- **Activity log** (board "Activity log + details"):
+  - Columns: When, Who (name and email), an Action tag, About.
+  - Controls: search, an action filter, page size (10, 25 or 50) and pages.
+  - "View details" opens a side panel built on the portal's dialog: focus stays inside, Escape closes it, and focus goes back to its button. It shows when, who and their role, the target, the browser and rough place the session signed in from (the device's time zone, never an IP address), what changed (before and after), call notes, and the emails sent with whether they went.
+  - **Append-only:** no endpoint edits or deletes an entry (a test checks every route). Entries are kept 2 years. A test scans the log table for sign-in codes, class codes, phone tokens, the authenticator key, backup codes and a learner's name, and finds none.
+- **Sign-in code email** (updated board):
+  - One box with the six digits together (no spaces, no separate boxes) in a 44 px monospace font, with "Tap and hold (or double-click) the code to copy it". The subject keeps the spaced code; the plain text has the code alone on its own line.
+  - Every header now has the Magana mark as a hosted PNG (magana.ng/brand/magana-mark-email.png, alt "Magana"), with the name in text beside it.
+- **Portal:**
+  - The sign-in code is six boxes. Pasting the whole code into the first box, even with its space, fills all six (a test pastes it). The phone's one-time-code autofill works too.
+  - **Table alignment fixed everywhere:** the Actions cell was styled `display: flex`, which stopped it being a table cell and broke the rows' vertical centring on Teachers, Consent records, Uploads and Magana team. "You" shows in the Actions column for the signed-in owner.
+- **Tests:** backend 484 passed (5 new log tests, updated email tests); portal end-to-end 48 passed (axe on the setup QR and key, the activity log with the panel open and closed, the code boxes).
+
+---
+
 ## 2026-10-26 · Resetting a team authenticator (a setup key was seen in a screenshot)
 
 - **Why:** an owner's authenticator setup key appeared in a screenshot. Anyone with the key can make that account's authenticator codes, so it must be replaceable at once.

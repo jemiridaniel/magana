@@ -60,8 +60,9 @@ def outbox(tmp: Path, to: str) -> list[dict]:
 
 
 def last_code(tmp: Path, to: str) -> str:
-    text = outbox(tmp, to)[-1]["text"]
-    return re.search(r"(\d{3}) (\d{3})", text).group(0).replace(" ", "")
+    """The code from the last sign-in email's subject ("642 126 is your Magana sign-in code")."""
+    subject = [m for m in outbox(tmp, to) if m["kind"] == "sign_in_code"][-1]["subject"]
+    return re.match(r"(\d{3}) (\d{3})", subject).group(0).replace(" ", "")
 
 
 def sign_in(tmp: Path, email: str) -> TestClient:

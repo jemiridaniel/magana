@@ -132,7 +132,7 @@ def test_owners_invite_change_and_remove_and_one_owner_always_stays(fresh):
     assert owner.patch(f"/portal/team/members/{amos}", json={"role": "owner"}).json()["code"] == "team_role_changed"
     assert owner.post(f"/portal/team/members/{me['id']}/remove").json()["code"] == "team_member_removed"  # two owners: fine
     assert owner.get("/portal/me").status_code == 401  # signed out at once
-    log = [a["action"] for a in c.get("/portal/admin/activity").json()]
+    log = [a["action"] for a in c.get("/portal/admin/activity").json()["items"]]
     assert {"team_member_invited", "team_authenticator_set_up", "team_role_changed", "team_member_removed"} <= set(log)
 
 
@@ -196,8 +196,8 @@ def test_reset_my_authenticator_needs_a_current_code_and_kills_the_old_key(fresh
     assert c2.post("/portal/auth/totp", json={"code": totp.code_at(TOTP_SECRET, totp.counter_now())}).json()["detail"]["code"] == "totp_wrong"
     new = step["key"].replace(" ", "")
     assert c2.post("/portal/auth/totp", json={"code": totp_code(TEAM, new)}).json()["code"] == "signed_in"
-    log = c2.get("/portal/admin/activity").json()
-    assert any(a["action"] == "team_authenticator_reset" and a["detail"]["by"] == "self" for a in log)
+    [reset] = [a for a in c2.get("/portal/admin/activity").json()["items"] if a["action"] == "team_authenticator_reset"]
+    assert "(self)" in reset["about"]
 
 
 def test_an_owner_resets_another_members_authenticator_and_the_server_command_is_the_fallback(fresh, capsys):

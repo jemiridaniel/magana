@@ -109,8 +109,8 @@ A teacher sees only their own classes; a school's admins see the whole school. T
 ## The Magana team's own accounts
 
 The people who run Magana sign in to their own pages with team accounts: Owner, School reviewer or Support (view only).
-- We keep each team member's name, email, role, when they last signed in, and every action they took (the activity log).
-- Sign-in needs an email code **and** an authenticator app code. The app's key is stored encrypted and the 8 backup codes only as keyed hashes. Team members are signed out after 15 minutes without activity.
+- We keep each team member's name, email, role, when they last signed in, and every action they took (the activity log). Each log entry also notes the browser and a rough place (from the device's time zone, never the internet address) the session signed in from. **Log entries can't be edited or deleted and are kept 2 years**, then deleted. They never contain learner data, sign-in codes, authenticator keys or backup codes.
+- Sign-in needs an email code **and** an authenticator app code. The app's key is stored encrypted and the 8 backup codes only as keyed hashes. The QR code and key are drawn on our own server, shown once, and sent with instructions not to cache them. Team members are signed out after 15 minutes without activity, and can reset their authenticator at any time.
 - **Team accounts can't see learners' names, progress or consent.** They see schools and their teachers only, and the server enforces it.
 - One role per email: a team member can't also be a teacher or school admin.
 

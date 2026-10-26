@@ -8,23 +8,14 @@ import { useCallback, useEffect, useId, useState } from "react";
 import { useMe } from "@/components/SessionGate";
 import { messageFor } from "@/lib/messages";
 import { API_URL } from "@/lib/server";
-import { portal, PortalError, type Activity, type Check, type Reason, type SchoolRequest } from "@/lib/portal";
+import { portal, PortalError, type Check, type Reason, type SchoolRequest } from "@/lib/portal";
 
-export type Tab = "pending" | "approved" | "rejected" | "activity";
+export type Tab = "pending" | "approved" | "rejected";
 const CHECKS: { id: Check; label: string }[] = [
   { id: "person_confirmed", label: "I spoke to the person and they confirmed their role" },
   { id: "school_exists", label: "The school exists (called the school or found its listing)" },
   { id: "details_correct", label: "Location and school name are correct" },
 ];
-const ACTIONS: Record<string, string> = {
-  school_registered: "registered", school_call_noted: "saved call notes for", school_approved: "approved",
-  school_rejected: "didn’t approve", school_proof_viewed: "viewed the proof of", school_details_deleted: "deleted the details of",
-  school_email_resent: "resent the email for", team_viewed_teachers: "viewed the teachers of",
-  team_signed_in: "signed in", team_authenticator_set_up: "set up their authenticator", team_backup_code_used: "used a backup code",
-  team_invite_accepted: "accepted the team invitation", team_member_invited: "invited", team_role_changed: "changed the role of",
-  team_member_removed: "removed", team_invite_resent: "resent the team invitation to", team_invite_cancelled: "cancelled the invitation of",
-  team_owner_created: "was made the first owner (on the server)",
-};
 
 function SupportTools({ s }: { s: SchoolRequest }) {
   const [teachers, setTeachers] = useState<{ name: string; email: string; role: string; status: string }[] | null>(null);
@@ -169,37 +160,26 @@ function Decided({ rows, rejected }: { rows: SchoolRequest[]; rejected: boolean 
   );
 }
 
-function ActivityLog({ rows }: { rows: Activity[] }) {
-  if (!rows.length) return <p className="empty">Nothing yet.</p>;
-  return (
-    <ol className="audit">
-      {rows.map((a, i) => (
-        <li key={i}><time>{a.at}</time> · <b>{a.who}</b> {ACTIONS[a.action] ?? a.action}{" "}
-          {a.action.startsWith("team_") ? (a.target && !["team_signed_in", "team_authenticator_set_up", "team_backup_code_used",
-            "team_invite_accepted", "team_owner_created"].includes(a.action) ? a.target : "") : (a.school ?? "a school")}
-          {a.reference ? ` (${a.reference})` : ""}{typeof a.detail.reason === "string" ? `: ${a.detail.reason}` : ""}
-          {typeof a.detail.role === "string" && a.action !== "team_owner_created" ? ` (${a.detail.role})` : ""}</li>
-      ))}
-    </ol>
-  );
+/** Only these team roles see the page (the server checks too). */
+export function TeamOnly({ roles, children }: { roles: string[]; children: React.ReactNode }) {
+  const me = useMe();
+  if (me.kind !== "team" || !roles.includes(me.role)) return <p role="alert">{messageFor("team_role_needed")}</p>;
+  return <>{children}</>;
 }
 
 const TITLES: Record<Tab, [string, string]> = {
   pending: ["Schools to approve", "Call the person on the number they gave before approving. We promise a call within 2 working days."],
   approved: ["Approved schools", "Schools the team has confirmed, and who confirmed them."],
   rejected: ["Not approved", "Schools we couldn’t confirm, and why. Their details are deleted 30 days after the decision."],
-  activity: ["Activity log", "Who did what, and when: registrations, call notes, proof views and decisions."],
 };
 
 export default function TeamAdmin({ tab }: { tab: Tab }) {
   const me = useMe();
   const [schools, setSchools] = useState<SchoolRequest[] | null>(null);
-  const [log, setLog] = useState<Activity[] | null>(null);
   const [message, setMessage] = useState("");
   const load = useCallback(() => {
     const fail = (e: unknown) => setMessage(messageFor((e as PortalError).code));
-    if (tab === "activity") portal.activity().then(setLog).catch(fail);
-    else portal.adminSchools(tab).then(setSchools).catch(fail);
+    portal.adminSchools(tab).then(setSchools).catch(fail);
   }, [tab]);
   useEffect(load, [load]);
   if (me.kind !== "team") return <p role="alert">{messageFor("not_team")}</p>;
@@ -210,8 +190,7 @@ export default function TeamAdmin({ tab }: { tab: Tab }) {
       <div className="page-head"><div><h1>{title}</h1><p>{intro}</p></div>
         {tab === "pending" && <span className="pill pill-ready">New requests are emailed to the team</span>}</div>
       <p role="status" className="status-msg">{message}</p>
-      {tab === "activity" ? (log && <ActivityLog rows={log} />)
-        : schools === null ? null
+      {schools === null ? null
         : tab === "pending" ? (schools.length === 0 ? <p className="empty">No schools waiting. New requests are emailed to the team.</p> : (
             <ul className="list-plain">{schools.map((s) => (
               <li key={s.id}><Request s={s} viewOnly={me.role === "support"} onDone={(m) => { setMessage(m); load(); }} /></li>))}</ul>))

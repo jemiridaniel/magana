@@ -7,6 +7,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState, type FormEvent } from "react";
+import CodeBoxes from "@/components/CodeBoxes";
 import { messageFor } from "@/lib/messages";
 import { portal, PortalError } from "@/lib/portal";
 
@@ -15,7 +16,7 @@ function SignIn() {
   const params = useSearchParams();
   const [email, setEmail] = useState(params.get("email") ?? "");
   const [step, setStep] = useState<"email" | "code" | "setup" | "totp" | "backup">("email");
-  const [setup, setSetup] = useState<{ key: string; uri: string } | null>(null);
+  const [setup, setSetup] = useState<{ key: string; uri: string; qr: string; account: string } | null>(null);
   const [backupCodes, setBackupCodes] = useState<string[]>([]);
   const [useBackup, setUseBackup] = useState(false);
   const [team, setTeam] = useState("");
@@ -61,7 +62,7 @@ function SignIn() {
     try {
       const r = await portal.verify(email.trim(), digits);
       if (r.code === "signed_in") { router.replace(r.me.kind === "team" ? "/admin/" : "/"); return; }
-      if (r.code === "totp_setup") setSetup({ key: r.key, uri: r.uri });
+      if (r.code === "totp_setup") setSetup({ key: r.key, uri: r.uri, qr: r.qr, account: r.account });
       setStep(r.code === "totp_setup" ? "setup" : "totp");
       setBusy(false);
     } catch (err) {
@@ -94,23 +95,39 @@ function SignIn() {
              value={team} onChange={(e) => setTeam(e.target.value.replace(/[^\d -]/g, ""))}
              aria-describedby="totp-hint" aria-invalid={error ? true : undefined} />
       <span id="totp-hint" className="hint">{useBackup ? "One of the 8 codes you saved. Each works once."
-        : "6 digits from Magana in your authenticator app. It changes every 30 seconds."}</span>
+        : "6 digits. They change every 30 seconds."}</span>
     </div>
   );
 
   if (step === "setup" && setup) {
+    const groups = setup.key.split(" ");
     return (
       <>
         <h1 ref={heading} tabIndex={-1}>Set up your authenticator</h1>
-        <p className="lead">Magana team accounts need a second step. Use an authenticator app on your phone: Google Authenticator,
-          Microsoft Authenticator, Authy or 2FAS.</p>
+        <p className="lead">Magana team accounts need a second step. Use Google Authenticator, Microsoft Authenticator, Authy or 2FAS
+          on your phone.</p>
         <ol className="setup-steps">
-          <li>In the app, add an account and choose <b>Enter a setup key</b> (or open the link below on your phone).</li>
-          <li>Account: <b>Magana</b>. Key:
-            <code className="setup-key" aria-label={`Setup key: ${setup.key.split("").join(" ")}`}>{setup.key}</code></li>
+          <li>In the app, tap <b>+</b> then <b>Scan a QR code</b>.</li>
+          <li>Point your phone at the code below.</li>
           <li>Type the 6-digit code the app shows.</li>
         </ol>
-        <p><a className="btn" href={setup.uri}>Open in my authenticator app</a></p>
+        <div className="qr-card">
+          {/* Drawn on Magana's own server from the otpauth:// link: no outside QR service. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src={setup.qr} width={180} height={180} alt="QR code for your authenticator app" className="qr" />
+          <p><b>Magana · {setup.account}</b><br />Shown once. Don’t screenshot or share it: anyone with this code can make your
+            sign-in codes.</p>
+        </div>
+        <details className="setup-key-box">
+          <summary>Can’t scan? Enter a setup key instead</summary>
+          <p className="hint">Also for screen reader users: the key is read out in groups of four.</p>
+          <p>In the app, choose <b>Enter a setup key</b>. Account: <b>Magana</b>. Key:</p>
+          <p className="setup-key">
+            <span className="visually-hidden">Setup key, in groups of four: {groups.join(", ")}.</span>
+            <span aria-hidden="true">{setup.key}</span>
+          </p>
+          <p><a className="btn" href={setup.uri}>Open in my authenticator app</a></p>
+        </details>
         <form onSubmit={verifyTotp} className="form-grid" noValidate>
           {totpField}
           <p role="alert" className="form-error">{error}</p>
@@ -159,15 +176,8 @@ function SignIn() {
         <h1 ref={heading} tabIndex={-1}>Check your email</h1>
         <p className="lead">We sent a 6-digit code to <strong>{email}</strong>. It works for 10 minutes.</p>
         <form onSubmit={verify} className="form-grid" noValidate>
-          <div className="field">
-            <label htmlFor="code">Sign-in code</label>
-            <input
-              id="code" className="input code-input" inputMode="numeric" autoComplete="one-time-code" maxLength={7}
-              value={code} onChange={(e) => setCode(e.target.value.replace(/[^\d ]/g, ""))}
-              aria-describedby="code-hint" aria-invalid={error ? true : undefined}
-            />
-            <span id="code-hint" className="hint">6 digits, from the email “Your Magana sign-in code”.</span>
-          </div>
+          <CodeBoxes label="Sign-in code" value={code} onChange={setCode} invalid={!!error} describedBy="code-hint" />
+          <span id="code-hint" className="hint">6 digits, from the email “Your Magana sign-in code”. Paste the whole code into the first box.</span>
           <p role="alert" className="form-error">{error}</p>
           <button type="submit" className="btn btn-primary btn-block" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
         </form>

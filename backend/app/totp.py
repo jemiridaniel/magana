@@ -53,6 +53,13 @@ def uri(secret: str, email: str) -> str:
     return f"otpauth://totp/Magana:{quote(email)}?secret={secret}&issuer=Magana&digits={DIGITS}&period={STEP}"
 
 
+def qr_data_uri(uri_text: str) -> str:
+    """The otpauth:// link as a QR code (SVG data URI), drawn here: no outside QR service ever
+    sees the key. Never logged or cached: it is returned once, with Cache-Control: no-store."""
+    import segno
+    return segno.make(uri_text, error="m").svg_data_uri(scale=6, border=2, dark="#14171A", light="#FFFFFF")
+
+
 def grouped(secret: str) -> str:
     """"JBSW Y3DP EHPK 3PXP": easier to type into an app."""
     return " ".join(secret[i:i + 4] for i in range(0, len(secret), 4))

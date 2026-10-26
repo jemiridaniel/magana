@@ -5,8 +5,10 @@
 // bar); Escape closes it; focus goes back to the button that opened it.
 import { useEffect, useId, useRef } from "react";
 
-export default function Dialog({ open, title, onClose, children, describedBy }: {
+export default function Dialog({ open, title, onClose, children, describedBy, className = "dialog", closeButton = false }: {
   open: boolean; title: string; onClose: () => void; children: React.ReactNode; describedBy?: string;
+  className?: string;   // "dialog drawer": a side panel
+  closeButton?: boolean;  // a × in the corner, besides Escape
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const titleId = useId();
@@ -25,7 +27,7 @@ export default function Dialog({ open, title, onClose, children, describedBy }: 
 
   return (
     <dialog
-      ref={ref} className="dialog" aria-labelledby={titleId} aria-describedby={describedBy}
+      ref={ref} className={className} aria-labelledby={titleId} aria-describedby={describedBy}
       onClose={() => {
         onClose();
         (opener.current as HTMLElement | null)?.focus?.();
@@ -42,7 +44,10 @@ export default function Dialog({ open, title, onClose, children, describedBy }: 
         else if (!e.shiftKey && document.activeElement === last) { e.preventDefault(); first.focus(); }
       }}
     >
-      <h2 id={titleId}>{title}</h2>
+      <div className="dialog-head">
+        <h2 id={titleId}>{title}</h2>
+        {closeButton && <button type="button" className="btn btn-icon" aria-label="Close" onClick={() => ref.current?.close()}>×</button>}
+      </div>
       {children}
     </dialog>
   );

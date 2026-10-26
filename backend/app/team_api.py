@@ -13,7 +13,7 @@ from pydantic import BaseModel, Field
 from . import accounts as A
 from . import mailer, places, team
 from .accounts import db, iso, now, parse
-from .portal_api import EmailIn, Who, _mail, fail, owner, portal_url
+from .portal_api import EmailIn, Who, _mail, fail, owner, portal_url, team_audit
 from .portal_api import team as any_team
 
 router = APIRouter(prefix="/portal")
@@ -53,7 +53,7 @@ def add_member(body: MemberIn, who: Who = Depends(owner)) -> dict:
         if team.member_by_email(con, body.email):
             fail(409, "email_taken")
         mid = team.create(con, body.email, body.name, body.role, "invited", who.member["id"])
-        A.audit(con, None, who.id, "team_member_invited", mid, role=body.role, email=body.email)
+        team_audit(con, None, who, "team_member_invited", mid, role=body.role, email=body.email)
         m = team.member(con, mid)
     return {"code": "team_invite_sent", "id": mid, "emailed": _invite_mail(m, who)}
 
@@ -81,7 +81,7 @@ def change_role(member_id: str, body: RoleIn, who: Who = Depends(owner)) -> dict
         m = _member_or_404(con, member_id)
         _keeps_an_owner(con, m, body.role)
         con.execute("UPDATE team_members SET role = ? WHERE id = ?", (body.role, member_id))
-        A.audit(con, None, who.id, "team_role_changed", member_id, email=m["email"], role=body.role, was=m["role"])
+        team_audit(con, None, who, "team_role_changed", member_id, email=m["email"], role=body.role, was=m["role"])
     return {"code": "team_role_changed"}
 
 
@@ -92,7 +92,7 @@ def remove_member(member_id: str, who: Who = Depends(owner)) -> dict:
         _keeps_an_owner(con, m, None)
         con.execute("UPDATE team_members SET status = 'removed', removed_at = ? WHERE id = ?", (iso(now()), member_id))
         con.execute("DELETE FROM sessions WHERE who IN (?, ?)", (f"team:{member_id}", f"team2fa:{member_id}"))
-        A.audit(con, None, who.id, "team_member_removed", member_id, email=m["email"])
+        team_audit(con, None, who, "team_member_removed", member_id, email=m["email"])
     return {"code": "team_member_removed"}
 
 
@@ -105,7 +105,7 @@ def resend_member_invite(member_id: str, who: Who = Depends(owner)) -> dict:
         t = now()
         con.execute("UPDATE team_members SET invited_at = ?, invite_expires = ? WHERE id = ?",
                     (iso(t), iso(t + timedelta(days=A.INVITE_DAYS)), member_id))
-        A.audit(con, None, who.id, "team_invite_resent", member_id, email=m["email"])
+        team_audit(con, None, who, "team_invite_resent", member_id, email=m["email"])
         m = team.member(con, member_id)
     return {"code": "team_invite_sent", "emailed": _invite_mail(m, who)}
 
@@ -117,7 +117,7 @@ def cancel_member_invite(member_id: str, who: Who = Depends(owner)) -> dict:
         if m["status"] != "invited":
             fail(409, "not_invited")
         con.execute("UPDATE team_members SET status = 'removed', removed_at = ? WHERE id = ?", (iso(now()), member_id))
-        A.audit(con, None, who.id, "team_invite_cancelled", member_id, email=m["email"])
+        team_audit(con, None, who, "team_invite_cancelled", member_id, email=m["email"])
     return {"code": "team_invite_cancelled"}
 
 
@@ -139,7 +139,7 @@ def reset_my_authenticator(body: ResetIn, who: Who = Depends(any_team)) -> dict:
         ok = team.use_backup_code(con, m, body.backup_code) if body.backup_code else team.check_totp(con, m, body.code)
         if ok:
             team.reset_authenticator(con, m["id"])
-            A.audit(con, None, who.id, "team_authenticator_reset", m["id"], by="self",
+            team_audit(con, None, who, "team_authenticator_reset", m["id"], by="self",
                     proof="backup code" if body.backup_code else "authenticator code")
     if not ok:
         wait = codes.attempts.failed(key)
@@ -156,7 +156,7 @@ def reset_member_authenticator(member_id: str, who: Who = Depends(owner)) -> dic
         if m["id"] == who.member["id"]:
             fail(409, "use_reset_my_authenticator")
         team.reset_authenticator(con, m["id"])
-        A.audit(con, None, who.id, "team_authenticator_reset", m["id"], by="owner", email=m["email"])
+        team_audit(con, None, who, "team_authenticator_reset", m["id"], by="owner", email=m["email"])
     return {"code": "authenticator_reset"}
 
 
@@ -170,7 +170,7 @@ def school_teachers(school_id: str, who: Who = Depends(any_team)) -> list[dict]:
             fail(404, "not_found")
         rows = con.execute("SELECT name, email, role, title, status FROM staff WHERE school_id = ? AND status != 'removed'"
                            " ORDER BY role, name", (school_id,)).fetchall()
-        A.audit(con, school_id, who.id, "team_viewed_teachers", school_id)
+        team_audit(con, school_id, who, "team_viewed_teachers", school_id)
     return [dict(r) for r in rows]
 
 
@@ -181,7 +181,7 @@ def resend_school_email(school_id: str, who: Who = Depends(any_team)) -> dict:
         s = A.row(con.execute("SELECT * FROM schools WHERE id = ?", (school_id,)).fetchone())
         if s is None:
             fail(404, "not_found")
-        A.audit(con, school_id, who.id, "school_email_resent", school_id, status=s["status"])
+        team_audit(con, school_id, who, "school_email_resent", school_id, status=s["status"])
     place = f"{places.lga_name(s['lga'])}, {places.state_name(s['state'])}"
     if s["status"] == "approved":
         email = mailer.school_approved(s["contact_name"], s["name"], portal_url())

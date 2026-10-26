@@ -51,7 +51,14 @@ export interface SchoolRequest {
   call_notes: string; checks: Check[]; reason: Reason | null; reason_label: string | null;
   decided_at: string | null; decided_by: string | null;
 }
-export interface Activity { action: string; school: string | null; reference: string | null; target: string | null; who: string; at: string; detail: Record<string, unknown> }
+export interface Activity { id: number; date: string; time: string; action: string; label: string; who: string; who_email: string; about: string }
+export interface ActivityPage { items: Activity[]; total: number; page: number; pages: number; size: number; actions: { action: string; label: string }[] }
+export interface ActivityDetail extends Activity {
+  when: string; who_role: string; school: string | null; reference: string | null;
+  target: { name: string; email: string; role: string } | null; signed_in_from: { browser?: string; place?: string } | null;
+  changes: { field: string; before: string; after: string }[]; call_notes: string | null;
+  emails: { subject: string; to: string; sent: boolean }[]; kept_for: string;
+}
 export type Me =
   | { kind: "staff"; id: string; name: string; email: string; role: Role; title: string; school: School }
   | { kind: "team"; email: string; name: string; role: TeamRole; role_label: string };
@@ -133,7 +140,7 @@ export const portal = {
     // Only for the email's "requested from … in Nigeria": the device's time zone, no location.
     { "X-Magana-Timezone": Intl.DateTimeFormat().resolvedOptions().timeZone ?? "" }),
   verify: (email: string, code: string) =>
-    call<{ code: "signed_in"; me: Me } | { code: "totp_required" } | { code: "totp_setup"; key: string; uri: string }>(
+    call<{ code: "signed_in"; me: Me } | { code: "totp_required" } | { code: "totp_setup"; key: string; uri: string; qr: string; account: string }>(
       "POST", "/portal/auth/verify", { email, code }),
   totp: (body: { code?: string; backup_code?: string }) =>
     call<{ code: "signed_in"; me: Me; backup_codes?: string[] }>("POST", "/portal/auth/totp", body),
@@ -172,7 +179,10 @@ export const portal = {
   reasons: (id: string) => call<{ reason: Reason; label: string; preview: string }[]>("GET", `/portal/admin/reasons?school_id=${id}`),
   decideSchool: (id: string, body: { decision: "approve" | "reject"; checks?: Check[]; call_notes?: string; reason?: Reason }) =>
     call<{ code: string; emailed: boolean }>("POST", `/portal/admin/schools/${id}`, body),
-  activity: () => call<Activity[]>("GET", "/portal/admin/activity"),
+  activity: (p: { q?: string; action?: string; page?: number; size?: number } = {}) =>
+    call<ActivityPage>("GET", `/portal/admin/activity?${new URLSearchParams(Object.entries(p).filter(([, v]) => v !== undefined && v !== "")
+      .map(([k, v]) => [k, String(v)]))}`),
+  activityEntry: (id: number) => call<ActivityDetail>("GET", `/portal/admin/activity/${id}`),
   schoolTeachers: (id: string) => call<{ name: string; email: string; role: string; title: string; status: string }[]>(
     "GET", `/portal/admin/schools/${id}/teachers`),
   resendSchoolEmail: (id: string) => call<{ code: string; emailed: boolean }>("POST", `/portal/admin/schools/${id}/resend`),

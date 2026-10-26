@@ -133,6 +133,7 @@ def db():
 
 # Columns added after the first release: added to an existing database on first use.
 COLUMNS = {
+    "sessions": {"browser": "TEXT", "place": "TEXT"},
     "schools": {"ref": "INTEGER", "call_notes": "TEXT NOT NULL DEFAULT ''", "checks": "TEXT NOT NULL DEFAULT ''",
                 "reason": "TEXT", "proof_type": "TEXT", "ministry_no": "TEXT NOT NULL DEFAULT ''"},
 }

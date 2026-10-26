@@ -29,14 +29,16 @@ def all_kinds():
     ]
 
 
-def test_six_emails_each_html_and_text_with_the_same_footer_and_no_images():
+def test_seven_emails_each_html_and_text_with_the_same_footer_and_the_logo():
     emails = all_kinds()
     emails.append(mailer.team_invitation("Remi", "Daniel", "School reviewer", "Approve or reject schools",
                                          "remi@example.com", "https://teachers.magana.ng"))
     assert [e.kind for e in emails] == list(mailer.KINDS)
     for e in emails:
         assert e.html.startswith("<!doctype html>") and 'lang="en"' in e.html
-        assert "<img" not in e.html and "<svg" not in e.html  # no image carries information
+        # One image, the hosted logo with alt text; the header reads the same without it.
+        assert e.html.count("<img") == 1 and 'alt="Magana"' in e.html and "https://magana.ng/brand/magana-mark-email.png" in e.html
+        assert "data:" not in e.html and "<svg" not in e.html and ">for Teachers<" in e.html
         assert "font-size:18px" in e.html and "background:#14171A" in e.html  # 18 px text, dark header
         assert "support@magana.ng" in e.html and "support@magana.ng" in e.text  # the footer
         assert "Magana never asks for a password or bank details." in e.text
@@ -45,9 +47,13 @@ def test_six_emails_each_html_and_text_with_the_same_footer_and_no_images():
 
 def test_the_sign_in_code_is_in_the_subject_with_when_and_roughly_where():
     e = all_kinds()[0]
-    assert e.subject == "642 126 is your Magana sign-in code"
+    assert e.subject == "642 126 is your Magana sign-in code"  # spaced in the subject
+    # One box, six digits together (so mail apps offer "Copy code"), monospace at 44 px.
+    assert e.html.count(">642126<") == 1 and "642 126" not in e.html.split("<body")[1].split("YOUR CODE")[1][:400]
+    assert "font-size:44px" in e.html and "monospace" in e.html and "user-select:all" in e.html
+    assert "Tap and hold (or double-click) the code to copy it." in e.html
+    assert "\n642126\n" in e.text  # the code alone on its own line in the plain text
     assert "Requested from Chrome on a Mac in Nigeria at 09:36 (Nigerian time), Mon 26 Oct." in e.text
-    assert "642 126" in e.text and "10 minutes" in e.text
     plain = mailer.sign_in_code("642126", None, T, "", "")
     assert "Requested from a browser at 09:36" in plain.text  # no device or place given: nothing invented
     assert mailer.rough_place("../../etc") is None
@@ -190,9 +196,9 @@ def test_the_proof_is_encrypted_team_only_and_deleted_once_decided(fresh):
     team.post(f"/portal/admin/schools/{sid}", json=APPROVE)
     assert not (fresh / "proofs" / f"{sid}.bin").exists()
     assert team.get(f"/portal/admin/schools/{sid}/proof").status_code == 404
-    log = [a for a in team.get("/portal/admin/activity").json() if a["action"].startswith("school_")]
+    log = [a for a in team.get("/portal/admin/activity").json()["items"] if a["action"].startswith("school_")]
     assert [a["action"] for a in log][:3] == ["school_approved", "school_proof_viewed", "school_registered"]
-    assert log[0]["who"] == TEAM and log[0]["reference"] == "SCH-1047"
+    assert log[0]["who_email"] == TEAM and log[0]["about"] == "Ikeja Community School · SCH-1047"
 
 
 def test_a_proof_that_isnt_a_photo_or_pdf_is_refused():

@@ -49,7 +49,7 @@ export async function emailedCode(email: string, after = 0): Promise<string> {
           .sort((a, b) => a.t - b.t).map(({ f }) => JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")))
           .filter((m) => m.to === email && /sign-in code/.test(m.subject))
       : [];
-    if (mails.length) return mails.at(-1).text.match(/(\d{3}) (\d{3})/).slice(1).join("");
+    if (mails.length) return mails.at(-1).subject.match(/^(\d{3}) (\d{3})/).slice(1).join("");
     await new Promise((r) => setTimeout(r, 100));
   }
   throw new Error(`no code emailed to ${email}`);
@@ -99,7 +99,7 @@ export async function signInTeam(page: Page, email: string) {
   await page.getByLabel("Email address").fill(email);
   const asked = Date.now();
   await page.getByRole("button", { name: "Send me a code" }).click();
-  await page.getByLabel("Sign-in code").fill(await emailedCode(email, asked));
+  await page.getByRole("textbox", { name: /^Sign-in code/ }).fill(await emailedCode(email, asked));
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByRole("heading", { name: "Enter your authenticator code" })).toBeFocused();
   await page.getByLabel("Authenticator code").fill(await nextTotp(email));
@@ -119,7 +119,7 @@ export async function signIn(page: Page, email: string) {
   const asked = Date.now();
   await page.getByRole("button", { name: "Send me a code" }).click();
   await expect(page.getByRole("heading", { name: "Check your email" })).toBeFocused();
-  await page.getByLabel("Sign-in code").fill(await emailedCode(email, asked));
+  await page.getByRole("textbox", { name: /^Sign-in code/ }).fill(await emailedCode(email, asked));
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText(/Good (morning|afternoon|evening)/);
 }

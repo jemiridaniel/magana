@@ -35,6 +35,9 @@ log = logging.getLogger("magana.mail")
 
 DEFAULT_FROM = "Magana for Teachers <no-reply@magana.ng>"
 DEFAULT_REPLY_TO = "support@magana.ng"
+# The Magana mark in every header: a hosted PNG (the website serves it), with alt text, so the
+# header still reads "Magana for Teachers" when images are blocked.
+DEFAULT_LOGO_URL = "https://magana.ng/brand/magana-mark-email.png"
 LAGOS = ZoneInfo("Africa/Lagos")
 KINDS = ("sign_in_code", "registration_received", "new_school_request", "school_approved", "school_not_approved",
          "teacher_invitation", "team_invitation")
@@ -54,6 +57,10 @@ class Email:
 
 
 # ---------- small helpers
+
+def logo_url() -> str:
+    return os.environ.get("MAIL_LOGO_URL", DEFAULT_LOGO_URL)
+
 
 def reply_to() -> str:
     return os.environ.get("MAIL_REPLY_TO", DEFAULT_REPLY_TO)
@@ -163,8 +170,10 @@ def _page(title: str, preheader: str, body: str, team: bool = False) -> str:
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr><td style="padding:28px 12px 36px">
 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;margin:0 auto;background:#FFFFFF;border-radius:16px;border:1px solid #D9D5CB;overflow:hidden">
 <tr><td style="padding:20px 28px;background:{INK};color:#FFFFFF">
-<span style="font-size:22px;font-weight:700">Magana</span><br>
-<span style="font-size:14px;color:#C9CED4">for Teachers</span></td></tr>
+<table role="presentation" cellpadding="0" cellspacing="0"><tr>
+<td style="padding-right:12px;vertical-align:middle"><img src="{escape(logo_url())}" width="40" height="40" alt="Magana" style="display:block;border:0;color:#FFFFFF;font-size:16px;font-weight:700"></td>
+<td style="vertical-align:middle;color:#FFFFFF"><span style="font-size:22px;font-weight:700">Magana</span><br>
+<span style="font-size:14px;color:#C9CED4">for Teachers</span></td></tr></table></td></tr>
 <tr><td style="padding:28px;font-size:18px;line-height:1.5">{body}</td></tr>
 <tr><td style="padding:18px 28px 24px;background:{GROUND};border-top:1px solid #E2DED4;font-size:14px;line-height:1.5;color:{MUTED}">
 {foot}<br>Questions? Reply to <b style="color:{INK}">{escape(reply_to())}</b> · <a href="https://magana.ng" style="color:{GREEN}">magana.ng</a>
@@ -192,17 +201,19 @@ def sign_in_code(code: str, name: str | None, requested: datetime, user_agent: s
     hello = f"Hello {name}, use" if name else "Use"
     place = rough_place(tz)
     where = f"Requested from {device(user_agent)}{f' in {place}' if place else ''} at {lagos_time(requested).split(', ')[1]} (Nigerian time), {day(requested)}."
-    boxes = "".join(
-        f'<span style="display:inline-block;width:46px;height:58px;line-height:58px;margin:0 {16 if i == 2 else 6}px 6px 0;'
-        f'text-align:center;border-radius:10px;background:#FFFFFF;border:2px solid {INK};font-size:30px;font-weight:700">{c}</span>'
-        for i, c in enumerate(code))
-    body = (_h1("Your sign-in code") + _p(f"{escape(hello)} this code to sign in to Magana for Teachers:")
-            + f'<div style="margin:0 0 18px;padding:20px;border-radius:14px;background:#FFF7E0;border:2px solid {AMBER}">'
-            + f'<div aria-hidden="true">{boxes}</div>'
-            + f'<p style="margin:6px 0 0;font-size:16px;color:{MUTED}">The code is <b style="color:{INK}">{spaced}</b>. It works for 10 minutes.</p></div>'
+    # One box, the six digits together: Gmail and iOS then offer "Copy code", and one tap selects it.
+    box = (f'<div style="margin:0 0 18px;padding:22px 20px;border-radius:14px;background:#FFF7E0;border:2px solid {AMBER};text-align:center">'
+           f'<div style="font-size:15px;font-weight:700;color:{MUTED};letter-spacing:.5px;margin:0 0 12px">YOUR CODE</div>'
+           f'<div style="display:inline-block;padding:12px 26px;border-radius:12px;background:#FFFFFF;border:2px solid {INK};'
+           f'font-family:\'SFMono-Regular\',Menlo,Consolas,\'Courier New\',monospace;font-size:44px;font-weight:700;'
+           f'letter-spacing:10px;color:{INK};-webkit-user-select:all;user-select:all">{code}</div>'
+           f'<p style="margin:12px 0 0;font-size:15px;color:{MUTED}">Tap and hold (or double-click) the code to copy it. '
+           f'It works for 10 minutes.</p></div>')
+    body = (_h1("Your sign-in code") + _p(f"{escape(hello)} this code to sign in to Magana for Teachers:") + box
             + _p(f"{escape(where)} Didn’t ask for this? Ignore this email: nobody can sign in without the code.", small=True))
     pre = f"Works for 10 minutes. {hello} this code to sign in."
-    text = _text(f"Your Magana sign-in code is {spaced}", "It works for 10 minutes.",
+    # The code alone on its own line, so it's easy to select in plain-text mail apps.
+    text = _text(f"{hello} this code to sign in to Magana for Teachers:", code, "It works for 10 minutes.",
                  f"{where} Didn't ask for this? Ignore this email: nobody can sign in without the code.")
     return Email("sign_in_code", f"{spaced} is your Magana sign-in code", pre, _page("Your sign-in code", pre, body), text)
 

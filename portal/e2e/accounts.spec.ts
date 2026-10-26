@@ -17,10 +17,10 @@ test("sign in: the email, then the code; a wrong code says so; both pages pass t
   await expect(page.getByText(/ask for a new code in \d+ s/)).toBeVisible();
   await designChecks(page);
   const right = await emailedCode(email);
-  await page.getByLabel("Sign-in code").fill(right === "730913" ? "815204" : "730913");
+  await page.getByRole("textbox", { name: /^Sign-in code/ }).fill(right === "730913" ? "815204" : "730913");
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.locator(".form-error")).toHaveText(/That code isn’t right/);
-  await page.getByLabel("Sign-in code").fill(right);
+  await page.getByRole("textbox", { name: /^Sign-in code/ }).fill(right);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Mrs Folake Adebayo");
 });
@@ -236,8 +236,28 @@ test("team admin: three checks unlock Approve; Don’t approve needs a reason an
   await expect(page.getByRole("row").filter({ hasText: "Bright Future Academy" }).first()).toContainText("Couldn’t reach them after 3 calls");
   await designChecks(page);
   await page.getByRole("link", { name: "Activity log" }).click();
-  await expect(page.getByText(`${teamEmail} approved Kano Model School`, { exact: false }).first()).toBeVisible();
+  await page.getByLabel("Search").fill("Kano Model");
+  await page.getByLabel("Action").selectOption({ label: "Approved school" });
+  const row = page.getByRole("row").filter({ hasText: "Kano Model School" }).first();
+  await expect(row).toContainText("Approved school");
+  await expect(row).toContainText(teamEmail);
   await designChecks(page);
+  const view = row.getByRole("button", { name: /^View details/ });
+  await view.click();
+  const panel = page.getByRole("dialog", { name: "Activity details" });
+  await expect(panel).toBeVisible();
+  await expect(panel.getByText("Waiting")).toBeVisible();  // status before → after
+  await expect(panel.getByText(/Spoke to Mrs Adebayo/)).toBeVisible();  // the call notes
+  await expect(panel.getByText(/is ready on Magana” → principal · sent/)).toBeVisible();
+  await expect(panel.getByText(/can’t be edited or deleted\. Kept for 2 years/)).toBeVisible();
+  for (let i = 0; i < 5; i++) {  // Tab stays in the panel
+    await page.keyboard.press("Tab");
+    expect(await page.evaluate(() => !!document.activeElement?.closest("dialog"))).toBe(true);
+  }
+  await designChecks(page);
+  await page.keyboard.press("Escape");
+  await expect(panel).toBeHidden();
+  await expect(view).toBeFocused();  // focus back on its button
 });
 
 test("an under-18 who changes class needs their teacher's code (the backend checks it)", async ({ page }) => {
@@ -274,11 +294,16 @@ test("Magana team (owner): invite a reviewer, their first sign-in sets up the au
   await expect(them.getByLabel("Email address")).toHaveValue(email);  // from the invitation link
   const asked = Date.now();
   await them.getByRole("button", { name: "Send me a code" }).click();
-  await them.getByLabel("Sign-in code").fill(await emailedCode(email, asked));
+  await them.getByRole("textbox", { name: /^Sign-in code/ }).fill(await emailedCode(email, asked));
   await them.getByRole("button", { name: "Sign in" }).click();
   await expect(them.getByRole("heading", { name: "Set up your authenticator" })).toBeFocused();
   await designChecks(them);
-  const key = (await them.locator(".setup-key").innerText()).replace(/\s/g, "");
+  await expect(them.getByRole("img", { name: "QR code for your authenticator app" })).toHaveAttribute("src", /^data:image\/svg\+xml/);
+  await expect(them.getByText(`Magana · ${email}`)).toBeVisible();
+  await them.getByText("Can’t scan? Enter a setup key instead").click();
+  await expect(them.locator(".setup-key .visually-hidden")).toHaveText(/^Setup key, in groups of four: (\w{4}, )+\w{1,4}\.$/);
+  await designChecks(them);
+  const key = (await them.locator(".setup-key [aria-hidden=true]").innerText()).replace(/\s/g, "");
   await them.getByLabel("Authenticator code").fill("000000");
   await them.getByRole("button", { name: "Finish setting up" }).click();
   await expect(them.locator(".form-error")).toHaveText(/authenticator code isn’t right/);
@@ -304,7 +329,8 @@ test("Magana team (owner): invite a reviewer, their first sign-in sets up the au
   await page.getByRole("dialog").getByRole("button", { name: "Remove" }).click();
   await expect(page.getByRole("row").filter({ hasText: email })).toHaveCount(0);
   await page.getByRole("link", { name: "Activity log" }).click();
-  await expect(page.getByText(new RegExp(`removed ${email.replace(/[.+]/g, "\\$&")}`)).first()).toBeVisible();
+  await page.getByLabel("Action").selectOption({ label: "Removed member" });
+  await expect(page.getByRole("row").filter({ hasText: "Oluremi Balogun" }).first()).toContainText("Removed member");
 });
 
 test("Support (view only): sees schools and their teachers and can resend emails, but no approve controls", async ({ page }) => {
@@ -341,7 +367,31 @@ test("My account: Reset my authenticator needs a current code, signs you out, an
   await page.getByLabel("Email address").fill(email);
   const asked = Date.now();
   await page.getByRole("button", { name: "Send me a code" }).click();
-  await page.getByLabel("Sign-in code").fill(await emailedCode(email, asked));
+  await page.getByRole("textbox", { name: /^Sign-in code/ }).fill(await emailedCode(email, asked));
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByRole("heading", { name: "Set up your authenticator" })).toBeFocused();
+});
+
+test("sign-in code: pasting the whole code into the first box fills all six", async ({ page }) => {
+  const email = uniqueEmail("paste");
+  await approve(await registerSchool(email));
+  await page.goto("/sign-in/");
+  await page.getByLabel("Email address").fill(email);
+  const asked = Date.now();
+  await page.getByRole("button", { name: "Send me a code" }).click();
+  const code = await emailedCode(email, asked);
+  const first = page.getByRole("textbox", { name: /^Sign-in code, digit 1 of 6/ });
+  await first.focus();
+  await first.evaluate((el, text) => {
+    const data = new DataTransfer();
+    data.setData("text/plain", text);
+    el.dispatchEvent(new ClipboardEvent("paste", { clipboardData: data, bubbles: true, cancelable: true }));
+  }, `${code.slice(0, 3)} ${code.slice(3)}`);  // as copied from the subject, with its space
+  const boxes = page.getByRole("group", { name: "Sign-in code" }).getByRole("textbox");
+  await expect(boxes).toHaveCount(6);
+  for (let i = 0; i < 6; i++) await expect(boxes.nth(i)).toHaveValue(code[i]);
+  await expect(boxes.nth(5)).toBeFocused();
+  await designChecks(page);
+  await page.getByRole("button", { name: "Sign in" }).click();
+  await expect(page.getByRole("heading", { level: 1 })).toContainText(/Good (morning|afternoon|evening)/);
 });
