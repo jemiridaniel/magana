@@ -5,7 +5,8 @@
 // "Check" until the teacher corrects and approves it (uploads_api.py); learners only ever get
 // approved text.
 import Link from "next/link";
-import { useCallback, useEffect, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useState, type FormEvent } from "react";
+import DropZone from "@/components/DropZone";
 import { messageFor } from "@/lib/messages";
 import { portal, PortalError, type ClassInfo, type UploadInfo } from "@/lib/portal";
 
@@ -25,7 +26,7 @@ export default function UploadsView() {
   const [message, setMessage] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
-  const file = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>(null);
 
   const load = useCallback(() => {
     portal.uploads().then(setUploads).catch((e) => setError((e as PortalError).code));
@@ -37,13 +38,14 @@ export default function UploadsView() {
     e.preventDefault();
     const form = e.currentTarget;
     const f = new FormData(form);
-    const chosen = file.current?.files?.[0];
+    const chosen = file;
     if (!chosen) { setMessage("Choose a photo or PDF first."); return; }
     setBusy(true);
     setMessage("Reading the file. A long PDF takes a minute.");
     try {
       const r = await portal.sendUpload(chosen, String(f.get("class") ?? ""), String(f.get("title") ?? ""));
       form.reset();
+      setFile(null);
       setMessage(r.upload.status === "check"
         ? `${r.upload.title}: Magana read it. Please check it before learners use it.`
         : `${r.upload.title}: ${messageFor(r.code)}`);
@@ -73,9 +75,9 @@ export default function UploadsView() {
             <option value="">No class yet</option>
             {classes.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select></div>
-        <div className="field"><label htmlFor="u-file">Photo or PDF</label>
-          <input id="u-file" ref={file} name="file" type="file" accept={ACCEPT} className="input" aria-describedby="u-file-hint" />
-          <span id="u-file-hint" className="hint">Up to 15 MB. Handwritten pages work too: you check them before learners get them.</span></div>
+        <div className="field"><span className="field-label" id="u-file-l">Photo or PDF</span>
+          <DropZone label="Photo or PDF" accept={ACCEPT} file={file} onFile={setFile}
+                    hint="Up to 15 MB. Handwritten pages work too: you check them before learners get them." /></div>
         <button type="submit" className="btn btn-primary" disabled={busy}>{busy ? "Reading…" : "Upload"}</button>
         <p className="status-msg" role="status">{message}</p>
       </form>

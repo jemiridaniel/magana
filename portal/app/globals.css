@@ -565,3 +565,57 @@ fieldset { border: 0; margin: 0; padding: 0; }
 .check-lines li.needs-check { border-color: var(--amber); background: var(--check-bg); }
 .check-lines label { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-weight: 700; }
 .check-lines textarea { font-size: 1.125rem; line-height: 1.5; min-height: 64px; resize: vertical; }
+
+/* ---------- State and LGA: one grid, fields at the same height, the hint under both */
+.place-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "l1 l2" "c1 c2" "h h";
+  column-gap: 12px; row-gap: 6px; align-items: start; }
+.place-grid .pg-l1 { grid-area: l1; align-self: end; }
+.place-grid .pg-l2 { grid-area: l2; align-self: end; }
+.place-grid .pg-c1 { grid-area: c1; width: 100%; }
+.place-grid .pg-c2 { grid-area: c2; }
+.place-grid .pg-c2 .input { width: 100%; }
+.place-grid .pg-hint { grid-area: h; margin: 0; }
+.place-grid .listbox { top: calc(100% + 4px); }
+
+/* ---------- drop zone (Uploads, Register your school) */
+.dropzone { position: relative; }
+/* The real file input covers the whole zone, invisible: click anywhere, or Tab to it and press
+   Enter or Space. It is the one focusable control, named by the zone's label. */
+.dropzone-input { position: absolute; inset: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; z-index: 1; }
+.dropzone:focus-within { outline: 4px solid var(--green-ink); outline-offset: 3px; }
+.dropzone .btn { cursor: pointer; }
+.dropzone-title { margin: 0; overflow-wrap: anywhere; }
+.dropzone-size { margin: -6px 0 0; color: var(--ink-soft); }
+.dropzone-compact { padding: 28px 16px; }
+
+/* ---------- School waiting for confirmation */
+.auth-form-wide { max-width: 520px; }
+.pill-lead { justify-self: start; font-size: 1rem; }
+.pill-absent { background: var(--absent-bg); color: var(--absent-ink); }
+.steps { list-style: none; margin: 0; padding: 0; display: grid; gap: 14px; }
+.step { display: flex; gap: 14px; align-items: flex-start; }
+.step > span:last-child { display: grid; gap: 2px; }
+.step > span:last-child > span { color: var(--ink-soft); }
+.step-mark { flex: none; display: flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 20px; font-weight: 700; border: 2px solid var(--ink); }
+.step-done .step-mark { background: var(--green-ink); border-color: var(--green-ink); color: #fff; }
+.step-now .step-mark { background: var(--amber); border-color: var(--amber); }
+.box { padding: 14px 18px; border-radius: 14px; background: var(--processing-bg); line-height: 1.45; margin: 0; }
+
+/* ---------- Register: proof of school */
+.proof { display: grid; gap: 12px; padding: 16px; border-radius: 14px; border: 2px dashed var(--ink); background: var(--surface); margin: 0; }
+.proof legend { font-weight: 700; padding: 0 6px; }
+
+/* ---------- Team admin */
+.req { display: grid; gap: 20px; padding: 24px; border: 2px solid var(--ink); border-radius: 18px; background: var(--surface); }
+.req-head { display: flex; flex-wrap: wrap; gap: 12px; justify-content: space-between; align-items: flex-start; }
+.req-head h2 { margin: 0; }
+.req-head .sub { color: var(--ink-soft); }
+.req-facts { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px 24px; margin: 0; }
+.req-facts div { display: grid; gap: 2px; }
+.req-facts dt { color: var(--ink-soft); font-size: 0.95rem; }
+.req-facts dd { margin: 0; font-weight: 700; overflow-wrap: anywhere; }
+.req-checks { display: grid; gap: 12px; padding: 18px; border-radius: 14px; background: var(--ground); }
+.req-actions { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.btn[aria-disabled="true"] { opacity: .55; cursor: not-allowed; }
+.preview { padding: 14px 18px; border-radius: 14px; background: var(--processing-bg); margin: 0; }
+.list-plain { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; }

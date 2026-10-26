@@ -13,6 +13,13 @@ const links = [
   { href: "/progress/", label: "Learner progress" },
   { href: "/consent/", label: "Consent records" },
 ];
+// The Magana team (board "Schools to approve"): its own four pages, nothing else.
+const teamLinks = [
+  { href: "/admin/", label: "Schools to approve" },
+  { href: "/admin/approved/", label: "Approved schools" },
+  { href: "/admin/not-approved/", label: "Not approved" },
+  { href: "/admin/activity/", label: "Activity log" },
+];
 const adminLinks = [
   { href: "/teachers/", label: "Teachers" },
   { href: "/school/", label: "School details" },
@@ -36,12 +43,12 @@ export default function Sidebar() {
         <img className="brand-mark" src={`${process.env.NEXT_PUBLIC_BASE_PATH ?? ""}/brand/magana_mark_on_ink.svg`} alt="" width={44} height={44} />
         <span className="brand-text">
           <span className="brand-name">Magana</span>
-          <span className="brand-sub">Teachers</span>
+          <span className="brand-sub">{me.kind === "team" ? "Team admin" : "Teachers"}</span>
         </span>
       </Link>
       <nav aria-label="Main">
         {me.kind === "team" ? (
-          <ul className="nav-list">{item({ href: "/admin/", label: "Schools to approve" })}</ul>
+          <ul className="nav-list">{teamLinks.map(item)}</ul>
         ) : (
           <>
             <ul className="nav-list">{links.map(item)}</ul>

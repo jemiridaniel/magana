@@ -1,7 +1,6 @@
 // Accounts and the new portal screens against a real backend (design canvas: Sign in, Enter
 // sign-in code, Register your school, Teachers, Home, Learner remove from class, My classes):
 // axe (WCAG 2.2 AA + AAA contrast), 64 px targets, the dialog's focus, the LGA combobox.
-import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 import { apiUrl } from "../playwright.config";
 import { addClass, approve, designChecks, emailedCode, joinOnPhone, newSchool, registerSchool, signIn, uniqueEmail } from "./helpers";
@@ -30,10 +29,24 @@ test("signed out: every portal page goes to sign in", async ({ page }) => {
   await expect(page).toHaveURL(/\/sign-in\/?$/);
 });
 
-test("register your school: state select, LGA combobox by keyboard, then pending until approved", async ({ page }) => {
-  await page.goto("/register/");
+test("register your school: State and LGA side by side, LGA by keyboard, proof of school, then the waiting page", async ({ page }) => {
+  const email = uniqueEmail("register");
+  for (const width of [1280, 390]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/register/");
+    const state = await page.getByLabel("State").boundingBox();
+    const lga = await page.getByRole("combobox", { name: "Local government area" }).boundingBox();
+    expect(Math.abs(state!.y - lga!.y), `${width}px: same height`).toBeLessThanOrEqual(1);
+    expect(Math.abs(state!.height - lga!.height), `${width}px: same size`).toBeLessThanOrEqual(2);
+    expect(lga!.x, `${width}px: side by side`).toBeGreaterThan(state!.x + state!.width - 1);
+    const hint = await page.getByText("All 36 states and the FCT").boundingBox();
+    expect(hint!.y).toBeGreaterThan(state!.y + state!.height);  // under both
+    expect(hint!.x).toBeLessThanOrEqual(state!.x + 1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth - innerWidth)).toBeLessThanOrEqual(0);
+  }
+  await page.setViewportSize({ width: 1280, height: 900 });
   await page.getByLabel("Your full name").fill("Mr Chinedu Okafor");
-  await page.getByLabel("Your email").fill(uniqueEmail("register"));
+  await page.getByLabel("Your email").fill(email);
   await page.getByLabel("Your phone number").fill("0803 000 0002");
   await page.getByLabel("School name").fill("Surulere Grammar School");
   await page.getByLabel("State").selectOption({ label: "Lagos" });
@@ -48,12 +61,33 @@ test("register your school: state select, LGA combobox by keyboard, then pending
   await expect(lga).toHaveAttribute("aria-activedescendant", /opt-1$/);
   await lga.press("Enter");
   await expect(lga).toHaveValue("Ikorodu");
-  await expect(lga).toHaveAttribute("aria-expanded", "false");
+  // Proof of school: the drop zone, by keyboard: Tab reaches the file input itself.
+  const file = page.locator(".proof input[type=file]");
+  await file.focus();
+  await expect(file).toBeFocused();
+  await file.setInputFiles({ name: "letterhead.png", mimeType: "image/png", buffer: Buffer.from(
+    "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==", "base64") });
+  await expect(page.locator(".proof .dropzone-title")).toContainText("letterhead.png");
+  await expect(page.locator(".proof")).toContainText("Change file");
+  await page.getByLabel(/Ministry approval number/).fill("LSMOE/PS/2019/0412");
+  await designChecks(page);
   await page.getByRole("button", { name: "Register school" }).click();
   await expect(page.locator(".form-error")).toHaveText(/Tick the box/);
   await page.getByLabel(/I confirm I lead this school/).check();
   await page.getByRole("button", { name: "Register school" }).click();
   await expect(page.getByRole("heading", { name: "Thank you" })).toBeFocused();
+  await expect(page.getByText(/reference SCH-\d+/)).toBeVisible();
+
+  // Signed in before the team confirms: the waiting page, three steps and a normal Sign out.
+  await signIn(page, email).catch(() => undefined);
+  await page.goto("/");
+  await expect(page.getByText("Waiting for confirmation")).toBeVisible();
+  await expect(page.getByRole("heading", { level: 1, name: "Surulere Grammar School" })).toBeVisible();
+  await expect(page.getByRole("list", { name: "What happens next" }).getByRole("listitem")).toHaveCount(3);
+  await expect(page.getByText(/On 0803 \*\*\* \*\*02, by /)).toBeVisible();
+  await designChecks(page);
+  const out = await page.getByRole("button", { name: "Sign out" }).boundingBox();
+  expect(out!.width).toBeLessThan(400);  // a normal-sized button, not full width
 });
 
 test("Home: an empty school reads well and passes the checks", async ({ page }) => {
@@ -160,15 +194,49 @@ test("Teachers (school admin): invite, then remove with their class moved first;
   await designChecks(page);
 });
 
-test("the Magana team approves a pending school on its own page", async ({ page }) => {
+test("team admin: three checks unlock Approve; Don’t approve needs a reason and shows the email; tabs and the log", async ({ page }, info) => {
+  const teamEmail = info.project.name === "phone" ? "team-phone@magana.test" : "team@magana.test";
   await registerSchool(uniqueEmail("pending"), "Kano Model School");
-  await signIn(page, "team@magana.test").catch(() => undefined);  // the team lands on /admin/, not Home
+  await registerSchool(uniqueEmail("pending2"), "Bright Future Academy");
+  await signIn(page, teamEmail).catch(() => undefined);
   await page.goto("/admin/");
-  const school = page.getByRole("listitem").filter({ hasText: "Kano Model School" }).first();
-  await expect(school).toBeVisible();
-  await expect((await new AxeBuilder({ page: page as never }).withTags(["wcag2a", "wcag2aa", "wcag2aaa"]).analyze()).violations).toEqual([]);
-  await school.getByRole("button", { name: /^Approve/ }).click();
-  await expect(page.getByRole("status")).toHaveText("Kano Model School: approved.");
+  const kano = page.getByRole("article", { name: "Kano Model School" }).first();
+  await expect(kano).toBeVisible();
+  await expect(kano.getByRole("link", { name: /^Call 0803 000 0001/ })).toHaveAttribute("href", "tel:+2348030000001");
+  await designChecks(page);
+  const approve = kano.getByRole("button", { name: /^Approve school/ });
+  await expect(approve).toHaveAttribute("aria-disabled", "true");
+  await approve.click({ force: true });  // aria-disabled, not disabled: still reachable, and says why
+  await expect(kano.getByRole("status")).toHaveText("Tick all three checks before approving.");
+  await kano.getByLabel("Call notes (team only)").fill("Spoke to Mrs Adebayo 26 Oct 11:05. Confirmed she's principal.");
+  await kano.getByLabel(/I spoke to the person/).check();
+  await kano.getByRole("button", { name: /^Save notes/ }).click();
+  await expect(kano.getByRole("status")).toHaveText("Call notes saved.");
+  await kano.getByLabel(/The school exists/).check();
+  await kano.getByLabel(/Location and school name are correct/).check();
+  await expect(approve).toHaveAttribute("aria-disabled", "false");
+  await approve.click();
+  await expect(page.getByRole("status").filter({ hasText: "Kano Model School is approved." })).toBeVisible({ timeout: 15_000 });
+
+  const bright = page.getByRole("article", { name: "Bright Future Academy" }).first();
+  await bright.getByRole("button", { name: /^Don’t approve/ }).click();
+  await bright.getByRole("button", { name: /^Send and don’t approve/ }).click();
+  await expect(bright.getByRole("status")).toHaveText("Choose a reason.");
+  await bright.getByLabel("Couldn’t reach them after 3 calls").check();
+  await expect(bright.getByText(/Email preview: “We tried to call you 3 times on 0803 \*\*\* \*\*01/)).toBeVisible();
+  await designChecks(page);
+  await bright.getByRole("button", { name: /^Send and don’t approve/ }).click();
+  await expect(page.getByRole("status").filter({ hasText: "Bright Future Academy: not approved." })).toBeVisible({ timeout: 15_000 });
+
+  await page.getByRole("link", { name: "Approved schools" }).click();
+  await expect(page.getByRole("row").filter({ hasText: "Kano Model School" }).first()).toContainText(teamEmail);
+  await designChecks(page);
+  await page.getByRole("link", { name: "Not approved" }).click();
+  await expect(page.getByRole("row").filter({ hasText: "Bright Future Academy" }).first()).toContainText("Couldn’t reach them after 3 calls");
+  await designChecks(page);
+  await page.getByRole("link", { name: "Activity log" }).click();
+  await expect(page.getByText(`${teamEmail} approved Kano Model School`, { exact: false }).first()).toBeVisible();
+  await designChecks(page);
 });
 
 test("an under-18 who changes class needs their teacher's code (the backend checks it)", async ({ page }) => {

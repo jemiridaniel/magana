@@ -98,6 +98,11 @@ CODES = frozenset(ENGLISH)
 
 # Codes only the teacher portal sees (portal/lib/messages.ts words each one; a test checks).
 PORTAL = {
+    "proof_too_big": "That file is too big. Please keep it under 5 MB.",
+    "proof_wrong_type": "That file isn't a photo or PDF. Choose a JPG, PNG, WebP or PDF.",
+    "school_decided": "Someone on the team has already decided about this school.",
+    "notes_saved": "Call notes saved.",
+    "checks_required": "Tick all three checks before approving.",
     "upload_saved": "Uploaded. Magana read it and kept only the text.",
     "upload_approved": "Approved. Learners can now use this text.",
     "upload_corrections_saved": "Corrections saved. It stays at Check until you approve it.",

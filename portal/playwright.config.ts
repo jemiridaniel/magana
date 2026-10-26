@@ -25,7 +25,9 @@ export default defineConfig({
       command: `../backend/.venv/bin/uvicorn app.main:app --app-dir ../backend --port ${API_PORT}`,
       url: `http://localhost:${API_PORT}/health`,
       env: { MAGANA_ENV: "development", MAGANA_API_KEY: "", MAGANA_MAIL: "outbox", MAGANA_DATA_DIR: dataDir,
-             MAGANA_TEAM_EMAILS: "team@magana.test", MAGANA_DEV_SIGNIN_LIMIT: "10000", MAGANA_DEV_REGISTER_LIMIT: "10000",
+             // One team email per browser project and per worker: parallel sign-ins never replace each other's code.
+             MAGANA_TEAM_EMAILS: ["team@magana.test", "team-phone@magana.test",
+                                  ...Array.from({ length: 8 }, (_, i) => `approver-${i}@magana.test`)].join(","), MAGANA_DEV_SIGNIN_LIMIT: "10000", MAGANA_DEV_REGISTER_LIMIT: "10000",
              MAGANA_DEV_CODE_GAP: "0", MAGANA_DEV_CODES_PER_HOUR: "10000",
              MAGANA_CORS_ORIGIN_REGEX: `http://localhost:${PORTAL_PORT}` },
       reuseExistingServer: !!process.env.E2E_REUSE,  // E2E_REUSE=1: servers you started (to read their logs)

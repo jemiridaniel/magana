@@ -41,9 +41,10 @@ export async function registerSchool(email: string, school = "Ikeja Community Sc
 
 export async function approve(schoolId: string) {
   const team = await pwRequest.newContext();
-  await team.post(`${apiUrl}/portal/auth/request-code`, { data: { email: "team@magana.test" } });
-  await team.post(`${apiUrl}/portal/auth/verify`, { data: { email: "team@magana.test", code: await emailedCode("team@magana.test") } });
-  expect((await team.post(`${apiUrl}/portal/admin/schools/${schoolId}`, { data: { decision: "approve" } })).ok()).toBeTruthy();
+  const email = `approver-${process.env.TEST_PARALLEL_INDEX ?? 0}@magana.test`;  // this worker's own
+  await team.post(`${apiUrl}/portal/auth/request-code`, { data: { email } });
+  await team.post(`${apiUrl}/portal/auth/verify`, { data: { email, code: await emailedCode(email) } });
+  expect((await team.post(`${apiUrl}/portal/admin/schools/${schoolId}`, { data: { decision: "approve", checks: ["person_confirmed", "school_exists", "details_correct"] } })).ok()).toBeTruthy();
 }
 
 /** Signs [email] in through the real page and waits for Home. */

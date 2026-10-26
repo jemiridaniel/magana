@@ -28,7 +28,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from . import accounts as A
-from . import codes, curriculum, mailer, places
+from . import codes, curriculum, mailer, places, proofs
 from .accounts import db, iso, now, parse
 
 router = APIRouter(prefix="/portal")
@@ -177,6 +177,14 @@ def _can_sign_in(con, email: str) -> bool:
     return school is not None and school["status"] != "rejected"
 
 
+def _name_for(email: str) -> str | None:
+    if email in team_emails():
+        return None
+    with db() as con:
+        r = con.execute("SELECT name FROM staff WHERE email = ? AND status != 'removed'", (email,)).fetchone()
+    return r["name"] if r else None
+
+
 @router.post("/auth/request-code")
 def request_code(body: EmailIn, request: Request) -> dict:
     """Always answers the same way, so it never tells whether an email has an account."""
@@ -202,7 +210,9 @@ def request_code(body: EmailIn, request: Request) -> dict:
                      0, iso(t), count + 1, iso(since)))
     if code:
         try:
-            mailer.sign_in_code(body.email, code)
+            mailer.send(body.email, mailer.sign_in_code(
+                code, _name_for(body.email), t, request.headers.get("user-agent", ""),
+                request.headers.get("x-magana-timezone", "")))
         except mailer.MailError:
             fail(503, "mail_unavailable")
     return {"code": "sign_in_code_sent", "retry_after": CODE_GAP_S, "minutes": A.LOGIN_CODE_MINUTES}
@@ -272,7 +282,18 @@ def me(who: Who = Depends(signed_in)) -> dict:
     return {"kind": "staff", "id": who.staff["id"], "name": who.staff["name"], "email": who.email,
             "role": who.staff["role"], "title": who.staff["title"],
             "school": {"id": school["id"], "name": school["name"], "status": school["status"],
-                       "state": school["state"], "lga": school["lga"]}}
+                       "state": school["state"], "lga": school["lga"], **_pending_details(school)}}
+
+
+def _pending_details(school: dict) -> dict:
+    """What the "School waiting for confirmation" page shows."""
+    if school["status"] == "approved":
+        return {}
+    registered = parse(school["created_at"])
+    return {"reference": mailer.ref(school["ref"]) if school.get("ref") else None,
+            "registered": mailer.lagos_time(registered), "call_by": mailer.day(mailer.call_by(registered)),
+            "phone_masked": mailer.masked_phone(school["contact_phone"] or ""),
+            "reason": school.get("reason")}
 
 
 # ---------- registering a school (public), approving it (Magana team)
@@ -286,6 +307,8 @@ class RegisterIn(EmailIn):
     state: str
     lga: str
     agree: bool
+    ministry_no: str = Field("", max_length=60)
+    proof: str | None = Field(None, max_length=8_000_000)  # a data URL or base64: a photo or PDF, 5 MB at most
 
     @field_validator("phone")
     @classmethod
@@ -306,46 +329,202 @@ def register_school(body: RegisterIn, request: Request) -> dict:
         fail(400, "agree_required")
     if not places.valid(body.state, body.lga):
         fail(400, "place_unknown")
+    proof = None
+    if body.proof:
+        try:
+            proof = proofs.decode(body.proof)
+            proofs.kind_of(proof)
+        except proofs.ProofError as e:
+            fail(400, e.code)
     t = now()
+    _purge_not_confirmed()
     with db() as con:
         if con.execute("SELECT 1 FROM staff WHERE email = ? AND status != 'removed'", (body.email,)).fetchone():
             fail(409, "email_taken")
         sid, aid = A.new_id("sch"), A.new_id("stf")
+        n = con.execute("SELECT COALESCE(MAX(ref), 1046) + 1 FROM schools").fetchone()[0]
         con.execute("INSERT INTO schools(id, name, state, lga, status, contact_name, contact_role, contact_email,"
-                    " contact_phone, created_at) VALUES (?,?,?,?,?,?,?,?,?,?)",
+                    " contact_phone, created_at, ref, ministry_no) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
                     (sid, body.school.strip(), body.state, body.lga, "pending", body.name.strip(), body.role,
-                     body.email, body.phone, iso(t)))
+                     body.email, body.phone, iso(t), n, body.ministry_no.strip()))
+        if proof:
+            con.execute("UPDATE schools SET proof_type = ? WHERE id = ?", (proofs.save(sid, proof), sid))
         _, lk, sealed = A.fresh_code(con, "staff")
         con.execute("INSERT INTO staff(id, school_id, name, email, role, title, status, created_at, code_lookup, code_sealed)"
                     " VALUES (?,?,?,?,?,?,?,?,?,?)",
                     (aid, sid, body.name.strip(), body.email, "admin", body.role, "active", iso(t), lk, sealed))
-        A.audit(con, sid, aid, "school_registered", sid)
-    return {"code": "school_registered", "school_id": sid}
+        A.audit(con, sid, aid, "school_registered", sid, proof=bool(proof))
+    place = f"{places.lga_name(body.lga)}, {places.state_name(body.state)}"
+    _mail(body.email, mailer.registration_received(body.name.strip(), body.school.strip(), place, body.role,
+                                                   body.phone, mailer.ref(n), t))
+    for team_email in sorted(team_emails()):
+        _mail(team_email, mailer.new_school_request(body.school.strip(), place, body.name.strip(), body.role, body.email,
+                                                    body.phone, mailer.ref(n), t, portal_url(), bool(proof),
+                                                    body.ministry_no.strip()))
+    return {"code": "school_registered", "school_id": sid, "reference": mailer.ref(n)}
+
+
+def _mail(to: str, email: "mailer.Email") -> bool:
+    """Send, and carry on if email is down: the registration or decision still stands."""
+    try:
+        mailer.send(to, email)
+        return True
+    except mailer.MailError:
+        return False
+
+
+NOT_CONFIRMED_DAYS = 30
+
+
+def _purge_not_confirmed() -> None:
+    """Schools not confirmed 30 days ago are deleted, as their email says."""
+    cutoff = iso(now() - timedelta(days=NOT_CONFIRMED_DAYS))
+    with db() as con:
+        for (sid,) in con.execute("SELECT id FROM schools WHERE status = 'rejected' AND decided_at < ?", (cutoff,)).fetchall():
+            ids = [r[0] for r in con.execute("SELECT id FROM staff WHERE school_id = ?", (sid,))]
+            if con.execute("SELECT 1 FROM classes WHERE school_id = ?", (sid,)).fetchone():
+                continue  # never for a school that has classes (it can't: a rejected school can't create any)
+            for i in ids:
+                con.execute("DELETE FROM sessions WHERE who = ?", (i,))
+            con.execute("DELETE FROM staff WHERE school_id = ?", (sid,))
+            con.execute("UPDATE audit SET actor = NULL WHERE actor IN (%s)" % ",".join("?" * len(ids)), ids) if ids else None
+            con.execute("DELETE FROM schools WHERE id = ?", (sid,))
+            proofs.delete(sid)
+            A.audit(con, None, "system", "school_details_deleted", None, after_days=NOT_CONFIRMED_DAYS)
+
+
+CHECKS = ("person_confirmed", "school_exists", "details_correct")
+
+
+def _school_out(r) -> dict:
+    d = dict(r)
+    registered = parse(d["created_at"])
+    by = mailer.call_by(registered)
+    return {"id": d["id"], "name": d["name"], "status": d["status"], "reference": mailer.ref(d["ref"]),
+            "state_name": places.state_name(d["state"]), "lga_name": places.lga_name(d["lga"]),
+            "contact_name": d["contact_name"], "contact_role": d["contact_role"], "contact_email": d["contact_email"],
+            "contact_phone": mailer.local_phone(d["contact_phone"] or ""), "phone_tel": d["contact_phone"],
+            "registered": mailer.lagos_time(registered), "call_by": mailer.day(by),
+            "days_left": max(0, (by.date() - now().astimezone(mailer.LAGOS).date()).days),
+            "ministry_no": d.get("ministry_no") or "", "proof": d.get("proof_type"),
+            "call_notes": d.get("call_notes") or "", "checks": [c for c in (d.get("checks") or "").split(",") if c],
+            "reason": d.get("reason"), "reason_label": mailer.REASONS.get(d.get("reason") or "", None),
+            "decided_at": mailer.lagos_time(parse(d["decided_at"])) if d.get("decided_at") else None,
+            "decided_by": d.get("decided_by")}
 
 
 @router.get("/admin/schools")
 def list_schools(status: str = "pending", who: Who = Depends(team)) -> list[dict]:
+    _purge_not_confirmed()
+    order = "created_at" if status == "pending" else "decided_at DESC"
     with db() as con:
-        rows = con.execute("SELECT * FROM schools WHERE status = ? ORDER BY created_at", (status,)).fetchall()
-        return [{**dict(r), "state_name": places.state_name(r["state"]), "lga_name": places.lga_name(r["lga"])}
-                for r in rows]
+        rows = con.execute(f"SELECT * FROM schools WHERE status = ? ORDER BY {order}", (status,)).fetchall()
+        return [_school_out(r) for r in rows]
+
+
+def _pending_school(con, school_id: str) -> dict:
+    s = A.row(con.execute("SELECT * FROM schools WHERE id = ?", (school_id,)).fetchone())
+    if s is None:
+        fail(404, "not_found")
+    if s["status"] != "pending":
+        fail(409, "school_decided")
+    return s
+
+
+class NotesIn(BaseModel):
+    call_notes: str = Field("", max_length=2000)
+    checks: list[Literal["person_confirmed", "school_exists", "details_correct"]] = Field(default_factory=list)
+
+
+@router.put("/admin/schools/{school_id}/notes")
+def save_notes(school_id: str, body: NotesIn, who: Who = Depends(team)) -> dict:
+    with db() as con:
+        _pending_school(con, school_id)
+        con.execute("UPDATE schools SET call_notes = ?, checks = ? WHERE id = ?",
+                    (body.call_notes.strip(), ",".join(sorted(set(body.checks))), school_id))
+        A.audit(con, school_id, who.id, "school_call_noted", school_id)
+    return {"code": "notes_saved"}
+
+
+@router.get("/admin/reasons")
+def reasons(school_id: str, who: Who = Depends(team)) -> list[dict]:
+    """Each reason with the email the applicant would get: the preview before sending."""
+    with db() as con:
+        s = A.row(con.execute("SELECT * FROM schools WHERE id = ?", (school_id,)).fetchone())
+    if s is None:
+        fail(404, "not_found")
+    place = f"{places.lga_name(s['lga'])}, {places.state_name(s['state'])}"
+    out = []
+    for key, label in mailer.REASONS.items():
+        what, can = mailer.reason_text(key, s["name"], s["contact_phone"] or "", place)
+        out.append({"reason": key, "label": label, "preview": f"{what} {can[0]}"})
+    return out
 
 
 class DecisionIn(BaseModel):
     decision: Literal["approve", "reject"]
+    checks: list[Literal["person_confirmed", "school_exists", "details_correct"]] = Field(default_factory=list)
+    call_notes: str = Field("", max_length=2000)
+    reason: Literal["unreachable", "role_unconfirmed", "not_found", "duplicate"] | None = None
 
 
 @router.post("/admin/schools/{school_id}")
 def decide_school(school_id: str, body: DecisionIn, who: Who = Depends(team)) -> dict:
+    """Approve only with all three checks ticked; not approving needs a reason, which the
+    applicant reads. Either way the proof file is deleted and the decision is in the log."""
+    if body.decision == "approve" and set(body.checks) != set(CHECKS):
+        fail(400, "checks_required")
+    if body.decision == "reject" and not body.reason:
+        fail(400, "reason_required")
     with db() as con:
-        s = con.execute("SELECT * FROM schools WHERE id = ?", (school_id,)).fetchone()
-        if s is None:
-            fail(404, "not_found")
+        s = _pending_school(con, school_id)
         status = "approved" if body.decision == "approve" else "rejected"
-        con.execute("UPDATE schools SET status = ?, decided_at = ?, decided_by = ? WHERE id = ?",
-                    (status, iso(now()), who.email, school_id))
-        A.audit(con, school_id, who.id, f"school_{status}", school_id)
-    return {"code": f"school_{status}"}
+        con.execute("UPDATE schools SET status = ?, decided_at = ?, decided_by = ?, call_notes = ?, checks = ?,"
+                    " reason = ?, proof_type = NULL WHERE id = ?",
+                    (status, iso(now()), who.email, body.call_notes.strip() or s["call_notes"] or "",
+                     ",".join(sorted(set(body.checks))), body.reason if status == "rejected" else None, school_id))
+        A.audit(con, school_id, who.id, f"school_{status}", school_id,
+                **({"reason": body.reason} if body.reason and status == "rejected" else {}))
+    proofs.delete(school_id)
+    place = f"{places.lga_name(s['lga'])}, {places.state_name(s['state'])}"
+    if status == "approved":
+        sent = _mail(s["contact_email"], mailer.school_approved(s["contact_name"], s["name"], portal_url()))
+    else:
+        sent = _mail(s["contact_email"], mailer.school_not_approved(s["contact_name"], s["name"], s["contact_phone"] or "",
+                                                                   place, body.reason, mailer.ref(s["ref"])))
+    return {"code": f"school_{status}", "emailed": sent}
+
+
+@router.get("/admin/schools/{school_id}/proof")
+def school_proof(school_id: str, who: Who = Depends(team)) -> Response:
+    """The proof file, for the team only; never cached."""
+    with db() as con:
+        s = A.row(con.execute("SELECT proof_type FROM schools WHERE id = ?", (school_id,)).fetchone())
+    data = proofs.load(school_id) if s and s["proof_type"] else None
+    if data is None:
+        fail(404, "not_found")
+    with db() as con:
+        A.audit(con, school_id, who.id, "school_proof_viewed", school_id)
+    return Response(data, media_type=s["proof_type"], headers={
+        "Cache-Control": "no-store", "Content-Disposition": "inline", "X-Content-Type-Options": "nosniff"})
+
+
+@router.get("/admin/activity")
+def activity(who: Who = Depends(team), limit: int = 200) -> list[dict]:
+    """Who did what to which school, and when: registrations, calls, decisions, proof views."""
+    with db() as con:
+        rows = con.execute(
+            "SELECT a.*, s.name AS school_name, s.ref AS ref FROM audit a LEFT JOIN schools s ON s.id = a.school_id"
+            " WHERE a.action IN ('school_registered','school_call_noted','school_approved','school_rejected',"
+            "'school_proof_viewed','school_details_deleted') ORDER BY a.id DESC LIMIT ?", (min(limit, 500),)).fetchall()
+        names = {r["id"]: r["name"] for r in con.execute("SELECT id, name FROM staff")}
+    out = []
+    for r in rows:
+        actor = r["actor"] or ""
+        out.append({"action": r["action"], "school": r["school_name"], "reference": mailer.ref(r["ref"]) if r["ref"] else None,
+                    "who": actor[5:] if actor.startswith("team:") else names.get(actor, "Magana" if actor == "system" else actor),
+                    "at": mailer.lagos_time(parse(r["at"])), "detail": json.loads(r["detail"])})
+    return out
 
 
 # ---------- staff (school admins)
@@ -394,13 +573,19 @@ def invite(body: InviteIn, who: Who = Depends(admin)) -> dict:
             _class_for_admin(con, who, cid)
             con.execute("UPDATE classes SET teacher_id = ? WHERE id = ?", (sid, cid))
         A.audit(con, who.school["id"], who.id, "staff_invited", sid, role=body.role, classes=body.class_ids)
-    _send_invite(body.email, who)
+    _send_invite(sid, who)
     return {"code": "invite_sent", "id": sid}
 
 
-def _send_invite(email: str, who: Who) -> None:
+def _send_invite(staff_id: str, who: Who) -> None:
+    with db() as con:
+        s = con.execute("SELECT * FROM staff WHERE id = ?", (staff_id,)).fetchone()
+        classes = [r["name"] for r in con.execute("SELECT name FROM classes WHERE teacher_id = ? ORDER BY name", (staff_id,))]
+    role = "School admin" if s["role"] == "admin" else "Teacher"
     try:
-        mailer.invitation(email, who.school["name"], who.staff["name"], portal_url())
+        mailer.send(s["email"], mailer.teacher_invitation(s["name"], who.school["name"], who.staff["name"],
+                                                         role + (f" · {s['title']}" if s["title"] else ""), classes,
+                                                         s["email"], portal_url()))
     except mailer.MailError:
         fail(503, "mail_unavailable")
 
@@ -422,7 +607,7 @@ def resend_invite(staff_id: str, who: Who = Depends(admin)) -> dict:
         con.execute("UPDATE staff SET invited_at = ?, invite_expires = ? WHERE id = ?",
                     (iso(t), iso(t + timedelta(days=A.INVITE_DAYS)), staff_id))
         A.audit(con, who.school["id"], who.id, "invite_resent", staff_id)
-    _send_invite(s["email"], who)
+    _send_invite(staff_id, who)
     return {"code": "invite_sent"}
 
 

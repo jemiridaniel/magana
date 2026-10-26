@@ -15,6 +15,7 @@ from app import accounts, codes, places
 from app.main import app
 
 TEAM = "team@magana.test"
+APPROVE = {"decision": "approve", "checks": ["person_confirmed", "school_exists", "details_correct"]}
 PRINCIPAL = "adebayo.folake@gmail.com"
 
 
@@ -74,7 +75,7 @@ def register(email=PRINCIPAL) -> str:
 def approved_school(tmp) -> tuple[str, TestClient]:
     sid = register()
     team = sign_in(tmp, TEAM)
-    assert team.post(f"/portal/admin/schools/{sid}", json={"decision": "approve"}).status_code == 200
+    assert team.post(f"/portal/admin/schools/{sid}", json=APPROVE).status_code == 200
     return sid, sign_in(tmp, PRINCIPAL)
 
 
@@ -161,7 +162,7 @@ def test_a_new_school_is_pending_until_the_magana_team_approves_it(fresh):
     assert principal.get("/portal/admin/schools").status_code == 403  # not the team
     team = sign_in(fresh, TEAM)
     assert [s["id"] for s in team.get("/portal/admin/schools").json()] == [sid]
-    team.post(f"/portal/admin/schools/{sid}", json={"decision": "approve"})
+    team.post(f"/portal/admin/schools/{sid}", json=APPROVE)
     assert principal.get("/portal/classes").status_code == 200
 
 
@@ -229,7 +230,7 @@ def test_in_production_the_cookie_is_secure(fresh, monkeypatch):
     register()
     sent = []
     import app.portal_api as pa
-    monkeypatch.setattr(pa.mailer, "sign_in_code", lambda to, code: sent.append(code))
+    monkeypatch.setattr(pa.mailer, "send", lambda to, email: sent.append(email.subject[:7].replace(" ", "")))
     monkeypatch.setenv("MAGANA_ENV", "production")
     monkeypatch.setenv("MAGANA_CODE_KEY", "k" * 32)
     c = TestClient(app)

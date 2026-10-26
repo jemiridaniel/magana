@@ -5,6 +5,7 @@
 // only that. The Magana team sees the admin page.
 import { usePathname, useRouter } from "next/navigation";
 import { createContext, useCallback, useContext, useEffect, useState } from "react";
+import SchoolWaiting from "@/components/SchoolWaiting";
 import ServerBanner from "@/components/ServerBanner";
 import { messageFor } from "@/lib/messages";
 import { portal, PortalError, type Me } from "@/lib/portal";
@@ -61,16 +62,7 @@ export default function SessionGate({ children }: { children: React.ReactNode })
     );
   }
   if (me.kind === "staff" && me.school.status !== "approved") {
-    return (
-      <main id="main" className="main" tabIndex={-1}>
-        <div className="content">
-          <div className="page-head"><div><h1>{me.school.name}</h1>
-            <p>{me.school.status === "pending" ? messageFor("school_pending")
-              : "The Magana team couldn’t confirm this school. Email the support address on magana.ng to ask why."}</p></div></div>
-          <SignOutButton />
-        </div>
-      </main>
-    );
+    return <SchoolWaiting name={me.name} school={me.school} />;
   }
   return <SessionContext.Provider value={{ me, refresh: load }}>{children}</SessionContext.Provider>;
 }

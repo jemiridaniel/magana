@@ -12,12 +12,12 @@ export class PortalError extends Error {
   }
 }
 
-export async function call<T>(method: string, path: string, body?: unknown): Promise<T> {
+export async function call<T>(method: string, path: string, body?: unknown, headers: Record<string, string> = {}): Promise<T> {
   let r: Response;
   try {
     r = await apiFetch(path, {
       method,
-      headers: { "Content-Type": "application/json", ...apiKeyHeader },
+      headers: { "Content-Type": "application/json", ...apiKeyHeader, ...headers },
       body: body === undefined ? undefined : JSON.stringify(body),
     });
   } catch (e) {
@@ -36,7 +36,22 @@ export type Role = "admin" | "teacher";
 export type Mode = "guided" | "classroom" | "standard";
 export type Consent = "pending" | "received" | "not_needed";
 
-export interface School { id: string; name: string; status: "pending" | "approved" | "rejected"; state: string; lga: string }
+export interface School {
+  id: string; name: string; status: "pending" | "approved" | "rejected"; state: string; lga: string;
+  // Only while waiting for confirmation (or not confirmed):
+  reference?: string | null; registered?: string; call_by?: string; phone_masked?: string; reason?: string | null;
+}
+
+export type Check = "person_confirmed" | "school_exists" | "details_correct";
+export type Reason = "unreachable" | "role_unconfirmed" | "not_found" | "duplicate";
+export interface SchoolRequest {
+  id: string; name: string; status: School["status"]; reference: string; state_name: string; lga_name: string;
+  contact_name: string; contact_role: string; contact_email: string; contact_phone: string; phone_tel: string;
+  registered: string; call_by: string; days_left: number; ministry_no: string; proof: string | null;
+  call_notes: string; checks: Check[]; reason: Reason | null; reason_label: string | null;
+  decided_at: string | null; decided_by: string | null;
+}
+export interface Activity { action: string; school: string | null; reference: string | null; who: string; at: string; detail: Record<string, unknown> }
 export type Me =
   | { kind: "staff"; id: string; name: string; email: string; role: Role; title: string; school: School }
   | { kind: "team"; email: string; name: string };
@@ -108,11 +123,13 @@ export const portal = {
   checkUpload: (id: string, lines: string[], approve: boolean) =>
     call<{ code: string; upload: UploadInfo & { lines: UploadLine[] } }>("PUT", `/portal/uploads/${id}`, { lines, approve }),
   me: () => call<Me>("GET", "/portal/me"),
-  requestCode: (email: string) => call<{ retry_after: number; minutes: number }>("POST", "/portal/auth/request-code", { email }),
+  requestCode: (email: string) => call<{ retry_after: number; minutes: number }>("POST", "/portal/auth/request-code", { email },
+    // Only for the email's "requested from … in Nigeria": the device's time zone, no location.
+    { "X-Magana-Timezone": Intl.DateTimeFormat().resolvedOptions().timeZone ?? "" }),
   verify: (email: string, code: string) => call<{ me: Me }>("POST", "/portal/auth/verify", { email, code }),
   signOut: () => call("POST", "/portal/auth/sign-out"),
   places: () => call<{ states: Place[] }>("GET", "/portal/places"),
-  register: (body: Record<string, unknown>) => call<{ school_id: string }>("POST", "/portal/schools/register", body),
+  register: (body: Record<string, unknown>) => call<{ school_id: string; reference: string }>("POST", "/portal/schools/register", body),
   home: () => call<HomeData>("GET", "/portal/home"),
   classes: () => call<ClassInfo[]>("GET", "/portal/classes"),
   createClass: (body: { name: string; level: string; mode: Mode; teacher_id?: string }) => call<ClassInfo>("POST", "/portal/classes", body),
@@ -139,9 +156,13 @@ export const portal = {
   saveAttendance: (classId: string, day: string, marks: { learner_id: string; mark: string }[]) =>
     call("PUT", `/portal/classes/${classId}/attendance`, { day, marks }),
   audit: () => call<{ id: number; action: string; actor_name: string; target_name: string | null; at: string }[]>("GET", "/portal/audit"),
-  pendingSchools: () => call<{ id: string; name: string; state_name: string; lga_name: string; contact_name: string;
-    contact_role: string; contact_email: string; contact_phone: string; created_at: string }[]>("GET", "/portal/admin/schools"),
-  decideSchool: (id: string, decision: "approve" | "reject") => call("POST", `/portal/admin/schools/${id}`, { decision }),
+  adminSchools: (status: School["status"]) => call<SchoolRequest[]>("GET", `/portal/admin/schools?status=${status}`),
+  saveCallNotes: (id: string, call_notes: string, checks: Check[]) =>
+    call("PUT", `/portal/admin/schools/${id}/notes`, { call_notes, checks }),
+  reasons: (id: string) => call<{ reason: Reason; label: string; preview: string }[]>("GET", `/portal/admin/reasons?school_id=${id}`),
+  decideSchool: (id: string, body: { decision: "approve" | "reject"; checks?: Check[]; call_notes?: string; reason?: Reason }) =>
+    call<{ code: string; emailed: boolean }>("POST", `/portal/admin/schools/${id}`, body),
+  activity: () => call<Activity[]>("GET", "/portal/admin/activity"),
 };
 
 export const modeLabel: Record<Mode, string> = {

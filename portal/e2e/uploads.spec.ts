@@ -34,10 +34,13 @@ test("upload a PDF, see only its text, correct a line and approve; both pages pa
   await expect(page.getByRole("status").filter({ hasText: "Choose a photo or PDF first." })).toBeVisible();
 
   await page.getByLabel("Title").fill("SS2 Biology notes");
-  await page.getByLabel("Photo or PDF").setInputFiles({
+  await page.locator(".dropzone input[type=file]").setInputFiles({
     name: "notes.pdf", mimeType: "application/pdf",
     buffer: textPdf(["Photosynthesis", "Plants make food from light", "Read pages 12 to 15"]),
   });
+  await expect(page.locator(".dropzone-title")).toContainText("notes.pdf");  // the chosen file's name and size
+  await expect(page.getByText("Change file")).toBeVisible();
+  await designChecks(page);
   await page.getByRole("button", { name: "Upload" }).click();
   await expect(page.getByRole("status").filter({ hasText: "SS2 Biology notes:" })).toBeVisible();
   const row = page.getByRole("row").filter({ hasText: "SS2 Biology notes" });

@@ -265,7 +265,8 @@ Teachers sign in with a 6-digit code sent from **no-reply@magana.ng** through Am
    2. **Mail type:** Transactional. **Website URL:** `https://magana.ng`.
    3. **Use case description**, for example: *"Magana for Teachers (teachers.magana.ng) sends one-time 6-digit sign-in codes and invitations to teachers that a school admin has invited. No marketing email. About 50–500 emails a month during the pilot. Recipients are only addresses a school admin entered; bounces and complaints are handled by removing the address from the school."*
    4. AWS usually answers within a day. Until then, test with your own address: verify it under **Identities → Create identity → Email address**.
-6. **On the server** (`.env`), then `sudo docker compose -f docker-compose.prod.yml up -d`:
+6. **Replies go to support@magana.ng.** Every email has `Reply-To: support@magana.ng` (`MAIL_REPLY_TO`). Make that address real, for free, with **Cloudflare → magana.ng → Email → Email Routing → Get started**: add the MX and TXT records it offers, then a route **support@magana.ng → maganasupport@gmail.com** and confirm the Gmail address. (Email Routing only receives; SES still sends.)
+7. **On the server** (`.env`), then `sudo docker compose -f docker-compose.prod.yml up -d`:
    ```bash
    MAGANA_MAIL=ses
    MAIL_FROM=Magana for Teachers <no-reply@magana.ng>

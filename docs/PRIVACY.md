@@ -92,6 +92,8 @@ Magana marks lines that look handwritten. It reads their numbers only when two s
 |---|---|
 | The school's name, state and local government area | While the school uses Magana |
 | The principal's name, role, email and phone (the phone only so we can confirm the school) | While the school uses Magana |
+| **Proof of school** (optional: a photo or PDF of the letterhead, Ministry approval letter or staff ID) and a Ministry approval number | The file is stored encrypted and only the Magana team can open it. **It is deleted automatically as soon as we approve the school or decide not to.** The approval number stays with the school's record |
+| A school we couldn't confirm | Its details are deleted 30 days after our decision, unless the principal replies |
 | Teachers' names, emails, roles and classes | While they work at the school. When removed, they are signed out at once; their name stays in the audit log |
 | Sign-in codes | 10 minutes, in a form that can't be read back |
 | Sign-in sessions | Until sign-out, 30 minutes without activity, or 12 hours |
@@ -111,7 +113,7 @@ We use a few service providers. They handle data only to provide their service t
 | Provider | What for | What they see |
 |---|---|---|
 | **Amazon Web Services** (London, UK) | Our server | Everything our server handles, encrypted on the way |
-| **Amazon SES** | Sending teachers' sign-in codes and invitations | Teachers' email addresses |
+| **Amazon SES** | Sending sign-in codes, invitations and school registration emails | The recipient's email address and the email's content |
 | **Cloudflare** | Our domain names, and hosting the website and web app | Visitors' internet addresses |
 | **Meta (WhatsApp)** | Delivering WhatsApp messages | WhatsApp messages and photos |
 | **The Ibà service** | Working out call-back priority from the quick check | The answers, never stored |

@@ -34,6 +34,33 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-26 · Emails, school approval and proof of school (UNREVIEWED)
+
+> For Nurse Balogun: the proof-of-school file (PRIVACY.md) and the emails' wording.
+
+- **Six emails** (`mailer.py`, boards "Emails & school approval"):
+  - The emails: sign-in code, registration received, new school request (to the team), approved, not confirmed (with the reason), and teacher invitation.
+  - Each has HTML and plain text, 18 px text, a dark header, partly hidden phone numbers (`0803 *** **00`; the full number goes only to the team) and the same footer.
+  - **No image carries information.** Email apps block images and strip SVG, so the logo is text.
+  - The sign-in code is in the subject ("642 126 is your Magana sign-in code"). The email says when the code was asked for and from roughly where: the browser and the device's **time zone** (e.g. "in Nigeria"). Magana has no IP-location lookup; sending addresses to one would break the privacy notice.
+  - Replies go to support@magana.ng. The log holds only "email sent: kind, time".
+- **Team approval:**
+  - Approve works only with three checks ticked: person confirmed, school exists, details correct. The server enforces this too.
+  - Call notes are saved.
+  - Not approving needs one of 4 reasons, and the team sees the email the applicant will get first.
+  - Tabs: Approved, Not approved, Activity log.
+  - Every registration, call note, proof view and decision is logged.
+  - Schools not confirmed are deleted 30 days after the decision, as their email says.
+- **Proof of school** (optional): a photo or PDF, checked by its first bytes, up to 5 MB, plus a Ministry approval number. The file is stored encrypted, only the team can open it, and it is **deleted when the school is approved or not**. Tests check the stored bytes are not readable and the file is gone after the decision.
+- **Waiting page:** three steps, the reference, the call-by day and a normal-sized Sign out.
+- **Layout bugs fixed:**
+  - State and LGA now sit side by side at the same height at 1280 and 390 px, with one hint under both. A test measures it.
+  - Uploads and proof of school use a drop zone: the file input fills the dashed area, so you can click anywhere or Tab to it. It shows the file's name and size, and "Change file". The 1 px hidden input first failed the 64 px rule.
+- **Tests:** backend 467 passed (15 new: emails, recipients, the SES Reply-To, logs, checks, reasons, proof privacy, the 30-day deletion). Portal end-to-end 40 passed: axe and 64 px on Register (both widths), the waiting page, all four team tabs, and Uploads.
+- **A test-only race, fixed:** parallel test workers signed in with one shared team email and replaced each other's codes. Each worker now has its own.
+
+---
+
 ## 2026-10-26 · Statement photos: no partial amounts, and no amount missing without a warning (UNREVIEWED)
 
 - **Why:** on a simulated phone photo of the Bank A statement, about 300 numbers went missing with no warning (entry of 25 Oct). The "small or faint print" tip wasn't enough.

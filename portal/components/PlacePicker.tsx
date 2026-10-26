@@ -52,20 +52,21 @@ export default function PlacePicker({ value, onChange, invalid }: {
 
   const count = state ? `${matches.length} of ${state.name}’s ${state.lgas.length} LGAs` : "";
 
+  // One grid: the two labels on the first row, the two fields on the second (so they sit at the
+  // same height even when "Local government area" wraps), and the hint across both underneath.
   return (
     <div className="place-grid">
-      <div className="field">
-        <label htmlFor={`${id}-state`}>State</label>
-        <select
-          id={`${id}-state`} className="select" value={value.state} aria-invalid={invalid && !value.state ? true : undefined}
-          onChange={(e) => { onChange({ state: e.target.value, lga: "" }); setText(""); }}
-        >
-          <option value="">Choose a state</option>
-          {states.map((s) => <option key={s.code} value={s.code}>{s.name}</option>)}
-        </select>
-      </div>
-      <div className="field combo">
-        <label htmlFor={`${id}-lga`}>Local government area</label>
+      <label className="field-label pg-l1" htmlFor={`${id}-state`}>State</label>
+      <label className="field-label pg-l2" htmlFor={`${id}-lga`}>Local government area</label>
+      <select
+        id={`${id}-state`} className="select pg-c1" value={value.state} aria-invalid={invalid && !value.state ? true : undefined}
+        aria-describedby={`${id}-hint`}
+        onChange={(e) => { onChange({ state: e.target.value, lga: "" }); setText(""); }}
+      >
+        <option value="">Choose a state</option>
+        {states.map((s) => <option key={s.code} value={s.code}>{s.name}</option>)}
+      </select>
+      <div className="combo pg-c2">
         <input
           ref={input} id={`${id}-lga`} className="input" role="combobox" autoComplete="off"
           aria-autocomplete="list" aria-expanded={open && matches.length > 0} aria-controls={`${id}-list`}
@@ -77,7 +78,6 @@ export default function PlacePicker({ value, onChange, invalid }: {
           onBlur={() => setTimeout(() => setOpen(false), 150)}
           onKeyDown={onKey}
         />
-        <span id={`${id}-hint`} className="hint">{state ? "Type to filter, then choose with the arrow keys and Enter." : "Choose the state first."}</span>
         {open && matches.length > 0 && (
           <ul id={`${id}-list`} role="listbox" className="listbox" aria-label={`${state?.name} LGAs`}>
             {matches.map((l, i) => (
@@ -89,9 +89,11 @@ export default function PlacePicker({ value, onChange, invalid }: {
             ))}
           </ul>
         )}
-        <span id={`${id}-count`} className="visually-hidden" aria-live="polite">{open ? count : ""}</span>
-        {open && state && <span className="hint" aria-hidden="true">{count}</span>}
       </div>
+      <p id={`${id}-hint`} className="hint pg-hint">
+        All 36 states and the FCT, and each state’s LGAs. {state ? "Type to filter, then choose with the arrow keys and Enter." : "Choose the state first."}
+      </p>
+      <span id={`${id}-count`} className="visually-hidden" aria-live="polite">{open ? count : ""}</span>
     </div>
   );
 }

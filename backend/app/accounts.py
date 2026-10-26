@@ -118,6 +118,7 @@ def db():
         try:
             if path not in _ready:
                 con.executescript(SCHEMA)
+                _migrate(con)
                 _ready.add(path)
             yield con
             con.commit()
@@ -126,6 +127,25 @@ def db():
             raise
         finally:
             con.close()
+
+
+# Columns added after the first release: added to an existing database on first use.
+COLUMNS = {
+    "schools": {"ref": "INTEGER", "call_notes": "TEXT NOT NULL DEFAULT ''", "checks": "TEXT NOT NULL DEFAULT ''",
+                "reason": "TEXT", "proof_type": "TEXT", "ministry_no": "TEXT NOT NULL DEFAULT ''"},
+}
+
+
+def _migrate(con) -> None:
+    for table, cols in COLUMNS.items():
+        have = {r[1] for r in con.execute(f"PRAGMA table_info({table})")}
+        for name, kind in cols.items():
+            if name not in have:
+                con.execute(f"ALTER TABLE {table} ADD COLUMN {name} {kind}")
+    # Schools registered before references existed get one, in order.
+    for i, r in enumerate(con.execute("SELECT id FROM schools WHERE ref IS NULL ORDER BY created_at").fetchall()):
+        top = con.execute("SELECT COALESCE(MAX(ref), 1046) FROM schools").fetchone()[0]
+        con.execute("UPDATE schools SET ref = ? WHERE id = ?", (top + 1, r[0]))
 
 
 def reset_for_tests() -> None:
