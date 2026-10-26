@@ -42,7 +42,7 @@ DEFAULT_REPLY_TO = "support@magana.ng"
 DEFAULT_LOGO_URL = "https://magana.ng/brand/magana-mark-email.png"
 LAGOS = ZoneInfo("Africa/Lagos")
 KINDS = ("sign_in_code", "registration_received", "new_school_request", "school_approved", "school_not_approved",
-         "teacher_invitation", "team_invitation", "ses_reputation_alert")
+         "teacher_invitation", "team_invitation", "ses_reputation_alert", "problem_report")
 
 
 class MailError(Exception):
@@ -389,6 +389,26 @@ def ses_reputation_alert(bounce: float | None, complaint: float | None) -> Email
     text = _text(pre, "\n".join(f"{k}: {v}" for k, v in rows), todo)
     return Email("ses_reputation_alert", "Magana email: bounce or complaint rate too high", pre,
                  _page("Email reputation", pre, body, team=True), text)
+
+
+LANGUAGES = {"en": "English", "ha": "Hausa", "yo": "Yorùbá", "ig": "Igbo"}
+
+
+def problem_report(kind: str, screen: str, version: str, phone: str, lang: str, tier: str, *,
+                   voice_seconds: int | None, page_text: bool, when: datetime, link: str) -> Email:
+    """To support@ for each new report (reports_api.py). What and where only: the page text and the
+    voice note stay in the portal."""
+    age = {"standard": "18+", "guided": "13–17", "classroom": "Classroom session"}.get(tier, tier)
+    rows = [("What went wrong", kind), ("Screen", screen.replace("_", " ")), ("App version", version),
+            ("Phone", phone), ("App language", LANGUAGES.get(lang, lang)), ("Age group", age),
+            ("Voice note", f"{voice_seconds} s, in the portal" if voice_seconds else "None"),
+            ("Page text", "Included, in the portal" if page_text else "Not included"),
+            ("Sent", lagos_time(when))]
+    pre = f"New problem report: {kind}."
+    body = (_h1("New problem report") + _rows(rows) + '<div style="height:18px"></div>'
+            + f'<p style="margin:18px 0">{_button("Open Reports", link)}</p>')
+    text = _text(pre, "\n".join(f"{k}: {v}" for k, v in rows), f"Open Reports: {link}")
+    return Email("problem_report", f"Problem report: {kind}", pre, _page("Problem report", pre, body, team=True), text)
 
 
 # ---------- sending

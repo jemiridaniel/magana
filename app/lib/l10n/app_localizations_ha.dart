@@ -2275,4 +2275,75 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get helpCheckThanks => 'Na gode.';
+
+  @override
+  String get msg_report_sent => 'Na gode. Rahotonka ya isa ga ƙungiyar Magana.';
+
+  @override
+  String get msg_voice_note_adults_only =>
+      'Saƙon murya na manya ne kawai. Zaɓi abin da ya faru daga jerin.';
+
+  @override
+  String get msg_voice_note_unreadable =>
+      'Ban iya amfani da wannan saƙon murya ba. Sake nadawa ko aika rahoton ba tare da shi ba.';
+
+  @override
+  String get msg_voice_note_too_long =>
+      'Saƙon murya ya yi tsawo. Ka sa ya gaza daƙiƙa 60.';
+
+  @override
+  String get reportGoesTo => 'Yana zuwa ga ƙungiyar Magana';
+
+  @override
+  String get reportWhat => 'Me ya faru?';
+
+  @override
+  String get reportReadWrong => 'Ya karanta wani abu ba daidai ba';
+
+  @override
+  String get reportHardToUse => 'Yana da wahalar amfani';
+
+  @override
+  String get reportTooSlow => 'Ya yi jinkiri sosai';
+
+  @override
+  String get reportSomethingElse => 'Wani abu dabam';
+
+  @override
+  String get reportRecord => 'Nada saƙon murya (har zuwa daƙiƙa 60)';
+
+  @override
+  String reportRecording(int seconds) {
+    return 'Tsaida nadawa · daƙiƙa $seconds';
+  }
+
+  @override
+  String reportVoiceNote(int seconds) {
+    return 'An nada saƙon murya: daƙiƙa $seconds.';
+  }
+
+  @override
+  String get reportDeleteVoice => 'Share saƙon murya';
+
+  @override
+  String get reportIncludeText => 'Haɗa rubutun wannan shafi';
+
+  @override
+  String get reportIncludeTextNote =>
+      'A kashe sai ka kunna. Ba a taɓa aika hotuna.';
+
+  @override
+  String get reportSend => 'Aika rahoto';
+
+  @override
+  String get reportChooseFirst => 'Fara zaɓar abin da ya faru.';
+
+  @override
+  String get reportNoMic =>
+      'Magana ba za ta iya amfani da makirufo ba. Kana iya aika rahoton har yanzu.';
+
+  @override
+  String emailSupport(String email) {
+    return 'Aika imel zuwa $email';
+  }
 }

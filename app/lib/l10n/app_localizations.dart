@@ -3579,7 +3579,7 @@ abstract class AppLocalizations {
   /// No description provided for @readerCommandHelp.
   ///
   /// In en, this message translates to:
-  /// **'You can say: next, back, repeat, pause, read, next column, headings or spell. Say commands in English for now.'**
+  /// **'You can say: next, back, repeat, pause, read, next column, headings, spell or report a problem. Say commands in English for now.'**
   String get readerCommandHelp;
 
   /// No description provided for @msg_explain_language_coming.
@@ -3683,6 +3683,126 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Thank you.'**
   String get helpCheckThanks;
+
+  /// No description provided for @msg_report_sent.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you. Your report went to the Magana team.'**
+  String get msg_report_sent;
+
+  /// No description provided for @msg_voice_note_adults_only.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice notes are for adults only. Choose what went wrong from the list.'**
+  String get msg_voice_note_adults_only;
+
+  /// No description provided for @msg_voice_note_unreadable.
+  ///
+  /// In en, this message translates to:
+  /// **'I couldn\'t use that voice note. Please record it again or send the report without it.'**
+  String get msg_voice_note_unreadable;
+
+  /// No description provided for @msg_voice_note_too_long.
+  ///
+  /// In en, this message translates to:
+  /// **'That voice note is too long. Please keep it under 60 seconds.'**
+  String get msg_voice_note_too_long;
+
+  /// No description provided for @reportGoesTo.
+  ///
+  /// In en, this message translates to:
+  /// **'Goes to the Magana team'**
+  String get reportGoesTo;
+
+  /// No description provided for @reportWhat.
+  ///
+  /// In en, this message translates to:
+  /// **'What went wrong?'**
+  String get reportWhat;
+
+  /// No description provided for @reportReadWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'It read something wrong'**
+  String get reportReadWrong;
+
+  /// No description provided for @reportHardToUse.
+  ///
+  /// In en, this message translates to:
+  /// **'It was hard to use'**
+  String get reportHardToUse;
+
+  /// No description provided for @reportTooSlow.
+  ///
+  /// In en, this message translates to:
+  /// **'It was too slow'**
+  String get reportTooSlow;
+
+  /// No description provided for @reportSomethingElse.
+  ///
+  /// In en, this message translates to:
+  /// **'Something else'**
+  String get reportSomethingElse;
+
+  /// No description provided for @reportRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Record a voice note (up to 60 seconds)'**
+  String get reportRecord;
+
+  /// No description provided for @reportRecording.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop recording · {seconds} s'**
+  String reportRecording(int seconds);
+
+  /// No description provided for @reportVoiceNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice note recorded: {seconds} seconds.'**
+  String reportVoiceNote(int seconds);
+
+  /// No description provided for @reportDeleteVoice.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete voice note'**
+  String get reportDeleteVoice;
+
+  /// No description provided for @reportIncludeText.
+  ///
+  /// In en, this message translates to:
+  /// **'Include this page’s text'**
+  String get reportIncludeText;
+
+  /// No description provided for @reportIncludeTextNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Off unless you switch it on. Photos are never sent.'**
+  String get reportIncludeTextNote;
+
+  /// No description provided for @reportSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send report'**
+  String get reportSend;
+
+  /// No description provided for @reportChooseFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose what went wrong first.'**
+  String get reportChooseFirst;
+
+  /// No description provided for @reportNoMic.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana can\'t use the microphone. You can still send the report.'**
+  String get reportNoMic;
+
+  /// No description provided for @emailSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Email {email}'**
+  String emailSupport(String email);
 }
 
 class _AppLocalizationsDelegate

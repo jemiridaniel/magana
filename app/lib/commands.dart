@@ -5,7 +5,8 @@ import 'policy.dart';
 /// (CLAUDE.md: "every action reachable by one voice command").
 enum VoiceCommand {
   // Specific before general: "read my test results" is Everyday papers, not the
-  // quiz or Read a page.
+  // quiz or Read a page; "report a problem" is not a medical report.
+  report(null, ['report a problem', 'problem', 'something wrong']),
   reminders(Feature.reminders, ['reminder', 'remind']),
   nurse(Feature.healthCallback, ['nurse', 'pharmacist', 'health worker']),
   everyday(Feature.everydayHealth, [
@@ -74,6 +75,7 @@ AppLanguage? namedLanguage(String transcript) {
 /// What "Speak a command" in the Reader can do (board 5c: "Next column" by voice too).
 /// Specific before general: "next column" before "next".
 enum ReaderCommand {
+  report(['report a problem', 'problem']),
   nextColumn(['next column', 'column']),
   headings(['heading', 'headings']),
   spell(['spell']),

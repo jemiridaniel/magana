@@ -121,6 +121,16 @@ The people who run Magana sign in to their own pages with team accounts: Magana 
 - **Team accounts can't see learners' names, progress or consent.** They see schools and their teachers only, and the server enforces it.
 - One role per email: a team member can't also be a teacher or school admin.
 
+## Problem reports
+
+"Report a problem" in the app sends the Magana team:
+- what went wrong, chosen from a list;
+- the app version, the phone's maker and model, the app language and the screen you were on;
+- **for adults only**, a voice note of up to 60 seconds, if you record one. Under-18s have no recording option.
+- **the page's text, only if you switch "Include this page's text" on.** It is off by default. Never in a Classroom session. A photo is never sent.
+
+Reports are kept 180 days, then deleted. Only the Magana team can see them. The email that tells our support team about a new report says what went wrong and where, never the page text or the voice note. Playing a voice note is logged.
+
 ## Who else handles your data
 
 We use a few service providers. They handle data only to provide their service to us:

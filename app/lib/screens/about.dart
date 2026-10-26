@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../l10n/app_localizations.dart';
 import '../widgets.dart';
@@ -23,6 +24,10 @@ const asrAttributions = [
 /// scripts/set_public_config.py, which updates every copy).
 const supportEmail = 'support@magana.ng';
 
+/// Opens the phone's email app to write to support (a mailto: link).
+Future<void> emailSupport() =>
+    launchUrl(Uri(scheme: 'mailto', path: supportEmail));
+
 const termsCondition =
     'Awarri Technologies and the Federal Ministry of Communications, Innovation and '
     'Digital Economy.';
@@ -45,6 +50,10 @@ class AboutScreen extends StatelessWidget {
       body: [
         ScreenHeader(title: l.aboutTitle, subtitle: version),
         NoteBox(text: l.aboutContact(supportEmail)),
+        SecondaryButton(
+          label: l.emailSupport(supportEmail),
+          onTap: emailSupport,
+        ),
         heading(l.aboutModels),
         NoteBox(text: l.aboutModelsNote),
         heading('${l.aboutExplain}: N-ATLaS (NCAIR1/N-ATLaS)'),

@@ -31,6 +31,14 @@ class MainActivity : FlutterActivity() {
                     else -> result.notImplemented()
                 }
             }
+        // The phone's maker and model, for problem reports (lib/platform/device_model.dart).
+        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "magana/device")
+            .setMethodCallHandler { call, result ->
+                when (call.method) {
+                    "model" -> result.success("${Build.MANUFACTURER} ${Build.MODEL}".trim())
+                    else -> result.notImplemented()
+                }
+            }
         // "Open with Magana" and Share for PDFs (lib/platform/shared_pdf.dart).
         pdfChannel = MethodChannel(flutterEngine.dartExecutor.binaryMessenger, "magana/shared_pdf").also {
             it.setMethodCallHandler { call, result ->

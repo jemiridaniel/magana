@@ -2271,4 +2271,75 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get helpCheckThanks => 'Daalụ.';
+
+  @override
+  String get msg_report_sent => 'Daalụ. Akụkọ gị erutela ndị otu Magana.';
+
+  @override
+  String get msg_voice_note_adults_only =>
+      'Ozi olu bụ naanị maka ndị okenye. Họrọ ihe mere n\'ndepụta.';
+
+  @override
+  String get msg_voice_note_unreadable =>
+      'Enweghị m ike iji ozi olu ahụ. Biko dekọọ ya ọzọ ma ọ bụ zipu akụkọ ahụ na-enweghị ya.';
+
+  @override
+  String get msg_voice_note_too_long =>
+      'Ozi olu ahụ ogologo karịa. Biko mee ka ọ dị n\'okpuru sekọnd 60.';
+
+  @override
+  String get reportGoesTo => 'Ọ na-aga n\'aka ndị otu Magana';
+
+  @override
+  String get reportWhat => 'Gịnị mere?';
+
+  @override
+  String get reportReadWrong => 'Ọ gụrụ ihe ụfọdụ n\'ụzọ na-ezighi ezi';
+
+  @override
+  String get reportHardToUse => 'Ọ siri ike iji';
+
+  @override
+  String get reportTooSlow => 'Ọ dị nwayọ nke ukwuu';
+
+  @override
+  String get reportSomethingElse => 'Ihe ọzọ';
+
+  @override
+  String get reportRecord => 'Dekọọ ozi olu (ruo sekọnd 60)';
+
+  @override
+  String reportRecording(int seconds) {
+    return 'Kwụsị ndekọ · sekọnd $seconds';
+  }
+
+  @override
+  String reportVoiceNote(int seconds) {
+    return 'E dekọrọ ozi olu: sekọnd $seconds.';
+  }
+
+  @override
+  String get reportDeleteVoice => 'Hichapụ ozi olu';
+
+  @override
+  String get reportIncludeText => 'Tinye ederede peeji a';
+
+  @override
+  String get reportIncludeTextNote =>
+      'Ọ gbanyụrụ ma ọ bụrụ na ị gbanyeghị ya. A naghị eziga foto ọ bụla.';
+
+  @override
+  String get reportSend => 'Zipu akụkọ';
+
+  @override
+  String get reportChooseFirst => 'Buru ụzọ họrọ ihe mere.';
+
+  @override
+  String get reportNoMic =>
+      'Magana enweghị ike iji igwe okwu. Ị ka nwere ike izipu akụkọ ahụ.';
+
+  @override
+  String emailSupport(String email) {
+    return 'Zipu email na $email';
+  }
 }

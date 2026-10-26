@@ -18,6 +18,7 @@ import '../voice_input.dart';
 import 'explain.dart';
 import 'health_worker.dart';
 import 'reminders.dart';
+import 'report_problem.dart';
 import '../messages.dart';
 import '../speech.dart';
 import '../theme.dart';
@@ -293,8 +294,19 @@ class _ReaderScreenState extends State<ReaderScreen> {
         _play(_index);
       case ReaderCommand.help:
         _speaker.say(l.readerCommandHelp);
+      case ReaderCommand.report:
+        _run++;
+        _speaker.stop();
+        openReportProblem(context, screen: 'reader', pageText: _pageText());
     }
   }
+
+  /// The page as read, for a problem report (sent only if the person switches it on).
+  String _pageText() => [
+    for (final i in _items)
+      if (!i.isFaint)
+        i.isRow ? i.cells.map((c) => c.value).join(' | ') : i.text,
+  ].join('\n');
 
   /// An item's text without its warning; unclear numbers stay "unclear number".
   String _body(ReadItem item) {

@@ -1746,7 +1746,7 @@
   "cueTiltToward": "Tilt the top of the phone toward you",
   "cueTiltAway": "Tilt the top of the phone away from you",
   "cueBlurry": "Blurry. Hold still",
-  "readerCommandHelp": "You can say: next, back, repeat, pause, read, next column, headings or spell. Say commands in English for now.",
+  "readerCommandHelp": "You can say: next, back, repeat, pause, read, next column, headings, spell or report a problem. Say commands in English for now.",
   "msg_explain_language_coming": "Explain in {language} is coming. You can hear it in English.",
   "@msg_explain_language_coming": {
     "placeholders": {
@@ -1770,5 +1770,46 @@
   "helpCheckNoteClass": "Asked once a day at most. Your teacher sees only the totals, never what you read.",
   "helpCheckNotePhone": "Asked once a day at most. Your answers stay on this phone.",
   "helpCheckNotHeard": "Please say yes, some help or skip, or tap your answer.",
-  "helpCheckThanks": "Thank you."
+  "helpCheckThanks": "Thank you.",
+  "msg_report_sent": "Thank you. Your report went to the Magana team.",
+  "msg_voice_note_adults_only": "Voice notes are for adults only. Choose what went wrong from the list.",
+  "msg_voice_note_unreadable": "I couldn't use that voice note. Please record it again or send the report without it.",
+  "msg_voice_note_too_long": "That voice note is too long. Please keep it under 60 seconds.",
+  "reportGoesTo": "Goes to the Magana team",
+  "reportWhat": "What went wrong?",
+  "reportReadWrong": "It read something wrong",
+  "reportHardToUse": "It was hard to use",
+  "reportTooSlow": "It was too slow",
+  "reportSomethingElse": "Something else",
+  "reportRecord": "Record a voice note (up to 60 seconds)",
+  "reportRecording": "Stop recording · {seconds} s",
+  "@reportRecording": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "reportVoiceNote": "Voice note recorded: {seconds} seconds.",
+  "@reportVoiceNote": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "reportDeleteVoice": "Delete voice note",
+  "reportIncludeText": "Include this page’s text",
+  "reportIncludeTextNote": "Off unless you switch it on. Photos are never sent.",
+  "reportSend": "Send report",
+  "reportChooseFirst": "Choose what went wrong first.",
+  "reportNoMic": "Magana can't use the microphone. You can still send the report.",
+  "emailSupport": "Email {email}",
+  "@emailSupport": {
+    "placeholders": {
+      "email": {
+        "type": "String"
+      }
+    }
+  }
 }

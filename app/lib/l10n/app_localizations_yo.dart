@@ -2273,4 +2273,75 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get helpCheckThanks => 'O ṣeun.';
+
+  @override
+  String get msg_report_sent => 'O ṣeun. Ìjábọ̀ rẹ ti dé ọ̀dọ̀ ẹgbẹ́ Magana.';
+
+  @override
+  String get msg_voice_note_adults_only =>
+      'Ohùn tí a gbà sílẹ̀ wà fún àgbàlagbà nìkan. Yan ohun tó ṣẹlẹ̀ láti inú àtòjọ.';
+
+  @override
+  String get msg_voice_note_unreadable =>
+      'Mi ò lè lo ohùn yẹn. Jọ̀wọ́ tún gbà á sílẹ̀ tàbí fi ìjábọ̀ ránṣẹ́ láìsí i.';
+
+  @override
+  String get msg_voice_note_too_long =>
+      'Ohùn yẹn ti gùn jù. Jọ̀wọ́ jẹ́ kí ó kéré sí ìṣẹ́jú-àáyá 60.';
+
+  @override
+  String get reportGoesTo => 'Ó ń lọ sọ́dọ̀ ẹgbẹ́ Magana';
+
+  @override
+  String get reportWhat => 'Kí ló ṣẹlẹ̀?';
+
+  @override
+  String get reportReadWrong => 'Ó ka nǹkan kan ní àṣìṣe';
+
+  @override
+  String get reportHardToUse => 'Ó ṣòro láti lò';
+
+  @override
+  String get reportTooSlow => 'Ó lọ́ra jù';
+
+  @override
+  String get reportSomethingElse => 'Nǹkan mìíràn';
+
+  @override
+  String get reportRecord => 'Gba ohùn sílẹ̀ (títí dé ìṣẹ́jú-àáyá 60)';
+
+  @override
+  String reportRecording(int seconds) {
+    return 'Dá gbígbà dúró · ìṣẹ́jú-àáyá $seconds';
+  }
+
+  @override
+  String reportVoiceNote(int seconds) {
+    return 'A ti gba ohùn sílẹ̀: ìṣẹ́jú-àáyá $seconds.';
+  }
+
+  @override
+  String get reportDeleteVoice => 'Pa ohùn rẹ́';
+
+  @override
+  String get reportIncludeText => 'Fi ọ̀rọ̀ ojú-ìwé yìí kún un';
+
+  @override
+  String get reportIncludeTextNote =>
+      'Ó wà ní pípa àyàfi tí o bá tàn án. A kì í fi fọ́tò ránṣẹ́ láé.';
+
+  @override
+  String get reportSend => 'Fi ìjábọ̀ ránṣẹ́';
+
+  @override
+  String get reportChooseFirst => 'Kọ́kọ́ yan ohun tó ṣẹlẹ̀.';
+
+  @override
+  String get reportNoMic =>
+      'Magana kò lè lo makirofóònù. O ṣì lè fi ìjábọ̀ ránṣẹ́.';
+
+  @override
+  String emailSupport(String email) {
+    return 'Fi ímeèlì ránṣẹ́ sí $email';
+  }
 }

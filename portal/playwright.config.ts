@@ -38,7 +38,7 @@ export default defineConfig({
                 `exec .venv/bin/uvicorn app.main:app --port ${API_PORT}`].join("; "),
       url: `http://localhost:${API_PORT}/health`,
       env: { MAGANA_ENV: "development", MAGANA_API_KEY: "", MAGANA_MAIL: "outbox", MAGANA_DATA_DIR: dataDir,
-             MAGANA_DEV_SIGNIN_LIMIT: "10000", MAGANA_DEV_REGISTER_LIMIT: "10000",
+             MAGANA_DEV_SIGNIN_LIMIT: "10000", MAGANA_DEV_REGISTER_LIMIT: "10000", MAGANA_DEV_REPORT_LIMIT: "10000",
              MAGANA_DEV_CODE_GAP: "0", MAGANA_DEV_CODES_PER_HOUR: "10000",
              MAGANA_CORS_ORIGIN_REGEX: `http://localhost:${PORTAL_PORT}` },
       reuseExistingServer: !!process.env.E2E_REUSE,  // E2E_REUSE=1: servers you started (to read their logs)

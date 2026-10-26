@@ -126,6 +126,8 @@ def db():
                 con.executescript(team.SCHEMA)
                 from . import ses_events  # addresses that bounced or complained
                 con.executescript(ses_events.SCHEMA)
+                from .reports_api import SCHEMA as REPORTS  # "Report a problem" (board 9)
+                con.executescript(REPORTS)
                 _migrate(con)
                 _ready.add(path)
             yield con

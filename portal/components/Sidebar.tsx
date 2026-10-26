@@ -21,6 +21,7 @@ const teamLinks = [
   { href: "/admin/approved/", label: "Approved schools" },
   { href: "/admin/not-approved/", label: "Not approved" },
   { href: "/admin/activity/", label: "Activity log", roles: ["owner", "reviewer"] },
+  { href: "/admin/reports/", label: "Reports" },
   { href: "/admin/account/", label: "My account" },
 ];
 const adminLinks = [

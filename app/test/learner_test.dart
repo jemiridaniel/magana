@@ -207,7 +207,14 @@ void main() {
     await tap(tester, en.settings);
     await tester.pumpAndSettle();
     expect(find.text(en.settingsVersion('0.1.0', '3')), findsOneWidget);
-    expect(find.text(en.reportHow), findsOneWidget);
+    expect(
+      find.bySemanticsLabel('${en.reportProblem}. ${en.reportGoesTo}'),
+      findsOneWidget,
+    );
+    expect(
+      find.bySemanticsLabel(en.emailSupport(supportEmail)),
+      findsOneWidget,
+    );
     expectAccessible(tester, 'Settings');
     await tap(tester, RegExp('^${en.aboutTitle}'));
     // The terms' credit lines, verbatim, as each model card words them.
@@ -302,7 +309,8 @@ void main() {
       expect(speaker.said.last, startsWith(en.explainQuestionPreview));
 
       await tap(tester, en.reportProblem);
-      expect(find.text(en.reportHow), findsOneWidget);
+      expect(find.text(en.reportWhat), findsOneWidget); // Report a problem (board 9)
+      expect(find.bySemanticsLabel(en.reportIncludeText), findsOneWidget);
       handle.dispose();
     },
   );

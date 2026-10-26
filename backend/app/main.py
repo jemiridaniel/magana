@@ -20,7 +20,7 @@ from typing import Literal
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import asr, codes, curriculum, explain, handwriting, learner_api, pdfs, policy, portal_api, quizzes, ratelimit, safety, ses_events, ses_health, templates, team_api, triage, uploads_api, wa_flow
+from . import asr, codes, curriculum, explain, handwriting, learner_api, pdfs, policy, portal_api, quizzes, ratelimit, reports_api, safety, ses_events, ses_health, templates, team_api, triage, uploads_api, wa_flow
 from .wa_client import WhatsAppClient
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
@@ -70,6 +70,7 @@ app.include_router(portal_api.router)
 app.include_router(learner_api.router)
 app.include_router(uploads_api.router)
 app.include_router(team_api.router)
+app.include_router(reports_api.router)
 
 WHATSAPP_WEBHOOK = "/whatsapp/webhook"
 SES_EVENTS = "/internal/ses-events"  # Amazon SNS, which proves itself with its signature (ses_events.py)

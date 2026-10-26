@@ -747,3 +747,7 @@ tr.is-open { background: #F3F9F5; }
 
 /* A link that is a table cell's content (Learner progress): 48 px tall like the other links. */
 .cell-link { display: inline-flex; align-items: center; min-height: 48px; }
+
+/* Reports (components/ReportsList.tsx). */
+.table-box summary { display: flex; align-items: center; min-height: 48px; font-weight: 700; cursor: pointer; }
+.report-text { white-space: pre-wrap; max-width: 48ch; }

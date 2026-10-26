@@ -13,6 +13,21 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-26 · Report a problem (board 9) (UNREVIEWED)
+
+- **What changed:**
+  - The app has a Report a problem screen, reachable from Settings, by saying "report a problem" on Home or in the Reader, and from Explain.
+  - It offers four choices: "It read something wrong", "It was hard to use", "It was too slow", "Something else".
+  - Adults may add a voice note, which stops itself at 60 s. Under-18s see no recording option, and the server refuses a voice note from them too.
+  - "Include this page's text" is off by default and never offered in a Classroom session. A photo is never sent, and extra fields are refused.
+  - Reports are stored with the app version, phone model, language and screen, and kept 180 days. They show in the team's new **Reports** page, which Support can view. Playing a voice note is logged.
+  - support@ gets one email per report, which never includes the page text or the voice note.
+  - The support email in About and Settings is now a tappable mailto button.
+- **Changes from the board:** the board's "Hold to say more" is a tap-to-start, tap-to-stop button. Holding is hard with TalkBack (double-tap and hold).
+- **Bug found and fixed:** the app treated any answer other than 200 as an error. A new report (201 Created) would have shown as failed. It now accepts any 2xx.
+- **Tests:** `backend/tests/test_reports.py` (8), `app/test/report_problem_test.dart` (10), and a portal end-to-end test of Reports for Support.
+- **Not yet:** recording on a real phone (AAC at 32 kbit/s, about 240 kB a minute), and native review of the new Hausa, Yorùbá and Igbo strings.
+
 ## 2026-10-26 · "Did you need help?" (board 8) and a real "Done without sighted help" figure (UNREVIEWED)
 
 - **Before:** nothing wrote the portal's `learner_stats`, so "Done without sighted help" had no real source. It showed only test data, and it was worked out as unaided ÷ pages read. "Share my score with my teacher" sent nothing.

@@ -11,6 +11,7 @@ import 'about.dart';
 import 'home.dart';
 import 'class_code.dart';
 import 'onboarding.dart' show GoalsStep, classLevelChoices;
+import 'report_problem.dart';
 
 /// The installed build's version; replaceable in tests.
 Future<({String version, String build})> Function() appVersion = () async {
@@ -176,7 +177,16 @@ class _SettingsScreenState extends State<SettingsScreen> {
             style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
           ),
         ),
-        NoteBox(text: l.reportHow),
+        ChoiceCard(
+          title: l.reportProblem,
+          detail: l.reportGoesTo,
+          leading: const Icon(Icons.flag_circle_outlined, size: 30),
+          onTap: () => openReportProblem(context, screen: 'settings'),
+        ),
+        SecondaryButton(
+          label: l.emailSupport(supportEmail),
+          onTap: emailSupport,
+        ),
         NoteBox(text: l.privacyNote, kind: NoteKind.privacy),
         ChoiceCard(
           title: l.aboutTitle,
@@ -197,7 +207,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           onTap: () => AppScope.of(context).speaker.say(
             [
               if (v != null) l.settingsVersion(v.version, v.build),
-              l.reportHow,
+              '${l.reportProblem}. ${l.reportGoesTo}.',
             ].join(' '),
           ),
         ),

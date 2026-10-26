@@ -131,7 +131,26 @@ async function sendUpload(file: File, classId: string, title: string): Promise<{
   return json;
 }
 
+export interface ProblemReport {
+  id: string; kind: string; kind_label: string; screen: string; app_version: string; phone_model: string; language: string;
+  age_group: string; page_text: string | null; voice_seconds: number | null; when: string;
+}
+
+/** A report's voice note, as a blob (the request carries the sign-in cookie; logged as played). */
+async function reportVoice(id: string): Promise<Blob> {
+  let r: Response;
+  try {
+    r = await apiFetch(`/portal/admin/reports/${id}/voice`, { headers: apiKeyHeader });
+  } catch (e) {
+    throw new PortalError(e instanceof ServerDown && e.state === "sleeping" ? "server_sleeping" : "unreachable");
+  }
+  if (!r.ok) throw new PortalError("not_found");
+  return r.blob();
+}
+
 export const portal = {
+  reports: () => call<ProblemReport[]>("GET", "/portal/admin/reports"),
+  reportVoice,
   uploads: () => call<UploadInfo[]>("GET", "/portal/uploads"),
   upload: (id: string) => call<UploadInfo & { lines: UploadLine[] }>("GET", `/portal/uploads/${id}`),
   sendUpload,

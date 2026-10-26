@@ -61,6 +61,10 @@ ENGLISH = {
     "not_linked": "This phone isn't in a class now. You can still read pages.",
     "class_joined": "You're in the class.",
     "progress_shared": "Your totals were shared with your teacher.",
+    "report_sent": "Thank you. Your report went to the Magana team.",
+    "voice_note_adults_only": "Voice notes are for adults only. Choose what went wrong from the list.",
+    "voice_note_unreadable": "I couldn't use that voice note. Please record it again or send the report without it.",
+    "voice_note_too_long": "That voice note is too long. Please keep it under 60 seconds.",
     "class_changed": "Your class has changed.",
     "session_code_invalid": "That session code isn't right. Check it in the teacher portal.",
     # Explanations

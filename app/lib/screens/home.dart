@@ -18,6 +18,7 @@ import 'settings.dart';
 import 'everyday.dart';
 import 'library.dart';
 import 'quiz_list.dart';
+import 'report_problem.dart';
 import 'score.dart';
 import 'skills.dart';
 
@@ -675,6 +676,8 @@ void runCommand(BuildContext context, String transcript) {
       open(const ExplainScreen(lines: [], source: ''));
     case VoiceCommand.settings:
       open(const SettingsScreen());
+    case VoiceCommand.report:
+      openReportProblem(context, screen: 'home');
     case VoiceCommand.language:
       final lang = namedLanguage(transcript);
       if (lang == null) {
@@ -703,6 +706,7 @@ void runCommand(BuildContext context, String transcript) {
         VoiceCommand.ask: l.askQuestion,
         VoiceCommand.language: l.changeLanguageCommand,
         VoiceCommand.settings: l.settings,
+        VoiceCommand.report: l.reportProblem,
       };
       scope.speaker.say(
         l.commandHelp(

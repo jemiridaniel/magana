@@ -9,7 +9,24 @@ An audit of the Android app (`app/`) and the server calls it depends on, against
 - Every TalkBack check so far was on the Android emulator (Android 16, API 36).
 - The live server's settings could not be read for this audit: SSH timed out, because inbound SSH is limited to your own IP. Production settings below come from `deploy/.env.example` and from FINDINGS.
 
-## Summary
+## Status after the fixes (updated 26 Oct 2026)
+
+The audit below is as written on 26 Oct, before any fix. These are the statuses now, after the fixes from the design boards (5c, 5d, 5e, 8, 9) and Explain's fail-safe. Measurements are in docs/FINDINGS.md.
+
+| # | Item | Status now | What changed |
+|---|---|---|---|
+| 1 | Capture guidance | **Partly** | A tilt cue from the page's edges and a blur check while framing (no auto-capture while blurry) were added. Thresholds are untuned on a real camera, and there is still no real-phone test. |
+| 2 | Confidence signalling | **Exists** | Gallery photos with text cut off at the edge now say "Part of the page is cut off at the <side>". On Hausa, Yorùbá and Igbo pages, a digit inside a word is "unclear letter", never a number. |
+| 3 | Offline | **Partly** (much better) | Basic reading works on the phone (ML Kit and the phone's voice), with number safety. The photo is queued, encrypted, for the full reading. Tables, columns and Explain still need the server. APK +13 MB. |
+| 4 | Low-end phones | **Partly** | Unchanged: still never run on a real low-end phone. |
+| 5 | Structure | **Partly** (much better) | Two-column pages are read column by column: words in order went from 64% to 100% on team pages. There are headings, "Next column" and a page map. Real photographed textbook pages are still to be measured. |
+| 6 | Accessibility tests | **Partly** | More `expectAccessible` checks (help check, report a problem, unclear letters, Explain), plus portal axe checks on the new pages. Still no TalkBack test on a real phone. |
+| 7 | Feedback | **Exists** | "Did you need help?" (board 8) feeds a real "Done without sighted help" figure, with "No answers yet" when empty. "Report a problem" (board 9) goes to the team's Reports list and emails support. The support email can be tapped. |
+| 8 | Consent | **Partly** | Unchanged. The new problem reports and shared totals follow the age rules: no voice note under 18, nothing from Classroom sessions, nothing before consent. |
+| 9 | Explain | **Partly** (still off in production) | Fails safe: every marker exactly once, one retry at temperature 0, then the page is read. English goes only to the LoRA. Hausa, Yorùbá and Igbo are "coming", with English offered. On the 20-prompt set the LoRA in English gave 2 spoken, 3 refused, 0 unsafe. There is no approved host yet. |
+| 10 | Language | **Partly** | Hausa, Yorùbá and Igbo pages are warned once. Yorùbá and Igbo pages are read again with better models. Words that may have lost a letter are marked and spelled, and a digit inside a word is an unclear letter. Hausa ɓ ɗ ƙ ƴ are still lost by every model. The UI text is still a draft. |
+
+## Summary (as audited, before the fixes)
 
 | # | Item | Status | One line |
 |---|---|---|---|
@@ -287,6 +304,8 @@ For the LoRA, the main failure is the **wrong language**, plus harmless ordinal 
 ---
 
 ## Highest-priority gaps for the white paper
+
+*As audited. Since then items 1–4 below have been addressed in code (see "Status after the fixes" above). Item 5, a real phone and a blind tester, is still open.*
 
 1. **No offline reading** (item 3). The main promise ("partly offline") isn't met: reading a page needs the server.
 2. **Two-column pages merge their columns** (item 5). A comprehension risk on textbooks and leaflets.

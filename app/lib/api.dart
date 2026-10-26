@@ -476,7 +476,7 @@ class MaganaApi {
         return null;
       }
     }();
-    if (res.statusCode != 200) {
+    if (res.statusCode < 200 || res.statusCode > 299) {
       final detail = decoded is Map ? decoded['detail'] : null;
       throw ApiException(
         detail is Map && detail['code'] is String
@@ -565,6 +565,37 @@ class MaganaApi {
       status: body['status'] as String? ?? 'not_linked',
       classInfo: body['class'] as Map<String, dynamic>?,
     );
+  }
+
+  /// Report a problem (board 9): returns the message code (report_sent). The voice note
+  /// goes only from adults; page text only when switched on; never a photo.
+  Future<String> reportProblem({
+    required String kind,
+    required String screen,
+    required String appVersion,
+    required String phoneModel,
+    required String language,
+    String? pageText,
+    ({Uint8List bytes, String type, int seconds})? voiceNote,
+  }) async {
+    final body = await _json(
+      'POST',
+      '/reports',
+      body: {
+        'kind': kind,
+        'screen': screen,
+        'app_version': appVersion,
+        'phone_model': phoneModel,
+        'language': language,
+        'page_text': ?pageText,
+        if (voiceNote != null) ...{
+          'voice_note': base64Encode(voiceNote.bytes),
+          'voice_type': voiceNote.type,
+          'voice_seconds': voiceNote.seconds,
+        },
+      },
+    );
+    return body['code'] as String? ?? 'report_sent';
   }
 
   /// "Did you need help?" daily totals for the teacher (board 8, help_check.dart):
@@ -679,7 +710,7 @@ class MaganaApi {
     } catch (_) {
       throw ApiException(noAnswerCode());
     }
-    if (res.statusCode != 200) {
+    if (res.statusCode < 200 || res.statusCode > 299) {
       String code = serverAsleep(res.statusCode) ? 'server_sleeping' : 'failed';
       try {
         final detail = (jsonDecode(res.body) as Map)['detail'];

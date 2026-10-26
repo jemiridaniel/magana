@@ -29,11 +29,13 @@ def all_kinds():
     ]
 
 
-def test_eight_emails_each_html_and_text_with_the_same_footer_and_the_logo():
+def test_nine_emails_each_html_and_text_with_the_same_footer_and_the_logo():
     emails = all_kinds()
     emails.append(mailer.team_invitation("Remi", "Daniel", "School reviewer", "Approve or reject schools",
                                          "remi@example.com", "https://teachers.magana.ng"))
     emails.append(mailer.ses_reputation_alert(0.031, None))
+    emails.append(mailer.problem_report("It read something wrong", "reader", "0.1.0+6", "TECNO KI5q", "ha", "standard",
+                                        voice_seconds=12, page_text=False, when=T, link="https://teachers.magana.ng/admin/reports/"))
     assert [e.kind for e in emails] == list(mailer.KINDS)
     for e in emails:
         assert e.html.startswith("<!doctype html>") and 'lang="en"' in e.html

@@ -9,6 +9,7 @@ import '../theme.dart';
 import '../voice_input.dart';
 import '../widgets.dart';
 import 'capture.dart';
+import 'report_problem.dart';
 
 /// Explain in my language (design 6). N-ATLAS is not hosted yet, so this is a
 /// preview: the backend's preview engine gives back the page text itself. Every
@@ -174,26 +175,11 @@ class _ExplainScreenState extends State<ExplainScreen> {
     AppScope.of(context).speaker.say(_l.answerLanguage(next.name));
   }
 
-  void _report() {
-    final l = _l;
-    AppScope.of(context).speaker.say(l.reportHow);
-    showDialog<void>(
-      context: context,
-      builder: (dialog) => AlertDialog(
-        title: Text(
-          l.reportProblem,
-          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
-        ),
-        content: Text(l.reportHow, style: const TextStyle(fontSize: 19)),
-        actions: [
-          PrimaryButton(
-            label: MaterialLocalizations.of(dialog).okButtonLabel,
-            onTap: () => Navigator.of(dialog).pop(),
-          ),
-        ],
-      ),
-    );
-  }
+  void _report() => openReportProblem(
+    context,
+    screen: 'explain',
+    pageText: _hasPage ? widget.lines.join('\n') : null,
+  );
 
   @override
   Widget build(BuildContext context) {

@@ -2213,7 +2213,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get readerCommandHelp =>
-      'You can say: next, back, repeat, pause, read, next column, headings or spell. Say commands in English for now.';
+      'You can say: next, back, repeat, pause, read, next column, headings, spell or report a problem. Say commands in English for now.';
 
   @override
   String msg_explain_language_coming(String language) {
@@ -2271,4 +2271,76 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get helpCheckThanks => 'Thank you.';
+
+  @override
+  String get msg_report_sent =>
+      'Thank you. Your report went to the Magana team.';
+
+  @override
+  String get msg_voice_note_adults_only =>
+      'Voice notes are for adults only. Choose what went wrong from the list.';
+
+  @override
+  String get msg_voice_note_unreadable =>
+      'I couldn\'t use that voice note. Please record it again or send the report without it.';
+
+  @override
+  String get msg_voice_note_too_long =>
+      'That voice note is too long. Please keep it under 60 seconds.';
+
+  @override
+  String get reportGoesTo => 'Goes to the Magana team';
+
+  @override
+  String get reportWhat => 'What went wrong?';
+
+  @override
+  String get reportReadWrong => 'It read something wrong';
+
+  @override
+  String get reportHardToUse => 'It was hard to use';
+
+  @override
+  String get reportTooSlow => 'It was too slow';
+
+  @override
+  String get reportSomethingElse => 'Something else';
+
+  @override
+  String get reportRecord => 'Record a voice note (up to 60 seconds)';
+
+  @override
+  String reportRecording(int seconds) {
+    return 'Stop recording · $seconds s';
+  }
+
+  @override
+  String reportVoiceNote(int seconds) {
+    return 'Voice note recorded: $seconds seconds.';
+  }
+
+  @override
+  String get reportDeleteVoice => 'Delete voice note';
+
+  @override
+  String get reportIncludeText => 'Include this page’s text';
+
+  @override
+  String get reportIncludeTextNote =>
+      'Off unless you switch it on. Photos are never sent.';
+
+  @override
+  String get reportSend => 'Send report';
+
+  @override
+  String get reportChooseFirst => 'Choose what went wrong first.';
+
+  @override
+  String get reportNoMic =>
+      'Magana can\'t use the microphone. You can still send the report.';
+
+  @override
+  String emailSupport(String email) {
+    return 'Email $email';
+  }
 }

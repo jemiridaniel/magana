@@ -650,6 +650,7 @@ ACTION_LABELS = {
     "team_member_invited": "Invited member", "team_role_changed": "Role changed", "team_member_removed": "Removed member",
     "team_invite_resent": "Invite resent", "team_invite_cancelled": "Invite cancelled", "team_owner_created": "First Magana admin made",
     "team_member_created": "Member made", "team_email_undeliverable": "Email undeliverable",
+    "team_report_voice_played": "Played a voice note",
 }
 LOG_YEARS = 2
 
@@ -706,6 +707,8 @@ def _about(r: dict, people: dict) -> str:
         return f"{target.get('name') or d.get('email', '')} → {tm.ROLE_LABEL.get(d.get('role', ''), '')}"
     if r["action"] == "team_authenticator_reset":
         return f"{target.get('name', '')}’s authenticator ({d.get('by', '')})"
+    if r["action"] == "team_report_voice_played":
+        return f"Problem report {r['target'] or ''}".strip()
     if r["action"] == "team_email_undeliverable":
         return f"{d.get('email', '')} · {'Marked as spam' if d.get('reason') == 'complaint' else 'Hard bounce'}"
     return target.get("name") or d.get("email") or ""

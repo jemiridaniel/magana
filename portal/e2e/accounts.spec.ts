@@ -516,3 +516,30 @@ test("Done without sighted help: from learners' “Did you need help?” answers
   await expect(page.getByRole("row", { name: /New learner/ }).getByRole("cell", { name: "75%" })).toBeVisible();
   await designChecks(page);
 });
+
+test("Reports (Support can view): what went wrong, where, phone and app; page text and voice note only when sent", async ({ page }) => {
+  const kind = `phone-${Date.now()}`;
+  const send = (data: object, tier = "standard") => page.request.post(`${apiUrl}/reports`, {
+    data: { kind: "read_wrong", screen: "reader", app_version: "0.1.0+6", language: "ha", ...data },
+    headers: { "X-Magana-Tier": tier } });
+  // 16 bytes of an AAC file's start: enough for the list (the browser needn't play it here).
+  const voice = Buffer.from("000000186674797044000000").toString("base64");
+  expect((await send({ phone_model: kind, page_text: "Paracetamol 500 mg", voice_note: voice, voice_type: "audio/mp4", voice_seconds: 9 })).status()).toBe(201);
+  expect((await send({ phone_model: `${kind}-teen`, kind: "too_slow" }, "guided")).status()).toBe(201);
+  await signInTeam(page, "support@magana.test");
+  await page.getByRole("link", { name: "Reports" }).click();
+  await expect(page.getByRole("heading", { name: "Reports", level: 1 })).toBeVisible();
+  const adult = page.getByRole("row", { name: new RegExp(`${kind}(?!-teen)`) }).first();
+  await expect(adult.getByRole("rowheader")).toContainText("It read something wrong");
+  await expect(adult.getByText("18+")).toBeVisible();
+  await expect(adult.getByText("Version 0.1.0+6")).toBeVisible();
+  await adult.getByText("Show page text").click();
+  await expect(adult.getByText("Paracetamol 500 mg")).toBeVisible();
+  await adult.getByRole("button", { name: /^Play voice note \(9 s\)/ }).click();
+  await expect(adult.getByLabel("Voice note, 9 seconds")).toBeVisible();
+  const teen = page.getByRole("row", { name: new RegExp(`${kind}-teen`) });
+  await expect(teen.getByText("13–17")).toBeVisible();
+  await expect(teen.getByText("Not included")).toBeVisible();
+  await expect(teen.getByRole("cell", { name: "None", exact: true })).toBeVisible();
+  await designChecks(page);
+});
