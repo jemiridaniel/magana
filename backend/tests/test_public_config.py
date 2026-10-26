@@ -10,9 +10,6 @@ CONFIG = json.loads((ROOT / "config" / "public.json").read_text())
 ADDRESS = re.compile(r"[\w.+-]+@magana\.ng\b|[\w.+-]*magana[\w.+-]*@gmail\.com", re.I)
 # The sign-in emails' sender (mailer.py MAIL_FROM): it can't receive mail, so it's never support.
 SENDER = "no-reply@magana.ng"
-# Where replies to Magana's emails go (mailer.py MAIL_REPLY_TO); Cloudflare Email Routing forwards
-# it to the support inbox (docs/DEPLOY_AWS.md §8b).
-REPLY_TO = "support@magana.ng"
 
 
 # Built, downloaded or generated: not ours to check. (No git here: CI runs this in the
@@ -34,7 +31,7 @@ def test_every_support_address_is_the_configured_one():
         if not path.exists():
             continue
         for found in ADDRESS.findall(path.read_text(encoding="utf-8", errors="ignore")):
-            if found.lower() in (SENDER, REPLY_TO):
+            if found.lower() == SENDER:
                 continue
             seen.setdefault(found, []).append(path.relative_to(ROOT).as_posix())
     assert set(seen) == {CONFIG["support_email"]}, seen
@@ -44,3 +41,8 @@ def test_the_address_reaches_the_app_portal_and_docs():
     email = CONFIG["support_email"]
     for rel in ("app/lib/screens/about.dart", "portal/lib/site.ts", "website/lib/site.ts", "docs/ACCESSIBILITY.md", "docs/PRIVACY.md", "docs/TESTER_INSTALL.md"):
         assert email in (ROOT / rel).read_text(encoding="utf-8"), rel
+
+
+def test_replies_to_magana_emails_go_to_the_support_address():
+    from app import mailer
+    assert mailer.DEFAULT_REPLY_TO == CONFIG["support_email"]

@@ -2,7 +2,7 @@
 
 > **DRAFT for Oluremi O. Balogun** (consent and safeguarding) to review before testing with learners. It follows the Nigeria Data Protection Act 2023 (NDPA) and describes what the Magana app, server and portal do today. When they change, this notice changes in the same commit. Points marked **[check]** need a decision or a legal check.
 
-Last updated: 26 October 2026 · Contact: **maganasupport@gmail.com**
+Last updated: 26 October 2026 · Contact: **support@magana.ng**
 
 ## The short version
 
@@ -160,7 +160,7 @@ Under the NDPA you can:
 - **complain** to the **Nigeria Data Protection Commission (NDPC)**, at ndpc.gov.ng.
 
 **How:**
-- Email **maganasupport@gmail.com**. We answer within 30 days.
+- Email **support@magana.ng**. We answer within 30 days.
 - Most of what Magana keeps is on your phone: uninstalling the app deletes it.
 - For a learner in a class, the teacher or school admin can remove the learner and, when a guardian asks, delete everything about them. A school admin confirms, and it is all deleted within 7 days.
 
@@ -170,4 +170,4 @@ When Magana changes what it does with personal data, we update this notice and t
 
 ## Contact
 
-**maganasupport@gmail.com** · Magana team, Nigeria
+**support@magana.ng** · Magana team, Nigeria

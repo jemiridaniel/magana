@@ -65,7 +65,7 @@ Magana should **never guess a number**. If it says "unclear number", that is on 
 
 ## 6. Reporting a problem
 
-Please send us three things, by email to **maganasupport@gmail.com**, or by WhatsApp to the person who gave you the app:
+Please send us three things, by email to **support@magana.ng**, or by WhatsApp to the person who gave you the app:
 
 1. **The name of the screen.** Magana says it when the screen opens, for example "Medicine label" or "Practice quiz".
 2. **What you did.** For example: "I took a photo of my paracetamol box in my kitchen in the evening."

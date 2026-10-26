@@ -246,7 +246,7 @@ Teachers sign in with a 6-digit code sent from **no-reply@magana.ng** through Am
    3. Back in SES, the identity shows **Verified** and DKIM **Successful**, usually within an hour.
 3. **SPF and DMARC** (so Gmail and Yahoo trust the mail), in Cloudflare DNS:
    - **TXT** `@` → `v=spf1 include:amazonses.com ~all`. If an SPF record already exists, add `include:amazonses.com` to it rather than making a second one.
-   - **TXT** `_dmarc` → `v=DMARC1; p=none; rua=mailto:maganasupport@gmail.com`.
+   - **TXT** `_dmarc` → `v=DMARC1; p=none; rua=mailto:support@magana.ng`.
 4. **Let the server send:** in **IAM → Roles → `magana-ec2-ssm` → Add permissions → Create inline policy → JSON**, paste this, with your account ID:
    ```json
    {
@@ -265,7 +265,7 @@ Teachers sign in with a 6-digit code sent from **no-reply@magana.ng** through Am
    2. **Mail type:** Transactional. **Website URL:** `https://magana.ng`.
    3. **Use case description**, for example: *"Magana for Teachers (teachers.magana.ng) sends one-time 6-digit sign-in codes and invitations to teachers that a school admin has invited. No marketing email. About 50–500 emails a month during the pilot. Recipients are only addresses a school admin entered; bounces and complaints are handled by removing the address from the school."*
    4. AWS usually answers within a day. Until then, test with your own address: verify it under **Identities → Create identity → Email address**.
-6. **Replies go to support@magana.ng.** Every email has `Reply-To: support@magana.ng` (`MAIL_REPLY_TO`). Make that address real, for free, with **Cloudflare → magana.ng → Email → Email Routing → Get started**: add the MX and TXT records it offers, then a route **support@magana.ng → maganasupport@gmail.com** and confirm the Gmail address. (Email Routing only receives; SES still sends.)
+6. **Replies go to support@magana.ng.** Every email has `Reply-To: support@magana.ng` (`MAIL_REPLY_TO`). Make that address real, for free, with **Cloudflare → magana.ng → Email → Email Routing → Get started**: add the MX and TXT records it offers, then a route **support@magana.ng → the team's Gmail support inbox** (the address support used before 26 Oct) and confirm it from that inbox. **Do this before people use support@magana.ng**: it's now the support address on the app, website, portal and every email. (Email Routing only receives; SES still sends.)
 7. **On the server** (`.env`), then `sudo docker compose -f docker-compose.prod.yml up -d`:
    ```bash
    MAGANA_MAIL=ses

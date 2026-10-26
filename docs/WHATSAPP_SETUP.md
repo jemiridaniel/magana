@@ -11,7 +11,7 @@ The code is ready on the server at **https://api.magana.ng/whatsapp/webhook**. I
 ## 1. Create the app (about 10 minutes)
 
 1. Go to **developers.facebook.com** and sign in with the Facebook account that will own Magana's WhatsApp. Choose **My Apps → Create app**.
-2. Use case: **Other**, then app type **Business**. App name: `Magana`. Contact email: `maganasupport@gmail.com`. If it asks for a business portfolio, create one called `Magana`.
+2. Use case: **Other**, then app type **Business**. App name: `Magana`. Contact email: `support@magana.ng`. If it asks for a business portfolio, create one called `Magana`.
 3. On the app's dashboard, find **WhatsApp** and choose **Set up**. Meta creates a test WhatsApp business account and a **test phone number**.
 
 ## 2. The numbers you need

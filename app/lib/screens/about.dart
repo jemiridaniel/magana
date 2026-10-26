@@ -21,7 +21,7 @@ const asrAttributions = [
 
 /// Where testers and users write to: config/public.json (change it with
 /// scripts/set_public_config.py, which updates every copy).
-const supportEmail = 'maganasupport@gmail.com';
+const supportEmail = 'support@magana.ng';
 
 const termsCondition =
     'Awarri Technologies and the Federal Ministry of Communications, Innovation and '

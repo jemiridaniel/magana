@@ -2,7 +2,7 @@
 
 Magana is made for blind and low-vision people, so accessibility is how it works, not an extra. This statement covers the website (magana.ng), the Android app, the web version (app.magana.ng) and the teacher portal (teachers.magana.ng).
 
-**Contact:** maganasupport@gmail.com. Tell us what you were trying to do, on which page or screen, and with which screen reader or browser. We reply within 5 working days.
+**Contact:** support@magana.ng. Tell us what you were trying to do, on which page or screen, and with which screen reader or browser. We reply within 5 working days.
 
 ## What we aim for
 
@@ -36,6 +36,6 @@ Every release of the website is checked with:
 
 ## If something doesn't work for you
 
-Email **maganasupport@gmail.com**. If you can't use a part of Magana, we will help you another way, for example by reading a document to you over the phone.
+Email **support@magana.ng**. If you can't use a part of Magana, we will help you another way, for example by reading a document to you over the phone.
 
 *Last reviewed: 25 October 2026.*
