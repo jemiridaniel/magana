@@ -202,6 +202,18 @@ def letters_for_number(words: list[dict], i: int, threshold: float = CRITICAL_WO
     return len(core) >= 2 and core.lower() not in _REAL_SHORT and any(_has_digit(n) for n in near)
 
 
+NUMBER_CODES = {"unreadable_number", "number_mismatch", "low_confidence_number", "handwritten_number"}
+
+
+def letters_not_numbers(warnings: list[Warning], result: dict) -> list[Warning]:
+    """On a Hausa, Yorùbá or Igbo page, a digit inside a word is an unclear letter
+    (letters.digit_in_word, marked "unclear_letter"): it gets no number warning, so it is
+    never read as a number. Numbers standing alone keep every check."""
+    letter_words = {(m["block_index"], m["word_index"]) for m in result.get("letter_marks") or []
+                    if m.get("kind") == "unclear_letter"}
+    return [w for w in warnings if not (w.code in NUMBER_CODES and (w.block_index, w.word_index) in letter_words)]
+
+
 def number_warnings(lines: list[dict], threshold: float = CRITICAL_WORD_THRESHOLD) -> list[Warning]:
     """One warning per critical word that is unreadable, read differently by its second
     (cropped) reading, or not confident enough: below 0.90, unless both readings agree and

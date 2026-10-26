@@ -266,6 +266,9 @@ class AppLocalizationsYo extends AppLocalizations {
   String get unclearNumber => 'nọ́ńbà tí kò ṣe kedere';
 
   @override
+  String get unclearLetter => 'lẹ́tà tí kò ṣe kedere';
+
+  @override
   String get faintPrint => 'Àkọsílẹ̀ tí kò hàn dáadáa';
 
   @override

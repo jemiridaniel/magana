@@ -504,6 +504,12 @@ abstract class AppLocalizations {
   /// **'unclear number'**
   String get unclearNumber;
 
+  /// Said instead of a word with a digit inside on a Hausa, Yorùbá or Igbo page: the digit is an unclear letter, never a number.
+  ///
+  /// In en, this message translates to:
+  /// **'unclear letter'**
+  String get unclearLetter;
+
   /// No description provided for @faintPrint.
   ///
   /// In en, this message translates to:

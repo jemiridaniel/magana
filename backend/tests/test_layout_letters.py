@@ -118,7 +118,8 @@ def test_words_that_may_have_lost_a_letter_are_marked_and_never_changed():
     assert not letters.may_miss_letter("2026", "ha")
     assert letters.may_miss_letter("omo", "yo") and letters.may_miss_letter("umu", "ig")
     lines = [{"text": "Kasar tana da dalibai", "words": [{"text": w} for w in "Kasar tana da dalibai".split()]}]
-    assert letters.marks(lines, "ha") == [{"block_index": 0, "word_index": 0}, {"block_index": 0, "word_index": 3}]
+    assert letters.marks(lines, "ha") == [{"block_index": 0, "word_index": 0, "kind": "special_letter"},
+                                          {"block_index": 0, "word_index": 3, "kind": "special_letter"}]
     assert lines[0]["text"] == "Kasar tana da dalibai"
 
 

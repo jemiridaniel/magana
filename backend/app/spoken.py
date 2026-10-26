@@ -24,6 +24,7 @@ _SYMBOLS = {
     "/": " slash ", "&": " and ", "+": " plus ", "=": " equals ", "×": " times ", "@": " at ",
 }
 UNCLEAR = "[unclear number]"
+UNCLEAR_LETTER = "[unclear letter]"  # a digit inside a word on a Hausa, Yorùbá or Igbo page (letters.py)
 
 
 def _under_1000(n: int) -> str:
@@ -71,7 +72,7 @@ def number_words(sign: str, whole: str, fraction: str | None) -> str:
 
 def spell_numbers(text: str) -> str:
     """Every number in [text] in English words; "[unclear number]" stays as words."""
-    text = text.replace(UNCLEAR, " unclear number ")
+    text = text.replace(UNCLEAR, " unclear number ").replace(UNCLEAR_LETTER, " unclear letter ")
     text = _NUMBER.sub(lambda m: f" {number_words(m.group(1), m.group(2), m.group(3))} ", text)
     # Digits inside a code ("PCM2291", "B12"): one by one.
     return re.sub(r"\d", lambda m: f" {_ONES[int(m.group())]} ", text)

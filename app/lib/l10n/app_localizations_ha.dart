@@ -267,6 +267,9 @@ class AppLocalizationsHa extends AppLocalizations {
   String get unclearNumber => 'lambar da ba a gane ba';
 
   @override
+  String get unclearLetter => 'harafi mara tabbas';
+
+  @override
   String get faintPrint => 'Rubutu mara haske';
 
   @override

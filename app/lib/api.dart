@@ -70,6 +70,7 @@ class ReadItem {
     this.column = 1,
     this.heading = false,
     this.letterMarks = const {},
+    this.unclearLetters = const {},
   });
 
   final ItemKind kind;
@@ -88,6 +89,9 @@ class ReadItem {
   final bool heading; // the backend found a heading (taller or bold text)
   final Set<int>
   letterMarks; // words that may have lost a special letter (never changed)
+  // Of those, words with a digit inside (Hausa, Yorùbá, Igbo pages): said as "unclear
+  // letter", never as a number, and spelled with "unclear letter" for the digit.
+  final Set<int> unclearLetters;
 
   /// The first item on a new PDF page: the reader says "Page 2 of 13" first.
   bool pageStart = false;
@@ -164,10 +168,16 @@ class ReadResult {
     }
 
     final marks = <int, Set<int>>{};
+    final letterDigits = <int, Set<int>>{};
     for (final m in list(json['letter_marks'])) {
       marks
           .putIfAbsent(m['block_index'] as int, () => {})
           .add(m['word_index'] as int);
+      if (m['kind'] == 'unclear_letter') {
+        letterDigits
+            .putIfAbsent(m['block_index'] as int, () => {})
+            .add(m['word_index'] as int);
+      }
     }
 
     final lines = list(json['lines']);
@@ -191,6 +201,7 @@ class ReadResult {
           column: lines[i]['column'] as int? ?? 1,
           heading: lines[i]['heading'] == true,
           letterMarks: marks[i] ?? const {},
+          unclearLetters: letterDigits[i] ?? const {},
         ),
       );
     }

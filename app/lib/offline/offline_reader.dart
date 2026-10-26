@@ -3,6 +3,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 
 import '../api.dart';
 import '../platform.dart';
+import 'page_letters.dart';
 
 /// Offline basic reading (board 5e; CLAUDE.md: "offline fallback with ML Kit OCR +
 /// device TTS"). When the server can't be reached, fails or is slow, the photo is read
@@ -196,6 +197,12 @@ Future<Map<String, dynamic>> _reading(OfflinePhoto photo, String mode) async {
   final seen = (await photo.read())..sort((a, b) => a.top.compareTo(b.top));
   final lines = <Map<String, dynamic>>[];
   final warnings = <Map<String, dynamic>>[];
+  // A Hausa, Yorùbá or Igbo page (as the server finds it): one warning for the page, and
+  // a digit inside a word is an unclear letter, never a number (page_letters.dart).
+  final language = pageLanguageOf(
+    [for (final l in seen) ...l.words.map((w) => w.text)].join(' '),
+  );
+  final letterMarks = <Map<String, dynamic>>[];
   for (final (i, line) in seen.indexed) {
     final confs = [for (final w in line.words) w.confidence ?? 0.0];
     final conf = confs.reduce((a, b) => a + b) / confs.length;
@@ -221,6 +228,14 @@ Future<Map<String, dynamic>> _reading(OfflinePhoto photo, String mode) async {
     var numberFlagged = false;
     for (final (j, w) in line.words.indexed) {
       if (!_digit.hasMatch(w.text)) continue;
+      if (language != null && digitInWord(w.text)) {
+        letterMarks.add({
+          'block_index': i,
+          'word_index': j,
+          'kind': 'unclear_letter',
+        });
+        continue;
+      }
       final code = await _numberCheck(photo, line, j);
       if (code != null) {
         warnings.add({'block_index': i, 'word_index': j, 'code': code});
@@ -234,7 +249,12 @@ Future<Map<String, dynamic>> _reading(OfflinePhoto photo, String mode) async {
   final out = <String, dynamic>{
     'offline': true,
     'columns': 1,
-    'tips': _cutOff(photo, seen),
+    'tips': [
+      ..._cutOff(photo, seen),
+      if (language != null) 'letters_$language',
+    ],
+    'page_language': language,
+    'letter_marks': letterMarks,
     'lines': lines,
     'tables': const [],
     'faint_regions': const [],

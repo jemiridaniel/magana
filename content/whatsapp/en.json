@@ -15,6 +15,7 @@
   "page_header": "*Your page*, {count} lines, read exactly as printed:",
   "page_header_one": "*Your page*, 1 line, read exactly as printed:",
   "unclear_number": "[unclear number]",
+  "unclear_letter": "[unclear letter]",
   "no_text": "I couldn’t find any printed text in that photo. Please send another photo with the whole page in view, in good light.",
   "unreadable_photo": "I couldn’t open that photo. Please send it again as a photo, not a document.",
   "faint": "⚠️ Part of the page ({where}) has print I couldn’t read. Please check it with someone near you, or send a clearer photo.",

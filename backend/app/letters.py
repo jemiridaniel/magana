@@ -7,6 +7,8 @@ Measured on 10 pages per language (benchmark/letters, scripts/letter_ocr_test.py
 So a page in one of these languages is read again with the better model (`READ_AGAIN`), the
 app warns once per page, and words that could be a special-letter word are marked. A word is
 never changed: "kaya" may be "ƙaya" (thorn) or really "kaya" (load), and only a person can say.
+A digit inside a word on these pages ("uz9" for ụzọ) is an unclear letter, never a number
+(digit_in_word); a number standing alone keeps the verbatim rule.
 """
 from __future__ import annotations
 
@@ -91,13 +93,35 @@ def may_miss_letter(token: str, lang: str) -> bool:
     return any(candidate != found for candidate in _index(lang).get(plain(found), ()))
 
 
+# A number with its unit or an ordinal, written as one word ("500mg", "2nd", "10am"): a number.
+_NUMBER_WORD = re.compile(r"^\d+(?:[.,]\d+)?(?:mg|mcg|ml|l|g|kg|km|cm|mm|m|am|pm|st|nd|rd|th|h|hr|hrs|min|s|x)$", re.I)
+_EDGES = "()[]{},.;:!?\"'“”‘’"
+
+
+def digit_in_word(token: str) -> bool:
+    """A digit inside a word made of letters: "uz9", "9zo", "n'9". On these pages that digit
+    is an unclear letter, never a number (`eng` read Igbo ọ as "9"). Not "929" (digits only:
+    a number), "500mg" or "2nd" (a number with its unit), nor capitals with digits ("SS2",
+    "JSS3", "B12", "N500"), which are class levels, vitamins and amounts."""
+    for part in re.split(r"[-/–—]", token.strip(_EDGES)):
+        if (any(c.isdigit() for c in part) and any(c.isalpha() and c.islower() for c in part)
+                and not _NUMBER_WORD.match(part)):
+            return True
+    return False
+
+
 def marks(lines: list[dict], lang: str) -> list[dict]:
-    """Words that could be a special-letter word: {"block_index", "word_index"}. Numbers and
-    words in no list are never marked; nothing is changed."""
+    """Words to check with a person: {"block_index", "word_index", "kind"}. "special_letter":
+    a listed word with a special letter has this spelling without it. "unclear_letter": a
+    digit inside a word (digit_in_word), which is read as "unclear letter", never as a number.
+    Words in no list and numbers standing alone are never marked; nothing is changed."""
     out = []
     for i, line in enumerate(lines):
         words = line.get("words") or [{"text": t} for t in line.get("text", "").split()]
         for j, w in enumerate(words):
-            if may_miss_letter(w.get("text", ""), lang):
-                out.append({"block_index": i, "word_index": j})
+            text = w.get("text", "")
+            if digit_in_word(text):
+                out.append({"block_index": i, "word_index": j, "kind": "unclear_letter"})
+            elif may_miss_letter(text, lang):
+                out.append({"block_index": i, "word_index": j, "kind": "special_letter"})
     return out

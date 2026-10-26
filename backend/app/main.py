@@ -228,6 +228,7 @@ def checked(result: dict, mode: str = "school") -> dict:
         line_mm, cell_mm = safety.number_mismatches(result, result.pop("second_pass"), scale=SECOND_PASS_SCALE)
         warnings += line_mm
         cell_warnings += cell_mm
+    warnings = safety.letters_not_numbers(warnings, result)
     out = {**result, "warnings": [w.__dict__ for w in warnings], "cell_warnings": [w.__dict__ for w in cell_warnings]}
     if mode == "money":
         # A photo of a money page: no partial amounts (safety.money_photo_check).

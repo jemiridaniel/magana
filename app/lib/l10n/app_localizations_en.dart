@@ -267,6 +267,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unclearNumber => 'unclear number';
 
   @override
+  String get unclearLetter => 'unclear letter';
+
+  @override
   String get faintPrint => 'Faint print';
 
   @override

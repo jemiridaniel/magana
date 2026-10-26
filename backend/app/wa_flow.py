@@ -116,8 +116,9 @@ def read_photo(data: bytes, engine) -> dict | None:
                 + safety.line_end_warnings(result["lines"]) + safety.line_part_warnings(result["lines"]))
     if "second_pass" in result:
         warnings += safety.number_mismatches(result, result.pop("second_pass"), scale=SECOND_PASS_SCALE)[0]
+    warnings = safety.letters_not_numbers(warnings, result)
     return {"lines": result["lines"], "warnings": [w.__dict__ for w in warnings],
-            "faint_regions": result.get("faint_regions", [])}
+            "faint_regions": result.get("faint_regions", []), "letter_marks": result.get("letter_marks", [])}
 
 
 def reading_messages(lang: str, result: dict) -> tuple[list[str], list[tuple[str, str | None]]]:
@@ -129,18 +130,24 @@ def reading_messages(lang: str, result: dict) -> tuple[list[str], list[tuple[str
         codes.setdefault(w["block_index"], []).append(w["code"])
         if w["code"] in NUMBER_CODES and isinstance(w.get("word_index"), int):
             unclear.setdefault(w["block_index"], set()).add(w["word_index"])
+    # A digit inside a word on a Hausa, Yorùbá or Igbo page (letters.digit_in_word): an unclear
+    # letter, shown beside the word as read and never said as a number.
+    letter = {(m["block_index"], m["word_index"]) for m in result.get("letter_marks") or []
+              if m.get("kind") == "unclear_letter"}
     marker = t(lang, "unclear_number")
     shown, voice, warnings = [], [], []
     for i, line in enumerate(lines):
         words = [w["text"] for w in line.get("words") or []] or line["text"].split()
-        text = " ".join(marker if j in unclear.get(i, ()) else w for j, w in enumerate(words))
+        text = " ".join(marker if j in unclear.get(i, ()) else f"{w} {t(lang, 'unclear_letter')}" if (i, j) in letter
+                        else w for j, w in enumerate(words))
         shown.append(f"{i + 1}. {text}")
         c = codes.get(i, [])
         key = ("number" if any(x in NUMBER_CODES for x in c) else "line_end" if "line_end_unclear" in c
                else "unsure" if c else None)
         if key:
             warnings.append(t(lang, f"warn_{key}", line=i + 1))
-        said = " ".join(spoken_unclear if j in unclear.get(i, ()) else w for j, w in enumerate(words))
+        said = " ".join(spoken_unclear if j in unclear.get(i, ()) else spoken_unclear_letter if (i, j) in letter
+                        else w for j, w in enumerate(words))
         voice.append((said, key))
     header = t(lang, "page_header_one") if len(lines) == 1 else t(lang, "page_header", count=len(lines))
     messages = _chunks(header, shown)
@@ -184,6 +191,7 @@ def number_segments(text: str, seg_lang: str, user_lang: str, voice) -> tuple[li
 
 
 spoken_unclear = "[unclear number]"  # spoken.for_voice says it as "unclear number"
+spoken_unclear_letter = spoken.UNCLEAR_LETTER
 
 
 def _chunks(header: str, lines: list[str], limit: int = 3800) -> list[str]:

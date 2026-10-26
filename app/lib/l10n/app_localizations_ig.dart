@@ -266,6 +266,9 @@ class AppLocalizationsIg extends AppLocalizations {
   String get unclearNumber => 'nọmba edoghị anya';
 
   @override
+  String get unclearLetter => 'mkpụrụedemede edoghị anya';
+
+  @override
   String get faintPrint => 'Ederede na-adịghị ahụ anya';
 
   @override

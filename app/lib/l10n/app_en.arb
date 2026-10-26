@@ -196,6 +196,10 @@
   "whereMiddle": "in the middle of the page",
   "whereBottom": "near the bottom of the page",
   "unclearNumber": "unclear number",
+  "unclearLetter": "unclear letter",
+  "@unclearLetter": {
+    "description": "Said instead of a word with a digit inside on a Hausa, Yorùbá or Igbo page: the digit is an unclear letter, never a number."
+  },
   "@unclearNumber": {
     "description": "Said and shown in place of a number the app could not read reliably."
   },

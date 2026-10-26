@@ -184,9 +184,12 @@ class _ReaderScreenState extends State<ReaderScreen> {
   }
 
   /// Words on [item] that may have lost a special letter, as read (never changed).
+  /// A word with a digit inside is already said as "unclear letter": never named here,
+  /// so its digit is never said as a number.
   List<String> _marked(ReadItem item) => [
     for (final i in item.letterMarks.toList()..sort())
-      if (i < item.words.length) item.words[i],
+      if (i < item.words.length && !item.unclearLetters.contains(i))
+        item.words[i],
   ];
 
   /// "Spell word": each marked word on this line, letter by letter.
@@ -194,15 +197,23 @@ class _ReaderScreenState extends State<ReaderScreen> {
     _run++;
     setState(() => _playing = false);
     await _speaker.stop();
-    final words = _marked(_items[_index]);
-    if (words.isEmpty) {
+    final item = _items[_index];
+    final marked = [
+      for (final i in item.letterMarks.toList()..sort())
+        if (i < item.words.length) i,
+    ];
+    if (marked.isEmpty) {
       _speaker.say(_l.spellNone);
       return;
     }
+    // Letter by letter; a digit inside a word is said as "unclear letter", and that word is
+    // named "unclear letter" too, so the digit is never said as a number.
+    String letter(String c) => RegExp(r'\d').hasMatch(c) ? _l.unclearLetter : c;
     _speaker.say(
       [
-        for (final w in words)
-          '$w: ${w.replaceAll(RegExp(r"[^\p{L}'’]", unicode: true), '').characters.join(', ')}',
+        for (final i in marked)
+          '${item.unclearLetters.contains(i) ? _l.unclearLetter : item.words[i]}: '
+              '${item.words[i].replaceAll(RegExp(r"[^\p{L}\d'’]", unicode: true), '').characters.map(letter).join(', ')}',
       ].join('. '),
     );
   }
@@ -283,7 +294,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
       ItemKind.faint => '',
       ItemKind.line => [
         for (final (i, w) in item.words.indexed)
-          item.unclearWords.contains(i) ? _l.unclearNumber : w,
+          item.unclearWords.contains(i)
+              ? _l.unclearNumber
+              : item.unclearLetters.contains(i)
+              ? _l.unclearLetter
+              : w,
       ].join(' '),
       ItemKind.row =>
         '${_position(item)}. ${[for (final c in item.cells) (c.header.isEmpty ? '' : '${c.header}: ') + (c.unclear ? _l.unclearNumber : c.value)].join('. ')}',
