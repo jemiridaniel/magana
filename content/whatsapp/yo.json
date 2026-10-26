@@ -118,5 +118,7 @@
     "ask_someone_to_check": "Jọ̀wọ́ ní kí ẹnìkan tó wà nítòsí rẹ yẹ̀ ẹ́ wò, tàbí lọ sí ilé-ìwòsàn.",
     "callback_booked": "A ti ṣètò ìpè rẹ. Nọ́ọ̀sì tàbí oníṣègùn òògùn yóò pè ọ́.",
     "callback_unavailable": "Ìpè padà kò tíì sí. Bí o bá nílò ìrànlọ́wọ́ báyìí, lọ sí ilé-ìwòsàn tàbí pe 112."
-  }
+  },
+  "voice_number_left_out": "nọ́ńbà kan, wo àkọsílẹ̀",
+  "voice_numbers_in_text": "Àwọn nọ́ńbà kan wà nínú àkọsílẹ̀ nìkan: jọ̀wọ́ kà wọ́n níbẹ̀."
 }

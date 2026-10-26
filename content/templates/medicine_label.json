@@ -1,7 +1,7 @@
 {
   "domain": "health",
   "kind": "medicine_label",
-  "review": "DRAFT. Hausa, Yorùbá and Igbo written by the developer: every phrase needs a native speaker's review, then Dr. Oluba Amos's clinical approval, before Magana uses it. Until a translation's status is clinically_approved it is never used.",
+  "review": "Native-speaker reviewed (Hausa, Yorùbá, Igbo) and clinically approved by the clinical lead on 25/10/2026, with the reviewers' fixes applied. Igbo #7, #9, #12 and #13 stay in English (status native_reviewed) until the Igbo reviewer adds tone marks and fixes #9's meaning. Reviewer names are kept privately until they agree to be credited.",
   "templates": [
     {
       "id": "take_times_a_day",
@@ -13,15 +13,21 @@
       "translations": {
         "ha": {
           "text": "Sha ƙwaya {a} sau {b} a rana.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
           "text": "Lo tábúlẹ́ẹ̀tì {a} ní ìgbà {b} lójúmọ́.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
           "text": "Ṅụọ mkpụrụ ọgwụ {a} ugboro {b} n'ụbọchị.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         }
       }
     },
@@ -33,15 +39,21 @@
       "translations": {
         "ha": {
           "text": "Sha ƙwaya {a} zuwa {b} duk bayan sa'o'i {c} zuwa {d} gwargwadon bukata.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
           "text": "Lo tábúlẹ́ẹ̀tì {a} sí {b} ní gbogbo wákàtí {c} sí {d} bí ó bá ṣe pọn dandan.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
           "text": "Ṅụọ mkpụrụ ọgwụ {a} ruo {b} kwa awa {c} ruo {d} dịka achọrọ.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         }
       }
     },
@@ -54,15 +66,21 @@
       "translations": {
         "ha": {
           "text": "Sha ƙwaya {a} duk bayan sa'o'i {b}.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
           "text": "Lo tábúlẹ́ẹ̀tì {a} ní gbogbo wákàtí {b}.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
           "text": "Ṅụọ mkpụrụ ọgwụ {a} kwa awa {b}.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         }
       }
     },
@@ -74,15 +92,21 @@
       "translations": {
         "ha": {
           "text": "Kada ka sha fiye da ƙwaya {a} cikin sa'o'i {b}.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
           "text": "Má ṣe lo ju tábúlẹ́ẹ̀tì {a} lọ láàrin wákàtí {b}.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
           "text": "Ewerela karịa mkpụrụ ọgwụ {a} n'ime awa {b}.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         }
       }
     },
@@ -95,15 +119,21 @@
       "translations": {
         "ha": {
           "text": "A sha bayan cin abinci.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
           "text": "Lò ó lẹ́yìn oúnjẹ.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
           "text": "Ṅụọ ya mgbe i richara nri.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         }
       }
     },
@@ -115,16 +145,22 @@
       ],
       "translations": {
         "ha": {
-          "text": "A sha kafin cin abinci.",
-          "status": "draft"
+          "text": "A sha kafin a ci abinci.",
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
           "text": "Lò ó ṣáájú oúnjẹ.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
           "text": "Ṅụọ ya tupu i rie nri.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         }
       }
     },
@@ -136,15 +172,20 @@
       "translations": {
         "ha": {
           "text": "A haɗiye shi duka da ruwa.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
           "text": "Gbé e mì lódidi pẹ̀lú omi.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
-          "text": "Loo ya dum na mmiri.",
-          "status": "draft"
+          "text": "Nwere mmiri loo ya dum.",
+          "status": "native_reviewed",
+          "note": "Waiting for the Igbo reviewer: tone marks. Read in English until then."
         }
       }
     },
@@ -156,15 +197,21 @@
       "translations": {
         "ha": {
           "text": "Kada a tauna shi ko a niƙa shi.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
           "text": "Má ṣe jẹ ẹ́ tàbí lọ̀ ọ́.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
           "text": "Atala ya, egwerekwala ya.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         }
       }
     },
@@ -176,15 +223,20 @@
       "translations": {
         "ha": {
           "text": "A girgiza shi sosai kafin amfani.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
           "text": "Mì ín dáadáa kí o tó lò ó.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
           "text": "Kpatụọ ya nke ọma tupu i jiri ya.",
-          "status": "draft"
+          "status": "native_reviewed",
+          "note": "Waiting for the Igbo reviewer: the meaning must be \"before use\", not \"before you drink it\"; tone marks. Read in English until then."
         }
       }
     },
@@ -197,15 +249,21 @@
       "translations": {
         "ha": {
           "text": "A ajiye shi nesa da hannun yara.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
           "text": "Fi pamọ́ sí ibi tí ọwọ́ àwọn ọmọdé kò ti lè tó o.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
           "text": "Debe ya ebe aka ụmụaka na-agaghị eru.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         }
       }
     },
@@ -220,15 +278,21 @@
       "translations": {
         "ha": {
           "text": "A ajiye shi ƙasa da digiri {a} na Celsius.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
           "text": "Tọ́jú rẹ̀ ní ìsàlẹ̀ ìwọ̀n {a} Celsius.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
           "text": "Chekwaa ya n'okpuru ogo {a} Celsius.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         }
       }
     },
@@ -241,15 +305,20 @@
       "translations": {
         "ha": {
           "text": "A ajiye shi a wuri mai sanyi da bushewa.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
           "text": "Tọ́jú rẹ̀ sí ibi tí ó tutù tí ó sì gbẹ.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
-          "text": "Chekwaa ya n'ebe dị jụụ ma kpọọ nkụ.",
-          "status": "draft"
+          "text": "Chekwaa ya n’ebe di juu mana mmiri agaghi emetu ya.",
+          "status": "native_reviewed",
+          "note": "Waiting for the Igbo reviewer: tone marks. Read in English until then."
         }
       }
     },
@@ -264,16 +333,21 @@
       ],
       "translations": {
         "ha": {
-          "text": "Ranar ƙarewa: {a}",
-          "status": "draft"
+          "text": "Ranar lalacewa: {a}",
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
-          "text": "Ọjọ́ tí yóò parí: {a}",
-          "status": "draft"
+          "text": "Ọjọ́ ìbàjẹ́: {a}",
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
-          "text": "Ụbọchị ọ ga-agwụ: {a}",
-          "status": "draft"
+          "text": "Ubochi mmebi: {a}",
+          "status": "native_reviewed",
+          "note": "Waiting for the Igbo reviewer: tone marks. Read in English until then."
         }
       }
     },
@@ -285,15 +359,21 @@
       "translations": {
         "ha": {
           "text": "Manya da yara sama da shekara {a}",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
           "text": "Àwọn àgbàlagbà àti ọmọdé tí ó ju ọdún {a} lọ",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
           "text": "Ndị okenye na ụmụaka karịrị afọ {a}",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         }
       }
     },
@@ -305,15 +385,21 @@
       "translations": {
         "ha": {
           "text": "Don amfani a waje kawai.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "yo": {
-          "text": "Fún lílò ní ara òde nìkan.",
-          "status": "draft"
+          "text": "Fún lílò sára nìkan.",
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         },
         "ig": {
           "text": "Maka iji n'akpụkpọ ahụ naanị.",
-          "status": "draft"
+          "status": "clinically_approved",
+          "approved_by": "clinical lead",
+          "approved_on": "2026-10-25"
         }
       }
     }

@@ -115,5 +115,7 @@
     "ask_someone_to_check": "Don Allah ka roƙi wani da ke kusa da kai ya duba, ko ka je asibiti.",
     "callback_booked": "An tsara kiran. Ma'aikaciyar jinya ko mai sayar da magani za ta kira ka.",
     "callback_unavailable": "Ba a fara kiran dawowa ba tukuna. Idan kana buƙatar taimako yanzu, je asibiti ko ka kira 112."
-  }
+  },
+  "voice_number_left_out": "wata lamba, duba saƙon rubutu",
+  "voice_numbers_in_text": "Wasu lambobi suna cikin saƙon rubutu kawai: don Allah a karanta su a can."
 }

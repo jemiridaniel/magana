@@ -117,5 +117,7 @@
     "ask_someone_to_check": "Biko rịọ onye nọ gị nso ka o lelee ya, ma ọ bụ gaa ụlọ ọgwụ.",
     "callback_booked": "E debela oku gị. Nọọsụ ma ọ bụ onye na-ere ọgwụ ga-akpọ gị.",
     "callback_unavailable": "Enweghị oku nkpọghachi ugbu a. Ọ bụrụ na ịchọrọ enyemaka ugbu a, gaa n'ụlọ ọgwụ ma ọ bụ kpọọ 112."
-  }
+  },
+  "voice_number_left_out": "otu nọmba, lee ozi ederede",
+  "voice_numbers_in_text": "Ụfọdụ nọmba dị naanị n'ozi ederede: biko gụọ ha ebe ahụ."
 }

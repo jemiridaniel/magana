@@ -294,16 +294,17 @@ def explain_page(body: ExplainRequest, tier: policy.Tier = Depends(caller_tier),
     require(tier, EXPLAIN_FEATURE[body.mode])
     if not body.source_text.strip() or len(body.source_text) > explain.MAX_SOURCE_CHARS:
         raise HTTPException(400, {"code": "explain_bad_source"})
-    if not explain.allowed(engine):
-        # Tester and production builds: Explain stays off (no page text leaves for an
-        # unapproved host, and the templates are not yet approved either).
-        return {"code": "explain_not_available", "explanation": None, "read_instead": body.source_text,
-                "preview": False}
     if body.mode != "school":
         # Health and money papers: no model, ever. Approved templates or English as printed.
+        # No model is involved, so this works whether or not Explain is switched on.
         t = templates.translate(body.source_text, body.lang, body.mode)
         return {"code": "paper_lines", "explanation": None, "read_instead": None, "preview": False,
                 "lines": t["lines"], "fallback": t["fallback"]}
+    if not explain.allowed(engine):
+        # Tester and production builds: Explain stays off (no page text leaves for an
+        # unapproved host).
+        return {"code": "explain_not_available", "explanation": None, "read_instead": body.source_text,
+                "preview": False}
     r = explain.explain(explain.for_language(engine, body.lang), body.source_text, body.question, body.lang,
                         body.style, guided=tier is policy.Tier.GUIDED)
     body = {"code": r.code, "explanation": r.explanation, "read_instead": r.read_instead,

@@ -467,3 +467,53 @@ def test_for_voice_refuses_what_the_voice_would_skip():
     assert spoken.for_voice("Take 8 tablets.", english) == "take eight tablets"
     assert spoken.for_voice("Ọmọ", english) is None
     assert spoken.for_voice("Take 1/2 tablet", english) == "take one slash two tablet"
+
+
+# ---------- numbers in Hausa, Yorùbá and Igbo voice notes: English words, or left out
+
+class LangVoice(FakeVoice):
+    """A voice per language, each with its own letters (Yorùbá has no c, q, v, x or z)."""
+
+    def __init__(self, vocabs):
+        super().__init__(langs=tuple(vocabs))
+        self.vocabs = {k: set(v) for k, v in vocabs.items()}
+
+    def vocab(self, lang):
+        return self.vocabs[lang]
+
+
+YO = "abdefghijklmnoprstuwyàáèéìíòóùúẹọṣńǹ' -"
+EN = "abcdefghijklmnopqrstuvwxyz' -"
+
+
+def test_a_yoruba_line_says_its_numbers_in_english_with_the_english_voice():
+    parts, dropped = wa_flow.number_segments("Lo tábúlẹ́ẹ̀tì 5 ní ìgbà 3", "yo", "yo", LangVoice({"yo": YO, "en": EN}))
+    assert [(p.lang, p.text.strip()) for p in parts] == [
+        ("yo", "Lo tábúlẹ́ẹ̀tì"), ("en", "five"), ("yo", "ní ìgbà"), ("en", "three")]
+    assert not dropped
+    # Never translated number words: no Yorùbá voice ever says a number.
+    assert all(p.lang == "en" for p in parts if any(w in p.text for w in ("five", "three")))
+
+
+def test_amounts_codes_and_english_lines():
+    v = LangVoice({"ha": EN, "en": EN})
+    parts, _ = wa_flow.number_segments("Sha 500 mg, PCM2291, ₦2,350.00", "ha", "ha", v)
+    said = [(p.lang, p.text.strip(" ,")) for p in parts]
+    assert ("en", "five hundred") in said
+    assert ("en", "two two nine one") in said  # a code, digit by digit
+    assert ("en", "two thousand three hundred and fifty point zero zero") in said
+    parts, _ = wa_flow.number_segments("Take 2 tablets", "en", "ha", v)
+    assert [(p.lang, p.text) for p in parts] == [("en", "Take 2 tablets")]  # English text: as before
+
+
+def test_a_number_that_cant_be_said_is_left_out_and_the_text_is_the_reference():
+    v = LangVoice({"ig": "abcdefghijklmnopqrstuvwxyzịọụṅ' -"})  # no English voice
+    parts, dropped = wa_flow.number_segments("Ṅụọ mkpụrụ ọgwụ 2", "ig", "ig", v)
+    assert dropped and parts[-1] == tts.Segment("ig", wa_flow.t("ig", "voice_number_left_out"))
+    assert not any(ch.isdigit() for p in parts for ch in p.text)
+
+
+@pytest.mark.parametrize("lang", ["en", "ha", "yo", "ig"])
+def test_the_left_out_phrases_have_no_digits(lang):
+    for key in ("voice_number_left_out", "voice_numbers_in_text"):
+        assert not any(ch.isdigit() for ch in wa_flow.t(lang, key))

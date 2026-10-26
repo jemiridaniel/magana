@@ -65,9 +65,15 @@ def test_health_and_money_papers_never_reach_the_model(engine, mode):
     assert engine.calls == []
     assert body["code"] == "paper_lines" and body["explanation"] is None
     assert "minti" not in json.dumps(body, ensure_ascii=False)
-    # No template is approved yet: every line is read in English as printed, with the warning.
-    assert all(line["text"] is None for line in body["lines"])
-    assert "take 1 to 2 tablets every 4 to 6 hours as needed." in [l["source"] for l in body["lines"]]
+    by_source = {l["source"].lower(): l["text"] for l in body["lines"]}
+    dose = by_source["take 1 to 2 tablets every 4 to 6 hours as needed."]
+    if mode == "health":
+        # The clinically approved Hausa template, with the label's own numbers in its slots.
+        assert dose == "Sha ƙwaya 1 zuwa 2 duk bayan sa'o'i 4 zuwa 6 gwargwadon bukata."
+    else:
+        assert dose is None  # money and letters don't use health templates: English as printed
+    # Lines without an approved template are read in English as printed, with the warning.
+    assert any(text is None for text in by_source.values())
     assert body["fallback"] == ("cant_translate_line_health" if mode == "health" else "cant_translate_line_money")
 
 
@@ -77,11 +83,17 @@ def test_health_papers_need_an_adult_account(engine):
     assert r.json()["detail"] == {"code": "not_allowed_for_tier"}
 
 
-def test_outside_development_explain_stays_off_for_papers_too(engine, monkeypatch):
+def test_outside_development_papers_still_get_their_approved_templates(engine, monkeypatch):
+    """Explain (the model) is off outside development, but health papers never use a model:
+    the approved templates work in tester and production builds too."""
     monkeypatch.setenv("MAGANA_ENV", "production")
     body = client.post("/explain", json={"source_text": LABEL, "mode": "health", "lang": "yo"},
                        headers={"X-Magana-Tier": "standard"}).json()
-    assert body["code"] == "explain_not_available"
+    assert engine.calls == [] and body["code"] == "paper_lines"
+    assert any(l["template"] for l in body["lines"])
+    school = client.post("/explain", json={"source_text": "Plants make food.", "mode": "school", "lang": "yo"},
+                         headers={"X-Magana-Tier": "standard"}).json()
+    assert school["code"] == "explain_not_available"
 
 
 # ---------- schoolwork: the answers the old guard missed or caught, now all refused
@@ -211,7 +223,12 @@ def test_number_word_lists_are_drafts_needing_native_review():
 
 # ---------- templates
 
-def test_the_15_medicine_label_templates_are_drafts_with_matching_slots():
+HELD_IGBO = {"swallow_whole_with_water", "shake_well", "store_cool_dry", "expiry_date"}  # #7, #9, #12, #13
+
+
+def test_the_15_medicine_label_templates_are_approved_with_matching_slots():
+    """First clinical sign-off (25/10/2026): Hausa and Yorùbá all 15; Igbo 11, with #7, #9,
+    #12 and #13 held in English until the Igbo reviewer adds tone marks (and fixes #9)."""
     doc = json.loads((P.content_dir() / "templates" / "medicine_label.json").read_text())
     assert doc["domain"] == "health" and len(doc["templates"]) == 15
     assert len({t["id"] for t in doc["templates"]}) == 15
@@ -221,8 +238,32 @@ def test_the_15_medicine_label_templates_are_drafts_with_matching_slots():
         for lang in ("ha", "yo", "ig"):
             tr = t["translations"][lang]
             assert tr["status"] in T.STATUSES
-            assert tr["status"] == "draft"  # none reviewed yet
-            assert frozenset(T.SLOT.findall(tr["text"])) == next(iter(slots)), (t["id"], lang)
+            held = lang == "ig" and t["id"] in HELD_IGBO
+            assert tr["status"] == ("native_reviewed" if held else "clinically_approved"), (t["id"], lang)
+            if not held:
+                assert (tr["approved_by"], tr["approved_on"]) == ("clinical lead", "2026-10-25")
+            # Every placeholder survives, once each, in every translation.
+            assert sorted(T.SLOT.findall(tr["text"])) == sorted(next(iter(slots))), (t["id"], lang)
+    # No reviewer's name in the public repo until they agree to be credited.
+    text = (P.content_dir() / "templates" / "medicine_label.json").read_text()
+    assert not any(n in text for n in ("Amos", "Samanja", "Anyanwu"))
+
+
+def test_the_reviewers_fixes_are_in():
+    by = {t.id: t.translations for t in T.load()}
+    assert by["before_meals"]["ha"]["text"] == "A sha kafin a ci abinci."
+    assert by["external_use_only"]["yo"]["text"] == "Fún lílò sára nìkan."
+    assert by["expiry_date"]["ha"]["text"] == "Ranar lalacewa: {a}"
+    assert by["expiry_date"]["yo"]["text"] == "Ọjọ́ ìbàjẹ́: {a}"
+    assert "kwa awa {c} ruo {d}" in by["take_range_every_range_hours_as_needed"]["ig"]["text"]
+
+
+def test_an_approved_label_is_read_in_hausa_and_a_held_igbo_line_in_english():
+    r = T.translate("Take 2 tablets 3 times a day. Expiry date: 08/2027.", "ha", "health")
+    assert [l["text"] for l in r["lines"]] == ["Sha ƙwaya 2 sau 3 a rana.", "Ranar lalacewa: 08/2027"]
+    r = T.translate("Take 2 tablets 3 times a day. Shake well before use.", "ig", "health")
+    assert r["lines"][0]["text"] == "Ṅụọ mkpụrụ ọgwụ 2 ugboro 3 n'ụbọchị."
+    assert r["lines"][1]["text"] is None and r["fallback"] == "cant_translate_line_health"
 
 
 def test_only_clinically_approved_health_templates_are_used(monkeypatch):
@@ -240,7 +281,7 @@ def test_only_clinically_approved_health_templates_are_used(monkeypatch):
 def test_english_needs_no_template_and_unmatched_lines_keep_their_english():
     r = T.translate(LABEL, "en", "health")
     assert r["fallback"] is None and all(l["text"] == l["source"] for l in r["lines"])
-    r = T.translate("Shake well before use. Batch: PCM2291.", "ig", "health", statuses={"draft"})
+    r = T.translate("Shake well before use. Batch: PCM2291.", "ig", "health", statuses={"native_reviewed"})
     assert [l["template"] for l in r["lines"]] == ["shake_well", None, None]
     assert r["fallback"] == "cant_translate_line_health"
 

@@ -34,6 +34,30 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-26 · First clinical sign-off: 15 templates, 3 languages
+
+- **Approved:** the 15 medicine-label phrase templates, by the clinical lead on 25/10/2026, after a native-speaker review in each language. **Hausa: 15. Yorùbá: 15. Igbo: 11.** The sheet is kept privately with the reviewers' names, until they agree to be credited.
+- **Fixes applied from the review:**
+  - Hausa #6: "A sha kafin a ci abinci."
+  - Yorùbá #15: "Fún lílò sára nìkan."
+  - #13 "Expiry date": Hausa "Ranar lalacewa", Yorùbá "Ọjọ́ ìbàjẹ́", Igbo "Ubochi mmebi"
+  - Igbo #7: "Nwere mmiri loo ya dum."
+  - Igbo #12: "Chekwaa ya n’ebe di juu mana mmiri agaghi emetu ya."
+  - Igbo #2's spacing ("kwa awa {c} ruo {d}") was already right in the repo; only the sheet had it run together.
+- **Held in English:** Igbo #7, #9, #12 and #13, until the Igbo reviewer adds tone marks and fixes #9's meaning ("before use", not "before you drink it").
+- **Placeholders:** every placeholder appears once in every translation of all 15 (a test checks), so a label's numbers always go in as printed.
+- **Turned on:** approved templates now work in tester and production builds. Before, `/explain` returned "Explain isn't available" before it reached the templates, although health papers never use a model. Schoolwork Explain stays off there.
+- **Checks:** backend 446 passed. Health-mode tests: a Hausa label is read with the approved template and the label's own numbers ("Sha ƙwaya 1 zuwa 2 duk bayan sa'o'i 4 zuwa 6…"); a held Igbo line is read in English with the warning; money and letters don't use health templates.
+
+## 2026-10-26 · Voice notes: numbers in English until the number words are reviewed (UNREVIEWED)
+
+- **Rule** (on the sign-off list): in Hausa, Yorùbá and Igbo WhatsApp voice notes, every number is its own segment, said in English words by the English voice ("five hundred"). Before this, the number was spelled in English but said by the Hausa, Yorùbá or Igbo voice. The Yorùbá voice has no c, q, v, x or z, so "five", "six", "seven" and "zero" couldn't be said; then the whole voice note was dropped.
+- A number even the English voice can't say is left out: "a number, see the message". The note ends "Some numbers are only in the text message". The text message, which is exact, is the reference.
+- Codes are said digit by digit ("PCM2291" → "two two nine one").
+- **Checks:** 4 new WhatsApp tests (51 passed), including that Magana's own phrases hold no digits.
+
+---
+
 ## 2026-10-26 · Handwriting: built and tested on synthetic lines only; not measured (UNREVIEWED)
 
 > **Unreviewed, and not yet measured.** For Dr. Amos: the health rules (docs/review/handwriting_signoff.md, rules 2–4). For Nurse Balogun: the wording, and the optional Azure reader (PRIVACY.md, "Handwriting").
@@ -1291,28 +1315,20 @@ Tester IDs only, never names.
 
 | What was approved | By whom | When |
 |---|---|---|
+| The 15 medicine-label phrase templates (`content/templates/medicine_label.json`): Hausa 15, Yorùbá 15, Igbo 11, with the reviewers' fixes | Clinical lead, after native-speaker review in each language (names kept privately until they agree to be credited) | 25/10/2026 |
 
 ### Waiting for sign-off
 
-**Dr. Oluba Amos (clinical):** the 15 medicine-label phrase templates in `content/templates/medicine_label.json`, in Hausa, Yorùbá and Igbo. Each needs a native speaker's review first (status `native_reviewed`). Then Dr. Amos sets it to `clinically_approved`; only then does Magana use it. Also the wording "I can't translate this line safely. Please ask a pharmacist." (`msg_cant_translate_line_health`, all four languages).
+**Igbo reviewer, then the clinical lead:** 4 medicine-label templates still read in English (status `native_reviewed`):
 
 | # | Template | English (first form) | Next step |
 |---|---|---|---|
-| 1 | `take_times_a_day` | Take {a} tablets {b} times a day | native review, then Dr. Amos |
-| 2 | `take_range_every_range_hours_as_needed` | Take {a} to {b} tablets every {c} to {d} hours as needed | native review, then Dr. Amos |
-| 3 | `take_every_hours` | Take {a} tablets every {b} hours | native review, then Dr. Amos |
-| 4 | `not_more_than_in_hours` | Do not take more than {a} tablets in {b} hours | native review, then Dr. Amos |
-| 5 | `after_meals` | Take after meals | native review, then Dr. Amos |
-| 6 | `before_meals` | Take before meals | native review, then Dr. Amos |
-| 7 | `swallow_whole_with_water` | Swallow whole with water | native review, then Dr. Amos |
-| 8 | `do_not_chew_or_crush` | Do not chew or crush | native review, then Dr. Amos |
-| 9 | `shake_well` | Shake well before use | native review, then Dr. Amos |
-| 10 | `keep_from_children` | Keep out of the reach of children | native review, then Dr. Amos |
-| 11 | `store_below_degrees` | Store below {a} degrees C | native review, then Dr. Amos |
-| 12 | `store_cool_dry` | Store in a cool dry place | native review, then Dr. Amos |
-| 13 | `expiry_date` | Expiry date: {a} | native review, then Dr. Amos |
-| 14 | `adults_and_children_over_years` | Adults and children over {a} years | native review, then Dr. Amos |
-| 15 | `external_use_only` | For external use only | native review, then Dr. Amos |
+| 7 | `swallow_whole_with_water` | Swallow whole with water | tone marks on "Nwere mmiri loo ya dum." |
+| 9 | `shake_well` | Shake well before use | the meaning must be "before use", not "before you drink it"; tone marks |
+| 12 | `store_cool_dry` | Store in a cool dry place | tone marks |
+| 13 | `expiry_date` | Expiry date: {a} | tone marks on "Ubochi mmebi: {a}" |
+
+**Dr. Oluba Amos (clinical), and native speakers:** numbers in WhatsApp voice notes. Until the number-word lists (`content/number_words/`) are reviewed by native speakers and Dr. Amos signs off, Hausa, Yorùbá and Igbo voice notes say every number in **English words, with the English voice** ("five hundred milligrams"), never as translated number words. A number that can't be said reliably is left out of the voice note ("a number, see the message"); the note ends "Some numbers are only in the text message", and the text message is the reference (`wa_flow.number_segments`).
 
 **Native speakers (Hausa, Yorùbá, Igbo):** the number and unit word lists in `content/number_words/`, including which ambiguous words (Yorùbá `kan`, Igbo `otu`, Hausa `ɗaya`, `wata`) can safely be checked.
 

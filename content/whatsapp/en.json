@@ -120,5 +120,7 @@
     "ask_someone_to_check": "Please ask someone near you to check, or go to a clinic.",
     "callback_booked": "Your call back is booked. A nurse or pharmacist will call you.",
     "callback_unavailable": "Call backs are not available yet. If you need help now, go to a clinic or call 112."
-  }
+  },
+  "voice_number_left_out": "a number, see the message",
+  "voice_numbers_in_text": "Some numbers are only in the text message: please read it there."
 }

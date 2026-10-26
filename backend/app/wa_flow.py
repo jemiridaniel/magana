@@ -29,7 +29,7 @@ from typing import Awaitable, Callable
 import httpx
 from starlette.concurrency import run_in_threadpool
 
-from . import language, safety, triage, tts, wa_store as store
+from . import language, safety, spoken, triage, tts, wa_store as store
 from .iba_client import IbaClient
 from .messages import ENGLISH
 from .placeholders import content_dir
@@ -149,6 +149,38 @@ def reading_messages(lang: str, result: dict) -> tuple[list[str], list[tuple[str
     for region in result.get("faint_regions", []):
         messages.append(t(lang, "faint", where=t(lang, f"where_{region.get('where', 'middle')}")))
     return messages, voice
+
+
+# Numbers in Hausa, Yorùbá and Igbo voice notes: said in English words by the English voice
+# ("five hundred milligrams"), never as translated number words, until the number-word lists
+# are reviewed by native speakers and Dr. Amos signs off (docs/FINDINGS.md). A number that
+# can't be said reliably is left out of the voice note; the text message is the reference.
+_NUMBER_PIECE = re.compile(r"(?<![\w.,])([-+−]?)(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d+))?(?![\w])|\d+")
+
+
+def number_segments(text: str, seg_lang: str, user_lang: str, voice) -> tuple[list, bool]:
+    """A line as voice segments: its words in [seg_lang]'s voice, each number on its own in
+    English. Returns (segments, whether a number had to be left out)."""
+    if seg_lang == "en":
+        return [tts.Segment("en", text)], False
+    out, dropped, at = [], False, 0
+    for m in _NUMBER_PIECE.finditer(text):
+        before = text[at:m.start()]
+        if before.strip():
+            out.append(tts.Segment(seg_lang, before))
+        if m.group(2) is not None:
+            words = spoken.number_words(m.group(1), m.group(2), m.group(3))
+        else:  # digits inside a code ("PCM2291"): one by one
+            words = " ".join(spoken.integer_words(d) for d in m.group(0))
+        if voice.available("en") and spoken.for_voice(words, voice.vocab("en")):
+            out.append(tts.Segment("en", words))
+        else:
+            out.append(tts.Segment(user_lang, t(user_lang, "voice_number_left_out")))
+            dropped = True
+        at = m.end()
+    if text[at:].strip():
+        out.append(tts.Segment(seg_lang, text[at:]))
+    return out, dropped
 
 
 spoken_unclear = "[unclear number]"  # spoken.for_voice says it as "unclear number"
@@ -360,10 +392,15 @@ class Flow:
         if not self.voice.available(page_lang):
             page_lang = "en"
         segments = [tts.Segment(lang, t(lang, "voice_intro"))]
+        left_out = False
         for text, warn in voice_lines:
-            segments.append(tts.Segment(page_lang, text))
+            parts, dropped = number_segments(text, page_lang, lang, self.voice)
+            segments += parts
+            left_out |= dropped
             if warn:
                 segments.append(tts.Segment(lang, t(lang, f"voice_warn_{warn}")))
+        if left_out:
+            segments.append(tts.Segment(lang, t(lang, "voice_numbers_in_text")))
         segments.append(tts.Segment(lang, t(lang, "voice_outro")))
         try:
             ogg = await run_in_threadpool(tts.voice_note, self.voice, segments)

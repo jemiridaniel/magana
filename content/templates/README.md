@@ -12,7 +12,7 @@ Health and money papers are never explained by a model. Instead, each line is ma
 - **`status`**, per translation:
   - `draft`: written, not yet checked;
   - `native_reviewed`: checked by a native speaker;
-  - `clinically_approved`: health only, signed off by Dr. Oluba Amos after native review.
+  - `clinically_approved`: health only, signed off by the clinical lead after native review (`approved_by`, `approved_on`). Reviewers' names are kept privately until they agree to be credited.
 - **Which are used:**
   - **health:** only `clinically_approved`;
   - **money and letters:** `native_reviewed` or `clinically_approved`.
@@ -21,4 +21,4 @@ Health and money papers are never explained by a model. Instead, each line is ma
 
 | File | Domain | Phrases | Status |
 |---|---|---|---|
-| `medicine_label.json` | health | 15 common medicine-label phrases | all **draft**: on Dr. Amos's sign-off list (docs/FINDINGS.md) |
+| `medicine_label.json` | health | 15 common medicine-label phrases | **clinically approved** 25/10/2026 (clinical lead) in Hausa and Yorùbá (15 each) and Igbo (11). Igbo #7, #9, #12, #13 are `native_reviewed` and read in English until the Igbo reviewer adds tone marks (and fixes #9's meaning) |
