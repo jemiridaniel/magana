@@ -349,3 +349,10 @@ img { max-width: 100%; height: auto; }
 }
 /* Very narrow phones: the 330 px phone scales down instead of scrolling sideways. */
 @media (max-width: 372px) { .pd-phone { transform: scale(.88); transform-origin: top center; margin-bottom: -82px; } }
+.download-facts { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0; padding: 0; list-style: none; font-size: 18px; }
+.download-facts li + li::before { content: "·"; margin-right: 20px; color: #d5d9de; }
+.download-steps-h { margin: 6px 0 0; font-size: 22px; color: #fff; }
+.download-steps { margin: 0; padding-left: 1.4em; display: flex; flex-direction: column; gap: 8px; font-size: 18px; line-height: 1.5; }
+.test-tasks { display: flex; flex-direction: column; gap: 18px; padding-left: 1.4em; }
+.test-tasks h3 { margin: 0 0 6px; font-size: 22px; }
+.test-tasks p { margin: 4px 0; }

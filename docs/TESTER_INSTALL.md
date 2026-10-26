@@ -4,7 +4,7 @@ Thank you for helping test Magana. Magana reads printed pages aloud: schoolwork,
 
 ## 1. Get the app
 
-On your phone, open **https://magana.ng/android/** and tap **Download the app**. Or save the file we send you, called something like `magana-0.1.0+3.apk`, from WhatsApp, email or Google Drive. It is about 21 MB.
+On your phone, open **https://magana.ng/android/** and tap **Download for Android**. The link **https://magana.ng/download/android** always gives the newest version. The file is called `magana.apk` and is about 34 MB. It needs Android 7 or newer. What to try is at **https://magana.ng/test/**.
 
 **If you already have Magana installed,** install the new version over it, without uninstalling first. Your settings stay. Versions before 0.1.0+3 keep working for now, but please update: they use the old server address.
 

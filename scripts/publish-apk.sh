@@ -1,40 +1,43 @@
 #!/usr/bin/env bash
-# Put the latest signed arm64 APK on the website: https://<domain>/downloads/magana.apk (and
-# magana-<version>.apk), linked from https://<domain>/android/. Run after scripts/build-apk.sh.
-# 1. Uploads it to the public GitHub release "android-latest", which the Cloudflare Pages deploy
-#    copies into the website (docs/DEPLOY_PAGES.md), and starts that deploy.
-# 2. While the website is still served by the EC2 server, also copies it there over SSH
-#    (~/.magana/aws.env; the security group must allow your current IP). MAGANA_SKIP_EC2=1 skips it.
+# Publish the latest signed arm64 APK for testers. Run after scripts/build-apk.sh.
+#   scripts/publish-apk.sh [release-notes.md]
+# 1. Makes the GitHub release v<version> (the repository is public, so its files are too) with:
+#    magana.apk (always this name), magana-<version>.apk and latest.json (version, size, date,
+#    checksum). It is marked "latest".
+# 2. Redeploys the website, which shows latest.json next to the button. The button's address,
+#    https://<domain>/download/android, redirects to
+#    https://github.com/jemiridaniel/magana/releases/latest/download/magana.apk (website/public/
+#    _redirects), so it always serves the newest release and never has to change. The APK itself
+#    never goes to Cloudflare Pages (files over 25 MB aren't allowed there).
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-# shellcheck disable=SC1090
-source "${MAGANA_AWS_ENV:-$HOME/.magana/aws.env}"
-: "${MAGANA_HOST:?set MAGANA_HOST in ~/.magana/aws.env}"
-KEY="${MAGANA_SSH_KEY/#\~/$HOME}"
 APK="$ROOT/app/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk"
 VERSION=$(grep '^version:' "$ROOT/app/pubspec.yaml" | awk '{print $2}')
-DOMAIN=$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["domain"])' "$ROOT/config/public.json")
+TAG="v$VERSION"
+NOTES="${1:-}"
 [ -f "$APK" ] || { echo "no APK: run scripts/build-apk.sh first" >&2; exit 1; }
+# Never publish a build with a real secret in it (docs/DEPLOY_AWS.md §8d).
+"$ROOT/backend/.venv/bin/python" "$ROOT/scripts/check_bundle_secrets.py" "$APK"
 tmp=$(mktemp -d)
+trap 'rm -rf "$tmp"' EXIT
 cp "$APK" "$tmp/magana-$VERSION.apk"
 cp "$APK" "$tmp/magana.apk"
-# The page shows the version, size and checksum, so testers can check what they downloaded.
 python3 - "$tmp" "$VERSION" <<'PY'
-import hashlib, json, os, sys
+import datetime, hashlib, json, os, sys
 d, version = sys.argv[1], sys.argv[2]
 apk = os.path.join(d, "magana.apk")
-json.dump({"version": version, "bytes": os.path.getsize(apk),
-           "sha256": hashlib.sha256(open(apk, "rb").read()).hexdigest()},
+lagos = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=1)))
+json.dump({"version": version, "bytes": os.path.getsize(apk), "date": lagos.date().isoformat(),
+           "min_android": "7.0", "sha256": hashlib.sha256(open(apk, "rb").read()).hexdigest()},
           open(os.path.join(d, "latest.json"), "w"), indent=1)
 PY
 export GH_TOKEN="${GH_TOKEN:-$(gh auth token --user jemiridaniel 2>/dev/null || gh auth token)}"
-gh release view android-latest >/dev/null 2>&1 || gh release create android-latest --prerelease \
-  --title "Magana for Android (tester APK)" --notes "The latest tester APK, as on https://$DOMAIN/android/."
-gh release upload android-latest "$tmp/magana.apk" "$tmp/magana-$VERSION.apk" "$tmp/latest.json" --clobber
-gh workflow run ci.yml --ref main && echo "Website redeploy started (gh run watch)"
-if [ "${MAGANA_SKIP_EC2:-}" != "1" ]; then
-  ssh -i "$KEY" "ubuntu@$MAGANA_HOST" 'mkdir -p ~/srv/magana/deploy/downloads'
-  rsync -az -e "ssh -i $KEY" "$tmp/" "ubuntu@$MAGANA_HOST:srv/magana/deploy/downloads/"
+if gh release view "$TAG" >/dev/null 2>&1; then
+  gh release upload "$TAG" "$tmp/magana.apk" "$tmp/magana-$VERSION.apk" "$tmp/latest.json" --clobber
+else
+  gh release create "$TAG" --latest --title "Magana for Android $VERSION (testers)" \
+    ${NOTES:+--notes-file "$NOTES"} ${NOTES:---notes "Tester build $VERSION. Install it from https://magana.ng/download/android"} \
+    "$tmp/magana.apk" "$tmp/magana-$VERSION.apk" "$tmp/latest.json"
 fi
-rm -rf "$tmp"
-echo "https://$DOMAIN/downloads/magana.apk  (version $VERSION)"
+gh workflow run ci.yml --ref main && echo "Website redeploy started (gh run watch)"
+echo "https://magana.ng/download/android  (version $VERSION)"

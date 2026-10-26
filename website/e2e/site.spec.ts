@@ -2,7 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test, type Page } from "@playwright/test";
 import samples from "../data/samples.json";
 
-const PAGES = ["/", "/privacy/", "/accessibility/", "/android/"];
+const PAGES = ["/", "/privacy/", "/accessibility/", "/android/", "/test/"];
 const WIDTHS = [
   { name: "desktop", width: 1280, height: 900 },
   { name: "phone", width: 390, height: 844 },
@@ -183,4 +183,30 @@ test("hero demo: with reduced motion, scene 2 shows still", async ({ browser }) 
   expect(await opacity(page, ".pd-cap-k1")).toBe(1);
   await expect(page.getByRole("button", { name: "Pause demo" })).toBeHidden();
   await page.close();
+});
+
+
+test("Download for Android: the stable address, version, size, date, Android 7, three steps", async ({ page }) => {
+  await page.route("**/downloads/latest.json", (r) => r.fulfill({ json: {
+    version: "0.1.0+6", bytes: 35225883, date: "2026-10-26", min_android: "7.0", sha256: "ab".repeat(32) } }));
+  await ready(page, "/android/");
+  const button = page.getByRole("link", { name: "Download for Android" });
+  await expect(button).toHaveAttribute("href", "/download/android");
+  expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(64);
+  for (const fact of ["Version 0.1.0+6", "34 MB", "Released 26 Oct 2026", "Android 7 or newer"]) {
+    await expect(page.getByText(fact, { exact: true })).toBeVisible();
+  }
+  await expect(page.getByRole("heading", { name: "Install it in 3 steps" })).toBeVisible();
+  await expect(page.locator(".download-steps li")).toHaveCount(3);
+});
+
+test("What to test: six tasks and Report a problem", async ({ page }) => {
+  await ready(page, "/test/");
+  await expect(page.locator(".test-tasks > li")).toHaveCount(6);
+  for (const t of ["Read an English page", "Read a page with two columns", "Read a table", "Read a Hausa, Yorùbá or Igbo page",
+                   "Read a page in airplane mode", "Read a medicine label"]) {
+    await expect(page.getByRole("heading", { name: t })).toBeVisible();
+  }
+  await expect(page.getByText("Report a problem").first()).toBeVisible();
+  await expect(page.getByRole("link", { name: "Download for Android" })).toHaveAttribute("href", "/download/android");
 });

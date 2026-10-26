@@ -200,7 +200,9 @@ jobs:
         run: |
           (cd website && npm ci && npx next build)
           mkdir -p website/out/downloads
-          gh release download android-latest -D website/out/downloads -p 'magana*.apk' -p latest.json \
+          # Only the newest release's latest.json (version, size, date): the APK itself stays on
+          # GitHub (Pages refuses files over 25 MB); /download/android redirects there (_redirects).
+          gh release download -D website/out/downloads -p latest.json \
             || echo "No APK published yet (scripts/publish-apk.sh)."
           $WRANGLER pages deploy website/out --project-name magana-website --branch main --commit-hash "$GITHUB_SHA"
 

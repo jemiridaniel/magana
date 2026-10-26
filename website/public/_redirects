@@ -1,0 +1,5 @@
+# Cloudflare Pages redirects (docs/DEPLOY_PAGES.md). The Android app is too big for Pages (25 MB),
+# so it lives on GitHub Releases; this address always gives the newest one (scripts/publish-apk.sh).
+/download/android   https://github.com/jemiridaniel/magana/releases/latest/download/magana.apk  302
+/download/android/  https://github.com/jemiridaniel/magana/releases/latest/download/magana.apk  302
+/downloads/magana.apk  https://github.com/jemiridaniel/magana/releases/latest/download/magana.apk  302
