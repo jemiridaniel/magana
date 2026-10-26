@@ -1,4 +1,4 @@
-"""Make the first Magana team owner. Run on the server, once (never through the web):
+"""Make the first Magana admin (role "owner"). Run on the server, once (never through the web):
 
     sudo docker compose -f docker-compose.prod.yml exec magana \\
         python -m app.team_setup --email you@example.com --name "Your Name"
@@ -28,7 +28,7 @@ from . import portal_api, team
 
 
 def main(argv: list[str] | None = None) -> int:
-    p = argparse.ArgumentParser(prog="python -m app.team_setup", description="Make the first Magana team owner.")
+    p = argparse.ArgumentParser(prog="python -m app.team_setup", description="Make the first Magana admin.")
     p.add_argument("--email", required=True)
     p.add_argument("--name", default=None)
     p.add_argument("--reset-authenticator", action="store_true",
@@ -47,7 +47,7 @@ def main(argv: list[str] | None = None) -> int:
         print(f"Done: {m['email']}'s authenticator is reset and they're signed out. Their next sign-in sets up a new one.")
         return 0
     if not a.name:
-        p.error("--name is needed to make the first owner")
+        p.error("--name is needed to make the first Magana admin")
     dev = os.environ.get("MAGANA_ENV") == "development"
     if (a.role != "owner" or a.totp_secret) and not dev:
         print("--role and --totp-secret are for development only.", file=sys.stderr)
@@ -58,7 +58,7 @@ def main(argv: list[str] | None = None) -> int:
         return 2
     with A.db() as con:
         if not dev and team.active_owners(con) > 0:
-            print("A Magana team owner already exists. Owners add team members in the portal: Magana team.",
+            print("A Magana admin already exists. Magana admins add team members in the portal: Magana team.",
                   file=sys.stderr)
             return 1
         if team.is_staff_email(con, email):

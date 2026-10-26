@@ -58,8 +58,8 @@ export default function MyAccount() {
               {useBackup ? "Use my authenticator app instead" : "Lost your phone? Use a backup code"}</button>
           </div>
         </form>
-        <p className="note">No phone and no backup codes? Ask another owner to reset it from Magana team, or, if you’re the only
-          owner, run <code>python -m app.team_setup --email {me.email} --reset-authenticator</code> on the server.</p>
+        <p className="note">No phone and no backup codes? Ask the other Magana admin to reset it from Magana team, or, if you’re the
+          only one, run <code>python -m app.team_setup --email {me.email} --reset-authenticator</code> on the server.</p>
       </section>
     </>
   );

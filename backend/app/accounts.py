@@ -134,6 +134,9 @@ def db():
 # Columns added after the first release: added to an existing database on first use.
 COLUMNS = {
     "sessions": {"browser": "TEXT", "place": "TEXT"},
+    # Who did it, as they were when it happened (actor_snapshot): the log is append-only, so a
+    # removed account still shows its name and email.
+    "audit": {"actor_name": "TEXT", "actor_email": "TEXT", "actor_role": "TEXT"},
     "schools": {"ref": "INTEGER", "call_notes": "TEXT NOT NULL DEFAULT ''", "checks": "TEXT NOT NULL DEFAULT ''",
                 "reason": "TEXT", "proof_type": "TEXT", "ministry_no": "TEXT NOT NULL DEFAULT ''"},
 }
@@ -149,15 +152,41 @@ def _migrate(con) -> None:
     for i, r in enumerate(con.execute("SELECT id FROM schools WHERE ref IS NULL ORDER BY created_at").fetchall()):
         top = con.execute("SELECT COALESCE(MAX(ref), 1046) FROM schools").fetchone()[0]
         con.execute("UPDATE schools SET ref = ? WHERE id = ?", (top + 1, r[0]))
+    # Entries written before the snapshot existed get one from the accounts as they are now.
+    for (actor,) in con.execute("SELECT DISTINCT actor FROM audit WHERE actor_name IS NULL AND actor IS NOT NULL").fetchall():
+        snap = actor_snapshot(con, actor)
+        if snap[0] is not None:
+            con.execute("UPDATE audit SET actor_name = ?, actor_email = ?, actor_role = ? WHERE actor = ? AND actor_name IS NULL",
+                        (*snap, actor))
 
 
 def reset_for_tests() -> None:
     _ready.clear()
 
 
+def actor_snapshot(con, actor: str | None) -> tuple[str | None, str | None, str | None]:
+    """(name, email, role) of a Magana team member, a school's staff member or the server, as
+    they are now. Learners get none: their names never go in the log."""
+    from . import team
+    if actor in ("server", "system"):
+        return ("Magana server", "", "Server command") if actor == "server" else ("Magana", "", "Automatic")
+    if actor and actor.startswith("team:"):
+        email = actor[5:]
+        m = con.execute("SELECT name, role FROM team_members WHERE email = ? ORDER BY status = 'removed', created_at DESC",
+                        (email,)).fetchone()
+        return (m["name"], email, team.ROLE_LABEL[m["role"]]) if m else (email, email, "Magana team")
+    if actor and not actor.startswith(("learner:", "deleted-")):
+        s = con.execute("SELECT name, email, role FROM staff WHERE id = ?", (actor,)).fetchone()
+        if s:
+            return s["name"], s["email"], "School admin" if s["role"] == "admin" else "Teacher"
+    return None, None, None
+
+
 def audit(con, school_id: str | None, actor: str | None, action: str, target: str | None = None, **detail) -> None:
-    con.execute("INSERT INTO audit(school_id, actor, action, target, detail, at) VALUES (?,?,?,?,?,?)",
-                (school_id, actor, action, target, json.dumps(detail, ensure_ascii=False), iso(now())))
+    con.execute("INSERT INTO audit(school_id, actor, action, target, detail, at, actor_name, actor_email, actor_role)"
+                " VALUES (?,?,?,?,?,?,?,?,?)",
+                (school_id, actor, action, target, json.dumps(detail, ensure_ascii=False), iso(now()),
+                 *actor_snapshot(con, actor)))
 
 
 def row(r) -> dict | None:

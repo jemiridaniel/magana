@@ -43,7 +43,7 @@ export default function Sidebar() {
     </li>
   );
   return (
-    <header className="sidebar">
+    <header className={me.kind === "team" ? "sidebar sidebar-team" : "sidebar"}>
       <Link className="brand" href="/" aria-label="Magana for Teachers, Home">
         {/* The Magana mark (brand kit, on-ink colours): decorative, the link has its own name. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -53,6 +53,7 @@ export default function Sidebar() {
           <span className="brand-sub">{me.kind === "team" ? "Team admin" : "Teachers"}</span>
         </span>
       </Link>
+      {me.kind === "team" && <p className="staff-badge">Magana staff only</p>}
       <nav aria-label="Main">
         {me.kind === "team" ? (
           <>

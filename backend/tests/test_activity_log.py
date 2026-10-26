@@ -106,3 +106,31 @@ def test_setup_shows_a_qr_drawn_here_and_nothing_secret_is_logged_or_cacheable(f
     assert r.headers["cache-control"] == "no-store" and len(r.json()["backup_codes"]) == 8
     logged = "\n".join(rec.getMessage() for rec in caplog.records)
     assert key not in logged and "svg" not in logged and not any(b in logged for b in r.json()["backup_codes"])
+
+
+def test_who_is_kept_on_each_entry_and_never_shows_deleted(fresh):
+    """The actor's name, email and role are stored on the entry when it's written, so a removed
+    account's entries still say who it was; older entries are filled in from the accounts."""
+    make_team("rev@magana.test", "reviewer", name="Remi Reviewer")
+    sid = register()
+    rev = team_client(fresh, "rev@magana.test")
+    assert rev.post(f"/portal/admin/schools/{sid}", json=APPROVE).json()["code"] == "school_approved"
+    owner = team_client(fresh)
+    rid = next(m["id"] for m in owner.get("/portal/team/members").json() if m["email"] == "rev@magana.test")
+    with accounts.db() as con:  # an entry written before the snapshot existed
+        con.execute("INSERT INTO audit(actor, action, target, detail, at) VALUES (?,?,?,?,?)",
+                    ("team:rev@magana.test", "team_viewed_teachers", None, "{}", accounts.iso(accounts.now())))
+    accounts.reset_for_tests()  # the next start-up fills it in
+    assert owner.post(f"/portal/team/members/{rid}/remove").json()["code"] == "team_member_removed"
+    with accounts.db() as con:  # stored on the entry, not looked up
+        snaps = {tuple(r) for r in con.execute("SELECT actor_name, actor_email, actor_role FROM audit WHERE actor = ?",
+                                               ("team:rev@magana.test",))}
+    assert snaps == {("Remi Reviewer", "rev@magana.test", "School reviewer")}
+    items = owner.get("/portal/admin/activity?size=100").json()["items"]
+    approved = next(e for e in items if e["action"] == "school_approved")
+    assert (approved["who"], approved["who_email"]) == ("Remi Reviewer (removed)", "rev@magana.test")
+    d = owner.get(f"/portal/admin/activity/{approved['id']}").json()
+    assert (d["who"], d["who_role"]) == ("Remi Reviewer (removed)", "School reviewer")
+    assert not [e for e in items if "(deleted)" in e["who"] or e["who"] == "Unknown"]
+    first = next(e for e in items if e["action"] == "team_owner_created")
+    assert (first["label"], first["who"]) == ("First Magana admin made", "Magana server")

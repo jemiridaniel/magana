@@ -136,14 +136,14 @@ def admin(who: Who = Depends(staff)) -> Who:
 
 
 def team(who: Who = Depends(signed_in)) -> Who:
-    """Any Magana team member: Owner, School reviewer or Support (view only)."""
+    """Any Magana team member: Magana admin, School reviewer or Support (view only)."""
     if who.kind != "team":
         fail(403, "not_team")
     return who
 
 
 def reviewer(who: Who = Depends(team)) -> Who:
-    """Owners and School reviewers: approve or reject schools, proof documents, the activity log."""
+    """Magana admins and School reviewers: approve or reject schools, proof documents, the activity log."""
     if who.role not in ("owner", "reviewer"):
         fail(403, "team_role_needed")
     return who
@@ -482,6 +482,9 @@ def _mail(to: str, email: "mailer.Email") -> bool:
 NOT_CONFIRMED_DAYS = 30
 
 
+APPLICANT, APPLICANT_ROLE = "School applicant", "Details removed 30 days after the decision"
+
+
 def _purge_not_confirmed() -> None:
     """Schools not confirmed 30 days ago are deleted, as their email says."""
     cutoff = iso(now() - timedelta(days=NOT_CONFIRMED_DAYS))
@@ -493,7 +496,9 @@ def _purge_not_confirmed() -> None:
             for i in ids:
                 con.execute("DELETE FROM sessions WHERE who = ?", (i,))
             con.execute("DELETE FROM staff WHERE school_id = ?", (sid,))
-            con.execute("UPDATE audit SET actor = NULL WHERE actor IN (%s)" % ",".join("?" * len(ids)), ids) if ids else None
+            if ids:  # their details go too, as the email said; the entries stay
+                con.execute("UPDATE audit SET actor = NULL, actor_name = ?, actor_email = '', actor_role = ? WHERE actor IN (%s)"
+                            % ",".join("?" * len(ids)), [APPLICANT, APPLICANT_ROLE, *ids])
             con.execute("DELETE FROM schools WHERE id = ?", (sid,))
             proofs.delete(sid)
             A.audit(con, None, "system", "school_details_deleted", None, after_days=NOT_CONFIRMED_DAYS)
@@ -636,7 +641,7 @@ ACTION_LABELS = {
     "team_authenticator_set_up": "Authenticator set up", "team_backup_code_used": "Backup code used",
     "team_authenticator_reset": "Authenticator reset", "team_invite_accepted": "Joined the team",
     "team_member_invited": "Invited member", "team_role_changed": "Role changed", "team_member_removed": "Removed member",
-    "team_invite_resent": "Invite resent", "team_invite_cancelled": "Invite cancelled", "team_owner_created": "First owner made",
+    "team_invite_resent": "Invite resent", "team_invite_cancelled": "Invite cancelled", "team_owner_created": "First Magana admin made",
     "team_member_created": "Member made",
 }
 LOG_YEARS = 2
@@ -666,6 +671,18 @@ def _people(con) -> dict[str, dict]:
     return people
 
 
+def _actor_of(r: dict, removed: set[str]) -> dict:
+    """Who did it, from the entry's own snapshot; "(removed)" if their team account is gone now."""
+    name = r.get("actor_name") or "Unknown"
+    return {"name": f"{name} (removed)" if r.get("actor") in removed else name,
+            "email": r.get("actor_email") or "", "role": r.get("actor_role") or ""}
+
+
+def _removed_team(con) -> set[str]:
+    return {f"team:{e}" for (e,) in con.execute(
+        "SELECT email FROM team_members GROUP BY email HAVING SUM(status != 'removed') = 0")}
+
+
 def _about(r: dict, people: dict) -> str:
     d = json.loads(r["detail"] or "{}")
     ref = f" · {mailer.ref(r['ref'])}" if r.get("ref") else ""
@@ -685,9 +702,9 @@ def _about(r: dict, people: dict) -> str:
     return target.get("name") or d.get("email") or ""
 
 
-def _entry(r: dict, people: dict) -> dict:
+def _entry(r: dict, people: dict, removed: set[str]) -> dict:
     at = parse(r["at"]).astimezone(mailer.LAGOS)
-    who = people.get(r["actor"] or "", {"name": "(deleted)", "email": "", "role": ""})
+    who = _actor_of(r, removed)
     return {"id": r["id"], "date": f"{at.day} {at:%b %Y}", "time": f"{at:%H:%M}", "action": r["action"],
             "label": ACTION_LABELS.get(r["action"], r["action"]), "who": who["name"], "who_email": who["email"],
             "about": _about(r, people)}
@@ -700,9 +717,9 @@ def activity(who: Who = Depends(reviewer), q: str = "", action: str = "", page: 
     size = size if size in (10, 25, 50, 100) else 25
     with db() as con:
         _purge_old_log(con)
-        people = _people(con)
+        people, removed = _people(con), _removed_team(con)
         rows = _log_rows(con, " AND a.action = ?" if action else "", (action,) if action else ())
-    entries = [_entry(r, people) for r in rows]
+    entries = [_entry(r, people, removed) for r in rows]
     if q.strip():
         needle = q.strip().lower()
         entries = [e for e in entries if needle in " ".join([e["who"], e["who_email"], e["about"], e["label"]]).lower()]
@@ -719,17 +736,17 @@ def activity_entry(entry_id: int, who: Who = Depends(reviewer)) -> dict:
     from, what changed (before and after), call notes and emails sent."""
     with db() as con:
         rows = _log_rows(con, " AND a.id = ?", (entry_id,))
-        people = _people(con)
+        people, removed = _people(con), _removed_team(con)
     if not rows:
         fail(404, "not_found")
     r = rows[0]
     d = json.loads(r["detail"] or "{}")
     at = parse(r["at"]).astimezone(mailer.LAGOS)
-    actor = people.get(r["actor"] or "", {"name": "(deleted)", "email": "", "role": ""})
+    actor = _actor_of(r, removed)
     changes = d.get("changes") or ([{"field": "Role", "before": tm.ROLE_LABEL.get(d["was"], d["was"]),
                                      "after": tm.ROLE_LABEL.get(d["role"], d["role"])}] if "was" in d else [])
     target = people.get(r["target"] or "")
-    return {**_entry(r, people), "when": f"{at:%a} {at.day} {at:%b %Y}, {at:%H:%M:%S}",
+    return {**_entry(r, people, removed), "when": f"{at:%a} {at.day} {at:%b %Y}, {at:%H:%M:%S}",
             "who_role": actor["role"], "school": r["school_name"], "reference": mailer.ref(r["ref"]) if r["ref"] else None,
             "target": ({"name": target["name"], "email": target["email"], "role": target["role"]} if target else None),
             "signed_in_from": d.get("from") or None, "changes": changes, "call_notes": d.get("call_notes") or None,

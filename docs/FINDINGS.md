@@ -34,6 +34,30 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-26 · Team admin pages at full width; the activity log keeps who did it (UNREVIEWED)
+
+- **Who never shows "(deleted)":**
+  - The log looked up each actor's name in the accounts *when shown*. An actor whose account was gone (for example a principal whose not-confirmed school was deleted after 30 days) showed "(deleted)".
+  - Each entry now stores the actor's name, email and role **when it's written**, which fits an append-only log. Older entries were filled in from the accounts at start-up.
+  - A removed team member's entries still show their name and email, with "(removed)" after the name.
+  - A deleted applicant shows as "School applicant", with no name or email, as the 30-day deletion promises.
+  - Learners never get a snapshot: their names don't go in the log.
+  - Test: an approval by a reviewer, an older entry without a snapshot, then the reviewer removed: both entries still say who it was.
+- **Full width:**
+  - Every team admin page now fills the space beside the sidebar, with 40 px side and 32 px top padding. Before, it was capped at 1100 px and centred, which left a narrow column on wide screens.
+  - Checked at 1440 and 1280 px on Schools to approve, Approved schools, Not approved, Activity log, Magana team and My account.
+  - Teachers' pages are unchanged.
+- **Tables on team admin pages** (board "Activity log + details"):
+  - A 2 px ink box with 16 px corners on white, the header row on #EDEAE1 with 16 px bold text, and rows divided by #D9D5CB.
+  - Second lines are 15 px #3D434A (10:1).
+  - The row being viewed stays highlighted (#F3F9F5) while its panel is open: the panel's backdrop is lighter so the highlight shows.
+- **Filters:** Search grows (at least 280 px) and Action is about 200 px, both with 2 px ink borders. They stay 64 px tall, not the board's 52 px, because the portal's rule and design check are 64 px for every field and button. The "View details" buttons stay 64 px for the same reason.
+- **"Magana staff only" badge** under the logo on every team page. It uses #A11B12 (7.8:1 with white), not the board's #B42318, which is only 6.6:1 and below the 7:1 rule.
+- **Wording:** "First owner made" is now "First Magana admin made". The other user-facing "owner" text (My account, the server setup command, the privacy notice) now says Magana admin; the stored role is still "owner".
+- **Tests:** backend 489 passed (1 new). Portal end-to-end 48 passed, with new checks for the badge, the 40 px right edge at 1280 px, the open row's highlight, no "(deleted)", and axe.
+
+---
+
 ## 2026-10-26 · Add a team member: a modal, at most 2 Magana admins, no duplicate invites (UNREVIEWED)
 
 - **Modal** (board "Team members + Add member modal"): "+ Add team member" (`aria-haspopup="dialog"`) opens a native modal `<dialog>` in place of the inline form. The "Extra protection" box stays.

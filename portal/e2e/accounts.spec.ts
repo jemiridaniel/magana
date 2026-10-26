@@ -236,6 +236,12 @@ test("team admin: three checks unlock Approve; Don’t approve needs a reason an
   await expect(page.getByRole("row").filter({ hasText: "Bright Future Academy" }).first()).toContainText("Couldn’t reach them after 3 calls");
   await designChecks(page);
   await page.getByRole("link", { name: "Activity log" }).click();
+  await expect(page.getByText("Magana staff only")).toBeVisible();
+  if (page.viewportSize()!.width >= 1280) {  // the full width beside the sidebar, no centred column
+    const main = (await page.locator("#main").boundingBox())!, table = (await page.locator(".table-wrap").boundingBox())!;
+    expect(Math.round(main.x + main.width - (table.x + table.width))).toBe(40);
+  }
+  await expect(page.getByRole("table")).not.toContainText("(deleted)");
   await page.getByLabel("Search").fill("Kano Model");
   await page.getByLabel("Action").selectOption({ label: "Approved school" });
   const row = page.getByRole("row").filter({ hasText: "Kano Model School" }).first();
@@ -246,6 +252,7 @@ test("team admin: three checks unlock Approve; Don’t approve needs a reason an
   await view.click();
   const panel = page.getByRole("dialog", { name: "Activity details" });
   await expect(panel).toBeVisible();
+  await expect(row).toHaveCSS("background-color", "rgb(243, 249, 245)");  // the row being viewed
   await expect(panel.getByText("Waiting")).toBeVisible();  // status before → after
   await expect(panel.getByText(/Spoke to Mrs Adebayo/)).toBeVisible();  // the call notes
   await expect(panel.getByText(/is ready on Magana” → principal · sent/)).toBeVisible();
