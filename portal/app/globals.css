@@ -97,9 +97,9 @@ a { color: var(--green-ink); }
 .nav-link[aria-current="page"] { background: #fff; color: var(--ink); }
 .sidebar :focus-visible { outline-color: var(--amber); box-shadow: none; }
 
-.main { flex: 1; min-width: 0; padding: 48px 32px 64px; }
+.main { flex: 1; min-width: 0; padding: 32px 40px 64px; }  /* the full width beside the sidebar */
 .main:focus { outline: none; }
-.content { max-width: 1100px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
+.content { display: grid; grid-template-columns: minmax(0, 1fr); gap: 32px; }
 /* minmax(0, 1fr): wide tables scroll inside .table-wrap instead of stretching the page on phones. */
 
 .page-head { display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end; justify-content: space-between; }
@@ -518,6 +518,8 @@ td.row-actions > span:not([class]) { align-items: center; min-height: 64px; font
   background: var(--surface); color: var(--ink); text-decoration: none; text-align: left; font: inherit; cursor: pointer; width: 100%;
 }
 .quick a span, .class-cards span { color: var(--ink-soft); font-size: 1rem; }
+.quick-icon { display: flex; align-items: center; justify-content: center; width: 46px; height: 46px; margin-bottom: 6px;
+  border-radius: 50%; background: var(--amber); color: var(--ink); font-style: normal; }
 .quick a:hover, .class-cards a:hover, .class-card:hover { background: var(--ready-bg); }
 .class-card[aria-pressed="true"] { border-width: 4px; border-color: var(--green-ink); background: var(--ready-bg); }
 .class-cards { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; }
@@ -540,8 +542,13 @@ td.row-actions > span:not([class]) { align-items: center; min-height: 64px; font
 .listbox { position: absolute; z-index: 5; top: calc(100% - 28px); left: 0; right: 0; max-height: 300px; overflow-y: auto; list-style: none; margin: 0; padding: 6px; border: 2px solid var(--ink); border-radius: var(--radius); background: var(--surface); box-shadow: 0 6px 16px rgba(0,0,0,.15); }
 .option { display: flex; align-items: center; min-height: 48px; padding: 0 14px; border-radius: 8px; cursor: pointer; }
 .option.active { background: var(--ready-bg); font-weight: 700; outline: 2px solid var(--green-ink); }
-.dialog { max-width: min(560px, calc(100vw - 32px)); width: 100%; border: 3px solid var(--ink); border-radius: var(--radius); padding: 24px; color: var(--ink); background: var(--surface); }
-.dialog::backdrop { background: rgba(20, 23, 26, 0.6); }
+.dialog { max-width: min(580px, calc(100vw - 32px)); width: 100%; border: 0; border-radius: 22px; padding: 28px; color: var(--ink);
+  background: var(--surface); box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35); outline: 2px solid transparent; }  /* outline: seen in forced colours */
+/* Every modal (components/Dialog.tsx): the dimmed, blurred backdrop covers the whole page,
+   sidebar included; showModal() makes the page behind inert. No blur where it isn't supported
+   or the person asked for less transparency: then just the dim. */
+.dialog::backdrop { background: rgba(20, 23, 26, 0.4); -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); }
+@media (prefers-reduced-transparency: reduce) { .dialog::backdrop { -webkit-backdrop-filter: none; backdrop-filter: none; } }
 html:has(dialog[open]) { overflow: hidden; }  /* the page behind a modal doesn't scroll */
 .dialog h2 { margin-bottom: 12px; }
 .auth { display: flex; flex-wrap: wrap; min-height: 100vh; }
@@ -677,7 +684,6 @@ html:has(dialog[open]) { overflow: hidden; }  /* the page behind a modal doesn't
 .tag-warn { background: var(--check-bg); color: var(--check-ink); }
 .tag-info { background: #E7F1FB; color: #123E6B; }
 tr.is-open { background: #F3F9F5; }
-.drawer::backdrop { background: rgba(20, 23, 26, 0.35); }  /* light, so the row being viewed shows */
 .pager { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: flex-end; gap: 12px; margin-top: 16px; }
 .pager-size { max-width: 160px; }
 .pager-pages { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
@@ -705,14 +711,31 @@ tr.is-open { background: #F3F9F5; }
 .field-error:empty { display: none; }
 .input[aria-invalid="true"], .select[aria-invalid="true"] { border-color: var(--absent-ink); border-width: 3px; }
 
-/* ---------- Magana team admin pages (boards "Magana team admin · …"): the full width beside the
-   sidebar, the red staff badge, and tables in a bordered box. Teachers' pages are unchanged. */
+/* ---------- Magana team admin pages (boards "Magana team admin · …"): the red staff badge. */
 .staff-badge { display: block; width: fit-content; margin: -20px 16px 24px; padding: 3px 10px; border-radius: 10px;
   background: #A11B12; color: #fff; font-size: 0.875rem; font-weight: 700; }  /* 7.8:1; the board's #B42318 is 6.6:1 */
-.shell:has(.sidebar-team) .content { max-width: none; margin: 0; }
-@media (min-width: 901px) { .shell:has(.sidebar-team) .main { padding: 32px 40px 64px; } }
-.shell:has(.sidebar-team) .table-wrap { border: 2px solid var(--ink); border-radius: 16px; background: var(--surface); }
-.shell:has(.sidebar-team) thead th { background: #EDEAE1; padding: 12px 16px; font-size: 16px; font-weight: 700;
+
+/* ---------- framed tables (boards "Activity log", "Team members", "Teachers"): a 2 px ink box */
+.table-box { border: 2px solid var(--ink); border-radius: 16px; background: var(--surface); }
+.table-box thead th { background: #EDEAE1; padding: 12px 16px; font-size: 16px; font-weight: 700;
   color: var(--ink); text-transform: none; letter-spacing: normal; border-bottom: 0; }
-.shell:has(.sidebar-team) tbody :is(th, td) { padding: 10px 16px; font-size: 16px; border-bottom: 0; border-top: 1px solid #D9D5CB; }
-.shell:has(.sidebar-team) tbody .sub { font-size: 15px; color: #3D434A; }
+.table-box tbody :is(th, td) { padding: 10px 16px; font-size: 16px; border-bottom: 0; border-top: 1px solid #D9D5CB; }
+.table-box tbody .sub { font-size: 15px; color: #3D434A; }
+.table-box tbody th { overflow-wrap: normal; min-width: 180px; }  /* names wrap between words; emails may break anywhere */
+.table-box tbody .sub { overflow-wrap: anywhere; }
+.row-btns { display: flex; flex-wrap: wrap; gap: 8px; min-width: 300px; }
+.row-btns .btn { white-space: nowrap; }
+
+/* ---------- toggle chips: real checkboxes (Invite a teacher's classes) */
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { position: relative; display: inline-flex; align-items: center; gap: 8px; min-height: 48px; padding: 0 16px;
+  border-radius: 24px; border: 2px solid var(--ink); background: var(--surface); cursor: pointer; }
+.chip input { position: absolute; opacity: 0; width: 100%; height: 100%; inset: 0; margin: 0; cursor: pointer; }
+.chip:has(input:checked) { border-color: var(--green-ink); background: var(--ready-bg); font-weight: 700; }
+.chip:has(input:checked)::before { content: "✓"; }
+.chip:has(input:focus-visible) { outline: 3px solid var(--ink); outline-offset: 3px; box-shadow: 0 0 0 6px var(--amber); }
+.warn-note { display: flex; gap: 14px; align-items: flex-start; padding: 16px 18px; border-radius: 14px;
+  background: var(--check-bg); color: var(--check-ink); line-height: 1.45; }
+.warn-note svg { flex: none; margin-top: 2px; }
+.legend-note { font-weight: 400; color: var(--ink-soft); }
+.actions-end { justify-content: flex-end; }

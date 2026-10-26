@@ -139,7 +139,7 @@ function Decided({ rows, rejected }: { rows: SchoolRequest[]; rejected: boolean 
   const [open, setOpen] = useState<string | null>(null);
   if (!rows.length) return <p className="empty">{rejected ? "No schools turned down." : "No schools approved yet."}</p>;
   return (
-    <div className="table-wrap" role="region" aria-label={rejected ? "Schools not approved" : "Approved schools"} tabIndex={0}>
+    <div className="table-wrap table-box" role="region" aria-label={rejected ? "Schools not approved" : "Approved schools"} tabIndex={0}>
       <table>
         <thead><tr><th scope="col">School</th><th scope="col">Location</th><th scope="col">Principal</th>
           {rejected && <th scope="col">Reason</th>}<th scope="col">Decided</th><th scope="col">Call notes</th>

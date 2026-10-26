@@ -163,12 +163,40 @@ test("Learner page: details, record consent, move within the school; it passes t
 test("Teachers (school admin): invite, then remove with their class moved first; School details shows the log", async ({ page }) => {
   await newSchool(page);
   const email = uniqueEmail("grace");
+  await addClass(page, "JSS 1 English", "jss1", "guided");
   await page.goto("/teachers/");
   await designChecks(page);
-  await page.getByLabel("Full name").fill("Miss Grace Eze");
-  await page.getByLabel("Email", { exact: true }).fill(email);
-  await page.getByRole("button", { name: "Send invite" }).click();
-  await expect(page.getByRole("status").filter({ hasText: `Invitation sent to ${email}` })).toBeVisible();
+  await expect(page.getByRole("note").filter({ hasText: "When you remove a teacher" })).toBeVisible();  // out of the form
+  const invite = page.getByRole("button", { name: "+ Invite a teacher" });
+  await expect(invite).toHaveAttribute("aria-haspopup", "dialog");
+  await invite.click();
+  const modal = page.getByRole("dialog", { name: "Invite a teacher" });
+  await expect(modal.getByLabel("Full name")).toBeFocused();
+  // The backdrop is dimmed and blurred and covers the sidebar too; the page behind can't scroll.
+  const backdrop = await modal.evaluate((d) => { const s = getComputedStyle(d, "::backdrop"); return [s.backgroundColor, s.backdropFilter]; });
+  expect(backdrop).toEqual(["rgba(20, 23, 26, 0.4)", "blur(6px)"]);
+  expect(await page.evaluate(() => document.elementFromPoint(40, 300)?.tagName)).toBe("DIALOG");
+  expect(await page.evaluate(() => getComputedStyle(document.documentElement).overflow)).toBe("hidden");
+  await expect(modal.getByText("Teaches their classes, uploads pages, sets quizzes. Can’t invite or remove people.")).toBeVisible();
+  await modal.getByLabel("Role").selectOption("admin");
+  await expect(modal.getByText("Everything a teacher can do, plus invite and remove teachers and edit school details.")).toBeVisible();
+  await modal.getByLabel("Role").selectOption("teacher");
+  await modal.getByRole("checkbox", { name: "JSS 1 English" }).check();
+  await designChecks(page);
+  await modal.getByLabel("Full name").fill("Miss Grace Eze");
+  await modal.getByLabel("Email", { exact: true }).fill(email);
+  await modal.getByRole("button", { name: "Send invite" }).click();
+  await expect(modal).toBeHidden();
+  await expect(invite).toBeFocused();
+  await expect(page.getByRole("status").filter({ hasText: `Invite sent to ${email}` })).toBeVisible();
+  await expect(page.getByRole("row").filter({ hasText: email })).toContainText("JSS 1 English");
+  await invite.click();  // the same email again: an inline error, no second invitation
+  await modal.getByLabel("Full name").fill("Miss Grace Eze");
+  await modal.getByLabel("Email", { exact: true }).fill(email);
+  await modal.getByRole("button", { name: "Send invite" }).click();
+  await expect(modal.getByLabel("Email", { exact: true })).toHaveAccessibleDescription(/already used for a Magana teacher/);
+  await page.mouse.click(5, 5);  // the backdrop closes it
+  await expect(modal).toBeHidden();
   await expect(page.getByRole("row").filter({ hasText: email })).toContainText("Invited");
 
   // She signs in (accepting the invitation) in another browser and takes a class.
@@ -186,7 +214,8 @@ test("Teachers (school admin): invite, then remove with their class moved first;
   const dialog = page.getByRole("dialog", { name: "Remove Miss Grace Eze?" });
   await dialog.getByRole("button", { name: "Remove" }).click();
   await expect(dialog.getByRole("alert")).toHaveText("Choose a new teacher for each of their classes first.");
-  await dialog.getByLabel(`New teacher for ${cls.name}`).selectOption({ label: "Mrs Folake Adebayo" });
+  for (const name of [cls.name, "JSS 1 English"])  // the class she took and the one picked when she was invited
+    await dialog.getByLabel(`New teacher for ${name}`).selectOption({ label: "Mrs Folake Adebayo" });
   await dialog.getByRole("button", { name: "Remove" }).click();
   await expect(page.getByRole("row").filter({ hasText: email })).toContainText("Removed");
 

@@ -273,6 +273,17 @@ def test_invites_expire_after_7_days(fresh, monkeypatch):
     assert [s["status"] for s in admin.get("/portal/staff").json() if s["email"] == "late@gmail.com"] == ["expired"]
 
 
+def test_inviting_the_same_email_twice_sends_one_invitation_and_logs_one(fresh):
+    sid, admin = approved_school(fresh)
+    body = {"email": "tunde.bakare@gmail.com", "name": "Mr Tunde Bakare", "role": "teacher"}
+    assert admin.post("/portal/staff", json=body).status_code == 201
+    r = admin.post("/portal/staff", json={**body, "email": "Tunde.Bakare@gmail.com"})
+    assert (r.status_code, r.json()["detail"]["code"]) == (409, "email_taken")
+    assert len(outbox(fresh, "tunde.bakare@gmail.com")) == 1
+    with accounts.db() as con:
+        assert con.execute("SELECT COUNT(*) FROM audit WHERE school_id = ? AND action = 'staff_invited'", (sid,)).fetchone()[0] == 1
+
+
 def test_teachers_see_only_their_classes_and_admins_see_all(fresh):
     _, admin = approved_school(fresh)
     grace = invite(admin, fresh, "grace.eze@gmail.com")

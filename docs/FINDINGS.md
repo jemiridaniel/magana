@@ -34,6 +34,27 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-26 · Teacher portal at full width; Invite a teacher in a modal; blurred backdrop for every dialog (UNREVIEWED)
+
+- **Full width everywhere:** the shared content wrapper's 1100 px cap is gone for the whole portal (teachers and the Magana team). The main area fills the space beside the sidebar with 32 px top and 40 px side padding (16 px on phones). Checked at 1440 and 1280 px on Home, Uploads, My classes, Quizzes, Attendance, Learner progress, Consent records, School details, Help and Teachers.
+- **Framed tables** are now one class (`.table-box`, a 2 px ink box with a beige header and #D9D5CB row lines), used on Teachers and the team admin tables.
+  - Names wrap only between words; emails may break anywhere.
+  - Row buttons sit side by side (8 px gap, wrapping only when the cell is too narrow), with a 300 px Actions column, so at least two fit on a line at 1280 px.
+- **Invite a teacher** (board "Teachers + Invite modal"): "+ Invite a teacher" (`aria-haspopup="dialog"`) opens a modal in place of the inline form.
+  - Fields: Full name, Email (with the "Any email works" hint) and Role, a native select with the chosen role's description.
+  - Classes are real checkboxes styled as 48 px chips. A school with no classes sees "Add classes later from My classes." instead.
+  - Errors show under their field and are announced. The same email again gives an inline error, and the server sends no second invitation and logs one `staff_invited` (new backend test).
+  - On success the modal closes, "Invite sent to …" is announced and the row shows Invited.
+  - "When you remove a teacher…" is now an amber note under the table.
+- **Every dialog** (the shared `Dialog`, so team admin and teachers alike) has the board's look: white, 22 px corners, a shadow, and a dimmed rgba(20,23,26,0.40) backdrop blurred 6 px that covers the sidebar too.
+  - With `prefers-reduced-transparency: reduce`, or without `backdrop-filter`, it's just the dim.
+  - `showModal()` already makes the page behind inert, so no extra `inert` or `aria-hidden` is needed (an `inert` app root would also disable the dialog, which sits inside it). The page behind doesn't scroll.
+  - The focus trap, Escape/×/Cancel/backdrop close and focus return are unchanged.
+- **Home:** the quick actions have the board's amber icons (decorative, hidden from screen readers).
+- **Tests:** backend 490 passed (1 new). Portal end-to-end 48 passed, with new checks for the modal's focus, the role descriptions, the class chips, the blurred backdrop covering the sidebar, the scroll lock, the inline duplicate error, a backdrop click closing it, and axe with the modal open.
+
+---
+
 ## 2026-10-26 · Team admin pages at full width; the activity log keeps who did it (UNREVIEWED)
 
 - **Who never shows "(deleted)":**

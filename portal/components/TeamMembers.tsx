@@ -202,7 +202,7 @@ export default function TeamMembers() {
         <AddMember onSent={(email, emailed) => done(emailed ? `Invite sent to ${email}`
           : `${email} is added, but the email couldn’t be sent. Try Resend.`)} /></div>
       <p role="status" className="status-msg">{message}</p>
-      <div className="table-wrap" role="region" aria-label="Team members table" tabIndex={0}>
+      <div className="table-wrap table-box" role="region" aria-label="Team members table" tabIndex={0}>
         <table>
           <thead><tr><th scope="col">Name and email</th><th scope="col">Role and what they can do</th>
             <th scope="col">Last sign-in</th><th scope="col">Status</th><th scope="col">Actions</th></tr></thead>
@@ -214,16 +214,16 @@ export default function TeamMembers() {
               <td><span className={`pill ${m.status === "active" ? "pill-ready" : "pill-check"}`}>{STATUS[m.status]}</span></td>
               <td className="row-actions">
                 {m.email === me.email ? <span>You</span> : m.status === "active" ? (
-                  <><ChangeRole m={m} onDone={done} /><ResetAuthenticator m={m} onDone={done} /><RemoveMember m={m} onDone={done} /></>
+                  <div className="row-btns"><ChangeRole m={m} onDone={done} /><ResetAuthenticator m={m} onDone={done} /><RemoveMember m={m} onDone={done} /></div>
                 ) : (
-                  <>
+                  <div className="row-btns">
                     <button type="button" className="btn" onClick={async () => {
                       try { await portal.resendTeamInvite(m.id); done(`Invitation sent again to ${m.email}.`); }
                       catch (e) { setMessage(messageFor((e as PortalError).code)); } }}>Resend<span className="visually-hidden">: {m.name}</span></button>
                     <button type="button" className="btn btn-danger" onClick={async () => {
                       try { await portal.cancelTeamInvite(m.id); done(`Invitation to ${m.email} cancelled.`); }
                       catch (e) { setMessage(messageFor((e as PortalError).code)); } }}>Cancel invite<span className="visually-hidden">: {m.name}</span></button>
-                  </>
+                  </div>
                 )}
               </td>
             </tr>))}</tbody>

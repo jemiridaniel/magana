@@ -69,6 +69,17 @@ function AttentionItem({ a }: { a: Attention }) {
   }
 }
 
+// The board's amber icon on each quick action: decorative, the link text names it.
+function QuickIcon({ d, circle = false, head = false }: { d: string; circle?: boolean; head?: boolean }) {
+  return (
+    <i className="quick-icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round">
+        {circle && <circle cx="12" cy="12" r="9" />}{head && <circle cx="10" cy="8" r="4" />}<path d={d} />
+      </svg>
+    </i>
+  );
+}
+
 export default function HomePage() {
   const [data, setData] = useState<HomeData | null>(null);
   const [error, setError] = useState("");
@@ -99,10 +110,10 @@ export default function HomePage() {
       <section aria-labelledby="quick-h" className="card-section">
         <h2 id="quick-h">Quick actions</h2>
         <ul className="quick">
-          <li><Link href="/uploads/"><strong>Upload a page</strong><span>Notes, tests, photos</span></Link></li>
-          <li><Link href="/attendance/"><strong>Take attendance</strong><span>{first ? first.name : "For a class"}</span></Link></li>
-          <li><Link href="/quizzes/new/"><strong>Create a quiz</strong><span>Voice quiz for a class</span></Link></li>
-          <li><Link href="/classes/"><strong>Add a learner</strong><span>Share a class code</span></Link></li>
+          <li><Link href="/uploads/"><QuickIcon d="M12 16V4M7 9l5-5 5 5M4 20h16" /><strong>Upload a page</strong><span>Notes, tests, photos</span></Link></li>
+          <li><Link href="/attendance/"><QuickIcon d="M4 12l5 5L20 6" /><strong>Take attendance</strong><span>{first ? first.name : "For a class"}</span></Link></li>
+          <li><Link href="/quizzes/new/"><QuickIcon d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5v.7M12 17v.5" circle /><strong>Create a quiz</strong><span>Voice quiz for a class</span></Link></li>
+          <li><Link href="/classes/"><QuickIcon d="M3 21c0-4 3-6 7-6M18 14v6M15 17h6" head /><strong>Add a learner</strong><span>Share a class code</span></Link></li>
         </ul>
       </section>
 

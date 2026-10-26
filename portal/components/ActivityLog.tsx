@@ -77,7 +77,7 @@ export default function ActivityLog() {
       </div>
       <p className="visually-hidden" aria-live="polite">{data ? `${data.total} entr${data.total === 1 ? "y" : "ies"}` : ""}</p>
       {data && (data.items.length === 0 ? <p className="empty">No activity matches.</p> : (
-        <div className="table-wrap" role="region" aria-label="Activity table" tabIndex={0}>
+        <div className="table-wrap table-box" role="region" aria-label="Activity table" tabIndex={0}>
           <table>
             <thead><tr><th scope="col">When</th><th scope="col">Who</th><th scope="col">Action</th><th scope="col">About</th>
               <th scope="col"><span className="visually-hidden">Details</span></th></tr></thead>
