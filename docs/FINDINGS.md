@@ -13,6 +13,35 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-26 · iOS: first Ad Hoc build (UNREVIEWED, not yet on an iPhone)
+
+- **Set up:**
+  - The iOS project was created with bundle ID `ng.magana.app`, team 7MB7UQXJB4 (Daniel Jemiri, Individual; never the Locomex team), automatic signing.
+  - Minimum iOS 15.5, because ML Kit text recognition needs it. CocoaPods installed 16 pods.
+  - Plain usage strings for the camera, microphone, photo library and speech recognition.
+  - The Magana app icon and the Magana launch screen, the same artwork as Android. Android's icons came out byte-identical.
+  - `docs/IOS.md` has the Diawi steps and the steps for Xcode over a cable.
+- **Build:** `scripts/build_ios_adhoc.sh` made `app/build/ios/ipa/Magana.ipa`, 24,041,745 bytes (23 MB), version 0.1.0+5.
+  - Profile "iOS Team Ad Hoc Provisioning Profile: ng.magana.app", covering 2 registered devices, expiring 4 Apr 2027. `get-task-allow` is false.
+  - The script found no API key, web key, private key or AWS key inside the .ipa.
+- **What iOS needed** (`ios/Runner/MaganaChannels.swift`): the Android-only channels, rewritten in Swift.
+  - The upright photo and number crops for offline reading.
+  - The encrypted queue, with AES-GCM and a Keychain key for this device only. Its format is the same as Android's.
+  - The on-device speech check and the phone model for problem reports.
+  - Without these, offline reading would have silently been off on iPhone.
+- **Children's speech never goes to Apple:**
+  - speech_to_text 7.5.0 sets `requiresOnDeviceRecognition` whenever Magana asks for on-device recognition (checked in its source), and iOS then never sends that audio to Apple.
+  - Under-18s have no other Apple step (`voiceSteps`, tested in `app/test/ios_test.dart`).
+  - A plugin detail: if on-device recognition is unsupported, the plugin reports an error but doesn't stop. Magana checks support first (`onDeviceAvailable`), and the request still carries `requiresOnDeviceRecognition`.
+- **Found:** ML Kit on iOS gives **no confidence** for any word. Offline on iPhone, every number is therefore "unclear number", which fails safe. The page gets one spoken warning instead of a warning on every line. **Needs Dr. Amos and Nurse Balogun's review**, like the rest of offline number safety. Android is unchanged: it always has confidence.
+- **Voices** (Apple's catalogue, read on macOS 26): 41 English voices (en-AU, GB, IE, IN, US, ZA). There is no Hausa, Yorùbá, Igbo or Nigerian English voice.
+- **VoiceOver:** the same Flutter semantics as TalkBack, so the labels and the reading order are the same. Not yet tried on an iPhone. Likely differences to check:
+  - the escape gesture (two-finger Z) on sheets and dialogs;
+  - announcements (`liveRegion`) are less reliable on iOS;
+  - the Headings rotor should list our headers;
+  - the app's own voice and VoiceOver can talk over each other, as with TalkBack.
+- **Not done:** no iPhone has run it, and the iOS simulator can't build it on this Mac (ML Kit has no arm64 simulator build). Spoken reminders and "Open with Magana" for PDFs are Android only.
+
 ## 2026-10-26 · Report a problem (board 9) (UNREVIEWED)
 
 - **What changed:**

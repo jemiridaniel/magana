@@ -617,5 +617,6 @@
   "reportSend": "Zipu akụkọ",
   "reportChooseFirst": "Buru ụzọ họrọ ihe mere.",
   "reportNoMic": "Magana enweghị ike iji igwe okwu. Ị ka nwere ike izipu akụkọ ahụ.",
-  "emailSupport": "Zipu email na {email}"
+  "emailSupport": "Zipu email na {email}",
+  "msg_offline_no_confidence": "Ekwentị a enweghị ike ịkọ otú o si ji n'aka banyere okwu ọ bụla, ya mere a na-agụ nọmba ọ bụla dị ka “nọmba edoghị anya”. Lelee akwụkwọ ndị dị mkpa mgbe ị nọ n'ịntanetị, ma ọ bụ ya na mmadụ."
 }

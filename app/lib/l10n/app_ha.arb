@@ -617,5 +617,6 @@
   "reportSend": "Aika rahoto",
   "reportChooseFirst": "Fara zaɓar abin da ya faru.",
   "reportNoMic": "Magana ba za ta iya amfani da makirufo ba. Kana iya aika rahoton har yanzu.",
-  "emailSupport": "Aika imel zuwa {email}"
+  "emailSupport": "Aika imel zuwa {email}",
+  "msg_offline_no_confidence": "Wannan waya ba za ta iya faɗin tabbacinta kan kowace kalma ba, don haka ana karanta kowace lamba a matsayin “lamba mara tabbas”. Duba muhimman takardu idan kana kan intanet, ko tare da wani."
 }

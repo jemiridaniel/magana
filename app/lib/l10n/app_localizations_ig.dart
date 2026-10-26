@@ -2342,4 +2342,8 @@ class AppLocalizationsIg extends AppLocalizations {
   String emailSupport(String email) {
     return 'Zipu email na $email';
   }
+
+  @override
+  String get msg_offline_no_confidence =>
+      'Ekwentị a enweghị ike ịkọ otú o si ji n\'aka banyere okwu ọ bụla, ya mere a na-agụ nọmba ọ bụla dị ka “nọmba edoghị anya”. Lelee akwụkwọ ndị dị mkpa mgbe ị nọ n\'ịntanetị, ma ọ bụ ya na mmadụ.';
 }

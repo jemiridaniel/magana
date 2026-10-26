@@ -2344,4 +2344,8 @@ class AppLocalizationsYo extends AppLocalizations {
   String emailSupport(String email) {
     return 'Fi ímeèlì ránṣẹ́ sí $email';
   }
+
+  @override
+  String get msg_offline_no_confidence =>
+      'Fóònù yìí kò lè sọ bí ó ṣe dá a lójú tó nípa ọ̀rọ̀ kọ̀ọ̀kan, nítorí náà gbogbo nọ́ńbà ni a ń kà sí “nọ́ńbà tí kò ṣe kedere”. Ṣàyẹ̀wò àwọn ìwé pàtàkì nígbà tí o bá wà lórí íńtánẹ́ẹ̀tì, tàbí pẹ̀lú ẹnìkan.';
 }

@@ -3803,6 +3803,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Email {email}'**
   String emailSupport(String email);
+
+  /// No description provided for @msg_offline_no_confidence.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone can\'t say how sure it is of each word, so every number is read as “unclear number”. Check important papers when you are online, or with a person.'**
+  String get msg_offline_no_confidence;
 }
 
 class _AppLocalizationsDelegate

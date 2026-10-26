@@ -66,8 +66,8 @@ abstract class PageRecognizer {
   Future<OfflinePhoto?> open(Uint8List bytes);
 }
 
-/// ML Kit on Android: the photo is turned upright and kept in the app's private cache
-/// only while it is read (android/.../OfflineChannels.kt).
+/// ML Kit on Android and iOS: the photo is turned upright and kept in the app's private
+/// cache only while it is read (android/.../OfflineChannels.kt, ios/Runner/MaganaChannels.swift).
 class MlKitRecognizer implements PageRecognizer {
   static const _channel = MethodChannel('magana/offline');
 
@@ -78,7 +78,7 @@ class MlKitRecognizer implements PageRecognizer {
     try {
       upright = await _channel.invokeMapMethod('upright', {'bytes': bytes});
     } on MissingPluginException {
-      return null; // not Android (no crop and upright helper): don't read offline
+      return null; // no crop and upright helper on this platform: don't read offline
     }
     if (upright == null) return null;
     return _MlKitPhoto(
@@ -203,6 +203,9 @@ Future<Map<String, dynamic>> _reading(OfflinePhoto photo, String mode) async {
     [for (final l in seen) ...l.words.map((w) => w.text)].join(' '),
   );
   final letterMarks = <Map<String, dynamic>>[];
+  // ML Kit on iOS gives no confidence at all. Then every number is "unclear number" (below);
+  // the lines get one page warning instead of a warning on every line.
+  final sure = seen.any((l) => l.words.any((w) => w.confidence != null));
   for (final (i, line) in seen.indexed) {
     final confs = [for (final w in line.words) w.confidence ?? 0.0];
     final conf = confs.reduce((a, b) => a + b) / confs.length;
@@ -242,7 +245,7 @@ Future<Map<String, dynamic>> _reading(OfflinePhoto photo, String mode) async {
         numberFlagged = true;
       }
     }
-    if (!numberFlagged && conf < lineThreshold) {
+    if (!numberFlagged && sure && conf < lineThreshold) {
       warnings.add({'block_index': i, 'code': 'low_confidence'});
     }
   }
@@ -250,6 +253,7 @@ Future<Map<String, dynamic>> _reading(OfflinePhoto photo, String mode) async {
     'offline': true,
     'columns': 1,
     'tips': [
+      if (!sure && seen.isNotEmpty) 'offline_no_confidence',
       ..._cutOff(photo, seen),
       if (language != null) 'letters_$language',
     ],

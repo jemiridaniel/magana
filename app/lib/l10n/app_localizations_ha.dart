@@ -2346,4 +2346,8 @@ class AppLocalizationsHa extends AppLocalizations {
   String emailSupport(String email) {
     return 'Aika imel zuwa $email';
   }
+
+  @override
+  String get msg_offline_no_confidence =>
+      'Wannan waya ba za ta iya faɗin tabbacinta kan kowace kalma ba, don haka ana karanta kowace lamba a matsayin “lamba mara tabbas”. Duba muhimman takardu idan kana kan intanet, ko tare da wani.';
 }
