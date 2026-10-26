@@ -120,6 +120,8 @@ def db():
                 con.executescript(SCHEMA)
                 from . import team  # the Magana team's own accounts (team.py)
                 con.executescript(team.SCHEMA)
+                from . import ses_events  # addresses that bounced or complained
+                con.executescript(ses_events.SCHEMA)
                 _migrate(con)
                 _ready.add(path)
             yield con

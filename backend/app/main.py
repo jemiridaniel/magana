@@ -11,6 +11,7 @@ import os
 
 from fastapi import BackgroundTasks, Depends, FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse, PlainTextResponse
 from PIL import Image
 import logging
@@ -19,7 +20,7 @@ from typing import Literal
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import asr, codes, curriculum, explain, handwriting, learner_api, pdfs, policy, portal_api, quizzes, ratelimit, safety, templates, team_api, triage, uploads_api, wa_flow
+from . import asr, codes, curriculum, explain, handwriting, learner_api, pdfs, policy, portal_api, quizzes, ratelimit, safety, ses_events, ses_health, templates, team_api, triage, uploads_api, wa_flow
 from .wa_client import WhatsAppClient
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
@@ -37,9 +38,12 @@ async def lifespan(app: FastAPI):
     interval = float(os.environ.get("IBA_PROBE_S", "60"))
     if IbaClient.from_env() is not None and interval > 0:
         task = asyncio.create_task(_probe_iba(interval))
+    # The weekly SES bounce and complaint check (ses_health.py).
+    reputation = asyncio.create_task(ses_health.loop()) if ses_health.enabled() else None
     yield
-    if task:
-        task.cancel()
+    for t in (task, reputation):
+        if t:
+            t.cancel()
 
 
 async def _probe_iba(interval: float) -> None:
@@ -68,6 +72,7 @@ app.include_router(uploads_api.router)
 app.include_router(team_api.router)
 
 WHATSAPP_WEBHOOK = "/whatsapp/webhook"
+SES_EVENTS = "/internal/ses-events"  # Amazon SNS, which proves itself with its signature (ses_events.py)
 
 
 @app.middleware("http")
@@ -95,7 +100,7 @@ async def require_api_key(request, call_next):
     # touching the APKs, and the APK key never goes to GitHub.
     keys = [k for k in (key, os.environ.get("MAGANA_WEB_API_KEY", "")) if k]
     # The WhatsApp webhook is called by Meta, which proves itself with a signature instead.
-    if key and request.method != "OPTIONS" and request.url.path not in ("/health", WHATSAPP_WEBHOOK):
+    if key and request.method != "OPTIONS" and request.url.path not in ("/health", WHATSAPP_WEBHOOK, SES_EVENTS):
         sent = request.headers.get("x-magana-key", "").encode()
         if not any(hmac.compare_digest(sent, k.encode()) for k in keys):
             return JSONResponse({"detail": {"code": "bad_api_key"}}, status_code=401)
@@ -551,6 +556,26 @@ def _first_delivery(message_id: str) -> bool:
 def get_whatsapp_flow() -> wa_flow.Flow | None:
     client = WhatsAppClient.from_env()
     return wa_flow.Flow(client, get_engine) if client else None
+
+
+@app.post(SES_EVENTS)
+async def ses_events_in(request: Request) -> dict:
+    """Bounces, complaints and deliveries from AWS SES, through SNS (text/plain JSON). Only
+    messages signed by SNS for our own topic are acted on; everything else gets 403."""
+    body = await request.body()
+    if len(body) > 256_000:
+        raise HTTPException(413, {"code": "too_large"})
+    try:
+        msg = json.loads(body)
+        if not isinstance(msg, dict):
+            raise ValueError
+    except ValueError:
+        raise HTTPException(400, {"code": "bad_request"}) from None
+    try:
+        done = await run_in_threadpool(ses_events.handle, msg)
+    except ses_events.Refused:
+        raise HTTPException(403, {"code": "bad_signature"}) from None
+    return {"code": "ok", "done": done}
 
 
 @app.get(WHATSAPP_WEBHOOK)

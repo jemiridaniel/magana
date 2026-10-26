@@ -739,3 +739,8 @@ tr.is-open { background: #F3F9F5; }
 .warn-note svg { flex: none; margin-top: 2px; }
 .legend-note { font-weight: 400; color: var(--ink-soft); }
 .actions-end { justify-content: flex-end; }
+
+/* An address that bounced or complained (components/Undeliverable.tsx): 9.6:1 on the amber tint. */
+.undeliverable { display: flex; gap: 6px; align-items: center; width: fit-content; margin-top: 6px; padding: 2px 10px;
+  border-radius: 10px; background: var(--check-bg); color: var(--check-ink); font-size: 1rem; font-weight: 700; }
+.undeliverable svg { flex: none; }

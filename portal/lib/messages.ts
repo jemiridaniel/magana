@@ -52,6 +52,7 @@ export const portalMessages: Record<string, string> = {
   not_team: "Only the Magana team can open this page.",
   code_sent_recently: "We just sent a code. You can ask for a new one in a few seconds.",
   too_many_codes: "Too many codes for this email. Please try again in an hour.",
+  mail_undeliverable: "We couldn’t deliver to this address. Check it with the person, or use another email.",
   sign_in_code_sent: "If this email is invited, we sent a 6-digit code to it.",
   mail_unavailable: "We couldn’t send the email just now. Please try again in a few minutes.",
   sign_in_code_wrong: "That code isn’t right. Check the latest email from Magana.",

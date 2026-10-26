@@ -9,6 +9,7 @@ import { useMe } from "@/components/SessionGate";
 import { messageFor } from "@/lib/messages";
 import { API_URL } from "@/lib/server";
 import { portal, PortalError, type Check, type Reason, type SchoolRequest } from "@/lib/portal";
+import { Undeliverable } from "@/components/Undeliverable";
 
 export type Tab = "pending" | "approved" | "rejected";
 const CHECKS: { id: Check; label: string }[] = [
@@ -88,7 +89,7 @@ function Request({ s, onDone, viewOnly }: { s: SchoolRequest; onDone: (msg: stri
               {s.proof === "application/pdf" ? "PDF" : "Photo"} · view<span className="visually-hidden"> for {s.name} (opens in a new tab)</span></a>
           : "None"}</dd></div>
         <div><dt>Ministry approval no.</dt><dd>{s.ministry_no || "None"}</dd></div>
-        <div><dt>Email</dt><dd>{s.contact_email}</dd></div>
+        <div><dt>Email</dt><dd>{s.contact_email}<Undeliverable show={s.contact_undeliverable} /></dd></div>
       </dl>
       {viewOnly ? <SupportTools s={s} /> : !rejecting ? (
         <>

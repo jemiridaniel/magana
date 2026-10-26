@@ -8,6 +8,7 @@ import Dialog from "@/components/Dialog";
 import { useStaff } from "@/components/SessionGate";
 import { messageFor } from "@/lib/messages";
 import { portal, PortalError, type ClassInfo, type Role, type StaffMember } from "@/lib/portal";
+import { Undeliverable } from "@/components/Undeliverable";
 
 const statusLabel: Record<string, string> = { active: "Active", invited: "Invited", expired: "Invite expired", removed: "Removed" };
 const ROLES: { id: Role; label: string; can: string }[] = [
@@ -130,7 +131,7 @@ function InviteTeacher({ classes, onSent }: { classes: ClassInfo[]; onSent: (ema
       onSent(body.email);
     } catch (err) {
       const code = (err as PortalError).code;
-      if (["email_taken", "email_is_team", "form_invalid"].includes(code)) {
+      if (["email_taken", "email_is_team", "form_invalid", "mail_undeliverable"].includes(code)) {
         setErrors({ email: code === "form_invalid" ? "That doesn’t look like an email address." : messageFor(code) });
         document.getElementById("i-email")?.focus();
       } else setErrors({ form: messageFor(code) });
@@ -212,7 +213,7 @@ export default function TeachersPage() {
           <tbody>
             {staff.map((s) => (
               <tr key={s.id}>
-                <th scope="row">{s.name}<br /><span className="sub">{s.email}</span></th>
+                <th scope="row">{s.name}<br /><span className="sub">{s.email}</span><Undeliverable show={s.undeliverable} /></th>
                 <td>{roleLabel(s)}</td>
                 <td>{s.classes.map((c) => c.name).join(", ") || "—"}</td>
                 <td><span className={`pill ${s.status === "active" ? "pill-ready" : s.status === "removed" ? "pill-processing" : "pill-check"}`}>{statusLabel[s.status]}</span></td>

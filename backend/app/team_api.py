@@ -11,7 +11,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 
 from . import accounts as A
-from . import mailer, places, team
+from . import mailer, places, ses_events, team
 from .accounts import db, iso, now, parse
 from .portal_api import EmailIn, Who, _mail, fail, owner, portal_url, team_audit
 from .portal_api import team as any_team
@@ -19,20 +19,22 @@ from .portal_api import team as any_team
 router = APIRouter(prefix="/portal")
 
 
-def _member_out(m: dict) -> dict:
+def _member_out(m: dict, bad: set[str] = frozenset()) -> dict:
     expired = m["status"] == "invited" and parse(m["invite_expires"]) < now()
     return {"id": m["id"], "name": m["name"], "email": m["email"], "role": m["role"],
             "role_label": team.ROLE_LABEL[m["role"]], "can": team.ROLE_CAN[m["role"]],
             "status": "expired" if expired else m["status"],
             "last_sign_in": mailer.lagos_time(parse(m["last_sign_in"])) if m["last_sign_in"] else None,
-            "invited_at": mailer.lagos_time(parse(m["invited_at"])) if m["invited_at"] else None}
+            "invited_at": mailer.lagos_time(parse(m["invited_at"])) if m["invited_at"] else None,
+            "undeliverable": m["email"].lower() in bad}
 
 
 @router.get("/team/members")
 def members(who: Who = Depends(owner)) -> list[dict]:
     with db() as con:
         rows = con.execute("SELECT * FROM team_members WHERE status != 'removed' ORDER BY role = 'owner' DESC, created_at").fetchall()
-        return [_member_out(dict(r)) for r in rows]
+        bad = ses_events.undeliverable_set(con, [r["email"] for r in rows])
+        return [_member_out(dict(r), bad) for r in rows]
 
 
 class MemberIn(EmailIn):
@@ -52,6 +54,8 @@ def add_member(body: MemberIn, who: Who = Depends(owner)) -> dict:
             fail(409, "email_is_teacher")  # one role per email
         if m := team.member_by_email(con, body.email):
             fail(409, "team_already_member" if m["status"] == "active" else "team_already_invited")
+        if ses_events.undeliverable_set(con, [body.email]):
+            fail(409, "mail_undeliverable")
         if body.role == "owner" and team.admins(con) >= team.MAX_ADMINS:
             fail(409, "team_admins_max")
         mid = team.create(con, body.email, body.name, body.role, "invited", who.member["id"])
@@ -106,6 +110,8 @@ def resend_member_invite(member_id: str, who: Who = Depends(owner)) -> dict:
         m = _member_or_404(con, member_id)
         if m["status"] != "invited":
             fail(409, "not_invited")
+        if ses_events.undeliverable_set(con, [m["email"]]):
+            fail(409, "mail_undeliverable")
         t = now()
         con.execute("UPDATE team_members SET invited_at = ?, invite_expires = ? WHERE id = ?",
                     (iso(t), iso(t + timedelta(days=A.INVITE_DAYS)), member_id))

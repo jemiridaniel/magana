@@ -13,6 +13,14 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-26 · Email: bounces and complaints handled, sign-in code limits confirmed
+
+- **What changed:** every email now goes through the SES configuration set `magana-default`. Its bounces and complaints come back through SNS to `/internal/ses-events`. A hard bounce or a complaint stops all mail to that address; the portal shows "We couldn't deliver to this address"; invites and resends to it are refused. A weekly check alerts at bounce rate > 2% or complaint rate > 0.05%. Details in docs/DEPLOY_AWS.md §8c.
+- **Safety of the endpoint (tests, `backend/tests/test_ses_events.py`, 30 tests):** messages with another key, another account's topic of the same name, a changed body, an age over 1 hour, a certificate URL not on `sns.<region>.amazonaws.com` or over http, or an unknown signature version are all refused (403) and change nothing. A SubscribeURL outside SNS is never visited. Logs show a masked address and never the subject: checked with a bounce whose subject holds a sign-in code.
+- **Sign-in code limits, measured in tests:** 10-minute expiry, 5 codes per address per hour, 45 s between codes. **Bug found and fixed:** a successful sign-in deleted the address's code record, which reset its hourly count, so one person could get more than 5 codes in an hour. The record now stays, marked used.
+- **A sign-in for an undeliverable address** gets the same answer as any other request, so the answer still never tells whether an email has an account.
+- **Not yet done on AWS:** `scripts/setup-ses-events.sh` must be run in CloudShell (this Mac has no Magana AWS credentials). Until then, mail is sent without the set, with a CRITICAL log line. Not yet tested against real SES: run the mailbox simulator test in §8c afterwards.
+
 ## 2026-10-25 · Website: the page loader no longer jumps to 100%; timed on video
 
 - **The problem:** on a normal connection, the page loaded in about 100 ms, so the loader showed "100%" at once and vanished at its 0.8 s minimum. No dot was seen popping in order.

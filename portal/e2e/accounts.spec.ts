@@ -1,8 +1,9 @@
 // Accounts and the new portal screens against a real backend (design canvas: Sign in, Enter
 // sign-in code, Register your school, Teachers, Home, Learner remove from class, My classes):
 // axe (WCAG 2.2 AA + AAA contrast), 64 px targets, the dialog's focus, the LGA combobox.
+import { execFileSync } from "node:child_process";
 import { expect, test } from "@playwright/test";
-import { apiUrl } from "../playwright.config";
+import { apiUrl, dataDir } from "../playwright.config";
 import { addClass, approve, designChecks, emailedCode, joinOnPhone, newSchool, nextTotp, registerSchool, signIn, signInTeam,
          totpAt, uniqueEmail } from "./helpers";
 
@@ -464,4 +465,32 @@ test("sign-in code: pasting the whole code into the first box fills all six", as
   await designChecks(page);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText(/Good (morning|afternoon|evening)/);
+});
+
+test("an address that bounced shows “We couldn’t deliver to this address”, and a new invite to it says so on the field", async ({ page }) => {
+  await newSchool(page);
+  const bounced = uniqueEmail("bounced"), next = uniqueEmail("never");
+  await page.goto("/teachers/");
+  await page.getByRole("button", { name: "+ Invite a teacher" }).click();
+  let modal = page.getByRole("dialog", { name: "Invite a teacher" });
+  await modal.getByLabel("Full name").fill("Mr Bounced Teacher");
+  await modal.getByLabel("Email", { exact: true }).fill(bounced);
+  await modal.getByRole("button", { name: "Send invite" }).click();
+  await expect(modal).toBeHidden();
+  // What SES reports through /internal/ses-events, marked with the server's own command.
+  for (const email of [bounced, next]) {
+    execFileSync(".venv/bin/python", ["-m", "app.ses_events", "--mark", email],
+                 { cwd: "../backend", env: { ...process.env, MAGANA_DATA_DIR: dataDir!, MAGANA_ENV: "development" } });
+  }
+  await page.reload();
+  const row = page.getByRole("row", { name: /Mr Bounced Teacher/ });
+  await expect(row.getByText("We couldn’t deliver to this address")).toBeVisible();
+  await designChecks(page);
+  await page.getByRole("button", { name: "+ Invite a teacher" }).click();
+  modal = page.getByRole("dialog", { name: "Invite a teacher" });
+  await modal.getByLabel("Full name").fill("Mrs Never Sent");
+  await modal.getByLabel("Email", { exact: true }).fill(next);
+  await modal.getByRole("button", { name: "Send invite" }).click();
+  await expect(modal.getByText("We couldn’t deliver to this address. Check it with the person, or use another email.")).toBeVisible();
+  await expect(modal.getByLabel("Email", { exact: true })).toBeFocused();
 });

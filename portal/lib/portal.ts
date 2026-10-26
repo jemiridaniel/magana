@@ -46,7 +46,7 @@ export type Check = "person_confirmed" | "school_exists" | "details_correct";
 export type Reason = "unreachable" | "role_unconfirmed" | "not_found" | "duplicate";
 export interface SchoolRequest {
   id: string; name: string; status: School["status"]; reference: string; state_name: string; lga_name: string;
-  contact_name: string; contact_role: string; contact_email: string; contact_phone: string; phone_tel: string;
+  contact_name: string; contact_role: string; contact_email: string; contact_undeliverable?: boolean; contact_phone: string; phone_tel: string;
   registered: string; call_by: string; days_left: number; ministry_no: string; proof: string | null;
   call_notes: string; checks: Check[]; reason: Reason | null; reason_label: string | null;
   decided_at: string | null; decided_by: string | null;
@@ -67,6 +67,7 @@ export type TeamRole = "owner" | "reviewer" | "support";
 export interface TeamMember {
   id: string; name: string; email: string; role: TeamRole; role_label: string; can: string;
   status: "invited" | "active" | "expired"; last_sign_in: string | null; invited_at: string | null;
+  undeliverable: boolean;
 }
 
 export interface ClassInfo {
@@ -88,6 +89,7 @@ export interface StaffMember {
   id: string; name: string; email: string; role: Role; title: string;
   status: "invited" | "active" | "removed" | "expired"; invited_at: string | null; removed_at: string | null;
   classes: { id: string; name: string }[];
+  undeliverable: boolean;
 }
 
 export type Attention =

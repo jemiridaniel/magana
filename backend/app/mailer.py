@@ -14,7 +14,9 @@ carries information: email apps block images and strip SVG), phone numbers partl
 the same footer. Never logged: only "email sent: <kind>, <time>".
 
 MAGANA_MAIL selects how (docs/DEPLOY_AWS.md, "Email: AWS SES"):
-- ses     AWS SES in eu-west-2, through the instance's IAM role (no password stored).
+- ses     AWS SES in eu-west-2, through the instance's IAM role (no password stored), always with
+          the configuration set "magana-default" (SES_CONFIGURATION_SET), whose bounces and
+          complaints come back to /internal/ses-events (ses_events.py).
 - outbox  development and tests only: each email is written to MAGANA_DATA_DIR/outbox/ as
           JSON. Refused when MAGANA_ENV is production.
 """
@@ -40,11 +42,15 @@ DEFAULT_REPLY_TO = "support@magana.ng"
 DEFAULT_LOGO_URL = "https://magana.ng/brand/magana-mark-email.png"
 LAGOS = ZoneInfo("Africa/Lagos")
 KINDS = ("sign_in_code", "registration_received", "new_school_request", "school_approved", "school_not_approved",
-         "teacher_invitation", "team_invitation")
+         "teacher_invitation", "team_invitation", "ses_reputation_alert")
 
 
 class MailError(Exception):
     pass
+
+
+class Undeliverable(MailError):
+    """The address hard-bounced or complained before (ses_events.py): nothing is sent to it."""
 
 
 @dataclass(frozen=True)
@@ -371,6 +377,20 @@ def team_invitation(name: str, inviter: str, role: str, can: str, email: str, po
     return Email("team_invitation", "You’re invited to the Magana team", pre, _page("Team invitation", pre, body, team=True), text)
 
 
+def ses_reputation_alert(bounce: float | None, complaint: float | None) -> Email:
+    """To the team (ses_health.py): the weekly check found the bounce or complaint rate too high."""
+    def pct(r):
+        return "no data" if r is None else f"{r * 100:.2f}%"
+    rows = [("Bounce rate", f"{pct(bounce)} (limit 2%)"), ("Complaint rate", f"{pct(complaint)} (limit 0.05%)")]
+    todo = ("Check the Activity log for “Email undeliverable”, and SES → Reputation metrics in the AWS console. "
+            "AWS reviews the account at 5% bounces or 0.1% complaints.")
+    pre = "The weekly SES check found a rate over its limit."
+    body = _h1("Email reputation needs a look") + _p(pre) + _rows(rows) + '<div style="height:18px"></div>' + _p(todo)
+    text = _text(pre, "\n".join(f"{k}: {v}" for k, v in rows), todo)
+    return Email("ses_reputation_alert", "Magana email: bounce or complaint rate too high", pre,
+                 _page("Email reputation", pre, body, team=True), text)
+
+
 # ---------- sending
 
 def _outbox(to: str, email: Email) -> None:
@@ -384,23 +404,52 @@ def _outbox(to: str, email: Email) -> None:
 
 
 def _ses(to: str, email: Email) -> None:
-    import boto3
     from botocore.exceptions import BotoCoreError, ClientError
 
+    from .ses_events import CONFIGURATION_SET
+
+    message = dict(
+        FromEmailAddress=os.environ.get("MAIL_FROM", DEFAULT_FROM),
+        Destination={"ToAddresses": [to]},
+        ReplyToAddresses=[reply_to()],
+        Content={"Simple": {"Subject": {"Data": email.subject, "Charset": "UTF-8"},
+                            "Body": {"Text": {"Data": email.text, "Charset": "UTF-8"},
+                                     "Html": {"Data": email.html, "Charset": "UTF-8"}}}},
+        ConfigurationSetName=os.environ.get("SES_CONFIGURATION_SET", CONFIGURATION_SET),
+    )
+    client = ses_client()
     try:
-        boto3.client("sesv2", region_name=os.environ.get("SES_REGION", "eu-west-2")).send_email(
-            FromEmailAddress=os.environ.get("MAIL_FROM", DEFAULT_FROM),
-            Destination={"ToAddresses": [to]},
-            ReplyToAddresses=[reply_to()],
-            Content={"Simple": {"Subject": {"Data": email.subject, "Charset": "UTF-8"},
-                                "Body": {"Text": {"Data": email.text, "Charset": "UTF-8"},
-                                         "Html": {"Data": email.html, "Charset": "UTF-8"}}}},
-        )
-    except (BotoCoreError, ClientError) as e:
+        client.send_email(**message)
+    except ClientError as e:
+        # Until scripts/setup-ses-events.sh has run (the set, or the role's right to use it, is
+        # missing), send without it rather than lock teachers out; the account-level suppression
+        # list still applies. Loud, so it gets fixed.
+        if e.response.get("Error", {}).get("Code") not in ("NotFoundException", "ConfigurationSetDoesNotExistException",
+                                                            "AccessDeniedException"):
+            raise MailError(type(e).__name__) from e
+        log.critical("SES configuration set unusable (%s): sent without bounce tracking; run scripts/setup-ses-events.sh",
+                     e.response["Error"]["Code"])
+        del message["ConfigurationSetName"]
+        try:
+            client.send_email(**message)
+        except (BotoCoreError, ClientError) as e2:
+            raise MailError(type(e2).__name__) from e2
+    except BotoCoreError as e:
         raise MailError(type(e).__name__) from e
 
 
+def ses_client():
+    import boto3
+
+    return boto3.client("sesv2", region_name=os.environ.get("SES_REGION", "eu-west-2"))
+
+
 def send(to: str, email: Email) -> None:
+    from .ses_events import is_undeliverable
+
+    if is_undeliverable(to):
+        log.info("email not sent: %s, address undeliverable", email.kind)
+        raise Undeliverable(email.kind)
     how = os.environ.get("MAGANA_MAIL", "outbox" if os.environ.get("MAGANA_ENV") == "development" else "ses")
     (_ses if how == "ses" else _outbox)(to, email)
     # Only the kind and the time: never an address, a name, a code or any content.

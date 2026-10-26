@@ -28,7 +28,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from . import accounts as A
-from . import codes, curriculum, mailer, places, proofs, totp
+from . import codes, curriculum, mailer, places, proofs, ses_events, totp
 from . import team as tm  # the Magana team's accounts (team.py); `team` below is the dependency
 from .accounts import db, iso, now, parse
 
@@ -228,7 +228,8 @@ def request_code(body: EmailIn, request: Request) -> dict:
     with db() as con:
         old = A.row(con.execute("SELECT * FROM login_codes WHERE email = ?", (body.email,)).fetchone())
         gap = _limit("MAGANA_DEV_CODE_GAP", CODE_GAP_S)
-        if old and (t - parse(old["sent_at"])).total_seconds() < gap:
+        # The 45 s gap is between unused codes: signing out and in again doesn't wait.
+        if old and old["code_lookup"] != "used" and (t - parse(old["sent_at"])).total_seconds() < gap:
             wait = gap - int((t - parse(old["sent_at"])).total_seconds())
             fail(429, "code_sent_recently", retry_after=max(1, wait))
         count, since = (old["sent_count"], parse(old["count_since"])) if old else (0, t)
@@ -247,6 +248,8 @@ def request_code(body: EmailIn, request: Request) -> dict:
             mailer.send(body.email, mailer.sign_in_code(
                 code, _name_for(body.email), t, request.headers.get("user-agent", ""),
                 request.headers.get("x-magana-timezone", "")))
+        except mailer.Undeliverable:
+            pass  # answered like any other request: the answer never tells what is on the list
         except mailer.MailError:
             fail(503, "mail_unavailable")
     return {"code": "sign_in_code_sent", "retry_after": CODE_GAP_S, "minutes": A.LOGIN_CODE_MINUTES}
@@ -264,7 +267,7 @@ def verify(body: VerifyIn, request: Request, response: Response) -> dict:
     t = now()
     with db() as con:
         lc = A.row(con.execute("SELECT * FROM login_codes WHERE email = ?", (body.email,)).fetchone())
-        good = (lc is not None and parse(lc["expires"]) > t and lc["code_lookup"] != "none"
+        good = (lc is not None and parse(lc["expires"]) > t and lc["code_lookup"] not in ("none", "used")
                 and secrets.compare_digest(lc["code_lookup"], codes.lookup(body.code)))
         if not good:
             if lc and parse(lc["expires"]) <= t:
@@ -272,7 +275,8 @@ def verify(body: VerifyIn, request: Request, response: Response) -> dict:
             wait = codes.attempts.failed(key)
             fail(429 if wait else 400, "code_locked" if wait else "sign_in_code_wrong",
                  **({"retry_after": int(wait)} if wait else {}))
-        con.execute("DELETE FROM login_codes WHERE email = ?", (body.email,))
+        # Used up, but the row stays: the hourly count (CODES_PER_HOUR) still holds after a sign-in.
+        con.execute("UPDATE login_codes SET code_lookup = 'used' WHERE email = ?", (body.email,))
         token = secrets.token_urlsafe(32)
         m = tm.member_by_email(con, body.email)
         if m is not None:
@@ -507,7 +511,7 @@ def _purge_not_confirmed() -> None:
 CHECKS = ("person_confirmed", "school_exists", "details_correct")
 
 
-def _school_out(r) -> dict:
+def _school_out(r, bad: set[str] = frozenset()) -> dict:
     d = dict(r)
     registered = parse(d["created_at"])
     by = mailer.call_by(registered)
@@ -521,7 +525,9 @@ def _school_out(r) -> dict:
             "call_notes": d.get("call_notes") or "", "checks": [c for c in (d.get("checks") or "").split(",") if c],
             "reason": d.get("reason"), "reason_label": mailer.REASONS.get(d.get("reason") or "", None),
             "decided_at": mailer.lagos_time(parse(d["decided_at"])) if d.get("decided_at") else None,
-            "decided_by": d.get("decided_by")}
+            "decided_by": d.get("decided_by"),
+            # Bounced or marked as spam (ses_events.py): "We couldn't deliver to this address".
+            "contact_undeliverable": (d["contact_email"] or "").lower() in bad}
 
 
 @router.get("/admin/schools")
@@ -530,7 +536,8 @@ def list_schools(status: str = "pending", who: Who = Depends(team)) -> list[dict
     order = "created_at" if status == "pending" else "decided_at DESC"
     with db() as con:
         rows = con.execute(f"SELECT * FROM schools WHERE status = ? ORDER BY {order}", (status,)).fetchall()
-        return [_school_out(r) for r in rows]
+        bad = ses_events.undeliverable_set(con, [r["contact_email"] for r in rows])
+        return [_school_out(r, bad) for r in rows]
 
 
 def _pending_school(con, school_id: str) -> dict:
@@ -642,7 +649,7 @@ ACTION_LABELS = {
     "team_authenticator_reset": "Authenticator reset", "team_invite_accepted": "Joined the team",
     "team_member_invited": "Invited member", "team_role_changed": "Role changed", "team_member_removed": "Removed member",
     "team_invite_resent": "Invite resent", "team_invite_cancelled": "Invite cancelled", "team_owner_created": "First Magana admin made",
-    "team_member_created": "Member made",
+    "team_member_created": "Member made", "team_email_undeliverable": "Email undeliverable",
 }
 LOG_YEARS = 2
 
@@ -699,6 +706,8 @@ def _about(r: dict, people: dict) -> str:
         return f"{target.get('name') or d.get('email', '')} → {tm.ROLE_LABEL.get(d.get('role', ''), '')}"
     if r["action"] == "team_authenticator_reset":
         return f"{target.get('name', '')}’s authenticator ({d.get('by', '')})"
+    if r["action"] == "team_email_undeliverable":
+        return f"{d.get('email', '')} · {'Marked as spam' if d.get('reason') == 'complaint' else 'Hard bounce'}"
     return target.get("name") or d.get("email") or ""
 
 
@@ -760,7 +769,8 @@ def _staff_out(con, s: dict) -> dict:
     expired = s["status"] == "invited" and parse(s["invite_expires"]) < now()
     return {"id": s["id"], "name": s["name"], "email": s["email"], "role": s["role"], "title": s["title"],
             "status": "expired" if expired else s["status"], "invited_at": s["invited_at"],
-            "removed_at": s["removed_at"], "classes": [dict(c) for c in classes]}
+            "removed_at": s["removed_at"], "classes": [dict(c) for c in classes],
+            "undeliverable": bool(ses_events.undeliverable_set(con, [s["email"]]))}
 
 
 @router.get("/staff")
@@ -791,6 +801,8 @@ def invite(body: InviteIn, who: Who = Depends(admin)) -> dict:
             fail(409, "email_taken")
         if tm.is_team_email(con, body.email):
             fail(409, "email_is_team")  # one role per email
+        if ses_events.undeliverable_set(con, [body.email]):
+            fail(409, "mail_undeliverable")
         sid = A.new_id("stf")
         _, lk, sealed = A.fresh_code(con, "staff")
         con.execute("INSERT INTO staff(id, school_id, name, email, role, title, status, invited_by, invited_at,"
@@ -814,6 +826,8 @@ def _send_invite(staff_id: str, who: Who) -> None:
         mailer.send(s["email"], mailer.teacher_invitation(s["name"], who.school["name"], who.staff["name"],
                                                          role + (f" · {s['title']}" if s["title"] else ""), classes,
                                                          s["email"], portal_url()))
+    except mailer.Undeliverable:
+        fail(409, "mail_undeliverable")
     except mailer.MailError:
         fail(503, "mail_unavailable")
 
@@ -832,6 +846,8 @@ def resend_invite(staff_id: str, who: Who = Depends(admin)) -> dict:
         s = _staff_in_school(con, who, staff_id)
         if s["status"] != "invited":
             fail(409, "not_invited")
+        if ses_events.undeliverable_set(con, [s["email"]]):
+            fail(409, "mail_undeliverable")
         con.execute("UPDATE staff SET invited_at = ?, invite_expires = ? WHERE id = ?",
                     (iso(t), iso(t + timedelta(days=A.INVITE_DAYS)), staff_id))
         A.audit(con, who.school["id"], who.id, "invite_resent", staff_id)

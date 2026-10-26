@@ -9,6 +9,7 @@ import Dialog from "@/components/Dialog";
 import { useMe } from "@/components/SessionGate";
 import { messageFor } from "@/lib/messages";
 import { portal, PortalError, type TeamMember, type TeamRole } from "@/lib/portal";
+import { Undeliverable } from "@/components/Undeliverable";
 
 const ROLES: { id: TeamRole; label: string; can: string }[] = [
   { id: "reviewer", label: "School reviewer", can: "Approve or reject schools, view proof documents, see the activity log." },
@@ -68,7 +69,7 @@ function AddMember({ onSent }: { onSent: (email: string, emailed: boolean) => vo
     } catch (err) {
       const code = (err as PortalError).code;
       const msg = code === "form_invalid" ? "Check the name and the email address." : messageFor(code);
-      const field = ["team_already_member", "team_already_invited", "email_is_teacher"].includes(code) ? "email"
+      const field = ["team_already_member", "team_already_invited", "email_is_teacher", "mail_undeliverable"].includes(code) ? "email"
         : code === "team_admins_max" ? "role" : "form";
       setErrors({ [field]: msg });
       if (field !== "form") document.getElementById(`t-${field}`)?.focus();
@@ -208,7 +209,7 @@ export default function TeamMembers() {
             <th scope="col">Last sign-in</th><th scope="col">Status</th><th scope="col">Actions</th></tr></thead>
           <tbody>{rows.map((m) => (
             <tr key={m.id}>
-              <th scope="row">{m.name}<span className="sub">{m.email}</span></th>
+              <th scope="row">{m.name}<span className="sub">{m.email}</span><Undeliverable show={m.undeliverable} /></th>
               <td><b>{m.role_label}</b><span className="sub">{m.can}</span></td>
               <td>{m.last_sign_in ?? "—"}</td>
               <td><span className={`pill ${m.status === "active" ? "pill-ready" : "pill-check"}`}>{STATUS[m.status]}</span></td>

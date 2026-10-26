@@ -285,6 +285,30 @@ Teachers sign in with a 6-digit code sent from **no-reply@magana.ng** through Am
 
    `MAGANA_CODE_KEY` (which keys the class, session and teacher codes, and seals the authenticator keys) is made by the deploy itself the first time (`deploy/update.sh`). Never change it later: every code would stop working.
 
+### 8c. Bounces and complaints
+
+Every email goes through the SES configuration set **magana-default** (`SES_CONFIGURATION_SET`). Its Bounce, Complaint and Delivery events go to the SNS topic **magana-ses-events**, which POSTs them to `https://api.magana.ng/internal/ses-events` (`backend/app/ses_events.py`).
+- The server checks each message's SNS signature (the certificate only from `sns.<region>.amazonaws.com`), that it comes from our own topic in this account, and that it is less than an hour old. It confirms the subscription itself.
+- A **hard bounce** (Permanent) or a **complaint** marks the address undeliverable. Nothing more is sent to it, invites and resends to it are refused (`mail_undeliverable`), and the portal shows **"We couldn't deliver to this address"** on Teachers, Magana team and a school's request. The Activity log gets "Email undeliverable" with the address masked (`t***@gmail.com`). Soft bounces change nothing.
+- The account-level SES suppression list (BOUNCE and COMPLAINT) is on too.
+- Logs hold the event kind and a masked address only: never the email's subject (a sign-in code's subject holds the code), headers or body.
+- **Weekly check** (`backend/app/ses_health.py`): once a week the server reads CloudWatch `AWS/SES` `Reputation.BounceRate` and `Reputation.ComplaintRate` (the highest in the last 7 days). Over **2%** bounces or **0.05%** complaints, it emails `SES_ALERT_EMAIL` (default daniel@magana.ng), logs CRITICAL and posts to `MAGANA_ALERT_WEBHOOK_URL`. Turn it off with `SES_HEALTH_CHECK=off`.
+
+**Sign-in code limits** (`portal_api.py`): a code expires after **10 minutes**; at most **5 codes per email address per hour** (a successful sign-in doesn't reset the count) and **45 s** between codes; **30 code requests per IP address per hour**; **3 wrong codes** lock that email's sign-in for **5 minutes**.
+
+**Set it up** (once, then again only if something changes): push the code, wait for the deploy, then in **AWS CloudShell** (Magana account, London) upload and run `scripts/setup-ses-events.sh`. It turns on the suppression list, creates the set, the topic (only SES in this account may publish to it), the event destination, updates the role `magana-ec2-ssm`'s inline policy `magana-send-signin-email` (send through the set, read the SES metrics), and subscribes the endpoint. No key is made or stored. Until it has run, mail is still sent, without the set, with a CRITICAL log line "SES configuration set unusable".
+
+**Test it** in CloudShell with the SES mailbox simulator:
+```bash
+aws sesv2 send-email --region eu-west-2 --from-email-address no-reply@magana.ng --configuration-set-name magana-default \
+  --destination ToAddresses=bounce@simulator.amazonses.com \
+  --content 'Simple={Subject={Data=Bounce test},Body={Text={Data=Test}}}'
+```
+The Activity log then shows "Email undeliverable · b***@simulator.amazonses.com · Hard bounce". Use `complaint@simulator.amazonses.com` for a complaint.
+
+**Taking an address off the list** (the person says their mailbox works again): on the server,
+`sudo docker compose -f docker-compose.prod.yml exec magana python -m app.ses_events --clear someone@example.com`, and remove it in **SES → Configuration → Suppression list**. `--mark` stops sending to an address by hand.
+
 ## 9. Switching to PaddleOCR (one line in .env)
 
 > **Measure before real users.** Every number is now re-read from its own crop in PaddleOCR mode too, by Tesseract. The backend runs a start-up self-test and **refuses to start** if any number isn't re-read (docs/FINDINGS.md). PaddleOCR's memory use on 4 GiB and its real word positions have **not been measured** yet: check `docker stats` and read a few test pages first.
