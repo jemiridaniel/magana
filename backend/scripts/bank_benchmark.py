@@ -148,8 +148,10 @@ def to_photo(x: float, y: float, size: tuple[int, int]) -> tuple[float, float]:
 
 
 def value(t: str) -> str:
-    """The number as spoken: thousands commas don't change it ("9999.99," is 9,999.99)."""
-    return core(t).replace(",", "")
+    """The number as spoken: thousands commas, a currency letter or sign and trailing
+    punctuation don't change it ("9999.99," is 9,999.99; "N45,200.00" is ₦45,200.00)."""
+    m = re.search(r"\d[\d,./:]*\d|\d", t)
+    return m.group().replace(",", "") if m else core(t)
 
 
 def score_ocr(result: dict, scored, place, scale: float = 1.0) -> Counter:
@@ -176,12 +178,15 @@ def score_ocr(result: dict, scored, place, scale: float = 1.0) -> Counter:
                     hits.append((li, wi, ow["text"], mx))
         hits.sort(key=lambda h: h[3])
         truth = core(w.text)
+        # Only a reading with a digit is a reading of the number; letters there mean it wasn't read.
+        hits = [h for h in hits if has_digit(h[2])]
         if not hits:
             # Warned all the same: a faint region there, or a warning on a line of that row
             # (line_part_unclear: print in the row that no word covers).
             row_warned = any(li in flagged_lines and abs(l["top"] + l["height"] / 2 - cy) <= max(half_h, 8)
                              for li, l in enumerate(result["lines"]))
-            near_faint = row_warned or any(abs(f.get("top", 0) - cy) < 60 for f in faint)
+            page_warned = "money_amounts_unreliable" in result.get("tips", [])  # "can't read the amounts reliably"
+            near_faint = page_warned or row_warned or any(abs(f.get("top", 0) - cy) < 60 for f in faint)
             out[f"{kind}:missed_flagged" if near_faint else f"{kind}:missed_silently"] += 1
             continue
         exact = any(value(h[2]) == value(truth) for h in hits) or value("".join(h[2] for h in hits)) == value(truth)
@@ -252,13 +257,13 @@ def main_(path: str) -> None:
         all_truths += [core(w.text) for w, _ in scored]
         img = masked_render(page, private)
         t = time.time()
-        scan = main.checked(read_page(img, engine, second_pass=True))
+        scan = main.checked(read_page(img, engine, second_pass=True), "money")
         t_scan += time.time() - t
         report["scan"] += score_ocr(scan, scored, lambda x, y: (x, y))
         report["page_tips"].update(f"scan:{t}" for t in scan["tips"])
         photo = photo_like(img)
         t = time.time()
-        res = main.checked(read_page(photo, engine, second_pass=True))
+        res = main.checked(read_page(photo, engine, second_pass=True), "money")
         t_photo += time.time() - t
         size = photo.size
         report["page_tips"].update(f"photo:{t}" for t in res["tips"])

@@ -321,7 +321,9 @@ class _CaptureScreenState extends State<CaptureScreen>
             for (final tip in result.tips) messageFor(_l, tip),
             for (final f in result.items.where((i) => i.isFaint))
               messageFor(_l, 'faint_region', where: pagePosition(_l, f.where)),
-            _l.noTextFound,
+            // Held back for safety is not "no text": the tip already says why.
+            if (!result.tips.contains('money_amounts_unreliable'))
+              _l.noTextFound,
           ].join(' '),
         );
         _resume();

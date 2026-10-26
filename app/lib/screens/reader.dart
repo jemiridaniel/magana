@@ -488,6 +488,18 @@ class _ReaderScreenState extends State<ReaderScreen> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      // A money photo whose amounts aren't all reliable: only the parts that
+                      // passed every check are here (backend safety.money_photo_check).
+                      if (widget.result.tips.contains(
+                        'money_amounts_unreliable',
+                      )) ...[
+                        NoteBox(
+                          text:
+                              '${messageFor(l, 'money_amounts_unreliable')} ${messageFor(l, 'reading_incomplete')}',
+                          kind: NoteKind.warning,
+                        ),
+                        const SizedBox(height: 16),
+                      ],
                       _ItemCard(
                         item: item,
                         position: _position(item),

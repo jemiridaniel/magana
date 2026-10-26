@@ -2027,4 +2027,12 @@ class AppLocalizationsYo extends AppLocalizations {
   String msg_handwritten_number(String where) {
     return 'Lórí $where, nọ́ńbà tí a fi ọwọ́ kọ. Mi ò ní fojú inú wò ó: jọ̀wọ́ béèrè lọ́wọ́ oníṣègùn-oògùn tàbí nọ́ọ̀sì.';
   }
+
+  @override
+  String get msg_money_amounts_unreliable =>
+      'Mi ò lè ka iye owó tó wà lójú-ìwé yìí dáadáa. Jọ̀wọ́ ṣí PDF láti inú áàpù báǹkì rẹ tàbí ímeèlì, tàbí kí o béèrè lọ́wọ́ ẹni tí o fọkàn tán.';
+
+  @override
+  String get msg_reading_incomplete =>
+      'Kíkà yìí kò pé. Àwọn apá tí mo lè ṣàyẹ̀wò nìkan ni màá kà.';
 }

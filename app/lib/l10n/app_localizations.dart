@@ -3311,6 +3311,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'On {where}, a handwritten number. I won\'t guess it: please ask the pharmacist or nurse.'**
   String msg_handwritten_number(String where);
+
+  /// A money page read from a photo whose amounts aren't all reliable.
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t read the amounts on this page reliably. Please open the PDF from your bank\'s app or email, or ask someone you trust.'**
+  String get msg_money_amounts_unreliable;
+
+  /// Only the parts that passed every check are read.
+  ///
+  /// In en, this message translates to:
+  /// **'This reading is incomplete. I\'ll read only the parts I could check.'**
+  String get msg_reading_incomplete;
 }
 
 class _AppLocalizationsDelegate

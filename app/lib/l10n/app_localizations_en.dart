@@ -2028,4 +2028,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String msg_handwritten_number(String where) {
     return 'On $where, a handwritten number. I won\'t guess it: please ask the pharmacist or nurse.';
   }
+
+  @override
+  String get msg_money_amounts_unreliable =>
+      'I can\'t read the amounts on this page reliably. Please open the PDF from your bank\'s app or email, or ask someone you trust.';
+
+  @override
+  String get msg_reading_incomplete =>
+      'This reading is incomplete. I\'ll read only the parts I could check.';
 }

@@ -7,6 +7,8 @@ String messageFor(AppLocalizations l, String code, {String where = ''}) =>
       'too_dark' => l.msg_too_dark,
       'blurry' => l.msg_blurry,
       'small_print' => l.msg_small_print,
+      'money_amounts_unreliable' => l.msg_money_amounts_unreliable,
+      'reading_incomplete' => l.msg_reading_incomplete,
       'handwritten_page' => l.msg_handwritten_page,
       'mixed_page' => l.msg_mixed_page,
       'handwritten_prescription' => l.msg_handwritten_prescription,

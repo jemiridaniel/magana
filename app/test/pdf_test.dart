@@ -67,6 +67,7 @@ Map<String, dynamic> twoPages() => {
 class FakePdfApi {
   final sent = <http.Request>[];
   String? password = '482915';
+  List<String> tips = [];
 
   MockClient get client => MockClient((req) async {
     sent.add(req);
@@ -85,7 +86,7 @@ class FakePdfApi {
         401,
       );
     }
-    return http.Response(jsonEncode(twoPages()), 200);
+    return http.Response(jsonEncode({...twoPages(), 'tips': tips}), 200);
   });
 
   String mode(int i) => RegExp(r'name="mode"\r\n\r\n([^\r]*)')
@@ -101,6 +102,7 @@ Future<(FakeSpeaker, FakePdfApi, ProfileController)> start(
   Tier tier = Tier.standard,
   SharedPdf? shared,
   bool locked = true,
+  List<String> tips = const [],
 }) async {
   SharedPreferences.setMockInitialValues({});
   tester.view.physicalSize = const Size(390 * 3, 844 * 3);
@@ -120,6 +122,7 @@ Future<(FakeSpeaker, FakePdfApi, ProfileController)> start(
   final speaker = FakeSpeaker();
   final backend = FakePdfApi();
   if (!locked) backend.password = null;
+  backend.tips = tips;
   await tester.pumpWidget(
     MaganaApp(
       api: MaganaApi(client: backend.client, headers: () => profile.headers),
@@ -228,5 +231,32 @@ void main() {
     );
     expect(find.byType(PdfScreen), findsNothing);
     expect(backend.sent, isEmpty);
+  });
+
+  testWidgets('a money page held back says so first, and shows it', (
+    tester,
+  ) async {
+    final (speaker, _, _) = await start(
+      tester,
+      shared: SharedPdf(pdfBytes, 'photo-statement.pdf'),
+      locked: false,
+      tips: ['money_amounts_unreliable', 'reading_incomplete'],
+    );
+    await tester.pumpAndSettle();
+    expect(find.byType(ReaderScreen), findsOneWidget);
+    await tester.pump(const Duration(seconds: 1));
+    final said = speaker.said.join(' | ');
+    expect(said, contains("I can't read the amounts on this page reliably"));
+    expect(
+      said,
+      contains(
+        "This reading is incomplete. I'll read only the parts I could check.",
+      ),
+    );
+    expect(
+      said.indexOf("I can't read the amounts"),
+      lessThan(said.indexOf('Opening balance')),
+    );
+    expect(find.textContaining("I can't read the amounts"), findsOneWidget);
   });
 }

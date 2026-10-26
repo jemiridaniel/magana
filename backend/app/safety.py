@@ -322,3 +322,58 @@ def handwritten_health(result: dict) -> tuple[list[Warning], list[str]]:
 def line_part_warnings(lines: list[dict]) -> list[Warning]:
     """Lines with print in their row that no word covers: part of the line was not read."""
     return [Warning(i, code="line_part_unclear") for i, l in enumerate(lines) if l.get("part_unclear")]
+
+
+# ---------- Money pages from a photo: no partial amounts
+
+# 45,250.50 | 7.50 | ₦2,000 | N2,000.00 (a currency sign or letter, then digits)
+_AMOUNT = re.compile(r"(?<![\d/.:-])[₦N#]?\d{1,3}(?:,\d{3})+(?:\.\d{2})?(?![\d/:])|(?<![\d/.:-])[₦N#]?\d+\.\d{2}(?![\d/:])")
+_DATE = re.compile(r"\b\d{1,2}[-/.]\d{1,2}[-/.]\d{2,4}\b|\b\d{4}-\d{2}-\d{2}\b"
+                   r"|\b\d{1,2}[-/ ]?(?:jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec)[a-z]*[-/ ,]*\d{2,4}\b", re.I)
+
+
+def money_photo_check(result: dict) -> dict:
+    """A money page read from a photo (or a scanned PDF page) whose amounts aren't all
+    reliable is not read in part. A statement photo lost amounts with no warning at all
+    (docs/FINDINGS.md), so the page is unreliable when any of these holds:
+      - the print was too small or faint (tip small_print, or a faint region);
+      - any line or table cell has a warning;
+      - a dated row has no amount, or fewer amounts than the page's other dated rows (what a
+        silently dropped amount looks like).
+    Then the reading starts with money_amounts_unreliable and reading_incomplete, and keeps
+    only the lines and rows that passed every check; dated rows short of an amount go too."""
+    lines, tables = result.get("lines", []), result.get("tables", [])
+    flagged = {w["block_index"] for w in result.get("warnings", [])}
+    bad_rows = {(w["table_index"], w["row"]) for w in result.get("cell_warnings", [])}
+    # Rows as they sit on the page: OCR often splits a statement row into column blocks
+    # (the date, the description, each amount), so lines at the same height are one row.
+    rows: list[list[int]] = []
+    for i in sorted(range(len(lines)), key=lambda i: lines[i].get("top", 0)):
+        top, h = lines[i].get("top", 0), max(lines[i].get("height", 0), 1)
+        mid = top + h / 2
+        if rows:
+            last = lines[rows[-1][0]]
+            if abs(mid - (last.get("top", 0) + max(last.get("height", 0), 1) / 2)) <= max(h, last.get("height", 0), 1) / 2:
+                rows[-1].append(i)
+                continue
+        rows.append([i])
+    text = lambda row: " ".join(lines[i].get("text", "") for i in sorted(row, key=lambda i: lines[i].get("left", 0)))  # noqa: E731
+    dated = [row for row in rows if _DATE.search(text(row))]
+    counts = [len(_AMOUNT.findall(text(row))) for row in dated]
+    usual = max(set(counts), key=counts.count) if counts else 0
+    short = {i for row, n in zip(dated, counts) if n == 0 or n < usual for i in row}
+    unreliable = ("small_print" in result.get("tips", []) or bool(result.get("faint_regions"))
+                  or bool(flagged) or bool(bad_rows) or bool(short))
+    if not unreliable:
+        return result
+    keep = [l for i, l in enumerate(lines) if i not in flagged and i not in short]
+    kept_tables = []
+    for t_i, t in enumerate(tables):
+        rows = [r for r_i, r in enumerate(t.get("rows", [])) if (t_i, r_i) not in bad_rows]
+        if rows:
+            kept_tables.append({**t, "rows": rows})
+    tips = [t for t in result.get("tips", []) if t not in ("money_amounts_unreliable", "reading_incomplete")]
+    return {**result, "lines": keep, "tables": kept_tables, "warnings": [], "cell_warnings": [],
+            "tips": ["money_amounts_unreliable", "reading_incomplete", *tips], "incomplete": True,
+            "left_out": len(lines) - len(keep) + sum(len(t.get("rows", [])) for t in tables)
+            - sum(len(t["rows"]) for t in kept_tables)}

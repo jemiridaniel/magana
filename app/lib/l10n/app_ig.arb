@@ -535,5 +535,7 @@
   "msg_handwritten_page": "Peeji a dị ka e ji aka dee ya. Ihe e ji aka dee na-esiri m ike, ya mere enwere m ike ịgụhie okwu. A na-agụ nọmba naanị mgbe o doro m anya.",
   "msg_mixed_page": "Akụkụ peeji a dị ka e ji aka dee ya. Enwere m ike ịgụhie akụkụ ndị ahụ. A na-agụ nọmba ebe ahụ naanị mgbe o doro m anya.",
   "msg_handwritten_prescription": "Nke a dị ka e ji aka dee ya n'akwụkwọ ahụike. Agaghị m agụ ọgwụ ma ọ bụ ọnụọgụ e ji aka dee. Biko rịọ onye na-ere ọgwụ ma ọ bụ nọọsụ ka ha gụọrọ gị ya.",
-  "msg_handwritten_number": "Na {where}, nọmba e ji aka dee. Agaghị m echere ya: biko jụọ onye na-ere ọgwụ ma ọ bụ nọọsụ."
+  "msg_handwritten_number": "Na {where}, nọmba e ji aka dee. Agaghị m echere ya: biko jụọ onye na-ere ọgwụ ma ọ bụ nọọsụ.",
+  "msg_money_amounts_unreliable": "Enweghị m ike ịgụ ego ndị dị na peeji a nke ọma. Biko mepee PDF site na ngwa ụlọ akụ gị ma ọ bụ ozi ịmeel, ma ọ bụ jụọ onye ị tụkwasịrị obi.",
+  "msg_reading_incomplete": "Ọgụgụ a ezughị ezu. Aga m agụ naanị akụkụ ndị m nwere ike ịlele."
 }

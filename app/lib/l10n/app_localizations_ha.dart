@@ -2033,4 +2033,12 @@ class AppLocalizationsHa extends AppLocalizations {
   String msg_handwritten_number(String where) {
     return 'A $where, lambar rubutun hannu. Ba zan yi hasashe ba: don Allah ka tambayi mai harhaɗa magunguna ko nas.';
   }
+
+  @override
+  String get msg_money_amounts_unreliable =>
+      'Ban iya karanta adadin kuɗin da ke wannan shafin da tabbaci ba. Don Allah buɗe PDF daga manhajar bankinka ko imel, ko ka roƙi wanda ka amince da shi.';
+
+  @override
+  String get msg_reading_incomplete =>
+      'Wannan karatun bai cika ba. Zan karanta sassan da na iya tantancewa kawai.';
 }

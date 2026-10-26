@@ -34,6 +34,25 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-26 · Statement photos: no partial amounts, and no amount missing without a warning (UNREVIEWED)
+
+- **Why:** on a simulated phone photo of the Bank A statement, about 300 numbers went missing with no warning (entry of 25 Oct). The "small or faint print" tip wasn't enough.
+- **Rule** (`safety.money_photo_check`; money pages from a photo or a scanned PDF page, not text-layer PDFs):
+  - **When it applies:** the page's amounts aren't all reliable. That means the print was too small or faint, any line or cell has a warning, or a dated row has no amount, or fewer than the other dated rows (the shape of a silently dropped amount).
+  - **What Magana says first:** "I can't read the amounts on this page reliably. Please open the PDF from your bank's app or email, or ask someone you trust." Then: "This reading is incomplete. I'll read only the parts I could check."
+  - **What it reads:** only the lines and rows that passed every check. Dated rows short of an amount are dropped whole, so no partial amounts. The Reader shows the warning at the top. If nothing passed, the capture screen doesn't add "No text found".
+  - Rows are grouped as they sit on the page. Tesseract splits a statement row into column blocks (date, description, each amount), which first made a clean scan look short of amounts. A clean scan of the test statement is now read in full: 24 of 24 amounts, not held back.
+- **Measured (private Bank A statement, 13 pages, 1,998 numbers, totals only):**
+  - **Simulated photo:** 0 amounts missing without a warning (was about 300), and 0 wrong amounts read out. 128 amounts and 325 date parts are held back under the page warning. On 9 of 13 pages nothing passed every check, so only the warning is said; those pages hold 1,545 of the numbers.
+  - **Scan at 300 dpi:** 362 amounts and 835 date parts read correctly, 0 wrong. 206 amounts and 595 date parts held back, because each page had at least one flagged line. Stricter than before by design: one doubtful line holds the page.
+  - **Text-layer PDF (the "Read a PDF" path):** unchanged, 1,998 of 1,998 exact.
+  - A benchmark mistake was fixed on the way: a stray letter sitting where an amount should be was counted as a misread; now it counts as the amount missing.
+- **Also found:** on 12 of 13 simulated photo pages, the handwriting heuristic called the blurry print "handwritten". It only adds a warning, but it is a false alarm to tune with real handwritten pages (`handwriting.py`, DRAFT).
+- **Tests:** a test-made statement drawn at 300 dpi and made phone-like: zero amounts may be missing without a warning, and no wrong amount may be read (`test_money_photo.py`, 7 tests). An app test: the warning is said first and shown. Backend 452 passed; app 201 passed.
+- **PaddleOCR against Tesseract:** the first run was stopped after an hour at 3.1 GB, with no results. `scripts/ocr_compare.py` now prints each page as it goes and stops itself over a memory cap; `scripts/ocr_compare_night.sh` runs the parts one after another, overnight, at low priority. Results go in the next entry.
+
+---
+
 ## 2026-10-26 · Website: the animated phone demo in the hero
 
 - **Built** (`website/components/HeroDemo.tsx`, from the "Website · magana.ng home" boards):

@@ -32,6 +32,8 @@ ENGLISH = {
     "consent_required": "Learners aged 13 to 17 need a parent's or guardian's consent first.",
     "teacher_session_required": "Learners under 13 can only use Magana in a teacher-run session.",
     "unreadable_image": "I couldn't open that photo. Please try again.",
+    "money_amounts_unreliable": "I can't read the amounts on this page reliably. Please open the PDF from your bank's app or email, or ask someone you trust.",
+    "reading_incomplete": "This reading is incomplete. I'll read only the parts I could check.",
     "handwritten_page": "This page looks handwritten. Handwriting is hard for me, so I may get words wrong. Numbers are only read when I'm sure.",
     "mixed_page": "Some of this page looks handwritten. I may get those parts wrong. Numbers there are only read when I'm sure.",
     "handwritten_prescription": "This looks like handwriting on a health paper. I won't read handwritten medicines or doses. Please ask the pharmacist or nurse to read it to you.",

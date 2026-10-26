@@ -535,5 +535,7 @@
   "msg_handwritten_page": "Ojú-ìwé yìí dà bí ìkọ̀wé ọwọ́. Ìkọ̀wé ọwọ́ ṣòro fún mi, nítorí náà mo lè ṣi ọ̀rọ̀ kà. Mo máa ń ka nọ́ńbà nígbà tí ó dá mi lójú nìkan.",
   "msg_mixed_page": "Apá kan ojú-ìwé yìí dà bí ìkọ̀wé ọwọ́. Mo lè ṣi àwọn apá yẹn kà. Mo máa ń ka nọ́ńbà ibẹ̀ nígbà tí ó dá mi lójú nìkan.",
   "msg_handwritten_prescription": "Èyí dà bí ìkọ̀wé ọwọ́ lórí ìwé ìlera. Mi ò ní ka oògùn tàbí ìwọ̀n tí a fi ọwọ́ kọ. Jọ̀wọ́ ní kí oníṣègùn-oògùn tàbí nọ́ọ̀sì kà á fún ọ.",
-  "msg_handwritten_number": "Lórí {where}, nọ́ńbà tí a fi ọwọ́ kọ. Mi ò ní fojú inú wò ó: jọ̀wọ́ béèrè lọ́wọ́ oníṣègùn-oògùn tàbí nọ́ọ̀sì."
+  "msg_handwritten_number": "Lórí {where}, nọ́ńbà tí a fi ọwọ́ kọ. Mi ò ní fojú inú wò ó: jọ̀wọ́ béèrè lọ́wọ́ oníṣègùn-oògùn tàbí nọ́ọ̀sì.",
+  "msg_money_amounts_unreliable": "Mi ò lè ka iye owó tó wà lójú-ìwé yìí dáadáa. Jọ̀wọ́ ṣí PDF láti inú áàpù báǹkì rẹ tàbí ímeèlì, tàbí kí o béèrè lọ́wọ́ ẹni tí o fọkàn tán.",
+  "msg_reading_incomplete": "Kíkà yìí kò pé. Àwọn apá tí mo lè ṣàyẹ̀wò nìkan ni màá kà."
 }
