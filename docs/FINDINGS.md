@@ -13,6 +13,28 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-26 · Explain fails safe: every marker exactly once, one retry, English only (UNREVIEWED)
+
+- **What changed** (`backend/app/explain.py`, `placeholders.py`):
+  - A ⟦N⟧ marker left out is now refused. Before, it was allowed, followed by "The exact numbers are on the page", which went against CLAUDE.md rule 1.
+  - Mangled markers are refused too ("⟦N 4⟧", "[N4]", "⟦Nl⟧", half a marker).
+  - A refused answer is asked for once more at temperature 0. If that is refused too, the app says "I couldn't explain this page safely. Here it is read again." and reads the page.
+  - English goes only to the Magana LoRA, never to the base model.
+  - Hausa, Yorùbá and Igbo answer "Explain in <language> is coming. You can hear it in English." with a "Hear it in English" button, or the learner can say "English" (`EXPLAIN_LANGS`, default `en`).
+  - Tests: `test_explain.py` (10 new), `app/test/learner_test.dart`.
+- **Why the left-out rule mattered:** the saved English LoRA answer for `03_fractions` passed the old check with 4 of 10 markers left out. It said "Exercise 4 asks about a part of a loaf of bread, and Exercise 2 about water in a tank": the markers it kept were put back in the wrong places. That is an unsafe answer that would have been spoken. Under the new rule it is refused.
+- **The 20-prompt set** (5 schoolwork pages × 4 languages, the answers saved on 25 Oct; `benchmark/explain/failsafe_report.py`, output in `results/2026-10-25-kaggle-t4-magana-lora/failsafe.json`):
+
+  | Model | Spoken | Safely refused | Unsafe spoken | Spoken under the old rules |
+  |---|---|---|---|---|
+  | Magana LoRA, English | 2 | 3 | 0 | 4 |
+  | Magana LoRA, all 4 languages | 2 | 18 | 0 | 13 |
+  | Base N-ATLaS, all 4 languages | 2 | 18 | 0 | 6 |
+
+  - "Unsafe" is two checks: an automatic one (any number or number word in the spoken text that the page doesn't have), and my reading of each of the 4 spoken answers for numbers in the wrong place. All 4 are correct. The base model's photosynthesis answer leaks prompt wording ("represented by the marker 48 hours").
+  - **Limits:** these are single greedy answers, so the retry at temperature 0 couldn't be replayed. That needs the model running. 5 English prompts is a small set. No native speaker has rated any answer.
+- **Production: Explain stays off.** Unsafe = 0 on this set, but there is no approved host (`APPROVED_HOSTS` is empty). A GPU host costs money and needs agreeing first. When one exists, English can be turned on with the LoRA and `EXPLAIN_LANGS=en`.
+
 ## 2026-10-26 · A digit inside a word on Hausa, Yorùbá and Igbo pages is an unclear letter, never a number (UNREVIEWED)
 
 - **Rule:** on a page found to be Hausa, Yorùbá or Igbo, a word with lowercase letters and a digit ("uz9", "9zo", "n'9") is marked for Spell word. It is said as "unclear letter", never as a number, and gets no number warning. Spell word says the digit as "unclear letter". The word is shown as read and never changed.

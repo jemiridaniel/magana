@@ -8,13 +8,15 @@ EXPLAIN_ENGINE selects how N-ATLaS is reached (docs/MODELS.md):
 - llamacpp  a llama.cpp server (GGUF); Magana renders the model's chat template itself
 
 Only schoolwork reaches the model, and never its numbers: every number, with its unit or
-currency, is replaced by a placeholder (⟦N1⟧ …) first. An answer is used only if no digit,
-number word, unit word or arithmetic was added and no placeholder is repeated or made up
-(placeholders.py). Placeholders it leaves out are allowed: the answer is then followed by
-"The exact numbers are on the page. Say 'read again' to hear them." The page's exact text
-is put back, and it also goes through
-safety.guard_explanation. Otherwise, or if the model is slow or down, the app reads the page
-instead (CLAUDE.md rule 1). Health and money papers never reach a model (templates.py). Page text is data, never instructions (rule 6): it is
+currency, is replaced by a placeholder (⟦N1⟧ …) first. An answer is spoken only if every
+placeholder appears exactly once, none is made up or mangled ("[N1]", "⟦Nl⟧"), and no digit,
+number word, unit word or arithmetic was added (placeholders.py); then the page's exact text is
+put back and safety.guard_explanation checks it again. A refused answer is asked for once more
+at temperature 0; if that fails too, the app says "I couldn't explain this page safely. Here it
+is read again." and reads the page (CLAUDE.md rule 1). A slow or down model: the page is read.
+English goes to the Magana LoRA (ADAPTER_LANGS) and never to the base model; Hausa, Yorùbá and
+Igbo stay off ("Explain in Hausa is coming") until LIVE_LANGS includes them. Health and money
+papers never reach a model (templates.py). Page text is data, never instructions (rule 6): it is
 fenced in <page> tags, stripped of the model's control tokens, and the system prompt says so.
 """
 from __future__ import annotations
@@ -42,6 +44,7 @@ ANSWER_TOKENS = 700
 SECTION_CHARS = 6_000
 TIMEOUT_S = 20.0
 TEMPERATURE = 0.1  # the model card's settings
+RETRY_TEMPERATURE = 0.0  # one more try, greedy, before the page is read instead
 REPETITION_PENALTY = 1.12
 
 LANGUAGE_NAMES = {"en": "English", "ha": "Hausa", "yo": "Yorùbá", "ig": "Igbo"}
@@ -71,7 +74,7 @@ def allowed(engine: "Engine") -> bool:
 class Engine(Protocol):
     preview: bool
 
-    def complete(self, system: str, user: str, timeout: float) -> str: ...
+    def complete(self, system: str, user: str, timeout: float, temperature: float = TEMPERATURE) -> str: ...
 
 
 class ExplainUnavailable(Exception):
@@ -177,7 +180,7 @@ class StubEngine:
 
     preview = True
 
-    def complete(self, system: str, user: str, timeout: float) -> str:
+    def complete(self, system: str, user: str, timeout: float, temperature: float = TEMPERATURE) -> str:
         page = user.split("<page>\n", 1)[1].split("\n</page>", 1)[0]
         return page
 
@@ -202,11 +205,11 @@ class OpenAIChatEngine:
         e.lang = lang
         return e
 
-    def complete(self, system: str, user: str, timeout: float) -> str:
+    def complete(self, system: str, user: str, timeout: float, temperature: float = TEMPERATURE) -> str:
         body = {
             "model": self.adapter if self.adapter and self.lang in ADAPTER_LANGS else self.model,
             "messages": [{"role": "system", "content": system}, {"role": "user", "content": user}],
-            "temperature": TEMPERATURE,
+            "temperature": temperature,
             "repetition_penalty": REPETITION_PENALTY,
             "max_tokens": ANSWER_TOKENS,
             "chat_template_kwargs": {"date_string": today()},
@@ -239,10 +242,10 @@ class LlamaCppEngine:
         e.lang = lang
         return e
 
-    def complete(self, system: str, user: str, timeout: float) -> str:
+    def complete(self, system: str, user: str, timeout: float, temperature: float = TEMPERATURE) -> str:
         body: dict = {
             "prompt": render_llama31(system, user, today()),
-            "temperature": TEMPERATURE,
+            "temperature": temperature,
             "repeat_penalty": REPETITION_PENALTY,
             "n_predict": ANSWER_TOKENS,
             "stop": ["<|eot_id|>"],
@@ -331,37 +334,61 @@ def left_out(raw: str, page: "placeholders.Masked") -> bool:
     used = {int(m.group(1)) for m in placeholders.PLACEHOLDER.finditer(raw)}
     return any(n not in used for n in range(1, len(page.slots) + 1))
 
+def live_languages() -> set[str]:
+    """Languages Explain answers in: EXPLAIN_LANGS (comma-separated), English by default. Hausa,
+    Yorùbá and Igbo are added only after native review of the benchmark answers (docs/FINDINGS.md)."""
+    return {l.strip() for l in os.environ.get("EXPLAIN_LANGS", "en").split(",") if l.strip()} or {"en"}
+
+
+def trained_for(engine: Engine, lang: str) -> bool:
+    """English goes to the Magana LoRA only, never the base model (its English answers were
+    refused 4 times in 5). The stub (a preview) needs none."""
+    if getattr(engine, "preview", False) or lang not in ADAPTER_LANGS:
+        return True
+    return bool(getattr(engine, "adapter", "") or getattr(engine, "lora_id", None) is not None)
+
+
+def _answer(engine: Engine, system: str, user: str, page, asked, lang: str, section: str, deadline: float):
+    """(the checked answer, whether markers were left out) or (None, the refusal code). One
+    retry at RETRY_TEMPERATURE when the first answer is refused."""
+    code = "numbers_unconfirmed"
+    for temperature in (TEMPERATURE, RETRY_TEMPERATURE):
+        left = deadline - time.monotonic()
+        if left <= 0:
+            if temperature == TEMPERATURE:
+                raise ExplainUnavailable("timeout")
+            break  # no time to try again: read the page
+        raw = engine.complete(system, user, left, temperature=temperature).strip()
+        if not raw:
+            raise ExplainUnavailable("empty")
+        text, problems = check_answer(raw, page, asked, lang, allow_left_out=False)
+        if not problems and safety.guard_explanation(section, text).ok:
+            return text, None
+        code = "explain_wrong_language" if any(p.code == "wrong_language" for p in problems) else "numbers_unconfirmed"
+    return None, code
+
+
 def explain(engine: Engine, source_text: str, question: str | None, lang: str, style: str,
             guided: bool, timeout_s: float = TIMEOUT_S) -> Explanation:
     """Explain the page section by section within one deadline. Every section's answer must
-    pass the number guard against that section; otherwise the page is read instead."""
+    pass the number guard against that section (one retry); otherwise the page is read instead."""
+    if not trained_for(engine, lang):
+        return Explanation("explain_unavailable", None, source_text, engine.preview)
     deadline = time.monotonic() + timeout_s
     parts = sections(source_text)
     system = system_prompt(lang, guided)
     answers = []
-    missing = False
     try:
         for n, section in enumerate(parts, 1):
-            left = deadline - time.monotonic()
-            if left <= 0:
-                raise ExplainUnavailable("timeout")
             page = placeholders.mask(section)
             asked = placeholders.mask(question, start=len(page.slots) + 1) if question else None
             markers = [f"⟦N{k}⟧" for k in range(1, len(page.slots) + 1)]
-            raw = engine.complete(
-                system, user_prompt(page.text, asked.text if asked else None, style, (n, len(parts)), markers), left
-            ).strip()
-            if not raw:
-                raise ExplainUnavailable("empty")
-            text, problems = check_answer(raw, page, asked, lang)
-            if any(p.code == "wrong_language" for p in problems):
-                return Explanation("explain_wrong_language", None, source_text, engine.preview)
-            if problems or not safety.guard_explanation(section, text).ok:
-                return Explanation("numbers_unconfirmed", None, source_text, engine.preview)
-            missing = missing or left_out(raw, page)
+            user = user_prompt(page.text, asked.text if asked else None, style, (n, len(parts)), markers)
+            text, refused = _answer(engine, system, user, page, asked, lang, section, deadline)
+            if refused:
+                return Explanation(refused, None, source_text, engine.preview)
             answers.append(text)
     except ExplainUnavailable:
         return Explanation("explain_unavailable", None, source_text, engine.preview)
     code = "explain_preview" if engine.preview else "explained"
-    return Explanation(code, "\n\n".join(answers), None, engine.preview,
-                       followup="numbers_left_out" if missing else None)
+    return Explanation(code, "\n\n".join(answers), None, engine.preview)

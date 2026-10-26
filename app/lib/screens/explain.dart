@@ -86,7 +86,7 @@ class _ExplainScreenState extends State<ExplainScreen> {
       scope.speaker.say(
         [
           if (_question != null && a.preview) _l.explainQuestionPreview,
-          messageFor(_l, a.code),
+          messageFor(_l, a.code, language: _languageName),
           a.spoken((code) => messageFor(_l, code)),
           if (a.followup case final f?) messageFor(_l, f),
         ].join(' '),
@@ -139,6 +139,13 @@ class _ExplainScreenState extends State<ExplainScreen> {
       _readPage();
       return;
     }
+    // "English": the offer when this language isn't on yet.
+    if (_languageComing &&
+        RegExp(r'\benglish\b|turanci|gẹ̀ẹ́sì|geesi|bekee')
+            .hasMatch(heard.first.toLowerCase())) {
+      _inEnglish();
+      return;
+    }
     setState(() => _question = heard.first);
     if (_hasPage) {
       _ask();
@@ -148,6 +155,17 @@ class _ExplainScreenState extends State<ExplainScreen> {
   }
 
   void _readPage() => AppScope.of(context).speaker.say(widget.lines.join('\n'));
+
+  String get _languageName =>
+      appLanguages.firstWhere((a) => a.code == _language).name;
+
+  /// Explain in Hausa, Yorùbá or Igbo is not on yet: the same page in English.
+  bool get _languageComing => _answer?.code == 'explain_language_coming';
+
+  void _inEnglish() {
+    setState(() => _language = 'en');
+    _ask();
+  }
 
   void _nextLanguage() {
     final i = appLanguages.indexWhere((a) => a.code == _language);
@@ -270,7 +288,7 @@ class _ExplainScreenState extends State<ExplainScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    messageFor(l, answer.code),
+                    messageFor(l, answer.code, language: language.name),
                     style: const TextStyle(
                       fontSize: 17,
                       fontWeight: FontWeight.w700,
@@ -311,6 +329,8 @@ class _ExplainScreenState extends State<ExplainScreen> {
               ),
             ),
           ),
+        if (_hasPage && _languageComing && !_busy)
+          PrimaryButton(label: l.explainInEnglish, onTap: _inEnglish),
         if (_hasPage) ...[
           SecondaryButton(
             label: l.saySimpler,

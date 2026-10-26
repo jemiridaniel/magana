@@ -82,7 +82,7 @@
   "msg_consent_required": "Ụmụ akwụkwọ dị afọ 13 ruo 17 chọrọ nkwenye nne na nna ma ọ bụ onye na-elekọta ha mbụ.",
   "msg_teacher_session_required": "Ụmụ akwụkwọ na-erubeghị afọ 13 nwere ike iji Magana naanị n'oge nkuzi onye nkuzi na-edu.",
   "msg_unreadable_image": "Enweghị m ike imepe foto ahụ. Biko nwaa ọzọ.",
-  "msg_numbers_unconfirmed": "Enweghị m ike ikwenye ụfọdụ nọmba na nkọwa a, ya mere aga m agụ peeji ahụ otú o si dị.",
+  "msg_numbers_unconfirmed": "Enweghị m ike ịkọwa peeji a n'enweghị nsogbu. Lee ya, agụgharịrị ya ọzọ.",
   "msg_class_code_wrong": "Koodu klaasị ahụ ezighị ezi. Lelee ya na onye nkuzi gị.",
   "msg_code_locked": "Koodu ezighị ezi adịla ọtụtụ. Biko chere nkeji 5, wee nwaa ọzọ.",
   "msg_teacher_code_needed": "Naanị onye nkuzi gị nwere ike ibuga gị na klaasị ọzọ. Rịọ ha ka ha tinye koodu onye nkuzi ha.",
@@ -580,5 +580,7 @@
   "cueTiltToward": "Hulata elu ekwentị gaa n'ebe ị nọ",
   "cueTiltAway": "Hulata elu ekwentị pụọ n'ebe ị nọ",
   "cueBlurry": "Ọ dị nzuzu. Kwụsị ọtọ",
-  "readerCommandHelp": "Ị nwere ike ikwu: next, back, repeat, pause, read, next column, headings ma ọ bụ spell. Kwuo iwu n'asụsụ Bekee ugbu a."
+  "readerCommandHelp": "Ị nwere ike ikwu: next, back, repeat, pause, read, next column, headings ma ọ bụ spell. Kwuo iwu n'asụsụ Bekee ugbu a.",
+  "msg_explain_language_coming": "Nkọwa n'asụsụ {language} na-abịa. Ị nwere ike ịnụ ya n'asụsụ Bekee.",
+  "explainInEnglish": "Nụ ya n'asụsụ Bekee"
 }

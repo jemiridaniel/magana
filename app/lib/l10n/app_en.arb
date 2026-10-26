@@ -251,7 +251,7 @@
   "msg_consent_required": "Learners aged 13 to 17 need a parent's or guardian's consent first.",
   "msg_teacher_session_required": "Learners under 13 can only use Magana in a teacher-run session.",
   "msg_unreadable_image": "I couldn't open that photo. Please try again.",
-  "msg_numbers_unconfirmed": "I can't confirm some numbers in this explanation, so I'll read the page exactly instead.",
+  "msg_numbers_unconfirmed": "I couldn't explain this page safely. Here it is read again.",
   "msg_class_code_wrong": "That class code isn't right. Check it with your teacher.",
   "msg_code_locked": "Too many wrong codes. Please wait 5 minutes, then try again.",
   "msg_teacher_code_needed": "Only your teacher can move you to another class. Ask them to enter their teacher code.",
@@ -1746,5 +1746,14 @@
   "cueTiltToward": "Tilt the top of the phone toward you",
   "cueTiltAway": "Tilt the top of the phone away from you",
   "cueBlurry": "Blurry. Hold still",
-  "readerCommandHelp": "You can say: next, back, repeat, pause, read, next column, headings or spell. Say commands in English for now."
+  "readerCommandHelp": "You can say: next, back, repeat, pause, read, next column, headings or spell. Say commands in English for now.",
+  "msg_explain_language_coming": "Explain in {language} is coming. You can hear it in English.",
+  "@msg_explain_language_coming": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "explainInEnglish": "Hear it in English"
 }

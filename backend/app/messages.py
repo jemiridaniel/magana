@@ -63,7 +63,8 @@ ENGLISH = {
     "class_changed": "Your class has changed.",
     "session_code_invalid": "That session code isn't right. Check it in the teacher portal.",
     # Explanations
-    "numbers_unconfirmed": "I can't confirm some numbers in this explanation, so I'll read the page exactly instead.",
+    "numbers_unconfirmed": "I couldn't explain this page safely. Here it is read again.",
+    "explain_language_coming": "Explain in {language} is coming. You can hear it in English.",
     "explain_wrong_language": "I couldn't explain this in your language, so I'll read the page exactly instead.",
     "explain_preview": "This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",
     "explained": "Here is the explanation.",

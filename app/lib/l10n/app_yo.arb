@@ -82,7 +82,7 @@
   "msg_consent_required": "Àwọn akẹ́kọ̀ọ́ ọmọ ọdún 13 sí 17 nílò àṣẹ òbí tàbí alágbàtọ́ wọn ná.",
   "msg_teacher_session_required": "Àwọn akẹ́kọ̀ọ́ tí kò tíì pé ọdún 13 lè lo Magana nínú ìpàdé tí olùkọ́ ń darí nìkan.",
   "msg_unreadable_image": "Mi ò lè ṣí fọ́tò yẹn. Jọ̀wọ́ tún gbìyànjú.",
-  "msg_numbers_unconfirmed": "Mi ò lè fìdí àwọn nọ́ńbà kan nínú àlàyé yìí múlẹ̀, nítorí náà màá ka ojú-ìwé náà gẹ́gẹ́ bí ó ṣe wà.",
+  "msg_numbers_unconfirmed": "Mi ò lè ṣàlàyé ojú-ìwé yìí láìséwu. Ìyí ni, a tún kà á.",
   "msg_class_code_wrong": "Nọ́ńbà kíláàsì yẹn kò tọ̀nà. Yẹ̀ ẹ́ wò pẹ̀lú olùkọ́ rẹ.",
   "msg_code_locked": "Àwọn kóòdù tí kò tọ̀nà ti pọ̀ jù. Jọ̀wọ́ dúró fún ìṣẹ́jú 5, lẹ́yìn náà tún gbìyànjú.",
   "msg_teacher_code_needed": "Olùkọ́ rẹ nìkan ló lè gbé ọ lọ sí kíláàsì mìíràn. Ní kí wọ́n tẹ kóòdù olùkọ́ wọn.",
@@ -580,5 +580,7 @@
   "cueTiltToward": "Tẹ orí fóònù sọ́dọ̀ rẹ",
   "cueTiltAway": "Tẹ orí fóònù kúrò lọ́dọ̀ rẹ",
   "cueBlurry": "Kò mọ́. Dúró jẹ́ẹ́",
-  "readerCommandHelp": "O lè sọ pé: next, back, repeat, pause, read, next column, headings tàbí spell. Sọ àwọn àṣẹ ní èdè Gẹ̀ẹ́sì fún báyìí."
+  "readerCommandHelp": "O lè sọ pé: next, back, repeat, pause, read, next column, headings tàbí spell. Sọ àwọn àṣẹ ní èdè Gẹ̀ẹ́sì fún báyìí.",
+  "msg_explain_language_coming": "Àlàyé ní {language} ń bọ̀. O lè gbọ́ ọ ní èdè Gẹ̀ẹ́sì.",
+  "explainInEnglish": "Gbọ́ ọ ní Gẹ̀ẹ́sì"
 }

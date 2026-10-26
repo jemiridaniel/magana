@@ -591,7 +591,7 @@ abstract class AppLocalizations {
   /// No description provided for @msg_numbers_unconfirmed.
   ///
   /// In en, this message translates to:
-  /// **'I can\'t confirm some numbers in this explanation, so I\'ll read the page exactly instead.'**
+  /// **'I couldn\'t explain this page safely. Here it is read again.'**
   String get msg_numbers_unconfirmed;
 
   /// No description provided for @msg_class_code_wrong.
@@ -3581,6 +3581,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You can say: next, back, repeat, pause, read, next column, headings or spell. Say commands in English for now.'**
   String get readerCommandHelp;
+
+  /// No description provided for @msg_explain_language_coming.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain in {language} is coming. You can hear it in English.'**
+  String msg_explain_language_coming(String language);
+
+  /// No description provided for @explainInEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Hear it in English'**
+  String get explainInEnglish;
 }
 
 class _AppLocalizationsDelegate

@@ -28,6 +28,7 @@ from pathlib import Path
 
 LANGUAGES = ("en", "ha", "yo", "ig")
 PLACEHOLDER = re.compile(r"⟦N(\d+)⟧")
+_MANGLED = re.compile(r"[⟦⟧]|[\[(<{【〚]\s*[Nn]\s*[\dIl]*\s*[\])>}】〛]|\bN\d+\b")
 
 
 def content_dir() -> Path:
@@ -169,6 +170,9 @@ def check(answer: str, masked_source: str, required: range, optional: range = ra
     if _ARITHMETIC.search(answer):
         problems.append(Problem("arithmetic", _ARITHMETIC.search(answer).group(0)))
     rest = PLACEHOLDER.sub(" ", answer)
+    # A marker the model changed: "⟦N 1⟧", "[N1]", "⟦Nl⟧", a stray bracket. Never guessed back.
+    for s_ in _MANGLED.findall(rest):
+        problems.append(Problem("placeholder_mangled", s_))
     for d in re.findall(r"\d+(?:[.,]\d+)*", rest):
         problems.append(Problem("digit", d))
     for s in _SYMBOLS.findall(rest):

@@ -92,9 +92,11 @@ The terms are at the bottom of each model card; there is no separate LICENSE fil
 |---|---|
 | `EXPLAIN_ENGINE` | `stub` (preview: the page text, no model), `vllm` (OpenAI-compatible vLLM with `--enable-lora`; `EXPLAIN_MODEL` = `NCAIR1/N-ATLaS`, `EXPLAIN_ADAPTER` = the Magana LoRA's served name, used for English only), `hf_space` (OpenAI-compatible server on a Hugging Face Space), `llamacpp` (llama.cpp server with a GGUF) |
 | `EXPLAIN_URL`, `EXPLAIN_API_KEY` | the server and its key (vLLM `--api-key`) |
+| `EXPLAIN_LANGS` | languages Explain answers in, comma-separated: `en` by default. Others get "Explain in Hausa is coming. You can hear it in English." Add `ha`, `yo` or `ig` only after native review of that language's benchmark answers |
 | `ASR_ENGINE` | `device` (default: the phone's own recogniser) or `local` (the four NCAIR1 Whisper models on the backend's CPU; `backend/requirements-asr.txt`) |
 
-- **Every explanation** goes through `safety.guard_explanation`, section by section, within a 20-second deadline. If an answer adds or changes a number, or the model is slow or down, the app reads the page instead.
+- **Every explanation** goes through the placeholder check and `safety.guard_explanation`, section by section, within a 20-second deadline. Every ⟦N⟧ must appear exactly once, none mangled, and no number, number word or unit may be added. A refused answer is asked for once more at temperature 0. If that is refused too, the app says "I couldn't explain this page safely. Here it is read again." and reads the page. A slow or down model: the page is read.
+- **English goes only to the Magana LoRA** (`explain.trained_for`). With a real model and no `EXPLAIN_ADAPTER` / `EXPLAIN_LORA_ID`, English answers "Explanations aren't available right now" and the page is read.
 - **Guided learners (13 to 17)** get a curriculum-only prompt.
 - **One GPU, several adapters:** vLLM with `--enable-lora --max-lora-rank 16` serves the base model, the Ibà adapter (`iba-atlas`) and the Magana adapter side by side, for example `--lora-modules magana-lora=/models/Magana-ATLAS-8B-LoRA-Powered-by-Awarri`.
 - **The Magana LoRA serves English only** (`explain.ADAPTER_LANGS`). It was trained on English examples and answers every language in English (docs/FINDINGS.md). Hausa, Yorùbá and Igbo always go to base N-ATLaS. Set `EXPLAIN_ADAPTER=magana-lora` (vLLM). With llama.cpp, load the adapter with `--lora` and set `EXPLAIN_LORA_ID=0`; Magana turns it on (scale 1) for English requests and off (scale 0) for the others.

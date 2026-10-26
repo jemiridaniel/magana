@@ -325,7 +325,7 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get msg_numbers_unconfirmed =>
-      'Ban iya tabbatar da wasu lambobi a wannan bayanin ba, don haka zan karanta shafin daidai yadda yake.';
+      'Ban iya bayyana wannan shafi lafiya ba. Ga shi an sake karanta shi.';
 
   @override
   String get msg_class_code_wrong =>
@@ -2219,4 +2219,12 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get readerCommandHelp =>
       'Za ka iya cewa: next, back, repeat, pause, read, next column, headings ko spell. Faɗi umarni da Turanci a yanzu.';
+
+  @override
+  String msg_explain_language_coming(String language) {
+    return 'Bayani da $language yana zuwa. Kuna iya jin sa da Turanci.';
+  }
+
+  @override
+  String get explainInEnglish => 'Ji shi da Turanci';
 }

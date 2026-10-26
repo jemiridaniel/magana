@@ -326,7 +326,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get msg_numbers_unconfirmed =>
-      'I can\'t confirm some numbers in this explanation, so I\'ll read the page exactly instead.';
+      'I couldn\'t explain this page safely. Here it is read again.';
 
   @override
   String get msg_class_code_wrong =>
@@ -2214,4 +2214,12 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get readerCommandHelp =>
       'You can say: next, back, repeat, pause, read, next column, headings or spell. Say commands in English for now.';
+
+  @override
+  String msg_explain_language_coming(String language) {
+    return 'Explain in $language is coming. You can hear it in English.';
+  }
+
+  @override
+  String get explainInEnglish => 'Hear it in English';
 }

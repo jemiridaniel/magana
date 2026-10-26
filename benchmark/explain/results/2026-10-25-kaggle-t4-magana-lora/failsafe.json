@@ -1,0 +1,446 @@
+[
+ {
+  "model": "base",
+  "lang": "en",
+  "page": "01_food_tests",
+  "spoken": false,
+  "problems": [
+   "number_word"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "en",
+  "page": "01_food_tests",
+  "spoken": false,
+  "problems": [
+   "number_word",
+   "placeholder_missing"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "base",
+  "lang": "en",
+  "page": "02_photosynthesis",
+  "spoken": true,
+  "problems": [],
+  "old_rules_spoken": true,
+  "text": "This page explains photosynthesis, which is how green plants make their own food in the leaves. The process involves chlorophyll trapping light energy from the sun. Plants take in carbon dioxide from the air and water from the soil to produce glucose (food) while releasing oxygen. The equation for this process is carbon dioxide plus water results in glucose and oxygen with the use of light energy and chlorophyll.\n\nIn an experimental setup, a leaf kept in darkness for a certain period (represented by the marker 48 hours) showed a negative starch test. This implies that without sunlight, the leaf could not perform photosynthesis effectively, resulting in no production of starch.",
+  "unsafe": []
+ },
+ {
+  "model": "magana-lora",
+  "lang": "en",
+  "page": "02_photosynthesis",
+  "spoken": true,
+  "problems": [],
+  "old_rules_spoken": true,
+  "text": "This page explains photosynthesis. Green plants make their own food in the leaves with the help of chlorophyll, which traps light energy from the sun. They take in carbon dioxide from the air and water from the soil, and produce glucose while giving out oxygen. The process uses light energy and chlorophyll, and can be represented by the equation carbon dioxide + water -> glucose + oxygen. In an experiment, a leaf kept in the dark for 48 hours gave a negative starch test.",
+  "unsafe": []
+ },
+ {
+  "model": "base",
+  "lang": "en",
+  "page": "03_fractions",
+  "spoken": false,
+  "problems": [
+   "number_word",
+   "placeholder_missing"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "en",
+  "page": "03_fractions",
+  "spoken": false,
+  "problems": [
+   "placeholder_missing"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "base",
+  "lang": "en",
+  "page": "07_school_notice",
+  "spoken": false,
+  "problems": [
+   "digit",
+   "number_word",
+   "placeholder_mangled",
+   "placeholder_missing"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "en",
+  "page": "07_school_notice",
+  "spoken": true,
+  "problems": [],
+  "old_rules_spoken": true,
+  "text": "This notice to parents gives dates and asks families to pay a fee. The Parent-Teacher Association meeting is on Saturday, 14 November 2026, at 10:00 a.m. in the school hall, and each family should pay the PTA levy of N2,500 before 30 November 2026. The Second term examinations start on Monday, 7 December 2026.",
+  "unsafe": []
+ },
+ {
+  "model": "base",
+  "lang": "en",
+  "page": "10_rainfall",
+  "spoken": false,
+  "problems": [
+   "number_word"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "en",
+  "page": "10_rainfall",
+  "spoken": false,
+  "problems": [
+   "placeholder_missing"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "base",
+  "lang": "ha",
+  "page": "01_food_tests",
+  "spoken": false,
+  "problems": [
+   "placeholder_missing"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "magana-lora",
+  "lang": "ha",
+  "page": "01_food_tests",
+  "spoken": false,
+  "problems": [
+   "number_word",
+   "placeholder_missing",
+   "wrong_language"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "base",
+  "lang": "ha",
+  "page": "02_photosynthesis",
+  "spoken": false,
+  "problems": [
+   "placeholder_missing"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "magana-lora",
+  "lang": "ha",
+  "page": "02_photosynthesis",
+  "spoken": false,
+  "problems": [
+   "wrong_language"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "base",
+  "lang": "ha",
+  "page": "03_fractions",
+  "spoken": false,
+  "problems": [
+   "digit",
+   "number_word",
+   "placeholder_missing",
+   "unit_word"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "ha",
+  "page": "03_fractions",
+  "spoken": false,
+  "problems": [
+   "placeholder_missing",
+   "wrong_language"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "base",
+  "lang": "ha",
+  "page": "07_school_notice",
+  "spoken": false,
+  "problems": [
+   "digit",
+   "placeholder_missing",
+   "unit_word"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "ha",
+  "page": "07_school_notice",
+  "spoken": false,
+  "problems": [
+   "wrong_language"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "base",
+  "lang": "ha",
+  "page": "10_rainfall",
+  "spoken": true,
+  "problems": [],
+  "old_rules_spoken": true,
+  "text": "Wannan shafin yana nuna matsakaicin ruwan sama na kowane wata a Legas a cikin millimeters. An bayyana adadin da aka samu ga kowace wata daga Janairu zuwa Disamba, tare da lambobi masu zuwa: January 35, February 50, March 100, April 145, May 270, June 460, July 280, August 70, September 160, October 200, November 70, da December 25.\n\nTambayar ta yi don sanin wanne watan ya fi samun ruwan sama. Don gano wannan, za mu iya kwatanta yawan ruwan sama a kowace wata. Idan muka dubi bayanan, zamu iya ganin cewa watan Yuni yana da mafi girman adadin ruwan sama (wato, mafi girma) idan aka kwatanta da sauran watanni. \n\nDon tantance bambanci tsakanin Yuni da Yuli, za mu iya rage yawan ruwan sama na Yuli daga na Yuni. Duk da haka, ba tare da takamaiman adadin ruwan sama ba ga kowace wata, ba za mu iya lissafin ainihin bambancin ba. Saboda haka, bisa ga bayanan da ke akwai, Yuni shine watan da ya fi samun ruwan sama, amma ba za mu iya tantance adadin ruwan sama na musamman tsakanin Yuni da Yuli ba.",
+  "unsafe": []
+ },
+ {
+  "model": "magana-lora",
+  "lang": "ha",
+  "page": "10_rainfall",
+  "spoken": false,
+  "problems": [
+   "placeholder_missing",
+   "wrong_language"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "base",
+  "lang": "yo",
+  "page": "01_food_tests",
+  "spoken": false,
+  "problems": [
+   "digit",
+   "number_word",
+   "placeholder_repeated"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "yo",
+  "page": "01_food_tests",
+  "spoken": false,
+  "problems": [
+   "number_word",
+   "placeholder_missing",
+   "wrong_language"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "base",
+  "lang": "yo",
+  "page": "02_photosynthesis",
+  "spoken": false,
+  "problems": [
+   "number_word",
+   "placeholder_missing"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "yo",
+  "page": "02_photosynthesis",
+  "spoken": false,
+  "problems": [
+   "placeholder_missing",
+   "wrong_language"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "base",
+  "lang": "yo",
+  "page": "03_fractions",
+  "spoken": false,
+  "problems": [
+   "digit",
+   "number_word",
+   "placeholder_mangled",
+   "placeholder_missing"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "yo",
+  "page": "03_fractions",
+  "spoken": false,
+  "problems": [
+   "placeholder_missing",
+   "wrong_language"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "base",
+  "lang": "yo",
+  "page": "07_school_notice",
+  "spoken": false,
+  "problems": [
+   "digit",
+   "number_word",
+   "placeholder_mangled",
+   "placeholder_missing",
+   "unit_word"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "yo",
+  "page": "07_school_notice",
+  "spoken": false,
+  "problems": [
+   "number_word",
+   "wrong_language"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "base",
+  "lang": "yo",
+  "page": "10_rainfall",
+  "spoken": false,
+  "problems": [
+   "number_word",
+   "placeholder_missing",
+   "unit_word"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "yo",
+  "page": "10_rainfall",
+  "spoken": false,
+  "problems": [
+   "placeholder_missing",
+   "wrong_language"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "base",
+  "lang": "ig",
+  "page": "01_food_tests",
+  "spoken": false,
+  "problems": [
+   "placeholder_missing"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "magana-lora",
+  "lang": "ig",
+  "page": "01_food_tests",
+  "spoken": false,
+  "problems": [
+   "number_word",
+   "placeholder_missing",
+   "wrong_language"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "base",
+  "lang": "ig",
+  "page": "02_photosynthesis",
+  "spoken": false,
+  "problems": [
+   "digit",
+   "placeholder_mangled",
+   "placeholder_missing"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "ig",
+  "page": "02_photosynthesis",
+  "spoken": false,
+  "problems": [
+   "wrong_language"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "base",
+  "lang": "ig",
+  "page": "03_fractions",
+  "spoken": false,
+  "problems": [
+   "digit",
+   "placeholder_missing",
+   "unit_word"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "ig",
+  "page": "03_fractions",
+  "spoken": false,
+  "problems": [
+   "placeholder_missing",
+   "placeholder_repeated",
+   "wrong_language"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "base",
+  "lang": "ig",
+  "page": "07_school_notice",
+  "spoken": false,
+  "problems": [
+   "digit",
+   "placeholder_missing"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "magana-lora",
+  "lang": "ig",
+  "page": "07_school_notice",
+  "spoken": false,
+  "problems": [
+   "number_word",
+   "wrong_language"
+  ],
+  "old_rules_spoken": false
+ },
+ {
+  "model": "base",
+  "lang": "ig",
+  "page": "10_rainfall",
+  "spoken": false,
+  "problems": [
+   "placeholder_missing",
+   "wrong_language"
+  ],
+  "old_rules_spoken": true
+ },
+ {
+  "model": "magana-lora",
+  "lang": "ig",
+  "page": "10_rainfall",
+  "spoken": false,
+  "problems": [
+   "placeholder_missing",
+   "wrong_language"
+  ],
+  "old_rules_spoken": true
+ }
+]

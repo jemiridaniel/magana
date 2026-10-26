@@ -67,6 +67,20 @@ class GuardFails extends Backend {
   };
 }
 
+/// Explain is on in English only: other languages are "coming" (backend explain.live_languages).
+class EnglishOnly extends Backend {
+  @override
+  Map<String, Object?> explainReply(Map body) => body['lang'] == 'en'
+      ? super.explainReply(body)
+      : {
+          'code': 'explain_language_coming',
+          'explanation': null,
+          'read_instead': null,
+          'preview': false,
+          'language': body['lang'],
+        };
+}
+
 /// A tester or production server whose Explain host isn't approved (docs/MODELS.md).
 class NotApproved extends Backend {
   @override
@@ -303,6 +317,40 @@ void main() {
     expect(speaker.said.last, startsWith(en.msg_numbers_unconfirmed));
     expect(speaker.said.last, contains('Amoxicillin unclear number mg'));
   });
+
+  testWidgets(
+    'explain in Hausa is coming: English is offered, by tap or by voice',
+    (tester) async {
+      final handle = tester.ensureSemantics();
+      final (speaker, backend, voice, _) = await start(
+        tester,
+        backend: EnglishOnly(),
+      );
+      await captureToReader(tester);
+      await tap(tester, en.explainThis);
+      await tap(tester, en.answerLanguage('English')); // → Hausa
+      await tap(tester, en.saySimpler);
+      expect(backend.explains.last['lang'], 'ha');
+      final coming = en.msg_explain_language_coming('Hausa');
+      expect(coming, 'Explain in Hausa is coming. You can hear it in English.');
+      expect(find.text(coming), findsOneWidget);
+      expect(speaker.said.last, startsWith(coming));
+      expectAccessible(tester, 'Explain: language coming');
+      await tap(tester, en.explainInEnglish);
+      expect(backend.explains.last['lang'], 'en');
+      expect(find.text(en.msg_explain_preview), findsOneWidget);
+      expect(find.bySemanticsLabel(en.explainInEnglish), findsNothing);
+
+      // By voice: "English" takes the offer too.
+      await tap(tester, en.answerLanguage('English'));
+      await tap(tester, en.saySimpler);
+      expect(find.text(coming), findsOneWidget);
+      voice.replies.add(['in english please']);
+      await tap(tester, en.askAQuestion);
+      expect(backend.explains.last['lang'], 'en');
+      handle.dispose();
+    },
+  );
 
   testWidgets('ask a question from Home: explains a page, so read one first', (
     tester,

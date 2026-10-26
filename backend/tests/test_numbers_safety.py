@@ -20,15 +20,17 @@ client = TestClient(app)
 @pytest.fixture(autouse=True)
 def development(monkeypatch):
     monkeypatch.setenv("MAGANA_ENV", "development")
+    monkeypatch.setenv("EXPLAIN_LANGS", "en,ha,yo,ig")  # the checks, in every language
 
 
 class Recording:
     preview = False
+    adapter = "magana-lora"
 
     def __init__(self, answer="ok"):
         self.answer, self.calls = answer, []
 
-    def complete(self, system, user, timeout):
+    def complete(self, system, user, timeout, temperature=0.1):
         self.calls.append(user)
         return self.answer
 
@@ -91,7 +93,7 @@ def test_outside_development_papers_still_get_their_approved_templates(engine, m
                        headers={"X-Magana-Tier": "standard"}).json()
     assert engine.calls == [] and body["code"] == "paper_lines"
     assert any(l["template"] for l in body["lines"])
-    school = client.post("/explain", json={"source_text": "Plants make food.", "mode": "school", "lang": "yo"},
+    school = client.post("/explain", json={"source_text": "Plants make food.", "mode": "school", "lang": "en"},
                          headers={"X-Magana-Tier": "standard"}).json()
     assert school["code"] == "explain_not_available"
 
@@ -136,15 +138,17 @@ def test_each_placeholder_at_most_once_and_no_others_left_out_is_allowed():
     assert problems_with("Sha ⟦N1⟧ kowane ⟦N2⟧ zuwa ⟦N3⟧ ⟦N9⟧.", source, "ha") == {"placeholder_unknown"}
 
 
-def test_an_answer_that_leaves_numbers_out_is_given_and_points_to_the_page(engine):
+def test_an_answer_that_leaves_numbers_out_is_refused_and_the_page_read(engine):
+    """Every ⟦N⟧ must be in the answer exactly once (CLAUDE.md rule 1): one left out is refused,
+    after one retry."""
     engine.answer = "Sha magani kamar yadda aka rubuta a takardar."  # no markers at all
     body = client.post("/explain", json={"source_text": "Take 2 tablets every 4 to 6 hours.", "lang": "ha"},
                        headers={"X-Magana-Tier": "standard"}).json()
-    assert (body["code"], body["followup"]) == ("explained", "numbers_left_out")
-    assert body["explanation"] == "Sha magani kamar yadda aka rubuta a takardar."
+    assert body["code"] == "numbers_unconfirmed" and body["explanation"] is None
+    assert body["read_instead"] == "Take 2 tablets every 4 to 6 hours." and len(engine.calls) == 2
 
 
-def test_an_answer_with_every_marker_needs_no_followup(engine):
+def test_an_answer_with_every_marker_is_given(engine):
     engine.answer = "Sha ⟦N1⟧ kowane ⟦N2⟧ zuwa ⟦N3⟧."
     body = client.post("/explain", json={"source_text": "Take 2 tablets every 4 to 6 hours.", "lang": "ha"},
                        headers={"X-Magana-Tier": "standard"}).json()

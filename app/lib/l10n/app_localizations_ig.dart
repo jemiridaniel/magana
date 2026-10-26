@@ -325,7 +325,7 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get msg_numbers_unconfirmed =>
-      'Enweghị m ike ikwenye ụfọdụ nọmba na nkọwa a, ya mere aga m agụ peeji ahụ otú o si dị.';
+      'Enweghị m ike ịkọwa peeji a n\'enweghị nsogbu. Lee ya, agụgharịrị ya ọzọ.';
 
   @override
   String get msg_class_code_wrong =>
@@ -2214,4 +2214,12 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get readerCommandHelp =>
       'Ị nwere ike ikwu: next, back, repeat, pause, read, next column, headings ma ọ bụ spell. Kwuo iwu n\'asụsụ Bekee ugbu a.';
+
+  @override
+  String msg_explain_language_coming(String language) {
+    return 'Nkọwa n\'asụsụ $language na-abịa. Ị nwere ike ịnụ ya n\'asụsụ Bekee.';
+  }
+
+  @override
+  String get explainInEnglish => 'Nụ ya n\'asụsụ Bekee';
 }

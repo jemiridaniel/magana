@@ -324,7 +324,7 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get msg_numbers_unconfirmed =>
-      'Mi ò lè fìdí àwọn nọ́ńbà kan nínú àlàyé yìí múlẹ̀, nítorí náà màá ka ojú-ìwé náà gẹ́gẹ́ bí ó ṣe wà.';
+      'Mi ò lè ṣàlàyé ojú-ìwé yìí láìséwu. Ìyí ni, a tún kà á.';
 
   @override
   String get msg_class_code_wrong =>
@@ -2216,4 +2216,12 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get readerCommandHelp =>
       'O lè sọ pé: next, back, repeat, pause, read, next column, headings tàbí spell. Sọ àwọn àṣẹ ní èdè Gẹ̀ẹ́sì fún báyìí.';
+
+  @override
+  String msg_explain_language_coming(String language) {
+    return 'Àlàyé ní $language ń bọ̀. O lè gbọ́ ọ ní èdè Gẹ̀ẹ́sì.';
+  }
+
+  @override
+  String get explainInEnglish => 'Gbọ́ ọ ní Gẹ̀ẹ́sì';
 }

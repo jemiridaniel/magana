@@ -311,6 +311,10 @@ def explain_page(body: ExplainRequest, tier: policy.Tier = Depends(caller_tier),
         t = templates.translate(body.source_text, body.lang, body.mode)
         return {"code": "paper_lines", "explanation": None, "read_instead": None, "preview": False,
                 "lines": t["lines"], "fallback": t["fallback"]}
+    if body.lang not in explain.live_languages():
+        # Hausa, Yorùbá and Igbo: not yet (native review first). The app offers English.
+        return {"code": "explain_language_coming", "explanation": None, "read_instead": None, "preview": False,
+                "language": body.lang}
     if not explain.allowed(engine):
         # Tester and production builds: Explain stays off (no page text leaves for an
         # unapproved host).
@@ -318,11 +322,7 @@ def explain_page(body: ExplainRequest, tier: policy.Tier = Depends(caller_tier),
                 "preview": False}
     r = explain.explain(explain.for_language(engine, body.lang), body.source_text, body.question, body.lang,
                         body.style, guided=tier is policy.Tier.GUIDED)
-    body = {"code": r.code, "explanation": r.explanation, "read_instead": r.read_instead,
-            "preview": r.preview}
-    if r.followup:
-        body["followup"] = r.followup  # numbers_left_out: "The exact numbers are on the page…"
-    return body
+    return {"code": r.code, "explanation": r.explanation, "read_instead": r.read_instead, "preview": r.preview}
 
 
 @lru_cache(maxsize=1)

@@ -13,8 +13,10 @@ client = TestClient(app)
 
 @pytest.fixture(autouse=True)
 def development(monkeypatch):
-    """These tests are about the engines; deployment rules are tested below."""
+    """These tests are about the engines; deployment rules are tested below. Hausa, Yorùbá and
+    Igbo are switched on here (EXPLAIN_LANGS) so the engines can be tested in them."""
     monkeypatch.setenv("MAGANA_ENV", "development")
+    monkeypatch.setenv("EXPLAIN_LANGS", "en,ha,yo,ig")
 
 
 LABEL = "Paracetamol 500 mg tablets. Take 2 tablets every 4 to 6 hours."
@@ -34,13 +36,14 @@ def engine():
 
 class Fixed:
     preview = False
+    adapter = "magana-lora"  # English goes to the trained adapter only
 
     def __init__(self, *answers):
         self.answers = list(answers)
         self.calls = []
 
-    def complete(self, system, user, timeout):
-        self.calls.append((system, user, timeout))
+    def complete(self, system, user, timeout, temperature=explain.TEMPERATURE):
+        self.calls.append((system, user, timeout, temperature))
         return self.answers.pop(0) if self.answers else keep_markers(user)
 
 
@@ -59,9 +62,57 @@ def test_stub_is_a_preview_that_gives_back_the_page_unchanged():
 
 
 def test_a_number_not_on_the_page_is_never_given(engine):
-    engine(Fixed("Sha kwayoyi 3 kowane awa 4."))  # 3 is not on the page
+    e = Fixed("Sha kwayoyi 3 kowane awa 4.", "Sha ⟦N1⟧ sau 3.")  # 3 is not on the page, twice
+    engine(e)
     body = post({"source_text": LABEL, "lang": "ha"}).json()
     assert body == {"code": "numbers_unconfirmed", "explanation": None, "read_instead": LABEL, "preview": False}
+    # Tried once more, greedy, before giving up.
+    assert [c[3] for c in e.calls] == [explain.TEMPERATURE, explain.RETRY_TEMPERATURE] == [0.1, 0.0]
+
+
+def test_a_refused_answer_is_tried_once_more_at_a_lower_temperature(engine):
+    e = Fixed("Paracetamol ⟦N1⟧ sau 3.", "Paracetamol ⟦N1⟧: sha ⟦N2⟧ kowane ⟦N3⟧ zuwa ⟦N4⟧.")
+    engine(e)
+    body = post({"source_text": LABEL, "lang": "ha"}).json()
+    assert body["code"] == "explained" and len(e.calls) == 2 and e.calls[1][3] == 0.0
+
+
+@pytest.mark.parametrize("answer", [
+    "Paracetamol ⟦N1⟧: sha ⟦N2⟧ kowane ⟦N3⟧.",                    # ⟦N4⟧ dropped
+    "Paracetamol ⟦N1⟧: sha ⟦N2⟧ kowane ⟦N3⟧ zuwa ⟦N 4⟧.",          # mangled: a space
+    "Paracetamol ⟦N1⟧: sha ⟦N2⟧ kowane ⟦N3⟧ zuwa [N4].",           # mangled: brackets
+    "Paracetamol ⟦N1⟧: sha ⟦N2⟧ kowane ⟦N3⟧ zuwa ⟦Nl⟧.",           # mangled: l for 1
+    "Paracetamol ⟦N1⟧: sha ⟦N2⟧ kowane ⟦N3⟧ zuwa ⟦N4.",            # mangled: half a marker
+    "Paracetamol ⟦N1⟧: sha ⟦N2⟧ kowane ⟦N3⟧ zuwa ⟦N4⟧ ⟦N4⟧.",      # repeated
+    "Paracetamol ⟦N1⟧: sha ⟦N2⟧ kowane ⟦N3⟧ zuwa ⟦N5⟧.",           # made up
+])
+def test_a_dropped_or_mangled_marker_is_never_spoken(engine, answer):
+    engine(Fixed(answer, answer))
+    body = post({"source_text": LABEL, "lang": "ha"}).json()
+    assert body["code"] == "numbers_unconfirmed" and body["explanation"] is None and body["read_instead"] == LABEL
+
+
+def test_hausa_yoruba_and_igbo_are_coming_and_english_is_offered(engine, monkeypatch):
+    monkeypatch.delenv("EXPLAIN_LANGS")
+    e = Fixed()
+    engine(e)
+    for lang in ("ha", "yo", "ig"):
+        body = post({"source_text": LABEL, "lang": lang}).json()
+        assert body == {"code": "explain_language_coming", "explanation": None, "read_instead": None,
+                        "preview": False, "language": lang}
+    assert e.calls == []  # nothing went to the model
+    assert post({"source_text": LABEL, "lang": "en"}).json()["code"] == "explained"
+
+
+def test_english_never_goes_to_the_base_model(engine):
+    base = Fixed()
+    base.adapter = ""
+    engine(base)
+    body = post({"source_text": LABEL, "lang": "en"}).json()
+    assert body["code"] == "explain_unavailable" and body["read_instead"] == LABEL and base.calls == []
+    assert explain.trained_for(explain.LlamaCppEngine("http://x", "", lora_id=0), "en")
+    assert not explain.trained_for(explain.LlamaCppEngine("http://x", "", lora_id=None), "en")
+    assert explain.trained_for(explain.StubEngine(), "en")
 
 
 def test_an_answer_that_keeps_the_placeholders_gets_the_pages_exact_text_back(engine):
@@ -119,8 +170,9 @@ def test_an_over_long_line_is_cut_at_a_space():
 
 class Slow:
     preview = False
+    adapter = "magana-lora"
 
-    def complete(self, system, user, timeout):
+    def complete(self, system, user, timeout, temperature=explain.TEMPERATURE):
         raise explain.ExplainUnavailable("timeout")
 
 
@@ -346,7 +398,7 @@ HAUSA = ("Wannan shafin ya nuna yadda tsire-tsire masu launin kore ke samar da a
 
 
 def test_an_english_answer_to_a_hausa_request_is_refused_and_the_page_is_read(engine):
-    engine(Fixed(ENGLISH))
+    engine(Fixed(ENGLISH, ENGLISH))  # and again on the retry
     body = post({"source_text": "Green plants make food in their leaves.", "lang": "ha"}).json()
     assert body["code"] == "explain_wrong_language"
     assert body["explanation"] is None
