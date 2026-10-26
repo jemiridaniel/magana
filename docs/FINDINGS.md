@@ -13,6 +13,49 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-27 · Small cards and torn, faint slips: why the iPhone failed, and the fixes (UNREVIEWED)
+
+- **What happened:** on a real iPhone, Magana failed on two easy items:
+  - a small printed church card, held in the hand against a wall;
+  - a thermal-printed boarding pass with its left edge torn.
+- **Neither photo was kept.** The boarding pass carries the tester's name. Both cases were rebuilt synthetically: `backend/tests/capture_fixtures.py`, and the frames in `app/test/small_items_test.dart`.
+- **Causes found (reproduced on the synthetic versions):**
+  1. **The camera never took the picture of the card.** The framing check looks for a page that stands out from a darker background and fills at least 30% of the view. Against a pale wall, the wall itself is brighter than the print, so the analyser took the wall for the page. That "page" fills the view, so it said "Move the phone further away" for ever. A small card with a visible edge got "Move closer" for ever instead.
+  2. **Faint thermal print read as nothing.** Plain OCR found 0 words on the faint slip (grey print on grey-white paper on a dark table). A plain contrast stretch also found 0, because the dark table already uses the full range.
+  3. **The torn edge was neither read nor reported.** Letters cut by the tear came back as other letters ("JARDING" for BOARDING, "DEAT" for SEAT), with no warning.
+  4. **False "part of this line is unclear" on every line** of both items. The card's border against the wall, and the pieces of torn letters, counted as unread ink.
+  5. **"Move the phone closer" after reading a card with normal-size print.** The rule took "the first pass found little" to mean small print.
+- **Fixes:**
+  - **Capture** (`app/lib/capture/frame_analysis.dart`):
+    - The analyser now also counts where print is: 16 patches at full resolution, 4 of them in the middle.
+    - With no page found, a small-looking page, or a "page" that is really the wall around a card (print in at most 8 patches), print in at least 2 patches with 1 in the middle is a small item: hold still, then capture.
+    - "Move closer" now only when the print is in a single patch. A real page held too close (print everywhere) still hears "further away".
+    - **After 6 s of steady text it captures anyway**, whatever the guidance says. A plain wall with no print is never captured.
+  - **Faint print** (`backend/app/reader.py`, `flatten_contrast`):
+    - If the reading is still nearly empty or unsure after the usual faint-print recovery, the photo is flattened (divided by its blurred paper, then stretched) and read again. The flattened reading is kept if it finds more words.
+    - Every later step uses that copy, including each number's second reading from its own crop, so the "unclear number" rules are unchanged. The tip says "The print is faint, so I darkened it to read it. Check important numbers with a person."
+  - **Torn or cut edges** (`edge_cuts`):
+    - A line ends at the paper's own edge when the walk to the edge passes only short dark stretches and then a line height of background.
+    - It counts as cut when the first word is within half a line height of that edge, or within 1.6 with pieces of letters between.
+    - At least 2 lines must agree on the edge, and 40% of lines must be cut. A smudged line end is still flagged as before.
+    - Says "Some words at the left edge are cut off." Words are read as they are, never repaired.
+  - **Unread-ink checks** (line ends, parts of lines) now look only at each line's own paper, on the photo as taken. Flattening turns noise into "ink".
+  - **"Small print"** is now judged by the height of the words recovery found.
+- **Results on the synthetic stand-ins:**
+  - **Card:** all 5 lines read, with no warnings and no tips. On the phone, it is captured after about a second of steady frames.
+  - **Slip:** all 7 lines read (cut letters read as they are), with "Some words at the left edge are cut off" and the faint-print tip. Its numbers (P4 7123, 14C, B2, 06:45) each passed two agreeing readings.
+- **No change on normal pages:** 20 benchmark readings (10 pages, clean and phone-like) and 20 two-column readings were neither flattened nor called cut. Two-column words in order stayed at 100%.
+- **iPhone audio:** speech now uses the playback category with spokenAudio mode, so it plays with the silent switch on, ducking other sound. It is set again before every utterance, because recording switches the session to record mode, which plays speech through the earpiece. Tested in `app/test/ios_audio_diagnostics_test.dart`; **not yet confirmed on the iPhone with the switch on silent.**
+- **Diagnostics** (Settings → tap the version 7 times), in memory only, never an image. For the last attempt it shows:
+  - how the capture fired, what the framing said, and the page box;
+  - the text patches, sharpness and tilt;
+  - the server or phone path, the status code, the server code and time;
+  - the tips, and each word with its confidence;
+  - when speech started and finished.
+  It also shows the server address and the app key's last 4 characters, with a "Check the server" button that calls an endpoint needing the key.
+- **Not yet:** a retest on the iPhone with the same card and slip. Offline reading on the phone (ML Kit) has no contrast enhancement yet. The capture thresholds (2 and 8 patches, 6 s) are untuned on a real camera.
+- **Tests:** `backend/tests/test_small_items.py` (5), `app/test/small_items_test.dart` (7), `app/test/ios_audio_diagnostics_test.dart` (3).
+
 ## 2026-10-26 · The app key is an app identifier: daily caps, rotation, secret checks; build 0.1.0+6 (APK and IPA)
 
 - **Decision:** the APK, the .ipa and the PWA carry the same public app key. It is treated as an app identifier, not a secret.

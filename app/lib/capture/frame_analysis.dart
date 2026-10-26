@@ -4,8 +4,14 @@ import 'dart:typed_data';
 /// A small greyscale picture of one camera frame (0 = black, 255 = white),
 /// row-major and already turned the way the user holds the phone.
 class LumaGrid {
-  LumaGrid(this.width, this.height, this.data, {this.sharpness})
-    : assert(data.length == width * height);
+  LumaGrid(
+    this.width,
+    this.height,
+    this.data, {
+    this.sharpness,
+    this.printPatches = 0,
+    this.centrePrint = 0,
+  }) : assert(data.length == width * height);
 
   final int width;
   final int height;
@@ -15,8 +21,30 @@ class LumaGrid {
   /// null when no patch held print (then blur isn't judged).
   final double? sharpness;
 
-  LumaGrid withSharpness(double? s) =>
-      LumaGrid(width, height, data, sharpness: s);
+  /// How many of the 16 full-resolution patches ([frameTextOf]) hold print, and how many
+  /// of the middle 4 do: text in view, whether or not a page's edges can be seen.
+  final int printPatches;
+  final int centrePrint;
+
+  bool get textInView => printPatches > 0;
+
+  LumaGrid withSharpness(double? s) => LumaGrid(
+    width,
+    height,
+    data,
+    sharpness: s,
+    printPatches: printPatches,
+    centrePrint: centrePrint,
+  );
+
+  LumaGrid withText(FrameText t) => LumaGrid(
+    width,
+    height,
+    data,
+    sharpness: t.sharpness,
+    printPatches: t.patches,
+    centrePrint: t.centre,
+  );
 
   int at(int x, int y) => data[y * width + x];
 
@@ -70,13 +98,15 @@ class LumaGrid {
   }
 }
 
-/// Sharpness of a frame: the strongest edges (95th percentile of the absolute
-/// Laplacian) in 48 x 48 pixel patches on a 4 x 4 grid over the middle 80% of the
-/// frame, at full resolution. Patches without print (flat paper, the table) are
-/// skipped, so a blank middle never reads as blur; null when every patch is flat.
-/// Rendered pages at the camera's size (docs/FINDINGS.md): sharp about 200, a
-/// light blur (sigma 0.8) 28 to 64, sigma 1.5 11 to 18, sigma 2.5 5 to 7.
-double? sharpnessOf({
+/// Print in a frame, from 48 x 48 pixel patches on a 4 x 4 grid over the middle 80% of the
+/// frame, at full resolution: how sharp the print is (the strongest edges, the 95th
+/// percentile of the absolute Laplacian), how many patches hold print, and how many of the
+/// middle 4. Patches without print (flat paper, a plain wall) are skipped, so a blank middle
+/// never reads as blur. Rendered pages at the camera's size (docs/FINDINGS.md): sharp about
+/// 200, a light blur (sigma 0.8) 28 to 64, sigma 1.5 11 to 18, sigma 2.5 5 to 7.
+typedef FrameText = ({double? sharpness, int patches, int centre});
+
+FrameText frameTextOf({
   required Uint8List bytes,
   required int frameWidth,
   required int frameHeight,
@@ -86,6 +116,7 @@ double? sharpnessOf({
 }) {
   const size = 48, grid = 4;
   double? best;
+  var patches = 0, centre = 0;
   final values = Float64List((size - 2) * (size - 2));
   int at(int x, int y) =>
       bytes[y * rowStride + x * pixelStride + channelOffset];
@@ -121,10 +152,29 @@ double? sharpnessOf({
       final sorted = Float64List.fromList(values)..sort();
       final p95 = sorted[(sorted.length * 0.95).floor()];
       best = best == null ? p95 : math.max(best, p95);
+      patches++;
+      if ((gx == 1 || gx == 2) && (gy == 1 || gy == 2)) centre++;
     }
   }
-  return best;
+  return (sharpness: best, patches: patches, centre: centre);
 }
+
+/// The sharpness part of [frameTextOf]: null when every patch is flat.
+double? sharpnessOf({
+  required Uint8List bytes,
+  required int frameWidth,
+  required int frameHeight,
+  required int rowStride,
+  int pixelStride = 1,
+  int channelOffset = 0,
+}) => frameTextOf(
+  bytes: bytes,
+  frameWidth: frameWidth,
+  frameHeight: frameHeight,
+  rowStride: rowStride,
+  pixelStride: pixelStride,
+  channelOffset: channelOffset,
+).sharpness;
 
 /// What the user should do next. Spoken about every second while framing.
 enum Advice {
@@ -148,8 +198,34 @@ enum Advice {
 /// It looks for the page as the bright region against a darker background,
 /// which is how printed pages are photographed on tables and laps. Thresholds
 /// are deliberately simple and named so they can be tuned with testers.
+/// What the analyser saw in the last frame, for the hidden diagnostics screen. No image.
+typedef FrameReport = ({
+  Advice? advice,
+  ({double left, double top, double right, double bottom})? page,
+  double? sharpness,
+  double? tilt,
+  int printPatches,
+  int centrePrint,
+  bool smallItem,
+  bool anyway,
+});
+
 class FrameAnalyzer {
-  FrameAnalyzer({this.steadyFramesNeeded = 4});
+  FrameAnalyzer({this.steadyFramesNeeded = 4, DateTime Function()? clock})
+    : _clock = clock ?? DateTime.now;
+
+  final DateTime Function() _clock;
+
+  /// Steady text in view this long: capture anyway, whatever else the guidance says, so a
+  /// card, receipt or torn slip is never refused forever (docs/FINDINGS.md, 27 Oct 2026).
+  static const captureAnywayAfter = Duration(seconds: 6);
+
+  /// No page edges, but print in at least this many patches with one in the middle: a small
+  /// item (card, receipt, label, boarding pass) to read as it is. Print in fewer: too small.
+  static const smallItemPatches = 2;
+
+  /// A page too close for the view has print in more than half the 16 patches.
+  static const pageFillPatches = 8;
 
   /// Consecutive good, steady frames before auto-capture (about a second at
   /// the 4-5 frames a second the Capture screen analyses).
@@ -174,6 +250,24 @@ class FrameAnalyzer {
   LumaGrid? _previous;
   int _steady = 0;
   Advice? _last;
+  DateTime? _textSince;
+  ({double left, double top, double right, double bottom})? _page;
+  double? _tilt;
+  bool _smallItem = false;
+  bool _anyway = false;
+  LumaGrid? _lastGrid;
+
+  /// The last frame, as numbers (diagnostics).
+  FrameReport get report => (
+    advice: _last,
+    page: _page,
+    sharpness: _lastGrid?.sharpness,
+    tilt: _tilt,
+    printPatches: _lastGrid?.printPatches ?? 0,
+    centrePrint: _lastGrid?.centrePrint ?? 0,
+    smallItem: _smallItem,
+    anyway: _anyway,
+  );
 
   bool get readyToCapture => _steady >= steadyFramesNeeded;
 
@@ -196,6 +290,8 @@ class FrameAnalyzer {
     _previous = null;
     _steady = 0;
     _last = null;
+    _textSince = null;
+    _anyway = false;
   }
 
   Advice analyze(LumaGrid g) {
@@ -204,6 +300,20 @@ class FrameAnalyzer {
         _previous!.width == g.width &&
         _meanChange(_previous!, g) > shakeLimit;
     _previous = g;
+    _lastGrid = g;
+    final now = _clock();
+    // Never block reading forever: steady text for captureAnywayAfter, and it is captured.
+    if (g.textInView && !moving) {
+      _textSince ??= now;
+      if (now.difference(_textSince!) >= captureAnywayAfter) {
+        _anyway = true;
+        _steady = steadyFramesNeeded;
+        return _last = Advice.ready;
+      }
+    } else {
+      _textSince = null;
+    }
+    _anyway = false;
     final advice = _frame(g, moving);
     if (advice == Advice.ready) {
       _steady++;
@@ -214,6 +324,31 @@ class FrameAnalyzer {
   }
 
   Advice _frame(LumaGrid g, bool moving) {
+    _page = null;
+    _tilt = null;
+    _smallItem = false;
+    final a = _pageAdvice(g, moving);
+    // No page stands out, or the page looks small, or the "page" is a pale wall filling the
+    // view around a small card (measured: a card on a cream wall gave "move further away"
+    // for ever). If print fills a few patches, one in the middle, read it as it is. "Move
+    // closer" only when the print is in a single patch: too small to read. A real page held
+    // too close has print in most patches, so it still hears "move further away".
+    final wallAround =
+        a == Advice.liftPhone && g.printPatches <= pageFillPatches;
+    if ((a == Advice.noPage || a == Advice.moveCloser || wallAround) &&
+        g.textInView) {
+      if (g.printPatches < smallItemPatches) return Advice.moveCloser;
+      if (g.centrePrint == 0) return a;
+      _smallItem = true;
+      if (moving) return Advice.holdStill;
+      final sharp = g.sharpness;
+      if (sharp != null && sharp < blurLimit) return Advice.blurry;
+      return Advice.ready;
+    }
+    return a;
+  }
+
+  Advice _pageAdvice(LumaGrid g, bool moving) {
     final n = g.data.length;
     final mean = g.data.fold<int>(0, (a, v) => a + v) / n;
     if (mean < darkMean) return Advice.tooDark;
@@ -249,6 +384,12 @@ class FrameAnalyzer {
     final top = rows.indexOf(true), bottom = rows.lastIndexOf(true);
     final left = cols.indexOf(true), right = cols.lastIndexOf(true);
     if (top < 0 || left < 0) return Advice.noPage;
+    _page = (
+      left: left / g.width,
+      top: top / g.height,
+      right: (right + 1) / g.width,
+      bottom: (bottom + 1) / g.height,
+    );
 
     final cutTop = top == 0, cutBottom = bottom == g.height - 1;
     final cutLeft = left == 0, cutRight = right == g.width - 1;
@@ -278,6 +419,7 @@ class FrameAnalyzer {
           _width(g, y, t),
       ].reduce(math.max);
       if (upper > 0 && lower > 0) {
+        _tilt = upper / lower;
         if (upper < lower * tiltLimit) return Advice.tiltAway;
         if (lower < upper * tiltLimit) return Advice.tiltToward;
       }

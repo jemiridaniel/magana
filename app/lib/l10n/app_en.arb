@@ -1813,5 +1813,8 @@
     }
   },
   "msg_offline_no_confidence": "This phone can't say how sure it is of each word, so every number is read as “unclear number”. Check important papers when you are online, or with a person.",
-  "msg_daily_limit": "You've read a lot of pages today. Magana can read more tomorrow. Pages you saved are in My library."
+  "msg_daily_limit": "You've read a lot of pages today. Magana can read more tomorrow. Pages you saved are in My library.",
+  "msg_edge_cut_left": "Some words at the left edge are cut off.",
+  "msg_edge_cut_right": "Some words at the right edge are cut off.",
+  "msg_faint_print": "The print is faint, so I darkened it to read it. Check important numbers with a person."
 }

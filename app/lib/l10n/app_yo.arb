@@ -619,5 +619,8 @@
   "reportNoMic": "Magana kò lè lo makirofóònù. O ṣì lè fi ìjábọ̀ ránṣẹ́.",
   "emailSupport": "Fi ímeèlì ránṣẹ́ sí {email}",
   "msg_offline_no_confidence": "Fóònù yìí kò lè sọ bí ó ṣe dá a lójú tó nípa ọ̀rọ̀ kọ̀ọ̀kan, nítorí náà gbogbo nọ́ńbà ni a ń kà sí “nọ́ńbà tí kò ṣe kedere”. Ṣàyẹ̀wò àwọn ìwé pàtàkì nígbà tí o bá wà lórí íńtánẹ́ẹ̀tì, tàbí pẹ̀lú ẹnìkan.",
-  "msg_daily_limit": "O ti ka ọ̀pọ̀ ojú-ìwé lónìí. Magana lè ka sí i lọ́la. Àwọn ojú-ìwé tí o fi pamọ́ wà nínú Ilé-ìkàwé mi."
+  "msg_daily_limit": "O ti ka ọ̀pọ̀ ojú-ìwé lónìí. Magana lè ka sí i lọ́la. Àwọn ojú-ìwé tí o fi pamọ́ wà nínú Ilé-ìkàwé mi.",
+  "msg_edge_cut_left": "Àwọn ọ̀rọ̀ kan ní etí òsì ti gé.",
+  "msg_edge_cut_right": "Àwọn ọ̀rọ̀ kan ní etí ọ̀tún ti gé.",
+  "msg_faint_print": "Ìtẹ̀wé náà ti fẹ́ parẹ́, nítorí náà mo mú un ṣókùnkùn kí n lè kà á. Ṣàyẹ̀wò àwọn nọ́ńbà pàtàkì pẹ̀lú ẹnìkan."
 }

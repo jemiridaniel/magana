@@ -10,6 +10,7 @@ import '../widgets.dart';
 import 'about.dart';
 import 'home.dart';
 import 'class_code.dart';
+import 'diagnostics.dart';
 import 'onboarding.dart' show GoalsStep, classLevelChoices;
 import 'report_problem.dart';
 
@@ -29,6 +30,7 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   ({String version, String build})? _version;
+  int _versionTaps = 0; // 7 taps on the version: diagnostics
 
   @override
   void initState() {
@@ -161,11 +163,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
             },
           ),
         if (v != null) ...[
-          Semantics(
-            header: true,
-            child: Text(
-              l.settingsVersion(v.version, v.build),
-              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+          // Tapped 7 times: the hidden diagnostics screen, for testing on real phones.
+          GestureDetector(
+            onTap: () {
+              if (++_versionTaps < 7) return;
+              _versionTaps = 0;
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (_) => DiagnosticsScreen(
+                    version: l.settingsVersion(v.version, v.build),
+                  ),
+                ),
+              );
+            },
+            child: Semantics(
+              header: true,
+              child: Text(
+                l.settingsVersion(v.version, v.build),
+                style: const TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           ),
           NoteBox(text: l.settingsVersionNote),

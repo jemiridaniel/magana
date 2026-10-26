@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
+import 'diagnostics.dart';
 import 'platform.dart';
 
 /// How one utterance ended.
@@ -55,7 +56,10 @@ class Speaker {
   bool get speaking => _pending != null;
 
   FlutterTts _listen(FlutterTts tts) {
-    tts.setStartHandler(() => _started = _active = true);
+    tts.setStartHandler(() {
+      _started = _active = true;
+      diagnostics.spoke(started: true);
+    });
     // A stop() can deliver the old utterance's cancel event late; only finish
     // the current utterance once it has actually started.
     tts.setCompletionHandler(() {
@@ -159,10 +163,29 @@ class Speaker {
 
   static const retryDelay = Duration(milliseconds: 1500);
 
+  /// iPhone: speech plays with the silent switch on, and next to VoiceOver. The playback
+  /// category ignores the switch; spokenAudio mode, ducking other sound, pauses other spoken
+  /// audio (podcasts). Set before every utterance: recording a voice note or an answer
+  /// switches the session to record mode, which would send speech to the quiet earpiece.
+  static Future<void> iosAudio(FlutterTts tts) async {
+    if (kIsWeb || defaultTargetPlatform != TargetPlatform.iOS) return;
+    try {
+      await tts.setSharedInstance(true);
+      await tts.setIosAudioCategory(IosTextToSpeechAudioCategory.playback, [
+        IosTextToSpeechAudioCategoryOptions.duckOthers,
+        IosTextToSpeechAudioCategoryOptions
+            .interruptSpokenAudioAndMixWithOthers,
+      ], IosTextToSpeechAudioMode.spokenAudio);
+    } catch (e) {
+      devLog('speech: iOS audio session not set ($e)');
+    }
+  }
+
   /// One utterance, no retry. Replaceable in tests.
   @protected
   Future<Spoken> utter(String text) async {
     await _halt();
+    await iosAudio(_tts);
     _text = text;
     final done = _pending = Completer<Spoken>();
     _started = false;
@@ -203,6 +226,9 @@ class Speaker {
     if (onlyIfStarted && !_started) return;
     final c = _pending;
     _pending = null;
-    if (c != null && !c.isCompleted) c.complete(how);
+    if (c != null && !c.isCompleted) {
+      diagnostics.spoke(started: false, outcome: how.name);
+      c.complete(how);
+    }
   }
 }

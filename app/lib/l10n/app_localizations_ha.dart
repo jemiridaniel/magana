@@ -2354,4 +2354,14 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get msg_daily_limit =>
       'Ka karanta shafuka da yawa yau. Magana za ta iya karanta ƙari gobe. Shafukan da ka ajiye suna cikin Ɗakin karatuna.';
+
+  @override
+  String get msg_edge_cut_left => 'An yanke wasu kalmomi a gefen hagu.';
+
+  @override
+  String get msg_edge_cut_right => 'An yanke wasu kalmomi a gefen dama.';
+
+  @override
+  String get msg_faint_print =>
+      'Rubutun ya dushe, don haka na ƙara masa duhu don karanta shi. Duba muhimman lambobi tare da wani.';
 }

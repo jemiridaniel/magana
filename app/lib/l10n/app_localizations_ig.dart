@@ -2350,4 +2350,14 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get msg_daily_limit =>
       'Ị gụọla ọtụtụ peeji taa. Magana nwere ike ịgụkwu echi. Peeji ndị ị chekwara dị n\'Ọbá akwụkwọ m.';
+
+  @override
+  String get msg_edge_cut_left => 'Ebipụla ụfọdụ okwu n\'akụkụ aka ekpe.';
+
+  @override
+  String get msg_edge_cut_right => 'Ebipụla ụfọdụ okwu n\'akụkụ aka nri.';
+
+  @override
+  String get msg_faint_print =>
+      'Ederede ahụ adịghị ahụ anya nke ọma, ya mere eme m ka ọ gbaa ọchịchịrị ka m gụọ ya. Lelee nọmba ndị dị mkpa ya na mmadụ.';
 }

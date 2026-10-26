@@ -376,6 +376,11 @@ def capture_check(image: Image.Image) -> list[str]:
 SMALL_PRINT_PX = 10  # median word height below this: too small to read every number
 
 
+def _median_height(page: Page) -> float:
+    heights = sorted(w.height for l in page.lines for w in l.words if w.height and len(w.text) >= 2)
+    return heights[len(heights) // 2] if heights else 0.0
+
+
 def small_print(page: Page) -> list[str]:
     """'small_print' from the OCR's first pass, before faint-print recovery: its words are
     tiny, or it read almost nothing. Sharp 14 px digits (a statement at 300 dpi) read well; a
@@ -385,6 +390,139 @@ def small_print(page: Page) -> list[str]:
     if len(heights) < 5:
         return ["read_little"]  # read_page keeps it only if faint recovery then found text
     return ["small_print"] if heights[len(heights) // 2] < SMALL_PRINT_PX else []
+
+
+# ---------- Where the paper ends (torn slips, cards on a wall)
+
+PAPER_DROP = 18  # grey levels below the paper's own level that count as off the paper
+EDGE_GAP = 0.5   # first word this close to the paper's edge (in line heights): the edge cut it
+EDGE_FRAGMENT_GAP = 1.6  # ...or this close with pieces of letters between (what the tear left)
+EDGE_LINES = 0.4  # share of lines that must start (or end) at the edge
+FRAGMENT_DARK = 30  # grey levels below the paper that count as ink in a fragment
+
+
+def paper_span(gray, line: Line, x_from: int, x_to: int) -> tuple[int, int, bool, bool]:
+    """(left, right, left_is_edge, right_is_edge): how far the paper runs either side of
+    [x_from, x_to] on this line's band. The walk steps over short dark stretches (letters, a
+    ruled line, pieces of torn letters) and stops after a line height of non-paper: that is a
+    real edge, with background beyond. Reaching the photo's side is not an edge."""
+    import numpy as np
+
+    band = gray[line.top:line.top + line.height]
+    med = np.median(band, axis=0)
+    paper = np.percentile(med[x_from:x_to + 1], 90)
+    ok = med >= paper - PAPER_DROP
+    h, w = max(4, line.height), len(ok)
+
+    def walk(x: int, step: int) -> tuple[int, bool]:
+        last, run = x, 0
+        while 0 <= x + step < w:
+            x += step
+            if ok[x]:
+                last, run = x, 0
+            else:
+                run += 1
+                if run >= h:
+                    return last, True
+        return last, False
+
+    left, left_edge = walk(x_from, -1)
+    right, right_edge = walk(x_to, 1)
+    return left, right, left_edge, right_edge
+
+
+def _fragment(gray, line: Line, x0: int, x1: int) -> bool:
+    """Pieces of letters between x0 and x1 on this line (what a tear leaves of a word)."""
+    import numpy as np
+
+    if x1 - x0 < 2:
+        return False
+    region = gray[line.top:line.top + line.height, x0 + 1:x1]
+    paper = np.percentile(region, 90)
+    return int((region < paper - FRAGMENT_DARK).sum()) >= max(4, line.height // 2)
+
+
+def _edges(gray, line: Line, first: Word, last: Word) -> dict:
+    h = line.height
+    pl, _, pl_edge, _ = paper_span(gray, line, first.left, first.left + first.width)
+    _, pr, _, pr_edge = paper_span(gray, line, last.left, last.left + last.width)
+    gap_l, gap_r = first.left - pl, pr - (last.left + last.width)
+    cut_l = gap_l < EDGE_GAP * h or (gap_l < EDGE_FRAGMENT_GAP * h and _fragment(gray, line, pl, first.left))
+    cut_r = gap_r < EDGE_GAP * h or (gap_r < EDGE_FRAGMENT_GAP * h and
+                                     _fragment(gray, line, last.left + last.width, pr))
+    return {"pl": pl, "pr": pr, "pl_edge": bool(pl_edge), "pr_edge": bool(pr_edge), "cut_l": bool(cut_l),
+            "cut_r": bool(cut_r), "first": first.left, "last": last.left + last.width, "h": h}
+
+
+def paper_bounds(gray, page: Page) -> dict[int, dict]:
+    """Per line (by id): where its paper ends, and whether a tear or trim cut its words. An edge
+    counts only when another line's edge on that side lies within a line height of it: a real
+    paper edge is a straight boundary down the slip, while a smudge or a picture marks one line
+    (a smudged line end must still be flagged)."""
+    found = {}
+    for line in page.lines:
+        words = [w for w in line.words if w.width and w.height and len(w.text.strip()) >= 2]
+        if words and line.height:
+            found[id(line)] = _edges(gray, line, words[0], words[-1])
+    for side in ("l", "r"):
+        at = [e[f"p{side}"] for e in found.values() if e[f"p{side}_edge"]]
+        for e in found.values():
+            agree = sum(abs(x - e[f"p{side}"]) <= e["h"] for x in at) >= 2
+            e[f"p{side}_edge"] = e[f"p{side}_edge"] and agree
+            e[f"cut_{side}"] = e[f"cut_{side}"] and e[f"p{side}_edge"]
+    return found
+
+
+def on_paper(bounds: dict | None, line: Line, width: int) -> tuple[int, int]:
+    """The columns of [line] that are its own paper: up to a confirmed edge, and not the cut
+    letters before (or after) the words when the edge cut them. The whole row otherwise."""
+    e = (bounds or {}).get(id(line))
+    if e is None:
+        return 0, width
+    start = e["first"] if e["cut_l"] else (e["pl"] if e["pl_edge"] else 0)
+    stop = e["last"] if e["cut_r"] else (e["pr"] + 1 if e["pr_edge"] else width)
+    return start, max(start, stop)
+
+
+def edge_cuts(image: Image.Image, page: Page, bounds: dict | None = None) -> list[str]:
+    """'edge_cut_left' / 'edge_cut_right': lines run right up to the paper's own edge, as on a
+    torn or trimmed slip: "Some words at the left edge are cut off." What is there is still read
+    and never repaired. The photo's edge is cut_off's job."""
+    import numpy as np
+
+    if bounds is None:
+        bounds = paper_bounds(np.asarray(image.convert("L"), dtype=float), page)
+    n = len(bounds)
+    need = max(2, EDGE_LINES * n)
+    return [f"edge_cut_{side}" for side, key in (("left", "cut_l"), ("right", "cut_r"))
+            if n and sum(e[key] for e in bounds.values()) >= need]
+
+
+# ---------- Thermal and faint print: flatten the paper, then stretch
+
+def flatten_contrast(image: Image.Image) -> Image.Image:
+    """Faint print (thermal slips, worn receipts): each pixel divided by the blurred paper around
+    it, so uneven light goes and the paper turns even white, then stretched to full contrast. A
+    plain stretch doesn't help when a dark table already uses the full range (measured: 0 words
+    either way; flattened, 19 of the slip's words)."""
+    import numpy as np
+
+    gray = image.convert("L")
+    background = np.asarray(gray.filter(ImageFilter.GaussianBlur(25)), dtype=float) + 1
+    flat = np.clip(np.asarray(gray, dtype=float) / background * 235, 0, 255).astype("uint8")
+    return ImageOps.autocontrast(Image.fromarray(flat), cutoff=1).convert("RGB")
+
+
+FAINT_CONFIDENCE = 0.75  # a first reading this unsure (or nearly empty) is tried flattened too
+
+
+def _words(page: Page) -> list[Word]:
+    return [w for l in page.lines for w in l.words if len(w.text.strip()) >= 2]
+
+
+def reads_faint(page: Page) -> bool:
+    words = _words(page)
+    return len(words) < 5 or sum(w.confidence for w in words) / len(words) < FAINT_CONFIDENCE
 
 
 # ---------- Faint print
@@ -472,12 +610,15 @@ END_GAP = 1.5  # ink this many line-heights past the last word still belongs to 
 END_MIN_WIDTH = 0.6  # unread ink at least this many line-heights wide flags the line
 
 
-def mark_unclear_line_ends(image: Image.Image, page: Page) -> None:
+def mark_unclear_line_ends(image: Image.Image, page: Page, bounds: dict | None = None) -> None:
     """Flag lines whose ink continues to the right of the recognised text, e.g. a damaged
-    or faint end of line the OCR silently dropped ("Do not take more than ... ")."""
+    or faint end of line the OCR silently dropped ("Do not take more than ... "). Only ink on
+    the line's own paper ([bounds], paper_bounds): a card's border against a wall is not text,
+    and a slip torn at the right is edge_cuts' job."""
     import numpy as np
 
     ink = np.asarray(ink_map(image)) > INK_DELTA
+    gray = np.asarray(image.convert("L"), dtype=float)
     boxes = [(w.left, w.top, w.left + w.width, w.top + w.height) for l in page.lines for w in l.words if w.width]
     for line in page.lines:
         if not (line.width and line.height):
@@ -491,7 +632,8 @@ def mark_unclear_line_ends(image: Image.Image, page: Page) -> None:
         # Ignore specks: a column counts as ink when a tenth of the line's height is inked.
         inked = ink[top:bottom].sum(axis=0) >= max(2, line.height // 10)
         end = line.left + line.width
-        window = slice(end, min(ink.shape[1], end + int(line.height * (END_GAP + 4))))
+        _, limit = on_paper(bounds, line, ink.shape[1])
+        window = slice(end, max(end, min(ink.shape[1], end + int(line.height * (END_GAP + 4)), limit)))
         unread = inked[window] & ~covered[window]
         if not unread.any():
             continue
@@ -507,7 +649,7 @@ PART_MIN_HEIGHT = 0.4  # ...and at least this tall at its highest: glyphs, not a
 PART_JOIN = 0.3  # gaps up to this many line-heights join one unread run (the "." in 7.50)
 
 
-def mark_unread_parts(image: Image.Image, page: Page) -> None:
+def mark_unread_parts(image: Image.Image, page: Page, bounds: dict | None = None) -> None:
     """Flag a line when text-sized ink in its row is covered by no recognised word. On a
     statement Tesseract read a row's date and balance but silently dropped a small amount
     ("7.50") between them (docs/FINDINGS.md). The nearest line on that row is flagged,
@@ -525,7 +667,12 @@ def mark_unread_parts(image: Image.Image, page: Page) -> None:
             if min(bottom, y1) - max(top, y0) >= 0.5 * (y1 - y0):
                 covered[max(0, x0 - 2): x1 + 2] = True
         counts = ink[top:bottom].sum(axis=0)
-        unread = (counts >= max(2, h // 10)) & ~covered
+        # Only ink on this line's paper: a card's border against a wall is not unread text, and
+        # letters a tear cut through are edge_cuts' job.
+        paper = np.zeros(ink.shape[1], dtype=bool)
+        start, stop = on_paper(bounds, line, ink.shape[1])
+        paper[start:stop] = True
+        unread = (counts >= max(2, h // 10)) & ~covered & paper
         runs, start, gap = [], None, 0
         for x, on in enumerate(list(unread) + [False] * (int(h * PART_JOIN) + 2)):
             if on:
@@ -627,10 +774,13 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     """OCR one photo. With second_pass, also read a differently prepared copy so the
     safety layer can compare every number between the two readings. `handwriting` is an
     optional second reader for handwritten lines (handwriting.py; schoolwork only)."""
+    import numpy as np
+
     from . import handwriting as hw
     from . import layout, letters
 
     engine = engine or default_engine()
+    original = image  # where the paper ends is judged on the photo as taken
     page = engine.read(image)
     # A Hausa, Yorùbá or Igbo page: read again with the model that keeps more of its letters
     # (letters.READ_AGAIN). Numbers are still re-read by the first engine, independently.
@@ -642,16 +792,36 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     first = len(page.lines)
     faint = recover_faint(image, page, reader)
     if tiny == ["read_little"]:
-        # A short label is just short; a page whose text only recovery could find is not.
-        tiny = ["small_print"] if len(page.lines) > first else []
+        # A short label is just short. Text only recovery could find is small print if its
+        # words are small; a normal-size card on a wall is not ("Move closer" would be wrong).
+        tiny = ([t for t in small_print(page) if t != "read_little"] or ["small_print"]
+                if len(page.lines) > first and _median_height(page) < SMALL_PRINT_PX else [])
+    # Thermal or faint print still unread or unsure after recovery: read a flattened copy and
+    # keep it if it finds more words. Every later step (number re-reads included) then uses it.
+    enhanced = False
+    # Not for a blank photo (nothing varies): faint thermal ink is too weak for ink_bands.
+    if reads_faint(page) and ImageStat.Stat(original.convert("L")).stddev[0] > 3:
+        flat = flatten_contrast(original)
+        again = engine.read(flat)
+        if len(_words(again)) > len(_words(page)):
+            image, page, enhanced = flat, again, True
+            language = letters.page_language(" ".join(l.text for l in page.lines))
+            reader = _language_engine(engine, language) or engine
+            if reader is not engine:
+                page = reader.read(image)
+            faint = recover_faint(image, page, reader)
+            tiny = [t for t in small_print(page) if t != "read_little"]
+    bounds = paper_bounds(np.asarray(original.convert("L"), dtype=float), page)
     columns = layout.arrange(page, image)
-    mark_unclear_line_ends(image, page)
-    mark_unread_parts(image, page)
+    # On the photo as taken: flattening amplifies noise into "ink"; faint print is still ink there.
+    mark_unclear_line_ends(original, page, bounds)
+    mark_unread_parts(original, page, bounds)
     reread_numbers(image, page, engine)
     script = hw.classify(page)
     if handwriting is not None and script != "printed":
         hw.reread_handwritten(image, page, handwriting)
-    tips = (capture_check(image) + cut_off(image, page) + tiny
+    tips = (capture_check(original) + cut_off(original, page) + edge_cuts(original, page, bounds) + tiny
+            + (["faint_print"] if enhanced else [])
             + ([f"{script}_page"] if script != "printed" else []) + ([f"letters_{language}"] if language else []))
     result = {"tips": tips, **_page_dict(page), "faint_regions": faint, "script": script, "columns": columns,
               "page_language": language}

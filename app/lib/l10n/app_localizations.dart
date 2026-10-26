@@ -3815,6 +3815,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You\'ve read a lot of pages today. Magana can read more tomorrow. Pages you saved are in My library.'**
   String get msg_daily_limit;
+
+  /// No description provided for @msg_edge_cut_left.
+  ///
+  /// In en, this message translates to:
+  /// **'Some words at the left edge are cut off.'**
+  String get msg_edge_cut_left;
+
+  /// No description provided for @msg_edge_cut_right.
+  ///
+  /// In en, this message translates to:
+  /// **'Some words at the right edge are cut off.'**
+  String get msg_edge_cut_right;
+
+  /// No description provided for @msg_faint_print.
+  ///
+  /// In en, this message translates to:
+  /// **'The print is faint, so I darkened it to read it. Check important numbers with a person.'**
+  String get msg_faint_print;
 }
 
 class _AppLocalizationsDelegate

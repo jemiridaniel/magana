@@ -309,7 +309,10 @@ void main() {
       expect(speaker.said.last, startsWith(en.explainQuestionPreview));
 
       await tap(tester, en.reportProblem);
-      expect(find.text(en.reportWhat), findsOneWidget); // Report a problem (board 9)
+      expect(
+        find.text(en.reportWhat),
+        findsOneWidget,
+      ); // Report a problem (board 9)
       expect(find.bySemanticsLabel(en.reportIncludeText), findsOneWidget);
       handle.dispose();
     },

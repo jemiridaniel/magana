@@ -20,8 +20,8 @@ LumaGrid lumaGridFrom(CameraImage image, int sensorOrientation) {
     pixelStride: pixelStride,
     channelOffset: channelOffset,
     quarterTurns: sensorOrientation ~/ 90,
-  ).withSharpness(
-    sharpnessOf(
+  ).withText(
+    frameTextOf(
       bytes: plane.bytes,
       frameWidth: image.width,
       frameHeight: image.height,

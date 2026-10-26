@@ -2351,4 +2351,14 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get msg_daily_limit =>
       'You\'ve read a lot of pages today. Magana can read more tomorrow. Pages you saved are in My library.';
+
+  @override
+  String get msg_edge_cut_left => 'Some words at the left edge are cut off.';
+
+  @override
+  String get msg_edge_cut_right => 'Some words at the right edge are cut off.';
+
+  @override
+  String get msg_faint_print =>
+      'The print is faint, so I darkened it to read it. Check important numbers with a person.';
 }

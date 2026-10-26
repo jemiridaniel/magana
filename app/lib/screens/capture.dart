@@ -10,6 +10,7 @@ import '../app_scope.dart';
 import '../capture/camera_frames.dart';
 import '../capture/feedback.dart';
 import '../capture/frame_analysis.dart';
+import '../diagnostics.dart';
 import '../l10n/app_localizations.dart';
 import '../messages.dart';
 import '../offline/offline_reader.dart';
@@ -194,7 +195,16 @@ class _CaptureScreenState extends State<CaptureScreen>
         lumaGridFrom(image, _camera?.description.sensorOrientation ?? 90),
       );
       if (advice != _advice && mounted) setState(() => _advice = advice);
-      if (_auto && advice == Advice.ready) _captureWithCamera();
+      if (_auto && advice == Advice.ready) {
+        final r = _analyzer.report;
+        _captureWithCamera(
+          r.anyway
+              ? 'steady_text'
+              : r.smallItem
+              ? 'small_item'
+              : 'auto',
+        );
+      }
     } finally {
       _analysing = false;
     }
@@ -273,9 +283,10 @@ class _CaptureScreenState extends State<CaptureScreen>
 
   // ---------- capture
 
-  Future<void> _captureWithCamera() async {
+  Future<void> _captureWithCamera([String how = 'button']) async {
     final camera = _camera;
     if (_busy || camera == null || !camera.value.isInitialized) return;
+    diagnostics.begin(how, _analyzer.report);
     setState(() => _busy = true);
     _feedback.captured();
     try {
@@ -292,6 +303,10 @@ class _CaptureScreenState extends State<CaptureScreen>
 
   Future<void> _pick(ImageSource source) async {
     if (_busy) return;
+    diagnostics.begin(
+      source == ImageSource.gallery ? 'gallery' : 'system_camera',
+      null,
+    );
     final XFile? photo;
     try {
       photo =
@@ -330,6 +345,8 @@ class _CaptureScreenState extends State<CaptureScreen>
     final mayKeep =
         profile.can(Feature.library) && profile.tier != Tier.classroom;
     ReadTiming.start();
+    final attempt = diagnostics.last;
+    attempt?.photoBytes = bytes.length;
     _setStatus(l.readingPage);
     final online = scope.api.read(bytes, filename: filename, mode: mode);
     ReadResult? result;
@@ -391,6 +408,13 @@ class _CaptureScreenState extends State<CaptureScreen>
       });
     }
     final page = result;
+    attempt
+      ?..path = switch (why) {
+        null => 'server',
+        OfflineReason.noInternet => 'phone (no internet)',
+        OfflineReason.slow => 'phone (server slow or failed)',
+      }
+      ..read(page);
     if (!mounted) return;
     if (page.readableCount == 0) {
       _setStatus(

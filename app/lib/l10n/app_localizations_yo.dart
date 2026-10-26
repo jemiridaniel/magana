@@ -2352,4 +2352,14 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get msg_daily_limit =>
       'O ti ka ọ̀pọ̀ ojú-ìwé lónìí. Magana lè ka sí i lọ́la. Àwọn ojú-ìwé tí o fi pamọ́ wà nínú Ilé-ìkàwé mi.';
+
+  @override
+  String get msg_edge_cut_left => 'Àwọn ọ̀rọ̀ kan ní etí òsì ti gé.';
+
+  @override
+  String get msg_edge_cut_right => 'Àwọn ọ̀rọ̀ kan ní etí ọ̀tún ti gé.';
+
+  @override
+  String get msg_faint_print =>
+      'Ìtẹ̀wé náà ti fẹ́ parẹ́, nítorí náà mo mú un ṣókùnkùn kí n lè kà á. Ṣàyẹ̀wò àwọn nọ́ńbà pàtàkì pẹ̀lú ẹnìkan.';
 }

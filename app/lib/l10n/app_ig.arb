@@ -619,5 +619,8 @@
   "reportNoMic": "Magana enweghị ike iji igwe okwu. Ị ka nwere ike izipu akụkọ ahụ.",
   "emailSupport": "Zipu email na {email}",
   "msg_offline_no_confidence": "Ekwentị a enweghị ike ịkọ otú o si ji n'aka banyere okwu ọ bụla, ya mere a na-agụ nọmba ọ bụla dị ka “nọmba edoghị anya”. Lelee akwụkwọ ndị dị mkpa mgbe ị nọ n'ịntanetị, ma ọ bụ ya na mmadụ.",
-  "msg_daily_limit": "Ị gụọla ọtụtụ peeji taa. Magana nwere ike ịgụkwu echi. Peeji ndị ị chekwara dị n'Ọbá akwụkwọ m."
+  "msg_daily_limit": "Ị gụọla ọtụtụ peeji taa. Magana nwere ike ịgụkwu echi. Peeji ndị ị chekwara dị n'Ọbá akwụkwọ m.",
+  "msg_edge_cut_left": "Ebipụla ụfọdụ okwu n'akụkụ aka ekpe.",
+  "msg_edge_cut_right": "Ebipụla ụfọdụ okwu n'akụkụ aka nri.",
+  "msg_faint_print": "Ederede ahụ adịghị ahụ anya nke ọma, ya mere eme m ka ọ gbaa ọchịchịrị ka m gụọ ya. Lelee nọmba ndị dị mkpa ya na mmadụ."
 }

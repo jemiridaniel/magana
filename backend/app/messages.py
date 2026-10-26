@@ -17,6 +17,9 @@ ENGLISH = {
     "cut_off_bottom": "Part of the page is cut off at the bottom.",
     "cut_off_left": "Part of the page is cut off at the left.",
     "cut_off_right": "Part of the page is cut off at the right.",
+    "edge_cut_left": "Some words at the left edge are cut off.",
+    "edge_cut_right": "Some words at the right edge are cut off.",
+    "faint_print": "The print is faint, so I darkened it to read it. Check important numbers with a person.",
     # A Hausa, Yorùbá or Igbo page (letters.py): said once per page
     "letters_ha": "Hausa page. I can miss letters like ƙ, ɗ and ɓ. Marked words may have one of these. Spell a word or check it with someone.",
     "letters_yo": "Yorùbá page. I can miss letters like ẹ, ọ and ṣ, and tone marks. Marked words may have one of these. Spell a word or check it with someone.",

@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'diagnostics.dart';
 import 'platform.dart';
 import 'quiz.dart';
 
@@ -567,6 +568,23 @@ class MaganaApi {
     );
   }
 
+  /// For the diagnostics screen: reaches the server with the app key (a call that needs it)
+  /// and says what came back. Never throws.
+  Future<String> checkConnection() async {
+    try {
+      final res = await _client
+          .get(Uri.parse('$apiBase/learner/me'), headers: _headers())
+          .timeout(const Duration(seconds: 10));
+      return switch (res.statusCode) {
+        200 => '200: reached, app key accepted',
+        401 => '401: reached, app key refused',
+        final c => '$c: reached, unexpected answer',
+      };
+    } catch (e) {
+      return 'no answer (${e.runtimeType})';
+    }
+  }
+
   /// Report a problem (board 9): returns the message code (report_sent). The voice note
   /// goes only from adults; page text only when switched on; never a photo.
   Future<String> reportProblem({
@@ -704,12 +722,19 @@ class MaganaApi {
     Duration timeout,
   ) async {
     final http.Response res;
+    final attempt =
+        diagnostics.last; // the hidden diagnostics screen: status and time only
+    final sent = DateTime.now();
     try {
       res = await http.Response.fromStream(await _client.send(req))
           .timeout(timeout);
     } catch (_) {
+      attempt?.code = noAnswerCode();
       throw ApiException(noAnswerCode());
     }
+    attempt
+      ?..status = res.statusCode
+      ..serverMs = DateTime.now().difference(sent).inMilliseconds;
     if (res.statusCode < 200 || res.statusCode > 299) {
       String code = serverAsleep(res.statusCode) ? 'server_sleeping' : 'failed';
       try {
@@ -718,6 +743,7 @@ class MaganaApi {
           code = detail['code'] as String;
         }
       } catch (_) {}
+      attempt?.code = code;
       throw ApiException(code);
     }
     return ReadResult.fromJson(
