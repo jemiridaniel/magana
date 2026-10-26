@@ -2222,4 +2222,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get explainInEnglish => 'Hear it in English';
+
+  @override
+  String get msg_progress_shared =>
+      'Your totals were shared with your teacher.';
+
+  @override
+  String get helpCheckPage => 'Did you read this page on your own?';
+
+  @override
+  String get helpCheckPdf => 'Did you read this PDF on your own?';
+
+  @override
+  String get helpCheckQuiz => 'Did you do this quiz on your own?';
+
+  @override
+  String get helpCheckHow => 'Say “yes”, “some help” or “skip”, or tap.';
+
+  @override
+  String get helpOwn => 'Yes, on my own';
+
+  @override
+  String get helpOwnDetail => 'No sighted help';
+
+  @override
+  String get helpSome => 'I needed some help';
+
+  @override
+  String get helpSomeDetail => 'Someone helped with part of it';
+
+  @override
+  String get helpSkip => 'Skip';
+
+  @override
+  String get helpSkipDetail => 'Don’t ask today';
+
+  @override
+  String get helpCheckNoteClass =>
+      'Asked once a day at most. Your teacher sees only the totals, never what you read.';
+
+  @override
+  String get helpCheckNotePhone =>
+      'Asked once a day at most. Your answers stay on this phone.';
+
+  @override
+  String get helpCheckNotHeard =>
+      'Please say yes, some help or skip, or tap your answer.';
+
+  @override
+  String get helpCheckThanks => 'Thank you.';
 }

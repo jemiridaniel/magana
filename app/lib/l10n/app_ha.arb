@@ -582,5 +582,20 @@
   "cueBlurry": "Ba a gani sosai. Riƙe a tsaye",
   "readerCommandHelp": "Za ka iya cewa: next, back, repeat, pause, read, next column, headings ko spell. Faɗi umarni da Turanci a yanzu.",
   "msg_explain_language_coming": "Bayani da {language} yana zuwa. Kuna iya jin sa da Turanci.",
-  "explainInEnglish": "Ji shi da Turanci"
+  "explainInEnglish": "Ji shi da Turanci",
+  "msg_progress_shared": "An aika jimillar ka zuwa ga malaminka.",
+  "helpCheckPage": "Shin ka karanta wannan shafi da kanka?",
+  "helpCheckPdf": "Shin ka karanta wannan PDF da kanka?",
+  "helpCheckQuiz": "Shin ka yi wannan gwaji da kanka?",
+  "helpCheckHow": "Faɗi “eh”, “taimako” ko “tsallake”, ko ka taɓa.",
+  "helpOwn": "Eh, da kaina",
+  "helpOwnDetail": "Ba tare da taimakon mai gani ba",
+  "helpSome": "Na ɗan buƙaci taimako",
+  "helpSomeDetail": "Wani ya taimaka da wani ɓangare",
+  "helpSkip": "Tsallake",
+  "helpSkipDetail": "Kada a tambaya yau",
+  "helpCheckNoteClass": "Ana tambaya sau ɗaya a rana kawai. Malaminka yana ganin jimilla kawai, ba abin da ka karanta ba.",
+  "helpCheckNotePhone": "Ana tambaya sau ɗaya a rana kawai. Amsoshinka suna zama a wannan waya.",
+  "helpCheckNotHeard": "Don Allah faɗi eh, taimako ko tsallake, ko ka taɓa amsarka.",
+  "helpCheckThanks": "Na gode."
 }

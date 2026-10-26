@@ -80,7 +80,7 @@ export interface Learner {
   consent: Consent; consent_at: string | null; phone_linked: boolean; status: "active" | "removed";
   removed_at: string | null; removed_reason: string | null; joined_at: string; reminder_at: string | null;
   term?: { sessions_attended: number; sessions: number; attendance: number | null; pages: number | null;
-           unaided: number | null; quiz_average: number | null };
+           unaided: number | null; answered?: number; quiz_average: number | null };
   deletion?: { id: string; status: string; due: string } | null;
   class?: { id: string; name: string; mode: Mode } | null;
 }
@@ -103,7 +103,7 @@ export interface HomeData {
   me: Me & { kind: "staff" };
   classes: ClassInfo[];
   attention: Attention[];
-  week: { pages: number; unaided: number; quiz_average: number | null } | null;
+  week: { pages: number; unaided: number | null; answered: number; quiz_average: number | null } | null;
 }
 
 export interface Place { code: string; name: string; lgas: { code: string; name: string }[] }

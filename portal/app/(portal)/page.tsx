@@ -151,7 +151,7 @@ export default function HomePage() {
         {data.week ? (
           <dl className="figures">
             <div><dt>Pages read this week</dt><dd>{data.week.pages}</dd></div>
-            <div><dt>Done without sighted help</dt><dd>{data.week.unaided}%</dd></div>
+            <div><dt>Done without sighted help</dt><dd>{data.week.unaided === null ? "No answers yet" : `${data.week.unaided}%`}</dd></div>
             <div><dt>Average quiz score</dt><dd>{data.week.quiz_average === null ? "—" : `${data.week.quiz_average}%`}</dd></div>
           </dl>
         ) : (

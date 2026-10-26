@@ -49,14 +49,14 @@ export default function ProgressView() {
             <div className="table-wrap" role="region" aria-label="Learner progress" tabIndex={0}>
               <table>
                 <thead><tr><th scope="col">Learner</th><th scope="col">Attendance</th><th scope="col">Pages read</th>
-                  <th scope="col">Done without help</th><th scope="col">Quiz average</th></tr></thead>
+                  <th scope="col">Done without sighted help</th><th scope="col">Quiz average</th></tr></thead>
                 <tbody>
                   {rows.map((l) => (
                     <tr key={l.id}>
-                      <th scope="row"><Link href={`/learner/?id=${l.id}`}>{l.name}</Link></th>
+                      <th scope="row"><Link className="cell-link" href={`/learner/?id=${l.id}`}>{l.name}</Link></th>
                       <td>{l.term?.sessions ? `${pc(l.term.attendance)} (${l.term.sessions_attended} of ${l.term.sessions})` : "—"}</td>
                       <td>{l.term?.pages ?? "—"}</td>
-                      <td>{pc(l.term?.unaided)}</td>
+                      <td>{l.term?.unaided == null ? "No answers yet" : pc(l.term.unaided)}</td>
                       <td>{pc(l.term?.quiz_average)}</td>
                     </tr>
                   ))}

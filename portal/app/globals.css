@@ -744,3 +744,6 @@ tr.is-open { background: #F3F9F5; }
 .undeliverable { display: flex; gap: 6px; align-items: center; width: fit-content; margin-top: 6px; padding: 2px 10px;
   border-radius: 10px; background: var(--check-bg); color: var(--check-ink); font-size: 1rem; font-weight: 700; }
 .undeliverable svg { flex: none; }
+
+/* A link that is a table cell's content (Learner progress): 48 px tall like the other links. */
+.cell-link { display: inline-flex; align-items: center; min-height: 48px; }

@@ -2224,4 +2224,53 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get explainInEnglish => 'Gbọ́ ọ ní Gẹ̀ẹ́sì';
+
+  @override
+  String get msg_progress_shared => 'A ti fi àpapọ̀ rẹ ránṣẹ́ sí olùkọ́ rẹ.';
+
+  @override
+  String get helpCheckPage => 'Ṣé o ka ojú-ìwé yìí fúnra rẹ?';
+
+  @override
+  String get helpCheckPdf => 'Ṣé o ka PDF yìí fúnra rẹ?';
+
+  @override
+  String get helpCheckQuiz => 'Ṣé o ṣe ìdánwò yìí fúnra rẹ?';
+
+  @override
+  String get helpCheckHow =>
+      'Sọ “bẹ́ẹ̀ni”, “ìrànlọ́wọ́” tàbí “fò ó”, tàbí tẹ̀ ẹ́.';
+
+  @override
+  String get helpOwn => 'Bẹ́ẹ̀ni, fúnra mi';
+
+  @override
+  String get helpOwnDetail => 'Kò sí ìrànlọ́wọ́ ẹni tó ríran';
+
+  @override
+  String get helpSome => 'Mo nílò ìrànlọ́wọ́ díẹ̀';
+
+  @override
+  String get helpSomeDetail => 'Ẹnìkan ràn mí lọ́wọ́ pẹ̀lú apá kan';
+
+  @override
+  String get helpSkip => 'Fò ó';
+
+  @override
+  String get helpSkipDetail => 'Má ṣe béèrè lónìí';
+
+  @override
+  String get helpCheckNoteClass =>
+      'A máa ń béèrè lẹ́ẹ̀kan lójúmọ́ péré. Olùkọ́ rẹ ń rí àpapọ̀ nìkan, kì í ṣe ohun tí o kà.';
+
+  @override
+  String get helpCheckNotePhone =>
+      'A máa ń béèrè lẹ́ẹ̀kan lójúmọ́ péré. Àwọn ìdáhùn rẹ wà lórí fóònù yìí.';
+
+  @override
+  String get helpCheckNotHeard =>
+      'Jọ̀wọ́ sọ bẹ́ẹ̀ni, ìrànlọ́wọ́ tàbí fò ó, tàbí tẹ ìdáhùn rẹ.';
+
+  @override
+  String get helpCheckThanks => 'O ṣeun.';
 }

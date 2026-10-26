@@ -1755,5 +1755,20 @@
       }
     }
   },
-  "explainInEnglish": "Hear it in English"
+  "explainInEnglish": "Hear it in English",
+  "msg_progress_shared": "Your totals were shared with your teacher.",
+  "helpCheckPage": "Did you read this page on your own?",
+  "helpCheckPdf": "Did you read this PDF on your own?",
+  "helpCheckQuiz": "Did you do this quiz on your own?",
+  "helpCheckHow": "Say “yes”, “some help” or “skip”, or tap.",
+  "helpOwn": "Yes, on my own",
+  "helpOwnDetail": "No sighted help",
+  "helpSome": "I needed some help",
+  "helpSomeDetail": "Someone helped with part of it",
+  "helpSkip": "Skip",
+  "helpSkipDetail": "Don’t ask today",
+  "helpCheckNoteClass": "Asked once a day at most. Your teacher sees only the totals, never what you read.",
+  "helpCheckNotePhone": "Asked once a day at most. Your answers stay on this phone.",
+  "helpCheckNotHeard": "Please say yes, some help or skip, or tap your answer.",
+  "helpCheckThanks": "Thank you."
 }

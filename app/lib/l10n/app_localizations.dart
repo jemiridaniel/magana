@@ -3593,6 +3593,96 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Hear it in English'**
   String get explainInEnglish;
+
+  /// No description provided for @msg_progress_shared.
+  ///
+  /// In en, this message translates to:
+  /// **'Your totals were shared with your teacher.'**
+  String get msg_progress_shared;
+
+  /// No description provided for @helpCheckPage.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you read this page on your own?'**
+  String get helpCheckPage;
+
+  /// No description provided for @helpCheckPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you read this PDF on your own?'**
+  String get helpCheckPdf;
+
+  /// No description provided for @helpCheckQuiz.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you do this quiz on your own?'**
+  String get helpCheckQuiz;
+
+  /// No description provided for @helpCheckHow.
+  ///
+  /// In en, this message translates to:
+  /// **'Say “yes”, “some help” or “skip”, or tap.'**
+  String get helpCheckHow;
+
+  /// No description provided for @helpOwn.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes, on my own'**
+  String get helpOwn;
+
+  /// No description provided for @helpOwnDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'No sighted help'**
+  String get helpOwnDetail;
+
+  /// No description provided for @helpSome.
+  ///
+  /// In en, this message translates to:
+  /// **'I needed some help'**
+  String get helpSome;
+
+  /// No description provided for @helpSomeDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Someone helped with part of it'**
+  String get helpSomeDetail;
+
+  /// No description provided for @helpSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip'**
+  String get helpSkip;
+
+  /// No description provided for @helpSkipDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Don’t ask today'**
+  String get helpSkipDetail;
+
+  /// No description provided for @helpCheckNoteClass.
+  ///
+  /// In en, this message translates to:
+  /// **'Asked once a day at most. Your teacher sees only the totals, never what you read.'**
+  String get helpCheckNoteClass;
+
+  /// No description provided for @helpCheckNotePhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Asked once a day at most. Your answers stay on this phone.'**
+  String get helpCheckNotePhone;
+
+  /// No description provided for @helpCheckNotHeard.
+  ///
+  /// In en, this message translates to:
+  /// **'Please say yes, some help or skip, or tap your answer.'**
+  String get helpCheckNotHeard;
+
+  /// No description provided for @helpCheckThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you.'**
+  String get helpCheckThanks;
 }
 
 class _AppLocalizationsDelegate

@@ -2222,4 +2222,53 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get explainInEnglish => 'Nụ ya n\'asụsụ Bekee';
+
+  @override
+  String get msg_progress_shared => 'E zigara onye nkuzi gị ngụkọta gị.';
+
+  @override
+  String get helpCheckPage => 'Ị gụrụ peeji a n\'onwe gị?';
+
+  @override
+  String get helpCheckPdf => 'Ị gụrụ PDF a n\'onwe gị?';
+
+  @override
+  String get helpCheckQuiz => 'Ị mere ule a n\'onwe gị?';
+
+  @override
+  String get helpCheckHow =>
+      'Kwuo “ee”, “enyemaka” ma ọ bụ “wụfee”, ma ọ bụ pịa.';
+
+  @override
+  String get helpOwn => 'Ee, n\'onwe m';
+
+  @override
+  String get helpOwnDetail => 'Enweghị enyemaka onye na-ahụ ụzọ';
+
+  @override
+  String get helpSome => 'Achọrọ m enyemaka ntakịrị';
+
+  @override
+  String get helpSomeDetail => 'Mmadụ nyere aka n\'otu akụkụ';
+
+  @override
+  String get helpSkip => 'Wụfee';
+
+  @override
+  String get helpSkipDetail => 'Ajụla taa';
+
+  @override
+  String get helpCheckNoteClass =>
+      'A na-ajụ naanị otu ugboro n\'ụbọchị. Onye nkuzi gị na-ahụ naanị ngụkọta, ọ bụghị ihe ị gụrụ.';
+
+  @override
+  String get helpCheckNotePhone =>
+      'A na-ajụ naanị otu ugboro n\'ụbọchị. Azịza gị na-anọ na ekwentị a.';
+
+  @override
+  String get helpCheckNotHeard =>
+      'Biko kwuo ee, enyemaka ma ọ bụ wụfee, ma ọ bụ pịa azịza gị.';
+
+  @override
+  String get helpCheckThanks => 'Daalụ.';
 }

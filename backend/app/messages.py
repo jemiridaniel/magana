@@ -60,6 +60,7 @@ ENGLISH = {
     "class_has_no_accounts": "This class only has lessons your teacher runs. Ask your teacher.",
     "not_linked": "This phone isn't in a class now. You can still read pages.",
     "class_joined": "You're in the class.",
+    "progress_shared": "Your totals were shared with your teacher.",
     "class_changed": "Your class has changed.",
     "session_code_invalid": "That session code isn't right. Check it in the teacher portal.",
     # Explanations

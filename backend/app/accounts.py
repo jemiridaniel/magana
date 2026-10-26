@@ -8,7 +8,8 @@ One SQLite file, MAGANA_DATA_DIR/magana.db (docs/PRIVACY.md, "Teachers and schoo
 - classes     name, level, mode, teacher, class code (hashed + sealed: codes.py)
 - learners    the name a teacher gives, formats, language, under 18 or not, guardian consent,
               the linked phone (a hashed random token, never a phone number), term records
-- attendance, uploads, learner_stats: the portal's figures
+- attendance, uploads, learner_stats: the portal's figures; learner_days, the daily totals a
+              learner shares (pages, done on their own, with some help), summed into learner_stats
 - audit       who invited, removed or changed whom, and when
 - deletions   a guardian's deletion request, until a school admin confirms it
 """
@@ -62,6 +63,9 @@ CREATE TABLE IF NOT EXISTS attendance(
 CREATE TABLE IF NOT EXISTS learner_stats(
   learner_id TEXT NOT NULL, week TEXT NOT NULL, pages INTEGER NOT NULL DEFAULT 0, unaided INTEGER NOT NULL DEFAULT 0,
   quiz_avg REAL, PRIMARY KEY(learner_id, week));
+CREATE TABLE IF NOT EXISTS learner_days(
+  learner_id TEXT NOT NULL, day TEXT NOT NULL, pages INTEGER NOT NULL DEFAULT 0, own INTEGER NOT NULL DEFAULT 0,
+  helped INTEGER NOT NULL DEFAULT 0, PRIMARY KEY(learner_id, day));
 CREATE TABLE IF NOT EXISTS uploads(
   id TEXT PRIMARY KEY, school_id TEXT NOT NULL, class_id TEXT, teacher_id TEXT, title TEXT NOT NULL,
   status TEXT NOT NULL CHECK(status IN ('processing','check','ready','shared')), note TEXT NOT NULL DEFAULT '',
@@ -141,6 +145,9 @@ COLUMNS = {
     "audit": {"actor_name": "TEXT", "actor_email": "TEXT", "actor_role": "TEXT"},
     "schools": {"ref": "INTEGER", "call_notes": "TEXT NOT NULL DEFAULT ''", "checks": "TEXT NOT NULL DEFAULT ''",
                 "reason": "TEXT", "proof_type": "TEXT", "ministry_no": "TEXT NOT NULL DEFAULT ''"},
+    # Tasks with a "Did you need help?" answer (own + some help): the share done unaided is
+    # unaided / answered, not unaided / pages (board 8).
+    "learner_stats": {"answered": "INTEGER NOT NULL DEFAULT 0"},
 }
 
 

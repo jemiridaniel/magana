@@ -107,7 +107,7 @@ Magana marks lines that look handwritten. It reads their numbers only when two s
 | Classes and class codes | While the class exists. Codes are stored in a form that can't be read back, plus an encrypted copy for the class's teacher and the school's admins |
 | A learner's class link: the name the teacher gives, formats, language, under 18 or not, consent status | While they are in the class. "Remove from class" unlinks the phone at once |
 | The linked phone | A random token on the phone; we store only a coded form of it. No phone number |
-| Attendance, and figures a learner chooses to share | This term |
+| Attendance, and figures a learner chooses to share: per day, pages read and how many tasks they did on their own or with some help ("Did you need help?"). Never what they read | This term |
 | Teachers’ uploads (worksheets, notes) | **Only the text Magana read, never the file.** While the school uses Magana; email us to delete one |
 | The audit log (who invited, removed or changed whom, and when) | While the school uses Magana. A deleted learner is blanked in it |
 

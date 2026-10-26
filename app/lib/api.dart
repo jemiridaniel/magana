@@ -567,6 +567,11 @@ class MaganaApi {
     );
   }
 
+  /// "Did you need help?" daily totals for the teacher (board 8, help_check.dart):
+  /// per day {pages, own, helped}. Nothing else is sent.
+  Future<void> shareProgress(Map<String, Map<String, int>> days) =>
+      _json('POST', '/learner/progress', body: {'days': days});
+
   /// An under-18 moves class: the teacher types their own code, then the new
   /// class's code. Errors: teacher_code_wrong, code_locked, class_has_no_accounts.
   Future<ClassLink> changeClass(String teacherCode, String classCode) async {

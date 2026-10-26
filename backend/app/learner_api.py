@@ -1,5 +1,7 @@
-"""The learner app's class link (/learner/...): join with a class code, check the link, and
-change class (with the teacher's own code for under-18s).
+"""The learner app's class link (/learner/...): join with a class code, check the link,
+change class (with the teacher's own code for under-18s), and the daily totals a learner
+shares with their teacher (POST /learner/progress: pages read, done on their own, with some
+help; board 8 "Did you need help?").
 
 The phone is linked by a random token the app keeps (X-Magana-Learner); the server stores
 only its hash. No phone number, no name from the phone: the teacher names the learner in the
@@ -13,8 +15,11 @@ from __future__ import annotations
 import hashlib
 import secrets
 
+import re
+from datetime import date, timedelta
+
 from fastapi import APIRouter, Header, HTTPException, Request
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from . import accounts as A
 from . import codes
@@ -165,3 +170,62 @@ def consent_confirmed(token: str | None) -> bool | None:
     if l is None or l["status"] != "active":
         return None
     return (not l["under_18"]) or l["consent"] == "received"
+
+
+# ---------- shared progress (board 8)
+
+class DayTotals(BaseModel):
+    model_config = ConfigDict(extra="forbid")  # totals only: anything else is refused, never stored
+    pages: int = Field(0, ge=0, le=200)
+    own: int = Field(0, ge=0, le=50)
+    helped: int = Field(0, ge=0, le=50)
+
+
+class ProgressIn(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    days: dict[str, DayTotals] = Field(max_length=31)
+
+    @field_validator("days")
+    @classmethod
+    def _days(cls, v: dict) -> dict:
+        today = now().date()
+        for d in v:
+            if not re.fullmatch(r"\d{4}-\d{2}-\d{2}", d):
+                raise ValueError("not a day")
+            day = date.fromisoformat(d)
+            if day > today + timedelta(days=1) or day < today - timedelta(days=60):
+                raise ValueError("day out of range")
+        return v
+
+
+def week_of(day: str) -> str:
+    return date.fromisoformat(day).strftime("%G-W%V")
+
+
+@router.post("/progress")
+def share_progress(body: ProgressIn, x_magana_learner: str | None = Header(None),
+                   x_magana_tier: str = Header("standard")) -> dict:
+    """Per day: pages read, tasks done on their own and with some help. Replaces what this phone
+    sent before for those days, so sending again never counts twice. Only an active class link
+    (consent recorded for under-18s); never a Classroom session. The portal's "Done without
+    sighted help" is own / (own + helped)."""
+    if x_magana_tier == "classroom":
+        fail(403, "teacher_session_required")
+    with db() as con:
+        l = linked(con, x_magana_learner)
+        if l is None or _status(l) != "active":
+            fail(403, "not_linked")
+        weeks = set()
+        for day, t in body.days.items():
+            con.execute("INSERT OR REPLACE INTO learner_days(learner_id, day, pages, own, helped) VALUES (?,?,?,?,?)",
+                        (l["id"], day, t.pages, t.own, t.helped))
+            weeks.add(week_of(day))
+        for week in weeks:
+            days = [r for r in con.execute("SELECT * FROM learner_days WHERE learner_id = ?", (l["id"],))
+                    if week_of(r["day"]) == week]
+            pages, own, helped = (sum(r[k] for r in days) for k in ("pages", "own", "helped"))
+            con.execute("INSERT INTO learner_stats(learner_id, week, pages, unaided, answered) VALUES (?,?,?,?,?)"
+                        " ON CONFLICT(learner_id, week) DO UPDATE SET pages = excluded.pages,"
+                        " unaided = excluded.unaided, answered = excluded.answered",
+                        (l["id"], week, pages, own, own + helped))
+    return {"code": "progress_shared", "days": len(body.days)}

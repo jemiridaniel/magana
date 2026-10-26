@@ -494,3 +494,25 @@ test("an address that bounced shows “We couldn’t deliver to this address”,
   await expect(modal.getByText("We couldn’t deliver to this address. Check it with the person, or use another email.")).toBeVisible();
   await expect(modal.getByLabel("Email", { exact: true })).toBeFocused();
 });
+
+test("Done without sighted help: from learners' “Did you need help?” answers; “No answers yet” until then", async ({ page }) => {
+  await newSchool(page);
+  const cls = await addClass(page, "Evening class", "sss2", "standard");
+  const phone = await joinOnPhone(page, cls.code, "standard");
+  const day = new Date().toISOString().slice(0, 10);
+  const share = (days: object) => page.request.post(`${apiUrl}/learner/progress`, {
+    data: { days }, headers: { "X-Magana-Tier": "standard", "X-Magana-Learner": phone.token } });
+  // Pages read, no answers yet.
+  expect((await share({ [day]: { pages: 3, own: 0, helped: 0 } })).ok()).toBeTruthy();
+  await page.goto("/");
+  const figure = (name: string) => page.locator(".figures div").filter({ hasText: name }).locator("dd");
+  await expect(figure("Done without sighted help")).toHaveText("No answers yet");
+  await expect(figure("Pages read this week")).toHaveText("3");
+  // 3 on their own, 1 with some help: 75%.
+  await share({ [day]: { pages: 4, own: 3, helped: 1 } });
+  await page.reload();
+  await expect(figure("Done without sighted help")).toHaveText("75%");
+  await page.goto("/progress/");
+  await expect(page.getByRole("row", { name: /New learner/ }).getByRole("cell", { name: "75%" })).toBeVisible();
+  await designChecks(page);
+});

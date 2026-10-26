@@ -1062,6 +1062,12 @@ def rotate_teacher_code(who: Who = Depends(staff)) -> dict:
 
 # ---------- learners
 
+def _unaided(unaided: int | None, answered: int | None) -> int | None:
+    """"Done without sighted help": the share of answered "Did you need help?" questions
+    answered "Yes, on my own" (board 8). None when nobody has answered: "No answers yet"."""
+    return round(100 * (unaided or 0) / answered) if answered else None
+
+
 def _learner_out(con, l: dict, detail: bool = False) -> dict:
     out = {"id": l["id"], "name": l["name"], "class_id": l["class_id"], "formats": [f for f in l["formats"].split(",") if f],
            "language": l["language"], "under_18": bool(l["under_18"]), "consent": l["consent"],
@@ -1070,11 +1076,11 @@ def _learner_out(con, l: dict, detail: bool = False) -> dict:
            "reminder_at": l["reminder_at"]}
     if detail:
         att = con.execute("SELECT SUM(mark != 'absent'), COUNT(*) FROM attendance WHERE learner_id = ?", (l["id"],)).fetchone()
-        st = con.execute("SELECT SUM(pages), SUM(unaided), AVG(quiz_avg) FROM learner_stats WHERE learner_id = ?",
-                         (l["id"],)).fetchone()
+        st = con.execute("SELECT SUM(pages), SUM(unaided), AVG(quiz_avg), SUM(answered) FROM learner_stats"
+                         " WHERE learner_id = ?", (l["id"],)).fetchone()
         out["term"] = {"sessions_attended": att[0] or 0, "sessions": att[1],
                        "attendance": round(100 * (att[0] or 0) / att[1]) if att[1] else None,
-                       "pages": st[0], "unaided": round(100 * st[1] / st[0]) if st[0] else None,
+                       "pages": st[0], "unaided": _unaided(st[1], st[3]), "answered": st[3] or 0,
                        "quiz_average": round(st[2]) if st[2] is not None else None}
         pending = con.execute("SELECT id, status, due FROM deletions WHERE learner_id = ? AND status = 'pending'",
                               (l["id"],)).fetchone()
@@ -1218,6 +1224,7 @@ def delete_learner_data(con, learner_id: str) -> None:
     """Everything about one learner, gone: their row, attendance, figures and audit mentions."""
     con.execute("DELETE FROM attendance WHERE learner_id = ?", (learner_id,))
     con.execute("DELETE FROM learner_stats WHERE learner_id = ?", (learner_id,))
+    con.execute("DELETE FROM learner_days WHERE learner_id = ?", (learner_id,))
     con.execute("DELETE FROM learners WHERE id = ?", (learner_id,))
     con.execute("UPDATE audit SET target = 'deleted-learner', detail = '{}' WHERE target = ?", (learner_id,))
     con.execute("UPDATE audit SET actor = 'deleted-learner', detail = '{}' WHERE actor = ?", (f"learner:{learner_id}",))
@@ -1313,10 +1320,10 @@ def home(who: Who = Depends(staff)) -> dict:
         lmarks = ",".join("?" * len(lids))
         figures = None
         if lids:
-            st = con.execute(f"SELECT SUM(pages), SUM(unaided), AVG(quiz_avg) FROM learner_stats WHERE week = ?"
-                             f" AND learner_id IN ({lmarks})", [week, *lids]).fetchone()
-            if st[0]:
-                figures = {"pages": st[0], "unaided": round(100 * st[1] / st[0]),
+            st = con.execute(f"SELECT SUM(pages), SUM(unaided), AVG(quiz_avg), SUM(answered) FROM learner_stats"
+                             f" WHERE week = ? AND learner_id IN ({lmarks})", [week, *lids]).fetchone()
+            if st[0] or st[3]:
+                figures = {"pages": st[0] or 0, "unaided": _unaided(st[1], st[3]), "answered": st[3] or 0,
                            "quiz_average": round(st[2]) if st[2] is not None else None}
         return {"me": me(who), "classes": [_class_out(con, c) for c in classes], "attention": attention,
                 "week": figures}

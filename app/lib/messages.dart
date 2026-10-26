@@ -49,6 +49,7 @@ String messageFor(
   'class_has_no_accounts' => l.msg_class_has_no_accounts,
   'not_linked' => l.msg_not_linked,
   'class_joined' => l.msg_class_joined,
+  'progress_shared' => l.msg_progress_shared,
   'class_changed' => l.msg_class_changed,
   'explain_wrong_language' => l.msg_explain_wrong_language,
   'callback_booked' => l.msg_callback_booked,

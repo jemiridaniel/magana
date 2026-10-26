@@ -2227,4 +2227,52 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get explainInEnglish => 'Ji shi da Turanci';
+
+  @override
+  String get msg_progress_shared => 'An aika jimillar ka zuwa ga malaminka.';
+
+  @override
+  String get helpCheckPage => 'Shin ka karanta wannan shafi da kanka?';
+
+  @override
+  String get helpCheckPdf => 'Shin ka karanta wannan PDF da kanka?';
+
+  @override
+  String get helpCheckQuiz => 'Shin ka yi wannan gwaji da kanka?';
+
+  @override
+  String get helpCheckHow => 'Faɗi “eh”, “taimako” ko “tsallake”, ko ka taɓa.';
+
+  @override
+  String get helpOwn => 'Eh, da kaina';
+
+  @override
+  String get helpOwnDetail => 'Ba tare da taimakon mai gani ba';
+
+  @override
+  String get helpSome => 'Na ɗan buƙaci taimako';
+
+  @override
+  String get helpSomeDetail => 'Wani ya taimaka da wani ɓangare';
+
+  @override
+  String get helpSkip => 'Tsallake';
+
+  @override
+  String get helpSkipDetail => 'Kada a tambaya yau';
+
+  @override
+  String get helpCheckNoteClass =>
+      'Ana tambaya sau ɗaya a rana kawai. Malaminka yana ganin jimilla kawai, ba abin da ka karanta ba.';
+
+  @override
+  String get helpCheckNotePhone =>
+      'Ana tambaya sau ɗaya a rana kawai. Amsoshinka suna zama a wannan waya.';
+
+  @override
+  String get helpCheckNotHeard =>
+      'Don Allah faɗi eh, taimako ko tsallake, ko ka taɓa amsarka.';
+
+  @override
+  String get helpCheckThanks => 'Na gode.';
 }

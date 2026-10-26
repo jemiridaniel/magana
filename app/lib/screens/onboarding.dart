@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../api.dart' show ClassLink;
 import '../app_scope.dart';
 import '../curriculum.dart';
+import '../help_check.dart';
 import '../l10n/app_localizations.dart';
 import '../language.dart';
 import '../policy.dart';
@@ -77,6 +78,10 @@ class _ProfileGateState extends State<ProfileGate> with WidgetsBindingObserver {
     final scope = AppScope.of(context);
     final l = AppLocalizations.of(context);
     final profile = scope.profile;
+    // "Did you need help?" totals for the teacher, if this learner shares (board 8).
+    if (profile.link case final link? when profile.tier != Tier.classroom) {
+      ProgressShare.send(scope.api, link);
+    }
     if (!profile.can(Feature.library) || profile.tier == Tier.classroom) return;
     try {
       final n = await photoQueue.drain(scope.api);

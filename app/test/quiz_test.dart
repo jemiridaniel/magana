@@ -1,4 +1,5 @@
 import 'package:app/api.dart';
+import 'package:app/help_check.dart';
 import 'package:app/l10n/app_localizations.dart';
 import 'package:app/language.dart';
 import 'package:app/main.dart';
@@ -500,6 +501,25 @@ void main() {
     expect(find.textContaining(en.quizProgress(1, 10)), findsOneWidget);
     expect(find.bySemanticsLabel(en.quizScoreLabel(0, 0)), findsOneWidget);
   });
+
+  testWidgets(
+    'after the result: "Did you do this quiz on your own?" (board 8)',
+    (tester) async {
+      helpCheckEnabled = true;
+      addTearDown(() => helpCheckEnabled = false);
+      final (_, voice) = await openQuiz(tester);
+      for (var i = 0; i < 10; i++) {
+        await say(tester, voice, ['A']);
+        await say(tester, voice, ['yes'], button: en.quizSayYesOrNo);
+        await tap(tester, i < 9 ? en.quizNext : en.quizFinish);
+      }
+      expect(find.text(en.helpCheckQuiz), findsOneWidget);
+      await tester.tap(find.text(en.helpOwn));
+      await tester.pumpAndSettle();
+      final [record] = await HelpLog.load();
+      expect((record.task, record.answer), (HelpTask.quiz, HelpAnswer.own));
+    },
+  );
 
   for (final tier in Tier.values) {
     testWidgets('${tier.name}: the recogniser is chosen for this account', (

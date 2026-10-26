@@ -582,5 +582,20 @@
   "cueBlurry": "Ọ dị nzuzu. Kwụsị ọtọ",
   "readerCommandHelp": "Ị nwere ike ikwu: next, back, repeat, pause, read, next column, headings ma ọ bụ spell. Kwuo iwu n'asụsụ Bekee ugbu a.",
   "msg_explain_language_coming": "Nkọwa n'asụsụ {language} na-abịa. Ị nwere ike ịnụ ya n'asụsụ Bekee.",
-  "explainInEnglish": "Nụ ya n'asụsụ Bekee"
+  "explainInEnglish": "Nụ ya n'asụsụ Bekee",
+  "msg_progress_shared": "E zigara onye nkuzi gị ngụkọta gị.",
+  "helpCheckPage": "Ị gụrụ peeji a n'onwe gị?",
+  "helpCheckPdf": "Ị gụrụ PDF a n'onwe gị?",
+  "helpCheckQuiz": "Ị mere ule a n'onwe gị?",
+  "helpCheckHow": "Kwuo “ee”, “enyemaka” ma ọ bụ “wụfee”, ma ọ bụ pịa.",
+  "helpOwn": "Ee, n'onwe m",
+  "helpOwnDetail": "Enweghị enyemaka onye na-ahụ ụzọ",
+  "helpSome": "Achọrọ m enyemaka ntakịrị",
+  "helpSomeDetail": "Mmadụ nyere aka n'otu akụkụ",
+  "helpSkip": "Wụfee",
+  "helpSkipDetail": "Ajụla taa",
+  "helpCheckNoteClass": "A na-ajụ naanị otu ugboro n'ụbọchị. Onye nkuzi gị na-ahụ naanị ngụkọta, ọ bụghị ihe ị gụrụ.",
+  "helpCheckNotePhone": "A na-ajụ naanị otu ugboro n'ụbọchị. Azịza gị na-anọ na ekwentị a.",
+  "helpCheckNotHeard": "Biko kwuo ee, enyemaka ma ọ bụ wụfee, ma ọ bụ pịa azịza gị.",
+  "helpCheckThanks": "Daalụ."
 }

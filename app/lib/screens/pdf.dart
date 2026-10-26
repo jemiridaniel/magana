@@ -8,6 +8,7 @@ import '../messages.dart';
 import '../papers.dart';
 import '../platform/shared_pdf.dart';
 import '../policy.dart';
+import '../help_check.dart';
 import '../tasks.dart';
 import '../widgets.dart';
 import 'reader.dart';
@@ -133,8 +134,12 @@ class _PdfScreenState extends State<PdfScreen> {
       if (!mounted) return;
       await Navigator.of(context).pushReplacement(
         MaterialPageRoute(
-          builder: (_) =>
-              ReaderScreen(result: result, paper: paper, detected: detect),
+          builder: (_) => ReaderScreen(
+            result: result,
+            paper: paper,
+            detected: detect,
+            helpTask: HelpTask.pdf,
+          ),
         ),
       );
     } on ApiException catch (e) {

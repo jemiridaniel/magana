@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../api.dart';
 import '../app_scope.dart';
 import '../commands.dart';
+import '../help_check.dart';
 import '../language.dart';
 import '../offline/offline_reader.dart';
 import '../offline/photo_queue.dart';
@@ -39,7 +40,11 @@ class ReaderScreen extends StatefulWidget {
     this.detected = false,
     this.offlineReason,
     this.queued = false,
+    this.helpTask = HelpTask.page,
   });
+
+  /// Asked about when the page is finished: "Did you read this page on your own?" (board 8).
+  final HelpTask helpTask;
 
   /// Read on this phone (board 5e): why, for the banner. Null when the server read it.
   final OfflineReason? offlineReason;
@@ -74,6 +79,9 @@ class _ReaderScreenState extends State<ReaderScreen> {
   int _speed = 1;
   bool _fullReading = true; // "Full reading when online" (offline pages)
   bool _listening = false;
+  final _heard =
+      <int>{}; // items said to the end: the page is finished at the last or 80%
+  bool _helpAsked = false;
 
   List<ReadItem> get _items => widget.result.items;
   int get _columns => widget.result.columns;
@@ -544,20 +552,34 @@ class _ReaderScreenState extends State<ReaderScreen> {
       if (!await _speaker.sayThrough(_spoken(_items[i]), wanted: wanted)) {
         return pause();
       }
+      _heard.add(i);
     }
     if (run != _run || !mounted) return;
     setState(() => _playing = false);
     // Everyday papers end with their safety note (no advice; PIN never asked).
     await _speaker.say([_l.endOfPageHint, ?widget.paper?.note(_l)].join(' '));
+    if (run == _run) await _askForHelp();
   }
 
   Future<void> _sayOnly(int i) async {
-    _run++;
+    final run = ++_run;
     setState(() {
       _index = i;
       _playing = false;
     });
-    await _speaker.say(_spoken(_items[i]));
+    if (await _speaker.say(_spoken(_items[i]))) _heard.add(i);
+    if (run == _run) await _askForHelp();
+  }
+
+  /// "Did you read this page on your own?" once the page is finished: its last item heard,
+  /// or 80% of its items. At most once a day (help_check.dart).
+  Future<void> _askForHelp() async {
+    final n = _items.length;
+    final finished =
+        n > 0 && (_heard.contains(n - 1) || _heard.length >= (n * 0.8).ceil());
+    if (_helpAsked || !finished || !mounted) return;
+    _helpAsked = true;
+    await maybeAskForHelp(context, widget.helpTask);
   }
 
   void _prev() => _index > 0

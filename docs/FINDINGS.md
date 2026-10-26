@@ -13,6 +13,18 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-26 · "Did you need help?" (board 8) and a real "Done without sighted help" figure (UNREVIEWED)
+
+- **Before:** nothing wrote the portal's `learner_stats`, so "Done without sighted help" had no real source. It showed only test data, and it was worked out as unaided ÷ pages read. "Share my score with my teacher" sent nothing.
+- **Now:**
+  - After a page (its last line heard, or 80% of its lines), a PDF or a quiz, the app asks "Did you read this page on your own?" at most once a day. The answers are "Yes, on my own", "I needed some help" and "Skip (don't ask today)", by voice in the app language (English words always work) or by tap. Closing the sheet counts as Skip. Never asked in a Classroom session.
+  - The phone keeps only the date, the task (page, PDF, quiz) and the answer, for 90 days (`app/lib/help_check.dart`).
+  - A learner in a class who has "Share my score with my teacher" on sends, per day, only pages read, done on their own and with some help (`POST /learner/progress`). Extra fields are refused. Days are replaced, never added twice. Under-18s waiting for consent and Classroom sessions are refused. Adults and learners who don't share keep everything on the phone.
+  - The portal's figure is now own ÷ (own + some help), and shows "No answers yet" until there is an answer (Home, Learner progress, Learner page).
+- **Found and fixed:** the learner links in the Learner progress table were under 48 px. No test had rows there before.
+- **Tests:** `backend/tests/test_help_progress.py` (5), `app/test/help_check_test.dart` (10), a quiz test, and a portal end-to-end test.
+- **Not yet:** the voice words for Hausa, Yorùbá and Igbo (e.g. "taimako", "ìrànlọ́wọ́", "enyemaka") are drafts for native review. The 80% rule is not tested on a real phone with TalkBack.
+
 ## 2026-10-26 · Explain fails safe: every marker exactly once, one retry, English only (UNREVIEWED)
 
 - **What changed** (`backend/app/explain.py`, `placeholders.py`):

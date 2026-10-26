@@ -7,6 +7,7 @@ import '../language.dart';
 import '../platform.dart';
 import '../quiz.dart';
 import '../speech.dart';
+import '../help_check.dart';
 import '../tasks.dart';
 import '../theme.dart';
 import '../voice_answers.dart' as voice_answers;
@@ -190,11 +191,18 @@ class _QuizScreenState extends State<QuizScreen> {
     _say(text);
   }
 
+  /// The score, then "Did you do this quiz on your own?" (board 8) when a question was answered.
+  Future<void> _finishSay() async {
+    await AppScope.of(context).speaker
+        .say(_l.quizResult(_right, _quiz!.questions.length));
+    if (mounted && _answered > 0) await maybeAskForHelp(context, HelpTask.quiz);
+  }
+
   void _next() {
     if (_index + 1 >= _quiz!.questions.length) {
       setState(() => _finished = true);
       if (_answered > 0) TaskLog.record(TaskKind.quiz);
-      _say(_l.quizResult(_right, _quiz!.questions.length));
+      _finishSay();
       return;
     }
     setState(() {

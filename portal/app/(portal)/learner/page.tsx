@@ -146,7 +146,7 @@ function LearnerDetail() {
         <dl className="figures">
           <div><dt>Attendance</dt><dd>{l.term?.sessions ? `${l.term.sessions_attended} of ${l.term.sessions} sessions · ${l.term.attendance}%` : "No register yet"}</dd></div>
           <div><dt>Pages read</dt><dd>{l.term?.pages ?? "—"}</dd></div>
-          <div><dt>Done without help</dt><dd>{l.term?.unaided != null ? `${l.term.unaided}%` : "—"}</dd></div>
+          <div><dt>Done without sighted help</dt><dd>{l.term?.unaided != null ? `${l.term.unaided}%` : "No answers yet"}</dd></div>
           <div><dt>Quiz average</dt><dd>{l.term?.quiz_average != null ? `${l.term.quiz_average}%` : "—"}</dd></div>
         </dl>
       </section>
