@@ -1,7 +1,7 @@
 "use client";
 
 // Team admin (design canvas: "Schools to approve"): the Magana team's own pages, for
-// MAGANA_TEAM_EMAILS only (the server refuses everyone else). A school is approved only after
+// Magana team accounts only (team.py; the server refuses everyone else, and Support only looks). A school is approved only after
 // the call: three checks must be ticked. Not approving needs a reason, and the team sees the
 // email the applicant will get. Every decision, call note and proof view is in the activity log.
 import { useCallback, useEffect, useId, useState } from "react";
@@ -19,9 +19,34 @@ const CHECKS: { id: Check; label: string }[] = [
 const ACTIONS: Record<string, string> = {
   school_registered: "registered", school_call_noted: "saved call notes for", school_approved: "approved",
   school_rejected: "didn’t approve", school_proof_viewed: "viewed the proof of", school_details_deleted: "deleted the details of",
+  school_email_resent: "resent the email for", team_viewed_teachers: "viewed the teachers of",
+  team_signed_in: "signed in", team_authenticator_set_up: "set up their authenticator", team_backup_code_used: "used a backup code",
+  team_invite_accepted: "accepted the team invitation", team_member_invited: "invited", team_role_changed: "changed the role of",
+  team_member_removed: "removed", team_invite_resent: "resent the team invitation to", team_invite_cancelled: "cancelled the invitation of",
+  team_owner_created: "was made the first owner (on the server)",
 };
 
-function Request({ s, onDone }: { s: SchoolRequest; onDone: (msg: string) => void }) {
+function SupportTools({ s }: { s: SchoolRequest }) {
+  const [teachers, setTeachers] = useState<{ name: string; email: string; role: string; status: string }[] | null>(null);
+  const [msg, setMsg] = useState("");
+  return (
+    <div className="req-checks">
+      <div className="req-actions">
+        <button type="button" className="btn" onClick={() => portal.schoolTeachers(s.id).then(setTeachers).catch((e) => setMsg(messageFor((e as PortalError).code)))}>
+          Show teachers<span className="visually-hidden">: {s.name}</span></button>
+        <button type="button" className="btn" onClick={async () => {
+          try { const r = await portal.resendSchoolEmail(s.id); setMsg(r.emailed ? messageFor(r.code) : messageFor("mail_unavailable")); }
+          catch (e) { setMsg(messageFor((e as PortalError).code)); } }}>Resend email<span className="visually-hidden">: {s.name}</span></button>
+      </div>
+      {teachers && (teachers.length ? (
+        <ul className="audit">{teachers.map((t) => <li key={t.email}><b>{t.name}</b> · {t.email} · {t.role === "admin" ? "School admin" : "Teacher"} · {t.status}</li>)}</ul>
+      ) : <p className="empty">No teachers yet.</p>)}
+      <p role="status" className="status-msg">{msg}</p>
+    </div>
+  );
+}
+
+function Request({ s, onDone, viewOnly }: { s: SchoolRequest; onDone: (msg: string) => void; viewOnly: boolean }) {
   const id = useId();
   const [checks, setChecks] = useState<Set<Check>>(new Set(s.checks));
   const [notes, setNotes] = useState(s.call_notes);
@@ -74,7 +99,7 @@ function Request({ s, onDone }: { s: SchoolRequest; onDone: (msg: string) => voi
         <div><dt>Ministry approval no.</dt><dd>{s.ministry_no || "None"}</dd></div>
         <div><dt>Email</dt><dd>{s.contact_email}</dd></div>
       </dl>
-      {!rejecting ? (
+      {viewOnly ? <SupportTools s={s} /> : !rejecting ? (
         <>
           <div className="req-checks">
             <b>Checks before approving</b>
@@ -120,12 +145,14 @@ function Request({ s, onDone }: { s: SchoolRequest; onDone: (msg: string) => voi
 }
 
 function Decided({ rows, rejected }: { rows: SchoolRequest[]; rejected: boolean }) {
+  const [open, setOpen] = useState<string | null>(null);
   if (!rows.length) return <p className="empty">{rejected ? "No schools turned down." : "No schools approved yet."}</p>;
   return (
     <div className="table-wrap" role="region" aria-label={rejected ? "Schools not approved" : "Approved schools"} tabIndex={0}>
       <table>
         <thead><tr><th scope="col">School</th><th scope="col">Location</th><th scope="col">Principal</th>
-          {rejected && <th scope="col">Reason</th>}<th scope="col">Decided</th><th scope="col">Call notes</th></tr></thead>
+          {rejected && <th scope="col">Reason</th>}<th scope="col">Decided</th><th scope="col">Call notes</th>
+          <th scope="col">Actions</th></tr></thead>
         <tbody>{rows.map((s) => (
           <tr key={s.id}>
             <th scope="row">{s.name}<span className="sub">{s.reference}</span></th>
@@ -134,6 +161,8 @@ function Decided({ rows, rejected }: { rows: SchoolRequest[]; rejected: boolean 
             {rejected && <td>{s.reason_label}</td>}
             <td>{s.decided_at}<span className="sub">{s.decided_by}</span></td>
             <td>{s.call_notes || "—"}</td>
+            <td>{open === s.id ? <SupportTools s={s} /> : (
+              <button type="button" className="btn" onClick={() => setOpen(s.id)}>Teachers and emails<span className="visually-hidden">: {s.name}</span></button>)}</td>
           </tr>))}</tbody>
       </table>
     </div>
@@ -145,8 +174,11 @@ function ActivityLog({ rows }: { rows: Activity[] }) {
   return (
     <ol className="audit">
       {rows.map((a, i) => (
-        <li key={i}><time>{a.at}</time> · <b>{a.who}</b> {ACTIONS[a.action] ?? a.action} {a.school ?? "a school"}
-          {a.reference ? ` (${a.reference})` : ""}{typeof a.detail.reason === "string" ? `: ${a.detail.reason}` : ""}</li>
+        <li key={i}><time>{a.at}</time> · <b>{a.who}</b> {ACTIONS[a.action] ?? a.action}{" "}
+          {a.action.startsWith("team_") ? (a.target && !["team_signed_in", "team_authenticator_set_up", "team_backup_code_used",
+            "team_invite_accepted", "team_owner_created"].includes(a.action) ? a.target : "") : (a.school ?? "a school")}
+          {a.reference ? ` (${a.reference})` : ""}{typeof a.detail.reason === "string" ? `: ${a.detail.reason}` : ""}
+          {typeof a.detail.role === "string" && a.action !== "team_owner_created" ? ` (${a.detail.role})` : ""}</li>
       ))}
     </ol>
   );
@@ -182,7 +214,7 @@ export default function TeamAdmin({ tab }: { tab: Tab }) {
         : schools === null ? null
         : tab === "pending" ? (schools.length === 0 ? <p className="empty">No schools waiting. New requests are emailed to the team.</p> : (
             <ul className="list-plain">{schools.map((s) => (
-              <li key={s.id}><Request s={s} onDone={(m) => { setMessage(m); load(); }} /></li>))}</ul>))
+              <li key={s.id}><Request s={s} viewOnly={me.role === "support"} onDone={(m) => { setMessage(m); load(); }} /></li>))}</ul>))
         : <Decided rows={schools} rejected={tab === "rejected"} />}
     </>
   );

@@ -98,6 +98,18 @@ CODES = frozenset(ENGLISH)
 
 # Codes only the teacher portal sees (portal/lib/messages.ts words each one; a test checks).
 PORTAL = {
+    "school_email_resent": "Email sent again to the principal.",
+    "team_invite_cancelled": "Invitation cancelled.",
+    "team_member_removed": "Removed. They’re signed out everywhere.",
+    "team_role_changed": "Role changed.",
+    "team_invite_sent": "Invitation sent. It works for 7 days.",
+    "owners_minimum": "The Magana team must always have at least one owner.",
+    "totp_wrong": "That authenticator code isn’t right. Check the time on your phone and try the new code.",
+    "totp_setup": "Set up your authenticator app to finish signing in.",
+    "totp_required": "Enter the code from your authenticator app.",
+    "team_role_needed": "Your team role can’t do this. Ask a Magana team owner.",
+    "email_is_teacher": "That email belongs to a teacher or school admin. A team member needs a different email.",
+    "email_is_team": "That email belongs to a Magana team member. Use a different email.",
     "proof_too_big": "That file is too big. Please keep it under 5 MB.",
     "proof_wrong_type": "That file isn't a photo or PDF. Choose a JPG, PNG, WebP or PDF.",
     "school_decided": "Someone on the team has already decided about this school.",

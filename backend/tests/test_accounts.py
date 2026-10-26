@@ -15,6 +15,7 @@ from app import accounts, codes, places
 from app.main import app
 
 TEAM = "team@magana.test"
+TOTP_SECRET = "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP"  # test team members' authenticator key (development only)
 APPROVE = {"decision": "approve", "checks": ["person_confirmed", "school_exists", "details_correct"]}
 PRINCIPAL = "adebayo.folake@gmail.com"
 
@@ -24,7 +25,6 @@ def fresh(tmp_path, monkeypatch):
     monkeypatch.setenv("MAGANA_DATA_DIR", str(tmp_path))
     monkeypatch.setenv("MAGANA_ENV", "development")
     monkeypatch.setenv("MAGANA_MAIL", "outbox")
-    monkeypatch.setenv("MAGANA_TEAM_EMAILS", TEAM)
     monkeypatch.delenv("MAGANA_API_KEY", raising=False)
     accounts.reset_for_tests()
     codes.attempts = codes.Attempts()
@@ -33,7 +33,24 @@ def fresh(tmp_path, monkeypatch):
     monkeypatch.setattr(pa, "codes", codes)
     monkeypatch.setattr(la, "codes", codes)
     pa.ip_rate.hits.clear()
+    make_team(TEAM, "owner")
     yield tmp_path
+
+
+def make_team(email: str, role: str = "owner", name: str = "Magana Owner", totp_ready: bool = True) -> None:
+    """A Magana team member, made with the server's setup command (development flags)."""
+    from app import team_setup
+    args = ["--email", email, "--name", name, "--role", role] + (["--totp-secret", TOTP_SECRET] if totp_ready else [])
+    assert team_setup.main(args) == 0
+
+
+def totp_code(email: str, secret: str = TOTP_SECRET) -> str:
+    """The next authenticator code this member hasn't used (codes can't be used twice)."""
+    from app import team, totp
+    with accounts.db() as con:
+        last = team.member_by_email(con, email)["totp_last_counter"]
+    c = totp.counter_now() if last is None else max(totp.counter_now(), last + 1)
+    return totp.code_at(secret, c)
 
 
 def outbox(tmp: Path, to: str) -> list[dict]:
@@ -54,6 +71,9 @@ def sign_in(tmp: Path, email: str) -> TestClient:
     assert r.status_code == 200, r.text
     r = c.post("/portal/auth/verify", json={"email": email, "code": last_code(tmp, email)})
     assert r.status_code == 200, r.text
+    if r.json()["code"] == "totp_required":  # a Magana team member: the authenticator step
+        r = c.post("/portal/auth/totp", json={"code": totp_code(email)})
+        assert r.status_code == 200, r.text
     assert accounts.now is accounts_now
     return c
 

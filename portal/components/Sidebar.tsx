@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 import { SignOutButton, useMe } from "@/components/SessionGate";
+import { portal } from "@/lib/portal";
 
 const links = [
   { href: "/", label: "Home" },
@@ -13,12 +15,12 @@ const links = [
   { href: "/progress/", label: "Learner progress" },
   { href: "/consent/", label: "Consent records" },
 ];
-// The Magana team (board "Schools to approve"): its own four pages, nothing else.
+// The Magana team (boards "Schools to approve", "Team members"): its own pages, by role.
 const teamLinks = [
   { href: "/admin/", label: "Schools to approve" },
   { href: "/admin/approved/", label: "Approved schools" },
   { href: "/admin/not-approved/", label: "Not approved" },
-  { href: "/admin/activity/", label: "Activity log" },
+  { href: "/admin/activity/", label: "Activity log", roles: ["owner", "reviewer"] },
 ];
 const adminLinks = [
   { href: "/teachers/", label: "Teachers" },
@@ -28,6 +30,10 @@ const adminLinks = [
 export default function Sidebar() {
   const pathname = usePathname();
   const me = useMe();
+  const [pending, setPending] = useState(0);
+  useEffect(() => {
+    if (me.kind === "team") portal.adminSchools("pending").then((r) => setPending(r.length)).catch(() => null);
+  }, [me.kind, pathname]);
   const isCurrent = (href: string, section?: string) =>
     section ? pathname.startsWith(section) : pathname === href || pathname === href.replace(/\/$/, "");
   const item = (l: { href: string; label: string; section?: string }) => (
@@ -48,7 +54,19 @@ export default function Sidebar() {
       </Link>
       <nav aria-label="Main">
         {me.kind === "team" ? (
-          <ul className="nav-list">{teamLinks.map(item)}</ul>
+          <>
+            <ul className="nav-list">{teamLinks.filter((l) => !l.roles || l.roles.includes(me.role)).map((l) =>
+              l.href === "/admin/" && pending ? (
+                <li key={l.href}><Link className="nav-link" href={l.href} aria-current={isCurrent(l.href) ? "page" : undefined}>
+                  {l.label}<span className="nav-badge">{pending}<span className="visually-hidden"> waiting</span></span></Link></li>
+              ) : item(l))}</ul>
+            {me.role === "owner" && (
+              <>
+                <p className="nav-section" id="nav-owner">Owner only</p>
+                <ul className="nav-list" aria-labelledby="nav-owner">{item({ href: "/admin/team/", label: "Magana team" })}</ul>
+              </>
+            )}
+          </>
         ) : (
           <>
             <ul className="nav-list">{links.map(item)}</ul>

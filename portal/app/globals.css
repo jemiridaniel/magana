@@ -619,3 +619,28 @@ fieldset { border: 0; margin: 0; padding: 0; }
 .btn[aria-disabled="true"] { opacity: .55; cursor: not-allowed; }
 .preview { padding: 14px 18px; border-radius: 14px; background: var(--processing-bg); margin: 0; }
 .list-plain { list-style: none; margin: 0; padding: 0; display: grid; gap: 20px; }
+
+/* ---------- Sign-in: the authenticator step (Magana team) */
+.setup-steps { margin: 0; padding-left: 24px; display: grid; gap: 10px; line-height: 1.5; }
+.setup-key { display: block; margin-top: 6px; padding: 12px 14px; border-radius: 12px; background: var(--ground); border: 2px solid var(--ink);
+  font-size: 1.25rem; letter-spacing: 1px; overflow-wrap: anywhere; }
+.backup-codes { list-style: none; margin: 0; padding: 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px;
+  border-radius: 14px; background: var(--ground); border: 2px dashed var(--ink); }
+.backup-codes code { font-size: 1.25rem; letter-spacing: 1px; }
+
+/* ---------- Magana team (owners) */
+.team-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; align-items: start; margin-top: 24px; }
+.team-add { border: 3px solid var(--green-ink); }
+.role-cards { display: grid; gap: 8px; }
+.role-card { display: flex; gap: 12px; align-items: flex-start; padding: 12px 14px; border-radius: 12px; border: 2px solid var(--ink); cursor: pointer; }
+.role-card.is-on { border: 3px solid var(--green-ink); background: var(--ready-bg); }
+.role-card input { width: 24px; height: 24px; margin: 2px 0 0; flex: none; accent-color: var(--green-ink); }
+.role-card > span { display: grid; gap: 2px; }
+.role-card > span > span { color: var(--ink-soft); font-size: .95rem; }
+.protect { background: var(--check-bg); color: var(--check-ink); }
+.protect ul { margin: 0; padding-left: 22px; display: grid; gap: 8px; line-height: 1.45; }
+.btn-danger { border-color: var(--absent-ink); color: var(--absent-ink); }
+.nav-badge { margin-left: auto; min-width: 26px; padding: 2px 8px; border-radius: 12px; background: var(--amber); color: var(--ink); font-size: .95rem; font-weight: 700; text-align: center; }
+
+/* Long emails in team pages wrap instead of scrolling the page sideways (390 px). */
+.audit li, .req, .req-checks, .req-facts dd, .team-grid, .table-wrap td { overflow-wrap: anywhere; min-width: 0; }

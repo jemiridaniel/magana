@@ -34,6 +34,36 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-26 · Magana team accounts: roles, authenticator codes, and no learner data (UNREVIEWED)
+
+> For Nurse Balogun: the team's separation from learner data (PRIVACY.md, "The Magana team's own accounts").
+
+- **Built** (`team.py`, `team_api.py`, `totp.py`, `team_setup.py`; portal "Magana team", sign-in steps; board "Magana team admin · Team members"). Real accounts replace `MAGANA_TEAM_EMAILS`.
+  - **Roles:**
+    - **Owner:** everything, including team members.
+    - **School reviewer:** decide schools, view proof files, see the log.
+    - **Support (view only):** see schools and their teachers, resend emails.
+    - The server checks the role on every endpoint.
+  - **The first owner:** made only by `python -m app.team_setup` on the server, never through the web. It refuses if an owner exists. Every change keeps at least one active owner: the last owner can't be demoted or removed.
+  - **Sign-in:** an email code, then an authenticator code (RFC 6238, written with the standard library: no new package).
+    - The first sign-in shows the key and an "open in your authenticator app" link, then 8 backup codes, once.
+    - The key is stored sealed and the backup codes as keyed hashes.
+    - A code can't be used twice. 3 wrong codes lock it for 5 minutes. 15 minutes idle signs you out.
+    - Removing a member ends their sessions at once.
+  - **One role per email,** checked in all four places: team invite, staff invite, school registration and the setup command.
+  - **Records:** every team action is in the activity log: sign-ins, authenticator set-up, invites, role changes, removals, decisions, proof views, viewing a school's teachers, resent emails. The new-school alert goes to every active Owner and School reviewer, not Support.
+- **Learner data:** a test calls **every** `/portal` and `/learner` route as a team owner, after creating a named learner with consent recorded.
+  - No response contains the learner's name, ID or phone token.
+  - Every school-side endpoint answers 401, 403, 404, 405 or 422. The learner, class, progress and consent pages answer `not_for_team`.
+  - In the portal, a team member who opens a school page is sent to their own pages. That page used to crash before the redirect (fixed).
+- **A production bug found on the way:** CORS didn't allow `PATCH`, so every PATCH from the portal was blocked by the browser and shown as "server sleeping". That included renaming a learner or class, and editing a teacher. Fixed.
+- **Tests:**
+  - Backend 476 passed (9 new team tests: setup command, the authenticator flow, replay and backup codes, lockout, the 15-minute idle limit, the roles, last owner, one role per email, the learner sweep).
+  - Portal end-to-end 44 passed. axe and 64 px on the team page, both authenticator screens and the backup codes. An Owner invites a reviewer who sets up the authenticator from the key on screen; role changed, then removed. Support is view only.
+- **Deploying it:** after this deploy no one is a team member until the first owner is made on the server (DEPLOY_AWS.md §8b, step 7).
+
+---
+
 ## 2026-10-26 · Emails, school approval and proof of school (UNREVIEWED)
 
 > For Nurse Balogun: the proof-of-school file (PRIVACY.md) and the emails' wording.

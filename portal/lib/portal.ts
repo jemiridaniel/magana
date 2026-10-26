@@ -51,10 +51,16 @@ export interface SchoolRequest {
   call_notes: string; checks: Check[]; reason: Reason | null; reason_label: string | null;
   decided_at: string | null; decided_by: string | null;
 }
-export interface Activity { action: string; school: string | null; reference: string | null; who: string; at: string; detail: Record<string, unknown> }
+export interface Activity { action: string; school: string | null; reference: string | null; target: string | null; who: string; at: string; detail: Record<string, unknown> }
 export type Me =
   | { kind: "staff"; id: string; name: string; email: string; role: Role; title: string; school: School }
-  | { kind: "team"; email: string; name: string };
+  | { kind: "team"; email: string; name: string; role: TeamRole; role_label: string };
+
+export type TeamRole = "owner" | "reviewer" | "support";
+export interface TeamMember {
+  id: string; name: string; email: string; role: TeamRole; role_label: string; can: string;
+  status: "invited" | "active" | "expired"; last_sign_in: string | null; invited_at: string | null;
+}
 
 export interface ClassInfo {
   id: string; name: string; level: string; mode: Mode; teacher_id: string | null; teacher: string | null; code: string;
@@ -126,7 +132,11 @@ export const portal = {
   requestCode: (email: string) => call<{ retry_after: number; minutes: number }>("POST", "/portal/auth/request-code", { email },
     // Only for the email's "requested from … in Nigeria": the device's time zone, no location.
     { "X-Magana-Timezone": Intl.DateTimeFormat().resolvedOptions().timeZone ?? "" }),
-  verify: (email: string, code: string) => call<{ me: Me }>("POST", "/portal/auth/verify", { email, code }),
+  verify: (email: string, code: string) =>
+    call<{ code: "signed_in"; me: Me } | { code: "totp_required" } | { code: "totp_setup"; key: string; uri: string }>(
+      "POST", "/portal/auth/verify", { email, code }),
+  totp: (body: { code?: string; backup_code?: string }) =>
+    call<{ code: "signed_in"; me: Me; backup_codes?: string[] }>("POST", "/portal/auth/totp", body),
   signOut: () => call("POST", "/portal/auth/sign-out"),
   places: () => call<{ states: Place[] }>("GET", "/portal/places"),
   register: (body: Record<string, unknown>) => call<{ school_id: string; reference: string }>("POST", "/portal/schools/register", body),
@@ -163,6 +173,15 @@ export const portal = {
   decideSchool: (id: string, body: { decision: "approve" | "reject"; checks?: Check[]; call_notes?: string; reason?: Reason }) =>
     call<{ code: string; emailed: boolean }>("POST", `/portal/admin/schools/${id}`, body),
   activity: () => call<Activity[]>("GET", "/portal/admin/activity"),
+  schoolTeachers: (id: string) => call<{ name: string; email: string; role: string; title: string; status: string }[]>(
+    "GET", `/portal/admin/schools/${id}/teachers`),
+  resendSchoolEmail: (id: string) => call<{ code: string; emailed: boolean }>("POST", `/portal/admin/schools/${id}/resend`),
+  teamMembers: () => call<TeamMember[]>("GET", "/portal/team/members"),
+  addTeamMember: (body: { email: string; name: string; role: TeamRole }) => call<{ code: string; emailed: boolean }>("POST", "/portal/team/members", body),
+  changeTeamRole: (id: string, role: TeamRole) => call<{ code: string }>("PATCH", `/portal/team/members/${id}`, { role }),
+  removeTeamMember: (id: string) => call<{ code: string }>("POST", `/portal/team/members/${id}/remove`),
+  resendTeamInvite: (id: string) => call<{ code: string }>("POST", `/portal/team/members/${id}/resend`),
+  cancelTeamInvite: (id: string) => call<{ code: string }>("POST", `/portal/team/members/${id}/cancel`),
 };
 
 export const modeLabel: Record<Mode, string> = {

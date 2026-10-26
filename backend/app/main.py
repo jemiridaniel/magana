@@ -19,7 +19,7 @@ from typing import Literal
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import asr, codes, curriculum, explain, handwriting, learner_api, pdfs, policy, portal_api, quizzes, ratelimit, safety, templates, triage, uploads_api, wa_flow
+from . import asr, codes, curriculum, explain, handwriting, learner_api, pdfs, policy, portal_api, quizzes, ratelimit, safety, templates, team_api, triage, uploads_api, wa_flow
 from .wa_client import WhatsAppClient
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
@@ -65,6 +65,7 @@ app = FastAPI(
 app.include_router(portal_api.router)
 app.include_router(learner_api.router)
 app.include_router(uploads_api.router)
+app.include_router(team_api.router)
 
 WHATSAPP_WEBHOOK = "/whatsapp/webhook"
 
@@ -108,7 +109,7 @@ async def require_api_key(request, call_next):
 app.add_middleware(
     CORSMiddleware,
     allow_origin_regex=os.environ.get("MAGANA_CORS_ORIGIN_REGEX", r"http://(localhost|127\.0\.0\.1)(:\d+)?"),
-    allow_methods=["GET", "POST", "PUT", "DELETE"],  # PUT: the portal saves changes to a quiz
+    allow_methods=["GET", "POST", "PUT", "PATCH", "DELETE"],  # PUT and PATCH: the portal saves changes
     allow_headers=["*"],
     # The portal's sign-in cookie (HttpOnly, api.magana.ng only) goes with its requests; only the
     # origins in the regex above may send it.

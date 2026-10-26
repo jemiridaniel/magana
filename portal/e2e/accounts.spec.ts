@@ -3,7 +3,8 @@
 // axe (WCAG 2.2 AA + AAA contrast), 64 px targets, the dialog's focus, the LGA combobox.
 import { expect, test } from "@playwright/test";
 import { apiUrl } from "../playwright.config";
-import { addClass, approve, designChecks, emailedCode, joinOnPhone, newSchool, registerSchool, signIn, uniqueEmail } from "./helpers";
+import { addClass, approve, designChecks, emailedCode, joinOnPhone, newSchool, registerSchool, signIn, signInTeam,
+         totpAt, uniqueEmail } from "./helpers";
 
 test("sign in: the email, then the code; a wrong code says so; both pages pass the checks", async ({ page }) => {
   const email = uniqueEmail("signin");
@@ -198,7 +199,7 @@ test("team admin: three checks unlock Approve; Don’t approve needs a reason an
   const teamEmail = info.project.name === "phone" ? "team-phone@magana.test" : "team@magana.test";
   await registerSchool(uniqueEmail("pending"), "Kano Model School");
   await registerSchool(uniqueEmail("pending2"), "Bright Future Academy");
-  await signIn(page, teamEmail).catch(() => undefined);
+  await signInTeam(page, teamEmail);
   await page.goto("/admin/");
   const kano = page.getByRole("article", { name: "Kano Model School" }).first();
   await expect(kano).toBeVisible();
@@ -248,4 +249,78 @@ test("an under-18 who changes class needs their teacher's code (the backend chec
   const tc = (await (await page.request.get(`${apiUrl}/portal/me/teacher-code`)).json()).teacher_code;
   const r = await page.request.post(`${apiUrl}/learner/change-class`, { data: { teacher_code: tc, class_code: b.code }, headers: phone });
   expect((await r.json()).class.name).toBe("JSS 2 B");
+});
+
+test("Magana team (owner): invite a reviewer, their first sign-in sets up the authenticator and shows backup codes once", async ({ page, browser }, info) => {
+  const owner = info.project.name === "phone" ? "team-phone@magana.test" : "team@magana.test";
+  await signInTeam(page, owner);
+  await page.getByRole("link", { name: "Magana team" }).click();
+  await expect(page.getByRole("heading", { level: 1, name: "Magana team" })).toBeVisible();
+  await expect(page.getByText("No access to learners’ names, progress or consent.")).toBeVisible();
+  await designChecks(page);
+  const email = uniqueEmail("reviewer").replace("@gmail.com", "@magana.test");
+  await page.getByLabel("Full name").fill("Oluremi Balogun");
+  await page.getByLabel("Email", { exact: true }).fill(email);
+  await page.getByRole("radio", { name: /School reviewer/ }).check();
+  await page.getByRole("button", { name: "Send invite" }).click();
+  await expect(page.getByRole("status").filter({ hasText: `Invitation sent to ${email}` })).toBeVisible();
+  const row = page.getByRole("row").filter({ hasText: email });
+  await expect(row).toContainText("Invited");
+
+  // The new reviewer, on their own computer.
+  const ctx = await browser.newContext();
+  const them = await ctx.newPage();
+  await them.goto(`/sign-in/?email=${encodeURIComponent(email)}`);
+  await expect(them.getByLabel("Email address")).toHaveValue(email);  // from the invitation link
+  const asked = Date.now();
+  await them.getByRole("button", { name: "Send me a code" }).click();
+  await them.getByLabel("Sign-in code").fill(await emailedCode(email, asked));
+  await them.getByRole("button", { name: "Sign in" }).click();
+  await expect(them.getByRole("heading", { name: "Set up your authenticator" })).toBeFocused();
+  await designChecks(them);
+  const key = (await them.locator(".setup-key").innerText()).replace(/\s/g, "");
+  await them.getByLabel("Authenticator code").fill("000000");
+  await them.getByRole("button", { name: "Finish setting up" }).click();
+  await expect(them.locator(".form-error")).toHaveText(/authenticator code isn’t right/);
+  await them.getByLabel("Authenticator code").fill(totpAt(key, Math.floor(Date.now() / 30_000)));
+  await them.getByRole("button", { name: "Finish setting up" }).click();
+  await expect(them.getByRole("heading", { name: "Save your backup codes" })).toBeFocused();
+  await expect(them.getByRole("list", { name: "Backup codes" }).getByRole("listitem")).toHaveCount(8);
+  await designChecks(them);
+  await them.getByRole("button", { name: "I’ve saved them" }).click();
+  await expect(them).toHaveURL(/\/admin\/?$/);
+  await expect(them.getByRole("link", { name: "Magana team" })).toHaveCount(0);  // owners only
+  await ctx.close();
+
+  await page.reload();
+  await expect(page.getByRole("row").filter({ hasText: email })).toContainText("Active");
+  await page.getByRole("row").filter({ hasText: email }).getByRole("button", { name: /^Change role/ }).click();
+  const dialog = page.getByRole("dialog", { name: /Change Oluremi Balogun’s role/ });
+  await dialog.getByRole("radio", { name: /Support \(view only\)/ }).check();
+  await designChecks(page);
+  await dialog.getByRole("button", { name: "Save" }).click();
+  await expect(page.getByRole("row").filter({ hasText: email })).toContainText("Support (view only)");
+  await page.getByRole("row").filter({ hasText: email }).getByRole("button", { name: /^Remove/ }).click();
+  await page.getByRole("dialog").getByRole("button", { name: "Remove" }).click();
+  await expect(page.getByRole("row").filter({ hasText: email })).toHaveCount(0);
+  await page.getByRole("link", { name: "Activity log" }).click();
+  await expect(page.getByText(new RegExp(`removed ${email.replace(/[.+]/g, "\\$&")}`)).first()).toBeVisible();
+});
+
+test("Support (view only): sees schools and their teachers and can resend emails, but no approve controls", async ({ page }) => {
+  await registerSchool(uniqueEmail("support-view"), "Zaria Model School");
+  await signInTeam(page, "support@magana.test");
+  const card = page.getByRole("article", { name: "Zaria Model School" }).first();
+  await expect(card).toBeVisible();
+  await expect(card.getByRole("button", { name: /^Approve school/ })).toHaveCount(0);
+  await expect(card.getByLabel("Call notes (team only)")).toHaveCount(0);
+  await card.getByRole("button", { name: /^Show teachers/ }).click();
+  await expect(card.getByText(/Mrs Folake Adebayo .* School admin/)).toBeVisible();
+  await card.getByRole("button", { name: /^Resend email/ }).click();
+  await expect(card.getByRole("status")).toHaveText("Email sent again to the principal.");
+  await expect(page.getByRole("link", { name: "Activity log" })).toHaveCount(0);
+  await designChecks(page);
+  // Learner pages aren't for the team: the portal sends them back to their own pages.
+  await page.goto("/classes/");
+  await expect(page).toHaveURL(/\/admin\/?$/);
 });

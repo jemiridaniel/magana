@@ -118,6 +118,8 @@ def db():
         try:
             if path not in _ready:
                 con.executescript(SCHEMA)
+                from . import team  # the Magana team's own accounts (team.py)
+                con.executescript(team.SCHEMA)
                 _migrate(con)
                 _ready.add(path)
             yield con

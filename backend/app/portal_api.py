@@ -1,7 +1,7 @@
 """The teacher portal's API (/portal/...): sign-in, schools, staff, classes, learners.
 
 Sign-in: email, then a 6-digit code (10 minutes) by email. Only invited emails (or the Magana
-team's, MAGANA_TEAM_EMAILS) get one. The session is an HttpOnly, Secure, SameSite=Lax cookie on
+team's accounts, team.py) get one; team members then give an authenticator code too. The session is an HttpOnly, Secure, SameSite=Lax cookie on
 api.magana.ng, ended after 30 minutes without activity (12 hours at most).
 
 Roles: a school admin invites, edits and removes teachers, reassigns classes and sees every
@@ -28,7 +28,8 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from . import accounts as A
-from . import codes, curriculum, mailer, places, proofs
+from . import codes, curriculum, mailer, places, proofs, totp
+from . import team as tm  # the Magana team's accounts (team.py); `team` below is the dependency
 from .accounts import db, iso, now, parse
 
 router = APIRouter(prefix="/portal")
@@ -55,10 +56,6 @@ def portal_url() -> str:
     return os.environ.get("MAGANA_PORTAL_URL", "https://teachers.magana.ng")
 
 
-def team_emails() -> set[str]:
-    return {e.strip().lower() for e in os.environ.get("MAGANA_TEAM_EMAILS", "").split(",") if e.strip()}
-
-
 def _token_lookup(token: str) -> str:
     return hashlib.sha256(token.encode()).hexdigest()
 
@@ -71,6 +68,11 @@ class Who:
     staff: dict | None
     school: dict | None
     email: str
+    member: dict | None = None  # a Magana team member (team.py)
+
+    @property
+    def role(self) -> str | None:
+        return self.member["role"] if self.member else None
 
     @property
     def id(self) -> str:
@@ -90,13 +92,20 @@ def _who(request: Request) -> Who:
         if s is None:
             fail(401, "not_signed_in")
         t = now()
-        if (t - parse(s["last_seen"]) > timedelta(minutes=A.IDLE_MINUTES)
+        if s["who"].startswith("team2fa:"):
+            fail(401, "totp_required")  # the email code is done, the authenticator step isn't
+        idle = tm.IDLE_MINUTES if s["who"].startswith("team:") else A.IDLE_MINUTES
+        if (t - parse(s["last_seen"]) > timedelta(minutes=idle)
                 or t - parse(s["created_at"]) > timedelta(hours=A.SESSION_MAX_HOURS)):
             con.execute("DELETE FROM sessions WHERE token_lookup = ?", (s["token_lookup"],))
             fail(401, "session_expired")
         con.execute("UPDATE sessions SET last_seen = ? WHERE token_lookup = ?", (iso(t), s["token_lookup"]))
         if s["who"].startswith("team:"):
-            return Who("team", None, None, s["who"][5:])
+            m = tm.member(con, s["who"][5:])
+            if m is None or m["status"] != "active":
+                con.execute("DELETE FROM sessions WHERE token_lookup = ?", (s["token_lookup"],))
+                fail(401, "not_signed_in")
+            return Who("team", None, None, m["email"], m)
         staff = A.row(con.execute("SELECT * FROM staff WHERE id = ?", (s["who"],)).fetchone())
         if staff is None or staff["status"] != "active":
             con.execute("DELETE FROM sessions WHERE token_lookup = ?", (s["token_lookup"],))
@@ -125,8 +134,22 @@ def admin(who: Who = Depends(staff)) -> Who:
 
 
 def team(who: Who = Depends(signed_in)) -> Who:
+    """Any Magana team member: Owner, School reviewer or Support (view only)."""
     if who.kind != "team":
         fail(403, "not_team")
+    return who
+
+
+def reviewer(who: Who = Depends(team)) -> Who:
+    """Owners and School reviewers: approve or reject schools, proof documents, the activity log."""
+    if who.role not in ("owner", "reviewer"):
+        fail(403, "team_role_needed")
+    return who
+
+
+def owner(who: Who = Depends(team)) -> Who:
+    if who.role != "owner":
+        fail(403, "team_role_needed")
     return who
 
 
@@ -166,8 +189,9 @@ class EmailIn(BaseModel):
 
 
 def _can_sign_in(con, email: str) -> bool:
-    if email in team_emails():
-        return True
+    m = tm.member_by_email(con, email)
+    if m is not None:
+        return tm.can_sign_in(m)
     s = con.execute("SELECT * FROM staff WHERE email = ? AND status != 'removed'", (email,)).fetchone()
     if s is None:
         return False
@@ -178,9 +202,10 @@ def _can_sign_in(con, email: str) -> bool:
 
 
 def _name_for(email: str) -> str | None:
-    if email in team_emails():
-        return None
     with db() as con:
+        m = tm.member_by_email(con, email)
+        if m:
+            return m["name"]
         r = con.execute("SELECT name FROM staff WHERE email = ? AND status != 'removed'", (email,)).fetchone()
     return r["name"] if r else None
 
@@ -239,8 +264,15 @@ def verify(body: VerifyIn, request: Request, response: Response) -> dict:
             fail(429 if wait else 400, "code_locked" if wait else "sign_in_code_wrong",
                  **({"retry_after": int(wait)} if wait else {}))
         con.execute("DELETE FROM login_codes WHERE email = ?", (body.email,))
-        if body.email in team_emails():
-            who = f"team:{body.email}"
+        token = secrets.token_urlsafe(32)
+        m = tm.member_by_email(con, body.email)
+        if m is not None:
+            # For the Magana team the email code is only the first step: the authenticator is next.
+            who, out = f"team2fa:{m['id']}", {"code": "totp_required"}
+            if not m["totp_confirmed_at"]:
+                secret = totp.new_secret()
+                con.execute("UPDATE team_members SET totp_sealed = ? WHERE id = ?", (tm.seal(secret), m["id"]))
+                out = {"code": "totp_setup", "key": totp.grouped(secret), "uri": totp.uri(secret, m["email"])}
         else:
             s = con.execute("SELECT * FROM staff WHERE email = ? AND status != 'removed'", (body.email,)).fetchone()
             if s is None:
@@ -248,20 +280,73 @@ def verify(body: VerifyIn, request: Request, response: Response) -> dict:
             if s["status"] == "invited":
                 con.execute("UPDATE staff SET status = 'active' WHERE id = ?", (s["id"],))
                 A.audit(con, s["school_id"], s["id"], "invite_accepted", s["id"])
-            who = s["id"]
-        token = secrets.token_urlsafe(32)
+            who, out = s["id"], None
         con.execute("INSERT INTO sessions(token_lookup, who, created_at, last_seen) VALUES (?,?,?,?)",
                     (_token_lookup(token), who, iso(t), iso(t)))
     codes.attempts.succeeded(key)
     secure = os.environ.get("MAGANA_ENV", "production") != "development"
     response.set_cookie(COOKIE, token, httponly=True, secure=secure, samesite="lax", path="/")
-    return {"code": "signed_in", "me": me(_who_from(token))}
+    return out or {"code": "signed_in", "me": me(_who_from(token))}
 
 
 def _who_from(token: str) -> Who:
     class R:  # the request's cookies, for the response to the sign-in itself
         cookies = {COOKIE: token}
     return _who(R())  # type: ignore[arg-type]
+
+
+TOTP_STEP_MINUTES = 10
+
+
+class TotpIn(BaseModel):
+    code: str = Field("", max_length=12)
+    backup_code: str = Field("", max_length=12)
+
+
+@router.post("/auth/totp")
+def verify_totp(body: TotpIn, request: Request) -> dict:
+    """The authenticator step for the Magana team. First time: the code confirms the new key and
+    the 8 backup codes are returned, once. After that: an authenticator code or a backup code.
+    3 wrong tries lock it for 5 minutes."""
+    token = request.cookies.get(COOKIE, "")
+    t = now()
+    with db() as con:
+        s = con.execute("SELECT * FROM sessions WHERE token_lookup = ?", (_token_lookup(token or "-"),)).fetchone()
+        if s is None or not s["who"].startswith("team2fa:"):
+            fail(401, "not_signed_in")
+        if t - parse(s["created_at"]) > timedelta(minutes=TOTP_STEP_MINUTES):
+            con.execute("DELETE FROM sessions WHERE token_lookup = ?", (s["token_lookup"],))
+            fail(401, "session_expired")
+        m = tm.member(con, s["who"][8:])
+        if m is None or not tm.can_sign_in(m):
+            fail(401, "not_signed_in")
+    key = f"totp:{m['id']}"
+    if (wait := codes.attempts.locked_for(key)) > 0:
+        fail(429, "code_locked", retry_after=int(wait) + 1)
+    backup = None
+    with db() as con:
+        m = tm.member(con, m["id"])
+        first = not m["totp_confirmed_at"]
+        ok = (tm.use_backup_code(con, m, body.backup_code) if body.backup_code and not first
+              else tm.check_totp(con, m, body.code))
+        if ok:
+            if first:
+                backup, stored = tm.new_backup_codes()
+                con.execute("UPDATE team_members SET totp_confirmed_at = ?, backup_codes = ? WHERE id = ?",
+                            (iso(t), stored, m["id"]))
+            con.execute("UPDATE team_members SET status = 'active', last_sign_in = ? WHERE id = ?", (iso(t), m["id"]))
+            con.execute("UPDATE sessions SET who = ?, created_at = ?, last_seen = ? WHERE token_lookup = ?",
+                        (f"team:{m['id']}", iso(t), iso(t), s["token_lookup"]))
+            A.audit(con, None, f"team:{m['email']}",
+                    "team_authenticator_set_up" if first else ("team_backup_code_used" if body.backup_code else "team_signed_in"),
+                    m["id"])
+            if m["status"] == "invited":
+                A.audit(con, None, f"team:{m['email']}", "team_invite_accepted", m["id"])
+    if not ok:
+        wait = codes.attempts.failed(key)
+        fail(429 if wait else 400, "code_locked" if wait else "totp_wrong", **({"retry_after": int(wait)} if wait else {}))
+    codes.attempts.succeeded(key)
+    return {"code": "signed_in", "me": me(_who_from(token)), **({"backup_codes": backup} if backup else {})}
 
 
 @router.post("/auth/sign-out")
@@ -277,7 +362,8 @@ def sign_out(request: Request, response: Response) -> dict:
 @router.get("/me")
 def me(who: Who = Depends(signed_in)) -> dict:
     if who.kind == "team":
-        return {"kind": "team", "email": who.email, "name": "Magana team"}
+        return {"kind": "team", "email": who.email, "name": who.member["name"], "role": who.role,
+                "role_label": tm.ROLE_LABEL[who.role]}
     school = who.school
     return {"kind": "staff", "id": who.staff["id"], "name": who.staff["name"], "email": who.email,
             "role": who.staff["role"], "title": who.staff["title"],
@@ -341,6 +427,8 @@ def register_school(body: RegisterIn, request: Request) -> dict:
     with db() as con:
         if con.execute("SELECT 1 FROM staff WHERE email = ? AND status != 'removed'", (body.email,)).fetchone():
             fail(409, "email_taken")
+        if tm.is_team_email(con, body.email):
+            fail(409, "email_is_team")  # one role per email
         sid, aid = A.new_id("sch"), A.new_id("stf")
         n = con.execute("SELECT COALESCE(MAX(ref), 1046) + 1 FROM schools").fetchone()[0]
         con.execute("INSERT INTO schools(id, name, state, lga, status, contact_name, contact_role, contact_email,"
@@ -357,7 +445,9 @@ def register_school(body: RegisterIn, request: Request) -> dict:
     place = f"{places.lga_name(body.lga)}, {places.state_name(body.state)}"
     _mail(body.email, mailer.registration_received(body.name.strip(), body.school.strip(), place, body.role,
                                                    body.phone, mailer.ref(n), t))
-    for team_email in sorted(team_emails()):
+    with db() as con:
+        alerts = tm.alert_emails(con)
+    for team_email in alerts:
         _mail(team_email, mailer.new_school_request(body.school.strip(), place, body.name.strip(), body.role, body.email,
                                                     body.phone, mailer.ref(n), t, portal_url(), bool(proof),
                                                     body.ministry_no.strip()))
@@ -437,7 +527,7 @@ class NotesIn(BaseModel):
 
 
 @router.put("/admin/schools/{school_id}/notes")
-def save_notes(school_id: str, body: NotesIn, who: Who = Depends(team)) -> dict:
+def save_notes(school_id: str, body: NotesIn, who: Who = Depends(reviewer)) -> dict:
     with db() as con:
         _pending_school(con, school_id)
         con.execute("UPDATE schools SET call_notes = ?, checks = ? WHERE id = ?",
@@ -447,7 +537,7 @@ def save_notes(school_id: str, body: NotesIn, who: Who = Depends(team)) -> dict:
 
 
 @router.get("/admin/reasons")
-def reasons(school_id: str, who: Who = Depends(team)) -> list[dict]:
+def reasons(school_id: str, who: Who = Depends(reviewer)) -> list[dict]:
     """Each reason with the email the applicant would get: the preview before sending."""
     with db() as con:
         s = A.row(con.execute("SELECT * FROM schools WHERE id = ?", (school_id,)).fetchone())
@@ -469,7 +559,7 @@ class DecisionIn(BaseModel):
 
 
 @router.post("/admin/schools/{school_id}")
-def decide_school(school_id: str, body: DecisionIn, who: Who = Depends(team)) -> dict:
+def decide_school(school_id: str, body: DecisionIn, who: Who = Depends(reviewer)) -> dict:
     """Approve only with all three checks ticked; not approving needs a reason, which the
     applicant reads. Either way the proof file is deleted and the decision is in the log."""
     if body.decision == "approve" and set(body.checks) != set(CHECKS):
@@ -496,7 +586,7 @@ def decide_school(school_id: str, body: DecisionIn, who: Who = Depends(team)) ->
 
 
 @router.get("/admin/schools/{school_id}/proof")
-def school_proof(school_id: str, who: Who = Depends(team)) -> Response:
+def school_proof(school_id: str, who: Who = Depends(reviewer)) -> Response:
     """The proof file, for the team only; never cached."""
     with db() as con:
         s = A.row(con.execute("SELECT proof_type FROM schools WHERE id = ?", (school_id,)).fetchone())
@@ -510,19 +600,22 @@ def school_proof(school_id: str, who: Who = Depends(team)) -> Response:
 
 
 @router.get("/admin/activity")
-def activity(who: Who = Depends(team), limit: int = 200) -> list[dict]:
+def activity(who: Who = Depends(reviewer), limit: int = 200) -> list[dict]:
     """Who did what to which school, and when: registrations, calls, decisions, proof views."""
     with db() as con:
         rows = con.execute(
             "SELECT a.*, s.name AS school_name, s.ref AS ref FROM audit a LEFT JOIN schools s ON s.id = a.school_id"
-            " WHERE a.action IN ('school_registered','school_call_noted','school_approved','school_rejected',"
-            "'school_proof_viewed','school_details_deleted') ORDER BY a.id DESC LIMIT ?", (min(limit, 500),)).fetchall()
+            " WHERE a.action LIKE 'school_%' OR a.action LIKE 'team_%' ORDER BY a.id DESC LIMIT ?",
+            (min(limit, 500),)).fetchall()
         names = {r["id"]: r["name"] for r in con.execute("SELECT id, name FROM staff")}
+        names.update({r["id"]: r["email"] for r in con.execute("SELECT id, email FROM team_members")})
     out = []
     for r in rows:
         actor = r["actor"] or ""
+        target = names.get(r["target"]) if r["action"].startswith("team_") else None
         out.append({"action": r["action"], "school": r["school_name"], "reference": mailer.ref(r["ref"]) if r["ref"] else None,
-                    "who": actor[5:] if actor.startswith("team:") else names.get(actor, "Magana" if actor == "system" else actor),
+                    "target": target,
+                    "who": actor[5:] if actor.startswith("team:") else names.get(actor, "Magana" if actor in ("system", "server") else actor),
                     "at": mailer.lagos_time(parse(r["at"])), "detail": json.loads(r["detail"])})
     return out
 
@@ -563,6 +656,8 @@ def invite(body: InviteIn, who: Who = Depends(admin)) -> dict:
     with db() as con:
         if con.execute("SELECT 1 FROM staff WHERE email = ? AND status != 'removed'", (body.email,)).fetchone():
             fail(409, "email_taken")
+        if tm.is_team_email(con, body.email):
+            fail(409, "email_is_team")  # one role per email
         sid = A.new_id("stf")
         _, lk, sealed = A.fresh_code(con, "staff")
         con.execute("INSERT INTO staff(id, school_id, name, email, role, title, status, invited_by, invited_at,"

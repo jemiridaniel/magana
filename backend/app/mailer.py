@@ -4,7 +4,7 @@ and plain text, replies going to support@magana.ng.
   sign_in_code            the code in the subject ("642 126 is your Magana sign-in code"),
                           when and from roughly where it was asked for
   registration_received   to the principal who registered a school
-  new_school_request      to everyone in MAGANA_TEAM_EMAILS
+  new_school_request      to every active Owner and School reviewer (team.py)
   school_approved         to the principal
   school_not_approved     to the principal, with the reason the team chose
   teacher_invitation      to an invited teacher
@@ -37,7 +37,7 @@ DEFAULT_FROM = "Magana for Teachers <no-reply@magana.ng>"
 DEFAULT_REPLY_TO = "support@magana.ng"
 LAGOS = ZoneInfo("Africa/Lagos")
 KINDS = ("sign_in_code", "registration_received", "new_school_request", "school_approved", "school_not_approved",
-         "teacher_invitation")
+         "teacher_invitation", "team_invitation")
 
 
 class MailError(Exception):
@@ -332,6 +332,32 @@ def teacher_invitation(name: str | None, school: str, inviter: str, role: str, c
                  "This invitation works for 7 days. No password needed: you'll sign in with a code sent to this email. "
                  "Not expecting this? Ignore it.")
     return Email("teacher_invitation", f"{inviter} invited you to Magana", pre, _page("Teacher invitation", pre, body), text)
+
+
+def team_invitation(name: str, inviter: str, role: str, can: str, email: str, portal_url: str) -> Email:
+    """To a new Magana team member (not a school): what the role can do, and the extra protection."""
+    link = f"{portal_url}/sign-in/?email={email}"
+    steps = ["Sign in with this email: we send you a 6-digit code.",
+             "Set up an authenticator app (Google Authenticator, Microsoft Authenticator, Authy or 2FAS). "
+             "We show you 8 backup codes once: keep them somewhere safe.",
+             "Every sign-in after that asks for an authenticator code too."]
+    body = (f'<p style="margin:0 0 18px"><span style="display:inline-block;padding:4px 12px;border-radius:12px;'
+            f'background:#FFF1D6;color:#4A2800;font-size:15px;font-weight:700">Magana staff only</span></p>'
+            + _h1("You’re invited to the Magana team")
+            + _p(f"Hello {escape(name)}, <b>{escape(inviter)}</b> has added you to the team that runs Magana.")
+            + _rows([("Your role", role), ("You can", can)]) + '<div style="height:18px"></div>'
+            + '<p style="margin:0 0 10px"><b>Your first sign-in</b></p>' + _list([escape(x) for x in steps])
+            + f'<p style="margin:18px 0">{_button("Accept and sign in", link)}</p>'
+            + _p("Team accounts never see learners’ names, progress or consent. This invitation works for 7 days. "
+                 "Not expecting it? Ignore this email.", small=True))
+    pre = f"{inviter} added you as {role}."
+    text = _text(f"Hello {name}, {inviter} has added you to the team that runs Magana.",
+                 f"Your role: {role}\nYou can: {can}",
+                 "Your first sign-in\n" + "\n".join(f"{i}. {x}" for i, x in enumerate(steps, 1)),
+                 f"Accept and sign in: {link}",
+                 "Team accounts never see learners' names, progress or consent. This invitation works for 7 days. "
+                 "Not expecting it? Ignore this email.")
+    return Email("team_invitation", "You’re invited to the Magana team", pre, _page("Team invitation", pre, body, team=True), text)
 
 
 # ---------- sending

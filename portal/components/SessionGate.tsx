@@ -61,6 +61,9 @@ export default function SessionGate({ children }: { children: React.ReactNode })
       </main>
     );
   }
+  if (me.kind === "team" && !pathname.startsWith("/admin")) {
+    return null;  // school pages (learners, classes) aren't for the team: on the way to /admin/
+  }
   if (me.kind === "staff" && me.school.status !== "approved") {
     return <SchoolWaiting name={me.name} school={me.school} />;
   }

@@ -87,6 +87,17 @@ def unseal(sealed: str) -> str:
     return AESGCM(_derived("encrypt")).decrypt(raw[:12], raw[12:], b"magana-code").decode()
 
 
+def seal_with(purpose: str, text: str) -> str:
+    """Encrypt any short secret (an authenticator key) with its own derived key."""
+    nonce = secrets.token_bytes(12)
+    return base64.b64encode(nonce + AESGCM(_derived(f"encrypt-{purpose}")).encrypt(nonce, text.encode(), purpose.encode())).decode()
+
+
+def unseal_with(purpose: str, sealed: str) -> str:
+    raw = base64.b64decode(sealed)
+    return AESGCM(_derived(f"encrypt-{purpose}")).decrypt(raw[:12], raw[12:], purpose.encode()).decode()
+
+
 def spaced(code: str) -> str:
     """"482915" → "482 915", as the portal shows it."""
     return f"{code[:3]} {code[3:]}"

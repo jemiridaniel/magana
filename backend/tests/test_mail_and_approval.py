@@ -11,7 +11,7 @@ from PIL import Image
 
 from app import accounts, mailer, proofs
 from app.main import app
-from test_accounts import APPROVE, PRINCIPAL, TEAM, fresh, lagos_ikeja, outbox, sign_in  # noqa: F401
+from test_accounts import APPROVE, PRINCIPAL, TEAM, fresh, lagos_ikeja, make_team, outbox, sign_in  # noqa: F401
 
 T = datetime(2026, 10, 26, 8, 36, tzinfo=timezone.utc)  # Mon 26 Oct, 09:36 in Lagos
 
@@ -31,6 +31,8 @@ def all_kinds():
 
 def test_six_emails_each_html_and_text_with_the_same_footer_and_no_images():
     emails = all_kinds()
+    emails.append(mailer.team_invitation("Remi", "Daniel", "School reviewer", "Approve or reject schools",
+                                         "remi@example.com", "https://teachers.magana.ng"))
     assert [e.kind for e in emails] == list(mailer.KINDS)
     for e in emails:
         assert e.html.startswith("<!doctype html>") and 'lang="en"' in e.html
@@ -116,12 +118,14 @@ def kinds_to(tmp, to):
     return [m["kind"] for m in outbox(tmp, to)]
 
 
-def test_registering_emails_the_principal_and_every_team_member(fresh, monkeypatch):
-    monkeypatch.setenv("MAGANA_TEAM_EMAILS", f"{TEAM},second@magana.test")
+def test_registering_emails_the_principal_and_every_owner_and_reviewer(fresh):
+    make_team("second@magana.test", "reviewer")
+    make_team("support@example.org", "support")
     r = register(ministry_no="LSMOE/PS/2019/0412")
     assert r.status_code == 201 and r.json()["reference"] == "SCH-1047"
     assert kinds_to(fresh, PRINCIPAL) == ["registration_received"]
     assert kinds_to(fresh, TEAM) == ["new_school_request"] and kinds_to(fresh, "second@magana.test") == ["new_school_request"]
+    assert kinds_to(fresh, "support@example.org") == []  # Support (view only) isn't alerted
     [team_mail] = outbox(fresh, TEAM)
     assert "LSMOE/PS/2019/0412" in team_mail["text"] and team_mail["reply_to"] == "support@magana.ng"
 
@@ -186,7 +190,7 @@ def test_the_proof_is_encrypted_team_only_and_deleted_once_decided(fresh):
     team.post(f"/portal/admin/schools/{sid}", json=APPROVE)
     assert not (fresh / "proofs" / f"{sid}.bin").exists()
     assert team.get(f"/portal/admin/schools/{sid}/proof").status_code == 404
-    log = team.get("/portal/admin/activity").json()
+    log = [a for a in team.get("/portal/admin/activity").json() if a["action"].startswith("school_")]
     assert [a["action"] for a in log][:3] == ["school_approved", "school_proof_viewed", "school_registered"]
     assert log[0]["who"] == TEAM and log[0]["reference"] == "SCH-1047"
 

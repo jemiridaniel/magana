@@ -106,6 +106,14 @@ Magana marks lines that look handwritten. It reads their numbers only when two s
 
 A teacher sees only their own classes; a school's admins see the whole school. The Magana team sees school registrations, to confirm them, but not learners. Teachers never see the pages learners photograph or the questions they ask.
 
+## The Magana team's own accounts
+
+The people who run Magana sign in to their own pages with team accounts: Owner, School reviewer or Support (view only).
+- We keep each team member's name, email, role, when they last signed in, and every action they took (the activity log).
+- Sign-in needs an email code **and** an authenticator app code. The app's key is stored encrypted and the 8 backup codes only as keyed hashes. Team members are signed out after 15 minutes without activity.
+- **Team accounts can't see learners' names, progress or consent.** They see schools and their teachers only, and the server enforces it.
+- One role per email: a team member can't also be a teacher or school admin.
+
 ## Who else handles your data
 
 We use a few service providers. They handle data only to provide their service to us:

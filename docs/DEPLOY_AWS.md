@@ -271,9 +271,19 @@ Teachers sign in with a 6-digit code sent from **no-reply@magana.ng** through Am
    MAGANA_MAIL=ses
    MAIL_FROM=Magana for Teachers <no-reply@magana.ng>
    MAGANA_PORTAL_URL=https://teachers.magana.ng
-   MAGANA_TEAM_EMAILS=<your email>          # the Magana team: approves new schools at /admin/
+   MAIL_REPLY_TO=support@magana.ng
    ```
-   `MAGANA_CODE_KEY` (which keys the class, session and teacher codes) is made by the deploy itself the first time (`deploy/update.sh`). Never change it later: every code would stop working.
+   **Then make yourself the first Magana team owner** (once, on the server; there is no web page for it):
+   ```bash
+   cd ~/srv/magana && sudo docker compose -f docker-compose.prod.yml exec magana \
+       python -m app.team_setup --email you@example.com --name "Your Name"
+   ```
+   It refuses if an owner already exists. Sign in at teachers.magana.ng with that email: the first sign-in sets up an
+   authenticator app (Google Authenticator, Microsoft Authenticator, Authy or 2FAS) and shows 8 backup codes once.
+   After that, owners add School reviewers and Support in the portal (**Magana team**). A team email can't also be a
+   teacher or school admin, so use a different email for your test school. `MAGANA_TEAM_EMAILS` is no longer used.
+
+   `MAGANA_CODE_KEY` (which keys the class, session and teacher codes, and seals the authenticator keys) is made by the deploy itself the first time (`deploy/update.sh`). Never change it later: every code would stop working.
 
 ## 9. Switching to PaddleOCR (one line in .env)
 
