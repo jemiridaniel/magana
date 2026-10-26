@@ -2347,4 +2347,8 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get msg_offline_no_confidence =>
       'This phone can\'t say how sure it is of each word, so every number is read as “unclear number”. Check important papers when you are online, or with a person.';
+
+  @override
+  String get msg_daily_limit =>
+      'You\'ve read a lot of pages today. Magana can read more tomorrow. Pages you saved are in My library.';
 }

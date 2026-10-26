@@ -112,3 +112,38 @@ def test_the_signed_in_portal_is_limited_per_session_not_per_shared_ip(monkeypat
     # Sign-in keeps the IP limit, cookie or not.
     assert all(lim.check("/portal/auth/request-code", "10.0.0.2", None, "x") == 0 for _ in range(3))
     assert lim.check("/portal/auth/request-code", "10.0.0.2", None, "x") > 0
+
+
+# ---------- daily caps on reading, ASR and Explain
+
+def test_a_device_is_capped_per_day_and_told_to_come_back_tomorrow(monkeypatch):
+    wall = Clock()
+    wall.now = 1_793_000_000.0  # some time on a Lagos day
+    lim = ratelimit.RateLimiter(wall=wall)
+    monkeypatch.setenv("RATE_HEAVY_DEVICE_PER_DAY", "3")
+    monkeypatch.setenv("RATE_HEAVY_IP_PER_DAY", "100")
+    assert [lim.check_daily("/read", "1.2.3.4", DEV) for _ in range(3)] == [0.0, 0.0, 0.0]
+    wait = lim.check_daily("/read", "1.2.3.4", DEV)
+    local = wall.now + 3600
+    assert wait == 86400 - local % 86400  # until midnight in Lagos
+    assert lim.check_daily("/read", "1.2.3.4", "another-device-123") == 0.0  # other phones aren't
+    assert lim.check_daily("/library", "1.2.3.4", DEV) == 0.0  # light calls aren't capped
+    wall.now += wait + 1  # the next day
+    assert lim.check_daily("/read", "1.2.3.4", DEV) == 0.0
+
+
+def test_an_ip_is_capped_per_day_whatever_device_ids_it_sends(monkeypatch):
+    lim = ratelimit.RateLimiter(wall=lambda: 1_793_000_000.0)
+    monkeypatch.setenv("RATE_HEAVY_IP_PER_DAY", "5")
+    results = [lim.check_daily("/explain", "5.6.7.8", f"made-up-device-{i:04d}") for i in range(6)]
+    assert results[:5] == [0.0] * 5 and results[5] > 0
+
+
+def test_the_daily_cap_answers_daily_limit(monkeypatch):
+    monkeypatch.setattr(ratelimit, "limiter", ratelimit.RateLimiter())
+    monkeypatch.setenv("RATE_HEAVY_DEVICE_PER_DAY", "1")
+    headers = {"X-Magana-Device": DEV}
+    client.post("/read", headers=headers)  # counted (whatever the answer)
+    r = client.post("/read", headers=headers)
+    assert r.status_code == 429 and r.json() == {"detail": {"code": "daily_limit"}}
+    assert 0 < int(r.headers["retry-after"]) <= 86400

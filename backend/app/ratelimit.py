@@ -4,8 +4,13 @@ Token buckets in memory, one process (the backend runs one worker). Limits per m
 the environment:
   RATE_IP_PER_MIN (120) and RATE_DEVICE_PER_MIN (60) for every call;
   RATE_HEAVY_IP_PER_MIN (30) and RATE_HEAVY_DEVICE_PER_MIN (12) for /read, /asr and /explain.
+Daily caps on the same heavy calls, counted per Lagos calendar day: RATE_HEAVY_DEVICE_PER_DAY
+(300) per device and RATE_HEAVY_IP_PER_DAY (3000) per IP (a school's learners often share one
+connection). Over a cap: 429 "daily_limit" until midnight in Lagos.
 The device is the app's random install ID (X-Magana-Device); without one, only the IP limits
 apply. Behind Caddy the IP comes from X-Forwarded-For (uvicorn --proxy-headers).
+The app key (X-Magana-Key) is an app identifier, not a secret: it ships in the APK, the IPA and
+the PWA. These limits, not the key, are what protect the server (docs/DEPLOY_AWS.md, "API key").
 
 The signed-in teacher portal is limited per session instead (RATE_PORTAL_SESSION_PER_MIN,
 300): a school's teachers often share one internet connection, and one portal page makes
@@ -38,10 +43,34 @@ class Bucket:
     updated: float
 
 
+LAGOS_OFFSET_S = 3600  # Africa/Lagos is UTC+1 all year (no daylight saving)
+
+
 @dataclass
 class RateLimiter:
     clock: callable = time.monotonic
     buckets: dict[str, Bucket] = field(default_factory=dict)
+    wall: callable = time.time
+    days: dict[str, tuple[int, int]] = field(default_factory=dict)  # key -> (Lagos day number, count)
+
+    def check_daily(self, path: str, ip: str, device: str | None) -> float:
+        """0 if this heavy call is within today's caps (and counts it), else the seconds until
+        midnight in Lagos. Light calls are never capped per day."""
+        if path not in HEAVY_PATHS:
+            return 0.0
+        local = self.wall() + LAGOS_OFFSET_S
+        today = int(local // 86400)
+        caps = [(f"ip-day:{ip}", _limit("RATE_HEAVY_IP_PER_DAY", 3000))]
+        if device and _DEVICE.match(device):
+            caps.append((f"dev-day:{device}", _limit("RATE_HEAVY_DEVICE_PER_DAY", 300)))
+        counts = [(k, cap, self.days.get(k, (today, 0))) for k, cap in caps]
+        if any(day == today and n >= cap for _, cap, (day, n) in counts):
+            return 86400 - local % 86400
+        for k, _, (day, n) in counts:
+            self.days[k] = (today, (n if day == today else 0) + 1)
+        if len(self.days) > 100_000:
+            self.days = {k: v for k, v in self.days.items() if v[0] == today}
+        return 0.0
 
     def take(self, key: str, per_minute: int) -> float:
         """Spend one token; 0 if allowed, else the seconds until one is free."""

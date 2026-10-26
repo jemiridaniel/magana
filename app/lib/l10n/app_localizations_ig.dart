@@ -2346,4 +2346,8 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get msg_offline_no_confidence =>
       'Ekwentị a enweghị ike ịkọ otú o si ji n\'aka banyere okwu ọ bụla, ya mere a na-agụ nọmba ọ bụla dị ka “nọmba edoghị anya”. Lelee akwụkwọ ndị dị mkpa mgbe ị nọ n\'ịntanetị, ma ọ bụ ya na mmadụ.';
+
+  @override
+  String get msg_daily_limit =>
+      'Ị gụọla ọtụtụ peeji taa. Magana nwere ike ịgụkwu echi. Peeji ndị ị chekwara dị n\'Ọbá akwụkwọ m.';
 }

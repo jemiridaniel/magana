@@ -13,6 +13,18 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-26 · The app key is an app identifier: daily caps, rotation, secret checks; build 0.1.0+6 (APK and IPA)
+
+- **Decision:** the APK, the .ipa and the PWA carry the same public app key. It is treated as an app identifier, not a secret.
+- **What protects the server:** the limits that already existed per minute (per IP and per phone), plus new daily caps on reading, speech and Explain. The caps are 300 a day per phone and 3,000 a day per IP; over one, the app says "You've read a lot of pages today…" (`daily_limit`). The caps are in memory, so a restart resets them.
+- **Rotating the key:** a new key can be set while the old one keeps working, for up to 14 days (`*_PREVIOUS`, `*_PREVIOUS_UNTIL`). A missing date, or one more than 14 days away, refuses the old key. Steps are in docs/DEPLOY_AWS.md §8d.
+- **Tests:** `test_api_key.py` (3 new), `test_ratelimit.py` (3 new), `test_bundle_secrets.py` (3).
+- **Builds checked:**
+  - **APK** (`app-arm64-v8a-release.apk`, 35,225,883 bytes) and **IPA** (`Magana.ipa`, 24,034,617 bytes): the compiled app code holds `https://api.magana.ng` (3 times) and the app key (once), and no emulator or localhost address.
+  - `scripts/check_bundle_secrets.py` found no secret in the APK, the IPA or the PWA (`app/build/web`).
+  - It checks 9 patterns (AWS, private keys, Hugging Face, OpenAI-style, GitHub, Google, Slack, Meta tokens), 7 names of server secrets, and the 6 secret values kept on this Mac.
+  - The server's own secret values (Ibà, Explain, WhatsApp) aren't on this Mac, so they were checked by pattern and name only. Pass a copy of the server's `.env` with `--env` to check the values too.
+
 ## 2026-10-26 · iOS: first Ad Hoc build (UNREVIEWED, not yet on an iPhone)
 
 - **Set up:**

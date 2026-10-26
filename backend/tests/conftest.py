@@ -24,5 +24,6 @@ def fresh_rate_limits(monkeypatch):
     from app import ratelimit
 
     monkeypatch.setattr(ratelimit, "limiter", ratelimit.RateLimiter())
-    for name in ("RATE_IP_PER_MIN", "RATE_DEVICE_PER_MIN", "RATE_HEAVY_IP_PER_MIN", "RATE_HEAVY_DEVICE_PER_MIN"):
+    for name in ("RATE_IP_PER_MIN", "RATE_DEVICE_PER_MIN", "RATE_HEAVY_IP_PER_MIN", "RATE_HEAVY_DEVICE_PER_MIN",
+                 "RATE_HEAVY_IP_PER_DAY", "RATE_HEAVY_DEVICE_PER_DAY"):
         monkeypatch.setenv(name, "100000")

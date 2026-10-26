@@ -15,6 +15,7 @@ String messageFor(
   'cut_off_left' => l.msg_cut_off_left,
   'cut_off_right' => l.msg_cut_off_right,
   'letters_ha' => l.msg_letters_ha,
+  'daily_limit' => l.msg_daily_limit,
   'offline_no_confidence' => l.msg_offline_no_confidence,
   'letters_yo' => l.msg_letters_yo,
   'letters_ig' => l.msg_letters_ig,

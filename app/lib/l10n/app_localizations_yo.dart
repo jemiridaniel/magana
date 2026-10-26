@@ -2348,4 +2348,8 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get msg_offline_no_confidence =>
       'Fóònù yìí kò lè sọ bí ó ṣe dá a lójú tó nípa ọ̀rọ̀ kọ̀ọ̀kan, nítorí náà gbogbo nọ́ńbà ni a ń kà sí “nọ́ńbà tí kò ṣe kedere”. Ṣàyẹ̀wò àwọn ìwé pàtàkì nígbà tí o bá wà lórí íńtánẹ́ẹ̀tì, tàbí pẹ̀lú ẹnìkan.';
+
+  @override
+  String get msg_daily_limit =>
+      'O ti ka ọ̀pọ̀ ojú-ìwé lónìí. Magana lè ka sí i lọ́la. Àwọn ojú-ìwé tí o fi pamọ́ wà nínú Ilé-ìkàwé mi.';
 }

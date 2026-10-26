@@ -309,6 +309,40 @@ The Activity log then shows "Email undeliverable · b***@simulator.amazonses.com
 **Taking an address off the list** (the person says their mailbox works again): on the server,
 `sudo docker compose -f docker-compose.prod.yml exec magana python -m app.ses_events --clear someone@example.com`, and remove it in **SES → Configuration → Suppression list**. `--mark` stops sending to an address by hand.
 
+## 8d. The app key, rate limits and rotating the key
+
+**The app key is an app identifier, not a secret.** `MAGANA_API_KEY` is built into the APK and the iPhone .ipa. The PWA and portal carry it, or `MAGANA_WEB_API_KEY`. Anyone can read it from those files. It keeps out casual callers and bots. What protects the server are the limits (`backend/app/ratelimit.py`, all settable in `.env`):
+
+| Limit | Default | Applies to |
+|---|---|---|
+| `RATE_IP_PER_MIN` / `RATE_DEVICE_PER_MIN` | 120 / 60 a minute | every call |
+| `RATE_HEAVY_IP_PER_MIN` / `RATE_HEAVY_DEVICE_PER_MIN` | 30 / 12 a minute | reading (`/read`), speech (`/asr`), Explain |
+| `RATE_HEAVY_DEVICE_PER_DAY` | 300 a day per phone | the same heavy calls |
+| `RATE_HEAVY_IP_PER_DAY` | 3,000 a day per IP (a school shares one) | the same heavy calls |
+
+- Over a minute limit, the app says "Magana is busy right now".
+- Over a daily cap, it says "You've read a lot of pages today. Magana can read more tomorrow." The cap resets at midnight, Lagos time. The counts are in memory, so a restart resets them.
+
+**Real secrets never go in an app.** These are AWS (the server uses its IAM role; there are no keys), SES (the same role), Ibà, Explain, WhatsApp and `MAGANA_CODE_KEY`. Before sharing an APK, IPA or PWA build, run:
+```bash
+backend/.venv/bin/python scripts/check_bundle_secrets.py <apk> <ipa> app/build/web [--env <a copy of the server's .env>]
+```
+It refuses AWS keys, private keys and model or WhatsApp tokens, the names of the server's secrets, and the secret values kept on this Mac. `scripts/build_ios_adhoc.sh` runs it on every .ipa.
+
+**Rotating the key without breaking installed apps** (old and new keys both work for up to 14 days):
+1. Make a new key: `python3 -c "import secrets; print(secrets.token_urlsafe(24))"`.
+2. On the server, in `~/srv/magana/.env`:
+   ```bash
+   MAGANA_API_KEY_PREVIOUS=<the current key>
+   MAGANA_API_KEY_PREVIOUS_UNTIL=<today + 14 days, e.g. 2026-11-09>
+   MAGANA_API_KEY=<the new key>
+   ```
+   Then `sudo docker compose -f docker-compose.prod.yml up -d`. The PWA served by the server gets the new key on the next deploy.
+3. Put the new key in `~/.magana/app.env`. Build and share a new APK and .ipa (`scripts/build-apk.sh`, `scripts/build_ios_adhoc.sh`), and ask testers to update.
+4. After the date, delete the two `_PREVIOUS` lines. Apps still on the old key then get "bad_api_key".
+
+The web key rotates the same way, with `MAGANA_WEB_API_KEY_PREVIOUS` and `MAGANA_WEB_API_KEY_PREVIOUS_UNTIL`; also update the GitHub secret `MAGANA_WEB_API_KEY`. A date more than 14 days away, or a missing date, means the old key is refused at once (`main.accepted_keys`).
+
 ## 9. Switching to PaddleOCR (one line in .env)
 
 > **Measure before real users.** Every number is now re-read from its own crop in PaddleOCR mode too, by Tesseract. The backend runs a start-up self-test and **refuses to start** if any number isn't re-read (docs/FINDINGS.md). PaddleOCR's memory use on 4 GiB and its real word positions have **not been measured** yet: check `docker stats` and read a few test pages first.

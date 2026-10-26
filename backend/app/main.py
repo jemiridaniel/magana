@@ -6,6 +6,7 @@ import hmac
 import json
 import io
 from contextlib import asynccontextmanager
+from datetime import date, datetime, timedelta, timezone
 from functools import lru_cache
 import os
 
@@ -86,24 +87,49 @@ async def rate_limit(request, call_next):
         if wait:
             return JSONResponse({"detail": {"code": "too_many_requests"}}, status_code=429,
                                 headers={"Retry-After": str(max(1, round(wait)))})
+        wait = ratelimit.limiter.check_daily(request.url.path, ip, request.headers.get("x-magana-device"))
+        if wait:
+            return JSONResponse({"detail": {"code": "daily_limit"}}, status_code=429,
+                                headers={"Retry-After": str(max(1, round(wait)))})
     return await call_next(request)
+
+
+# Rotating a key without breaking installed apps: put the old key in *_PREVIOUS and a date in
+# *_PREVIOUS_UNTIL (at most 14 days on); both keys work until the end of that day (Lagos time).
+KEY_GRACE_DAYS = 14
+
+
+def accepted_keys(today: date | None = None) -> list[str]:
+    """The app keys this server takes now: the APK/IPA key, the web key, and each one's previous
+    key until its PREVIOUS_UNTIL date. Keys are app identifiers, not secrets (ratelimit.py)."""
+    today = today or (datetime.now(timezone.utc) + timedelta(hours=1)).date()
+    keys = []
+    for name in ("MAGANA_API_KEY", "MAGANA_WEB_API_KEY"):
+        if current := os.environ.get(name, ""):
+            keys.append(current)
+        previous = os.environ.get(f"{name}_PREVIOUS", "")
+        until = os.environ.get(f"{name}_PREVIOUS_UNTIL", "")
+        try:
+            until_day = date.fromisoformat(until)
+        except ValueError:
+            until_day = None  # no date, no grace: the old key is refused
+        if previous and until_day and today <= until_day and (until_day - today).days <= KEY_GRACE_DAYS:
+            keys.append(previous)
+    return keys
 
 
 @app.middleware("http")
 async def require_api_key(request, call_next):
-    """MAGANA_API_KEY (set on the server) must come with every request as X-Magana-Key.
-    /health stays open for the load balancer and uptime checks; CORS preflights pass.
-    Unset (local development): no key needed. The key ships inside the app, so it keeps
-    out casual callers and bots, not a determined attacker."""
+    """An app key must come with every request as X-Magana-Key: the APK and IPA carry
+    MAGANA_API_KEY, the web app and portal MAGANA_WEB_API_KEY, and during a rotation the
+    previous keys still work (accepted_keys). /health stays open for uptime checks; CORS
+    preflights pass. Unset (local development): no key needed. The key keeps out casual
+    callers and bots, not a determined attacker: the rate limits and daily caps do that."""
     key = os.environ.get("MAGANA_API_KEY", "")
-    # The web app and portal (Cloudflare Pages, built by GitHub Actions) carry their own key,
-    # MAGANA_WEB_API_KEY: it is public in their JavaScript anyway, so it can be rotated without
-    # touching the APKs, and the APK key never goes to GitHub.
-    keys = [k for k in (key, os.environ.get("MAGANA_WEB_API_KEY", "")) if k]
-    # The WhatsApp webhook is called by Meta, which proves itself with a signature instead.
+    # The WhatsApp webhook and SES events are called by Meta and Amazon, which sign instead.
     if key and request.method != "OPTIONS" and request.url.path not in ("/health", WHATSAPP_WEBHOOK, SES_EVENTS):
         sent = request.headers.get("x-magana-key", "").encode()
-        if not any(hmac.compare_digest(sent, k.encode()) for k in keys):
+        if not any(hmac.compare_digest(sent, k.encode()) for k in accepted_keys()):
             return JSONResponse({"detail": {"code": "bad_api_key"}}, status_code=401)
     return await call_next(request)
 

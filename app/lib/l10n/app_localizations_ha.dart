@@ -2350,4 +2350,8 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get msg_offline_no_confidence =>
       'Wannan waya ba za ta iya faɗin tabbacinta kan kowace kalma ba, don haka ana karanta kowace lamba a matsayin “lamba mara tabbas”. Duba muhimman takardu idan kana kan intanet, ko tare da wani.';
+
+  @override
+  String get msg_daily_limit =>
+      'Ka karanta shafuka da yawa yau. Magana za ta iya karanta ƙari gobe. Shafukan da ka ajiye suna cikin Ɗakin karatuna.';
 }

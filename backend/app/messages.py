@@ -36,6 +36,7 @@ ENGLISH = {
     "audio_too_long": "That recording is too long. Please say a short answer.",
     "unreadable_audio": "I couldn't hear that recording. Please try again.",
     "too_many_requests": "Magana is busy right now. Please wait a minute and try again.",
+    "daily_limit": "You've read a lot of pages today. Magana can read more tomorrow. Pages you saved are in My library.",
     "unknown_tier": "Please set up Magana again: your age group wasn't recognised.",
     "not_allowed_for_tier": "This isn't available on this account.",
     "consent_required": "Learners aged 13 to 17 need a parent's or guardian's consent first.",

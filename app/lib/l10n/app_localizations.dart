@@ -3809,6 +3809,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This phone can\'t say how sure it is of each word, so every number is read as “unclear number”. Check important papers when you are online, or with a person.'**
   String get msg_offline_no_confidence;
+
+  /// No description provided for @msg_daily_limit.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve read a lot of pages today. Magana can read more tomorrow. Pages you saved are in My library.'**
+  String get msg_daily_limit;
 }
 
 class _AppLocalizationsDelegate
