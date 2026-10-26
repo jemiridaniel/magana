@@ -56,6 +56,7 @@ android {
             // Never the debug key: testers could not install later updates over a
             // debug-signed build, and Play would refuse it (checked below).
             signingConfig = signingConfigs.findByName("release")
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
     }
 }

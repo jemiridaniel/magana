@@ -67,6 +67,9 @@ class ReadItem {
     this.codes = const [],
     this.where = '',
     this.page,
+    this.column = 1,
+    this.heading = false,
+    this.letterMarks = const {},
   });
 
   final ItemKind kind;
@@ -80,6 +83,11 @@ class ReadItem {
   final List<String> codes; // backend warning codes for this item
   final String where; // faint region: top | middle | bottom
   final int? page; // a PDF's page number (1-based); null for a photo
+  final int
+  column; // 1, 2, ...; 0 when the line runs across the columns (a title)
+  final bool heading; // the backend found a heading (taller or bold text)
+  final Set<int>
+  letterMarks; // words that may have lost a special letter (never changed)
 
   /// The first item on a new PDF page: the reader says "Page 2 of 13" first.
   bool pageStart = false;
@@ -109,7 +117,21 @@ class ReadResult {
     required this.items,
     this.json,
     this.pageCount = 1,
+    this.columns = 1,
+    this.pageLanguage,
+    this.offline = false,
   });
+
+  /// Text columns on the page (the backend reads column 1, then column 2).
+  final int columns;
+
+  /// "ha", "yo" or "ig" when the page is in that language (letter check, board 5d).
+  final String? pageLanguage;
+
+  /// Read on this phone without the server (board 5e): basic reading only.
+  final bool offline;
+
+  int get letterMarkCount => items.fold(0, (n, i) => n + i.letterMarks.length);
 
   /// Pages in a PDF; 1 for a photo.
   final int pageCount;
@@ -141,6 +163,13 @@ class ReadResult {
       }
     }
 
+    final marks = <int, Set<int>>{};
+    for (final m in list(json['letter_marks'])) {
+      marks
+          .putIfAbsent(m['block_index'] as int, () => {})
+          .add(m['word_index'] as int);
+    }
+
     final lines = list(json['lines']);
     final items = <ReadItem>[];
     for (var i = 0; i < lines.length; i++) {
@@ -159,6 +188,9 @@ class ReadResult {
           unclearWords: unclear[i] ?? const {},
           codes: lineCodes[i] ?? const [],
           page: lines[i]['page'] as int?,
+          column: lines[i]['column'] as int? ?? 1,
+          heading: lines[i]['heading'] == true,
+          letterMarks: marks[i] ?? const {},
         ),
       );
     }
@@ -228,10 +260,19 @@ class ReadResult {
       );
     }
 
-    // Dart's sort is not stable, so break ties by original position.
+    // Dart's sort is not stable, so break ties by original position. A page in
+    // columns keeps the backend's line order (column 1, then column 2), which
+    // sorting by height would undo; its tables and faint bands follow.
+    final columns = json['columns'] as int? ?? 1;
     final indexed = items.indexed.toList()
       ..sort(
-        (a, b) => a.$2.top != b.$2.top
+        (a, b) => columns > 1
+            ? (a.$2.kind == ItemKind.line) != (b.$2.kind == ItemKind.line)
+                  ? (a.$2.kind == ItemKind.line ? -1 : 1)
+                  : a.$2.kind == ItemKind.line
+                  ? a.$1.compareTo(b.$1)
+                  : a.$2.top.compareTo(b.$2.top)
+            : a.$2.top != b.$2.top
             ? a.$2.top.compareTo(b.$2.top)
             : a.$1.compareTo(b.$1),
       );
@@ -249,6 +290,9 @@ class ReadResult {
       items: sorted,
       json: json,
       pageCount: pageCount,
+      columns: columns,
+      pageLanguage: json['page_language'] as String?,
+      offline: json['offline'] == true,
     );
   }
 }

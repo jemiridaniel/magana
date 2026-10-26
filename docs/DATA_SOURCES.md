@@ -69,6 +69,11 @@ Written permission from teachers, schools or publishers. Keep the signed form or
 | Source ID | Person | Organisation / school | Material covered | Permission given (date) | Evidence | Restrictions | Logged by |
 |---|---|---|---|---|---|---|---|
 | S13 | [Teacher name] (example) | [School] | Biology & Maths notes, SS2 | 2026-11-02 | Signed form in team drive | Blank copies only; credit by name | Daniel |
+| S35 | Wikipedia in Hausa, Yorùbá and Igbo | Public text (encyclopaedia) | Hausa, Yorùbá, Igbo | https://ha.wikipedia.org · https://yo.wikipedia.org · https://ig.wikipedia.org | CC BY-SA 4.0 | Verified 26 Oct 2026 | Yes, share-alike | 10 article extracts per language for the letter test (benchmark/letters/, with each article's link); word frequencies from the dumps of 26 Oct 2026 for the word lists (content/word_lists/) | Text from Hausa, Yorùbá and Igbo Wikipedia, CC BY-SA 4.0 | Daniel | In use: 30 extracts; 3 word lists | 0 | 0 | Test pages are drawn, not photographed: not in the capture log. Word lists are derived works, CC BY-SA 4.0; not reviewed by native speakers. |
+| S36 | English Wiktionary: Hausa, Yoruba and Igbo entries (kaikki.org extracts; Category:Igbo lemmas) | Public dictionary | Hausa, Yorùbá, Igbo | https://kaikki.org/dictionary/ · https://en.wiktionary.org/wiki/Category:Igbo_lemmas | CC BY-SA 4.0 (and GFDL) | Verified 26 Oct 2026 | Yes, share-alike | Words with special letters for the letter check (content/word_lists/) | Wiktionary contributors, CC BY-SA 4.0; extracts by kaikki.org | Daniel | In use: 3 word lists | 0 | 0 | Kept only where the spelling is at least 25% of the word's uses in that Wikipedia. |
+| S37 | Team-written two-column textbook-style pages | Own content | English | benchmark/columns/pages.json | Our own, released CC BY 4.0 | N/A, our own | Yes | Two-column reading order and headings (scripts/column_order_test.py) | Magana Learn team, CC BY 4.0 | Daniel | In use: 10 pages | 10 | 0 | Drawn, not photographed. Real photographed textbook pages still to come. |
+| S38 | Tesseract tessdata_fast: yor and script/Latin models | Model (OCR) | Yorùbá; Latin-script languages | https://github.com/tesseract-ocr/tessdata_fast | Apache-2.0 | Verified 26 Oct 2026 | Yes | Reading Yorùbá and Igbo pages again so fewer special letters are lost (backend/Dockerfile, pinned) | Tesseract OCR tessdata_fast, Apache-2.0 | Daniel | In use | 0 | 0 |  |
+| S39 | Google ML Kit Text Recognition v2 (Latin, bundled) | Model (OCR, on the phone) | Latin-script languages | https://developers.google.com/ml-kit/vision/text-recognition/v2 | Google ML Kit terms (free; proprietary SDK) | Verified 26 Oct 2026 | Ships inside the app; not redistributed separately | Offline basic reading on the phone (app/lib/offline/) | Text recognition by Google ML Kit | Daniel | In use | 0 | 0 | Bundled model: nothing is downloaded or sent when reading offline. |
 
 ## Credits
 
@@ -83,4 +88,7 @@ Attribution lines for the README and the submission documentation. List publisha
 - Qur'an, Arabic text — via AlQuran Cloud and Tanzil.net — https://alquran.cloud/terms-and-conditions
 - Teacher-made notes and tests — [Teacher name, school], used with permission
 - Practice questions, daily-life pages, Skills lessons, phrase templates and word lists — Magana Learn team, CC BY 4.0
+- Wikipedia in Hausa, Yorùbá and Igbo — Wikipedia contributors, CC BY-SA 4.0 — https://ha.wikipedia.org, https://yo.wikipedia.org, https://ig.wikipedia.org
+- Wiktionary (Hausa, Yoruba, Igbo entries) — Wiktionary contributors, CC BY-SA 4.0; extracts by kaikki.org — https://kaikki.org/dictionary/
+- Tesseract tessdata_fast — Apache-2.0 — https://github.com/tesseract-ocr/tessdata_fast
 - FLEURS — Google, CC BY 4.0 (check) — https://huggingface.co/datasets/google/fleurs

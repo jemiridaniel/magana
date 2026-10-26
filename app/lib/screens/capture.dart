@@ -12,8 +12,13 @@ import '../capture/feedback.dart';
 import '../capture/frame_analysis.dart';
 import '../l10n/app_localizations.dart';
 import '../messages.dart';
+import '../offline/offline_reader.dart';
+import '../offline/photo_queue.dart';
+import '../offline/read_timing.dart';
+import '../library.dart';
 import '../papers.dart';
 import '../platform.dart';
+import '../policy.dart';
 import '../tasks.dart';
 import '../theme.dart';
 import 'reader.dart';
@@ -217,6 +222,9 @@ class _CaptureScreenState extends State<CaptureScreen>
     Advice.moveDown => _l.cueLower,
     Advice.moveLeft => _l.cueLeft,
     Advice.moveRight => _l.cueRight,
+    Advice.tiltToward => _l.cueTiltToward,
+    Advice.tiltAway => _l.cueTiltAway,
+    Advice.blurry => _l.cueBlurry,
     Advice.holdStill || Advice.ready => _l.cueHoldStill,
   };
 
@@ -303,49 +311,115 @@ class _CaptureScreenState extends State<CaptureScreen>
     await _send(await photo.readAsBytes(), photo.name);
   }
 
+  /// How long to wait for the server before reading on this phone (board 5e).
+  static const serverWait = Duration(seconds: 8);
+
+  /// Codes that mean "the server can't read it now" (no internet, asleep, failed):
+  /// these fall back to reading on the phone. Anything else (not allowed, a bad
+  /// photo) is the answer and is said as it is.
+  static const _fallBack = {'unreachable', 'server_sleeping', 'failed'};
+
   Future<void> _send(Uint8List bytes, String filename) async {
     final scope = AppScope.of(context);
-    _setStatus(_l.readingPage);
+    final l = _l;
+    final mode = widget.detect
+        ? Paper.letter.mode
+        : widget.paper?.mode ?? 'school';
+    final paper = widget.detect ? null : widget.paper;
+    final profile = scope.profile;
+    final mayKeep =
+        profile.can(Feature.library) && profile.tier != Tier.classroom;
+    ReadTiming.start();
+    _setStatus(l.readingPage);
+    final online = scope.api.read(bytes, filename: filename, mode: mode);
+    ReadResult? result;
+    OfflineReason? why;
     try {
-      final result = await scope.api.read(
-        bytes,
-        filename: filename,
-        mode: widget.detect
-            ? Paper.letter.mode
-            : widget.paper?.mode ?? 'school',
-      );
-      if (!mounted) return;
-      if (result.readableCount == 0) {
-        _setStatus(
-          [
-            for (final tip in result.tips) messageFor(_l, tip),
-            for (final f in result.items.where((i) => i.isFaint))
-              messageFor(_l, 'faint_region', where: pagePosition(_l, f.where)),
-            // Held back for safety is not "no text": the tip already says why.
-            if (!result.tips.contains('money_amounts_unreliable'))
-              _l.noTextFound,
-          ].join(' '),
-        );
+      result = await online.timeout(serverWait);
+    } on TimeoutException {
+      why = OfflineReason.slow;
+    } on ApiException catch (e) {
+      if (!_fallBack.contains(e.code)) {
+        _setStatus(messageFor(l, e.code));
         _resume();
         return;
       }
-      final paper = widget.detect ? detectPaper(result) : widget.paper;
-      await TaskLog.record(TaskKind.forPaper(paper));
-      await _stopCamera();
-      if (!mounted) return;
-      await Navigator.of(context).pushReplacement(
-        MaterialPageRoute(
-          builder: (_) => ReaderScreen(
-            result: result,
-            paper: paper,
-            detected: widget.detect,
-          ),
-        ),
-      );
-    } on ApiException catch (e) {
-      _setStatus(messageFor(_l, e.code));
-      _resume();
+      why = e.code == 'unreachable'
+          ? OfflineReason.noInternet
+          : OfflineReason.slow;
     }
+    var queued = false;
+    var dropped = 0; // oldest waiting pages dropped to keep at most 20
+    if (result == null) {
+      ReadResult? local;
+      try {
+        local = await readOnPhone(bytes, mode: mode);
+      } catch (_) {
+        local = null;
+      }
+      if (local == null) {
+        // This phone can't read offline (the web): wait for the server after all.
+        try {
+          result = await online;
+          why = null;
+        } on ApiException catch (e) {
+          _setStatus(messageFor(l, e.code));
+          _resume();
+          return;
+        }
+      } else {
+        result = local;
+        if (mayKeep && await FullReadingSetting.get()) {
+          queued = true;
+          // A slow server may still answer: its reading goes to My library. If it
+          // doesn't, the photo waits, encrypted, for the next time we're online.
+          online.then<void>(
+            (full) => Library.save(full, paper),
+            onError: (Object _) async {
+              dropped = await photoQueue.add(bytes, mode: mode, paper: paper);
+              if (dropped > 0) scope.speaker.say(l.queueDropped(dropped));
+            },
+          );
+        } else {
+          online.ignore();
+        }
+      }
+    } else if (mayKeep) {
+      // Online again: pages that waited get their full reading now.
+      photoQueue.drain(scope.api).then((n) {
+        if (n > 0) scope.speaker.say(l.fullReadingsReady(n));
+      });
+    }
+    final page = result;
+    if (!mounted) return;
+    if (page.readableCount == 0) {
+      _setStatus(
+        [
+          for (final tip in page.tips) messageFor(l, tip),
+          for (final f in page.items.where((i) => i.isFaint))
+            messageFor(l, 'faint_region', where: pagePosition(l, f.where)),
+          // Held back for safety is not "no text": the tip already says why.
+          if (!page.tips.contains('money_amounts_unreliable')) l.noTextFound,
+        ].join(' '),
+      );
+      _resume();
+      return;
+    }
+    final kind = widget.detect ? detectPaper(page) : widget.paper;
+    await TaskLog.record(TaskKind.forPaper(kind));
+    await _stopCamera();
+    if (!mounted) return;
+    await Navigator.of(context).pushReplacement(
+      MaterialPageRoute(
+        builder: (_) => ReaderScreen(
+          result: page,
+          paper: kind,
+          detected: widget.detect,
+          offlineReason: why,
+          queued: queued,
+        ),
+      ),
+    );
   }
 
   /// Back to framing after a failed read. With a live camera the message stays

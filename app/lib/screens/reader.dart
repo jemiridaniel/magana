@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 
 import '../api.dart';
 import '../app_scope.dart';
+import '../commands.dart';
+import '../language.dart';
+import '../offline/offline_reader.dart';
+import '../offline/photo_queue.dart';
+import '../offline/read_timing.dart';
 import '../l10n/app_localizations.dart';
 import '../library.dart';
 import '../papers.dart';
@@ -20,6 +25,11 @@ const _speeds = [0.75, 1.0, 1.25, 1.5];
 
 /// Reads a page aloud item by item (lines, or table rows) with Repeat,
 /// Previous and Next. Low-confidence items carry a spoken warning.
+/// Boards 5c, 5d, 5e: a page in columns is read column by column, with "Next
+/// column", headings and a small page map; a Hausa, Yorùbá or Igbo page warns once
+/// that special letters can be missed and marks words that may have lost one
+/// ("Spell word", "Ask someone"; a word is never changed); a page read on the
+/// phone without the server says so and what it can't do.
 class ReaderScreen extends StatefulWidget {
   const ReaderScreen({
     super.key,
@@ -27,7 +37,15 @@ class ReaderScreen extends StatefulWidget {
     this.paper,
     this.savedId,
     this.detected = false,
+    this.offlineReason,
+    this.queued = false,
   });
+
+  /// Read on this phone (board 5e): why, for the banner. Null when the server read it.
+  final OfflineReason? offlineReason;
+
+  /// The photo waits, encrypted, for a full reading when the phone is online.
+  final bool queued;
 
   /// "Read any paper": [paper] was worked out from the page's words.
   final bool detected;
@@ -54,14 +72,46 @@ class _ReaderScreenState extends State<ReaderScreen> {
   bool _questionSaved = false;
   int _run = 0; // bumps on every command so an old reading loop stops
   int _speed = 1;
+  bool _fullReading = true; // "Full reading when online" (offline pages)
+  bool _listening = false;
 
   List<ReadItem> get _items => widget.result.items;
+  int get _columns => widget.result.columns;
+
+  /// Each line's place within its column: (number, total), for "Line 2 of 9".
+  late final List<(int, int)> _inColumn = () {
+    final totals = <int, int>{};
+    final out = <(int, int)>[];
+    for (final i in _items) {
+      if (i.kind == ItemKind.line) {
+        totals[i.column] = (totals[i.column] ?? 0) + 1;
+      }
+    }
+    final seen = <int, int>{};
+    for (final i in _items) {
+      final n = seen[i.column] = (seen[i.column] ?? 0) + 1;
+      out.add((n, totals[i.column] ?? 0));
+    }
+    return out;
+  }();
+
+  String get _languageName => appLanguages
+      .firstWhere(
+        (a) => a.code == widget.result.pageLanguage,
+        orElse: () => appLanguages.first,
+      )
+      .name;
   AppLocalizations get _l => AppLocalizations.of(context);
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) => _play(0, intro: true));
+    if (widget.result.offline) {
+      FullReadingSetting.get().then((on) {
+        if (mounted) setState(() => _fullReading = on);
+      });
+    }
   }
 
   @override
@@ -79,6 +129,13 @@ class _ReaderScreenState extends State<ReaderScreen> {
 
   String _position(ReadItem item) => switch (item) {
     ReadItem(isFaint: true) => _l.faintPrint,
+    ReadItem(isRow: false, column: final int c) when _columns > 1 && c > 0 =>
+      _l.columnPosition(
+        c,
+        _columns,
+        _inColumn[_items.indexOf(item)].$1,
+        _inColumn[_items.indexOf(item)].$2,
+      ),
     ReadItem(isRow: false) => _l.linePosition(item.number, item.total),
     ReadItem(table: final int t) => _l.rowPositionInTable(
       item.number,
@@ -102,13 +159,122 @@ class _ReaderScreenState extends State<ReaderScreen> {
   /// Text exactly as printed, except that a number the backend could not read
   /// reliably is said as "unclear number", never as the digit OCR guessed.
   String _spoken(ReadItem item) {
+    final i = _items.indexOf(item);
     final body = _body(item);
     final warning = _warning(item);
     final page = item.pageStart
         ? _l.pageOf(item.page!, widget.result.pageCount)
         : null;
-    final spoken = [?page, if (body.isNotEmpty) body, ?warning].join('. ');
+    // Entering a column: "Column 2 of 2" first (TalkBack users hear where they are).
+    final column =
+        _columns > 1 &&
+            item.column > 0 &&
+            (i <= 0 || _items[i - 1].column != item.column)
+        ? _l.columnStart(item.column, _columns)
+        : null;
+    final marked = _marked(item);
+    final spoken = [
+      ?page,
+      ?column,
+      if (body.isNotEmpty) item.heading ? _l.headingSpoken(body) : body,
+      if (marked.isNotEmpty) _l.letterCheckWords(marked.join(', ')),
+      ?warning,
+    ].join('. ');
     return item.isRow && warning == null ? '$spoken.' : spoken;
+  }
+
+  /// Words on [item] that may have lost a special letter, as read (never changed).
+  List<String> _marked(ReadItem item) => [
+    for (final i in item.letterMarks.toList()..sort())
+      if (i < item.words.length) item.words[i],
+  ];
+
+  /// "Spell word": each marked word on this line, letter by letter.
+  Future<void> _spell() async {
+    _run++;
+    setState(() => _playing = false);
+    await _speaker.stop();
+    final words = _marked(_items[_index]);
+    if (words.isEmpty) {
+      _speaker.say(_l.spellNone);
+      return;
+    }
+    _speaker.say(
+      [
+        for (final w in words)
+          '$w: ${w.replaceAll(RegExp(r"[^\p{L}'’]", unicode: true), '').characters.join(', ')}',
+      ].join('. '),
+    );
+  }
+
+  /// "Ask someone": only a person can say which letter the word has.
+  Future<void> _askSomeone() async {
+    _run++;
+    setState(() => _playing = false);
+    await _speaker.stop();
+    _speaker.say(_l.askSomeoneText(_languageName));
+  }
+
+  /// "Next column": the first line of the next column.
+  void _nextColumn() {
+    final here = _items[_index].column;
+    for (var i = _index + 1; i < _items.length; i++) {
+      final c = _items[i].column;
+      if (c > 0 && c != here && _items[i - 1].column != c) return _go(i);
+    }
+    _speaker.say(_columns > 1 ? _l.lastColumn : _l.noColumns);
+  }
+
+  /// "Speak a command": next, back, repeat, pause, read, next column, headings, spell.
+  Future<void> _command() async {
+    final l = _l;
+    final voice = voiceInputFor(context);
+    if (_listening) {
+      await voice.stop();
+      return;
+    }
+    _run++;
+    setState(() => _playing = false);
+    await _speaker.stop();
+    if (!await voice.init()) {
+      _speaker.say(l.voiceCommandsUnavailable);
+      return;
+    }
+    setState(() => _listening = true);
+    List<String> heard;
+    try {
+      heard = await voice.listen(language: 'en');
+    } on VoiceStepFailed {
+      heard = const [];
+    }
+    if (!mounted) return;
+    setState(() => _listening = false);
+    if (heard.isEmpty) {
+      _speaker.say(l.commandNothingHeard);
+      return;
+    }
+    switch (matchReaderCommand(heard.first)) {
+      case null:
+        _speaker.say(l.commandNotUnderstood(heard.first));
+      case ReaderCommand.nextColumn:
+        _nextColumn();
+      case ReaderCommand.headings:
+        _jump(only: _JumpKind.headings);
+      case ReaderCommand.spell:
+        _spell();
+      case ReaderCommand.next:
+        _next();
+      case ReaderCommand.previous:
+        _prev();
+      case ReaderCommand.repeat:
+        _repeat();
+      case ReaderCommand.pause:
+        break; // listening already paused the reading
+      case ReaderCommand.play:
+        _play(_index);
+      case ReaderCommand.help:
+        _speaker.say(l.readerCommandHelp);
+    }
   }
 
   /// An item's text without its warning; unclear numbers stay "unclear number".
@@ -220,18 +386,51 @@ class _ReaderScreenState extends State<ReaderScreen> {
     );
   }
 
-  /// Jump within page: the start, each table, or the next thing Magana is unsure
-  /// about. Headings and diagrams need layout the backend doesn't send yet.
-  Future<void> _jump() async {
+  /// Jump within page: the start, each heading, column and table, or the next
+  /// thing Magana is unsure about. [only] shows one kind (the Headings, Columns
+  /// and Tables chips). Diagrams need layout the backend doesn't send yet.
+  Future<void> _jump({_JumpKind? only}) async {
     final l = _l;
     final tables = <int, int>{}; // table number -> first row index
     for (final (i, item) in _items.indexed) {
       if (item.isRow && item.number == 1) tables[item.table ?? 1] = i;
     }
+    final headings = [
+      for (final (i, item) in _items.indexed)
+        if (item.heading) (item.text, i),
+    ];
+    final columns = <int, int>{}; // column -> first line index
+    if (_columns > 1) {
+      for (final (i, item) in _items.indexed) {
+        if (item.column > 0) columns.putIfAbsent(item.column, () => i);
+      }
+    }
     final unsure = _items.indexed
         .where((e) => e.$1 > _index && e.$2.unsure)
         .map((e) => e.$1)
         .firstOrNull;
+    final empty = switch (only) {
+      _JumpKind.headings when headings.isEmpty => l.noHeadings,
+      _JumpKind.columns when columns.isEmpty => l.noColumns,
+      _JumpKind.tables when tables.isEmpty => l.noTables,
+      _ => null,
+    };
+    if (empty != null) {
+      _speaker.say(empty);
+      return;
+    }
+    final choices = [
+      if (only == null) (l.jumpStart, 0),
+      if (only == null || only == _JumpKind.headings)
+        for (final (text, i) in headings) ('${l.headingLabel}: $text', i),
+      if (only == null || only == _JumpKind.columns)
+        for (final MapEntry(key: c, value: i) in columns.entries)
+          (l.columnLabel(c), i),
+      if (only == null || only == _JumpKind.tables)
+        for (final MapEntry(key: n, value: i) in tables.entries)
+          (l.jumpTable(n), i),
+      if (only == null && unsure != null) (l.jumpWarnings, unsure),
+    ];
     final target = await showModalBottomSheet<int>(
       context: context,
       showDragHandle: true,
@@ -253,19 +452,14 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 ),
               ),
               const SizedBox(height: 12),
-              for (final (label, index) in [
-                (l.jumpStart, 0),
-                for (final MapEntry(key: n, value: i) in tables.entries)
-                  (l.jumpTable(n), i),
-                if (unsure != null) (l.jumpWarnings, unsure),
-              ]) ...[
+              for (final (label, index) in choices) ...[
                 SecondaryButton(
                   label: label,
                   onTap: () => Navigator.of(sheet).pop(index),
                 ),
                 const SizedBox(height: 10),
               ],
-              NoteBox(text: l.jumpNotYet),
+              if (only == null) NoteBox(text: l.jumpNotYet),
             ],
           ),
         ),
@@ -283,12 +477,27 @@ class _ReaderScreenState extends State<ReaderScreen> {
     ].join(', ');
   }
 
+  String? get _offlineBanner => switch (widget.offlineReason) {
+    OfflineReason.noInternet => _l.offlineBanner,
+    OfflineReason.slow => _l.offlineBannerSlow,
+    null => widget.result.offline ? _l.offlineBanner : null,
+  };
+
   String _intro() {
     final unsure = widget.result.unsureCount;
+    final marks = widget.result.letterMarkCount;
     return [
+      if (widget.result.offline) ...[
+        ?_offlineBanner,
+        _l.offlineNote,
+        if (widget.queued) _l.offlineQueued,
+      ],
       if (widget.detected && widget.paper != null)
         _l.detectedPaper(widget.paper!.title(_l)),
+      if (_columns > 1) _l.columnsNote(_columns),
       for (final tip in widget.result.tips) messageFor(_l, tip),
+      if (widget.result.pageLanguage != null && marks > 0)
+        _l.letterCount(marks),
       _l.pageRead,
       '${_counts()}.',
       if (unsure > 0) _l.unsureSummary(unsure),
@@ -310,6 +519,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
     }
 
     bool wanted() => run == _run && mounted;
+    if (intro) ReadTiming.firstWord(offline: widget.result.offline);
     if (intro && !await _speaker.sayThrough(_intro(), wanted: wanted)) {
       return pause();
     }
@@ -358,6 +568,17 @@ class _ReaderScreenState extends State<ReaderScreen> {
     await _speaker.setRate(_speeds[_speed]);
     await _speaker.say(_l.speed(_speedValue()));
     if (_playing) _play(_index);
+  }
+
+  /// Explain needs the server: not on a page read offline.
+  bool get _canExplain =>
+      !widget.result.offline &&
+      AppScope.of(context).profile.can(Feature.explain);
+
+  Future<void> _toggleFullReading() async {
+    final on = !_fullReading;
+    setState(() => _fullReading = on);
+    await FullReadingSetting.set(on);
   }
 
   bool get _canSave =>
@@ -456,7 +677,14 @@ class _ReaderScreenState extends State<ReaderScreen> {
                             ),
                           ),
                           Text(
-                            '${widget.paper != null ? '${l.readExactly} · ' : ''}${_counts()}${unsure > 0 ? ' · ${l.unclearCount(unsure)}' : ''}',
+                            [
+                              if (widget.paper != null) l.readExactly,
+                              if (widget.result.pageLanguage != null)
+                                l.languagePage(_languageName),
+                              if (_columns > 1) l.columnsSubtitle(_columns),
+                              _counts(),
+                              if (unsure > 0) l.unclearCount(unsure),
+                            ].join(' · '),
                             style: const TextStyle(
                               fontSize: 16,
                               color: MaganaColors.muted,
@@ -480,14 +708,113 @@ class _ReaderScreenState extends State<ReaderScreen> {
                       child: const Icon(Icons.list, size: 30),
                     ),
                   ),
+                  const SizedBox(width: 8),
+                  Semantics(
+                    button: true,
+                    label: _listening ? l.listeningCommand : l.speakCommand,
+                    excludeSemantics: true,
+                    onTap: _command,
+                    child: OutlinedButton(
+                      onPressed: _command,
+                      style: outlinedTile(radius: 32, bg: MaganaColors.amber)
+                          .copyWith(
+                            padding: const WidgetStatePropertyAll(
+                              EdgeInsets.zero,
+                            ),
+                          ),
+                      child: Icon(
+                        _listening ? Icons.stop : Icons.mic_none,
+                        size: 30,
+                      ),
+                    ),
+                  ),
                 ],
               ),
+              if (!widget.result.offline) ...[
+                const SizedBox(height: 12),
+                Semantics(
+                  container: true,
+                  label: l.jumpWithinPage,
+                  child: Row(
+                    children: [
+                      for (final (label, kind) in [
+                        (l.jumpHeadings, _JumpKind.headings),
+                        (l.jumpColumns, _JumpKind.columns),
+                        (l.jumpTables, _JumpKind.tables),
+                      ]) ...[
+                        if (kind != _JumpKind.headings)
+                          const SizedBox(width: 8),
+                        Expanded(
+                          child: _ControlButton(
+                            label: label,
+                            semantics: label,
+                            onPressed: () => _jump(only: kind),
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+              if (_columns > 1) ...[
+                const SizedBox(height: 12),
+                _PageMap(columns: _columns, current: item.column),
+              ],
               const SizedBox(height: 16),
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
+                      if (widget.result.offline) ...[
+                        Semantics(
+                          container: true,
+                          liveRegion: true,
+                          child: NoteBox(
+                            text: _offlineBanner!,
+                            kind: NoteKind.emergency,
+                            icon: Icons.wifi_off,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        NoteBox(
+                          bold: l.offlineNote,
+                          text: widget.queued ? l.offlineQueued : '',
+                        ),
+                        if (widget.queued) ...[
+                          const SizedBox(height: 12),
+                          Semantics(
+                            toggled: _fullReading,
+                            label: l.fullReadingWhenOnline,
+                            excludeSemantics: true,
+                            onTap: _toggleFullReading,
+                            child: SwitchListTile(
+                              value: _fullReading,
+                              onChanged: (_) => _toggleFullReading(),
+                              title: Text(
+                                l.fullReadingWhenOnline,
+                                style: const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                              ),
+                              minTileHeight: 64,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(18),
+                                side: const BorderSide(
+                                  color: MaganaColors.ink,
+                                  width: 2,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                        const SizedBox(height: 16),
+                      ],
+                      if (_columns > 1) ...[
+                        NoteBox(text: l.columnsNote(_columns)),
+                        const SizedBox(height: 16),
+                      ],
                       // A money photo whose amounts aren't all reliable: only the parts that
                       // passed every check are here (backend safety.money_photo_check).
                       if (widget.result.tips.contains(
@@ -505,6 +832,37 @@ class _ReaderScreenState extends State<ReaderScreen> {
                         position: _position(item),
                         status: _playing ? l.nowReading : null,
                       ),
+                      if (widget.result.pageLanguage case final lang?) ...[
+                        const SizedBox(height: 16),
+                        NoteBox(
+                          text: [
+                            messageFor(l, 'letters_$lang'),
+                            if (widget.result.letterMarkCount > 0)
+                              l.letterCount(widget.result.letterMarkCount),
+                          ].join(' '),
+                          kind: NoteKind.warning,
+                        ),
+                        const SizedBox(height: 12),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: _ControlButton(
+                                label: l.spellWord,
+                                semantics: l.spellWord,
+                                onPressed: _spell,
+                              ),
+                            ),
+                            const SizedBox(width: 10),
+                            Expanded(
+                              child: _ControlButton(
+                                label: l.askSomeone,
+                                semantics: l.askSomeone,
+                                onPressed: _askSomeone,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                       if (warning != null) ...[
                         const SizedBox(height: 16),
                         _WarningNote(text: warning),
@@ -647,7 +1005,30 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 semantics: l.speedLabel(_speedValue()),
                 onPressed: _cycleSpeed,
               ),
-              if (AppScope.of(context).profile.can(Feature.explain)) ...[
+              if (_columns > 1) ...[
+                const SizedBox(height: 10),
+                Row(
+                  children: [
+                    Expanded(
+                      child: _ControlButton(
+                        label: l.nextColumn,
+                        semantics: l.nextColumn,
+                        onPressed: _nextColumn,
+                      ),
+                    ),
+                    if (_canExplain) ...[
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: _ControlButton(
+                          label: l.explainThis,
+                          semantics: l.explainThis,
+                          onPressed: _explain,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ] else if (_canExplain) ...[
                 const SizedBox(height: 10),
                 SecondaryButton(label: l.explainThis, onTap: _explain),
               ],
@@ -756,6 +1137,8 @@ class _ItemCard extends StatelessWidget {
                       if (i > 0) const TextSpan(text: ' '),
                       item.unclearWords.contains(i)
                           ? _unclear(context)
+                          : item.letterMarks.contains(i)
+                          ? TextSpan(text: w, style: _marked)
                           : TextSpan(text: w),
                     ],
                   ],
@@ -926,6 +1309,86 @@ class _FindDialogState extends State<_FindDialog> {
           onTap: () => Navigator.of(context).pop(_field.text),
         ),
       ],
+    );
+  }
+}
+
+enum _JumpKind { headings, columns, tables }
+
+/// A word that may have lost a special letter (board 5d): shown as read, marked.
+const _marked = TextStyle(
+  backgroundColor: MaganaColors.warnFill,
+  color: MaganaColors.warnInk,
+  decoration: TextDecoration.underline,
+  decorationStyle: TextDecorationStyle.dashed,
+  decorationColor: MaganaColors.warnBorder,
+  decorationThickness: 2,
+);
+
+/// The small page map on a page in columns (board 5c): which column is being read.
+/// Visual only; the spoken position says "Column 1 of 2".
+class _PageMap extends StatelessWidget {
+  const _PageMap({required this.columns, required this.current});
+  final int columns;
+  final int current;
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    return ExcludeSemantics(
+      child: Container(
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+          color: MaganaColors.chip,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Row(
+          children: [
+            for (var c = 1; c <= columns; c++) ...[
+              if (c > 1) const SizedBox(width: 8),
+              Expanded(
+                child: Container(
+                  padding: const EdgeInsets.all(6),
+                  decoration: BoxDecoration(
+                    color: c == current
+                        ? Colors.white
+                        : const Color(0xFFF6F4EE),
+                    borderRadius: BorderRadius.circular(8),
+                    border: c == current
+                        ? Border.all(color: MaganaColors.green, width: 3)
+                        : null,
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        c == current
+                            ? '$c ▸ ${l.mapNow}'
+                            : c == current + 1
+                            ? '$c ${l.mapNext}'
+                            : '$c',
+                        style: const TextStyle(
+                          fontSize: 13,
+                          fontWeight: FontWeight.w700,
+                        ),
+                      ),
+                      for (var k = 0; k < 4; k++)
+                        Container(
+                          height: 5,
+                          margin: const EdgeInsets.only(top: 4),
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF9AA0A6),
+                            borderRadius: BorderRadius.circular(3),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
     );
   }
 }

@@ -8,6 +8,7 @@ import '../language.dart';
 import '../policy.dart';
 import '../profile.dart';
 import '../widgets.dart';
+import '../offline/photo_queue.dart';
 import '../platform/shared_pdf.dart';
 import 'class_code.dart';
 import 'pdf.dart';
@@ -35,6 +36,7 @@ class _ProfileGateState extends State<ProfileGate> with WidgetsBindingObserver {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _refresh();
       _sharedPdfs();
+      _fullReadings();
     });
   }
 
@@ -62,7 +64,26 @@ class _ProfileGateState extends State<ProfileGate> with WidgetsBindingObserver {
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    if (state == AppLifecycleState.resumed) _refresh();
+    if (state == AppLifecycleState.resumed) {
+      _refresh();
+      _fullReadings();
+    }
+  }
+
+  /// Pages read offline get their full reading when the phone is online again
+  /// (board 5e); the readings go to My library and the photos are deleted.
+  Future<void> _fullReadings() async {
+    if (!mounted) return;
+    final scope = AppScope.of(context);
+    final l = AppLocalizations.of(context);
+    final profile = scope.profile;
+    if (!profile.can(Feature.library) || profile.tier == Tier.classroom) return;
+    try {
+      final n = await photoQueue.drain(scope.api);
+      if (n > 0 && mounted) scope.speaker.say(l.fullReadingsReady(n));
+    } catch (_) {
+      // No queue on this platform, or still offline: try again next time.
+    }
   }
 
   Future<void> _refresh() async {

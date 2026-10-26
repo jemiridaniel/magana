@@ -1,0 +1,122 @@
+[
+ {
+  "id": "01",
+  "title": "Basic Science: Living Things",
+  "left": {
+   "heading": "Plants",
+   "text": "Plants make their own food in their leaves. This is called photosynthesis. They need sunlight, water from the soil and air. The green colour in leaves helps them catch the light of the sun."
+  },
+  "right": {
+   "heading": "Animals",
+   "text": "Animals cannot make their own food. Some animals eat plants, like goats and cows. Others eat meat, like lions. People keep many animals on farms for milk, eggs and meat."
+  }
+ },
+ {
+  "id": "02",
+  "title": "Social Studies: Our Community",
+  "left": {
+   "heading": "The Family",
+   "text": "A family is a group of people who live together and care for each other. In Nigeria many families are large, with grandparents, uncles and aunts living close to one another."
+  },
+  "right": {
+   "heading": "The Market",
+   "text": "The market is where people buy and sell goods. Traders bring yams, rice, cloth and tools. Markets are also places where friends meet and share news from other towns."
+  }
+ },
+ {
+  "id": "03",
+  "title": "Health Education: Keeping Clean",
+  "left": {
+   "heading": "Washing Hands",
+   "text": "Wash your hands with soap and clean water before you eat and after you use the toilet. Rub the backs of your hands and between your fingers. Germs that cause sickness are washed away."
+  },
+  "right": {
+   "heading": "Clean Water",
+   "text": "Drink water that has been boiled or treated. Keep water pots covered so that dust and insects cannot get in. Dirty water can carry diseases such as cholera and typhoid."
+  }
+ },
+ {
+  "id": "04",
+  "title": "Agricultural Science: Soil",
+  "left": {
+   "heading": "Kinds of Soil",
+   "text": "Sandy soil has large grains and lets water pass through quickly. Clay soil has very small grains and holds water. Loamy soil is a mixture of both and is good for most crops."
+  },
+  "right": {
+   "heading": "Caring for Soil",
+   "text": "Farmers add manure to soil to make it rich. They plant different crops each year so that the soil does not get tired. Trees and grass stop rain from washing the soil away."
+  }
+ },
+ {
+  "id": "05",
+  "title": "Civic Education: Rights and Duties",
+  "left": {
+   "heading": "Our Rights",
+   "text": "Every child has the right to go to school, to be fed and to be kept safe. Children also have the right to be heard when decisions are made about their lives."
+  },
+  "right": {
+   "heading": "Our Duties",
+   "text": "Citizens have duties too. We should obey the laws of the land, respect other people and help to keep our surroundings clean. Good citizens vote when they are old enough."
+  }
+ },
+ {
+  "id": "06",
+  "title": "Basic Science: The Weather",
+  "left": {
+   "heading": "Rainy Season",
+   "text": "In the rainy season the sky is often cloudy and it rains many times in a week. Farmers plant their crops at the start of this season so that the young plants get water."
+  },
+  "right": {
+   "heading": "Dry Season",
+   "text": "In the dry season there is little or no rain. In the north the harmattan wind blows dust from the desert. The air is dry and the mornings can be very cold."
+  }
+ },
+ {
+  "id": "07",
+  "title": "English Studies: Reading Well",
+  "left": {
+   "heading": "Before Reading",
+   "text": "Look at the title and the pictures first. Ask yourself what the story may be about. This helps you to understand the words when you begin to read the first page."
+  },
+  "right": {
+   "heading": "After Reading",
+   "text": "Tell the story again in your own words. Think about what the people in the story did and why. Talk about the story with a friend and say which part you liked best."
+  }
+ },
+ {
+  "id": "08",
+  "title": "Mathematics: Shapes Around Us",
+  "left": {
+   "heading": "Flat Shapes",
+   "text": "A square has four equal sides. A triangle has three sides. A circle is round and has no corners. You can find these shapes on doors, windows and road signs in your town."
+  },
+  "right": {
+   "heading": "Solid Shapes",
+   "text": "A cube looks like a box with six square faces. A cylinder looks like a tin of milk. A sphere is round like a ball. Many things we use every day have these shapes."
+  }
+ },
+ {
+  "id": "09",
+  "title": "Basic Technology: Simple Machines",
+  "left": {
+   "heading": "The Lever",
+   "text": "A lever is a bar that turns on a point called the fulcrum. A see-saw is a lever. When you push down on one end, the other end goes up and can lift a heavy load."
+  },
+  "right": {
+   "heading": "The Pulley",
+   "text": "A pulley is a wheel with a rope around it. People use pulleys to lift water from a well or to raise a flag. Pulling down on the rope lifts the bucket up."
+  }
+ },
+ {
+  "id": "10",
+  "title": "Security Education: Staying Safe",
+  "left": {
+   "heading": "At Home",
+   "text": "Do not open the door to strangers. Keep matches and medicines away from small children. Learn the phone number of a parent or a neighbour you can call for help."
+  },
+  "right": {
+   "heading": "On the Road",
+   "text": "Cross the road at a safe place and look both ways before you step out. Walk facing the cars when there is no footpath. Wear bright clothes when you walk at night."
+  }
+ }
+]

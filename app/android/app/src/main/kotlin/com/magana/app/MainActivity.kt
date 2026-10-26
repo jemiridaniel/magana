@@ -16,6 +16,8 @@ class MainActivity : FlutterActivity() {
 
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
+        // Offline basic reading and the encrypted queue (OfflineChannels.kt).
+        OfflineChannels.register(this, flutterEngine.dartExecutor.binaryMessenger)
         // Whether this phone can recognise speech fully on the device (Android 12+), so audio
         // never leaves it. speech_to_text silently uses the network recogniser when it can't,
         // which under-18 accounts must never do (lib/platform/speech_support.dart).

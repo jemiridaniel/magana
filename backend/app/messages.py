@@ -12,6 +12,15 @@ ENGLISH = {
     # Capture tips, before reading
     "too_dark": "It's quite dark. Turn on the torch or move to more light.",
     "blurry": "The photo looks blurry. Hold the phone still and try again.",
+    # Part of the page is outside the photo (reader.cut_off)
+    "cut_off_top": "Part of the page is cut off at the top.",
+    "cut_off_bottom": "Part of the page is cut off at the bottom.",
+    "cut_off_left": "Part of the page is cut off at the left.",
+    "cut_off_right": "Part of the page is cut off at the right.",
+    # A Hausa, Yorùbá or Igbo page (letters.py): said once per page
+    "letters_ha": "Hausa page. I can miss letters like ƙ, ɗ and ɓ. Marked words may have one of these. Spell a word or check it with someone.",
+    "letters_yo": "Yorùbá page. I can miss letters like ẹ, ọ and ṣ, and tone marks. Marked words may have one of these. Spell a word or check it with someone.",
+    "letters_ig": "Igbo page. I can miss letters like ị, ọ and ụ. Marked words may have one of these. Spell a word or check it with someone.",
     # Reading warnings
     "low_confidence": "I'm not sure about {where}. Please check it or retake the photo.",
     "low_confidence_number": "I can't read a number on {where} clearly. Please check it or retake the photo.",

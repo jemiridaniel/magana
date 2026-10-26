@@ -1339,8 +1339,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get jumpWarnings => 'Next thing I\'m not sure about';
 
   @override
-  String get jumpNotYet =>
-      'Jumping to headings and diagrams is not available yet.';
+  String get jumpNotYet => 'Jumping to diagrams is not available yet.';
 
   @override
   String get paperLetter => 'Letters & forms';
@@ -2036,4 +2035,180 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get msg_reading_incomplete =>
       'This reading is incomplete. I\'ll read only the parts I could check.';
+
+  @override
+  String columnsNote(int count) {
+    return '$count columns. Left first, then right.';
+  }
+
+  @override
+  String columnsSubtitle(int count) {
+    return '$count columns · read left, then right';
+  }
+
+  @override
+  String columnPosition(int column, int columns, int number, int total) {
+    return 'Column $column of $columns · Line $number of $total';
+  }
+
+  @override
+  String columnStart(int column, int columns) {
+    return 'Column $column of $columns';
+  }
+
+  @override
+  String columnLabel(int column) {
+    return 'Column $column';
+  }
+
+  @override
+  String headingSpoken(String text) {
+    return 'Heading: $text';
+  }
+
+  @override
+  String get headingLabel => 'Heading';
+
+  @override
+  String get nextColumn => 'Next column';
+
+  @override
+  String get lastColumn => 'This is the last column.';
+
+  @override
+  String get jumpHeadings => 'Headings';
+
+  @override
+  String get jumpColumns => 'Columns';
+
+  @override
+  String get jumpTables => 'Tables';
+
+  @override
+  String get noHeadings => 'I didn\'t find any headings on this page.';
+
+  @override
+  String get noColumns => 'This page has one column.';
+
+  @override
+  String get noTables => 'This page has no tables.';
+
+  @override
+  String get mapNow => 'now';
+
+  @override
+  String get mapNext => 'next';
+
+  @override
+  String letterCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count words may be wrong.',
+      one: '1 word may be wrong.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String letterCheckWords(String words) {
+    return 'These words may be missing a special letter: $words.';
+  }
+
+  @override
+  String get spellWord => 'Spell word';
+
+  @override
+  String get spellNone => 'No marked words on this line.';
+
+  @override
+  String get askSomeone => 'Ask someone';
+
+  @override
+  String askSomeoneText(String language) {
+    return 'Ask someone who reads $language to check the marked words.';
+  }
+
+  @override
+  String languagePage(String language) {
+    return '$language page';
+  }
+
+  @override
+  String get msg_letters_ha =>
+      'Hausa page. I can miss letters like ƙ, ɗ and ɓ. Marked words may have one of these. Spell a word or check it with someone.';
+
+  @override
+  String get msg_letters_yo =>
+      'Yorùbá page. I can miss letters like ẹ, ọ and ṣ, and tone marks. Marked words may have one of these. Spell a word or check it with someone.';
+
+  @override
+  String get msg_letters_ig =>
+      'Igbo page. I can miss letters like ị, ọ and ụ. Marked words may have one of these. Spell a word or check it with someone.';
+
+  @override
+  String get msg_cut_off_top => 'Part of the page is cut off at the top.';
+
+  @override
+  String get msg_cut_off_bottom => 'Part of the page is cut off at the bottom.';
+
+  @override
+  String get msg_cut_off_left => 'Part of the page is cut off at the left.';
+
+  @override
+  String get msg_cut_off_right => 'Part of the page is cut off at the right.';
+
+  @override
+  String get offlineBanner => 'No internet. Reading on this phone.';
+
+  @override
+  String get offlineBannerSlow =>
+      'Magana\'s server isn\'t answering. Reading on this phone.';
+
+  @override
+  String get offlineNote =>
+      'Basic reading only. Tables, columns and Explain need internet.';
+
+  @override
+  String get offlineQueued =>
+      'I\'ll keep this page and do a full reading when you\'re back online.';
+
+  @override
+  String get fullReadingWhenOnline => 'Full reading when online';
+
+  @override
+  String queueDropped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'The $count oldest waiting pages were removed: up to 20 pages can wait.',
+      one: 'The oldest waiting page was removed: up to 20 pages can wait.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fullReadingsReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count full readings are ready in My library.',
+      one: 'A full reading is ready in My library.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cueTiltToward => 'Tilt the top of the phone toward you';
+
+  @override
+  String get cueTiltAway => 'Tilt the top of the phone away from you';
+
+  @override
+  String get cueBlurry => 'Blurry. Hold still';
+
+  @override
+  String get readerCommandHelp =>
+      'You can say: next, back, repeat, pause, read, next column, headings or spell. Say commands in English for now.';
 }

@@ -2217,7 +2217,7 @@ abstract class AppLocalizations {
   /// No description provided for @jumpNotYet.
   ///
   /// In en, this message translates to:
-  /// **'Jumping to headings and diagrams is not available yet.'**
+  /// **'Jumping to diagrams is not available yet.'**
   String get jumpNotYet;
 
   /// No description provided for @paperLetter.
@@ -3323,6 +3323,258 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This reading is incomplete. I\'ll read only the parts I could check.'**
   String get msg_reading_incomplete;
+
+  /// No description provided for @columnsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} columns. Left first, then right.'**
+  String columnsNote(int count);
+
+  /// No description provided for @columnsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} columns · read left, then right'**
+  String columnsSubtitle(int count);
+
+  /// No description provided for @columnPosition.
+  ///
+  /// In en, this message translates to:
+  /// **'Column {column} of {columns} · Line {number} of {total}'**
+  String columnPosition(int column, int columns, int number, int total);
+
+  /// No description provided for @columnStart.
+  ///
+  /// In en, this message translates to:
+  /// **'Column {column} of {columns}'**
+  String columnStart(int column, int columns);
+
+  /// No description provided for @columnLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Column {column}'**
+  String columnLabel(int column);
+
+  /// No description provided for @headingSpoken.
+  ///
+  /// In en, this message translates to:
+  /// **'Heading: {text}'**
+  String headingSpoken(String text);
+
+  /// No description provided for @headingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Heading'**
+  String get headingLabel;
+
+  /// No description provided for @nextColumn.
+  ///
+  /// In en, this message translates to:
+  /// **'Next column'**
+  String get nextColumn;
+
+  /// No description provided for @lastColumn.
+  ///
+  /// In en, this message translates to:
+  /// **'This is the last column.'**
+  String get lastColumn;
+
+  /// No description provided for @jumpHeadings.
+  ///
+  /// In en, this message translates to:
+  /// **'Headings'**
+  String get jumpHeadings;
+
+  /// No description provided for @jumpColumns.
+  ///
+  /// In en, this message translates to:
+  /// **'Columns'**
+  String get jumpColumns;
+
+  /// No description provided for @jumpTables.
+  ///
+  /// In en, this message translates to:
+  /// **'Tables'**
+  String get jumpTables;
+
+  /// No description provided for @noHeadings.
+  ///
+  /// In en, this message translates to:
+  /// **'I didn\'t find any headings on this page.'**
+  String get noHeadings;
+
+  /// No description provided for @noColumns.
+  ///
+  /// In en, this message translates to:
+  /// **'This page has one column.'**
+  String get noColumns;
+
+  /// No description provided for @noTables.
+  ///
+  /// In en, this message translates to:
+  /// **'This page has no tables.'**
+  String get noTables;
+
+  /// No description provided for @mapNow.
+  ///
+  /// In en, this message translates to:
+  /// **'now'**
+  String get mapNow;
+
+  /// No description provided for @mapNext.
+  ///
+  /// In en, this message translates to:
+  /// **'next'**
+  String get mapNext;
+
+  /// No description provided for @letterCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 word may be wrong.} other{{count} words may be wrong.}}'**
+  String letterCount(int count);
+
+  /// No description provided for @letterCheckWords.
+  ///
+  /// In en, this message translates to:
+  /// **'These words may be missing a special letter: {words}.'**
+  String letterCheckWords(String words);
+
+  /// No description provided for @spellWord.
+  ///
+  /// In en, this message translates to:
+  /// **'Spell word'**
+  String get spellWord;
+
+  /// No description provided for @spellNone.
+  ///
+  /// In en, this message translates to:
+  /// **'No marked words on this line.'**
+  String get spellNone;
+
+  /// No description provided for @askSomeone.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask someone'**
+  String get askSomeone;
+
+  /// No description provided for @askSomeoneText.
+  ///
+  /// In en, this message translates to:
+  /// **'Ask someone who reads {language} to check the marked words.'**
+  String askSomeoneText(String language);
+
+  /// No description provided for @languagePage.
+  ///
+  /// In en, this message translates to:
+  /// **'{language} page'**
+  String languagePage(String language);
+
+  /// No description provided for @msg_letters_ha.
+  ///
+  /// In en, this message translates to:
+  /// **'Hausa page. I can miss letters like ƙ, ɗ and ɓ. Marked words may have one of these. Spell a word or check it with someone.'**
+  String get msg_letters_ha;
+
+  /// No description provided for @msg_letters_yo.
+  ///
+  /// In en, this message translates to:
+  /// **'Yorùbá page. I can miss letters like ẹ, ọ and ṣ, and tone marks. Marked words may have one of these. Spell a word or check it with someone.'**
+  String get msg_letters_yo;
+
+  /// No description provided for @msg_letters_ig.
+  ///
+  /// In en, this message translates to:
+  /// **'Igbo page. I can miss letters like ị, ọ and ụ. Marked words may have one of these. Spell a word or check it with someone.'**
+  String get msg_letters_ig;
+
+  /// No description provided for @msg_cut_off_top.
+  ///
+  /// In en, this message translates to:
+  /// **'Part of the page is cut off at the top.'**
+  String get msg_cut_off_top;
+
+  /// No description provided for @msg_cut_off_bottom.
+  ///
+  /// In en, this message translates to:
+  /// **'Part of the page is cut off at the bottom.'**
+  String get msg_cut_off_bottom;
+
+  /// No description provided for @msg_cut_off_left.
+  ///
+  /// In en, this message translates to:
+  /// **'Part of the page is cut off at the left.'**
+  String get msg_cut_off_left;
+
+  /// No description provided for @msg_cut_off_right.
+  ///
+  /// In en, this message translates to:
+  /// **'Part of the page is cut off at the right.'**
+  String get msg_cut_off_right;
+
+  /// No description provided for @offlineBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'No internet. Reading on this phone.'**
+  String get offlineBanner;
+
+  /// No description provided for @offlineBannerSlow.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana\'s server isn\'t answering. Reading on this phone.'**
+  String get offlineBannerSlow;
+
+  /// No description provided for @offlineNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Basic reading only. Tables, columns and Explain need internet.'**
+  String get offlineNote;
+
+  /// No description provided for @offlineQueued.
+  ///
+  /// In en, this message translates to:
+  /// **'I\'ll keep this page and do a full reading when you\'re back online.'**
+  String get offlineQueued;
+
+  /// No description provided for @fullReadingWhenOnline.
+  ///
+  /// In en, this message translates to:
+  /// **'Full reading when online'**
+  String get fullReadingWhenOnline;
+
+  /// No description provided for @queueDropped.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{The oldest waiting page was removed: up to 20 pages can wait.} other{The {count} oldest waiting pages were removed: up to 20 pages can wait.}}'**
+  String queueDropped(int count);
+
+  /// No description provided for @fullReadingsReady.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{A full reading is ready in My library.} other{{count} full readings are ready in My library.}}'**
+  String fullReadingsReady(int count);
+
+  /// No description provided for @cueTiltToward.
+  ///
+  /// In en, this message translates to:
+  /// **'Tilt the top of the phone toward you'**
+  String get cueTiltToward;
+
+  /// No description provided for @cueTiltAway.
+  ///
+  /// In en, this message translates to:
+  /// **'Tilt the top of the phone away from you'**
+  String get cueTiltAway;
+
+  /// No description provided for @cueBlurry.
+  ///
+  /// In en, this message translates to:
+  /// **'Blurry. Hold still'**
+  String get cueBlurry;
+
+  /// No description provided for @readerCommandHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'You can say: next, back, repeat, pause, read, next column, headings or spell. Say commands in English for now.'**
+  String get readerCommandHelp;
 }
 
 class _AppLocalizationsDelegate

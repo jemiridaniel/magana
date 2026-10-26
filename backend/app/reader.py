@@ -46,6 +46,10 @@ class Line:
     # "handwritten" or "printed" (handwriting.classify); which engine read a handwritten line.
     script: str = ""
     reader: str = ""
+    # Layout (layout.arrange): 1, 2, ... the column it is in, 0 when it runs across the
+    # columns (a title); and whether it is a heading.
+    column: int = 1
+    heading: bool = False
 
 
 @dataclass
@@ -332,6 +336,31 @@ def default_engine() -> OCREngine:
     return TesseractEngine()
 
 
+CUT_MARGIN = 0.004  # a word this close to the photo's edge (share of its size) runs off it
+
+
+def cut_off(image: Image.Image, page: Page) -> list[str]:
+    """'cut_off_top' ... 'cut_off_right': words touching the photo's edge, so part of the page
+    is outside the photo (a gallery photo has no live framing to prevent it). Words of one
+    character are left out: a speck or a ruled line's end is not text."""
+    w, h = image.size
+    mx, my = max(3, int(w * CUT_MARGIN)), max(3, int(h * CUT_MARGIN))
+    sides = set()
+    for line in page.lines:
+        for word in line.words:
+            if not (word.width and word.height) or len(word.text.strip()) < 2:
+                continue
+            if word.top <= my:
+                sides.add("top")
+            if word.top + word.height >= h - my:
+                sides.add("bottom")
+            if word.left <= mx:
+                sides.add("left")
+            if word.left + word.width >= w - mx:
+                sides.add("right")
+    return [f"cut_off_{s}" for s in ("top", "bottom", "left", "right") if s in sides]
+
+
 def capture_check(image: Image.Image) -> list[str]:
     """Capture tips as message codes: too_dark, blurry."""
     tips = []
@@ -599,26 +628,68 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     safety layer can compare every number between the two readings. `handwriting` is an
     optional second reader for handwritten lines (handwriting.py; schoolwork only)."""
     from . import handwriting as hw
+    from . import layout, letters
 
     engine = engine or default_engine()
     page = engine.read(image)
+    # A Hausa, Yorùbá or Igbo page: read again with the model that keeps more of its letters
+    # (letters.READ_AGAIN). Numbers are still re-read by the first engine, independently.
+    language = letters.page_language(" ".join(l.text for l in page.lines))
+    reader = _language_engine(engine, language) or engine
+    if reader is not engine:
+        page = reader.read(image)
     tiny = small_print(page)
     first = len(page.lines)
-    faint = recover_faint(image, page, engine)
+    faint = recover_faint(image, page, reader)
     if tiny == ["read_little"]:
         # A short label is just short; a page whose text only recovery could find is not.
         tiny = ["small_print"] if len(page.lines) > first else []
+    columns = layout.arrange(page, image)
     mark_unclear_line_ends(image, page)
     mark_unread_parts(image, page)
     reread_numbers(image, page, engine)
     script = hw.classify(page)
     if handwriting is not None and script != "printed":
         hw.reread_handwritten(image, page, handwriting)
-    tips = capture_check(image) + tiny + ([f"{script}_page"] if script != "printed" else [])
-    result = {"tips": tips, **_page_dict(page), "faint_regions": faint, "script": script}
+    tips = (capture_check(image) + cut_off(image, page) + tiny
+            + ([f"{script}_page"] if script != "printed" else []) + ([f"letters_{language}"] if language else []))
+    result = {"tips": tips, **_page_dict(page), "faint_regions": faint, "script": script, "columns": columns,
+              "page_language": language}
+    if language:
+        result["letter_marks"] = letters.marks(result["lines"], language)
     if second_pass:
         result["second_pass"] = _page_dict(engine.read(second_pass_image(image)))
     return result
+
+
+def _language_engine(engine: OCREngine, language: str | None) -> OCREngine | None:
+    """The Tesseract model that reads [language]'s letters better, when it is installed."""
+    model = letters_model(language)
+    if model is None or not isinstance(engine, TesseractEngine) or engine.lang != "eng":
+        return None
+    return TesseractEngine(lang=model) if model in installed_models() else None
+
+
+def letters_model(language: str | None) -> str | None:
+    from .letters import READ_AGAIN
+
+    return READ_AGAIN.get(language or "")
+
+
+_models: set[str] | None = None
+
+
+def installed_models() -> set[str]:
+    """Tesseract's installed language and script models (cached)."""
+    global _models
+    if _models is None:
+        try:
+            import pytesseract
+
+            _models = {m.removeprefix("script/") for m in pytesseract.get_languages(config="")}
+        except Exception:
+            _models = set()
+    return _models
 
 
 class NumberRereadMissing(RuntimeError):

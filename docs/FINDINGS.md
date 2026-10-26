@@ -34,6 +34,123 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-26 · Reading fixes from the white paper audit: two columns, local-language letters, offline reading, capture (UNREVIEWED)
+
+> **Unreviewed.**
+> - For Nurse Balogun: a photo may now wait on the phone, encrypted (PRIVACY.md, "Reading without internet").
+> - For Dr. Amos: offline number checks, which use the same 0.90 threshold plus a second reading from a crop.
+> - The word lists and the new Hausa, Yorùbá and Igbo strings need native speakers.
+
+Boards 5c, 5d and 5e. The measurements below are on the Mac, the Android emulator (arm64, Android 16) and team-made or openly licensed pages. **No real phone and no real photographed textbook page has been used yet.**
+
+### Two-column pages (board 5c)
+
+- **What changed (`backend/app/layout.py`):**
+  - A vertical gutter is found from the word boxes. Lines are split at it, and column 1 is read top to bottom, then column 2.
+  - Titles that run across both columns stay in place.
+  - Columns are accepted only when every column reads like paragraphs (2.5+ words a line, a fair width), so tables and statements are unchanged.
+  - Headings are text 1.3 times taller than body text, or a short line with strokes 1.25 times wider (bold).
+    - Ink density did not work: blur hid it.
+    - Stroke width did: headings measured 1.3 to 2.0 times body text, body lines at most 1.2.
+- **Measured** (`backend/scripts/column_order_test.py`; 10 team-written two-column pages in `benchmark/columns/`, drawn at 300 dpi, clean and made phone-like):
+
+  | | Words in the right order, before | After | Headings found | Wrong headings |
+  |---|---|---|---|---|
+  | Clean | 64.3% | **100%** | 30/30 | 0 |
+  | Phone-like | 55.5% | **100%** | 30/30 | 0 |
+
+  - The 10 one-column benchmark pages are read in exactly the same order as before (10/10), with no headings found on them, clean or phone-like.
+  - A test checks that a table-like page with short cells is not split.
+- **App:**
+  - "Column 1 of 2 · Line 2 of 9", spoken as "Column 2 of 2" on entering a column, with headings spoken as "Heading: …".
+  - "Next column" button, a small page map (visual only), and Headings, Columns and Tables jump chips (64 px, not the board's 48, by the portal and app rule).
+  - "Speak a command" in the Reader: next, back, repeat, pause, read, next column, headings, spell.
+- **Not done:** real photographed two-column textbook pages. The script takes them with `--photos DIR` (a `.txt` of the right reading order beside each photo).
+
+### Hausa, Yorùbá and Igbo letters (board 5d)
+
+- **Test set:** 10 pages per language (`benchmark/letters/`): Wikipedia extracts (CC BY-SA 4.0) chosen to hold the special letters, drawn in DejaVu Sans (which has every letter), clean and phone-like. Script: `backend/scripts/letter_ocr_test.py`.
+- **Special letters kept, by model** (phone-like pages, the tessdata_fast models Magana installs; clean pages were within a few points, and the larger "best" models were no better where it matters):
+
+  | Language (letters on the 10 pages) | `eng` (before) | `Latin` script model | `yor` |
+  |---|---|---|---|
+  | Hausa ɓ ɗ ƙ ƴ (213) | **0** | **0** | n/a |
+  | Yorùbá ẹ ọ ṣ (1,095) | 0 | 475 (43%) | **801 (73%)**: ṣ 131/131, ẹ 391/438, ọ 279/526 |
+  | Igbo ị ọ ụ ṅ (1,213) | 0 | **426 (35%)**: ọ 426/426, ị and ụ 0/787 | n/a |
+  | Yorùbá tone marks (3,237) | 346 (11%) | 3,070 (95%) | 2,743 (85%) |
+
+  - **What the letters became with `eng`:** ƙ→k, ɗ→d, ɓ→b; ẹ→é or e; ọ→o or d; ụ→u or y.
+  - **Igbo ọ was read as the digit "9" 37 times.** A letter can become a number.
+  - No Tesseract model exists for Hausa or Igbo (tessdata has `yor` only).
+  - Memory and time per page on the Mac: `eng` 112 MB, 1.3 s; `yor` 125 MB, 2.3 s; `Latin` best 433 MB, 4.3 s; `Latin` fast 372 MB, 2.2 s (same Igbo result as best).
+- **What changed (`backend/app/letters.py`):**
+  - The first (`eng`) reading decides the page's language from function words, with accents ignored.
+  - That decision was right on 30 of 30 pages, and none of the 10 English benchmark pages was taken for another language.
+  - A Yorùbá page is read again with `yor`, an Igbo page with `Latin` (both from tessdata_fast, pinned in the Dockerfile). Numbers are still re-read with `eng`, independently.
+  - Every Hausa, Yorùbá or Igbo page gets one spoken warning ("Hausa page. I can miss letters like ƙ, ɗ and ɓ…").
+- **Marked words.** A word is marked when the word list has a spelling with a special letter it lacks. Lists in `content/word_lists/`: Wiktionary plus Wikipedia word frequencies, with the test articles left out, CC BY-SA 4.0. Nothing is ever changed.
+  - The first lists marked far too much: 70% of marks fell on correct words, because Hausa "da" (and) has the twin "ɗa" (son).
+  - A list spelling is now kept only if it is at least 25% of that word's uses in Wikipedia. The 25% was fixed before scoring.
+
+  | Pages (phone-like) | Words that lost a letter, marked | Marks on words that were right |
+  |---|---|---|
+  | Hausa | 171 of 185 (92%) | 44 of 215 |
+  | Yorùbá (after `yor`) | 164 of 328 (50%) | 110 of 274 |
+  | Igbo (after `Latin`) | 448 of 456 (98%) | 35 of 483 |
+
+  - The board's example "kaya" is **not** marked: Wikipedia writes "kaya" 2,972 times and "ƙaya" 170 times.
+  - Igbo pages still get many marks (about 48 a page), because ị and ụ are lost.
+- **App:**
+  - Marked words are highlighted and named after their line ("These words may be missing a special letter: …").
+  - "Spell word" says each marked word letter by letter. "Ask someone" says to check with a person who reads the language.
+
+### Offline basic reading (board 5e)
+
+- **What changed:**
+  - ML Kit on-device text recognition (Latin, bundled in the app) and the phone's voice. The photo goes to the phone's private cache only while it is read.
+  - Offline reading starts when there's no internet, or the server fails or takes more than 8 s.
+  - Banner "No internet. Reading on this phone." (or "Magana's server isn't answering…"), and the note that tables, columns and Explain need internet. Explain is hidden offline.
+- **Number safety offline:**
+  - A number below 0.90, or with no confidence, is "unclear number".
+  - Every number is read a second time from a crop around it and its neighbours (Android: `OfflineChannels.kt`). If the readings differ, it is unclear.
+  - A money page with an unreliable amount keeps only what passed, as on the server.
+  - Text touching the photo's edge is reported.
+- **"Full reading when online"** (on by default): the photo waits encrypted (AES-GCM, key in the Android Keystore), at most 20, the oldest dropped and the person told. When the phone is online again, the server's reading goes to My library and the photo is deleted. A slow server's late answer is saved the same way. Classroom accounts never keep a photo.
+- **Time to first spoken word** (emulator, profile build, the team-made medicine label made phone-like, 1,240×317 px; from sending the photo to the Reader's first word):
+
+  | Run | Online (live server, London) | Offline (on the phone) |
+  |---|---|---|
+  | 1 | 4,968 ms | 2,700 ms |
+  | 2 | 4,265 ms | 2,227 ms |
+  | 3 | 4,534 ms | 2,325 ms |
+
+  - Offline marked 4 numbers unclear on this label, including "500" in "Paracetamol 500 mg". The server's full readings read them all, so offline is safer, not as complete.
+  - The three queued pages came back as full readings in My library when airplane mode was switched off.
+- **A release build broke offline reading:** code shrinking (R8) renamed classes ML Kit finds at run time (a NullPointerException in the plugin). The app fell back to "I couldn't reach Magana", so nothing unsafe was said. Fixed with keep rules (`android/app/proguard-rules.pro`), then checked again on the emulator with the release APK: offline reading and the queue round trip both work.
+- **APK size** (release, split per CPU):
+
+  | APK | Before | After | Change |
+  |---|---|---|---|
+  | arm64-v8a | 22,137,494 bytes | 35,225,827 bytes | +13.1 MB (+59%) |
+  | armeabi-v7a | 19,875,078 | 28,654,425 | +8.8 MB |
+
+  - The bundled ML Kit model is the cost. The unbundled one (through Google Play services) is smaller, but it downloads the model when first used, so it was not chosen.
+
+### Capture
+
+- **Tilt**, from the page's own edges, not a motion sensor. The page's top 15% narrower than its bottom: "Tilt the top of the phone away from you". The other way round: "…toward you".
+- **Blur while framing:** the strongest edges (95th percentile of the Laplacian) in 4×4 patches with print. Below 20, the cue is "Blurry. Hold still" and there is no auto-capture.
+  - The threshold comes from rendered pages at the camera's size: sharp about 200, light blur (σ 0.8) 28 to 64, σ 1.5 11 to 18.
+  - **Not yet tuned on a real camera.**
+- **Gallery photos:** words touching the photo's edge give "Part of the page is cut off at the right" (server `reader.cut_off`, and offline).
+
+### Tests
+
+- **Backend:** 501 passed (11 new: columns, the one-column and table pages unchanged, headings, cut-off, page language, marks never changing words, the model choice, numbers still re-read with `eng`).
+- **App:** 215 passed (14 new: column order, Next column and headings, the letter check and Spell word, offline reading with unclear and mismatched numbers, the money rule, cut-off, a slow server, Classroom never queuing, the 20-photo queue, tilt, blur, sharpness), with `expectAccessible` on the new Reader states.
+
+---
+
 ## 2026-10-26 · Audit measurements: two-column pages, local-language letters, data per page (UNREVIEWED)
 
 From the white paper audit (docs/WHITE_PAPER_AUDIT.md). Mac, Tesseract 5.5.3 `eng` (production's engine and language), team-made pages only. Nothing was changed.

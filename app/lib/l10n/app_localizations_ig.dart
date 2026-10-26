@@ -1341,7 +1341,7 @@ class AppLocalizationsIg extends AppLocalizations {
   String get jumpWarnings => 'Ihe na-esote m na-ejighị n\'aka';
 
   @override
-  String get jumpNotYet => 'Enweghị ike ịwụga n\'isiokwu na eserese ugbu a.';
+  String get jumpNotYet => 'Enweghị ike ịwụga n\'eserese ugbu a.';
 
   @override
   String get paperLetter => 'Akwụkwọ ozi na fọm';
@@ -2035,4 +2035,180 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get msg_reading_incomplete =>
       'Ọgụgụ a ezughị ezu. Aga m agụ naanị akụkụ ndị m nwere ike ịlele.';
+
+  @override
+  String columnsNote(int count) {
+    return 'Kọlụm $count. Nke aka ekpe mbụ, emesịa nke aka nri.';
+  }
+
+  @override
+  String columnsSubtitle(int count) {
+    return 'Kọlụm $count · aka ekpe, emesịa aka nri';
+  }
+
+  @override
+  String columnPosition(int column, int columns, int number, int total) {
+    return 'Kọlụm $column n\'ime $columns · Ahịrị $number n\'ime $total';
+  }
+
+  @override
+  String columnStart(int column, int columns) {
+    return 'Kọlụm $column n\'ime $columns';
+  }
+
+  @override
+  String columnLabel(int column) {
+    return 'Kọlụm $column';
+  }
+
+  @override
+  String headingSpoken(String text) {
+    return 'Isiokwu: $text';
+  }
+
+  @override
+  String get headingLabel => 'Isiokwu';
+
+  @override
+  String get nextColumn => 'Kọlụm na-esote';
+
+  @override
+  String get lastColumn => 'Nke a bụ kọlụm ikpeazụ.';
+
+  @override
+  String get jumpHeadings => 'Isiokwu';
+
+  @override
+  String get jumpColumns => 'Kọlụm';
+
+  @override
+  String get jumpTables => 'Tebụl';
+
+  @override
+  String get noHeadings => 'Ahụghị m isiokwu ọ bụla na peeji a.';
+
+  @override
+  String get noColumns => 'Peeji a nwere otu kọlụm.';
+
+  @override
+  String get noTables => 'Peeji a enweghị tebụl.';
+
+  @override
+  String get mapNow => 'ugbu a';
+
+  @override
+  String get mapNext => 'na-esote';
+
+  @override
+  String letterCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Okwu $count nwere ike ịdị njọ.',
+      one: 'Otu okwu nwere ike ịdị njọ.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String letterCheckWords(String words) {
+    return 'Okwu ndị a nwere ike ịfụ otu mkpụrụedemede pụrụ iche: $words.';
+  }
+
+  @override
+  String get spellWord => 'Sụpee okwu';
+
+  @override
+  String get spellNone => 'Enweghị okwu akara na ahịrị a.';
+
+  @override
+  String get askSomeone => 'Jụọ mmadụ';
+
+  @override
+  String askSomeoneText(String language) {
+    return 'Jụọ onye na-agụ $language ka o lelee okwu ndị e debere akara.';
+  }
+
+  @override
+  String languagePage(String language) {
+    return 'Peeji $language';
+  }
+
+  @override
+  String get msg_letters_ha =>
+      'Peeji Hausa. Enwere m ike ịfụ mkpụrụedemede dịka ƙ, ɗ na ɓ. Okwu ndị e debere akara nwere ike inwe otu n\'ime ha. Sụpee okwu ma ọ bụ lelee ya na mmadụ.';
+
+  @override
+  String get msg_letters_yo =>
+      'Peeji Yorùbá. Enwere m ike ịfụ mkpụrụedemede dịka ẹ, ọ na ṣ, na akara ụda. Okwu ndị e debere akara nwere ike inwe otu n\'ime ha. Sụpee okwu ma ọ bụ lelee ya na mmadụ.';
+
+  @override
+  String get msg_letters_ig =>
+      'Peeji Igbo. Enwere m ike ịfụ mkpụrụedemede dịka ị, ọ na ụ. Okwu ndị e debere akara nwere ike inwe otu n\'ime ha. Sụpee okwu ma ọ bụ lelee ya na mmadụ.';
+
+  @override
+  String get msg_cut_off_top => 'Akụkụ peeji ahụ bepụrụ n\'elu.';
+
+  @override
+  String get msg_cut_off_bottom => 'Akụkụ peeji ahụ bepụrụ n\'ala.';
+
+  @override
+  String get msg_cut_off_left => 'Akụkụ peeji ahụ bepụrụ n\'aka ekpe.';
+
+  @override
+  String get msg_cut_off_right => 'Akụkụ peeji ahụ bepụrụ n\'aka nri.';
+
+  @override
+  String get offlineBanner => 'Enweghị ịntanetị. Ana m agụ ya na ekwentị a.';
+
+  @override
+  String get offlineBannerSlow =>
+      'Sava Magana anaghị aza. Ana m agụ ya na ekwentị a.';
+
+  @override
+  String get offlineNote =>
+      'Ọgụgụ bụ isi naanị. Tebụl, kọlụm na Nkọwa chọrọ ịntanetị.';
+
+  @override
+  String get offlineQueued =>
+      'Aga m edebe peeji a ma gụchaa ya mgbe ịntanetị lọghachiri.';
+
+  @override
+  String get fullReadingWhenOnline => 'Ọgụgụ zuru ezu mgbe ịntanetị dị';
+
+  @override
+  String queueDropped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'E wepụrụ peeji $count kacha ochie na-eche: naanị peeji 20 nwere ike ichere.',
+      one: 'E wepụrụ peeji kacha ochie na-eche: naanị peeji 20 nwere ike ichere.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fullReadingsReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ọgụgụ zuru ezu $count dị njikere n\'Ọbá akwụkwọ m.',
+      one: 'Ọgụgụ zuru ezu dị njikere n\'Ọbá akwụkwọ m.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cueTiltToward => 'Hulata elu ekwentị gaa n\'ebe ị nọ';
+
+  @override
+  String get cueTiltAway => 'Hulata elu ekwentị pụọ n\'ebe ị nọ';
+
+  @override
+  String get cueBlurry => 'Ọ dị nzuzu. Kwụsị ọtọ';
+
+  @override
+  String get readerCommandHelp =>
+      'Ị nwere ike ikwu: next, back, repeat, pause, read, next column, headings ma ọ bụ spell. Kwuo iwu n\'asụsụ Bekee ugbu a.';
 }

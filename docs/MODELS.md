@@ -144,3 +144,12 @@ Sources for these limits are secondary and vary: [AIMultiple, free cloud GPUs](h
 For real users, N-ATLaS needs a GPU server that stays up:
 - **DSN's compute**, if it can give a persistent GPU;
 - or a cloud GPU with at least 16 GB (24 GB is more comfortable for fp16 plus LoRA). On AWS that is a g5/g6 instance, which is **not** in the free plan; agree the cost before starting one.
+
+## OCR models (reading pages)
+
+| Where | Model | Licence | Notes |
+|---|---|---|---|
+| Server, every page | Tesseract 5 `eng` (Debian package) | Apache-2.0 | The first reading. Production engine (`OCR_ENGINE=tesseract`). |
+| Server, Yorùbá pages | Tesseract `yor`, tessdata_fast, pinned in `backend/Dockerfile` | Apache-2.0 | Read again when the page is Yorùbá: keeps 71 to 73% of ẹ ọ ṣ (clean and phone-like test pages), against 0% for `eng` (docs/FINDINGS.md, 26 Oct 2026). 1 MB. |
+| Server, Igbo pages | Tesseract `script/Latin`, tessdata_fast, pinned | Apache-2.0 | Read again when the page is Igbo: keeps 35% of ị ọ ụ (every ọ, no ị or ụ), against 0% for `eng`. 89 MB file, about 370 MB of memory while it reads (2.2 s a page on the Mac). No model keeps Hausa ɓ ɗ ƙ ƴ. |
+| Phone, offline only | Google ML Kit Text Recognition v2, Latin, bundled (`google_mlkit_text_recognition` 0.17.1, `com.google.mlkit:text-recognition:16.0.1`) | Google ML Kit terms | Offline basic reading (`app/lib/offline/`). The model is inside the APK: nothing is downloaded or sent. It makes the arm64 APK 13 MB bigger. |

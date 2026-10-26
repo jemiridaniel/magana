@@ -908,7 +908,7 @@
     }
   },
   "jumpWarnings": "Next thing I'm not sure about",
-  "jumpNotYet": "Jumping to headings and diagrams is not available yet.",
+  "jumpNotYet": "Jumping to diagrams is not available yet.",
   "paperLetter": "Letters & forms",
   "paperLetterDetail": "Notices, forms, religious texts",
   "noteLetter": "Magana reads what is printed. It does not give legal or financial advice, and never asks for your PIN or password.",
@@ -1604,5 +1604,143 @@
   },
   "@msg_reading_incomplete": {
     "description": "Only the parts that passed every check are read."
-  }
+  },
+  "columnsNote": "{count} columns. Left first, then right.",
+  "@columnsNote": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "columnsSubtitle": "{count} columns · read left, then right",
+  "@columnsSubtitle": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "columnPosition": "Column {column} of {columns} · Line {number} of {total}",
+  "@columnPosition": {
+    "placeholders": {
+      "column": {
+        "type": "int"
+      },
+      "columns": {
+        "type": "int"
+      },
+      "number": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "columnStart": "Column {column} of {columns}",
+  "@columnStart": {
+    "placeholders": {
+      "column": {
+        "type": "int"
+      },
+      "columns": {
+        "type": "int"
+      }
+    }
+  },
+  "columnLabel": "Column {column}",
+  "@columnLabel": {
+    "placeholders": {
+      "column": {
+        "type": "int"
+      }
+    }
+  },
+  "headingSpoken": "Heading: {text}",
+  "@headingSpoken": {
+    "placeholders": {
+      "text": {
+        "type": "String"
+      }
+    }
+  },
+  "headingLabel": "Heading",
+  "nextColumn": "Next column",
+  "lastColumn": "This is the last column.",
+  "jumpHeadings": "Headings",
+  "jumpColumns": "Columns",
+  "jumpTables": "Tables",
+  "noHeadings": "I didn't find any headings on this page.",
+  "noColumns": "This page has one column.",
+  "noTables": "This page has no tables.",
+  "mapNow": "now",
+  "mapNext": "next",
+  "letterCount": "{count, plural, =1{1 word may be wrong.} other{{count} words may be wrong.}}",
+  "@letterCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "letterCheckWords": "These words may be missing a special letter: {words}.",
+  "@letterCheckWords": {
+    "placeholders": {
+      "words": {
+        "type": "String"
+      }
+    }
+  },
+  "spellWord": "Spell word",
+  "spellNone": "No marked words on this line.",
+  "askSomeone": "Ask someone",
+  "askSomeoneText": "Ask someone who reads {language} to check the marked words.",
+  "@askSomeoneText": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "languagePage": "{language} page",
+  "@languagePage": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "msg_letters_ha": "Hausa page. I can miss letters like ƙ, ɗ and ɓ. Marked words may have one of these. Spell a word or check it with someone.",
+  "msg_letters_yo": "Yorùbá page. I can miss letters like ẹ, ọ and ṣ, and tone marks. Marked words may have one of these. Spell a word or check it with someone.",
+  "msg_letters_ig": "Igbo page. I can miss letters like ị, ọ and ụ. Marked words may have one of these. Spell a word or check it with someone.",
+  "msg_cut_off_top": "Part of the page is cut off at the top.",
+  "msg_cut_off_bottom": "Part of the page is cut off at the bottom.",
+  "msg_cut_off_left": "Part of the page is cut off at the left.",
+  "msg_cut_off_right": "Part of the page is cut off at the right.",
+  "offlineBanner": "No internet. Reading on this phone.",
+  "offlineBannerSlow": "Magana's server isn't answering. Reading on this phone.",
+  "offlineNote": "Basic reading only. Tables, columns and Explain need internet.",
+  "offlineQueued": "I'll keep this page and do a full reading when you're back online.",
+  "fullReadingWhenOnline": "Full reading when online",
+  "queueDropped": "{count, plural, =1{The oldest waiting page was removed: up to 20 pages can wait.} other{The {count} oldest waiting pages were removed: up to 20 pages can wait.}}",
+  "@queueDropped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "fullReadingsReady": "{count, plural, =1{A full reading is ready in My library.} other{{count} full readings are ready in My library.}}",
+  "@fullReadingsReady": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cueTiltToward": "Tilt the top of the phone toward you",
+  "cueTiltAway": "Tilt the top of the phone away from you",
+  "cueBlurry": "Blurry. Hold still",
+  "readerCommandHelp": "You can say: next, back, repeat, pause, read, next column, headings or spell. Say commands in English for now."
 }

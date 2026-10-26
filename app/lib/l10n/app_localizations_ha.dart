@@ -1344,8 +1344,7 @@ class AppLocalizationsHa extends AppLocalizations {
   String get jumpWarnings => 'Abu na gaba da ban tabbata ba';
 
   @override
-  String get jumpNotYet =>
-      'Ba a iya tsallaka zuwa kanun labarai da zane-zane ba tukuna.';
+  String get jumpNotYet => 'Ba a iya tsallaka zuwa zane-zane ba tukuna.';
 
   @override
   String get paperLetter => 'Wasiƙu da fom';
@@ -2041,4 +2040,180 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get msg_reading_incomplete =>
       'Wannan karatun bai cika ba. Zan karanta sassan da na iya tantancewa kawai.';
+
+  @override
+  String columnsNote(int count) {
+    return 'Ginshiƙai $count. Na hagu da farko, sannan na dama.';
+  }
+
+  @override
+  String columnsSubtitle(int count) {
+    return 'Ginshiƙai $count · hagu, sannan dama';
+  }
+
+  @override
+  String columnPosition(int column, int columns, int number, int total) {
+    return 'Ginshiƙi $column cikin $columns · Layi $number cikin $total';
+  }
+
+  @override
+  String columnStart(int column, int columns) {
+    return 'Ginshiƙi $column cikin $columns';
+  }
+
+  @override
+  String columnLabel(int column) {
+    return 'Ginshiƙi $column';
+  }
+
+  @override
+  String headingSpoken(String text) {
+    return 'Kanun labari: $text';
+  }
+
+  @override
+  String get headingLabel => 'Kanun labari';
+
+  @override
+  String get nextColumn => 'Ginshiƙi na gaba';
+
+  @override
+  String get lastColumn => 'Wannan shi ne ginshiƙi na ƙarshe.';
+
+  @override
+  String get jumpHeadings => 'Kanun labarai';
+
+  @override
+  String get jumpColumns => 'Ginshiƙai';
+
+  @override
+  String get jumpTables => 'Teburori';
+
+  @override
+  String get noHeadings => 'Ban sami kanun labarai a wannan shafin ba.';
+
+  @override
+  String get noColumns => 'Wannan shafin ginshiƙi ɗaya ne.';
+
+  @override
+  String get noTables => 'Babu tebur a wannan shafin.';
+
+  @override
+  String get mapNow => 'yanzu';
+
+  @override
+  String get mapNext => 'na gaba';
+
+  @override
+  String letterCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Kalmomi $count na iya zama ba daidai ba.',
+      one: 'Kalma 1 na iya zama ba daidai ba.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String letterCheckWords(String words) {
+    return 'Waɗannan kalmomin na iya rasa wani harafi na musamman: $words.';
+  }
+
+  @override
+  String get spellWord => 'Faɗi haruffa';
+
+  @override
+  String get spellNone => 'Babu kalmar da aka yi wa alama a wannan layin.';
+
+  @override
+  String get askSomeone => 'Tambayi wani';
+
+  @override
+  String askSomeoneText(String language) {
+    return 'Tambayi wanda ke karanta $language ya duba kalmomin da aka yi wa alama.';
+  }
+
+  @override
+  String languagePage(String language) {
+    return 'Shafin $language';
+  }
+
+  @override
+  String get msg_letters_ha =>
+      'Shafin Hausa. Zan iya rasa haruffa kamar ƙ, ɗ da ɓ. Kalmomin da aka yi wa alama na iya ƙunsar ɗaya daga cikinsu. Faɗi haruffan kalma ko ka duba da wani.';
+
+  @override
+  String get msg_letters_yo =>
+      'Shafin Yarbanci. Zan iya rasa haruffa kamar ẹ, ọ da ṣ, da alamomin sauti. Kalmomin da aka yi wa alama na iya ƙunsar ɗaya daga cikinsu. Faɗi haruffan kalma ko ka duba da wani.';
+
+  @override
+  String get msg_letters_ig =>
+      'Shafin Igbo. Zan iya rasa haruffa kamar ị, ọ da ụ. Kalmomin da aka yi wa alama na iya ƙunsar ɗaya daga cikinsu. Faɗi haruffan kalma ko ka duba da wani.';
+
+  @override
+  String get msg_cut_off_top => 'Wani ɓangare na shafin ya yanke a sama.';
+
+  @override
+  String get msg_cut_off_bottom => 'Wani ɓangare na shafin ya yanke a ƙasa.';
+
+  @override
+  String get msg_cut_off_left => 'Wani ɓangare na shafin ya yanke a hagu.';
+
+  @override
+  String get msg_cut_off_right => 'Wani ɓangare na shafin ya yanke a dama.';
+
+  @override
+  String get offlineBanner => 'Babu intanet. Ana karantawa a wannan wayar.';
+
+  @override
+  String get offlineBannerSlow =>
+      'Sabar Magana ba ta amsawa. Ana karantawa a wannan wayar.';
+
+  @override
+  String get offlineNote =>
+      'Karatu na asali kawai. Teburori, ginshiƙai da Bayani suna buƙatar intanet.';
+
+  @override
+  String get offlineQueued =>
+      'Zan ajiye wannan shafin in yi cikakken karatu idan intanet ta dawo.';
+
+  @override
+  String get fullReadingWhenOnline => 'Cikakken karatu idan akwai intanet';
+
+  @override
+  String queueDropped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'An cire tsofaffin shafuka $count da ke jira: shafuka 20 ne kawai ke iya jira.',
+      one: 'An cire tsohon shafin da ke jira: shafuka 20 ne kawai ke iya jira.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fullReadingsReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Cikakkun karatu $count sun shirya a Ɗakin karatuna.',
+      one: 'Cikakken karatu ya shirya a Ɗakin karatuna.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cueTiltToward => 'Karkata saman wayar zuwa gare ka';
+
+  @override
+  String get cueTiltAway => 'Karkata saman wayar daga gare ka';
+
+  @override
+  String get cueBlurry => 'Ba a gani sosai. Riƙe a tsaye';
+
+  @override
+  String get readerCommandHelp =>
+      'Za ka iya cewa: next, back, repeat, pause, read, next column, headings ko spell. Faɗi umarni da Turanci a yanzu.';
 }

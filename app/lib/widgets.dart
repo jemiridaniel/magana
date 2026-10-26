@@ -257,8 +257,11 @@ class NoteBox extends StatelessWidget {
     required this.text,
     this.kind = NoteKind.info,
     this.bold,
+    this.icon,
   });
 
+  /// Replaces the kind's icon (the offline banner's "no connection").
+  final IconData? icon;
   final String text;
   final String? bold; // leading bold phrase, e.g. "Emergency?"
   final NoteKind kind;
@@ -316,7 +319,7 @@ class NoteBox extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 26, color: iconColor),
+            Icon(this.icon ?? icon, size: 26, color: iconColor),
             const SizedBox(width: 12),
             Expanded(
               child: Text.rich(

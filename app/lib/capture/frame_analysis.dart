@@ -4,12 +4,19 @@ import 'dart:typed_data';
 /// A small greyscale picture of one camera frame (0 = black, 255 = white),
 /// row-major and already turned the way the user holds the phone.
 class LumaGrid {
-  LumaGrid(this.width, this.height, this.data)
+  LumaGrid(this.width, this.height, this.data, {this.sharpness})
     : assert(data.length == width * height);
 
   final int width;
   final int height;
   final Uint8List data;
+
+  /// How sharp the print is, from full-resolution patches ([sharpnessOf]);
+  /// null when no patch held print (then blur isn't judged).
+  final double? sharpness;
+
+  LumaGrid withSharpness(double? s) =>
+      LumaGrid(width, height, data, sharpness: s);
 
   int at(int x, int y) => data[y * width + x];
 
@@ -63,6 +70,62 @@ class LumaGrid {
   }
 }
 
+/// Sharpness of a frame: the strongest edges (95th percentile of the absolute
+/// Laplacian) in 48 x 48 pixel patches on a 4 x 4 grid over the middle 80% of the
+/// frame, at full resolution. Patches without print (flat paper, the table) are
+/// skipped, so a blank middle never reads as blur; null when every patch is flat.
+/// Rendered pages at the camera's size (docs/FINDINGS.md): sharp about 200, a
+/// light blur (sigma 0.8) 28 to 64, sigma 1.5 11 to 18, sigma 2.5 5 to 7.
+double? sharpnessOf({
+  required Uint8List bytes,
+  required int frameWidth,
+  required int frameHeight,
+  required int rowStride,
+  int pixelStride = 1,
+  int channelOffset = 0,
+}) {
+  const size = 48, grid = 4;
+  double? best;
+  final values = Float64List((size - 2) * (size - 2));
+  int at(int x, int y) =>
+      bytes[y * rowStride + x * pixelStride + channelOffset];
+  for (var gy = 0; gy < grid; gy++) {
+    for (var gx = 0; gx < grid; gx++) {
+      final x0 = (frameWidth * (0.1 + 0.8 * gx / grid)).floor();
+      final y0 = (frameHeight * (0.1 + 0.8 * gy / grid)).floor();
+      if (x0 + size > frameWidth || y0 + size > frameHeight) continue;
+      var sum = 0.0, sq = 0.0;
+      for (var y = y0; y < y0 + size; y++) {
+        for (var x = x0; x < x0 + size; x++) {
+          final v = at(x, y);
+          sum += v;
+          sq += v * v;
+        }
+      }
+      final n = size * size;
+      final std = math.sqrt(math.max(0, sq / n - (sum / n) * (sum / n)));
+      if (std < 12) continue; // flat: no print to judge
+      var i = 0;
+      for (var y = y0 + 1; y < y0 + size - 1; y++) {
+        for (var x = x0 + 1; x < x0 + size - 1; x++) {
+          values[i++] =
+              (4 * at(x, y) -
+                      at(x - 1, y) -
+                      at(x + 1, y) -
+                      at(x, y - 1) -
+                      at(x, y + 1))
+                  .abs()
+                  .toDouble();
+        }
+      }
+      final sorted = Float64List.fromList(values)..sort();
+      final p95 = sorted[(sorted.length * 0.95).floor()];
+      best = best == null ? p95 : math.max(best, p95);
+    }
+  }
+  return best;
+}
+
 /// What the user should do next. Spoken about every second while framing.
 enum Advice {
   tooDark,
@@ -73,6 +136,9 @@ enum Advice {
   moveDown,
   moveLeft,
   moveRight,
+  tiltToward,
+  tiltAway,
+  blurry,
   holdStill,
   ready,
 }
@@ -99,6 +165,11 @@ class FrameAnalyzer {
   static const minPageArea = 0.30; // smaller than this: bring the phone closer
   static const shakeLimit =
       7.0; // mean frame-to-frame change that counts as moving
+  // The page's top edge this much narrower than its bottom (or the other way):
+  // the phone is tilted, so one end of the page is further from the camera.
+  static const tiltLimit = 0.85;
+  // Sharpness ([sharpnessOf]) below this is too blurry to read: no auto-capture.
+  static const blurLimit = 20.0;
 
   LumaGrid? _previous;
   int _steady = 0;
@@ -115,6 +186,8 @@ class FrameAnalyzer {
     Advice.moveLeft ||
     Advice.moveRight => 0.3,
     Advice.moveCloser || Advice.liftPhone => 0.5,
+    Advice.tiltToward || Advice.tiltAway => 0.6,
+    Advice.blurry => 0.65,
     Advice.holdStill => 0.7 + 0.3 * (_steady / steadyFramesNeeded).clamp(0, 1),
     Advice.ready => 1,
   };
@@ -188,8 +261,45 @@ class FrameAnalyzer {
 
     final area = (bottom - top + 1) * (right - left + 1) / n;
     if (area < minPageArea) return Advice.moveCloser;
+    // Tilt, from the page's own edges (no motion sensor: cheap phones may lack
+    // one). The end of the page further from the camera looks narrower. Its top
+    // narrower: the camera looks up the page, the top of the phone is tilted up
+    // toward the user, so tilt it away; and the other way round.
+    final span = bottom - top;
+    if (span >= 8) {
+      // The widest row in a band near each end: a row of print can read as all
+      // dark at this size, so one row alone may measure nothing.
+      final upper = [
+        for (var y = top + span ~/ 10; y <= top + span ~/ 4; y++)
+          _width(g, y, t),
+      ].reduce(math.max);
+      final lower = [
+        for (var y = bottom - span ~/ 4; y <= bottom - span ~/ 10; y++)
+          _width(g, y, t),
+      ].reduce(math.max);
+      if (upper > 0 && lower > 0) {
+        if (upper < lower * tiltLimit) return Advice.tiltAway;
+        if (lower < upper * tiltLimit) return Advice.tiltToward;
+      }
+    }
     if (moving) return Advice.holdStill;
+    final sharp = g.sharpness;
+    if (sharp != null && sharp < blurLimit) return Advice.blurry;
     return Advice.ready;
+  }
+
+  /// The page's width on row [y]: from its first to its last bright cell. The
+  /// whole row: a tilted page's wide end reaches past the columns that are page
+  /// from top to bottom.
+  static int _width(LumaGrid g, int y, int t) {
+    var first = -1, last = -1;
+    for (var x = 0; x < g.width; x++) {
+      if (g.at(x, y) > t) {
+        if (first < 0) first = x;
+        last = x;
+      }
+    }
+    return first < 0 ? 0 : last - first + 1;
   }
 
   static int _count(int count, bool Function(int) test) {

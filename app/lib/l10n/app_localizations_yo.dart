@@ -1339,7 +1339,7 @@ class AppLocalizationsYo extends AppLocalizations {
   String get jumpWarnings => 'Ohun tó kàn tí mi ò dá lójú';
 
   @override
-  String get jumpNotYet => 'A kò tíì lè fò sí àwọn àkọlé àti àwòrán.';
+  String get jumpNotYet => 'A kò tíì lè fò sí àwọn àwòrán.';
 
   @override
   String get paperLetter => 'Lẹ́tà àti fọ́ọ̀mù';
@@ -2035,4 +2035,182 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get msg_reading_incomplete =>
       'Kíkà yìí kò pé. Àwọn apá tí mo lè ṣàyẹ̀wò nìkan ni màá kà.';
+
+  @override
+  String columnsNote(int count) {
+    return 'Ọ̀wọ̀n $count. Ti òsì kọ́kọ́, lẹ́yìn náà ti ọ̀tún.';
+  }
+
+  @override
+  String columnsSubtitle(int count) {
+    return 'Ọ̀wọ̀n $count · òsì, lẹ́yìn náà ọ̀tún';
+  }
+
+  @override
+  String columnPosition(int column, int columns, int number, int total) {
+    return 'Ọ̀wọ̀n $column nínú $columns · Ìlà $number nínú $total';
+  }
+
+  @override
+  String columnStart(int column, int columns) {
+    return 'Ọ̀wọ̀n $column nínú $columns';
+  }
+
+  @override
+  String columnLabel(int column) {
+    return 'Ọ̀wọ̀n $column';
+  }
+
+  @override
+  String headingSpoken(String text) {
+    return 'Àkọlé: $text';
+  }
+
+  @override
+  String get headingLabel => 'Àkọlé';
+
+  @override
+  String get nextColumn => 'Ọ̀wọ̀n tó kàn';
+
+  @override
+  String get lastColumn => 'Èyí ni ọ̀wọ̀n tó kẹ́yìn.';
+
+  @override
+  String get jumpHeadings => 'Àwọn àkọlé';
+
+  @override
+  String get jumpColumns => 'Àwọn ọ̀wọ̀n';
+
+  @override
+  String get jumpTables => 'Àwọn tábìlì';
+
+  @override
+  String get noHeadings => 'Mi ò rí àkọlé kankan lójú ìwé yìí.';
+
+  @override
+  String get noColumns => 'Ọ̀wọ̀n kan ṣoṣo ni ojú ìwé yìí ní.';
+
+  @override
+  String get noTables => 'Kò sí tábìlì lójú ìwé yìí.';
+
+  @override
+  String get mapNow => 'báyìí';
+
+  @override
+  String get mapNext => 'tó kàn';
+
+  @override
+  String letterCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ọ̀rọ̀ $count lè ṣàṣìṣe.',
+      one: 'Ọ̀rọ̀ 1 lè ṣàṣìṣe.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String letterCheckWords(String words) {
+    return 'Àwọn ọ̀rọ̀ wọ̀nyí lè ti pàdánù lẹ́tà pàtàkì kan: $words.';
+  }
+
+  @override
+  String get spellWord => 'Sọ lẹ́tà ọ̀rọ̀';
+
+  @override
+  String get spellNone => 'Kò sí ọ̀rọ̀ tí a sàmì sí lórí ìlà yìí.';
+
+  @override
+  String get askSomeone => 'Béèrè lọ́wọ́ ẹnìkan';
+
+  @override
+  String askSomeoneText(String language) {
+    return 'Béèrè lọ́wọ́ ẹni tó ń ka $language kó yẹ àwọn ọ̀rọ̀ tí a sàmì sí wò.';
+  }
+
+  @override
+  String languagePage(String language) {
+    return 'Ojú ìwé $language';
+  }
+
+  @override
+  String get msg_letters_ha =>
+      'Ojú ìwé Hausa. Mo lè pàdánù àwọn lẹ́tà bíi ƙ, ɗ àti ɓ. Àwọn ọ̀rọ̀ tí a sàmì sí lè ní ọ̀kan nínú wọn. Sọ lẹ́tà ọ̀rọ̀ kan tàbí yẹ̀ ẹ́ wò pẹ̀lú ẹnìkan.';
+
+  @override
+  String get msg_letters_yo =>
+      'Ojú ìwé Yorùbá. Mo lè pàdánù àwọn lẹ́tà bíi ẹ, ọ àti ṣ, àti àmì ohùn. Àwọn ọ̀rọ̀ tí a sàmì sí lè ní ọ̀kan nínú wọn. Sọ lẹ́tà ọ̀rọ̀ kan tàbí yẹ̀ ẹ́ wò pẹ̀lú ẹnìkan.';
+
+  @override
+  String get msg_letters_ig =>
+      'Ojú ìwé Igbo. Mo lè pàdánù àwọn lẹ́tà bíi ị, ọ àti ụ. Àwọn ọ̀rọ̀ tí a sàmì sí lè ní ọ̀kan nínú wọn. Sọ lẹ́tà ọ̀rọ̀ kan tàbí yẹ̀ ẹ́ wò pẹ̀lú ẹnìkan.';
+
+  @override
+  String get msg_cut_off_top => 'Apá kan ojú ìwé ti gé kúrò lókè.';
+
+  @override
+  String get msg_cut_off_bottom => 'Apá kan ojú ìwé ti gé kúrò nísàlẹ̀.';
+
+  @override
+  String get msg_cut_off_left => 'Apá kan ojú ìwé ti gé kúrò lápá òsì.';
+
+  @override
+  String get msg_cut_off_right => 'Apá kan ojú ìwé ti gé kúrò lápá ọ̀tún.';
+
+  @override
+  String get offlineBanner => 'Kò sí íńtánẹ́ẹ̀tì. Mò ń kà á lórí fóònù yìí.';
+
+  @override
+  String get offlineBannerSlow =>
+      'Sáfà Magana kò dáhùn. Mò ń kà á lórí fóònù yìí.';
+
+  @override
+  String get offlineNote =>
+      'Kíkà ìpìlẹ̀ nìkan. Tábìlì, ọ̀wọ̀n àti Àlàyé nílò íńtánẹ́ẹ̀tì.';
+
+  @override
+  String get offlineQueued =>
+      'Màá pa ojú ìwé yìí mọ́, màá sì kà á ní kíkún nígbà tí íńtánẹ́ẹ̀tì bá padà.';
+
+  @override
+  String get fullReadingWhenOnline =>
+      'Kíkà ní kíkún nígbà tí íńtánẹ́ẹ̀tì bá wà';
+
+  @override
+  String queueDropped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          'A ti yọ ojú ìwé $count tó ti pẹ́ jù tó ń dúró: ojú ìwé 20 péré ló lè dúró.',
+      one:
+          'A ti yọ ojú ìwé tó ti pẹ́ jù tó ń dúró: ojú ìwé 20 péré ló lè dúró.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String fullReadingsReady(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Kíkà kíkún $count ti ṣetán nínú Ilé-ìkàwé mi.',
+      one: 'Kíkà kíkún kan ti ṣetán nínú Ilé-ìkàwé mi.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cueTiltToward => 'Tẹ orí fóònù sọ́dọ̀ rẹ';
+
+  @override
+  String get cueTiltAway => 'Tẹ orí fóònù kúrò lọ́dọ̀ rẹ';
+
+  @override
+  String get cueBlurry => 'Kò mọ́. Dúró jẹ́ẹ́';
+
+  @override
+  String get readerCommandHelp =>
+      'O lè sọ pé: next, back, repeat, pause, read, next column, headings tàbí spell. Sọ àwọn àṣẹ ní èdè Gẹ̀ẹ́sì fún báyìí.';
 }

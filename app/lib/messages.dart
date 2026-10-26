@@ -6,6 +6,13 @@ String messageFor(AppLocalizations l, String code, {String where = ''}) =>
     switch (code) {
       'too_dark' => l.msg_too_dark,
       'blurry' => l.msg_blurry,
+      'cut_off_top' => l.msg_cut_off_top,
+      'cut_off_bottom' => l.msg_cut_off_bottom,
+      'cut_off_left' => l.msg_cut_off_left,
+      'cut_off_right' => l.msg_cut_off_right,
+      'letters_ha' => l.msg_letters_ha,
+      'letters_yo' => l.msg_letters_yo,
+      'letters_ig' => l.msg_letters_ig,
       'small_print' => l.msg_small_print,
       'money_amounts_unreliable' => l.msg_money_amounts_unreliable,
       'reading_incomplete' => l.msg_reading_incomplete,

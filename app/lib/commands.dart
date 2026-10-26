@@ -70,3 +70,31 @@ AppLanguage? namedLanguage(String transcript) {
   }
   return null;
 }
+
+/// What "Speak a command" in the Reader can do (board 5c: "Next column" by voice too).
+/// Specific before general: "next column" before "next".
+enum ReaderCommand {
+  nextColumn(['next column', 'column']),
+  headings(['heading', 'headings']),
+  spell(['spell']),
+  next(['next', 'forward']),
+  previous(['previous', 'back', 'before']),
+  repeat(['repeat', 'again']),
+  pause(['pause', 'stop', 'wait']),
+  play(['read', 'play', 'continue', 'start']),
+  help(['help', 'what can i say', 'commands']);
+
+  const ReaderCommand(this.words);
+  final List<String> words;
+}
+
+/// The Reader command a transcript asks for, or null.
+ReaderCommand? matchReaderCommand(String transcript) {
+  final text = ' ${_norm(transcript)} ';
+  for (final c in ReaderCommand.values) {
+    if (c.words.any((w) => RegExp(' ${RegExp.escape(w)} ').hasMatch(text))) {
+      return c;
+    }
+  }
+  return null;
+}

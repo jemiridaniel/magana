@@ -6,7 +6,7 @@ Last updated: 26 October 2026 · Contact: **support@magana.ng**
 
 ## The short version
 
-- **Photos and PDFs of your papers are read and then deleted.** They are never saved on the server or kept on your phone.
+- **Photos and PDFs of your papers are read and then deleted.** They are never saved on the server. Without internet, a photo is read on your phone and can wait there, encrypted, for a full reading when you're back online; then it is deleted. **[check]**
 - **What Magana reads for you stays on your phone,** unless you save it to your library (30 days) or share it.
 - **No tracking.** The app and website have no analytics, no trackers and no crash reporting.
 - **Magana never asks for your bank PIN or any account password.** The one password it may ask for is a locked PDF's own, to open that one file. It is never saved.
@@ -25,7 +25,7 @@ The NDPA lets us use personal data only for a clear purpose and on a lawful basi
 
 | What | Why | Legal basis | Kept |
 |---|---|---|---|
-| **A photo or PDF of a page** | To read it to you | Your consent: you choose to send it | **Not kept.** Read in memory on our server, then deleted. The phone deletes its copy once it is sent |
+| **A photo or PDF of a page** | To read it to you | Your consent: you choose to send it | **Not kept.** Read in memory on our server, then deleted. The phone deletes its copy once it is sent. Offline: see "Reading without internet" |
 | **A locked PDF's password** | To open that one file | Your consent | **Not kept.** Used once, never saved or logged, never sent back |
 | **The text Magana read** | So you can hear it again | Your consent | On your phone only. In your library only if you save it: 30 days |
 | **Your speech** (answers, commands, questions) | To understand what you say | Your consent | **Not kept.** See "Speech recognition" |
@@ -37,6 +37,12 @@ The NDPA lets us use personal data only for a clear purpose and on a lawful basi
 | **Server logs**: time, internet address, which page of our service was asked for, errors | To keep the service working and safe | Legitimate interests | Rotated: the oldest goes when 3 files of 10 MB are full (usually a few weeks) |
 
 Server logs never contain photos, page text, recordings or health-check answers.
+
+## Reading without internet
+
+When there is no internet, or Magana's server fails or takes more than 8 seconds, the photo is **read on your phone** by text recognition built into the app (Google ML Kit, on-device). **Nothing leaves the phone** for that reading. It is a basic reading: no tables, columns or Explain.
+
+"Full reading when online" (on unless you switch it off): the photo **waits on your phone, encrypted** with a key kept in the phone's secure key store, and is sent for the full reading the next time Magana is online. The full reading goes to My library (kept 30 days, like any saved reading) and **the photo is deleted**. At most 20 photos wait; if there are more, the oldest is deleted and you are told. Accounts that can't keep a library (under 13) never keep a photo. **[check]** New: this is the only time a photo stays on the phone.
 
 ## Speech recognition
 
