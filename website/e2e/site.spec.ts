@@ -126,3 +126,61 @@ test("Hear a sample: says exactly Magana's lines, unclear number included; nothi
   expect(outside).toEqual([]);
   expect(await context.cookies()).toEqual([]);
 });
+
+// ---------- the hero demo (components/HeroDemo.tsx)
+
+const running = (page: Page) => page.evaluate(() =>
+  document.querySelector(".pd")!.getAnimations({ subtree: true }).filter((a) => a.playState === "running").length);
+const opacity = (page: Page, sel: string) => page.evaluate((s) => Number(getComputedStyle(document.querySelector(s)!).opacity), sel);
+
+test("hero demo: one description for screen readers, visuals hidden, captions not announced, CSS only", async ({ page }) => {
+  await ready(page, "/");
+  await expect(page.locator("#demo-desc")).toContainText("four steps");
+  await expect(page.locator(".pd-visual")).toHaveAttribute("aria-hidden", "true");
+  expect(await page.locator(".pd [aria-live], .pd [role=status], .pd [role=alert]").count()).toBe(0);
+  expect(await page.locator(".pd video, .pd iframe, .pd canvas, .pd img").count()).toBe(0);
+  expect(await running(page)).toBeGreaterThan(10);  // CSS animations, nothing else
+});
+
+test("hero demo: Pause/Play (WCAG 2.2.2), and it pauses on hover", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await ready(page, "/");
+  await page.mouse.move(5, 5);
+  const pause = page.getByRole("button", { name: "Pause demo" });
+  await pause.click();
+  await page.mouse.move(5, 5);
+  await page.evaluate(() => (document.activeElement as HTMLElement).blur());  // away from the demo: still paused
+  await expect(page.getByRole("button", { name: "Play demo" })).toBeVisible();
+  expect(await running(page)).toBe(0);
+  await page.getByRole("button", { name: "Play demo" }).click();
+  await page.evaluate(() => (document.activeElement as HTMLElement).blur());
+  await page.mouse.move(5, 5);
+  await expect.poll(() => running(page)).toBeGreaterThan(10);
+  await page.locator(".pd-phone").hover();
+  await expect.poll(() => running(page)).toBe(0);
+});
+
+test("hero demo: a step chip jumps to its scene and keeps focus", async ({ page }) => {
+  await page.setViewportSize({ width: 1280, height: 900 });
+  await ready(page, "/");
+  await page.getByRole("button", { name: "Show step 3 Learn" }).click();
+  await expect(page.locator("#pd-chip-3")).toBeFocused();
+  await expect.poll(() => opacity(page, ".pd-screen > .sc:nth-child(3)")).toBeGreaterThan(0.9);  // the quiz
+  expect(await opacity(page, ".pd-screen > .sc:nth-child(1)")).toBeLessThan(0.1);
+  await page.keyboard.press("Tab");
+  await page.keyboard.press("Enter");  // the 4th chip, from the keyboard
+  await expect(page.locator("#pd-chip-4")).toBeFocused();
+  await expect.poll(() => opacity(page, ".pd-screen > .sc:nth-child(4)")).toBeGreaterThan(0.9);  // the call-back
+  await expect(page.locator(".pd-emergency")).toContainText("112");
+});
+
+test("hero demo: with reduced motion, scene 2 shows still", async ({ browser }) => {
+  const page = await browser.newPage({ reducedMotion: "reduce" });
+  await ready(page, "/");
+  expect(await running(page)).toBe(0);
+  expect(await opacity(page, ".pd-screen > .sc.s2")).toBe(1);
+  for (const n of [1, 3, 4]) expect(await opacity(page, `.pd-screen > .sc:nth-child(${n})`)).toBe(0);
+  expect(await opacity(page, ".pd-cap-k1")).toBe(1);
+  await expect(page.getByRole("button", { name: "Pause demo" })).toBeHidden();
+  await page.close();
+});

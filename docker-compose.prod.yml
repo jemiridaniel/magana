@@ -6,10 +6,20 @@
 #
 # Switching OCR: set OCR_ENGINE=paddle in .env (and use a c7i-flex.large), then run the
 # same command again; the image is rebuilt with PaddleOCR.
+# Logs are rotated: at most 3 files of 10 MB per service, then the oldest is deleted
+# (docs/PRIVACY.md, "How long we keep things"). They never hold photos, page text,
+# recordings or health-check answers.
+x-logging: &logging
+  driver: json-file
+  options:
+    max-size: "10m"
+    max-file: "3"
+
 services:
   caddy:
     image: caddy:2.8-alpine
     restart: unless-stopped
+    logging: *logging
     ports:
       - "80:80"
       - "443:443"
@@ -40,6 +50,7 @@ services:
         # on: Whisper ASR and the WhatsApp voices (docs/DEPLOY_AWS.md §9a; 8 GiB instance).
         SPEECH: ${SPEECH:-off}
     restart: unless-stopped
+    logging: *logging
     env_file: .env
     environment:
       MAGANA_OCR: ${OCR_ENGINE:-tesseract}
@@ -63,6 +74,7 @@ services:
   iba:
     build: ${IBA_NATLAS_DIR:-../iba-natlas/app}
     restart: unless-stopped
+    logging: *logging
     expose:
       - "8000"
     environment:

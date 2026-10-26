@@ -22,3 +22,4 @@ backend/data/
 
 # Private test papers: never commit (bank statements, handwriting, prescriptions)
 magana-private-pages/
+.venv-*/

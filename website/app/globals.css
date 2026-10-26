@@ -118,7 +118,6 @@ img { max-width: 100%; height: auto; }
 .hero-text { flex: 1 1 520px; display: flex; flex-direction: column; gap: 26px; min-width: 0; }
 .hero-text > p.lead { font-size: 22px; max-width: 600px; }
 .hero-art { flex: 1 1 300px; display: flex; justify-content: center; }
-.hero-art svg { width: min(340px, 100%); height: auto; }
 .soon { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; font-size: 17px; color: var(--muted); }
 .soon li { display: flex; gap: 8px; align-items: flex-start; }
 .soon strong { color: var(--ink); }
@@ -222,3 +221,131 @@ img { max-width: 100%; height: auto; }
 .footer-nav a:hover { color: var(--amber); }
 .footer-small { flex-basis: 100%; font-size: 15px; color: #d5d9de; }
 .site-footer :focus-visible { outline-color: #fff; }
+
+/* ---------- Hero demo (components/HeroDemo.tsx; boards "Website · magana.ng home").
+   Four scenes of 4 s on a 16 s loop, CSS only. --d starts the loop part-way (a chip jump). */
+.pd { display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; max-width: 400px; }
+.pd *, .pd *::before, .pd *::after { box-sizing: border-box; }
+.pd-visual { display: flex; flex-direction: column; align-items: center; gap: 16px; width: 100%; }
+.pd .sc { position: absolute; inset: 0; opacity: 0; }
+.pd .sc, .pd .an, .pd .tab { animation: var(--k) 16s linear infinite both; animation-delay: var(--d, 0s); }
+.pd .bar { transform-origin: bottom; animation: pd-wave .9s ease-in-out infinite; }
+/* Pause: the button (WCAG 2.2.2), or hovering or focusing the demo. */
+.pd.pd-paused *, .pd:hover *, .pd:focus-within * { animation-play-state: paused !important; }
+
+.pd-phone { position: relative; width: 330px; height: 680px; flex: none; border-radius: 58px; padding: 11px;
+  background: linear-gradient(145deg, #3A3F45, #16181B); box-shadow: 0 40px 80px rgba(20, 23, 26, .35), inset 0 0 0 2px #4B5157; }
+.pd-btn { position: absolute; width: 4px; border-radius: 2px 0 0 2px; background: #2A2E33; }
+.pd-btn-r { border-radius: 0 2px 2px 0; }
+.pd-screen { position: relative; width: 100%; height: 100%; border-radius: 47px; overflow: hidden; background: #FBFAF6; color: #14171A; font-size: 15px; line-height: 1.3; }
+.pd-island { position: absolute; left: 50%; top: 11px; transform: translateX(-50%); width: 112px; height: 32px; border-radius: 16px; background: #000; z-index: 4; }
+.pd-bar { z-index: 3; pointer-events: none; }
+.pd-status { position: absolute; left: 0; right: 0; top: 0; height: 50px; display: flex; align-items: center; justify-content: space-between; padding: 6px 30px 0; font-size: 15px; font-weight: 700; }
+.pd-status-icons { display: flex; gap: 6px; align-items: center; }
+.pd-home { position: absolute; left: 50%; bottom: 8px; transform: translateX(-50%); width: 120px; height: 5px; border-radius: 3px; background: #14171A; opacity: .5; z-index: 4; }
+.pd-glass { position: absolute; inset: 0; border-radius: 47px; background: linear-gradient(115deg, rgba(255,255,255,.12), rgba(255,255,255,0) 35%); pointer-events: none; z-index: 5; }
+
+/* Scene 1: the camera */
+.pd-camera { background: radial-gradient(circle at 50% 40%, #5B5A52, #24231F); }
+.pd-label { position: absolute; left: 40px; top: 180px; width: 210px; padding: 16px 14px; border-radius: 6px; background: #F6F1E4;
+  box-shadow: 0 10px 24px rgba(0,0,0,.45); color: #14171A; font-family: Arial, sans-serif; font-size: 10px; display: flex; flex-direction: column; gap: 4px; }
+.pd-label-name { font-size: 15px; font-weight: 700; margin-bottom: 2px; }
+.pd-label-faint { color: #A49E92; }
+.pd-frame { position: absolute; left: 24px; right: 24px; top: 160px; height: 250px; }
+.pd-corner { position: absolute; width: 44px; height: 44px; border: 0 solid #FFFFFF; }
+.pd-corner.tl { left: 0; top: 0; border-left-width: 5px; border-top-width: 5px; border-top-left-radius: 16px; }
+.pd-corner.tr { right: 0; top: 0; border-right-width: 5px; border-top-width: 5px; border-top-right-radius: 16px; }
+.pd-corner.bl { left: 0; bottom: 0; border-left-width: 5px; border-bottom-width: 5px; border-bottom-left-radius: 16px; }
+.pd-corner.br { right: 0; bottom: 0; border-right-width: 5px; border-bottom-width: 5px; border-bottom-right-radius: 16px; }
+.pd-prompt { position: absolute; left: 50%; top: 92px; transform: translateX(-50%); white-space: nowrap; padding: 10px 18px; border-radius: 22px;
+  font-size: 17px; font-weight: 700; box-shadow: 0 4px 12px rgba(0,0,0,.3); opacity: 0; }
+.pd-flash { position: absolute; inset: 0; background: #FFFFFF; opacity: 0; }
+.pd-shutter-note { position: absolute; left: 0; right: 0; bottom: 118px; text-align: center; color: #FFFFFF; font-size: 13px; }
+.pd-shutter { position: absolute; left: 0; right: 0; bottom: 30px; display: flex; justify-content: center; }
+.pd-shutter > span { display: flex; align-items: center; justify-content: center; width: 76px; height: 76px; border-radius: 38px; border: 5px solid #FFFFFF; }
+.pd-shutter > span > span { width: 58px; height: 58px; border-radius: 29px; background: #FFFFFF; }
+
+/* Scenes 2–4: app screens */
+.pd-head { display: flex; align-items: center; gap: 10px; padding: 56px 18px 10px; }
+.pd-head > span:last-child { display: flex; flex-direction: column; }
+.pd-head b { font-size: 17px; }
+.pd-head > span:last-child > span { font-size: 12px; color: #3D434A; }
+.pd-back { display: flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 19px; border: 2px solid #14171A; }
+.pd-lines { display: flex; flex-direction: column; gap: 8px; padding: 0 16px; }
+.pd-line { padding: 10px 12px; border-radius: 12px; border: 2px solid #D9D5CB; background: #FFFFFF; }
+.pd-unclear { background: #FFF1D6; border-color: #C98A00; color: #4A2800; }
+.pd-bottom { position: absolute; left: 16px; right: 16px; bottom: 26px; display: flex; flex-direction: column; gap: 10px; }
+.pd-wave { display: flex; justify-content: center; gap: 4px; height: 26px; align-items: flex-end; }
+.pd-wave span { width: 5px; border-radius: 3px; background: #0A6B4B; }
+.pd-controls { display: grid; grid-template-columns: 1fr 1.3fr 1fr; gap: 8px; }
+.pd-controls span, .pd-say { display: flex; align-items: center; justify-content: center; gap: 8px; min-height: 52px; border-radius: 26px; font-weight: 700; border: 2px solid #14171A; }
+.pd-pause, .pd-say { background: #FFC94A; }
+.pd-say { min-height: 58px; border-radius: 29px; font-size: 17px; }
+.pd-quiz { padding: 0 16px; display: flex; flex-direction: column; gap: 10px; }
+.pd-q { font-size: 20px; font-weight: 700; line-height: 1.25; }
+.pd-opt { display: flex; align-items: center; gap: 12px; min-height: 54px; padding: 0 14px; border-radius: 14px; border: 2px solid #14171A; background: #FFFFFF; font-size: 16px; }
+.pd-opt b { font-size: 18px; }
+.pd-help { padding: 0 16px; display: flex; flex-direction: column; gap: 12px; }
+.pd-check { display: flex; flex-direction: column; gap: 8px; padding: 16px; border-radius: 16px; border: 2px solid #14171A; background: #FFFFFF; opacity: 0; }
+.pd-check > span { font-size: 13px; color: #3D434A; }
+.pd-check > b { font-size: 18px; }
+.pd-check > div { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 6px; margin-top: 4px; }
+.pd-check > div span { display: flex; align-items: center; justify-content: center; min-height: 46px; border-radius: 12px; border: 2px solid #14171A; font-size: 14px; font-weight: 700; }
+.pd-yes { background: #E3F1EA; }
+.pd-booked { position: absolute; left: 16px; right: 16px; top: 104px; display: flex; flex-direction: column; align-items: center; gap: 10px; padding: 22px 16px;
+  border-radius: 18px; background: #E3F1EA; border: 3px solid #0A6B4B; text-align: center; opacity: 0; }
+.pd-booked b { font-size: 20px; }
+.pd-booked span { font-size: 14px; color: #3D434A; }
+.pd-emergency { position: absolute; left: 16px; right: 16px; bottom: 26px; display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 14px;
+  background: #FFFFFF; border-left: 6px solid #B42318; font-size: 14px; line-height: 1.35; }
+
+/* The caption under the phone, and the step chips */
+.pd-caption { position: relative; width: 100%; max-width: 400px; min-height: 64px; padding: 12px 16px 12px 52px; border-radius: 18px;
+  background: #FFFFFF; border: 2px solid #E2DED4; font-size: 16px; line-height: 1.35; }
+.pd-caption > svg { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); }
+.pd-caption-track { position: relative; min-height: 40px; }
+.pd-cap { position: absolute; inset: 0; display: flex; align-items: center; opacity: 0; }
+.pd-steps { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; align-items: center; }
+.pd-chip, .pd-playpause { min-height: 64px; border-radius: 32px; border: 2px solid #14171A; background: #FFFFFF; color: #14171A; font: inherit; font-size: 16px; font-weight: 700; cursor: pointer; }
+.pd-chip { padding: 0 16px; }
+.pd-playpause { width: 64px; display: inline-flex; align-items: center; justify-content: center; }
+.pd-chip:focus-visible, .pd-playpause:focus-visible { outline: 4px solid #0A6B4B; outline-offset: 3px; }
+
+@keyframes pd-wave { 0%, 100% { transform: scaleY(.4); } 50% { transform: scaleY(1); } }
+@keyframes s1 { 0% { opacity: 0 } 0.8% { opacity: 1 } 24.2% { opacity: 1 } 25% { opacity: 0 } 100% { opacity: 0 } }
+@keyframes s2 { 0%, 24.99% { opacity: 0 } 25.8% { opacity: 1 } 49.2% { opacity: 1 } 50%, 100% { opacity: 0 } }
+@keyframes s3 { 0%, 49.99% { opacity: 0 } 50.8% { opacity: 1 } 74.2% { opacity: 1 } 75%, 100% { opacity: 0 } }
+@keyframes s4 { 0%, 74.99% { opacity: 0 } 75.8% { opacity: 1 } 99.2% { opacity: 1 } 100% { opacity: 0 } }
+@keyframes c1a { 0% { opacity: 0 } 0.5% { opacity: 1 } 8.5% { opacity: 1 } 9%, 100% { opacity: 0 } }
+@keyframes c1b { 0%, 8.99% { opacity: 0 } 9.5% { opacity: 1 } 16.5% { opacity: 1 } 17%, 100% { opacity: 0 } }
+@keyframes c1c { 0%, 16.99% { opacity: 0 } 17.5% { opacity: 1 } 24.5% { opacity: 1 } 25%, 100% { opacity: 0 } }
+@keyframes paper { 0% { transform: translate(34px, 10px) rotate(-6deg) } 9% { transform: translate(4px, 2px) rotate(-3deg) } 17%, 100% { transform: translate(0, 0) rotate(-2deg) } }
+@keyframes corners { 0%, 16% { border-color: #FFFFFF } 17%, 100% { border-color: #FFC94A } }
+@keyframes flash { 0%, 17% { opacity: 0 } 17.6% { opacity: .85 } 19%, 100% { opacity: 0 } }
+@keyframes hl1 { 0%, 25.9% { background: #FFFFFF; border-color: #D9D5CB } 26%, 33% { background: #E3F1EA; border-color: #0A6B4B } 33.1%, 100% { background: #FFFFFF; border-color: #D9D5CB } }
+@keyframes hl2 { 0%, 41% { background: #FFFFFF; border-color: #D9D5CB } 41.1%, 49.5% { background: #E3F1EA; border-color: #0A6B4B } 49.6%, 100% { background: #FFFFFF; border-color: #D9D5CB } }
+@keyframes hl3 { 0%, 33% { background: #FFF1D6; border-color: #C98A00 } 33.1%, 41% { background: #FFE3A8; border-color: #8A4B00 } 41.1%, 100% { background: #FFF1D6; border-color: #C98A00 } }
+@keyframes k1 { 0%, 25.99% { opacity: 0 } 26.4% { opacity: 1 } 32.6% { opacity: 1 } 33%, 100% { opacity: 0 } }
+@keyframes k2 { 0%, 32.99% { opacity: 0 } 33.4% { opacity: 1 } 40.6% { opacity: 1 } 41%, 100% { opacity: 0 } }
+@keyframes k3 { 0%, 40.99% { opacity: 0 } 41.4% { opacity: 1 } 49.6% { opacity: 1 } 50%, 100% { opacity: 0 } }
+@keyframes q0 { 0%, 49.99% { opacity: 0 } 50.4% { opacity: 1 } 59.6% { opacity: 1 } 60%, 100% { opacity: 0 } }
+@keyframes q1 { 0%, 59.99% { opacity: 0 } 60.4% { opacity: 1 } 66.6% { opacity: 1 } 67%, 100% { opacity: 0 } }
+@keyframes q2 { 0%, 66.99% { opacity: 0 } 67.4% { opacity: 1 } 74.6% { opacity: 1 } 75%, 100% { opacity: 0 } }
+@keyframes qa { 0%, 59.9% { background: #FFFFFF; border-color: #14171A } 60%, 75% { background: #E3F1EA; border-color: #0A6B4B } 75.1%, 100% { background: #FFFFFF; border-color: #14171A } }
+@keyframes h0 { 0%, 74.99% { opacity: 0 } 75.4% { opacity: 1 } 83.6% { opacity: 1 } 84%, 100% { opacity: 0 } }
+@keyframes h1 { 0%, 83.99% { opacity: 0 } 84.4% { opacity: 1 } 99.6% { opacity: 1 } 100% { opacity: 0 } }
+@keyframes t1 { 0%, 24.9% { background: #14171A; color: #FFFFFF } 25%, 100% { background: #FFFFFF; color: #14171A } }
+@keyframes t2 { 0%, 24.9% { background: #FFFFFF; color: #14171A } 25%, 49.9% { background: #14171A; color: #FFFFFF } 50%, 100% { background: #FFFFFF; color: #14171A } }
+@keyframes t3 { 0%, 49.9% { background: #FFFFFF; color: #14171A } 50%, 74.9% { background: #14171A; color: #FFFFFF } 75%, 100% { background: #FFFFFF; color: #14171A } }
+@keyframes t4 { 0%, 74.9% { background: #FFFFFF; color: #14171A } 75%, 100% { background: #14171A; color: #FFFFFF } }
+
+/* Reduced motion: scene 2 (the reader) shows still, with its first line and caption. */
+@media (prefers-reduced-motion: reduce) {
+  .pd .sc, .pd .an, .pd .tab, .pd .bar { animation: none !important; }
+  .pd .sc.s2 { opacity: 1; }
+  .pd .pd-cap-k1 { opacity: 1; }
+  .pd .pd-chip-2 { background: #14171A; color: #FFFFFF; }
+  .pd .pd-playpause { display: none; }
+}
+/* Very narrow phones: the 330 px phone scales down instead of scrolling sideways. */
+@media (max-width: 372px) { .pd-phone { transform: scale(.88); transform-origin: top center; margin-bottom: -82px; } }

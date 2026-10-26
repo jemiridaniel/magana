@@ -1,5 +1,6 @@
 import Link from "next/link";
 import BrailleName from "@/components/BrailleName";
+import HeroDemo from "@/components/HeroDemo";
 import Samples from "@/components/Samples";
 import { APP_URL, PORTAL_URL, SUPPORT_EMAIL } from "@/lib/site";
 
@@ -11,36 +12,6 @@ function Check() {
     <svg width="30" height="30" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
       <circle cx="12" cy="12" r="11" fill="#FFC94A" />
       <path d="M6.5 12.5l3.5 3.5 7.5-8" fill="none" stroke="#14171A" strokeWidth="2.6" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
-function PhoneArt() {
-  const t = { fontFamily: "'Atkinson Hyperlegible', sans-serif" };
-  return (
-    <svg viewBox="0 0 340 600" role="img" aria-label="Magana on a phone, reading a medicine label aloud, line 2 of 4" focusable="false">
-      <rect x="10" y="4" width="320" height="592" rx="44" fill="#14171A" />
-      <rect x="24" y="18" width="292" height="564" rx="32" fill="#FBFAF6" />
-      <rect x="130" y="30" width="80" height="18" rx="9" fill="#14171A" />
-      <text x="46" y="96" fontSize="22" fontWeight="700" fill="#14171A" style={t}>Medicine label</text>
-      <text x="46" y="122" fontSize="15" fill="#3D434A" style={t}>Line 2 of 4 · read exactly as printed</text>
-      <rect x="40" y="144" width="260" height="58" rx="14" fill="#FFFFFF" stroke="#D9D5CB" strokeWidth="2" />
-      <text x="56" y="179" fontSize="17" fill="#14171A" style={t}>PARACETAMOL 500 mg</text>
-      <rect x="40" y="214" width="260" height="82" rx="14" fill="#E3F1EA" stroke="#0A6B4B" strokeWidth="3" />
-      <text x="56" y="248" fontSize="17" fontWeight="700" fill="#14171A" style={t}>Take 1 to 2 tablets</text>
-      <text x="56" y="274" fontSize="17" fontWeight="700" fill="#14171A" style={t}>every 4 to 6 hours</text>
-      <rect x="40" y="308" width="260" height="82" rx="14" fill="#FFF1D6" stroke="#8A4B00" strokeWidth="2" />
-      <text x="56" y="342" fontSize="17" fill="#4A2800" style={t}>Do not take more than</text>
-      <text x="56" y="368" fontSize="17" fontWeight="700" fill="#4A2800" style={t}>[unclear number] in 24 h</text>
-      <g transform="translate(170 470)">
-        <circle r="46" fill="#FFC94A" stroke="#14171A" strokeWidth="3" />
-        <path d="M-14 -14v28l24 -14z" fill="#14171A" />
-      </g>
-      <g fill="none" stroke="#0A6B4B" strokeWidth="4" strokeLinecap="round">
-        <path d="M236 452a26 26 0 0 1 0 36" /><path d="M252 440a44 44 0 0 1 0 60" />
-        <path d="M104 452a26 26 0 0 0 0 36" /><path d="M88 440a44 44 0 0 0 0 60" />
-      </g>
-      <text x="170" y="550" textAnchor="middle" fontSize="15" fill="#3D434A" style={t}>Tap to pause · Swipe for next line</text>
     </svg>
   );
 }
@@ -113,7 +84,7 @@ export default function Home() {
             </li>
           </ul>
         </div>
-        <div className="hero-art"><PhoneArt /></div>
+        <div className="hero-art"><HeroDemo /></div>
       </section>
 
       <section id="how" className="section" aria-labelledby="how-h">

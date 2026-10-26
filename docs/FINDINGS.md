@@ -34,6 +34,37 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-26 · Website: the animated phone demo in the hero
+
+- **Built** (`website/components/HeroDemo.tsx`, from the "Website · magana.ng home" boards):
+  - A phone made in HTML and CSS: status bar, camera cut-out, side buttons and glass sheen.
+  - Four scenes, 4 s each: camera guidance on a label, the Reader with the unclear-number line, the Primary 5 quiz, and the call-back with the 112 line.
+  - The live caption under the phone, and step chips that jump to their scene.
+  - CSS animations only: no video, no images, no new libraries.
+- **Accessibility:**
+  - Pause/Play button (WCAG 2.2.2). The demo also pauses on hover or focus.
+  - With reduced motion, scene 2 shows still.
+  - Screen readers get one description of the demo, and the visuals are aria-hidden. The caption is aria-hidden too and is no live region, so it isn't read out on every change.
+  - A chip jump keeps focus on the chip that was pressed.
+  - **Changed from the board:** the chips and the Pause button are real buttons at least 64 px tall (the board's 40 px would fail the site's 64 px rule).
+- **A bug the tests found:** the old picture's `.hero-art svg { width: 340px }` rule stretched the caption's speaker icon over the buttons, so they couldn't be clicked. The rule is gone.
+- **Checks:** website 16 passed. axe (WCAG 2.2 AA plus 7:1 contrast), the 64 px rule and no sideways scroll pass at 1280 and 390 px. 4 demo tests: Pause/Play and hover pause, jump and focus, reduced motion, one description and no live caption.
+
+## 2026-10-26 · Privacy notice rewritten for the NDPA 2023; server logs now rotate (DRAFT)
+
+- `docs/PRIVACY.md` is now in plain English and follows the Nigeria Data Protection Act 2023:
+  - lawful basis for each kind of data, and health as sensitive data (explicit consent);
+  - children and guardian consent;
+  - retention periods, service providers, and the transfer to London;
+  - security, and breach notice to the NDPC within 72 hours;
+  - law-enforcement requests;
+  - rights: see, correct, delete, object, withdraw consent, and complain to the NDPC;
+  - changes to the notice, and contact.
+- Draft for Nurse Balogun. Three points are marked **[check]**: the school as controller and Magana as processor; reading while waiting for consent; and the legal basis for storing data in the UK.
+- **A gap it found, fixed:** server logs were kept forever (Docker's default). They now rotate at 3 files of 10 MB per service (`docker-compose.prod.yml`), so the notice can give a real retention period. This takes effect on the next deploy.
+
+---
+
 ## 2026-10-26 · First clinical sign-off: 15 templates, 3 languages
 
 - **Approved:** the 15 medicine-label phrase templates, by the clinical lead on 25/10/2026, after a native-speaker review in each language. **Hausa: 15. Yorùbá: 15. Igbo: 11.** The sheet is kept privately with the reviewers' names, until they agree to be credited.
