@@ -44,6 +44,12 @@ test("upload a PDF, see only its text, correct a line and approve; both pages pa
   await expect(row).toContainText("Ready");
   await designChecks(page);
 
+  // Home lists it under "Needs your attention" as ready to share.
+  await page.goto("/");
+  await expect(page.getByText("SS2 Biology notes is ready")).toBeVisible();
+  await expect(page.getByRole("link", { name: /^Open.*SS2 Biology notes/ })).toHaveAttribute("href", /\/uploads\/check\/?\?id=/);
+  await designChecks(page);
+  await page.goto("/uploads/");
   await row.getByRole("link", { name: /View text/ }).click();
   await expect(page.getByRole("heading", { level: 1, name: "SS2 Biology notes" })).toBeVisible();
   await expect(page.getByLabel(/^Line 3/)).toHaveValue("Read pages 12 to 15");

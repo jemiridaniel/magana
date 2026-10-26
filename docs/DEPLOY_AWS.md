@@ -391,9 +391,9 @@ A school's testers may share one IP behind a router. If they hit the limit, rais
 
 ## 10c. The teacher portal at teachers.magana.ng
 
-> **Stays here, behind basic auth, until the portal's own sign-in ships;** then it moves to Cloudflare Pages too (docs/DEPLOY_PAGES.md, step 6).
+> **Stays here until the portal's own sign-in is live (SES, §8b);** then it moves to Cloudflare Pages too (docs/DEPLOY_PAGES.md, step 6). The old browser login (basic auth) is gone: the portal signs teachers in itself.
 
-Every deploy rebuilds it (§8a). By hand: the same Caddy serves the portal as static files at `https://teachers.magana.ng/`, behind a login (`PORTAL_USER` and `PORTAL_HASH` in `.env`), because its JavaScript carries the teacher key. From your Mac:
+Every deploy rebuilds it (§8a). By hand: the same Caddy serves the portal as static files at `https://teachers.magana.ng/`. It carries no key; teachers sign in with an invited email and a 6-digit code. From your Mac:
 
 ```bash
 scripts/deploy-portal.sh

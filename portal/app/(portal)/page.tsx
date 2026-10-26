@@ -29,15 +29,16 @@ function AttentionItem({ a }: { a: Attention }) {
     case "upload_check":
       return (
         <li className="attention">
-          <div><strong>{a.upload.title} needs checking</strong><span>{a.upload.note || "Magana was unsure about part of it."}</span></div>
-          <Link className="btn" href={`/uploads/?check=${a.upload.id}`}>Review</Link>
+          <div><strong>{a.upload.title} needs checking</strong>
+            <span>{a.upload.note === "handwriting" ? "Part of it is handwritten. Check it against the paper." : "Magana was unsure about part of it."}</span></div>
+          <Link className="btn" href={`/uploads/check/?id=${a.upload.id}`}>Check<span className="visually-hidden">: {a.upload.title}</span></Link>
         </li>
       );
     case "upload_ready":
       return (
         <li className="attention">
-          <div><strong>{a.upload.title} is ready</strong><span>Audio, Braille-ready file and large print</span></div>
-          <Link className="btn" href={`/uploads/?share=${a.upload.id}`}>Share with class</Link>
+          <div><strong>{a.upload.title} is ready</strong><span>Checked text, ready to share with your class</span></div>
+          <Link className="btn" href={`/uploads/check/?id=${a.upload.id}`}>Open<span className="visually-hidden">: {a.upload.title}</span></Link>
         </li>
       );
     case "low_attendance":

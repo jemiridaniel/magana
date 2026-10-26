@@ -76,11 +76,8 @@ app.{$MAGANA_DOMAIN} {
 
 teachers.{$MAGANA_DOMAIN} {
 	import common
-	# Behind a login: the portal's JavaScript carries the teacher key, which lets it save quizzes.
-	basic_auth {
-		{$PORTAL_USER} {$PORTAL_HASH}
-	}
-	redir / /uploads/ 308
+	# The portal has its own sign-in (email and a 6-digit code, portal_api.py) and carries no
+	# key, so no basic auth here. "/" is Home; signed-out visitors go to Sign in.
 	root * /srv/teachers
 	@fresh path *.html */
 	header @fresh Cache-Control "no-cache"

@@ -32,7 +32,7 @@ The portal keeps a login. It will be **its own email sign-in** (a 6-digit code b
 - **Access's free plan stops at 50 users.** A few schools would pass that.
 - **Schools use any email** (Gmail, Yahoo, school domains). The portal's sign-in works with any address the school admin invites.
 
-**Until that sign-in ships,** the portal stays on the EC2 server behind Caddy's basic auth. Setting the repository variable `PORTAL_ON_PAGES=true` moves it (step 6).
+**Until sign-in emails work (SES),** the portal stays on the EC2 server, with its own sign-in and no basic auth. Setting the repository variable `PORTAL_ON_PAGES=true` moves it (step 6).
 
 ## One-time setup
 

@@ -22,4 +22,4 @@ NEXT_PUBLIC_API_KEY="$(env_value MAGANA_API_KEY)" \
 remote 'mkdir -p ~/srv/magana/deploy/teachers'
 rsync -az --delete -e "ssh -i $KEY" out/ "ubuntu@$MAGANA_HOST:srv/magana/deploy/teachers/"
 rm -rf out  # the build carries the keys
-echo "Teacher portal at https://teachers.$DOMAIN/ (login: PORTAL_USER in the server's .env)"
+echo "Teacher portal at https://teachers.$DOMAIN/ (sign in with an invited email)"

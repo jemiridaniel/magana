@@ -160,9 +160,10 @@ jobs:
           code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "https://api.$DOMAIN/read")
           [ "$code" = 401 ] || { echo "a call without the key gave $code, not 401"; exit 1; }
           curl -fsS -o /dev/null "https://app.$DOMAIN/"
-          if [ "${{ vars.PORTAL_ON_PAGES }}" != "true" ]; then  # still on the server, behind basic auth
-            code=$(curl -s -o /dev/null -w '%{http_code}' "https://teachers.$DOMAIN/uploads/")
-            [ "$code" = 401 ] || { echo "the portal without the login gave $code, not 401"; exit 1; }
+          if [ "${{ vars.PORTAL_ON_PAGES }}" != "true" ]; then  # still on the server, with its own sign-in
+            curl -fsS -o /dev/null "https://teachers.$DOMAIN/sign-in/"
+            code=$(curl -s -o /dev/null -w '%{http_code}' "https://api.$DOMAIN/portal/me")
+            [ "$code" = 401 ] || { echo "the portal API without a session gave $code, not 401"; exit 1; }
           fi
 
   pages:

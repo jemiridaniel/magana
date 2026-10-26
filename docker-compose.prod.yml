@@ -18,9 +18,6 @@ services:
       MAGANA_DOMAIN: ${MAGANA_DOMAIN:?set MAGANA_DOMAIN in .env, e.g. magana.ng}
       # The old <ip>.sslip.io address, kept as the API for older APKs.
       MAGANA_LEGACY_DOMAIN: ${MAGANA_LEGACY_DOMAIN:?set MAGANA_LEGACY_DOMAIN in .env, e.g. 18-130-12-34.sslip.io}
-      # The teacher portal's login (bcrypt hash from `caddy hash-password`; in .env, single-quoted).
-      PORTAL_USER: ${PORTAL_USER:?set PORTAL_USER in .env}
-      PORTAL_HASH: ${PORTAL_HASH:?set PORTAL_HASH in .env}
     volumes:
       - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
       # Filled by each deploy (deploy/update.sh): the tester PWA (app.), the teacher portal
