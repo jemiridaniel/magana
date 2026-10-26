@@ -34,6 +34,26 @@ No real phone and no blind or low-vision tester has been used yet.
 - **Tests** (CI, website e2e): every dot in order, never more than about 10% per 100 ms, a first-visit fill of at least 1.6 s with the 0.3 s hold, at least 1 s on a refresh, and with reduced motion the fill still in order without transitions.
 - **Status:** live.
 
+## 2026-10-26 · Audit measurements: two-column pages, local-language letters, data per page (UNREVIEWED)
+
+From the white paper audit (docs/WHITE_PAPER_AUDIT.md). Mac, Tesseract 5.5.3 `eng` (production's engine and language), team-made pages only. Nothing was changed.
+
+- **Two-column pages are merged.** Two columns of three lines, about 1,240 px apart, came back as three lines, each joining the left and right columns ("LEFT one: plants need light. RIGHT one: the heart pumps."). Lines are ordered by their top edge only (`reader.py`), so columns are never read one after the other.
+- **Hausa, Yorùbá and Igbo letters are lost, sometimes without a warning.** One clean line each, in a font that has the letters:
+  - Yorùbá "Ọmọ náà ń ṣeré nínú ọgbà." came back as "Omo naa Nn seré ninud ogba." (0.70, warned).
+  - Hausa "Ƙasar … ɗalibai" came back as "Kasar … dalibai" (**0.92, no warning**).
+  - Igbo "Ụmụaka … akwụkwọ" came back as "Umuaka … akwukwo" (**0.87, no warning**).
+  - Only `eng` data is installed (`backend/Dockerfile`).
+- **Data per page read** (`/read`, three benchmark pages made phone-like):
+  - Live camera size (about 1280×720, q95): 35.5–37.9 KB up.
+  - Gallery size (2400 px wide, q88): 85.0–96.1 KB up.
+  - Response: 1.2–2.2 KB gzipped (7.9–17.3 KB raw).
+  - Word recall was the same at both sizes (39–60 of 41–61 words; about 10 pt print).
+  - Simulated photos compress better than real ones, so real uploads will be larger. Not yet measured on a phone.
+- **Status:** open. Fixes are proposed in the audit; none made.
+
+---
+
 ## 2026-10-26 · Teacher portal at full width; Invite a teacher in a modal; blurred backdrop for every dialog (UNREVIEWED)
 
 - **Full width everywhere:** the shared content wrapper's 1100 px cap is gone for the whole portal (teachers and the Magana team). The main area fills the space beside the sidebar with 32 px top and 40 px side padding (16 px on phones). Checked at 1440 and 1280 px on Home, Uploads, My classes, Quizzes, Attendance, Learner progress, Consent records, School details, Help and Teachers.
