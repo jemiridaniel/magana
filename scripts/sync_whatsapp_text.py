@@ -9,7 +9,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 CODES_FROM_APP = ("go_to_clinic_now", "nurse_call_within_2_hours", "nurse_call_working_hours", "ask_someone_to_check",
-                  "callback_booked", "callback_unavailable")
+                  "callback_booked", "callback_unavailable", "missed_line")
 
 
 def app_section(lang: str) -> dict:

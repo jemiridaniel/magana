@@ -117,7 +117,8 @@
     "nurse_call_working_hours": "Daalụ. Otu nọọsụ ga-akpọghachi gị n'oge ọrụ.",
     "ask_someone_to_check": "Biko rịọ onye nọ gị nso ka o lelee ya, ma ọ bụ gaa ụlọ ọgwụ.",
     "callback_booked": "E debela oku gị. Nọọsụ ma ọ bụ onye na-ere ọgwụ ga-akpọ gị.",
-    "callback_unavailable": "Enweghị oku nkpọghachi ugbu a. Ọ bụrụ na ịchọrọ enyemaka ugbu a, gaa n'ụlọ ọgwụ ma ọ bụ kpọọ 112."
+    "callback_unavailable": "Enweghị oku nkpọghachi ugbu a. Ọ bụrụ na ịchọrọ enyemaka ugbu a, gaa n'ụlọ ọgwụ ma ọ bụ kpọọ 112.",
+    "missed_line": "Enwere ike m hapụrụ otu ahịrị ebe a, {where}. Biko lelee ya ma ọ bụ see foto ahụ ọzọ."
   },
   "voice_number_left_out": "otu nọmba, lee ozi ederede",
   "voice_numbers_in_text": "Ụfọdụ nọmba dị naanị n'ozi ederede: biko gụọ ha ebe ahụ."

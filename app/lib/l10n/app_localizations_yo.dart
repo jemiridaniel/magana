@@ -2501,4 +2501,23 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get pageViewLabel => 'Ìwé rẹ, a ṣàfihàn ìlà tí a ń kà';
+
+  @override
+  String msg_missed_line(String where) {
+    return 'Ó ṣeé ṣe kí n ti fo ìlà kan níbí, $where. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí ya fọ́tò náà lẹ́ẹ̀kan sí i.';
+  }
+
+  @override
+  String summaryMissed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ó ṣeé ṣe kí n ti fo ìlà $count.',
+      one: 'Ó ṣeé ṣe kí n ti fo ìlà 1.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get missedLineLabel => 'Ìlà tí mo lè ti fò';
 }

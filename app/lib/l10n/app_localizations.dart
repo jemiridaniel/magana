@@ -4043,6 +4043,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your page, current line highlighted'**
   String get pageViewLabel;
+
+  /// No description provided for @msg_missed_line.
+  ///
+  /// In en, this message translates to:
+  /// **'I may have missed a line here, {where}. Please check it or retake the photo.'**
+  String msg_missed_line(String where);
+
+  /// No description provided for @summaryMissed.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{I may have missed 1 line.} other{I may have missed {count} lines.}}'**
+  String summaryMissed(int count);
+
+  /// No description provided for @missedLineLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'A line I may have missed'**
+  String get missedLineLabel;
 }
 
 class _AppLocalizationsDelegate

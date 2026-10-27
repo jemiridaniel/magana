@@ -5,13 +5,19 @@ carry copies of `as_json()`; tests/test_curriculum.py fails if either drifts.
 """
 from __future__ import annotations
 
-# Primary 1-6, Junior Secondary 1-3, Senior Secondary 1-3.
+# Primary 1-6, Junior Secondary 1-3, Senior Secondary 1-3. Schools also say "Basic": the 9-year
+# Basic Education names (Basic 1-6 is Primary 1-6, Basic 7-9 is JSS 1-3); one level, both names.
 LEVELS: list[dict] = (
-    [{"id": f"p{n}", "name": f"Primary {n}", "band": "primary_1_3" if n <= 3 else "primary_4_6"}
-     for n in range(1, 7)]
-    + [{"id": f"jss{n}", "name": f"JSS {n}", "band": "jss"} for n in range(1, 4)]
+    [{"id": f"p{n}", "name": f"Primary {n}", "band": "primary_1_3" if n <= 3 else "primary_4_6",
+      "basic": f"Basic {n}"} for n in range(1, 7)]
+    + [{"id": f"jss{n}", "name": f"JSS {n}", "band": "jss", "basic": f"Basic {n + 6}"} for n in range(1, 4)]
     + [{"id": f"sss{n}", "name": f"SSS {n}", "band": "sss"} for n in range(1, 4)]
 )
+
+
+def label(level: dict) -> str:
+    """"Primary 4 (Basic 4)": what a teacher or learner picks from."""
+    return f"{level['name']} ({level['basic']})" if level.get("basic") else level["name"]
 
 BANDS: dict[str, str] = {
     "primary_1_3": "Primary 1–3",

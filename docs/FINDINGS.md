@@ -13,6 +13,41 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-27 · Missed lines are said, not lost; teachers' lesson notes (private, counts only); Basic 4 and 5 (UNREVIEWED)
+
+**Silent line loss.** On the script-font card Tesseract dropped a whole line ("in all things") with no warning: the faint-print check saw one tall band (the card's own edges join every row) and nothing else looked for it.
+- New check (`reader.missed_lines`): after reading, the ink no read line or word covers (each box widened by half its own height), inside the text's own area only, with borders and rules taken out (ink running down a column for more than 3 line heights). A line-sized row of at least 4 separate pieces of ink, 3 line heights wide, becomes a `missed_line` spot. The app says "I may have missed a line here, in the middle of the page. Please check it or retake the photo." at its place, and "I may have missed 1 line." in the page summary (`X-Magana-Messages: 3`). Older apps hear it as faint print; WhatsApp says it too. On a money photo it also marks the reading unreliable, as faint regions do.
+- Results:
+
+  | Set | Lines read | Missed-line alarms |
+  |---|---|---|
+  | Synthetic script card | 3 of 4 | 1, exactly where the dropped line is |
+  | 40-page set at 720 / 1080 / 1600 px | 381 at 1080 | 0 / 0 / 0 |
+  | Small card, thermal slip, handwritten prescription, barcode | | 0 |
+  | 1930s handwritten letter, side a / b | 28 / 28 | 1 / 0 |
+  | Tester's card (IMG_2041), counts only | 3 | 1 (the tester heard "3 lines") |
+  | Tester's boarding pass (IMG_2042) | 10 | 0 |
+
+  - A first version raised 5 false alarms on tilted two-column photo pages: heading letters reached past their boxes when the margin was based on body-text height. A margin from each box's own height fixed it.
+- Tests: `test_missed_lines.py` (every card line is read or reported as missed, between its neighbours; old apps get faint_region; no alarms on 6 benchmark pages clean and photo-like, or on the card, slip, prescription and barcode); app `warnings_test.dart`.
+
+**Teachers' lesson notes (Basic 4 and 5), private.** 26 photos, kept in `~/magana-private-pages/`; EXIF-free copies and all derived files (readings, labels, drafts, review sheet) are there too, never in the repository. Read only on this Mac: Tesseract, TrOCR, and N-ATLaS (Q4_K_M GGUF, llama.cpp); nothing sent to any outside service. Counts only. Tool: `backend/scripts/lesson_notes.py`.
+- **All 26 are handwritten; none is typed.** Our handwriting check said so for all 26 (25 handwritten, 1 mixed). Because that check is driven by OCR doubt, it was cross-checked: the photos are only 720×1280 (messaging-app size), but printed benchmark pages reduced to the same 720 px still read at 0.92–0.95 confidence with 89–93% dictionary words and are classed as printed, while the notes read at 0.24–0.50 and 22–51%.
+- **Inventory:** each photo is one page. From the readings, only 1 subject, 1 class (Basic 4) and 2 topics could be read with confidence; the rest are "unclear". Labels are never guessed, so the inventory needs the teacher, or a typed transcription.
+- **Reading test** (type `lessonnote` in the private test set, 26 pages, 593 lines). No ground truth yet, so only proxies; the tool scores word and character error rates once transcripts are added.
+
+  | Kind | Engine | Mean confidence | Real words | Lines flagged unclear |
+  |---|---|---|---|---|
+  | Typed | — | no typed pages | | |
+  | Handwritten | Tesseract (what the app uses) | 0.33 | 39% | 100% |
+  | Handwritten | TrOCR (local, optional engine) | 0.40 | 78% | 100% |
+
+  - **Safety finding: TrOCR invents text.** On these notes it wrote fluent English that cannot be on a Nigerian primary lesson note (American and Philippine history topics, a US state department). Its higher "real words" score is invention, not accuracy. Magana's rules hold, since every handwritten line is flagged and its numbers need two agreeing readings, but TrOCR text must never be used for labels, quizzes or explanations. The tool ignores it except to measure it.
+- **Draft quizzes: none.** There are no typed notes, and drafting from unreadable handwriting would mean inventing. The step is ready: N-ATLaS (local only, refused for any non-local URL) drafts 5 to 10 A–D questions per topic, each with a word-for-word quote from the notes. A question is dropped if the quote isn't in the notes, the right option isn't in the quote, any number (digits or number words) isn't in the notes, options repeat, or it is over 25 words. Answers are shuffled over A–D, because the model puts them first. Dry run on two public benchmark pages: photosynthesis 5 kept, 1 refused; rainfall (a table of figures) 0 kept, 6 refused.
+  - Drafts are marked "DRAFT – needs teacher review" and saved privately with `approved: false`. A test fails if any bundled quiz pack carries either mark. The review sheet (`lesson-quiz-review.xlsx`: question, A–D, answer, source page, the quote, yes / fix) follows the templates review.
+  - Open: the app allows 3 options at most for Primary 1–6 (`curriculum.PRIMARY_MAX_OPTIONS`); approved A–D questions would need a fourth option dropped, or that rule changed.
+- **Basic 4 and Basic 5** are Primary 4 and 5 (the 9-year Basic Education names: Basic 1–6 is Primary 1–6, Basic 7–9 is JSS 1–3). One level, both names: pickers in the app and the teacher portal now show "Primary 4 (Basic 4)". The ids and quiz packs are unchanged, so classes are not split.
+
 ## 2026-10-27 · 0.1.0+10: Touch to hear (boards 10, 10b), tablets and iPad (T1, T2) (UNREVIEWED)
 
 No blind or low-vision tester has used these yet; everything below is from widget tests, an Android tablet emulator and iPad-size renders.

@@ -60,6 +60,14 @@ def app_text(lang: str, code: str) -> str:
     return strings(lang)["app"].get(code) or strings("en")["app"].get(code) or ENGLISH[code]
 
 
+def region_text(lang: str, region: dict) -> str:
+    """Faint print, or a line that may have been missed, and where."""
+    where = t(lang, f"where_{region.get('where', 'middle')}")
+    if region.get("code") == "missed_line":
+        return app_text(lang, "missed_line").format(where=where)
+    return t(lang, "faint", where=where)
+
+
 def _norm(text: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"[^\w\s'’-]", " ", text.lower())).strip()
 
@@ -154,7 +162,7 @@ def reading_messages(lang: str, result: dict) -> tuple[list[str], list[tuple[str
     if warnings:
         messages.append("\n\n".join(warnings))
     for region in result.get("faint_regions", []):
-        messages.append(t(lang, "faint", where=t(lang, f"where_{region.get('where', 'middle')}")))
+        messages.append(region_text(lang, region))
     return messages, voice
 
 
@@ -376,7 +384,7 @@ class Flow:
             if not result["lines"]:
                 await self.text(wa, t(lang, "no_text"))
                 for region in result.get("faint_regions", []):
-                    await self.text(wa, t(lang, "faint", where=t(lang, f"where_{region.get('where', 'middle')}")))
+                    await self.text(wa, region_text(lang, region))
                 return
             messages, voice_lines = reading_messages(lang, result)
             for body in messages:

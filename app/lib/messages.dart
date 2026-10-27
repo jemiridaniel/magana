@@ -34,6 +34,7 @@ String messageFor(
   'unreadable_number' => l.msg_unreadable_number(where),
   'number_mismatch' => l.msg_number_mismatch(where),
   'faint_region' => l.msg_faint_region(where),
+  'missed_line' => l.msg_missed_line(where),
   'line_end_unclear' => l.msg_line_end_unclear(where),
   'line_part_unclear' => l.msg_line_part_unclear(where),
   'unknown_mode' => l.msg_unknown_mode,

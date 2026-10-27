@@ -164,7 +164,7 @@ void main() {
     await tap(tester, 'Teacher: start the class session');
     expect(find.text('Are you the teacher?'), findsNothing);
     expect(speaker.said.last, 'Choose the class first.');
-    await tap(tester, 'Primary 5');
+    await tap(tester, 'Primary 5 (Basic 5)');
     await tap(tester, 'Teacher: start the class session');
     expect(find.text('Are you the teacher?'), findsOneWidget);
     await tap(tester, 'Yes, start the session');

@@ -2504,4 +2504,23 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get pageViewLabel => 'Takardarka, an haskaka layin da ake karantawa';
+
+  @override
+  String msg_missed_line(String where) {
+    return 'Wataƙila na tsallake layi a nan, $where. Ka duba shi ko ka sake ɗaukar hoto.';
+  }
+
+  @override
+  String summaryMissed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Wataƙila na tsallake layuka $count.',
+      one: 'Wataƙila na tsallake layi 1.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get missedLineLabel => 'Layin da wataƙila na tsallake';
 }

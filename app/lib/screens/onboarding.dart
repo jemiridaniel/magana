@@ -582,7 +582,7 @@ List<Widget> classLevelChoices(
       (lv) => band == null ? lv.band.primary : lv.band == band,
     ))
       ChoiceCard(
-        title: level.name,
+        title: level.label,
         // In Settings the current class reads as selected.
         selected: selected == level.id,
         inGroup: selected != null,
@@ -669,7 +669,7 @@ class _ClassroomStepState extends State<ClassroomStep> {
         ),
         for (final level in classLevels.take(7)) // Primary 1 to JSS 1
           ChoiceCard(
-            title: level.name,
+            title: level.label,
             selected: _level == level.id,
             inGroup: true,
             leading: Icon(
@@ -680,7 +680,7 @@ class _ClassroomStepState extends State<ClassroomStep> {
             ),
             onTap: () {
               setState(() => _level = level.id);
-              AppScope.of(context).speaker.say(level.name);
+              AppScope.of(context).speaker.say(level.label);
             },
           ),
       ],

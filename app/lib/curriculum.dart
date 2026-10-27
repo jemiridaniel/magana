@@ -27,22 +27,28 @@ const bandNames = {
 };
 
 class ClassLevel {
-  const ClassLevel(this.id, this.name, this.band);
+  const ClassLevel(this.id, this.name, this.band, [this.basic]);
   final String id; // p1 … p6, jss1 … jss3, sss1 … sss3
   final String name; // "Primary 5", "JSS 2": the curriculum's names
   final Band band;
+
+  /// The 9-year Basic Education name: "Basic 4" is Primary 4, "Basic 7" is JSS 1.
+  final String? basic;
+
+  /// "Primary 4 (Basic 4)": what a learner or teacher picks from.
+  String get label => basic == null ? name : '$name ($basic)';
 }
 
 const classLevels = [
-  ClassLevel('p1', 'Primary 1', Band.primary13),
-  ClassLevel('p2', 'Primary 2', Band.primary13),
-  ClassLevel('p3', 'Primary 3', Band.primary13),
-  ClassLevel('p4', 'Primary 4', Band.primary46),
-  ClassLevel('p5', 'Primary 5', Band.primary46),
-  ClassLevel('p6', 'Primary 6', Band.primary46),
-  ClassLevel('jss1', 'JSS 1', Band.jss),
-  ClassLevel('jss2', 'JSS 2', Band.jss),
-  ClassLevel('jss3', 'JSS 3', Band.jss),
+  ClassLevel('p1', 'Primary 1', Band.primary13, 'Basic 1'),
+  ClassLevel('p2', 'Primary 2', Band.primary13, 'Basic 2'),
+  ClassLevel('p3', 'Primary 3', Band.primary13, 'Basic 3'),
+  ClassLevel('p4', 'Primary 4', Band.primary46, 'Basic 4'),
+  ClassLevel('p5', 'Primary 5', Band.primary46, 'Basic 5'),
+  ClassLevel('p6', 'Primary 6', Band.primary46, 'Basic 6'),
+  ClassLevel('jss1', 'JSS 1', Band.jss, 'Basic 7'),
+  ClassLevel('jss2', 'JSS 2', Band.jss, 'Basic 8'),
+  ClassLevel('jss3', 'JSS 3', Band.jss, 'Basic 9'),
   ClassLevel('sss1', 'SSS 1', Band.sss),
   ClassLevel('sss2', 'SSS 2', Band.sss),
   ClassLevel('sss3', 'SSS 3', Band.sss),

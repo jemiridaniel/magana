@@ -139,6 +139,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
   }
 
   String _position(ReadItem item) => switch (item) {
+    ReadItem(isFaint: true, code: 'missed_line') => _l.missedLineLabel,
     ReadItem(isFaint: true) => _l.faintPrint,
     ReadItem(isRow: false, column: final int c) when _columns > 1 && c > 0 =>
       _l.columnPosition(

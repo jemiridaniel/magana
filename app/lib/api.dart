@@ -37,8 +37,9 @@ Future<void> loadDeviceId() async {
 }
 
 /// Which message codes this app knows how to say (backend messages.SINCE): the server
-/// leaves newer page tips out for older apps rather than have them say "I couldn't read it".
-const messagesLevel = 2;
+/// leaves newer page tips out for older apps rather than have them say "I couldn't read it",
+/// and says a missed line (level 3) as faint print to them.
+const messagesLevel = 3;
 
 /// Headers every call to the Magana server carries.
 Map<String, String> get serverHeaders => {

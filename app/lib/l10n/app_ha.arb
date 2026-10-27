@@ -657,5 +657,8 @@
   "zoomIn": "Ƙara girman rubutu",
   "zoomOut": "Rage girman rubutu",
   "highContrast": "Bambanci mai ƙarfi",
-  "pageViewLabel": "Takardarka, an haskaka layin da ake karantawa"
+  "pageViewLabel": "Takardarka, an haskaka layin da ake karantawa",
+  "msg_missed_line": "Wataƙila na tsallake layi a nan, {where}. Ka duba shi ko ka sake ɗaukar hoto.",
+  "summaryMissed": "{count, plural, =1{Wataƙila na tsallake layi 1.} other{Wataƙila na tsallake layuka {count}.}}",
+  "missedLineLabel": "Layin da wataƙila na tsallake"
 }

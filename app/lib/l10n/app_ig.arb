@@ -657,5 +657,8 @@
   "zoomIn": "Mkpụrụedemede buru ibu",
   "zoomOut": "Mkpụrụedemede dị nta",
   "highContrast": "Ọdịiche agba siri ike",
-  "pageViewLabel": "Akwụkwọ gị, egosipụtara ahịrị a na-agụ"
+  "pageViewLabel": "Akwụkwọ gị, egosipụtara ahịrị a na-agụ",
+  "msg_missed_line": "Enwere ike m hapụrụ otu ahịrị ebe a, {where}. Biko lelee ya ma ọ bụ see foto ahụ ọzọ.",
+  "summaryMissed": "{count, plural, =1{Enwere ike m hapụrụ ahịrị 1.} other{Enwere ike m hapụrụ ahịrị {count}.}}",
+  "missedLineLabel": "Ahịrị m nwere ike ịhapụ"
 }

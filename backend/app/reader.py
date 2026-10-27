@@ -683,6 +683,76 @@ def recover_faint(image: Image.Image, page: Page, engine: OCREngine) -> list[dic
     return faint
 
 
+# ---------- Whole lines the OCR dropped
+
+MISSED_EDGE = 3.0  # ink running down a column this many line heights is a border, not letters
+MISSED_PIECES = 4  # separate pieces of ink in the row (letters, words), at least
+MISSED_WIDTH = 3.0  # inked columns, in line heights, at least
+
+
+def missed_lines(image: Image.Image, page: Page, faint: list[dict]) -> list[dict]:
+    """Rows of text-like ink that no read line or word covers: a line Tesseract dropped without a
+    trace ("in all things" on a script-font card, docs/FINDINGS.md). Said at its place as "I may
+    have missed a line here". Only inside the text's own area, so a wall or a picture beside a
+    card is not a line; borders and rules are left out; the row must be line-sized and made of
+    several separate pieces of ink. Faint bands are faint_regions' job."""
+    import numpy as np
+
+    lines = [l for l in page.lines if l.width and l.height]
+    heights = sorted(w.height for l in lines for w in l.words if w.height and len(w.text.strip()) >= 2)
+    if not heights:
+        return []
+    h = heights[len(heights) // 2]
+    ink = np.asarray(ink_map(image)) > INK_DELTA
+    rows, cols = ink.shape
+    # Everything read, with a margin of half its own height (a heading's letters reach further).
+    boxes = [(l.left, l.top, l.width, l.height) for l in lines]
+    boxes += [(w.left, w.top, w.width, w.height) for l in lines for w in l.words if w.width]
+    boxes += [(0, t.top, cols, t.height) for t in page.tables if t.height]
+    for left, top, width, height in boxes:
+        m = 0.5 * max(height, h)
+        ink[max(0, int(top - m)): int(top + height + m), max(0, int(left - m)): int(left + width + m)] = False
+    for f in faint:
+        ink[f["top"]: f["bottom"]] = False
+    x0 = max(0, int(min(l.left for l in lines) - 2 * h))
+    x1 = min(cols, int(max(l.left + l.width for l in lines) + 2 * h))
+    y0 = max(0, int(min(l.top for l in lines) - 4 * h))
+    y1 = min(rows, int(max(l.top + l.height for l in lines) + 4 * h))
+    area = ink[y0:y1, x0:x1]
+    longest = int(MISSED_EDGE * h)
+    for x in range(area.shape[1]):
+        col = area[:, x]
+        if col.sum() <= longest:
+            continue
+        d = np.diff(np.concatenate(([0], col.astype(np.int8), [0])))
+        for start, stop in zip(np.where(d == 1)[0], np.where(d == -1)[0]):
+            if stop - start > longest:
+                col[start:stop] = False
+    on = area.sum(axis=1) >= max(2, 0.003 * (x1 - x0))
+    bands, start, gap = [], None, 0
+    for y, lit in enumerate(list(on) + [False] * 4):
+        if lit:
+            start, gap = (y if start is None else start), 0
+        elif start is not None:
+            gap += 1
+            if gap > 2:
+                bands.append((start, y - gap + 1))
+                start, gap = None, 0
+    found = []
+    for top, bottom in bands:
+        height = bottom - top
+        if not 0.5 * h <= height <= 2.5 * h:
+            continue
+        inked = area[top:bottom].sum(axis=0) > 0
+        pieces = int(inked[0]) + int(np.sum(inked[1:] & ~inked[:-1]))
+        density = area[top:bottom].sum() / max(1, height * int(inked.sum()))
+        if pieces >= MISSED_PIECES and inked.sum() >= MISSED_WIDTH * h and 0.05 <= density <= 0.6:
+            middle = (y0 + (top + bottom) / 2) / max(rows, 1)
+            where = "top" if middle < 1 / 3 else "middle" if middle < 2 / 3 else "bottom"
+            found.append({"code": "missed_line", "top": y0 + top, "bottom": y0 + bottom, "where": where})
+    return found
+
+
 # ---------- Line ends: ink that carries on past the recognised text
 
 END_GAP = 1.5  # ink this many line-heights past the last word still belongs to the line
@@ -916,6 +986,9 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
                 page = reader.read(image)
             faint = recover_faint(image, page, reader)
             tiny = [t for t in small_print(page) if t != "read_little"]
+    # A whole line the OCR dropped without a trace: on the photo as taken, before barcodes go
+    # (their own boxes still cover their bars).
+    faint = faint + missed_lines(original, page, faint)
     barcodes = drop_barcodes(original, page)
     bounds = paper_bounds(np.asarray(original.convert("L"), dtype=float), page)
     columns = layout.arrange(page, image)

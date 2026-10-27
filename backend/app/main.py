@@ -225,7 +225,14 @@ async def read(file: UploadFile = File(...), mode: str = Form("school"),
                        handwriting=handwriting_reader(mode, tier), strict_handwriting=mode == "health")
     # The uploaded photo is never stored: it only lives in memory for this request.
     out = checked(result, mode)
-    return {**out, "tips": messages.tips_for(out["tips"], messages_level(x_magana_messages))}
+    return for_app(out, messages_level(x_magana_messages))
+
+
+def for_app(out: dict, level: int) -> dict:
+    """Only codes this app knows (X-Magana-Messages): newer tips left out, newer region codes
+    said the older way."""
+    return {**out, "tips": messages.tips_for(out["tips"], level),
+            "faint_regions": messages.regions_for(out.get("faint_regions", []), level)}
 
 
 def messages_level(header: str | None) -> int:
@@ -287,7 +294,7 @@ async def read_pdf(file: UploadFile = File(...), mode: str = Form("money"), pass
     try:
         out = pdfs.read_pdf(data, password or None, engine, mode in SECOND_PASS_MODES,
                             lambda result: checked(result, mode), strict_handwriting=mode == "health")
-        return {**out, "tips": messages.tips_for(out["tips"], messages_level(x_magana_messages))}
+        return for_app(out, messages_level(x_magana_messages))
     except pdfs.PdfError as e:
         status = {"pdf_password_needed": 401, "pdf_password_wrong": 401, "pdf_too_long": 413}.get(e.code, 400)
         raise HTTPException(status, {"code": e.code}) from None

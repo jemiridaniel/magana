@@ -3,47 +3,56 @@
     {
       "id": "p1",
       "name": "Primary 1",
-      "band": "primary_1_3"
+      "band": "primary_1_3",
+      "basic": "Basic 1"
     },
     {
       "id": "p2",
       "name": "Primary 2",
-      "band": "primary_1_3"
+      "band": "primary_1_3",
+      "basic": "Basic 2"
     },
     {
       "id": "p3",
       "name": "Primary 3",
-      "band": "primary_1_3"
+      "band": "primary_1_3",
+      "basic": "Basic 3"
     },
     {
       "id": "p4",
       "name": "Primary 4",
-      "band": "primary_4_6"
+      "band": "primary_4_6",
+      "basic": "Basic 4"
     },
     {
       "id": "p5",
       "name": "Primary 5",
-      "band": "primary_4_6"
+      "band": "primary_4_6",
+      "basic": "Basic 5"
     },
     {
       "id": "p6",
       "name": "Primary 6",
-      "band": "primary_4_6"
+      "band": "primary_4_6",
+      "basic": "Basic 6"
     },
     {
       "id": "jss1",
       "name": "JSS 1",
-      "band": "jss"
+      "band": "jss",
+      "basic": "Basic 7"
     },
     {
       "id": "jss2",
       "name": "JSS 2",
-      "band": "jss"
+      "band": "jss",
+      "basic": "Basic 8"
     },
     {
       "id": "jss3",
       "name": "JSS 3",
-      "band": "jss"
+      "band": "jss",
+      "basic": "Basic 9"
     },
     {
       "id": "sss1",

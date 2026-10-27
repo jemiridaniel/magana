@@ -31,3 +31,11 @@ def test_the_portal_words_every_portal_code():
     text = (ROOT / "portal/lib/messages.ts").read_text()
     missing = sorted(c for c in messages.PORTAL_CODES if f"{c}:" not in text)
     assert not missing, f"add these to portal/lib/messages.ts: {missing}"
+
+
+def test_basic_4_and_5_are_primary_4_and_5():
+    by_id = {lv["id"]: lv for lv in curriculum.LEVELS}
+    assert curriculum.label(by_id["p4"]) == "Primary 4 (Basic 4)"
+    assert curriculum.label(by_id["p5"]) == "Primary 5 (Basic 5)"
+    assert curriculum.label(by_id["jss3"]) == "JSS 3 (Basic 9)"
+    assert curriculum.label(by_id["sss1"]) == "SSS 1"

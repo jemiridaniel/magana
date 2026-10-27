@@ -43,12 +43,17 @@ class PageWarnings {
   /// Lines or rows with unclear text (not counting numbers).
   int get unclearLines => items.where(unclearText).length;
 
-  bool get any => unclearNumbers > 0 || unclearLines > 0;
+  /// Whole lines the server found ink for but no words: "I may have missed a line here".
+  int get missedLines =>
+      items.where((i) => i.codes.contains('missed_line')).length;
+
+  bool get any => unclearNumbers > 0 || unclearLines > 0 || missedLines > 0;
 
   /// The page summary, said once before the page.
   List<String> summary(AppLocalizations l) => [
     if (unclearNumbers > 0) l.summaryNumbers(unclearNumbers),
     if (unclearLines > 0) l.summaryLines(unclearLines),
+    if (missedLines > 0) l.summaryMissed(missedLines),
     if (any) l.summaryAsk,
   ];
 

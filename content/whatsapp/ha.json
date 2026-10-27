@@ -115,7 +115,8 @@
     "nurse_call_working_hours": "Na gode. Wata ma'aikaciyar jinya za ta kira ka a lokacin aiki.",
     "ask_someone_to_check": "Don Allah ka roƙi wani da ke kusa da kai ya duba, ko ka je asibiti.",
     "callback_booked": "An tsara kiran. Ma'aikaciyar jinya ko mai sayar da magani za ta kira ka.",
-    "callback_unavailable": "Ba a fara kiran dawowa ba tukuna. Idan kana buƙatar taimako yanzu, je asibiti ko ka kira 112."
+    "callback_unavailable": "Ba a fara kiran dawowa ba tukuna. Idan kana buƙatar taimako yanzu, je asibiti ko ka kira 112.",
+    "missed_line": "Wataƙila na tsallake layi a nan, {where}. Ka duba shi ko ka sake ɗaukar hoto."
   },
   "voice_number_left_out": "wata lamba, duba saƙon rubutu",
   "voice_numbers_in_text": "Wasu lambobi suna cikin saƙon rubutu kawai: don Allah a karanta su a can."

@@ -84,6 +84,10 @@ void main() {
         [for (final l in j['levels'] as List) l['band']],
         [for (final l in classLevels) l.band.id],
       );
+      expect(
+        [for (final l in j['levels'] as List) l['basic']],
+        [for (final l in classLevels) l.basic],
+      );
       expect(j['subjects'], subjectNames);
       expect(j['bands'], {for (final b in Band.values) b.id: bandNames[b]});
       expect(j['band_subjects'], {
@@ -440,5 +444,12 @@ void main() {
     for (final lang in ['ha', 'yo', 'ig']) {
       expect(off(lang, Tier.standard, 'sss2'), VoiceOff.language);
     }
+  });
+
+  test('Basic 4 and Basic 5 are Primary 4 and 5: one level, both names', () {
+    expect(levelById('p4')!.label, 'Primary 4 (Basic 4)');
+    expect(levelById('p5')!.label, 'Primary 5 (Basic 5)');
+    expect(levelById('jss1')!.label, 'JSS 1 (Basic 7)');
+    expect(levelById('sss1')!.label, 'SSS 1');
   });
 }

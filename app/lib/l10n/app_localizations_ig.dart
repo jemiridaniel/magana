@@ -2498,4 +2498,23 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get pageViewLabel => 'Akwụkwọ gị, egosipụtara ahịrị a na-agụ';
+
+  @override
+  String msg_missed_line(String where) {
+    return 'Enwere ike m hapụrụ otu ahịrị ebe a, $where. Biko lelee ya ma ọ bụ see foto ahụ ọzọ.';
+  }
+
+  @override
+  String summaryMissed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Enwere ike m hapụrụ ahịrị $count.',
+      one: 'Enwere ike m hapụrụ ahịrị 1.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get missedLineLabel => 'Ahịrị m nwere ike ịhapụ';
 }

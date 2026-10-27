@@ -2499,4 +2499,23 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get pageViewLabel => 'Your page, current line highlighted';
+
+  @override
+  String msg_missed_line(String where) {
+    return 'I may have missed a line here, $where. Please check it or retake the photo.';
+  }
+
+  @override
+  String summaryMissed(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'I may have missed $count lines.',
+      one: 'I may have missed 1 line.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get missedLineLabel => 'A line I may have missed';
 }

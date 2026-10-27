@@ -657,5 +657,8 @@
   "zoomIn": "Ọ̀rọ̀ tó tóbi sí i",
   "zoomOut": "Ọ̀rọ̀ tó kéré sí i",
   "highContrast": "Ìyàtọ̀ àwọ̀ tó ga",
-  "pageViewLabel": "Ìwé rẹ, a ṣàfihàn ìlà tí a ń kà"
+  "pageViewLabel": "Ìwé rẹ, a ṣàfihàn ìlà tí a ń kà",
+  "msg_missed_line": "Ó ṣeé ṣe kí n ti fo ìlà kan níbí, {where}. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí ya fọ́tò náà lẹ́ẹ̀kan sí i.",
+  "summaryMissed": "{count, plural, =1{Ó ṣeé ṣe kí n ti fo ìlà 1.} other{Ó ṣeé ṣe kí n ti fo ìlà {count}.}}",
+  "missedLineLabel": "Ìlà tí mo lè ti fò"
 }

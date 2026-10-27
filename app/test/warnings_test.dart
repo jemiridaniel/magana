@@ -125,4 +125,27 @@ void main() {
       );
     }
   });
+
+  test('a line the server may have missed: said at its place, counted in the summary', () {
+    final r = ReadResult.fromJson({
+      'tips': <String>[],
+      'lines': [
+        {...line('Give God'), 'top': 440},
+        {...line('Psalm 34:4'), 'top': 866},
+      ],
+      'warnings': <Map<String, dynamic>>[],
+      'faint_regions': [
+        {'code': 'missed_line', 'top': 722, 'bottom': 799, 'where': 'middle'},
+      ],
+    });
+    final w = PageWarnings(r.items);
+    expect(r.items.map((i) => i.isFaint), [false, true, false]); // between the two lines
+    expect(w.missedLines, 1);
+    expect(w.summary(en), [en.summaryMissed(1), en.summaryAsk]);
+    expect(
+      messageFor(en, 'missed_line', where: en.whereMiddle),
+      'I may have missed a line here, in the middle of the page. '
+      'Please check it or retake the photo.',
+    );
+  });
 }

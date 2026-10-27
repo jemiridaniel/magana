@@ -33,6 +33,7 @@ ENGLISH = {
     "line_end_unclear": "I can't read the end of {where}. Please check it or retake the photo.",
     "line_part_unclear": "Part of {where} wasn't read: there's print I couldn't make out. Please check it or retake the photo.",
     "faint_region": "There is faint print {where} that I can't read. Try more light, or retake the photo.",
+    "missed_line": "I may have missed a line here, {where}. Please check it or retake the photo.",
     # Request errors (HTTP detail)
     "unknown_mode": "Choose schoolwork, health or money.",
     "bad_api_key": "This copy of Magana can't reach the reading service. Please update the app.",
@@ -217,11 +218,17 @@ PORTAL_CODES = frozenset(PORTAL)
 # Page tips an app may not know yet, by the X-Magana-Messages level that first knows them (the
 # app's api.messagesLevel). Apps before 0.1.0+8 send no level (1) and say "I couldn't read it"
 # for a code they don't know, so newer tips are left out for them (tips_for).
-SINCE = {"barcode_skipped": 2}
+SINCE = {"barcode_skipped": 2, "missed_line": 3}
 
 
 def tips_for(tips: list[str], level: int) -> list[str]:
     return [t for t in tips if SINCE.get(t, 1) <= level]
+
+
+def regions_for(regions: list[dict], level: int) -> list[dict]:
+    """A missed line is still said to apps that don't know the code yet, as faint print there."""
+    return [r if SINCE.get(r.get("code", ""), 1) <= level else {**r, "code": "faint_region"}
+            for r in regions]
 
 # Codes only Meta's servers see, from the WhatsApp webhook (app/wa_flow.py): no app wording.
 WEBHOOK = {

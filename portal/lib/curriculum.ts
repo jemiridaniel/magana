@@ -9,6 +9,8 @@ export interface Level {
   id: LevelId;
   name: string;
   band: BandId;
+  /** The 9-year Basic Education name: "Basic 4" is Primary 4, "Basic 7" is JSS 1. */
+  basic?: string;
 }
 
 export const levels = data.levels as Level[];
@@ -17,6 +19,8 @@ export const PRIMARY_WORD_HINT = data.primary_word_hint;
 export const MIN_OPTIONS = data.min_options;
 
 export const level = (id: LevelId) => levels.find((l) => l.id === id)!;
+/** "Primary 4 (Basic 4)": what a teacher picks from. */
+export const levelLabel = (l: Level) => (l.basic ? `${l.name} (${l.basic})` : l.name);
 export const isPrimary = (id: LevelId) => level(id).band.startsWith("primary");
 export const maxOptions = (id: LevelId) => (isPrimary(id) ? data.primary_max_options : data.max_options);
 export const subjectsFor = (id: LevelId) => (data.band_subjects as Record<BandId, string[]>)[level(id).band];

@@ -1889,5 +1889,22 @@
   "zoomIn": "Bigger text",
   "zoomOut": "Smaller text",
   "highContrast": "High contrast",
-  "pageViewLabel": "Your page, current line highlighted"
+  "pageViewLabel": "Your page, current line highlighted",
+  "msg_missed_line": "I may have missed a line here, {where}. Please check it or retake the photo.",
+  "@msg_missed_line": {
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "summaryMissed": "{count, plural, =1{I may have missed 1 line.} other{I may have missed {count} lines.}}",
+  "@summaryMissed": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "missedLineLabel": "A line I may have missed"
 }

@@ -8,7 +8,7 @@ import { useSearchParams } from "next/navigation";
 import { Suspense, useCallback, useEffect, useRef, useState, type FormEvent } from "react";
 import RemoveLearner from "@/components/RemoveLearner";
 import { useStaff } from "@/components/SessionGate";
-import { levels } from "@/lib/curriculum";
+import { levelLabel, levels } from "@/lib/curriculum";
 import { messageFor } from "@/lib/messages";
 import { modeLabel, portal, PortalError, spaced, type ClassInfo, type Learner, type Mode, type StaffMember } from "@/lib/portal";
 
@@ -123,7 +123,7 @@ function Classes() {
           <div className="field"><label htmlFor="c-level">Level</label>
             <select id="c-level" name="level" className="select" defaultValue="">
               <option value="" disabled>Choose a level</option>
-              {levels.map((l) => <option key={l.id} value={l.id}>{l.name}</option>)}
+              {levels.map((l) => <option key={l.id} value={l.id}>{levelLabel(l)}</option>)}
             </select></div>
           <fieldset className="field"><legend className="field-label">Learners’ age</legend>
             {(Object.keys(modeLabel) as Mode[]).map((m) => (
