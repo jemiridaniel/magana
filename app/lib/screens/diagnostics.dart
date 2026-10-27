@@ -78,6 +78,7 @@ class _DiagnosticsScreenState extends State<DiagnosticsScreen> {
           a.photoBytes == null ? '—' : '${(a.photoBytes! / 1024).round()} KB',
         ),
         ('Read by', a.path ?? 'not read'),
+        if (a.screenshot) ('Picture', 'a screenshot, sent whole'),
         ('Server status', a.status?.toString() ?? 'no answer'),
         if (a.code != null) ('Server code', a.code!),
         if (a.serverMs != null) ('Server time', '${a.serverMs} ms'),

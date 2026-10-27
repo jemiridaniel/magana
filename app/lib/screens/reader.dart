@@ -23,6 +23,7 @@ import 'reminders.dart';
 import 'report_problem.dart';
 import '../messages.dart';
 import '../speech.dart';
+import '../spoken_numbers.dart';
 import '../theme.dart';
 import '../warnings.dart';
 
@@ -193,7 +194,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
     final spoken = [
       ?page,
       ?column,
-      if (body.isNotEmpty) item.heading ? _l.headingSpoken(body) : body,
+      // Said, not shown: naira amounts and long numbers (account numbers) read naturally.
+      if (body.isNotEmpty)
+        item.heading
+            ? _l.headingSpoken(spokenNumbers(body))
+            : spokenNumbers(body),
       if (marked.isNotEmpty) _l.letterCheckWords(marked.join(', ')),
       ...marks,
       if (item.isFaint) ?warning,

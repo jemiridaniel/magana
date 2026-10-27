@@ -13,6 +13,46 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-27 · Screenshots and dark mode: a bank receipt was "too dark" (UNREVIEWED)
+
+A gallery screenshot of a dark-mode bank transfer receipt (white on black) was refused as "too dark". It was judged as a camera photo: the average brightness was low.
+
+**Fixes (server, `reader.py`):**
+- **Screenshot detection.** All of: no camera in the EXIF (Make, Model), a flat single-colour background, a phone screen's shape (1.6–2.4), and a screen's exact width in pixels (720 … 1440) or WhatsApp's resize (1600, 2048 or 2560 on the long side).
+  - Being strict matters: a first version also took any PNG, or any long shape, and wrongly called 7 rendered test pages screenshots (a statement, tilted pages, wide pages). Their camera checks were then skipped.
+- **For screenshots:** no "too dark", blur, tilt, cut-off, shadow or show-through checks; read at full size.
+- **Light text on a dark background, camera or gallery:** read inverted. Required: a dark background, bright pixels, those pixels thin strokes (a white page on a dark table survives erosion and is not inverted), and spread over 3 or more of 16 areas (a lamp reflection in a dark photo is one spot).
+- **"Too dark"** now needs no readable contrast as well (1st–99th percentile under 100 grey levels).
+- **Receipts:** each label is read with its value, beside it or under it, top to bottom ("Amount: ₦8,000.00", "Account number: 0123456789"). This runs after each number's re-read: its crop must not take in the label's row above, which first gave re-reads at 0.27–0.32. The second reading is paired the same way, so they still line up.
+- **Money rules, unchanged in substance:**
+  - Tesseract doesn't know "₦". It reads it as "#", "N" or "4", which lowers the amount's confidence (0.83–0.87).
+  - A number behind one sign now also has its digits read alone, from a crop that starts after the sign. Accepted only if that reading starts with a digit and is the same number. The 0.90 / two-agreeing-readings rules are unchanged.
+  - Where "₦" became "4" in one reading ("48,000.00" against "N8,000.00"), the readings disagree and the amount is held back whole, as it must be.
+  - A receipt's single date line ("Date: 27 Oct 2026, 11:47") is no longer taken for a statement row missing its amount. That rule still applies with 2 or more dated rows.
+- **Results** (synthetic receipts, made-up names and numbers, money mode, through /read):
+
+  | Receipt | Screenshot / inverted | Camera tips | Read |
+  |---|---|---|---|
+  | Dark, value under label, PNG | yes / yes | none | everything, amount included ("Amount: #8,000.00") |
+  | Dark, value under label, JPEG (WhatsApp) | yes / yes | none | everything but the amount: held back ("₦" read as 4 by the re-read) |
+  | Light, value under label | yes / no | none | everything but the amount (0.83 and 0.77: under the rules) |
+  | Dark and light, value beside label | yes | none | everything but the amount ("₦" read as 4) |
+  | A genuinely dark camera photo | no / no | too_dark | unchanged |
+
+  - The 40-page set, the cards, slips and book pages: none is called a screenshot or inverted (all 701 backend tests pass).
+
+**App:**
+- A gallery screenshot (a PNG, or a phone screen's shape) is sent exactly as it is: full resolution, never re-compressed, up to 8 MB. Other gallery pictures are shrunk to 2400 px as before. Diagnostics say "a screenshot, sent whole".
+- Said, not shown (`spoken_numbers.dart`): "₦8,000.00" / "#8,000.00" / "N8,000.00" is "8,000 naira" (with kobo when there are any); 7 or more digits in a row (account numbers, references) are said digit by digit. The digits are never changed.
+- Offline, receipts too (`pairLabels`): Apple Vision gives labels and values as separate lines, out of order. They are paired row by row (beside), or label then the line under it.
+- Apple Vision on the same receipt (Mac, the app's own code) reads every value at 1.00, the amount "N8,000.00" included. So on an iPhone without a connection the amount passes the number rules (its crop re-read must still agree).
+
+**Open:**
+- The server's amount on receipts depends on how Tesseract takes "₦".
+- Ideas, not done:
+  - a "₦"-aware reading (per-character confidence), or Apple Vision for money screenshots on the phone when the server held the amount back;
+  - a test on real dark-mode receipts (none in the test set).
+
 ## 2026-10-27 · 0.1.0+11: why the iPhone read offline, capture that always finishes, one voice at a time, show-through and shadows, Apple Vision offline (UNREVIEWED)
 
 From the tester's iPhone (build 10): "Magana's server isn't answering" at about 11:47 and 11:58; capture that never fired; the previous screen's speech carrying on; "unclear" after every sentence of a thin book page; a torch shine on a card.

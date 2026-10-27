@@ -375,21 +375,33 @@ class _CaptureScreenState extends State<CaptureScreen>
     );
     final XFile? photo;
     try {
+      // From the gallery, the picture as it is: a screenshot is sent whole (below). From the
+      // camera, large enough for small print, small enough to upload on a slow connection.
       photo =
           await (widget.picker?.call(source) ??
-              // Large enough for small print, small enough to upload on a slow connection.
-              ImagePicker().pickImage(
-                source: source,
-                maxWidth: 2400,
-                imageQuality: 88,
-              ));
+              (source == ImageSource.gallery
+                  ? ImagePicker().pickImage(source: source)
+                  : ImagePicker().pickImage(
+                      source: source,
+                      maxWidth: 2400,
+                      imageQuality: 88,
+                    )));
     } catch (_) {
       _setStatus(_l.cameraFailed);
       return;
     }
     if (photo == null || !mounted) return;
     setState(() => _busy = true);
-    await _send(await photo.readAsBytes(), photo.name);
+    final raw = await photo.readAsBytes();
+    // A screenshot at full resolution, never re-compressed; a photo large enough for small
+    // print and small enough to upload on a slow connection.
+    final whole =
+        source == ImageSource.gallery && await looksLikeScreenshot(raw);
+    final bytes = whole || source == ImageSource.camera
+        ? raw
+        : await shrinkTo(raw, galleryMaxWidth, galleryQuality);
+    diagnostics.last?.screenshot = whole;
+    await _send(bytes, photo.name);
   }
 
   /// A failed send or a server error is tried once more within [serverWait].

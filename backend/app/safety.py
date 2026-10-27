@@ -160,10 +160,22 @@ def number_problem(words: list[str], i: int) -> str | None:
 def _line_words(line: dict) -> list[dict]:
     words = line.get("words") or []
     if words:
-        return [{"text": w["text"], "confidence": w.get("confidence", 1.0), "reread_text": w.get("reread_text"),
+        return [{"text": w["text"], "confidence": _own_confidence(w), "reread_text": w.get("reread_text"),
                  "reread_confidence": w.get("reread_confidence")} for w in words]
     return [{"text": w, "confidence": line.get("confidence", 1.0), "reread_text": None, "reread_confidence": None}
             for w in line.get("text", "").split()]
+
+
+def _own_confidence(w: dict) -> float:
+    """A word's own confidence. A number behind one sign ("₦8,000.00" read "#8,000.00": Tesseract
+    doesn't know ₦) is scored by its digits read alone, when they read as the same number
+    (reader.reread_numbers): the sign is not the number. Its second, cropped reading must still
+    agree, and every threshold is unchanged."""
+    conf = w.get("confidence", 1.0)
+    alone = w.get("digits_text")
+    if alone and _number(alone) == _number(w["text"]):
+        return max(conf, w.get("digits_confidence") or 0.0)
+    return conf
 
 
 def number_accepted(w: dict, threshold: float = CRITICAL_WORD_THRESHOLD,
@@ -374,6 +386,10 @@ def money_photo_check(result: dict) -> dict:
     counts = [len(_AMOUNT.findall(text(row))) for row in dated]
     usual = max(set(counts), key=counts.count) if counts else 0
     short = {i for row, n in zip(dated, counts) if n == 0 or n < usual for i in row}
+    # A receipt screenshot has one date line with no amount on it ("Date: 27 Oct 2026, 11:47"):
+    # that is not a statement row missing its amount. With two dated rows or more it is.
+    if result.get("screenshot") and len(dated) < 2:
+        short = set()
     unreliable = ("small_print" in result.get("tips", []) or bool(result.get("faint_regions"))
                   or bool(flagged) or bool(bad_rows) or bool(short))
     if not unreliable:

@@ -124,3 +124,56 @@ def book_page(size: tuple[int, int] = (1080, 1440), shadow: bool = False) -> Ima
         ImageDraw.Draw(mask).ellipse((-300, int(size[1] * 0.55), int(size[0] * 0.9), int(size[1] * 1.5)), fill=140)
         page = ImageChops.subtract(page, mask.filter(ImageFilter.GaussianBlur(70)))
     return _jpeg(page.convert("RGB"))
+
+
+# A made-up bank transfer receipt (no real names, accounts or banks).
+RECEIPT = [
+    ("Amount", "₦8,000.00"),
+    ("Recipient", "Ada Okonkwo"),
+    ("Account number", "0123456789"),
+    ("Bank", "Sample Bank"),
+    ("Reference", "TRF2026102711470001"),
+    ("Date", "27 Oct 2026, 11:47"),
+    ("Status", "Successful"),
+]
+
+
+def receipt(dark: bool = True, stacked: bool = True, fmt: str = "PNG", size: tuple[int, int] = (1080, 2340)) -> Image.Image:
+    """A phone banking app's transfer receipt as a screenshot: dark mode (white on near-black) or
+    light; each value under its label (stacked) or beside it. As sent: PNG, or JPEG as WhatsApp
+    re-saves screenshots."""
+    bg, label, value = ((18, 18, 18), (150, 150, 150), (245, 245, 245)) if dark else ((255, 255, 255), (110, 110, 110), (20, 20, 20))
+    img = Image.new("RGB", size, bg)
+    d = ImageDraw.Draw(img)
+    d.text((80, 260), "Transfer successful", fill=value, font=pagefont.font(56))
+    y = 420
+    for name, val in RECEIPT:
+        if stacked:
+            d.text((80, y), name, fill=label, font=pagefont.font(34))
+            d.text((80, y + 52), val, fill=value, font=pagefont.font(44))
+            y += 170
+        else:
+            d.text((80, y), name, fill=label, font=pagefont.font(38))
+            right = pagefont.font(40)
+            d.text((size[0] - 80 - d.textlength(val, font=right), y), val, fill=value, font=right)
+            y += 120
+    buf = io.BytesIO()
+    img.save(buf, fmt, **({"quality": 75} if fmt == "JPEG" else {}))
+    out = Image.open(io.BytesIO(buf.getvalue()))
+    out.load()
+    return out
+
+
+def dark_photo(size: tuple[int, int] = (1080, 1440)) -> Image.Image:
+    """A camera photo of a printed page taken with almost no light: genuinely too dark."""
+    rng = random.Random(7)
+    img = Image.new("L", size, 34)
+    d = ImageDraw.Draw(img)
+    for i in range(14):
+        d.text((90, 120 + i * 80), "Take one tablet twice a day after food", fill=22, font=pagefont.font(36))
+    noisy = img.point(lambda v: v)
+    px = noisy.load()
+    for _ in range(60000):
+        x, y = rng.randrange(size[0]), rng.randrange(size[1])
+        px[x, y] = min(255, max(0, px[x, y] + rng.randint(-8, 8)))
+    return _jpeg(noisy.convert("RGB"))

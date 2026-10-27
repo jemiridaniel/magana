@@ -37,4 +37,29 @@ void main() {
       3,
     ]); // no plugin: unchanged
   });
+
+  test(
+    'a screenshot is sent whole: PNGs; not an unreadable or huge file',
+    () async {
+      final png = Uint8List.fromList([
+        0x89,
+        0x50,
+        0x4E,
+        0x47,
+        0x0D,
+        0x0A,
+        0x1A,
+        0x0A,
+        1,
+        2,
+      ]);
+      expect(await looksLikeScreenshot(png), isTrue);
+      expect(
+        await looksLikeScreenshot(Uint8List.fromList([1, 2, 3, 4, 5])),
+        isFalse,
+      );
+      final huge = Uint8List(screenshotMaxBytes + 1)..setAll(0, png);
+      expect(await looksLikeScreenshot(huge), isFalse);
+    },
+  );
 }

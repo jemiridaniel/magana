@@ -34,6 +34,9 @@ class Attempt {
   /// The first try failed with this code and the photo was sent once more.
   String? retried;
 
+  /// A screenshot from the gallery, sent whole at full resolution.
+  bool screenshot = false;
+
   void read(ReadResult r) {
     tips = r.tips;
     final lines = (r.json?['lines'] as List?) ?? const [];

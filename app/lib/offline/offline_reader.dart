@@ -282,6 +282,7 @@ Future<ReadResult?> readOnPhone(
       }
     }
     seen = await dropShowThrough(photo, seen);
+    seen = pairLabels(seen);
     return ReadResult.fromJson(
       await _reading(photo, mode, seen, enhanced: enhanced),
     );
@@ -326,6 +327,96 @@ Future<List<SeenLine>> dropShowThrough(
           when kept.isNotEmpty)
         SeenLine(kept),
   ];
+}
+
+/// Receipt labels (as the server's reader.LABELS): a value beside or under one is read with it.
+const receiptLabels = {
+  'amount',
+  'recipient',
+  'beneficiary',
+  'sender',
+  'account number',
+  'account name',
+  'account',
+  'bank',
+  'reference',
+  'ref',
+  'transaction id',
+  'transaction ref',
+  'session id',
+  'date',
+  'time',
+  'status',
+  'narration',
+  'description',
+  'remark',
+  'fee',
+  'charge',
+  'total',
+  'balance',
+  'transaction type',
+  'payment method',
+  'from',
+  'to',
+};
+
+bool _isLabel(SeenLine l) => receiptLabels.contains(
+  l.words.map((w) => w.text).join(' ').replaceAll(':', '').trim().toLowerCase(),
+);
+
+/// Each receipt label with its value, top to bottom (as the server's reader.pair_labels): the
+/// value on the same row to its right (Apple Vision gives them as separate lines, out of
+/// order), or else the line just under it. "Amount: ₦8,000.00".
+List<SeenLine> pairLabels(List<SeenLine> seen) {
+  final lines = [...seen]..sort((a, b) => a.top.compareTo(b.top));
+  final used = <SeenLine>{};
+  final out = <SeenLine>[];
+  for (final label in lines) {
+    if (used.contains(label)) continue;
+    if (!_isLabel(label)) {
+      out.add(label);
+      continue;
+    }
+    final h = label.bottom - label.top;
+    final mid = (label.top + label.bottom) / 2;
+    SeenLine? value;
+    for (final l in lines) {
+      if (identical(l, label) || used.contains(l) || _isLabel(l)) continue;
+      final lh = l.bottom - l.top;
+      final sameRow =
+          (((l.top + l.bottom) / 2) - mid).abs() <= (h > lh ? h : lh) / 2 &&
+          l.left >= label.right;
+      final under =
+          l.top >= label.bottom &&
+          l.top - label.bottom <= 1.5 * (h > lh ? h : lh) &&
+          (l.left - label.left).abs() <= 2 * (h > lh ? h : lh);
+      if (sameRow || (value == null && under)) {
+        value = l;
+        if (sameRow) break;
+      }
+    }
+    if (value == null) {
+      out.add(label);
+      continue;
+    }
+    used.add(value);
+    final last = label.words.last;
+    out.add(
+      SeenLine([
+        ...label.words.take(label.words.length - 1),
+        SeenWord(
+          '${last.text.replaceAll(':', '')}:',
+          last.confidence,
+          last.left,
+          last.top,
+          last.width,
+          last.height,
+        ),
+        ...value.words,
+      ]),
+    );
+  }
+  return out;
 }
 
 const showThrough = 0.3; // as the server's SHOW_THROUGH

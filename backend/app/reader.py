@@ -6,6 +6,8 @@ layout and tables) without touching the API or safety layer.
 """
 from __future__ import annotations
 
+import re
+
 import os
 from dataclasses import dataclass, asdict, field
 from html.parser import HTMLParser
@@ -26,6 +28,10 @@ class Word:
     # Numbers only: an independent second reading of a crop around this word.
     reread_text: str | None = None
     reread_confidence: float | None = None
+    # A number behind one sign ("₦8,000.00", which OCR reads "#8,000.00"): its digits read on
+    # their own, so the sign Tesseract doesn't know doesn't lower the number's confidence.
+    digits_text: str | None = None
+    digits_confidence: float | None = None
 
 
 @dataclass
@@ -364,15 +370,131 @@ def cut_off(image: Image.Image, page: Page) -> list[str]:
 
 
 def capture_check(image: Image.Image) -> list[str]:
-    """Capture tips as message codes: too_dark, blurry."""
+    """Capture tips as message codes: too_dark, blurry. "Too dark" only when there is no readable
+    contrast: a dark photo with bright text (dark mode) is inverted before this, never dark."""
+    import numpy as np
+
     tips = []
     gray = image.convert("L")
-    if ImageStat.Stat(gray).mean[0] < 60:
+    lo, hi = np.percentile(np.asarray(gray), [1, 99])
+    if ImageStat.Stat(gray).mean[0] < 60 and hi - lo < 100:
         tips.append("too_dark")
     edges = gray.filter(ImageFilter.FIND_EDGES)
     if ImageStat.Stat(edges).var[0] < 50:
         tips.append("blurry")
     return tips
+
+
+# ---------- Screenshots and light text on dark
+
+CAMERA_TAGS = (0x010F, 0x0110)  # EXIF Make, Model: written by cameras, not by screenshots
+# Phone screens are 16:9 (1.78) to 21:9 (2.33); camera photos 4:3 (1.33). And their exact
+# widths in pixels (Android and iPhone), or the long side WhatsApp resizes a picture to.
+SCREEN_ASPECT = (1.6, 2.4)
+SCREEN_WIDTHS = {720, 750, 828, 1080, 1125, 1170, 1179, 1206, 1242, 1284, 1290, 1320, 1440}
+WHATSAPP_SIDES = {1600, 2048, 2560}
+
+
+def is_screenshot(image: Image.Image) -> bool:
+    """A screenshot or other digital image, not a camera photo (tester's dark-mode bank receipt,
+    27 Oct 2026, was "too dark"): no camera in its EXIF, a flat single-colour background (a
+    camera's paper has noise and shading), and a phone screen's shape and exact width (or
+    WhatsApp's resize of one). Camera checks (darkness, blur, tilt, cut-off, shadows) don't
+    apply to it."""
+    import numpy as np
+
+    try:
+        exif = image.getexif()
+        if any(tag in exif for tag in CAMERA_TAGS):
+            return False
+    except Exception:
+        pass
+    w, h = image.size
+    if not SCREEN_ASPECT[0] <= max(w, h) / max(1, min(w, h)) <= SCREEN_ASPECT[1]:
+        return False
+    if min(w, h) not in SCREEN_WIDTHS and max(w, h) not in WHATSAPP_SIDES:
+        return False
+    small = np.asarray(image.convert("L").resize((max(1, w // 4), max(1, h // 4)), Image.NEAREST), dtype=int)
+    values, counts = np.unique(small, return_counts=True)
+    mode = values[np.argmax(counts)]
+    # The background's own colour, within 2 grey levels (JPEG re-saving keeps it that flat).
+    return bool(np.mean(np.abs(small - mode) <= 2) >= 0.35)
+
+
+def light_on_dark(image: Image.Image) -> bool:
+    """Bright text on a dark background (dark mode, a blackboard, a light-on-dark sign): read
+    inverted. The background is what most of the image is; the text is a small bright share."""
+    import numpy as np
+
+    gray = np.asarray(image.convert("L").resize((max(1, image.width // 4), max(1, image.height // 4))), dtype=float)
+    background = np.median(gray)
+    lit = gray > background + 80
+    if not (background < 90 and np.percentile(gray, 99.9) > background + 100 and 0.001 < lit.mean() < 0.4):
+        return False
+    # Bright strokes, not a bright area: white paper on a dark table is lit too, but it survives
+    # being worn away (eroded) and text doesn't.
+    eroded = np.asarray(Image.fromarray((lit * 255).astype("uint8")).filter(ImageFilter.MinFilter(3))) > 0
+    if eroded.mean() > 0.25 * lit.mean():
+        return False
+    # Text spreads over the picture; a lamp's reflection in a dark photo is one spot (that
+    # photo must still hear "too dark").
+    h, w = lit.shape
+    patches = [lit[r * h // 4:(r + 1) * h // 4, c * w // 4:(c + 1) * w // 4] for r in range(4) for c in range(4)]
+    return bool(sum(p.size > 0 and p.mean() > 0.002 for p in patches) >= 3)
+
+
+# Receipt and statement labels: a value printed beside or under one is read with it
+# ("Amount: ₦8,000.00"), top to bottom (pair_labels).
+LABELS = (
+    "amount", "recipient", "beneficiary", "sender", "account number", "account name", "account",
+    "bank", "reference", "ref", "transaction id", "transaction ref", "session id", "date", "time",
+    "status", "narration", "description", "remark", "fee", "charge", "total", "balance",
+    "transaction type", "payment method", "from", "to",
+)
+
+
+def _label_of(text: str) -> str | None:
+    t = text.strip().rstrip(":").strip().lower()
+    return t if t in LABELS else None
+
+
+def pair_labels(page: Page) -> int:
+    """Puts each receipt label with its value, top to bottom: a label alone on its line takes
+    the line just under it (same column, close below) as its value; a label at the start of a
+    line gets its colon. Returns the pairs made."""
+    lines = sorted(page.lines, key=lambda l: l.top)
+    used: set[int] = set()
+    out: list[Line] = []
+    pairs = 0
+    for i, line in enumerate(lines):
+        if i in used:
+            continue
+        label = _label_of(line.text)
+        below = lines[i + 1] if i + 1 < len(lines) else None
+        if (label and line.words and below is not None and below.words and _label_of(below.text) is None
+                and below.top - (line.top + line.height) <= 1.5 * max(line.height, below.height)
+                and abs(below.left - line.left) <= 2 * max(line.height, below.height)):
+            last = line.words[-1]
+            last.text = last.text.rstrip(":") + ":"
+            line.words = line.words + below.words
+            line.text = f"{line.text.strip().rstrip(':')}: {below.text}"
+            line.width = max(line.left + line.width, below.left + below.width) - line.left
+            line.height = below.top + below.height - line.top
+            line.confidence = min(line.confidence, below.confidence)
+            used.add(i + 1)
+            pairs += 1
+        else:
+            # "Amount ₦8,000.00" on one line: the label's last word takes a colon.
+            for n in (2, 1):
+                head = " ".join(w.text for w in line.words[:n])
+                if len(line.words) > n and _label_of(head) and not head.endswith(":"):
+                    line.words[n - 1].text += ":"
+                    line.text = " ".join(w.text for w in line.words)
+                    pairs += 1
+                    break
+        out.append(line)
+    page.lines[:] = out
+    return pairs
 
 
 SMALL_PRINT_PX = 10  # median word height below this: too small to read every number
@@ -1018,12 +1140,36 @@ def reread_numbers(image: Image.Image, page: Page, engine: OCREngine) -> None:
         w, window, position = job
         return w, _pick(snippet.read(_window_crop(image, window)), position, len(window))
 
+    def digits(w: Word) -> tuple[Word, Word | None]:
+        # The sign is about one character wide (₦ a little wider): cut a little more each try,
+        # and keep only a reading that starts with a digit and is the same number.
+        char = w.width / max(1, len(w.text))
+        for cut in (1.0, 1.4, 1.8):
+            sign = max(1, round(cut * char))
+            alone = Word(w.text[1:], w.confidence, w.left + sign, w.top, max(1, w.width - sign), w.height)
+            found = _pick(snippet.read(_window_crop(image, [alone])), 0, 1)
+            if found and found.text[:1].isdigit() and _digits_of(found.text) == _digits_of(w.text[1:]):
+                return w, found
+        return w, None
+
     from concurrent.futures import ThreadPoolExecutor
 
+    signed = [w for w, _, _ in jobs if _SIGNED_NUMBER.match(w.text)]
     with ThreadPoolExecutor(max_workers=4) as pool:
         for w, found in pool.map(reread, jobs):
             w.reread_text = found.text if found else ""
             w.reread_confidence = found.confidence if found else 0.0
+        for w, found in pool.map(digits, signed):
+            w.digits_text = found.text if found else ""
+            w.digits_confidence = found.confidence if found else 0.0
+
+
+def _digits_of(text: str) -> str:
+    return re.sub(r"[^\d.]", "", text)
+
+
+# One sign, then a number: "₦8,000.00", "#8,000.00", "N500", "$12.50".
+_SIGNED_NUMBER = re.compile(r"^[^\d\s]\d[\d,.]*\d$|^[^\d\s]\d$")
 
 
 SECOND_PASS_SCALE = 1.5
@@ -1071,10 +1217,16 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
 
     engine = engine or default_engine()
     image = upright(image)
+    # A screenshot is not a camera photo: no darkness, blur, tilt, cut-off or shadow checks.
+    screenshot = is_screenshot(image)
+    # Light text on a dark background (dark mode, camera or gallery): read inverted.
+    inverted = light_on_dark(image)
+    if inverted:
+        image = ImageOps.invert(image.convert("RGB"))
     page = engine.read(image)
     # A tilted photo (tilt no longer holds the camera back): a nearly empty or unsure reading
     # is tried again on the photo turned level, kept if it finds more words.
-    if reads_faint(page) and ImageStat.Stat(image.convert("L")).stddev[0] > 3:
+    if not screenshot and reads_faint(page) and ImageStat.Stat(image.convert("L")).stddev[0] > 3:
         level, angle = straighten(image)
         if angle:
             again = engine.read(level)
@@ -1089,13 +1241,13 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
         page = reader.read(image)
     # A hand or phone shadow over part of the page: read an evened-out copy too, and keep it if
     # it reads more words with confidence (tester's book page, 27 Oct 2026).
-    shadow = shadowed(original, page)
+    shadow = not screenshot and shadowed(original, page)
     if shadow:
         flat = flatten_contrast(original)
         again = reader.read(flat)
         if _sure_words(again) > _sure_words(page):
             image, page = flat, again
-    seen_through = show_through(image, page)
+    seen_through = 0 if screenshot else show_through(image, page)
     tiny = small_print(page)
     first = len(page.lines)
     faint = recover_faint(image, page, reader)
@@ -1134,7 +1286,12 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     script = hw.classify(page, original, strict=strict_handwriting)
     if handwriting is not None and script != "printed":
         hw.reread_handwritten(image, page, handwriting)
-    tips = (capture_check(original) + cut_off(original, page) + edge_cuts(original, page, bounds) + tiny
+    # A receipt or banking screenshot: each label read with its value, top to bottom. After the
+    # numbers' re-reads (a crop around a value must not take in the label's row above).
+    if screenshot:
+        pair_labels(page)
+    camera = [] if screenshot else capture_check(original) + cut_off(original, page) + edge_cuts(original, page, bounds)
+    tips = (camera + tiny
             + (["faint_print"] if enhanced else []) + (["barcode_skipped"] if barcodes else [])
             # "This page looks handwritten" only when most of it does. A few unsure lines on a
             # printed page were called "mixed" from OCR doubt alone: a thermal slip and a
@@ -1142,11 +1299,15 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
             # app says "N lines are hard to read" instead (warning summary).
             + (["handwritten_page"] if script == "handwritten" else []) + ([f"letters_{language}"] if language else []))
     result = {"tips": tips, **_page_dict(page), "faint_regions": faint, "script": script, "columns": columns,
-              "page_language": language, "show_through_words": seen_through, "shadow": shadow}
+              "page_language": language, "show_through_words": seen_through, "shadow": shadow,
+              "screenshot": screenshot, "inverted": inverted}
     if language:
         result["letter_marks"] = letters.marks(result["lines"], language)
     if second_pass:
-        result["second_pass"] = _page_dict(engine.read(second_pass_image(image)))
+        again = engine.read(second_pass_image(image))
+        if screenshot:
+            pair_labels(again)  # line for line with the first reading
+        result["second_pass"] = _page_dict(again)
     return result
 
 
