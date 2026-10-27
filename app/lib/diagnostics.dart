@@ -37,6 +37,9 @@ class Attempt {
   /// A screenshot from the gallery, sent whole at full resolution.
   bool screenshot = false;
 
+  /// Money amounts checked against the phone's own reading, and how many were held back.
+  int? amountsChecked, amountsHeld;
+
   void read(ReadResult r) {
     tips = r.tips;
     final lines = (r.json?['lines'] as List?) ?? const [];

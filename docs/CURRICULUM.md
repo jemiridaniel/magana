@@ -43,7 +43,7 @@ One question format everywhere: the bundled packs, the backend's teacher quizzes
 
 ## Primary mode (Primary 1–6)
 
-- **Two or three options.** The portal won't let a primary question have more, and the backend refuses to assign one that does.
+- **Options:** two or three for Primary 1–3; up to four (A–D) for Primary 4–6. The portal won't let a question have more, and the backend refuses to assign one that does.
 - **Short sentences:** 15 words or fewer. The portal shows the count, and it's a warning, not a block.
 - **A slower voice:** 0.8 times the learner's own speed, put back when the quiz closes.
 - **Encouraging feedback:** "Well done! You chose A." / "Good try! The answer is A, the leaf."

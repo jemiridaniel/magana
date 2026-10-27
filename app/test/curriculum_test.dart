@@ -93,6 +93,9 @@ void main() {
       expect(j['band_subjects'], {
         for (final b in Band.values) b.id: bandSubjects[b],
       });
+      expect(j['band_max_options'], {
+        for (final b in Band.values) b.id: b.maxOptions,
+      });
     },
   );
 
@@ -114,8 +117,13 @@ void main() {
           for (final q in quiz.questions) {
             expect(q.answer, inInclusiveRange(0, q.options.length - 1));
             if (band.primary) {
-              // Primary mode: two or three options, 15 words or fewer.
-              expect(q.options.length, inInclusiveRange(2, 3), reason: q.id);
+              // Primary mode: 15 words or fewer; two or three options in
+              // Primary 1–3, up to four (A–D) in Primary 4–6.
+              expect(
+                q.options.length,
+                inInclusiveRange(2, band.maxOptions),
+                reason: q.id,
+              );
               expect(words(q.question), lessThanOrEqualTo(15), reason: q.id);
             } else {
               expect(q.options.length, 4, reason: q.id);

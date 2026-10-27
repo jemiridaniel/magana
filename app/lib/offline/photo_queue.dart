@@ -1,3 +1,5 @@
+import '../amount_check.dart';
+
 import 'dart:io';
 
 import 'package:flutter/services.dart';
@@ -73,7 +75,13 @@ class PhotoQueue {
       }
       try {
         final result = await api.read(bytes, mode: mode);
-        await Library.save(result, paper);
+        // Bank papers and screenshots: amounts checked against this phone's own reading.
+        await Library.save(
+          checksAmounts(result, mode: mode)
+              ? await confirmOnPhone(result, bytes)
+              : result,
+          paper,
+        );
         saved++;
       } on ApiException catch (e) {
         if (const {

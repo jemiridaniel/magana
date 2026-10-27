@@ -4,6 +4,7 @@ import 'package:app/api.dart';
 import 'package:app/l10n/app_localizations.dart';
 import 'package:app/language.dart';
 import 'package:app/main.dart';
+import 'package:app/offline/offline_reader.dart';
 import 'package:app/papers.dart';
 import 'package:app/policy.dart';
 import 'package:app/profile.dart';
@@ -22,6 +23,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'a11y.dart';
 import 'app_test.dart' show FakeSpeaker;
 import 'quiz_test.dart' show FakeVoice;
+import 'white_paper_test.dart' show FakePhoto, FakeRecognizer, seen;
 
 final en = lookupAppLocalizations(const Locale('en'));
 
@@ -305,6 +307,19 @@ void main() {
 
   testWidgets('E3: balances as printed, find a transaction', (tester) async {
     final handle = tester.ensureSemantics();
+    // The phone's own reading agrees on every amount, so each one is said (amount_check.dart).
+    pageRecognizer = FakeRecognizer(
+      FakePhoto([
+        for (final (i, t) in [
+          'Opening balance N45,200.00',
+          'Closing balance N38,750.00',
+          '03 Oct 2026 Transfer to Ada N2,000.00',
+          '14 Oct 2026 POS purchase supermarket N6,450.00',
+        ].indexed)
+          seen(t, 1.0, top: 100 + 100 * i),
+      ]),
+    );
+    addTearDown(() => pageRecognizer = MlKitRecognizer());
     final (speaker, _, _) = await start(tester, statement);
     await openPaper(tester, RegExp('^${en.paperStatement}'));
     expect(

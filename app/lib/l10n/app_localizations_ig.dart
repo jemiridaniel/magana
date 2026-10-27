@@ -266,6 +266,9 @@ class AppLocalizationsIg extends AppLocalizations {
   String get unclearNumber => 'nọmba edoghị anya';
 
   @override
+  String get amountUnclear => 'Enweghị m ike ịgụ ego ahụ nke ọma';
+
+  @override
   String get unclearLetter => 'mkpụrụedemede edoghị anya';
 
   @override
@@ -292,6 +295,11 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String msg_unreadable_number(String where) {
     return 'Enweghị m ike ịgụ otu nọmba na $where nke ọma. Biko lelee ya ma ọ bụ see foto ọzọ.';
+  }
+
+  @override
+  String msg_amount_unconfirmed(String where) {
+    return 'Enweghị m ike ịgụ ego dị na $where nke ọma, ya mere anaghị m ekwu ya. Magana na-ekwu ego naanị mgbe ọgụgụ abụọ dị iche iche dabara kpọmkwem. Biko lelee ya na ngwa ụlọ akụ gị ma ọ bụ na onye ị tụkwasịrị obi.';
   }
 
   @override

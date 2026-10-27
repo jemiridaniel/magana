@@ -340,14 +340,17 @@ class _ReaderScreenState extends State<ReaderScreen> {
       ItemKind.faint => '',
       ItemKind.line => [
         for (final (i, w) in item.words.indexed)
-          item.unclearWords.contains(i)
-              ? _l.unclearNumber
-              : item.unclearLetters.contains(i)
-              ? _l.unclearLetter
-              : w,
+          if (!item.heldSign(i))
+            item.unclearAmounts.contains(i)
+                ? _l.amountUnclear
+                : item.unclearWords.contains(i)
+                ? _l.unclearNumber
+                : item.unclearLetters.contains(i)
+                ? _l.unclearLetter
+                : w,
       ].join(' '),
       ItemKind.row =>
-        '${_position(item)}. ${[for (final c in item.cells) (c.header.isEmpty ? '' : '${c.header}: ') + (c.unclear ? _l.unclearNumber : c.value)].join('. ')}',
+        '${_position(item)}. ${[for (final c in item.cells) (c.header.isEmpty ? '' : '${c.header}: ') + (c.unclear ? (c.amount ? _l.amountUnclear : _l.unclearNumber) : c.value)].join('. ')}',
     };
   }
 
@@ -399,7 +402,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
   ];
 
   /// E3 "Find a transaction": the next row (or line) holding the words, date or
-  /// amount the learner says or types. Commas are ignored ("6,450" = "6450").
+  /// amount the learner says or types. Commas are ignored ("6,450" = "6450"). A number or
+  /// amount held back is never matched: finding it would say what it is.
   Future<void> _find() async {
     final l = _l;
     _run++;
@@ -420,8 +424,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
       final i = (_index + step) % n;
       final item = _items[i];
       final text = item.isRow
-          ? item.cells.map((c) => c.value).join(' ')
-          : item.text;
+          ? item.cells.where((c) => !c.unclear).map((c) => c.value).join(' ')
+          : [
+              for (final (i, w) in item.words.indexed)
+                if (!item.unclearWords.contains(i)) w,
+            ].join(' ');
       if (norm(text).contains(target)) return _go(i);
     }
     _speaker.say(l.findNoMatch(q));
@@ -726,19 +733,25 @@ class _ReaderScreenState extends State<ReaderScreen> {
   /// An item as the page view shows it: unclear numbers never as digits.
   String _plain(ReadItem item) {
     final unclear = '[${_l.unclearNumber}]';
+    final amount = '[${_l.amountUnclear}]';
     if (item.isRow) {
       return [
         for (final c in item.cells)
           [
             if (c.header.isNotEmpty) '${c.header}:',
-            c.unclear ? unclear : c.value,
+            c.unclear ? (c.amount ? amount : unclear) : c.value,
           ].join(' '),
       ].join(' · ');
     }
     if (item.isFaint) return '…';
     return [
       for (final (i, w) in item.words.indexed)
-        item.unclearWords.contains(i) ? unclear : w,
+        if (!item.heldSign(i))
+          item.unclearAmounts.contains(i)
+              ? amount
+              : item.unclearWords.contains(i)
+              ? unclear
+              : w,
     ].join(' ');
   }
 
@@ -1365,7 +1378,9 @@ class _ItemCard extends StatelessWidget {
                           ),
                         ),
                       Text.rich(
-                        c.unclear ? _unclear(context) : TextSpan(text: c.value),
+                        c.unclear
+                            ? _unclear(context, amount: c.amount)
+                            : TextSpan(text: c.value),
                         style: const TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
@@ -1378,14 +1393,18 @@ class _ItemCard extends StatelessWidget {
               Text.rich(
                 TextSpan(
                   children: [
-                    for (final (i, w) in item.words.indexed) ...[
-                      if (i > 0) const TextSpan(text: ' '),
-                      item.unclearWords.contains(i)
-                          ? _unclear(context)
-                          : item.letterMarks.contains(i)
-                          ? TextSpan(text: w, style: _marked)
-                          : TextSpan(text: w),
-                    ],
+                    for (final (i, w) in item.words.indexed)
+                      if (!item.heldSign(i)) ...[
+                        if (i > 0) const TextSpan(text: ' '),
+                        item.unclearWords.contains(i)
+                            ? _unclear(
+                                context,
+                                amount: item.unclearAmounts.contains(i),
+                              )
+                            : item.letterMarks.contains(i)
+                            ? TextSpan(text: w, style: _marked)
+                            : TextSpan(text: w),
+                      ],
                   ],
                 ),
                 style: const TextStyle(
@@ -1402,9 +1421,12 @@ class _ItemCard extends StatelessWidget {
 }
 
 /// A number the backend could not read reliably: shown as "[unclear number]",
-/// highlighted, never as the digit OCR guessed.
-TextSpan _unclear(BuildContext context) => TextSpan(
-  text: '[${AppLocalizations.of(context).unclearNumber}]',
+/// highlighted, never as the digit OCR guessed. A money amount two readings didn't agree
+/// on: "[I can't read the amount clearly]".
+TextSpan _unclear(BuildContext context, {bool amount = false}) => TextSpan(
+  text: amount
+      ? '[${AppLocalizations.of(context).amountUnclear}]'
+      : '[${AppLocalizations.of(context).unclearNumber}]',
   style: const TextStyle(
     backgroundColor: MaganaColors.warnFill,
     color: MaganaColors.warnInk,

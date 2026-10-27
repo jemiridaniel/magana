@@ -96,8 +96,8 @@ class Quiz {
   /// Written by the learner's teacher in the portal.
   final bool teacherMade;
 
-  /// Primary 1–6: two or three options, short sentences, a slower voice and
-  /// encouraging feedback.
+  /// Primary 1–6: short sentences, a slower voice and encouraging feedback
+  /// (two or three options in Primary 1–3, up to four in Primary 4–6).
   bool get primary => band?.primary ?? false;
 
   String get subjectName => subjectNames[subject] ?? subject;

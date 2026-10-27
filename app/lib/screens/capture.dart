@@ -13,6 +13,7 @@ import '../capture/frame_analysis.dart';
 import '../diagnostics.dart';
 import '../l10n/app_localizations.dart';
 import '../messages.dart';
+import '../amount_check.dart';
 import '../offline/offline_reader.dart';
 import '../platform/shrink_photo.dart';
 import '../offline/photo_queue.dart';
@@ -401,13 +402,17 @@ class _CaptureScreenState extends State<CaptureScreen>
         ? raw
         : await shrinkTo(raw, galleryMaxWidth, galleryQuality);
     diagnostics.last?.screenshot = whole;
-    await _send(bytes, photo.name);
+    await _send(bytes, photo.name, screenshot: whole);
   }
 
   /// A failed send or a server error is tried once more within [serverWait].
   static const _retryable = {'unreachable', 'server_sleeping', 'failed'};
 
-  Future<void> _send(Uint8List bytes, String filename) async {
+  Future<void> _send(
+    Uint8List bytes,
+    String filename, {
+    bool screenshot = false,
+  }) async {
     final scope = AppScope.of(context);
     final l = _l;
     final mode = widget.detect
@@ -458,6 +463,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     }
     still.cancel();
     var queued = false;
+    ReadResult? phoneReading; // this phone's own reading, when it made one
     var dropped = 0; // oldest waiting pages dropped to keep at most 20
     if (result == null) {
       ReadResult? local;
@@ -477,7 +483,7 @@ class _CaptureScreenState extends State<CaptureScreen>
           return;
         }
       } else {
-        result = local;
+        result = phoneReading = local;
         if (mayKeep && await FullReadingSetting.get()) {
           queued = true;
           // A slow server may still answer: its reading goes to My library. If it
@@ -485,7 +491,11 @@ class _CaptureScreenState extends State<CaptureScreen>
           online.then<void>(
             (full) async {
               attempt?.serverLate = true;
-              await Library.save(full, paper);
+              final saved =
+                  checksAmounts(full, mode: mode, screenshot: screenshot)
+                  ? await confirmOnPhone(full, bytes, phone: local)
+                  : full;
+              await Library.save(saved, paper);
             },
             onError: (Object _) async {
               dropped = await photoQueue.add(bytes, mode: mode, paper: paper);
@@ -502,7 +512,7 @@ class _CaptureScreenState extends State<CaptureScreen>
         if (n > 0) scope.speaker.say(l.fullReadingsReady(n));
       });
     }
-    final page = result;
+    var page = result;
     attempt
       ?..path = why == null ? 'server' : 'phone (${why.name})'
       ..read(page);
@@ -522,6 +532,15 @@ class _CaptureScreenState extends State<CaptureScreen>
       return;
     }
     final kind = widget.detect ? detectPaper(page) : widget.paper;
+    // Receipts, screenshots and bank papers: an amount is said only when this phone's own
+    // reading agrees with it exactly (amount_check.dart).
+    if (checksAmounts(page, mode: kind?.mode ?? mode, screenshot: screenshot)) {
+      page = await confirmOnPhone(page, bytes, phone: phoneReading);
+      diagnostics.last
+        ?..amountsChecked = page.json?['amounts_checked'] as int? ?? 0
+        ..amountsHeld = page.json?['amounts_held'] as int? ?? 0;
+      if (!mounted) return;
+    }
     await TaskLog.record(TaskKind.forPaper(kind));
     await _stopCamera();
     if (!mounted) return;

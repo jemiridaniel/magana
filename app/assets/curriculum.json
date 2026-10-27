@@ -130,5 +130,11 @@
   "primary_word_hint": 15,
   "primary_max_options": 3,
   "max_options": 4,
+  "band_max_options": {
+    "primary_1_3": 3,
+    "primary_4_6": 4,
+    "jss": 4,
+    "sss": 4
+  },
   "min_options": 2
 }

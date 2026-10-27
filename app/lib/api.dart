@@ -1,3 +1,5 @@
+import 'amount_check.dart';
+
 import 'dart:math';
 import 'dart:convert';
 
@@ -56,6 +58,8 @@ const numberCodes = {
   'low_confidence_number',
   'number_mismatch',
   'handwritten_number',
+  // A money amount two readings didn't agree on exactly (amount_check.dart).
+  'amount_unconfirmed',
 };
 
 /// One thing the Reader speaks: a line of text, one row of a table, or a band
@@ -70,6 +74,7 @@ class ReadItem {
     this.table,
     this.words = const [],
     this.unclearWords = const {},
+    this.unclearAmounts = const {},
     this.cells = const [],
     this.codes = const [],
     this.where = '',
@@ -87,6 +92,8 @@ class ReadItem {
   final int? table; // 1-based table number when the page has more than one
   final List<String> words; // a line's words, exactly as printed
   final Set<int> unclearWords; // indices of words holding an unreliable number
+  // Of those, money amounts: said "I can't read the amount clearly" (amount_check.dart).
+  final Set<int> unclearAmounts;
   final List<Cell> cells; // a table row's cells
   final List<String> codes; // backend warning codes for this item
   final String where; // faint region: top | middle | bottom
@@ -108,6 +115,11 @@ class ReadItem {
   bool get unsure => codes.isNotEmpty;
   String get text => words.join(' ');
 
+  /// Word [i] is a bare currency sign ("₦", "NGN") before an amount that is held back: it
+  /// isn't said or shown on its own either.
+  bool heldSign(int i) =>
+      unclearAmounts.contains(i + 1) && isSignWord(words[i]);
+
   /// The code to say: number problems first, they matter most.
   String? get code => codes.isEmpty
       ? null
@@ -115,11 +127,18 @@ class ReadItem {
 }
 
 class Cell {
-  const Cell(this.header, this.value, {this.unclear = false});
+  const Cell(
+    this.header,
+    this.value, {
+    this.unclear = false,
+    this.amount = false,
+  });
   final String header;
   final String value; // exactly as printed
   final bool
   unclear; // holds an unreliable number: say "unclear number" instead
+  final bool
+  amount; // that number is a money amount: "I can't read the amount clearly"
 }
 
 class ReadResult {
@@ -165,12 +184,16 @@ class ReadResult {
 
     final lineCodes = <int, List<String>>{};
     final unclear = <int, Set<int>>{};
+    final amounts = <int, Set<int>>{};
     for (final w in list(json['warnings'])) {
       final i = w['block_index'] as int;
       final code = w['code'] as String? ?? 'low_confidence';
       lineCodes.putIfAbsent(i, () => []).add(code);
       if (numberCodes.contains(code) && w['word_index'] is int) {
         unclear.putIfAbsent(i, () => {}).add(w['word_index'] as int);
+        if (code == 'amount_unconfirmed') {
+          amounts.putIfAbsent(i, () => {}).add(w['word_index'] as int);
+        }
       }
     }
 
@@ -203,6 +226,7 @@ class ReadResult {
               ? words
               : (lines[i]['text'] as String? ?? '').split(' '),
           unclearWords: unclear[i] ?? const {},
+          unclearAmounts: amounts[i] ?? const {},
           codes: lineCodes[i] ?? const [],
           page: lines[i]['page'] as int?,
           column: lines[i]['column'] as int? ?? 1,
@@ -246,6 +270,7 @@ class ReadResult {
               col < header.length ? header[col] : '',
               c['text'] as String? ?? '',
               unclear: found.any(numberCodes.contains),
+              amount: found.contains('amount_unconfirmed'),
             ),
           );
         }

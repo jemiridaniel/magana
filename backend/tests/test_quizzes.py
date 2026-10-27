@@ -102,17 +102,20 @@ def test_no_right_answer_or_an_undescribed_picture_blocks_assigning():
     assert r.json()["detail"]["code"] == "quiz_not_ready"
 
 
-def test_primary_classes_get_at_most_three_options_and_a_word_hint():
-    q = plant_quiz()
+def test_primary_1_to_3_get_at_most_three_options_primary_4_to_6_four_and_a_word_hint():
+    q = plant_quiz(level="p2", class_id="pri2")
     q["questions"][0]["options"].append("The stem")
     q["questions"][0]["question"] = "In a green plant growing in the school garden, which part of the plant makes food?"
     made = create(q)
     assert ("quiz_too_many_options", 1, True) in codes(made)
     assert ("quiz_question_long", 1, False) in codes(made)
-    # Four options are fine from JSS up.
-    jss = plant_quiz(level="jss1", class_id="jss1", subject="basic_science")
-    jss["questions"][0]["options"].append("The stem")
-    assert all(p["code"] != "quiz_too_many_options" for p in create(jss)["problems"])
+    # A–D from Primary 4 (Basic 4), as in JSS and SSS; five is too many anywhere.
+    for level, class_id in (("p5", "pri5"), ("jss1", "jss1")):
+        four = plant_quiz(level=level, class_id=class_id)
+        four["questions"][0]["options"].append("The stem")
+        assert all(p["code"] != "quiz_too_many_options" for p in create(four)["problems"])
+        four["questions"][0]["options"].append("The seed")
+        assert ("quiz_too_many_options", 1, True) in codes(create(four))
 
 
 def test_the_class_level_and_subject_follow_the_curriculum():

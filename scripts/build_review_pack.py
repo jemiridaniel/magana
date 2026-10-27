@@ -116,7 +116,7 @@ def sample_questions() -> Path:
         "answer by voice or by tapping.",
         "Please check: is the question right for the level? Is the right answer really right, "
         "and the others clearly wrong? Is it clear when heard, not read? Primary questions must "
-        "have 2 or 3 options and 15 words or fewer.",
+        "have 15 words or fewer, and 2 or 3 options in Primary 1 to 3 (up to 4 in Primary 4 to 6).",
         "In the 'Correct?' column choose yes, or fix and write what to change in Notes.",
         "'Said after the answer' is what Magana says once the learner has answered.",
         f"{sum(len(d['questions']) for d in packs)} questions in {len(packs)} packs. Source: app/assets/quiz/.",

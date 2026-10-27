@@ -196,6 +196,10 @@
   "whereMiddle": "in the middle of the page",
   "whereBottom": "near the bottom of the page",
   "unclearNumber": "unclear number",
+  "amountUnclear": "I can't read the amount clearly",
+  "@amountUnclear": {
+    "description": "Said in place of a money amount on a receipt, screenshot or bank paper when the server's and the phone's readings of it do not match exactly (never guessed)."
+  },
   "unclearLetter": "unclear letter",
   "@unclearLetter": {
     "description": "Said instead of a word with a digit inside on a Hausa, Yorùbá or Igbo page: the digit is an unclear letter, never a number."
@@ -224,6 +228,14 @@
   },
   "msg_unreadable_number": "I can't read a number on {where} clearly. Please check it or retake the photo.",
   "@msg_unreadable_number": {
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "msg_amount_unconfirmed": "I can't read the amount on {where} clearly, so it isn't said. Magana says an amount only when two separate readings of it match exactly. Please check it in your bank's app or with someone you trust.",
+  "@msg_amount_unconfirmed": {
     "placeholders": {
       "where": {
         "type": "String"

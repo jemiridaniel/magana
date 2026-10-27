@@ -25,6 +25,8 @@ def test_levels_and_subjects():
     assert "basic_science" in curriculum.subjects_for("p1")
     assert "biology" not in curriculum.subjects_for("jss3")
     assert curriculum.max_options("p2") == 3 and curriculum.max_options("sss1") == 4
+    # A–D for Primary 4–6; at most 3 options for Primary 1–3.
+    assert [curriculum.max_options(f"p{n}") for n in range(1, 7)] == [3, 3, 3, 4, 4, 4]
 
 
 def test_the_portal_words_every_portal_code():

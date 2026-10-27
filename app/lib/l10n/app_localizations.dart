@@ -504,6 +504,12 @@ abstract class AppLocalizations {
   /// **'unclear number'**
   String get unclearNumber;
 
+  /// Said in place of a money amount on a receipt, screenshot or bank paper when the server's and the phone's readings of it do not match exactly (never guessed).
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t read the amount clearly'**
+  String get amountUnclear;
+
   /// Said instead of a word with a digit inside on a Hausa, Yorùbá or Igbo page: the digit is an unclear letter, never a number.
   ///
   /// In en, this message translates to:
@@ -545,6 +551,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I can\'t read a number on {where} clearly. Please check it or retake the photo.'**
   String msg_unreadable_number(String where);
+
+  /// No description provided for @msg_amount_unconfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t read the amount on {where} clearly, so it isn\'t said. Magana says an amount only when two separate readings of it match exactly. Please check it in your bank\'s app or with someone you trust.'**
+  String msg_amount_unconfirmed(String where);
 
   /// No description provided for @msg_number_mismatch.
   ///

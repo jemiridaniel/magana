@@ -4,11 +4,17 @@ import 'package:app/spoken_numbers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  test('naira amounts, written ₦, # or N', () {
+  test('naira amounts, written ₦ or NGN', () {
     expect(spokenNumbers('Amount: ₦8,000.00'), 'Amount: 8,000 naira');
-    expect(spokenNumbers('Amount: #8,000.00'), 'Amount: 8,000 naira');
-    expect(spokenNumbers('Fee N10.50'), 'Fee 10 naira 50 kobo');
-    expect(spokenNumbers('Total: N1,250,000'), 'Total: 1,250,000 naira');
+    expect(spokenNumbers('Fee ₦10.50'), 'Fee 10 naira 50 kobo');
+    expect(spokenNumbers('Total: NGN 1,250,000'), 'Total: 1,250,000 naira');
+    expect(spokenNumbers('Total: NGN1,250,000.00'), 'Total: 1,250,000 naira');
+  });
+
+  test('the currency is never guessed: # and N are said as printed', () {
+    for (final t in ['Amount: #8,000.00', 'Fee N10.50', 'Total: N1,250,000']) {
+      expect(spokenNumbers(t), t);
+    }
   });
 
   test('account numbers and references digit by digit', () {

@@ -316,10 +316,10 @@ export default function QuizEditor() {
           <div className="field">
             <span className="field-label" id="style-label">Answer style</span>
             <p className="field-fixed" aria-labelledby="style-label" aria-describedby="style-hint">
-              {primary ? "2 or 3 options" : "2 to 4 options"}
+              {most === 3 ? "2 or 3 options" : "2 to 4 options"}
             </p>
             <span id="style-hint" className="hint">
-              {primary ? "Set by the class level. Primary classes use short choices." : "Set by the class level."}
+              {most === 3 ? "Set by the class level. Primary 1 to 3 use short choices." : "Set by the class level."}
             </span>
           </div>
         </div>
@@ -327,13 +327,13 @@ export default function QuizEditor() {
           <div className="callout" role="note">
             <svg width="26" height="26" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10" fill="none" stroke="currentColor" strokeWidth="2" /><path d="M12 10.5v6M12 7v.5" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" /></svg>
             <p>
-              <strong>{cls.name} is a Classroom mode class (under 13).</strong> This quiz only runs in a session you start. Magana uses a slower voice, short sentences and two or three options for these learners.
+              <strong>{cls.name} is a Classroom mode class (under 13).</strong> This quiz only runs in a session you start. Magana uses a slower voice, short sentences and {most === 3 ? "two or three" : "up to four"} options for these learners.
             </p>
           </div>
         )}
         {primary && cls?.mode !== "classroom" && (
           <div className="callout" role="note">
-            <p><strong>{levelOf(quiz.level).name} is a primary class.</strong> Magana uses a slower voice, short sentences and two or three options.</p>
+            <p><strong>{levelOf(quiz.level).name} is a primary class.</strong> Magana uses a slower voice, short sentences and {most === 3 ? "two or three" : "up to four"} options.</p>
           </div>
         )}
       </section>

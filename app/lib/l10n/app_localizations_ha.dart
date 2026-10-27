@@ -267,6 +267,9 @@ class AppLocalizationsHa extends AppLocalizations {
   String get unclearNumber => 'lambar da ba a gane ba';
 
   @override
+  String get amountUnclear => 'Ban iya karanta adadin kuɗin sarai ba';
+
+  @override
   String get unclearLetter => 'harafi mara tabbas';
 
   @override
@@ -293,6 +296,11 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String msg_unreadable_number(String where) {
     return 'Ban iya karanta wata lamba a $where sarai ba. Don Allah ka duba ko ka sake ɗaukar hoto.';
+  }
+
+  @override
+  String msg_amount_unconfirmed(String where) {
+    return 'Ban iya karanta adadin kuɗin da ke $where sarai ba, don haka ban faɗe shi ba. Magana tana faɗin adadin kuɗi ne kawai idan karatu biyu daban-daban sun yi daidai sosai. Don Allah ka duba shi a manhajar bankinka ko da wanda ka amince da shi.';
   }
 
   @override

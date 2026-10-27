@@ -47,11 +47,14 @@ BAND_SUBJECTS: dict[str, list[str]] = {
     "sss": ["english", "mathematics", "biology", "chemistry", "physics", *_LANGUAGES],
 }
 
-# Primary mode: short spoken questions, two or three options.
+# Primary mode: short spoken questions. Primary 1–3 has two or three options; Primary 4–6
+# may have four (A–D), like JSS and SSS.
 PRIMARY_WORD_HINT = 15
-PRIMARY_MAX_OPTIONS = 3
+PRIMARY_MAX_OPTIONS = 3  # Primary 1–3
 MAX_OPTIONS = 4
 MIN_OPTIONS = 2
+BAND_MAX_OPTIONS = {"primary_1_3": PRIMARY_MAX_OPTIONS, "primary_4_6": MAX_OPTIONS,
+                    "jss": MAX_OPTIONS, "sss": MAX_OPTIONS}
 
 _BY_ID = {lv["id"]: lv for lv in LEVELS}
 
@@ -69,7 +72,7 @@ def is_primary(level: str) -> bool:
 
 
 def max_options(level: str) -> int:
-    return PRIMARY_MAX_OPTIONS if is_primary(level) else MAX_OPTIONS
+    return BAND_MAX_OPTIONS[band(level)]
 
 
 def subjects_for(level: str) -> list[str]:
@@ -85,5 +88,6 @@ def as_json() -> dict:
         "primary_word_hint": PRIMARY_WORD_HINT,
         "primary_max_options": PRIMARY_MAX_OPTIONS,
         "max_options": MAX_OPTIONS,
+        "band_max_options": BAND_MAX_OPTIONS,
         "min_options": MIN_OPTIONS,
     }

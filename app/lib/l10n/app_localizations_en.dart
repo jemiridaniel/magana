@@ -267,6 +267,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get unclearNumber => 'unclear number';
 
   @override
+  String get amountUnclear => 'I can\'t read the amount clearly';
+
+  @override
   String get unclearLetter => 'unclear letter';
 
   @override
@@ -293,6 +296,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String msg_unreadable_number(String where) {
     return 'I can\'t read a number on $where clearly. Please check it or retake the photo.';
+  }
+
+  @override
+  String msg_amount_unconfirmed(String where) {
+    return 'I can\'t read the amount on $where clearly, so it isn\'t said. Magana says an amount only when two separate readings of it match exactly. Please check it in your bank\'s app or with someone you trust.';
   }
 
   @override

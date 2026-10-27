@@ -22,5 +22,6 @@ export const level = (id: LevelId) => levels.find((l) => l.id === id)!;
 /** "Primary 4 (Basic 4)": what a teacher picks from. */
 export const levelLabel = (l: Level) => (l.basic ? `${l.name} (${l.basic})` : l.name);
 export const isPrimary = (id: LevelId) => level(id).band.startsWith("primary");
-export const maxOptions = (id: LevelId) => (isPrimary(id) ? data.primary_max_options : data.max_options);
+/** Primary 1–3: 2 or 3 options; Primary 4–6, JSS and SSS: up to 4 (A–D). */
+export const maxOptions = (id: LevelId) => (data.band_max_options as Record<BandId, number>)[level(id).band];
 export const subjectsFor = (id: LevelId) => (data.band_subjects as Record<BandId, string[]>)[level(id).band];

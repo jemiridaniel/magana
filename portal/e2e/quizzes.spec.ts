@@ -60,7 +60,7 @@ test("create, check and assign a Primary 5 quiz; it reaches learners at that lev
   await expect(page.getByLabel("Class", { exact: true })).toHaveValue(primary5);
   await page.getByLabel("Subject").selectOption({ label: "Basic Science" });
   await page.getByLabel("Questions read in").selectOption({ label: "Yorùbá and English" });
-  await expect(page.getByText("2 or 3 options", { exact: true })).toBeVisible();
+  await expect(page.getByText("2 to 4 options", { exact: true })).toBeVisible(); // Primary 4–6: A–D
   await expect(page.getByText("Primary 5 is a Classroom mode class (under 13).")).toBeVisible();
 
   await page.getByLabel("Question", { exact: true }).fill("Which part of a plant makes food for the plant?");
@@ -69,7 +69,9 @@ test("create, check and assign a Primary 5 quiz; it reaches learners at that lev
   await page.getByLabel("Option B", { exact: true }).last().fill("The root");
   await page.getByRole("button", { name: "+ Add option" }).click();
   await page.getByLabel("Option C", { exact: true }).last().fill("The flower");
-  await expect(page.getByRole("button", { name: "+ Add option · 3 is the most for Primary 5" })).toBeDisabled();
+  await page.getByRole("button", { name: "+ Add option" }).click();
+  await page.getByLabel("Option D", { exact: true }).last().fill("The stem");
+  await expect(page.getByRole("button", { name: "+ Add option · 4 is the most for Primary 5" })).toBeDisabled();
   await page.getByLabel("Yorùbá version").fill("Apá wo nínú ewéko ló ń ṣe oúnjẹ fún ewéko náà?");
   await expect(page.getByText("Not yet checked", { exact: true })).toBeVisible();
   await page.getByLabel("Say this after a right answer").fill("Well done! Leaves make food using sunlight.");

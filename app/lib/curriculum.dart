@@ -13,9 +13,11 @@ enum Band {
   const Band(this.id);
   final String id;
 
-  /// Primary mode: two or three options, short sentences, a slower voice and
-  /// encouraging feedback.
+  /// Primary mode: short sentences, a slower voice and encouraging feedback.
   bool get primary => this == primary13 || this == primary46;
+
+  /// Two or three options in Primary 1–3; up to four (A–D) from Primary 4.
+  int get maxOptions => this == primary13 ? 3 : 4;
 }
 
 /// The curriculum's names for each band.

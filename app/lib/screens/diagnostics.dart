@@ -79,6 +79,11 @@ class _DiagnosticsScreenState extends State<DiagnosticsScreen> {
         ),
         ('Read by', a.path ?? 'not read'),
         if (a.screenshot) ('Picture', 'a screenshot, sent whole'),
+        if (a.amountsChecked case final n?)
+          (
+            'Money amounts',
+            '$n checked against a second reading, ${a.amountsHeld ?? 0} held back',
+          ),
         ('Server status', a.status?.toString() ?? 'no answer'),
         if (a.code != null) ('Server code', a.code!),
         if (a.serverMs != null) ('Server time', '${a.serverMs} ms'),

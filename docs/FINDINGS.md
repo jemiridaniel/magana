@@ -13,6 +13,43 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-27 · Receipt amounts said only when the server and the phone agree; A–D quizzes from Primary 4 (UNREVIEWED)
+
+**Rule (app, `amount_check.dart`):** on a screenshot (found by the phone or the server) or a money paper, the phone also reads the picture itself (Apple Vision on the iPhone, ML Kit on Android). A money amount is said only when the phone's reading holds it character for character, currency sign included. Otherwise: "I can't read the amount clearly" (shown as "[I can't read the amount clearly]"). The first reading is never changed: amounts are only held back.
+- **What counts as an amount:** a currency sign followed by digits, or digits grouped in thousands, or digits with 2 decimals. Plain numbers (dates, account numbers) keep the existing number rules.
+- **Read only once** (on the phone without the server, or on the web where the phone can't read): no second reading, so no amount is said.
+- **Applies everywhere a reading is kept:** a late server reading saved to My library, and queued pages read later, are checked the same way.
+- **The currency sign is never guessed:**
+  - only "₦" or "NGN" is said "naira";
+  - "#8,000.00" and "N8,000.00" are said as printed (before, both were said "8,000 naira");
+  - an unlikely sign ("₩", "¥") is held back even when both readings agree.
+- **Find a transaction** no longer matches a number or amount that is held back: matching it would reveal what it is.
+- **Diagnostics** show how many amounts were checked and how many were held back.
+
+**Measured** (the 5 synthetic receipts from the screenshot entry below; server through /read in money mode; Apple Vision on the Mac with the app's own code):
+
+| Receipt | Server's amount | Vision's amount | Said? |
+|---|---|---|---|
+| Dark, value under label, PNG | "#8,000.00" | "₩8,000.00" | no: the signs differ |
+| Dark, value under label, JPEG | held back by the server | "₩8,000.00" | no |
+| Light, value under label | held back by the server | "N8,000.00" | no |
+| Dark, value beside label | held back by the server | "N8,000.00" | no |
+| Light, value beside label | held back by the server | "₩8,000.00" | no |
+
+- Neither reader got "₦" right on any of the 5: Vision reads it as "₩" (3) or "N" (2), all at confidence 1.00; Tesseract reads it as "#", "N" or "4". So **0 of 5 amounts are said** now. Before this change, the dark PNG's amount was said "8,000 naira": a guess at the sign.
+- Every other field on the receipts (recipient, account number, bank, reference, date) is unaffected.
+- **Open:**
+  - Receipt amounts will stay unsaid until one reader reads "₦" itself. Possible fixes: a "₦"-aware recogniser, or comparing digits only and saying them without a currency. The second needs a decision: the rule is now "agree exactly".
+  - WhatsApp has no phone reading: its replies still follow the server's rules alone.
+  - These receipts are synthetic; there are no real dark-mode receipts in the test set.
+- Tests: `app/test/amount_check_test.dart` (16), `spoken_numbers_test.dart`. In `everyday_more_test.dart` (E3), the statement test now gives a phone reading that agrees.
+
+**Quizzes:** A–D (up to 4 options) for Primary 4–6. Primary 1–3 keeps at most 3. This settles the lesson-notes conflict: Basic 4 and 5 quizzes may have A–D.
+- Enforced in 3 places: the backend (`curriculum.BAND_MAX_OPTIONS`, `quizzes.check`), the portal (option limit, "2 to 4 options") and the app (`Band.maxOptions`).
+- Tests: `test_quizzes.py` (Primary 2: 4 options refused; Primary 5 and JSS 1: 4 allowed, 5 refused), `test_curriculum.py`, `curriculum_test.dart`.
+
+---
+
 ## 2026-10-27 · Screenshots and dark mode: a bank receipt was "too dark" (UNREVIEWED)
 
 A gallery screenshot of a dark-mode bank transfer receipt (white on black) was refused as "too dark". It was judged as a camera photo: the average brightness was low.
