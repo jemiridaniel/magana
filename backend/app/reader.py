@@ -77,6 +77,8 @@ class Table:
 class Page:
     lines: list[Line] = field(default_factory=list)
     tables: list[Table] = field(default_factory=list)
+    # Show-through (show_through): ink lighter than this is the back of a thin page, not text.
+    ink_floor: float = 0.0
 
 
 class OCREngine(Protocol):
@@ -593,6 +595,10 @@ def _words(page: Page) -> list[Word]:
     return [w for l in page.lines for w in l.words if len(w.text.strip()) >= 2]
 
 
+def _sure_words(page: Page) -> int:
+    return sum(1 for w in _words(page) if w.confidence >= 0.8)
+
+
 def reads_faint(page: Page) -> bool:
     words = _words(page)
     return len(words) < 5 or sum(w.confidence for w in words) / len(words) < FAINT_CONFIDENCE
@@ -647,12 +653,22 @@ def recover_faint(image: Image.Image, page: Page, engine: OCREngine) -> list[dic
     """Find ink the OCR skipped, contrast-boost each such band and read it again.
     Recovered lines join the page; bands that still give no text are returned as
     faint regions, so the user hears that something is there but unreadable."""
+    import numpy as np
+
     ink = ink_map(image)
+    depth = np.asarray(ink)
     spans = [(l.top, l.top + max(l.height, 1)) for l in page.lines]
     spans += [(t.top, t.top + t.height) for t in page.tables if t.height]
     faint = []
-    for top, bottom in ink_bands(ink):
-        if _covered((top, bottom), spans):
+    bands = [b for b in ink_bands(ink) if not _covered(b, spans)]
+    # Rows lighter than the page's print allows (show_through). Several of them on a page of
+    # print are the back of a thin page; one alone may be faint print, and is said to be there.
+    light = {b for b in bands if page.ink_floor and np.percentile(depth[b[0]:b[1]], 99.5) < page.ink_floor}
+    backside = len(light) >= 2 and len(page.lines) >= 3
+    for top, bottom in bands:
+        is_light = (top, bottom) in light
+        # Reads better mirrored: certainly the other side of the page.
+        if is_light and _reads_mirrored(ink, top, bottom, image.width, engine):
             continue
         pad = max(6, (bottom - top) // 2)
         y0, y1 = max(0, top - pad), min(image.height, bottom + pad)
@@ -669,7 +685,11 @@ def recover_faint(image: Image.Image, page: Page, engine: OCREngine) -> list[dic
         new = [l for l in found if not _covered((l.top, l.top + max(l.height, 1)), spans)]
         if found and not new:
             continue
-        found = new
+        # On a page showing its back, a light row adds only a sure reading: mirrored junk is
+        # never spoken. A lone faint line (a faded dose) is read as before, its doubt flagged.
+        found = [l for l in new if l.confidence >= 0.7] if is_light and backside else new
+        if is_light and backside and not found:
+            continue  # the back of the page, unreadable: nothing to say about it
         if found:
             page.lines.extend(found)
             spans += [(l.top, l.top + max(l.height, 1)) for l in found]
@@ -683,10 +703,114 @@ def recover_faint(image: Image.Image, page: Page, engine: OCREngine) -> list[dic
     return faint
 
 
+# ---------- Show-through: the back of a thin page
+
+# Ink under this share of the main print's darkness is the page behind: the synthetic show-through
+# measures about 0.23 of the print, a blurred smudge on real print about 0.45 (it must still be
+# flagged), so the line is drawn between them.
+SHOW_THROUGH = 0.3
+SHOW_THROUGH_MIN_PRINT = 60  # only on pages whose print is this dark (grey levels below paper)
+
+
+def _word_depth(depth, w: Word) -> float:
+    """How dark a word's strokes are below its paper: the 95th percentile of its box."""
+    import numpy as np
+
+    box = depth[max(0, w.top): w.top + w.height, max(0, w.left): w.left + w.width]
+    return float(np.percentile(box, 95)) if box.size else 0.0
+
+
+def show_through(image: Image.Image, page: Page) -> int:
+    """A thin page shows the other side's print through it, faint and mirrored (tester's book
+    page, 27 Oct 2026: "unclear" after every sentence). Measured against the page's own print
+    (its confidently read words): ink much lighter than that is the back of the page. Such
+    words the OCR was unsure of are dropped, never spoken; the page's ink floor makes every
+    later ink check (missed lines, unread parts, line ends, faint print) ignore that ink. Pages
+    whose print is itself pale are left alone. Returns the words dropped."""
+    import numpy as np
+
+    depth = np.asarray(ink_map(image), dtype=float)
+    sure = [_word_depth(depth, w) for l in page.lines for w in l.words
+            if w.width and w.confidence >= 0.8 and len(w.text.strip()) >= 2]
+    if len(sure) < 3:
+        return 0
+    main = float(np.median(sure))
+    if main < SHOW_THROUGH_MIN_PRINT:
+        return 0
+    page.ink_floor = SHOW_THROUGH * main
+    dropped = 0
+    emptied = []
+    for line in page.lines:
+        kept = [w for w in line.words
+                if not (w.width and w.confidence < 0.85 and _word_depth(depth, w) < page.ink_floor)]
+        if len(kept) < len(line.words):
+            dropped += len(line.words) - len(kept)
+            line.words[:] = kept
+            line.text = " ".join(w.text for w in kept)
+            if kept:
+                line.left = min(w.left for w in kept)
+                line.width = max(w.left + w.width for w in kept) - line.left
+                line.confidence = sum(w.confidence for w in kept) / len(kept)
+            else:
+                emptied.append(line)
+    page.lines[:] = [l for l in page.lines if not any(l is e for e in emptied)]
+    return dropped
+
+
+def _reads_mirrored(ink: Image.Image, top: int, bottom: int, width: int, engine: OCREngine) -> bool:
+    """A light band reads as words mirrored, better than the right way round: the other side of
+    the page."""
+    from PIL import ImageOps
+
+    pad = max(6, (bottom - top) // 2)
+    crop = ImageOps.invert(ImageOps.autocontrast(ink.crop((0, max(0, top - pad), width, bottom + pad)), cutoff=1))
+
+    def score(img: Image.Image) -> float:
+        words = [w for l in engine.read(img).lines for w in l.words if len(w.text.strip()) >= 3]
+        return sum(w.confidence for w in words if w.confidence >= 0.6)
+
+    return score(ImageOps.mirror(crop)) > max(score(crop), 0.0)
+
+
+# ---------- Shadows: uneven light across the page
+
+# A shadow is a dark patch, not a slope: light falling off across the page (every photo) is
+# taken out with a fitted plane first. What is left, darkest 5%, as a share of the paper (on a
+# 64-wide map, so the same at 720 and 1080 px): at most 0.04 on the 20 photo-like pages, 0.13
+# with a hand shadow over the lower page. A faint shadow (0.03) reads well enough as it is.
+SHADOW_DIP = 0.07
+
+
+def shadowed(image: Image.Image, page: Page) -> bool:
+    """A hand or phone shadow over part of the page: the paper itself (print removed) is much
+    darker in one part than another, within the text's own area (a wall around a card is not a
+    shadow)."""
+    import numpy as np
+
+    lines = [l for l in page.lines if l.width and l.height]
+    if not lines:
+        return False
+    box = (min(l.left for l in lines), min(l.top for l in lines),
+           max(l.left + l.width for l in lines), max(l.top + l.height for l in lines))
+    gray = image.convert("L").crop(box)
+    # The same size of map whatever the photo's size, so the threshold holds at 720 and 1080.
+    small = gray.resize((64, max(3, round(64 * gray.height / max(1, gray.width)))), Image.BOX)
+    paper = np.asarray(small.filter(ImageFilter.MaxFilter(5)), dtype=float)
+    h, w = paper.shape
+    if h < 3 or w < 3:
+        return False
+    yy, xx = np.mgrid[0:h, 0:w]
+    plane = np.c_[xx.ravel(), yy.ravel(), np.ones(h * w)]
+    fit, *_ = np.linalg.lstsq(plane, paper.ravel(), rcond=None)
+    left = paper.ravel() - plane @ fit
+    bright = np.percentile(paper, 95)
+    return bool(bright > 120 and -np.percentile(left, 5) > SHADOW_DIP * bright)
+
+
 # ---------- Whole lines the OCR dropped
 
 MISSED_EDGE = 3.0  # ink running down a column this many line heights is a border, not letters
-MISSED_PIECES = 4  # separate pieces of ink in the row (letters, words), at least
+MISSED_PIECES = 3  # separate pieces of ink in the row (joined-up script: one per word), at least
 MISSED_WIDTH = 3.0  # inked columns, in line heights, at least
 
 
@@ -703,7 +827,7 @@ def missed_lines(image: Image.Image, page: Page, faint: list[dict]) -> list[dict
     if not heights:
         return []
     h = heights[len(heights) // 2]
-    ink = np.asarray(ink_map(image)) > INK_DELTA
+    ink = np.asarray(ink_map(image)) > max(INK_DELTA, page.ink_floor)
     rows, cols = ink.shape
     # Everything read, with a margin of half its own height (a heading's letters reach further).
     boxes = [(l.left, l.top, l.width, l.height) for l in lines]
@@ -766,7 +890,7 @@ def mark_unclear_line_ends(image: Image.Image, page: Page, bounds: dict | None =
     and a slip torn at the right is edge_cuts' job."""
     import numpy as np
 
-    ink = np.asarray(ink_map(image)) > INK_DELTA
+    ink = np.asarray(ink_map(image)) > max(INK_DELTA, page.ink_floor)
     gray = np.asarray(image.convert("L"), dtype=float)
     boxes = [(w.left, w.top, w.left + w.width, w.top + w.height) for l in page.lines for w in l.words if w.width]
     for line in page.lines:
@@ -805,7 +929,7 @@ def mark_unread_parts(image: Image.Image, page: Page, bounds: dict | None = None
     once; ink just past a line's end is mark_unclear_line_ends' job."""
     import numpy as np
 
-    ink = np.asarray(ink_map(image)) > INK_DELTA
+    ink = np.asarray(ink_map(image)) > max(INK_DELTA, page.ink_floor)
     boxes = [(w.left, w.top, w.left + w.width, w.top + w.height) for l in page.lines for w in l.words if w.width]
     lines = [l for l in page.lines if l.width and l.height]
     for line in lines:
@@ -963,6 +1087,15 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     reader = _language_engine(engine, language) or engine
     if reader is not engine:
         page = reader.read(image)
+    # A hand or phone shadow over part of the page: read an evened-out copy too, and keep it if
+    # it reads more words with confidence (tester's book page, 27 Oct 2026).
+    shadow = shadowed(original, page)
+    if shadow:
+        flat = flatten_contrast(original)
+        again = reader.read(flat)
+        if _sure_words(again) > _sure_words(page):
+            image, page = flat, again
+    seen_through = show_through(image, page)
     tiny = small_print(page)
     first = len(page.lines)
     faint = recover_faint(image, page, reader)
@@ -975,7 +1108,7 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     # keep it if it finds more words. Every later step (number re-reads included) then uses it.
     enhanced = False
     # Not for a blank photo (nothing varies): faint thermal ink is too weak for ink_bands.
-    if reads_faint(page) and ImageStat.Stat(original.convert("L")).stddev[0] > 3:
+    if reads_faint(page) and image is original and ImageStat.Stat(original.convert("L")).stddev[0] > 3:
         flat = flatten_contrast(original)
         again = engine.read(flat)
         if len(_words(again)) > len(_words(page)):
@@ -984,6 +1117,7 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
             reader = _language_engine(engine, language) or engine
             if reader is not engine:
                 page = reader.read(image)
+            seen_through = show_through(image, page)
             faint = recover_faint(image, page, reader)
             tiny = [t for t in small_print(page) if t != "read_little"]
     # A whole line the OCR dropped without a trace: on the photo as taken, before barcodes go
@@ -1008,7 +1142,7 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
             # app says "N lines are hard to read" instead (warning summary).
             + (["handwritten_page"] if script == "handwritten" else []) + ([f"letters_{language}"] if language else []))
     result = {"tips": tips, **_page_dict(page), "faint_regions": faint, "script": script, "columns": columns,
-              "page_language": language}
+              "page_language": language, "show_through_words": seen_through, "shadow": shadow}
     if language:
         result["letter_marks"] = letters.marks(result["lines"], language)
     if second_pass:

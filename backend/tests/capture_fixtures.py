@@ -82,3 +82,45 @@ def script_card(size: tuple[int, int] = (1080, 1440)) -> Image.Image:
     photo = Image.new("RGB", size, (120, 110, 100))
     photo.paste(card, ((size[0] - card.width) // 2, (size[1] - card.height) // 2))
     return _jpeg(photo)  # sharp, as the real card was (sharpness 92)
+
+
+BOOK_LINES = [
+    "The rainy season in Nigeria usually starts in April",
+    "in the south and in June in the north of the country.",
+    "Farmers plant maize, yam and cassava at the start of",
+    "the rains, and harvest them before the dry season.",
+    "Rivers rise during the rains and fall in the dry months.",
+    "Children help their families on the farm after school.",
+]
+BACK_LINES = [
+    "Chapter Four: Trade and Markets in West Africa today",
+    "Markets open early in the morning and close at night",
+    "Traders bring goods from many towns and villages",
+    "Prices change with the seasons and the harvests",
+    "People buy food, cloth, tools and many other things",
+    "Some markets are held every four days in the towns",
+]
+
+
+def book_page(size: tuple[int, int] = (1080, 1440), shadow: bool = False) -> Image.Image:
+    """A thin book page photographed flat: dark print, and the reverse page's print showing
+    through faint and mirrored, between and behind the lines (tester's photo, 27 Oct 2026). With
+    [shadow], a hand's shadow over the lower part."""
+    from PIL import ImageChops, ImageFont, ImageOps
+
+    font = ImageFont.truetype(str(pagefont.PATH), 34)
+    back = Image.new("L", size, 0)
+    d = ImageDraw.Draw(back)
+    for i, line in enumerate(BACK_LINES):
+        d.text((70, 150 + i * 150), line, fill=255, font=font)
+    back = ImageOps.mirror(back).filter(ImageFilter.GaussianBlur(1.2))
+    page = Image.new("L", size, 246)
+    page = ImageChops.subtract(page, back.point(lambda v: v * 50 // 255))  # faint: ~50 grey levels
+    d = ImageDraw.Draw(page)
+    for i, line in enumerate(BOOK_LINES):
+        d.text((70, 110 + i * 150), line, fill=25, font=font)
+    if shadow:
+        mask = Image.new("L", size, 0)
+        ImageDraw.Draw(mask).ellipse((-300, int(size[1] * 0.55), int(size[0] * 0.9), int(size[1] * 1.5)), fill=140)
+        page = ImageChops.subtract(page, mask.filter(ImageFilter.GaussianBlur(70)))
+    return _jpeg(page.convert("RGB"))
