@@ -660,5 +660,14 @@
   "pageViewLabel": "Takardarka, an haskaka layin da ake karantawa",
   "msg_missed_line": "Wataƙila na tsallake layi a nan, {where}. Ka duba shi ko ka sake ɗaukar hoto.",
   "summaryMissed": "{count, plural, =1{Wataƙila na tsallake layi 1.} other{Wataƙila na tsallake layuka {count}.}}",
-  "missedLineLabel": "Layin da wataƙila na tsallake"
+  "missedLineLabel": "Layin da wataƙila na tsallake",
+  "pictureTaken": "An ɗauki hoto. Ina karantawa…",
+  "stillReading": "Har yanzu ina karantawa…",
+  "noTextMoveBack": "Ban sami rubutu ba. Gwada ɗaga wayar nesa kaɗan.",
+  "torchGlareOff": "Hasken yana haskakawa a kan takardar, don haka na kashe shi.",
+  "offlineBannerSendFailed": "Hoton bai isa sabar Magana ba (matsalar haɗi). Ina karantawa a wannan wayar.",
+  "offlineBannerTimeout": "Sabar Magana ta wuce daƙiƙa {seconds}. Ina karantawa a wannan wayar.",
+  "offlineBannerServerError": "Sabar Magana ta sami matsala da wannan shafi. Ina karantawa a wannan wayar.",
+  "offlineBannerBusy": "Sabar Magana tana aiki sosai a wannan minti. Ina karantawa a wannan wayar.",
+  "offlineBannerDailyLimit": "Ka gama karatun sabar na yau. Ina karantawa a wannan wayar; sabar za ta sake karantawa gobe."
 }

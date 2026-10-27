@@ -461,5 +461,25 @@ Map<String, dynamic> _moneyCheck(Map<String, dynamic> result) {
   };
 }
 
-/// Why a page was read on the phone: no connection, or the server failed or was slow.
-enum OfflineReason { noInternet, slow }
+/// Why a page was read on the phone, said as it is (iPhone test, 27 Oct 2026: a slow reply was
+/// called "the server isn't answering"): no internet (the web knows), the photo didn't get
+/// there, the server took too long, the server failed, it is busy this minute (429), or today's
+/// readings are used up (429, daily cap).
+enum OfflineReason {
+  noInternet,
+  sendFailed,
+  slow,
+  serverError,
+  busy,
+  dailyLimit;
+
+  /// The reason for a code from MaganaApi, or null when the code is the answer itself.
+  static OfflineReason? forCode(String code, {required bool web}) =>
+      switch (code) {
+        'unreachable' => web ? noInternet : sendFailed,
+        'server_sleeping' || 'failed' => serverError,
+        'too_many_requests' => busy,
+        'daily_limit' => dailyLimit,
+        _ => null,
+      };
+}

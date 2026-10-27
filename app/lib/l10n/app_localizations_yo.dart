@@ -2520,4 +2520,39 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get missedLineLabel => 'Ìlà tí mo lè ti fò';
+
+  @override
+  String get pictureTaken => 'Mo ti ya fọ́tò. Mò ń kà á…';
+
+  @override
+  String get stillReading => 'Mo ṣì ń kà á…';
+
+  @override
+  String get noTextMoveBack =>
+      'Mi ò rí ọ̀rọ̀ kankan. Gbìyànjú láti gbé fóònù sókè díẹ̀ sí i.';
+
+  @override
+  String get torchGlareOff =>
+      'Ìmọ́lẹ̀ náà ń tàn padà láti ojú ìwé, nítorí náà mo pa á.';
+
+  @override
+  String get offlineBannerSendFailed =>
+      'Fọ́tò náà kò dé ọ̀dọ̀ sáfà Magana (ìṣòro ìsopọ̀). Mò ń kà á lórí fóònù yìí.';
+
+  @override
+  String offlineBannerTimeout(int seconds) {
+    return 'Sáfà Magana pẹ́ ju ìṣẹ́jú-àáyá $seconds lọ. Mò ń kà á lórí fóònù yìí.';
+  }
+
+  @override
+  String get offlineBannerServerError =>
+      'Sáfà Magana ní ìṣòro pẹ̀lú ojú-ìwé yìí. Mò ń kà á lórí fóònù yìí.';
+
+  @override
+  String get offlineBannerBusy =>
+      'Sáfà Magana ń ṣiṣẹ́ lọ́wọ́ ní ìṣẹ́jú yìí. Mò ń kà á lórí fóònù yìí.';
+
+  @override
+  String get offlineBannerDailyLimit =>
+      'O ti lo ìkàwé sáfà ti òní tán. Mò ń kà á lórí fóònù yìí; sáfà yóò tún kà lọ́la.';
 }

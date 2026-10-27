@@ -52,6 +52,10 @@ class Speaker {
 
   double get rate => _rate;
 
+  /// VoiceOver or TalkBack is on: when it cuts Magana off, the person is moving around the
+  /// screen, so the words are not said again.
+  bool screenReaderOn = false;
+
   /// True while an utterance is playing or about to.
   bool get speaking => _pending != null;
 
@@ -149,7 +153,9 @@ class Speaker {
       return false;
     }
     final first = await utter(text);
-    if (first != Spoken.cutOff) return first == Spoken.finished;
+    if (first != Spoken.cutOff || screenReaderOn) {
+      return first == Spoken.finished;
+    }
     devLog('speech cut off by something else; saying it once more: "$text"');
     await Future<void>.delayed(retryDelay);
     if (turn != _turn || !(wanted?.call() ?? true)) return false;

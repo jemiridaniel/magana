@@ -14,6 +14,7 @@ import '../papers.dart';
 import '../policy.dart';
 import '../layout.dart';
 import '../widgets.dart';
+import 'capture.dart';
 import '../questions.dart';
 import '../voice_input.dart';
 import 'explain.dart';
@@ -534,7 +535,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
 
   String? get _offlineBanner => switch (widget.offlineReason) {
     OfflineReason.noInternet => _l.offlineBanner,
-    OfflineReason.slow => _l.offlineBannerSlow,
+    OfflineReason.sendFailed => _l.offlineBannerSendFailed,
+    OfflineReason.slow => _l.offlineBannerTimeout(serverWait.inSeconds),
+    OfflineReason.serverError => _l.offlineBannerServerError,
+    OfflineReason.busy => _l.offlineBannerBusy,
+    OfflineReason.dailyLimit => _l.offlineBannerDailyLimit,
     null => widget.result.offline ? _l.offlineBanner : null,
   };
 
@@ -693,8 +698,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
     );
     if (ok != true || !mounted) return;
     await Library.delete(widget.savedId!);
-    _speaker.say(l.deletedFromLibrary);
-    if (mounted) Navigator.of(context).pop();
+    if (!mounted) return;
+    // Said once the Reader has closed (a change of screen stops its own voice).
+    final voice = AppScope.app(context).speaker;
+    Navigator.of(context).pop();
+    voice.say(l.deletedFromLibrary);
   }
 
   // "1×" not "1.0×", the same on web and Android.

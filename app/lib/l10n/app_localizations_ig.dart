@@ -2517,4 +2517,39 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get missedLineLabel => 'Ahịrị m nwere ike ịhapụ';
+
+  @override
+  String get pictureTaken => 'E sere foto. A na m agụ ya…';
+
+  @override
+  String get stillReading => 'A ka na m agụ ya…';
+
+  @override
+  String get noTextMoveBack =>
+      'Ahụghị m ederede. Nwaa ibuli ekwentị ahụ elu ntakịrị.';
+
+  @override
+  String get torchGlareOff =>
+      'Ọkụ ahụ na-enwu n\'elu akwụkwọ ahụ, ya mere m gbanyụrụ ya.';
+
+  @override
+  String get offlineBannerSendFailed =>
+      'Foto ahụ eruteghị sava Magana (nsogbu njikọ). A na m agụ ya na ekwentị a.';
+
+  @override
+  String offlineBannerTimeout(int seconds) {
+    return 'Sava Magana were ihe karịrị sekọnd $seconds. A na m agụ ya na ekwentị a.';
+  }
+
+  @override
+  String get offlineBannerServerError =>
+      'Sava Magana nwere nsogbu na peeji a. A na m agụ ya na ekwentị a.';
+
+  @override
+  String get offlineBannerBusy =>
+      'Sava Magana nọ n\'ọrụ n\'oge a. A na m agụ ya na ekwentị a.';
+
+  @override
+  String get offlineBannerDailyLimit =>
+      'Ị jirila ọgụgụ sava nke taa. A na m agụ ya na ekwentị a; sava ga-agụ ọzọ echi.';
 }

@@ -147,3 +147,14 @@ def test_the_daily_cap_answers_daily_limit(monkeypatch):
     r = client.post("/read", headers=headers)
     assert r.status_code == 429 and r.json() == {"detail": {"code": "daily_limit"}}
     assert 0 < int(r.headers["retry-after"]) <= 86400
+
+
+def test_pilot_devices_on_the_allow_list_have_no_daily_cap(monkeypatch):
+    lim = ratelimit.RateLimiter(wall=lambda: 1_793_000_000.0)
+    monkeypatch.setenv("RATE_HEAVY_DEVICE_PER_DAY", "2")
+    monkeypatch.setenv("RATE_HEAVY_IP_PER_DAY", "2")
+    monkeypatch.setenv("RATE_EXEMPT_DEVICES", f" {DEV} ,tester-two-0001")
+    assert [lim.check_daily("/read", "1.2.3.4", DEV) for _ in range(10)] == [0.0] * 10
+    # Not by key or IP: another phone on the same connection is still capped.
+    assert [lim.check_daily("/read", "1.2.3.4", "someone-else-0001") > 0 for _ in range(3)] == [False, False, True]
+    assert not ratelimit.exempt(None) and not ratelimit.exempt("")

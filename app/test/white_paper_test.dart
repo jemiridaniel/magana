@@ -396,11 +396,16 @@ void main() {
         }),
       );
       await captureToReader(tester);
-      expect(find.text('No internet. Reading on this phone.'), findsOneWidget);
+      expect(
+        find.text(
+          "The photo didn't reach Magana's server (connection problem). Reading on this phone.",
+        ),
+        findsOneWidget,
+      );
       expect(
         speaker.said.where(
           (s) => s.startsWith(
-            'No internet. Reading on this phone. Basic reading only.',
+            "The photo didn't reach Magana's server (connection problem). Reading on this phone. Basic reading only.",
           ),
         ),
         hasLength(1),
@@ -426,7 +431,10 @@ void main() {
         queueStore.items.values.single,
         isNot(utf8.encode('png')),
       ); // encrypted
-      expect(posts, 1);
+      expect(
+        posts,
+        2,
+      ); // a failed send is tried once more before reading on the phone
       handle.dispose();
     },
   );
@@ -477,7 +485,7 @@ void main() {
   });
 
   testWidgets(
-    '5e: a slow server: read on the phone after 8 s, the full reading still saved',
+    '5e: a slow server: "Still reading…" at 5 s, read on the phone after 25 s, the full reading still saved',
     (tester) async {
       final speaker = FakeSpeaker();
       pageRecognizer = FakeRecognizer(
@@ -487,7 +495,7 @@ void main() {
         tester,
         speaker,
         client: MockClient((req) async {
-          await Future<void>.delayed(const Duration(seconds: 12));
+          await Future<void>.delayed(const Duration(seconds: 30));
           return http.Response(
             jsonEncode(columnsJson),
             200,
@@ -496,16 +504,20 @@ void main() {
         }),
       );
       await openCaptureAndTakePhoto(tester);
+      await tester.pump(const Duration(seconds: 6));
+      expect(speaker.said, contains('Still reading…'));
       await tester.pump(
-        const Duration(seconds: 9),
-      ); // past the 8 s wait: read on the phone
+        const Duration(seconds: 20),
+      ); // past the 25 s wait: read on the phone
       await tester.pumpAndSettle();
       expect(
-        find.text("Magana's server isn't answering. Reading on this phone."),
+        find.text(
+          "Magana's server took longer than 25 seconds. Reading on this phone.",
+        ),
         findsOneWidget,
       );
       await tester.pump(
-        const Duration(seconds: 4),
+        const Duration(seconds: 5),
       ); // the server answers after all
       await tester.pumpAndSettle();
       expect(speaker.said, contains('Plants make food'));
@@ -517,6 +529,47 @@ void main() {
       expect(await photoQueue.length, 0); // nothing needed to wait
     },
   );
+
+  for (final (code, banner) in [
+    (
+      'too_many_requests',
+      "Magana's server is busy this minute. Reading on this phone.",
+    ),
+    (
+      'daily_limit',
+      "You've used today's server readings. Reading on this phone; the server reads again tomorrow.",
+    ),
+  ]) {
+    testWidgets(
+      '5e: a 429 ($code) is said as it is, and the page is read on the phone',
+      (tester) async {
+        final speaker = FakeSpeaker();
+        pageRecognizer = FakeRecognizer(
+          FakePhoto([seen('Plants make food', 0.97)]),
+        );
+        var posts = 0;
+        await pumpOffline(
+          tester,
+          speaker,
+          client: MockClient((req) async {
+            posts++;
+            return http.Response(
+              jsonEncode({
+                'detail': {'code': code},
+              }),
+              429,
+              headers: {'content-type': 'application/json'},
+            );
+          }),
+        );
+        await captureToReader(tester);
+        expect(find.text(banner), findsOneWidget);
+        expect(speaker.said, contains('Plants make food'));
+        expect(posts, 1); // never retried: the server said why
+        expect(speaker.said.any((t) => t.contains("isn't answering")), isFalse);
+      },
+    );
+  }
 
   testWidgets('5e: a Classroom phone reads offline but never keeps the photo', (
     tester,
@@ -549,7 +602,12 @@ void main() {
     for (var i = 0; i < 20; i++) {
       await tester.pump(const Duration(milliseconds: 200));
     }
-    expect(find.text('No internet. Reading on this phone.'), findsOneWidget);
+    expect(
+      find.text(
+        "The photo didn't reach Magana's server (connection problem). Reading on this phone.",
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Full reading when online'), findsNothing);
     expect(await photoQueue.length, 0);
   });

@@ -2518,4 +2518,39 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get missedLineLabel => 'A line I may have missed';
+
+  @override
+  String get pictureTaken => 'Picture taken. Reading…';
+
+  @override
+  String get stillReading => 'Still reading…';
+
+  @override
+  String get noTextMoveBack =>
+      'I couldn\'t find text. Try moving the phone further away.';
+
+  @override
+  String get torchGlareOff =>
+      'The light was shining back off the page, so I turned it off.';
+
+  @override
+  String get offlineBannerSendFailed =>
+      'The photo didn\'t reach Magana\'s server (connection problem). Reading on this phone.';
+
+  @override
+  String offlineBannerTimeout(int seconds) {
+    return 'Magana\'s server took longer than $seconds seconds. Reading on this phone.';
+  }
+
+  @override
+  String get offlineBannerServerError =>
+      'Magana\'s server had a problem with this page. Reading on this phone.';
+
+  @override
+  String get offlineBannerBusy =>
+      'Magana\'s server is busy this minute. Reading on this phone.';
+
+  @override
+  String get offlineBannerDailyLimit =>
+      'You\'ve used today\'s server readings. Reading on this phone; the server reads again tomorrow.';
 }

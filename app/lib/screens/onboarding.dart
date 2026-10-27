@@ -8,6 +8,7 @@ import '../l10n/app_localizations.dart';
 import '../language.dart';
 import '../policy.dart';
 import '../profile.dart';
+import '../route_speech.dart';
 import '../widgets.dart';
 import '../offline/photo_queue.dart';
 import '../platform/shared_pdf.dart';
@@ -123,6 +124,12 @@ class _OnboardingFlow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Navigator(
+    observers: [
+      SpeechRouteObserver(
+        AppScope.of(context).voice,
+        AppScope.of(context).touch,
+      ),
+    ],
     onGenerateRoute: (_) =>
         MaterialPageRoute(builder: (_) => const LanguageStep()),
   );

@@ -660,5 +660,14 @@
   "pageViewLabel": "Ìwé rẹ, a ṣàfihàn ìlà tí a ń kà",
   "msg_missed_line": "Ó ṣeé ṣe kí n ti fo ìlà kan níbí, {where}. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí ya fọ́tò náà lẹ́ẹ̀kan sí i.",
   "summaryMissed": "{count, plural, =1{Ó ṣeé ṣe kí n ti fo ìlà 1.} other{Ó ṣeé ṣe kí n ti fo ìlà {count}.}}",
-  "missedLineLabel": "Ìlà tí mo lè ti fò"
+  "missedLineLabel": "Ìlà tí mo lè ti fò",
+  "pictureTaken": "Mo ti ya fọ́tò. Mò ń kà á…",
+  "stillReading": "Mo ṣì ń kà á…",
+  "noTextMoveBack": "Mi ò rí ọ̀rọ̀ kankan. Gbìyànjú láti gbé fóònù sókè díẹ̀ sí i.",
+  "torchGlareOff": "Ìmọ́lẹ̀ náà ń tàn padà láti ojú ìwé, nítorí náà mo pa á.",
+  "offlineBannerSendFailed": "Fọ́tò náà kò dé ọ̀dọ̀ sáfà Magana (ìṣòro ìsopọ̀). Mò ń kà á lórí fóònù yìí.",
+  "offlineBannerTimeout": "Sáfà Magana pẹ́ ju ìṣẹ́jú-àáyá {seconds} lọ. Mò ń kà á lórí fóònù yìí.",
+  "offlineBannerServerError": "Sáfà Magana ní ìṣòro pẹ̀lú ojú-ìwé yìí. Mò ń kà á lórí fóònù yìí.",
+  "offlineBannerBusy": "Sáfà Magana ń ṣiṣẹ́ lọ́wọ́ ní ìṣẹ́jú yìí. Mò ń kà á lórí fóònù yìí.",
+  "offlineBannerDailyLimit": "O ti lo ìkàwé sáfà ti òní tán. Mò ń kà á lórí fóònù yìí; sáfà yóò tún kà lọ́la."
 }

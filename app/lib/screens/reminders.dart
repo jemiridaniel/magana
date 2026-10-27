@@ -441,8 +441,11 @@ class _AddReminderScreenState extends State<AddReminderScreen> {
         noticeFor(context, r, store.sayNameWhenLocked),
       );
     }
-    speaker.say(l.reminderSaved(time));
-    if (mounted) Navigator.of(context).pop();
+    if (!mounted) return;
+    // Said once this screen has closed (a change of screen stops its own voice).
+    final voice = AppScope.app(context).speaker;
+    Navigator.of(context).pop();
+    voice.say(l.reminderSaved(time));
   }
 
   @override

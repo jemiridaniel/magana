@@ -660,5 +660,14 @@
   "pageViewLabel": "Akwụkwọ gị, egosipụtara ahịrị a na-agụ",
   "msg_missed_line": "Enwere ike m hapụrụ otu ahịrị ebe a, {where}. Biko lelee ya ma ọ bụ see foto ahụ ọzọ.",
   "summaryMissed": "{count, plural, =1{Enwere ike m hapụrụ ahịrị 1.} other{Enwere ike m hapụrụ ahịrị {count}.}}",
-  "missedLineLabel": "Ahịrị m nwere ike ịhapụ"
+  "missedLineLabel": "Ahịrị m nwere ike ịhapụ",
+  "pictureTaken": "E sere foto. A na m agụ ya…",
+  "stillReading": "A ka na m agụ ya…",
+  "noTextMoveBack": "Ahụghị m ederede. Nwaa ibuli ekwentị ahụ elu ntakịrị.",
+  "torchGlareOff": "Ọkụ ahụ na-enwu n'elu akwụkwọ ahụ, ya mere m gbanyụrụ ya.",
+  "offlineBannerSendFailed": "Foto ahụ eruteghị sava Magana (nsogbu njikọ). A na m agụ ya na ekwentị a.",
+  "offlineBannerTimeout": "Sava Magana were ihe karịrị sekọnd {seconds}. A na m agụ ya na ekwentị a.",
+  "offlineBannerServerError": "Sava Magana nwere nsogbu na peeji a. A na m agụ ya na ekwentị a.",
+  "offlineBannerBusy": "Sava Magana nọ n'ọrụ n'oge a. A na m agụ ya na ekwentị a.",
+  "offlineBannerDailyLimit": "Ị jirila ọgụgụ sava nke taa. A na m agụ ya na ekwentị a; sava ga-agụ ọzọ echi."
 }

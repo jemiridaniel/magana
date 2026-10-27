@@ -1906,5 +1906,21 @@
       }
     }
   },
-  "missedLineLabel": "A line I may have missed"
+  "missedLineLabel": "A line I may have missed",
+  "pictureTaken": "Picture taken. Reading…",
+  "stillReading": "Still reading…",
+  "noTextMoveBack": "I couldn't find text. Try moving the phone further away.",
+  "torchGlareOff": "The light was shining back off the page, so I turned it off.",
+  "offlineBannerSendFailed": "The photo didn't reach Magana's server (connection problem). Reading on this phone.",
+  "offlineBannerTimeout": "Magana's server took longer than {seconds} seconds. Reading on this phone.",
+  "@offlineBannerTimeout": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "offlineBannerServerError": "Magana's server had a problem with this page. Reading on this phone.",
+  "offlineBannerBusy": "Magana's server is busy this minute. Reading on this phone.",
+  "offlineBannerDailyLimit": "You've used today's server readings. Reading on this phone; the server reads again tomorrow."
 }

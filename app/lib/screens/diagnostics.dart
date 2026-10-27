@@ -46,6 +46,8 @@ class _DiagnosticsScreenState extends State<DiagnosticsScreen> {
       ('Platform', kIsWeb ? 'web' : defaultTargetPlatform.name),
       ('Server', apiBase),
       ('App key', keyLine),
+      // For the pilot allow-list (server RATE_EXEMPT_DEVICES): no daily cap for this phone.
+      ('Install ID', deviceId.isEmpty ? '—' : deviceId),
       if (_serverCheck case final c?) ('Server check', c),
       ('Last attempt', a == null ? 'none since the app started' : _time(a.at)),
       if (a != null) ...[
@@ -79,6 +81,8 @@ class _DiagnosticsScreenState extends State<DiagnosticsScreen> {
         ('Server status', a.status?.toString() ?? 'no answer'),
         if (a.code != null) ('Server code', a.code!),
         if (a.serverMs != null) ('Server time', '${a.serverMs} ms'),
+        if (a.retried case final code?)
+          ('Sent again', 'the first try failed ($code)'),
         ('Tips', a.tips.isEmpty ? 'none' : a.tips.join(', ')),
         (
           'Words read',

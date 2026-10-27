@@ -31,6 +31,9 @@ class Attempt {
   /// The phone showed its own reading, and the server answered later (kept for My library).
   bool serverLate = false;
 
+  /// The first try failed with this code and the photo was sent once more.
+  String? retried;
+
   void read(ReadResult r) {
     tips = r.tips;
     final lines = (r.json?['lines'] as List?) ?? const [];

@@ -46,6 +46,16 @@ class Bucket:
 LAGOS_OFFSET_S = 3600  # Africa/Lagos is UTC+1 all year (no daylight saving)
 
 
+def exempt(device: str | None) -> bool:
+    """Pilot testers' phones, by install ID (RATE_EXEMPT_DEVICES, comma-separated; each app's
+    hidden diagnostics shows its ID): no daily cap, so a day of testing never ends in "come back
+    tomorrow". Not by key: the key is in every copy of the app. The per-minute limits still apply."""
+    if not device:
+        return False
+    listed = {d.strip() for d in os.environ.get("RATE_EXEMPT_DEVICES", "").split(",") if d.strip()}
+    return device in listed
+
+
 @dataclass
 class RateLimiter:
     clock: callable = time.monotonic
@@ -56,7 +66,7 @@ class RateLimiter:
     def check_daily(self, path: str, ip: str, device: str | None) -> float:
         """0 if this heavy call is within today's caps (and counts it), else the seconds until
         midnight in Lagos. Light calls are never capped per day."""
-        if path not in HEAVY_PATHS:
+        if path not in HEAVY_PATHS or exempt(device):
             return 0.0
         local = self.wall() + LAGOS_OFFSET_S
         today = int(local // 86400)

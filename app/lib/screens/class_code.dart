@@ -374,8 +374,10 @@ class _TeacherCodeScreenState extends State<TeacherCodeScreen> {
         ),
       );
       if (!mounted) return;
-      scope.speaker.say(messageFor(l, 'class_changed'));
+      // Said once this screen has closed (a change of screen stops its own voice).
+      final voice = AppScope.app(context).speaker;
       Navigator.of(context).pop();
+      voice.say(messageFor(l, 'class_changed'));
     } on ApiException catch (e) {
       final msg = messageFor(l, e.code);
       scope.speaker.say(msg);

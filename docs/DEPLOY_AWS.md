@@ -318,6 +318,7 @@ The Activity log then shows "Email undeliverable · b***@simulator.amazonses.com
 | `RATE_IP_PER_MIN` / `RATE_DEVICE_PER_MIN` | 120 / 60 a minute | every call |
 | `RATE_HEAVY_IP_PER_MIN` / `RATE_HEAVY_DEVICE_PER_MIN` | 30 / 12 a minute | reading (`/read`), speech (`/asr`), Explain |
 | `RATE_HEAVY_DEVICE_PER_DAY` | 300 a day per phone | the same heavy calls |
+| `RATE_EXEMPT_DEVICES` | none | pilot testers' install IDs (comma-separated, from each app's hidden diagnostics): no daily cap; per-minute limits still apply |
 | `RATE_HEAVY_IP_PER_DAY` | 3,000 a day per IP (a school shares one) | the same heavy calls |
 
 - Over a minute limit, the app says "Magana is busy right now".

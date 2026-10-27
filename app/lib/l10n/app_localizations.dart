@@ -4061,6 +4061,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'A line I may have missed'**
   String get missedLineLabel;
+
+  /// No description provided for @pictureTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'Picture taken. Reading…'**
+  String get pictureTaken;
+
+  /// No description provided for @stillReading.
+  ///
+  /// In en, this message translates to:
+  /// **'Still reading…'**
+  String get stillReading;
+
+  /// No description provided for @noTextMoveBack.
+  ///
+  /// In en, this message translates to:
+  /// **'I couldn\'t find text. Try moving the phone further away.'**
+  String get noTextMoveBack;
+
+  /// No description provided for @torchGlareOff.
+  ///
+  /// In en, this message translates to:
+  /// **'The light was shining back off the page, so I turned it off.'**
+  String get torchGlareOff;
+
+  /// No description provided for @offlineBannerSendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The photo didn\'t reach Magana\'s server (connection problem). Reading on this phone.'**
+  String get offlineBannerSendFailed;
+
+  /// No description provided for @offlineBannerTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana\'s server took longer than {seconds} seconds. Reading on this phone.'**
+  String offlineBannerTimeout(int seconds);
+
+  /// No description provided for @offlineBannerServerError.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana\'s server had a problem with this page. Reading on this phone.'**
+  String get offlineBannerServerError;
+
+  /// No description provided for @offlineBannerBusy.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana\'s server is busy this minute. Reading on this phone.'**
+  String get offlineBannerBusy;
+
+  /// No description provided for @offlineBannerDailyLimit.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'ve used today\'s server readings. Reading on this phone; the server reads again tomorrow.'**
+  String get offlineBannerDailyLimit;
 }
 
 class _AppLocalizationsDelegate

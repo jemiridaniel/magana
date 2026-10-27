@@ -139,7 +139,11 @@ void main() {
       ],
     });
     final w = PageWarnings(r.items);
-    expect(r.items.map((i) => i.isFaint), [false, true, false]); // between the two lines
+    expect(r.items.map((i) => i.isFaint), [
+      false,
+      true,
+      false,
+    ]); // between the two lines
     expect(w.missedLines, 1);
     expect(w.summary(en), [en.summaryMissed(1), en.summaryAsk]);
     expect(

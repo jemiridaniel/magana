@@ -15,6 +15,7 @@ import 'screens/splash.dart';
 import 'screens/start.dart';
 import 'speech.dart';
 import 'theme.dart';
+import 'route_speech.dart';
 import 'touch.dart';
 import 'layout.dart';
 
@@ -96,6 +97,8 @@ class MaganaApp extends StatelessWidget {
         valueListenable: language,
         builder: (context, locale, _) => MaterialApp(
           onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
+          // One screen talks at a time: a change of screen stops the voice (route_speech.dart).
+          navigatorObservers: [SpeechRouteObserver(speaker, touch)],
           debugShowCheckedModeBanner: false,
           theme: maganaTheme(),
           locale: locale,
@@ -128,7 +131,10 @@ class MaganaApp extends StatelessWidget {
                           excluding: cover,
                           child: ExcludeSemantics(
                             excluding: cover,
-                            child: TouchExplorer(child: child!),
+                            child: VoiceKeeper(
+                              speaker: speaker,
+                              child: TouchExplorer(child: child!),
+                            ),
                           ),
                         ),
                         if (cover)
@@ -155,5 +161,42 @@ class MaganaApp extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+/// Stops the voice when Magana leaves the screen (another app, the lock button, a phone call),
+/// and tells it whether VoiceOver or TalkBack is on.
+class VoiceKeeper extends StatefulWidget {
+  const VoiceKeeper({super.key, required this.speaker, required this.child});
+  final Speaker speaker;
+  final Widget child;
+
+  @override
+  State<VoiceKeeper> createState() => _VoiceKeeperState();
+}
+
+class _VoiceKeeperState extends State<VoiceKeeper> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state != AppLifecycleState.resumed) widget.speaker.stop();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    widget.speaker.screenReaderOn =
+        MediaQuery.maybeAccessibleNavigationOf(context) ?? false;
+    return widget.child;
   }
 }

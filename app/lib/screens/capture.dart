@@ -24,8 +24,17 @@ import '../policy.dart';
 import '../tasks.dart';
 import '../theme.dart';
 import '../layout.dart';
+import '../version.dart';
 import '../widgets.dart';
 import 'reader.dart';
+
+/// How long to wait for the server before reading on this phone (board 5e). A full page
+/// takes the server 5–7 s, plus the upload on mobile data: the old 8 s sent most real pages
+/// to the phone while the server answered moments later (logs, 27 Oct 2026).
+const serverWait = Duration(seconds: 25);
+
+/// "Still reading…" after this long, so a wait is never silent.
+const stillReadingAfter = Duration(seconds: 5);
 
 /// Live camera preview with spoken framing guidance about every second,
 /// auto-capture when the page is whole and steady, a torch, and the gallery.
@@ -105,6 +114,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     WidgetsBinding.instance.removeObserver(this);
     _guideTimer?.cancel();
     _tickTimer?.cancel();
+    _deadline?.cancel();
     _statusTimer?.cancel();
     if (widget.feedback == null) _feedback.dispose();
     _stopCamera();
@@ -162,6 +172,31 @@ class _CaptureScreenState extends State<CaptureScreen>
 
   bool _tiltSaid = false;
 
+  /// Capture's own clock, apart from the frames: if they stall, the photo is still taken.
+  Timer? _deadline;
+
+  /// "Hold still" at most twice per attempt; the clocks take the photo anyway.
+  int _holdStillSaid = 0;
+  static const holdStillMax = 2;
+
+  /// The last photo was taken without text ever seen: "I couldn't find text" if none is read.
+  bool _noTextCapture = false;
+
+  void _armDeadline() {
+    _deadline?.cancel();
+    _deadline = Timer(
+      FrameAnalyzer.captureNoTextAfter + const Duration(seconds: 1),
+      () {
+        if (mounted &&
+            !_busy &&
+            _auto &&
+            _camera?.value.isInitialized == true) {
+          _captureWithCamera('deadline');
+        }
+      },
+    );
+  }
+
   Future<void> _startFraming() async {
     final camera = _camera;
     if (camera == null ||
@@ -172,6 +207,8 @@ class _CaptureScreenState extends State<CaptureScreen>
     }
     await camera.startImageStream(_onFrame);
     _streaming = true;
+    _holdStillSaid = 0;
+    _armDeadline();
   }
 
   Future<void> _stopFraming() async {
@@ -206,6 +243,11 @@ class _CaptureScreenState extends State<CaptureScreen>
       final advice = _analyzer.analyze(
         lumaGridFrom(image, _camera?.description.sensorOrientation ?? 90),
       );
+      // The torch shining back off the page: turn it off and say so, don't keep waiting.
+      if (_torchOn && _analyzer.glare) {
+        _setTorch(false);
+        _say(_l.torchGlareOff);
+      }
       if (advice != _advice && mounted) setState(() => _advice = advice);
       // Tilt is a tip, said once; it never holds the photo back.
       final tilt = _analyzer.tiltTip;
@@ -285,6 +327,8 @@ class _CaptureScreenState extends State<CaptureScreen>
         now.difference(_quietSince) < const Duration(seconds: 1)) {
       return;
     }
+    if (text == _l.cueHoldStill && _holdStillSaid >= holdStillMax) return;
+    if (text == _l.cueHoldStill) _holdStillSaid++;
     _quietSince = now;
     speaker.say(text);
   }
@@ -305,8 +349,12 @@ class _CaptureScreenState extends State<CaptureScreen>
     final camera = _camera;
     if (_busy || camera == null || !camera.value.isInitialized) return;
     diagnostics.begin(how, _analyzer.report);
+    _deadline?.cancel();
+    _noTextCapture = how == 'deadline' || _analyzer.capturedWithoutText;
     setState(() => _busy = true);
+    // Shutter sound, vibration and words before every photo: a blind user always knows.
     _feedback.captured();
+    _setStatus(_l.pictureTaken);
     try {
       await _stopFraming();
       final photo = await camera.takePicture();
@@ -344,13 +392,8 @@ class _CaptureScreenState extends State<CaptureScreen>
     await _send(await photo.readAsBytes(), photo.name);
   }
 
-  /// How long to wait for the server before reading on this phone (board 5e).
-  static const serverWait = Duration(seconds: 8);
-
-  /// Codes that mean "the server can't read it now" (no internet, asleep, failed):
-  /// these fall back to reading on the phone. Anything else (not allowed, a bad
-  /// photo) is the answer and is said as it is.
-  static const _fallBack = {'unreachable', 'server_sleeping', 'failed'};
+  /// A failed send or a server error is tried once more within [serverWait].
+  static const _retryable = {'unreachable', 'server_sleeping', 'failed'};
 
   Future<void> _send(Uint8List bytes, String filename) async {
     final scope = AppScope.of(context);
@@ -365,24 +408,43 @@ class _CaptureScreenState extends State<CaptureScreen>
     ReadTiming.start();
     final attempt = diagnostics.last;
     attempt?.photoBytes = bytes.length;
-    _setStatus(l.readingPage);
-    final online = scope.api.read(bytes, filename: filename, mode: mode);
+    // A camera photo was announced already ("Picture taken. Reading…").
+    if (_status != l.pictureTaken) _setStatus(l.readingPage);
+    final sent = DateTime.now();
+    final still = Timer(stillReadingAfter, () {
+      if (mounted && _busy) _setStatus(l.stillReading);
+    });
+    var online = scope.api.read(bytes, filename: filename, mode: mode);
     ReadResult? result;
     OfflineReason? why;
-    try {
-      result = await online.timeout(serverWait);
-    } on TimeoutException {
-      why = OfflineReason.slow;
-    } on ApiException catch (e) {
-      if (!_fallBack.contains(e.code)) {
-        _setStatus(messageFor(l, e.code));
-        _resume();
-        return;
+    for (var tries = 1; ; tries++) {
+      final left = serverWait - DateTime.now().difference(sent);
+      try {
+        result = await online.timeout(left.isNegative ? Duration.zero : left);
+        why = null;
+      } on TimeoutException {
+        why = OfflineReason.slow;
+      } on ApiException catch (e) {
+        why = OfflineReason.forCode(e.code, web: runningOnWeb);
+        if (why == null) {
+          // Not allowed, a bad photo...: that is the answer, said as it is.
+          still.cancel();
+          _setStatus(messageFor(l, e.code));
+          _resume();
+          return;
+        }
+        final again = serverWait - DateTime.now().difference(sent);
+        if (tries == 1 &&
+            _retryable.contains(e.code) &&
+            again > const Duration(seconds: 3)) {
+          attempt?.retried = e.code;
+          online = scope.api.read(bytes, filename: filename, mode: mode);
+          continue;
+        }
       }
-      why = e.code == 'unreachable'
-          ? OfflineReason.noInternet
-          : OfflineReason.slow;
+      break;
     }
+    still.cancel();
     var queued = false;
     var dropped = 0; // oldest waiting pages dropped to keep at most 20
     if (result == null) {
@@ -430,11 +492,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     }
     final page = result;
     attempt
-      ?..path = switch (why) {
-        null => 'server',
-        OfflineReason.noInternet => 'phone (no internet)',
-        OfflineReason.slow => 'phone (server slow or failed)',
-      }
+      ?..path = why == null ? 'server' : 'phone (${why.name})'
       ..read(page);
     if (!mounted) return;
     if (page.readableCount == 0) {
@@ -444,7 +502,8 @@ class _CaptureScreenState extends State<CaptureScreen>
           for (final f in page.items.where((i) => i.isFaint))
             messageFor(l, 'faint_region', where: pagePosition(l, f.where)),
           // Held back for safety is not "no text": the tip already says why.
-          if (!page.tips.contains('money_amounts_unreliable')) l.noTextFound,
+          if (!page.tips.contains('money_amounts_unreliable'))
+            _noTextCapture ? l.noTextMoveBack : l.noTextFound,
         ].join(' '),
       );
       _resume();
@@ -526,19 +585,36 @@ class _CaptureScreenState extends State<CaptureScreen>
                     ),
                   ),
                   Expanded(
-                    child: Semantics(
-                      header: true,
-                      child: Text(
-                        widget.detect
-                            ? l.readAnyPaper
-                            : widget.paper?.title(l) ?? l.readPage,
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(
-                          color: Colors.white,
-                          fontSize: 21,
-                          fontWeight: FontWeight.w700,
+                    child: Column(
+                      children: [
+                        Semantics(
+                          header: true,
+                          child: Text(
+                            widget.detect
+                                ? l.readAnyPaper
+                                : widget.paper?.title(l) ?? l.readPage,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 21,
+                              fontWeight: FontWeight.w700,
+                            ),
+                          ),
                         ),
-                      ),
+                        // The installed build, for testers; not read aloud.
+                        ExcludeSemantics(
+                          child: FutureBuilder<String>(
+                            future: appVersionLabel(),
+                            builder: (context, v) => Text(
+                              v.data ?? '',
+                              style: const TextStyle(
+                                color: Color(0xFFB8BEC4),
+                                fontSize: 13,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                   if (live && _torchWorks)

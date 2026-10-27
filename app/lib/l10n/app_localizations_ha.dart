@@ -2523,4 +2523,39 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get missedLineLabel => 'Layin da wataƙila na tsallake';
+
+  @override
+  String get pictureTaken => 'An ɗauki hoto. Ina karantawa…';
+
+  @override
+  String get stillReading => 'Har yanzu ina karantawa…';
+
+  @override
+  String get noTextMoveBack =>
+      'Ban sami rubutu ba. Gwada ɗaga wayar nesa kaɗan.';
+
+  @override
+  String get torchGlareOff =>
+      'Hasken yana haskakawa a kan takardar, don haka na kashe shi.';
+
+  @override
+  String get offlineBannerSendFailed =>
+      'Hoton bai isa sabar Magana ba (matsalar haɗi). Ina karantawa a wannan wayar.';
+
+  @override
+  String offlineBannerTimeout(int seconds) {
+    return 'Sabar Magana ta wuce daƙiƙa $seconds. Ina karantawa a wannan wayar.';
+  }
+
+  @override
+  String get offlineBannerServerError =>
+      'Sabar Magana ta sami matsala da wannan shafi. Ina karantawa a wannan wayar.';
+
+  @override
+  String get offlineBannerBusy =>
+      'Sabar Magana tana aiki sosai a wannan minti. Ina karantawa a wannan wayar.';
+
+  @override
+  String get offlineBannerDailyLimit =>
+      'Ka gama karatun sabar na yau. Ina karantawa a wannan wayar; sabar za ta sake karantawa gobe.';
 }

@@ -118,7 +118,10 @@ class _HomeScreenState extends State<HomeScreen> {
             padding: pad,
             child: ConstrainedBox(
               constraints: BoxConstraints(
-                minHeight: (box.maxHeight - pad.vertical).clamp(0, double.infinity),
+                minHeight: (box.maxHeight - pad.vertical).clamp(
+                  0,
+                  double.infinity,
+                ),
               ),
               child: IntrinsicHeight(
                 child: Column(
@@ -335,7 +338,8 @@ class _LanguageSheetState extends State<LanguageSheet> {
   }
 
   Future<void> _use() async {
-    final scope = AppScope.of(context);
+    // Said after the sheet closes: the app's own voice, not the sheet's.
+    final scope = AppScope.app(context);
     final lang = appLanguages.firstWhere((a) => a.code == _chosen);
     _applied = true;
     Navigator.of(context).pop();

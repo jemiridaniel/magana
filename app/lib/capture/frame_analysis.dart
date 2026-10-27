@@ -216,13 +216,15 @@ class FrameAnalyzer {
 
   final DateTime Function() _clock;
 
-  /// Steady text in view this long: capture anyway, whatever else the guidance says, so a
-  /// card, receipt or torn slip is never refused forever (docs/FINDINGS.md, 27 Oct 2026).
+  /// Capture always finishes by itself (iPhone test, 27 Oct 2026: constant small hand shake
+  /// counted as "moving" on every frame, so the old steady-text clock never started). Two
+  /// absolute clocks per attempt that nothing resets, not shake, blur, tilt or text leaving
+  /// the view: text seen → captured this long after it was first seen...
   static const captureAnywayAfter = Duration(seconds: 4);
 
-  /// Hand shake while holding a card doesn't restart that clock; only text out of view, or
-  /// moving for longer than this, does.
-  static const moveGrace = Duration(milliseconds: 1500);
+  /// ...and with no text at all, captured this long after the camera opened (Capture then says
+  /// "I couldn't find text" if the photo has none, and starts again).
+  static const captureNoTextAfter = Duration(seconds: 8);
 
   /// No page edges, but print in at least this many patches with one in the middle: a small
   /// item (card, receipt, label, boarding pass) to read as it is. Print in fewer: too small.
@@ -254,8 +256,10 @@ class FrameAnalyzer {
   LumaGrid? _previous;
   int _steady = 0;
   Advice? _last;
-  DateTime? _textSince;
-  DateTime? _lostSince; // text out of view or the phone moving, since
+  DateTime? _attemptStart; // the first frame since reset: the camera opened
+  DateTime? _textFirst; // text first seen in this attempt
+  bool _noText = false; // captured by the 8 s clock without ever seeing text
+  bool _glare = false;
   bool _tiltSeen =
       false; // the page is tilted: said once as a tip, never blocks
   ({double left, double top, double right, double bottom})? _page;
@@ -277,6 +281,13 @@ class FrameAnalyzer {
   );
 
   bool get readyToCapture => _steady >= steadyFramesNeeded;
+
+  /// Captured by the no-text clock: no text was seen in this attempt.
+  bool get capturedWithoutText => _noText;
+
+  /// A small, blown-out white patch on a page that isn't white all over: the torch shining
+  /// back off glossy paper (iPhone test, 27 Oct 2026). Capture turns the torch off.
+  bool get glare => _glare;
 
   /// The page looked tilted at some point: Capture says the tilt tip once (never blocks).
   Advice? get tiltTip => _tiltSeen
@@ -302,8 +313,10 @@ class FrameAnalyzer {
     _previous = null;
     _steady = 0;
     _last = null;
-    _textSince = null;
-    _lostSince = null;
+    _attemptStart = null;
+    _textFirst = null;
+    _noText = false;
+    _glare = false;
     _tiltSeen = false;
     _anyway = false;
   }
@@ -316,23 +329,18 @@ class FrameAnalyzer {
     _previous = g;
     _lastGrid = g;
     final now = _clock();
-    // Never block reading forever: text in view for captureAnywayAfter (page found or not,
-    // whatever the guidance says) and it is captured. A moment of hand shake doesn't reset it.
-    if (g.textInView && !moving) {
-      // Back after longer than a shake: the clock starts again.
-      if (_lostSince != null && now.difference(_lostSince!) > moveGrace) {
-        _textSince = null;
-      }
-      _lostSince = null;
-      _textSince ??= now;
-      if (now.difference(_textSince!) >= captureAnywayAfter) {
-        _anyway = true;
-        _steady = steadyFramesNeeded;
-        return _last = Advice.ready;
-      }
-    } else {
-      _lostSince ??= now;
-      if (now.difference(_lostSince!) > moveGrace) _textSince = null;
+    _glare = _glareIn(g);
+    // Never block reading forever (see captureAnywayAfter): absolute, never reset.
+    _attemptStart ??= now;
+    if (g.textInView) _textFirst ??= now;
+    final textDue =
+        _textFirst != null && now.difference(_textFirst!) >= captureAnywayAfter;
+    final anyDue = now.difference(_attemptStart!) >= captureNoTextAfter;
+    if (textDue || anyDue) {
+      _anyway = true;
+      _noText = _textFirst == null;
+      _steady = steadyFramesNeeded;
+      return _last = Advice.ready;
     }
     _anyway = false;
     final advice = _frame(g, moving);
@@ -342,6 +350,24 @@ class FrameAnalyzer {
     }
     _steady = 0;
     return _last = advice;
+  }
+
+  static bool _glareIn(LumaGrid g) {
+    var blown = 0, paper = 0, paperSum = 0;
+    for (final v in g.data) {
+      if (v >= 250) {
+        blown++;
+      } else if (v >= minPaper) {
+        paper++;
+        paperSum += v;
+      }
+    }
+    final n = g.data.length;
+    // 0.5–20% of the view blown out, on paper that is otherwise clearly below that.
+    return blown >= n * 0.005 &&
+        blown <= n * 0.2 &&
+        paper > n * 0.2 &&
+        paperSum / paper < 240;
   }
 
   Advice _frame(LumaGrid g, bool moving) {

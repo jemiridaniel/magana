@@ -14,6 +14,15 @@ class CaptureFeedback {
     // Low latency (Android SoundPool) so ticks stay in time.
     await p.setPlayerMode(PlayerMode.lowLatency);
     await p.setReleaseMode(ReleaseMode.stop);
+    // iPhone: heard with the silent switch on, like Magana's voice (speech.dart iosAudio).
+    await p.setAudioContext(
+      AudioContext(
+        iOS: AudioContextIOS(
+          category: AVAudioSessionCategory.playback,
+          options: const {AVAudioSessionOptions.mixWithOthers},
+        ),
+      ),
+    );
     await p.setSource(AssetSource(asset));
     return p;
   }

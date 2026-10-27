@@ -83,17 +83,21 @@ void main() {
     expect(a.analyze(withPrint(grid(frame()), 3, 1)), Advice.holdStill);
   });
 
-  test('a plain wall (no print) is never captured, however long', () {
+  test('no text at all: captured 8 s after the camera opens, and said so', () {
     var now = DateTime(2026, 10, 27, 9);
     final a = FrameAnalyzer(clock: () => now);
     final wall = grid(frame());
-    for (var s = 0; s < 20; s++) {
-      expect(a.analyze(wall), Advice.noPage);
-      now = now.add(const Duration(seconds: 1));
+    final seen = <Advice>[];
+    for (var ms = 0; ms <= 8000; ms += 200) {
+      seen.add(a.analyze(wall));
+      now = now.add(const Duration(milliseconds: 200));
     }
+    expect(seen.sublist(0, 40), everyElement(Advice.noPage)); // up to 7.8 s
+    expect(seen.last, Advice.ready); // at 8 s
+    expect(a.capturedWithoutText, isTrue);
   });
 
-  test('never blocked forever: 4 s of text in view and it captures anyway', () {
+  test('never blocked: 4 s after text is first seen it captures anyway', () {
     var now = DateTime(2026, 10, 27, 9);
     final a = FrameAnalyzer(clock: () => now);
     // A slip running off the left side of the view: guidance says "move left"...
@@ -104,38 +108,67 @@ void main() {
       now = now.add(const Duration(seconds: 1));
     }
     expect(seen.take(4), everyElement(Advice.moveLeft));
-    // ...until 4 s of text in view: then it is taken, and the server says what is cut off.
+    // ...until 4 s after the text came into view: taken, and the server says what is cut off.
     expect(seen.last, Advice.ready);
     expect(a.readyToCapture, isTrue);
     expect(a.report.anyway, isTrue);
+    expect(a.capturedWithoutText, isFalse);
   });
 
-  test('a moment of hand shake keeps the 4 s; moving away for longer restarts it', () {
+  test('60 s of constant small shake: captured within 8 s every time (iPhone test)', () {
     var now = DateTime(2026, 10, 27, 9);
     final a = FrameAnalyzer(clock: () => now);
-    final still = withPrint(page(0, 10, 30, 50), 6, 2);
-    final moved = withPrint(page(0, 10, 30, 50, shift: 8), 6, 2);
-    final blank = page(0, 10, 30, 50); // no print in view
-    Advice step(LumaGrid g, int ms) {
-      final advice = a.analyze(g);
-      now = now.add(Duration(milliseconds: ms));
-      return advice;
+    // Every frame moves a little: a hand that never stops trembling. With text in view, and
+    // with none.
+    for (final printed in [true, false]) {
+      a.reset();
+      final frames = [
+        for (final shift in [0, 6, 2, 8])
+          printed
+              ? withPrint(page(4, 6, 44, 58, shift: shift), 9, 3)
+              : page(4, 6, 44, 58, shift: shift),
+      ];
+      var captures = 0;
+      var since = now;
+      for (var ms = 0; ms < 60000; ms += 200) {
+        final advice = a.analyze(frames[(ms ~/ 200) % frames.length]);
+        if (advice == Advice.ready) {
+          final waited = now.difference(since);
+          expect(
+            waited,
+            lessThanOrEqualTo(const Duration(seconds: 8)),
+            reason: 'printed: $printed',
+          );
+          if (printed) {
+            expect(waited, lessThanOrEqualTo(const Duration(seconds: 4)));
+          }
+          captures++;
+          a.reset(); // Capture reads the photo, then starts the next attempt
+          since = now.add(const Duration(milliseconds: 200));
+        }
+        now = now.add(const Duration(milliseconds: 200));
+      }
+      expect(captures, greaterThanOrEqualTo(7), reason: 'printed: $printed');
     }
-
-    step(still, 1000);
-    step(still, 1000);
-    step(moved, 500); // a shake...
-    step(still, 1000);
-    step(still, 1000); // 3.5 s
-    // 4.5 s after the text came into view: the shake didn't restart the clock.
-    expect(step(still, 1000), Advice.ready);
-    a.reset();
-    step(still, 1000);
-    step(still, 1000);
-    step(blank, 2000); // text out of view for 2 s
-    step(still, 1000);
-    expect(step(still, 1000), isNot(Advice.ready));
   });
+
+  test(
+    'torch glare: a blown-out patch on the page is seen; plain paper is not',
+    () {
+      final a = FrameAnalyzer();
+      final g = page(4, 6, 44, 58);
+      final shine = Uint8List.fromList(g.data);
+      for (var y = 20; y < 30; y++) {
+        for (var x = 15; x < 27; x++) {
+          shine[y * 48 + x] = 255;
+        }
+      }
+      a.analyze(LumaGrid(48, 64, shine));
+      expect(a.glare, isTrue);
+      a.analyze(g);
+      expect(a.glare, isFalse);
+    },
+  );
 
   test('tilt never blocks: a tip only', () {
     final a = FrameAnalyzer(steadyFramesNeeded: 1);
