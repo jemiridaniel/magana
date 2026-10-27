@@ -16,6 +16,7 @@ from fastapi.concurrency import run_in_threadpool
 from fastapi.responses import JSONResponse, PlainTextResponse
 from PIL import Image
 import logging
+import time
 from typing import Literal
 
 import httpx
@@ -61,6 +62,13 @@ async def _probe_iba(interval: float) -> None:
 
 
 log = logging.getLogger("magana.api")
+# Magana's own lines (log_reads, callbacks) in the container log next to uvicorn's: without a
+# handler Python shows only warnings, and these info lines were lost.
+if not logging.getLogger("magana").handlers:
+    _out = logging.StreamHandler()
+    _out.setFormatter(logging.Formatter("%(name)s %(message)s"))
+    logging.getLogger("magana").addHandler(_out)
+    logging.getLogger("magana").setLevel(logging.INFO)
 
 app = FastAPI(
     lifespan=lifespan,
@@ -133,6 +141,27 @@ async def require_api_key(request, call_next):
         if not any(hmac.compare_digest(sent, k.encode()) for k in accepted_keys()):
             return JSONResponse({"detail": {"code": "bad_api_key"}}, status_code=401)
     return await call_next(request)
+
+
+@app.middleware("http")
+async def log_reads(request, call_next):
+    """One line per page read, for a tester's "server isn't answering": how long it took, what it
+    answered, how big the photo was, and which install (the first 8 characters of the app's random
+    ID, which its diagnostics screen shows). Never the page, the key or the IP."""
+    if request.url.path not in ("/read", "/read-pdf"):
+        return await call_next(request)
+    started = time.monotonic()
+    device = (request.headers.get("x-magana-device") or "-")[:8]
+    size = request.headers.get("content-length", "?")
+    try:
+        response = await call_next(request)
+    except Exception:
+        log.info("req %s status=500 ms=%d bytes=%s device=%s", request.url.path,
+                 (time.monotonic() - started) * 1000, size, device)
+        raise
+    log.info("req %s status=%d ms=%d bytes=%s device=%s", request.url.path, response.status_code,
+             (time.monotonic() - started) * 1000, size, device)
+    return response
 
 
 # Browsers (Flutter web, teacher portal) need CORS. Dev allows any localhost port;
