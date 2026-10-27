@@ -23,6 +23,8 @@ import '../platform.dart';
 import '../policy.dart';
 import '../tasks.dart';
 import '../theme.dart';
+import '../layout.dart';
+import '../widgets.dart';
 import 'reader.dart';
 
 /// Live camera preview with spoken framing guidance about every second,
@@ -78,12 +80,17 @@ class _CaptureScreenState extends State<CaptureScreen>
 
   AppLocalizations get _l => AppLocalizations.of(context);
 
+  /// On a tablet: lay the page flat and hold the tablet above it (board T1). The same
+  /// auto-capture rules: never stuck (FrameAnalyzer.captureAnywayAfter).
+  String get _guidance =>
+      isTablet(context) ? _l.framingGuidanceTablet : _l.framingGuidance;
+
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _say(_l.framingGuidance);
+      _say(_guidance);
       _startCamera();
     });
     _guideTimer = Timer.periodic(
@@ -482,7 +489,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     final l = _l;
     final camera = _camera;
     final live = camera != null && camera.value.isInitialized;
-    final text = _status ?? _adviceText(_advice) ?? l.framingGuidance;
+    final text = _status ?? _adviceText(_advice) ?? _guidance;
     final VoidCallback? takePhoto = _busy
         ? null
         : () => live ? _captureWithCamera() : _pick(ImageSource.camera);
@@ -505,10 +512,10 @@ class _CaptureScreenState extends State<CaptureScreen>
             children: [
               Row(
                 children: [
-                  Semantics(
-                    button: true,
+                  Labelled(
                     label: l.backToHome,
-                    excludeSemantics: true,
+                    counted: false,
+                    radius: 32,
                     onTap: () => Navigator.of(context).maybePop(),
                     child: OutlinedButton(
                       onPressed: () => Navigator.of(context).maybePop(),
@@ -535,11 +542,9 @@ class _CaptureScreenState extends State<CaptureScreen>
                     ),
                   ),
                   if (live && _torchWorks)
-                    Semantics(
-                      button: true,
+                    Labelled(
                       toggled: _torchOn,
                       label: _torchOn ? l.torchOff : l.torchOn,
-                      excludeSemantics: true,
                       onTap: () => _setTorch(!_torchOn),
                       child: OutlinedButton(
                         onPressed: () => _setTorch(!_torchOn),
@@ -623,10 +628,8 @@ class _CaptureScreenState extends State<CaptureScreen>
                             value: _auto,
                             onChanged: (v) => setState(() => _auto = v),
                           )
-                        : Semantics(
-                            button: true,
+                        : Labelled(
                             label: l.repeatInstructions,
-                            excludeSemantics: true,
                             onTap: _busy ? null : () => _say(text),
                             child: OutlinedButton(
                               onPressed: _busy ? null : () => _say(text),
@@ -639,12 +642,9 @@ class _CaptureScreenState extends State<CaptureScreen>
                           ),
                   ),
                   const SizedBox(width: 12),
-                  Semantics(
-                    button: true,
+                  Labelled(
                     label: l.takePhoto,
-                    enabled: !_busy,
-                    excludeSemantics: true,
-                    onTap: takePhoto,
+                    onTap: !_busy ? takePhoto : null,
                     child: SizedBox(
                       width: 92,
                       height: 92,
@@ -667,12 +667,9 @@ class _CaptureScreenState extends State<CaptureScreen>
                   ),
                   const SizedBox(width: 12),
                   Expanded(
-                    child: Semantics(
-                      button: true,
+                    child: Labelled(
                       label: l.galleryLabel,
-                      enabled: !_busy,
-                      excludeSemantics: true,
-                      onTap: openGallery,
+                      onTap: !_busy ? openGallery : null,
                       child: OutlinedButton(
                         onPressed: openGallery,
                         style: onDark,

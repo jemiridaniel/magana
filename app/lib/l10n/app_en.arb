@@ -1837,5 +1837,57 @@
   "unclearMark": "Unclear.",
   "whatsUnclear": "What's unclear?",
   "whatsUnclearNone": "Nothing on this page is unclear.",
-  "msg_barcode_skipped": "I skipped a barcode on this page."
+  "msg_barcode_skipped": "I skipped a barcode on this page.",
+  "touchTapAgain": "Tap again to open.",
+  "touchOf": "{n} of {total}",
+  "@touchOf": {
+    "placeholders": {
+      "n": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "touchChoices": "{count, plural, =1{1 choice} other{{count} choices}}",
+  "@touchChoices": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "touchExplore": "Touch to explore, or say a name.",
+  "touchToHear": "Touch to hear",
+  "touchToHearDetail": "Touch something to hear what it is; tap it again to open it. Not used while VoiceOver or TalkBack is on.",
+  "touchToHearOn": "Touch to hear: on",
+  "touchToHearOff": "Touch to hear: off",
+  "touchIntroTitle": "Using Magana by touch",
+  "touchIntroBody": "Your phone's screen reader is off, so Magana will talk you through it.",
+  "touchStep1Body": "Slide your finger. Magana says what's under it.",
+  "touchStep2Title": "Tap again to open",
+  "touchStep2Body": "A second tap on the same thing opens it.",
+  "touchStep3Title": "Or just say it",
+  "touchStep3Body": "Press the yellow button and say a name, like “medicine label”.",
+  "touchPractice": "Practice here",
+  "touchPracticeBody": "Touch this box. Then tap it again.",
+  "touchPracticeDone": "Well done. That is how you open things.",
+  "touchGotIt": "Got it, start",
+  "touchUseScreenReader": "I use VoiceOver / TalkBack",
+  "sayName": "Say a name",
+  "nameNotFound": "I heard “{heard}”, but nothing on this screen has that name.",
+  "@nameNotFound": {
+    "placeholders": {
+      "heard": {
+        "type": "String"
+      }
+    }
+  },
+  "framingGuidanceTablet": "Lay the page flat in good light and hold the tablet above it. I'll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.",
+  "readPageTablet": "Lay the page flat. Hold the tablet above it.",
+  "zoomIn": "Bigger text",
+  "zoomOut": "Smaller text",
+  "highContrast": "High contrast",
+  "pageViewLabel": "Your page, current line highlighted"
 }

@@ -12,6 +12,7 @@ import 'package:app/screens/splash.dart';
 import 'package:app/messages.dart';
 import 'package:app/screens/capture.dart';
 import 'package:app/speech.dart';
+import 'package:app/touch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
@@ -110,6 +111,7 @@ Future<LanguageController> pumpApp(
   Size size = const Size(390, 844),
   String language = 'en',
   ProfileController? profile,
+  TouchToHear? touch,
 }) async {
   SharedPreferences.setMockInitialValues({});
   tester.view.physicalSize = size * 3;
@@ -122,6 +124,7 @@ Future<LanguageController> pumpApp(
       speaker: speaker,
       language: controller,
       profile: profile ?? ProfileController(tier: Tier.standard),
+      touch: touch,
     ),
   );
   await tester.pumpAndSettle();
@@ -187,15 +190,6 @@ void main() {
     expect(find.text('Hello'), findsOneWidget);
   });
 
-  testWidgets('layout is a centred column of at most 480 px on wide screens', (
-    tester,
-  ) async {
-    await pumpApp(tester, FakeSpeaker(), size: const Size(1280, 900));
-    final scaffold = tester.getRect(find.byType(Scaffold).first);
-    expect(scaffold.width, maxContentWidth);
-    expect(scaffold.center.dx, 640);
-  });
-
   testWidgets(
     'Capture speaks framing guidance, then Reader reads lines with warnings',
     (tester) async {
@@ -203,7 +197,8 @@ void main() {
       await pumpApp(tester, speaker);
       await captureToReader(tester);
 
-      expect(speaker.said.first, en.framingGuidance);
+      // Home says what it is first (board 10), then Capture its guidance.
+      expect(speaker.said.take(2), ['Magana. 9 choices.', en.framingGuidance]);
       // The fake speaker finishes instantly, so the whole page has been read.
       expect(find.text('Take 2 tablets every 4 to 6 hours'), findsOneWidget);
       expect(

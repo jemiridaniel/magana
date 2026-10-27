@@ -13,6 +13,7 @@ import '../offline/photo_queue.dart';
 import '../platform/shared_pdf.dart';
 import 'class_code.dart';
 import 'pdf.dart';
+import 'touch_intro.dart';
 
 /// Shows onboarding until an age tier is chosen, the classroom step when a
 /// Classroom session hasn't started, and [home] otherwise. A Guided learner whose
@@ -186,9 +187,21 @@ class _LanguageStepState extends State<LanguageStep> {
       bottom: [
         PrimaryButton(
           label: l.continueLabel,
-          onTap: () =>
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => const AgeStep())),
+          onTap: () {
+            final nav = Navigator.of(context);
+            void age(BuildContext _) =>
+                nav.push(MaterialPageRoute(builder: (_) => const AgeStep()));
+            // Screen reader off: how to use Magana by touch first (board 10b).
+            if (shouldIntroduceTouch(context)) {
+              nav.push(
+                MaterialPageRoute(
+                  builder: (_) => TouchIntroScreen(onDone: age),
+                ),
+              );
+            } else {
+              age(context);
+            }
+          },
         ),
       ],
     );

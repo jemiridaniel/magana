@@ -48,7 +48,7 @@ class AboutScreen extends StatelessWidget {
     );
     return PageScaffold(
       body: [
-        ScreenHeader(title: l.aboutTitle, subtitle: version),
+        ScreenHeader(title: l.aboutTitle, subtitle: version, introduce: true),
         NoteBox(text: l.aboutContact(supportEmail)),
         SecondaryButton(
           label: l.emailSupport(supportEmail),

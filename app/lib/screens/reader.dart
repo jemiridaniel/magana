@@ -12,6 +12,7 @@ import '../l10n/app_localizations.dart';
 import '../library.dart';
 import '../papers.dart';
 import '../policy.dart';
+import '../layout.dart';
 import '../widgets.dart';
 import '../questions.dart';
 import '../voice_input.dart';
@@ -699,6 +700,155 @@ class _ReaderScreenState extends State<ReaderScreen> {
   String _speedValue() =>
       '${_speeds[_speed].toString().replaceFirst(RegExp(r'\.0$'), '')}×';
 
+  // ---------- Board T2: the page itself, for low-vision readers on a tablet
+
+  /// Text size and colours of the page view; kept from page to page.
+  static double _zoom = 26;
+  static bool _contrast = false;
+  static const _zoomMin = 18.0, _zoomMax = 48.0;
+  final _lineKeys = <int, GlobalKey>{};
+  int? _shownIndex;
+
+  /// An item as the page view shows it: unclear numbers never as digits.
+  String _plain(ReadItem item) {
+    final unclear = '[${_l.unclearNumber}]';
+    if (item.isRow) {
+      return [
+        for (final c in item.cells)
+          [
+            if (c.header.isNotEmpty) '${c.header}:',
+            c.unclear ? unclear : c.value,
+          ].join(' '),
+      ].join(' · ');
+    }
+    if (item.isFaint) return '…';
+    return [
+      for (final (i, w) in item.words.indexed)
+        item.unclearWords.contains(i) ? unclear : w,
+    ].join(' ');
+  }
+
+  /// Every line of the page, the one being read highlighted and kept in view. Visual only:
+  /// a screen reader hears the same text from the reading panel, so it isn't read twice.
+  Widget _pageView() {
+    final ground = _contrast ? Colors.black : Colors.white;
+    final ink = _contrast ? Colors.white : MaganaColors.ink;
+    if (_shownIndex != _index) {
+      _shownIndex = _index;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final c = _lineKeys[_index]?.currentContext;
+        if (c != null && c.mounted) {
+          Scrollable.ensureVisible(
+            c,
+            alignment: 0.3,
+            duration: const Duration(milliseconds: 200),
+          );
+        }
+      });
+    }
+    return Semantics(
+      container: true,
+      label: _l.pageViewLabel,
+      child: ExcludeSemantics(
+        child: Container(
+          decoration: BoxDecoration(
+            color: ground,
+            borderRadius: BorderRadius.circular(22),
+            border: Border.all(color: MaganaColors.ink, width: 2),
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (final (i, item) in _items.indexed)
+                  GestureDetector(
+                    onTap: () => _go(i),
+                    child: Container(
+                      key: _lineKeys.putIfAbsent(i, GlobalKey.new),
+                      margin: const EdgeInsets.symmetric(vertical: 3),
+                      padding: const EdgeInsets.symmetric(horizontal: 6),
+                      decoration: i == _index
+                          ? BoxDecoration(
+                              color: _contrast
+                                  ? MaganaColors.amber
+                                  : const Color(0xFFFFE7A3),
+                              borderRadius: BorderRadius.circular(4),
+                              border: Border.all(
+                                color: _contrast
+                                    ? Colors.white
+                                    : const Color(0xFF8A4B00),
+                                width: 4,
+                              ),
+                            )
+                          : null,
+                      child: Text(
+                        _plain(item),
+                        style: TextStyle(
+                          fontSize: _zoom,
+                          height: 1.5,
+                          color: i == _index && _contrast ? Colors.black : ink,
+                          fontWeight: item.heading
+                              ? FontWeight.w700
+                              : FontWeight.w400,
+                        ),
+                      ),
+                    ),
+                  ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  /// Zoom and high contrast for the page view (board T2).
+  Widget _viewControls() {
+    final l = _l;
+    void zoom(double by) =>
+        setState(() => _zoom = (_zoom + by).clamp(_zoomMin, _zoomMax));
+    return Row(
+      children: [
+        Expanded(
+          child: _ControlButton(
+            label: l.zoomOut,
+            semantics: l.zoomOut,
+            onPressed: () => zoom(-4),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: _ControlButton(
+            label: l.zoomIn,
+            semantics: l.zoomIn,
+            onPressed: () => zoom(4),
+          ),
+        ),
+        const SizedBox(width: 10),
+        Expanded(
+          child: Labelled(
+            label: l.highContrast,
+            toggled: _contrast,
+            onTap: () => setState(() => _contrast = !_contrast),
+            child: OutlinedButton(
+              onPressed: () => setState(() => _contrast = !_contrast),
+              style:
+                  outlinedTile(bg: _contrast ? MaganaColors.ink : Colors.white)
+                      .copyWith(
+                        foregroundColor: WidgetStatePropertyAll(
+                          _contrast ? Colors.white : MaganaColors.ink,
+                        ),
+                      ),
+              child: Text(l.highContrast, textAlign: TextAlign.center),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final l = _l;
@@ -706,439 +856,447 @@ class _ReaderScreenState extends State<ReaderScreen> {
     final row = item.isRow;
     final warning = _warning(item);
     final unsure = widget.result.unsureCount;
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+    final titleRow = Row(
+      children: [
+        Labelled(
+          label: l.backToHome,
+          counted: false,
+          radius: 32,
+          onTap: () => Navigator.of(context).maybePop(),
+          child: OutlinedButton(
+            onPressed: () => Navigator.of(context).maybePop(),
+            style: outlinedTile(
+              radius: 32,
+            ).copyWith(padding: const WidgetStatePropertyAll(EdgeInsets.zero)),
+            child: const Icon(Icons.chevron_left, size: 32),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Semantics(
+            header: true,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  widget.paper?.title(l) ?? l.yourPage,
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                Text(
+                  [
+                    if (widget.paper != null) l.readExactly,
+                    if (widget.result.pageLanguage != null)
+                      l.languagePage(_languageName),
+                    if (_columns > 1) l.columnsSubtitle(_columns),
+                    _counts(),
+                    if (unsure > 0) l.unclearCount(unsure),
+                  ].join(' · '),
+                  style: const TextStyle(
+                    fontSize: 16,
+                    color: MaganaColors.muted,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Labelled(
+          label: l.jumpWithinPage,
+          onTap: _jump,
+          child: OutlinedButton(
+            onPressed: _jump,
+            style: outlinedTile(
+              radius: 32,
+            ).copyWith(padding: const WidgetStatePropertyAll(EdgeInsets.zero)),
+            child: const Icon(Icons.list, size: 30),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Labelled(
+          label: _listening ? l.listeningCommand : l.speakCommand,
+          onTap: _command,
+          child: OutlinedButton(
+            onPressed: _command,
+            style: outlinedTile(
+              radius: 32,
+              bg: MaganaColors.amber,
+            ).copyWith(padding: const WidgetStatePropertyAll(EdgeInsets.zero)),
+            child: Icon(_listening ? Icons.stop : Icons.mic_none, size: 30),
+          ),
+        ),
+      ],
+    );
+    final extras = <Widget>[
+      if (!widget.result.offline) ...[
+        const SizedBox(height: 12),
+        Semantics(
+          container: true,
+          label: l.jumpWithinPage,
+          child: Row(
             children: [
-              Row(
-                children: [
-                  Semantics(
-                    button: true,
-                    label: l.backToHome,
-                    excludeSemantics: true,
-                    onTap: () => Navigator.of(context).maybePop(),
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.of(context).maybePop(),
-                      style: outlinedTile(radius: 32).copyWith(
-                        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-                      ),
-                      child: const Icon(Icons.chevron_left, size: 32),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Semantics(
-                      header: true,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            widget.paper?.title(l) ?? l.yourPage,
-                            style: const TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                          Text(
-                            [
-                              if (widget.paper != null) l.readExactly,
-                              if (widget.result.pageLanguage != null)
-                                l.languagePage(_languageName),
-                              if (_columns > 1) l.columnsSubtitle(_columns),
-                              _counts(),
-                              if (unsure > 0) l.unclearCount(unsure),
-                            ].join(' · '),
-                            style: const TextStyle(
-                              fontSize: 16,
-                              color: MaganaColors.muted,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Semantics(
-                    button: true,
-                    label: l.jumpWithinPage,
-                    excludeSemantics: true,
-                    onTap: _jump,
-                    child: OutlinedButton(
-                      onPressed: _jump,
-                      style: outlinedTile(radius: 32).copyWith(
-                        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-                      ),
-                      child: const Icon(Icons.list, size: 30),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  Semantics(
-                    button: true,
-                    label: _listening ? l.listeningCommand : l.speakCommand,
-                    excludeSemantics: true,
-                    onTap: _command,
-                    child: OutlinedButton(
-                      onPressed: _command,
-                      style: outlinedTile(radius: 32, bg: MaganaColors.amber)
-                          .copyWith(
-                            padding: const WidgetStatePropertyAll(
-                              EdgeInsets.zero,
-                            ),
-                          ),
-                      child: Icon(
-                        _listening ? Icons.stop : Icons.mic_none,
-                        size: 30,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              if (!widget.result.offline) ...[
-                const SizedBox(height: 12),
-                Semantics(
-                  container: true,
-                  label: l.jumpWithinPage,
-                  child: Row(
-                    children: [
-                      for (final (label, kind) in [
-                        (l.jumpHeadings, _JumpKind.headings),
-                        (l.jumpColumns, _JumpKind.columns),
-                        (l.jumpTables, _JumpKind.tables),
-                      ]) ...[
-                        if (kind != _JumpKind.headings)
-                          const SizedBox(width: 8),
-                        Expanded(
-                          child: _ControlButton(
-                            label: label,
-                            semantics: label,
-                            onPressed: () => _jump(only: kind),
-                          ),
-                        ),
-                      ],
-                    ],
+              for (final (label, kind) in [
+                (l.jumpHeadings, _JumpKind.headings),
+                (l.jumpColumns, _JumpKind.columns),
+                (l.jumpTables, _JumpKind.tables),
+              ]) ...[
+                if (kind != _JumpKind.headings) const SizedBox(width: 8),
+                Expanded(
+                  child: _ControlButton(
+                    label: label,
+                    semantics: label,
+                    onPressed: () => _jump(only: kind),
                   ),
                 ),
               ],
-              if (_columns > 1) ...[
-                const SizedBox(height: 12),
-                _PageMap(columns: _columns, current: item.column),
-              ],
-              const SizedBox(height: 16),
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      if (widget.result.offline) ...[
-                        Semantics(
-                          container: true,
-                          liveRegion: true,
-                          child: NoteBox(
-                            text: _offlineBanner!,
-                            kind: NoteKind.emergency,
-                            icon: Icons.wifi_off,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        NoteBox(
-                          bold: l.offlineNote,
-                          text: widget.queued ? l.offlineQueued : '',
-                        ),
-                        if (widget.queued) ...[
-                          const SizedBox(height: 12),
-                          Semantics(
-                            toggled: _fullReading,
-                            label: l.fullReadingWhenOnline,
-                            excludeSemantics: true,
-                            onTap: _toggleFullReading,
-                            child: SwitchListTile(
-                              value: _fullReading,
-                              onChanged: (_) => _toggleFullReading(),
-                              title: Text(
-                                l.fullReadingWhenOnline,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                              minTileHeight: 64,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(18),
-                                side: const BorderSide(
-                                  color: MaganaColors.ink,
-                                  width: 2,
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
-                        const SizedBox(height: 16),
-                      ],
-                      if (_columns > 1) ...[
-                        NoteBox(text: l.columnsNote(_columns)),
-                        const SizedBox(height: 16),
-                      ],
-                      // A money photo whose amounts aren't all reliable: only the parts that
-                      // passed every check are here (backend safety.money_photo_check).
-                      if (widget.result.tips.contains(
-                        'money_amounts_unreliable',
-                      )) ...[
-                        NoteBox(
-                          text:
-                              '${messageFor(l, 'money_amounts_unreliable')} ${messageFor(l, 'reading_incomplete')}',
-                          kind: NoteKind.warning,
-                        ),
-                        const SizedBox(height: 16),
-                      ],
-                      _ItemCard(
-                        item: item,
-                        position: _position(item),
-                        status: _playing ? l.nowReading : null,
-                      ),
-                      if (widget.result.pageLanguage case final lang?) ...[
-                        const SizedBox(height: 16),
-                        NoteBox(
-                          text: [
-                            messageFor(l, 'letters_$lang'),
-                            if (widget.result.letterMarkCount > 0)
-                              l.letterCount(widget.result.letterMarkCount),
-                          ].join(' '),
-                          kind: NoteKind.warning,
-                        ),
-                        const SizedBox(height: 12),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: _ControlButton(
-                                label: l.spellWord,
-                                semantics: l.spellWord,
-                                onPressed: _spell,
-                              ),
-                            ),
-                            const SizedBox(width: 10),
-                            Expanded(
-                              child: _ControlButton(
-                                label: l.askSomeone,
-                                semantics: l.askSomeone,
-                                onPressed: _askSomeone,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                      if (warning != null) ...[
-                        const SizedBox(height: 16),
-                        _WarningNote(text: warning),
-                      ],
-                      if (_warnings.any) ...[
-                        const SizedBox(height: 16),
-                        SecondaryButton(
-                          label: l.whatsUnclear,
-                          onTap: _whatsUnclear,
-                        ),
-                      ],
-                      if (_canSave) ...[
-                        const SizedBox(height: 16),
-                        if (widget.savedId != null)
-                          SecondaryButton(
-                            label: l.deleteFromLibrary,
-                            onTap: _delete,
-                          )
-                        else if (_saved)
-                          Semantics(
-                            liveRegion: true,
-                            child: NoteBox(
-                              text: l.savedToLibrary,
-                              kind: NoteKind.privacy,
-                            ),
-                          )
-                        else
-                          SecondaryButton(label: l.saveToLibrary, onTap: _save),
-                      ],
-                      if (widget.paper case final paper?) ...[
-                        const SizedBox(height: 16),
-                        NoteBox(text: paper.note(l)),
-                        const SizedBox(height: 12),
-                        SecondaryButton(
-                          label: l.readAgain,
-                          onTap: () => _play(0),
-                        ),
-                        if (paper == Paper.statement) ...[
-                          if (_balances.isNotEmpty) ...[
-                            const SizedBox(height: 12),
-                            NoteBox(
-                              bold: '${l.fromTheStatement}:',
-                              text: _balances.join('. '),
-                            ),
-                          ],
-                          const SizedBox(height: 12),
-                          SecondaryButton(
-                            label: l.findTransaction,
-                            onTap: _find,
-                          ),
-                        ],
-                        if (paper == Paper.report) ...[
-                          const SizedBox(height: 12),
-                          SecondaryButton(
-                            label: l.askAboutResult,
-                            onTap: _askAboutResult,
-                          ),
-                          if (_askedAboutResult) ...[
-                            const SizedBox(height: 12),
-                            Semantics(
-                              liveRegion: true,
-                              child: NoteBox(
-                                bold: _resultQuestion == null
-                                    ? null
-                                    : l.youAsked(_resultQuestion!),
-                                text: l.resultAnswer,
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            if (_questionSaved)
-                              NoteBox(
-                                text: l.questionSaved,
-                                kind: NoteKind.success,
-                              )
-                            else
-                              SecondaryButton(
-                                label: l.saveQuestion,
-                                onTap: _saveQuestion,
-                              ),
-                            const SizedBox(height: 12),
-                            SecondaryButton(
-                              label: l.askANurse,
-                              onTap: () =>
-                                  openHealthWorker(context, reason: 'results'),
-                            ),
-                          ],
-                        ],
-                        if (paper.isHealth) ...[
-                          const SizedBox(height: 12),
-                          if (paper == Paper.medicine &&
-                              AppScope.of(context).profile
-                                  .can(Feature.reminders)) ...[
-                            SecondaryButton(
-                              label: l.remindersCard,
-                              onTap: () => openReminders(context),
-                            ),
-                            const SizedBox(height: 12),
-                          ],
-                          SecondaryButton(
-                            label: l.askPharmacistOrNurse,
-                            onTap: () => openHealthWorker(
-                              context,
-                              reason: paper == Paper.report
-                                  ? 'results'
-                                  : 'medicine',
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          const EmergencyBanner(),
-                        ],
-                      ],
-                    ],
-                  ),
-                ),
+            ],
+          ),
+        ),
+      ],
+      if (_columns > 1) ...[
+        const SizedBox(height: 12),
+        _PageMap(columns: _columns, current: item.column),
+      ],
+    ];
+    final details = SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          if (widget.result.offline) ...[
+            Semantics(
+              container: true,
+              liveRegion: true,
+              child: NoteBox(
+                text: _offlineBanner!,
+                kind: NoteKind.emergency,
+                icon: Icons.wifi_off,
               ),
-              const SizedBox(height: 16),
-              Row(
-                children: [
-                  Expanded(
-                    child: _ControlButton(
-                      label: l.previous,
-                      semantics: row ? l.previousRow : l.previousLine,
-                      onPressed: _prev,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _ControlButton(
-                      label: l.repeat,
-                      semantics: row ? l.repeatRow : l.repeatLine,
-                      onPressed: _repeat,
-                    ),
-                  ),
-                  const SizedBox(width: 10),
-                  Expanded(
-                    child: _ControlButton(
-                      label: l.next,
-                      semantics: row ? l.nextRow : l.nextLine,
-                      onPressed: _next,
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              _ControlButton(
-                label: l.speed(_speedValue()),
-                semantics: l.speedLabel(_speedValue()),
-                onPressed: _cycleSpeed,
-              ),
-              if (_columns > 1) ...[
-                const SizedBox(height: 10),
-                Row(
-                  children: [
-                    Expanded(
-                      child: _ControlButton(
-                        label: l.nextColumn,
-                        semantics: l.nextColumn,
-                        onPressed: _nextColumn,
-                      ),
-                    ),
-                    if (_canExplain) ...[
-                      const SizedBox(width: 10),
-                      Expanded(
-                        child: _ControlButton(
-                          label: l.explainThis,
-                          semantics: l.explainThis,
-                          onPressed: _explain,
-                        ),
-                      ),
-                    ],
-                  ],
-                ),
-              ] else if (_canExplain) ...[
-                const SizedBox(height: 10),
-                SecondaryButton(label: l.explainThis, onTap: _explain),
-              ],
-              const SizedBox(height: 10),
+            ),
+            const SizedBox(height: 12),
+            NoteBox(
+              bold: l.offlineNote,
+              text: widget.queued ? l.offlineQueued : '',
+            ),
+            if (widget.queued) ...[
+              const SizedBox(height: 12),
               Semantics(
-                button: true,
-                label: _playing ? l.pauseLabel : l.playLabel,
+                toggled: _fullReading,
+                label: l.fullReadingWhenOnline,
                 excludeSemantics: true,
-                onTap: _togglePause,
-                child: OutlinedButton.icon(
-                  onPressed: _togglePause,
-                  icon: Icon(
-                    _playing ? Icons.pause : Icons.play_arrow,
-                    size: 30,
+                onTap: _toggleFullReading,
+                child: SwitchListTile(
+                  value: _fullReading,
+                  onChanged: (_) => _toggleFullReading(),
+                  title: Text(
+                    l.fullReadingWhenOnline,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                  label: Text(_playing ? l.pause : l.play),
-                  style: outlinedTile(radius: 36, bg: MaganaColors.amber)
-                      .copyWith(
-                        minimumSize: const WidgetStatePropertyAll(
-                          Size.fromHeight(72),
-                        ),
-                        side: const WidgetStatePropertyAll(
-                          BorderSide(color: MaganaColors.ink, width: 3),
-                        ),
-                        textStyle: const WidgetStatePropertyAll(
-                          TextStyle(
-                            fontFamily: fontFamily,
-                            fontFamilyFallback: fontFallback,
-                            fontSize: 21,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
+                  minTileHeight: 64,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
+                    side: const BorderSide(color: MaganaColors.ink, width: 2),
+                  ),
                 ),
               ),
             ],
+            const SizedBox(height: 16),
+          ],
+          if (_columns > 1) ...[
+            NoteBox(text: l.columnsNote(_columns)),
+            const SizedBox(height: 16),
+          ],
+          // A money photo whose amounts aren't all reliable: only the parts that
+          // passed every check are here (backend safety.money_photo_check).
+          if (widget.result.tips.contains('money_amounts_unreliable')) ...[
+            NoteBox(
+              text:
+                  '${messageFor(l, 'money_amounts_unreliable')} ${messageFor(l, 'reading_incomplete')}',
+              kind: NoteKind.warning,
+            ),
+            const SizedBox(height: 16),
+          ],
+          _ItemCard(
+            item: item,
+            position: _position(item),
+            status: _playing ? l.nowReading : null,
           ),
+          if (widget.result.pageLanguage case final lang?) ...[
+            const SizedBox(height: 16),
+            NoteBox(
+              text: [
+                messageFor(l, 'letters_$lang'),
+                if (widget.result.letterMarkCount > 0)
+                  l.letterCount(widget.result.letterMarkCount),
+              ].join(' '),
+              kind: NoteKind.warning,
+            ),
+            const SizedBox(height: 12),
+            Row(
+              children: [
+                Expanded(
+                  child: _ControlButton(
+                    label: l.spellWord,
+                    semantics: l.spellWord,
+                    onPressed: _spell,
+                  ),
+                ),
+                const SizedBox(width: 10),
+                Expanded(
+                  child: _ControlButton(
+                    label: l.askSomeone,
+                    semantics: l.askSomeone,
+                    onPressed: _askSomeone,
+                  ),
+                ),
+              ],
+            ),
+          ],
+          if (warning != null) ...[
+            const SizedBox(height: 16),
+            _WarningNote(text: warning),
+          ],
+          if (_warnings.any) ...[
+            const SizedBox(height: 16),
+            SecondaryButton(label: l.whatsUnclear, onTap: _whatsUnclear),
+          ],
+          if (_canSave) ...[
+            const SizedBox(height: 16),
+            if (widget.savedId != null)
+              SecondaryButton(label: l.deleteFromLibrary, onTap: _delete)
+            else if (_saved)
+              Semantics(
+                liveRegion: true,
+                child: NoteBox(text: l.savedToLibrary, kind: NoteKind.privacy),
+              )
+            else
+              SecondaryButton(label: l.saveToLibrary, onTap: _save),
+          ],
+          if (widget.paper case final paper?) ...[
+            const SizedBox(height: 16),
+            NoteBox(text: paper.note(l)),
+            const SizedBox(height: 12),
+            SecondaryButton(label: l.readAgain, onTap: () => _play(0)),
+            if (paper == Paper.statement) ...[
+              if (_balances.isNotEmpty) ...[
+                const SizedBox(height: 12),
+                NoteBox(
+                  bold: '${l.fromTheStatement}:',
+                  text: _balances.join('. '),
+                ),
+              ],
+              const SizedBox(height: 12),
+              SecondaryButton(label: l.findTransaction, onTap: _find),
+            ],
+            if (paper == Paper.report) ...[
+              const SizedBox(height: 12),
+              SecondaryButton(label: l.askAboutResult, onTap: _askAboutResult),
+              if (_askedAboutResult) ...[
+                const SizedBox(height: 12),
+                Semantics(
+                  liveRegion: true,
+                  child: NoteBox(
+                    bold: _resultQuestion == null
+                        ? null
+                        : l.youAsked(_resultQuestion!),
+                    text: l.resultAnswer,
+                  ),
+                ),
+                const SizedBox(height: 12),
+                if (_questionSaved)
+                  NoteBox(text: l.questionSaved, kind: NoteKind.success)
+                else
+                  SecondaryButton(label: l.saveQuestion, onTap: _saveQuestion),
+                const SizedBox(height: 12),
+                SecondaryButton(
+                  label: l.askANurse,
+                  onTap: () => openHealthWorker(context, reason: 'results'),
+                ),
+              ],
+            ],
+            if (paper.isHealth) ...[
+              const SizedBox(height: 12),
+              if (paper == Paper.medicine &&
+                  AppScope.of(context).profile.can(Feature.reminders)) ...[
+                SecondaryButton(
+                  label: l.remindersCard,
+                  onTap: () => openReminders(context),
+                ),
+                const SizedBox(height: 12),
+              ],
+              SecondaryButton(
+                label: l.askPharmacistOrNurse,
+                onTap: () => openHealthWorker(
+                  context,
+                  reason: paper == Paper.report ? 'results' : 'medicine',
+                ),
+              ),
+              const SizedBox(height: 12),
+              const EmergencyBanner(),
+            ],
+          ],
+        ],
+      ),
+    );
+    final controls = <Widget>[
+      const SizedBox(height: 16),
+      Row(
+        children: [
+          Expanded(
+            child: _ControlButton(
+              label: l.previous,
+              semantics: row ? l.previousRow : l.previousLine,
+              onPressed: _prev,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: _ControlButton(
+              label: l.repeat,
+              semantics: row ? l.repeatRow : l.repeatLine,
+              onPressed: _repeat,
+            ),
+          ),
+          const SizedBox(width: 10),
+          Expanded(
+            child: _ControlButton(
+              label: l.next,
+              semantics: row ? l.nextRow : l.nextLine,
+              onPressed: _next,
+            ),
+          ),
+        ],
+      ),
+      const SizedBox(height: 10),
+      _ControlButton(
+        label: l.speed(_speedValue()),
+        semantics: l.speedLabel(_speedValue()),
+        onPressed: _cycleSpeed,
+      ),
+      if (_columns > 1) ...[
+        const SizedBox(height: 10),
+        Row(
+          children: [
+            Expanded(
+              child: _ControlButton(
+                label: l.nextColumn,
+                semantics: l.nextColumn,
+                onPressed: _nextColumn,
+              ),
+            ),
+            if (_canExplain) ...[
+              const SizedBox(width: 10),
+              Expanded(
+                child: _ControlButton(
+                  label: l.explainThis,
+                  semantics: l.explainThis,
+                  onPressed: _explain,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ] else if (_canExplain) ...[
+        const SizedBox(height: 10),
+        SecondaryButton(label: l.explainThis, onTap: _explain),
+      ],
+      const SizedBox(height: 10),
+      Labelled(
+        label: _playing ? l.pauseLabel : l.playLabel,
+        onTap: _togglePause,
+        child: OutlinedButton.icon(
+          onPressed: _togglePause,
+          icon: Icon(_playing ? Icons.pause : Icons.play_arrow, size: 30),
+          label: Text(_playing ? l.pause : l.play),
+          style: outlinedTile(radius: 36, bg: MaganaColors.amber).copyWith(
+            minimumSize: const WidgetStatePropertyAll(Size.fromHeight(72)),
+            side: const WidgetStatePropertyAll(
+              BorderSide(color: MaganaColors.ink, width: 3),
+            ),
+            textStyle: const WidgetStatePropertyAll(
+              TextStyle(
+                fontFamily: fontFamily,
+                fontFamilyFallback: fontFallback,
+                fontSize: 21,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+          ),
+        ),
+      ),
+    ];
+    final tablet = isTablet(context);
+    return Scaffold(
+      body: SafeArea(
+        child: Padding(
+          padding: tablet
+              ? const EdgeInsets.fromLTRB(36, 24, 36, 24)
+              : const EdgeInsets.fromLTRB(20, 16, 20, 20),
+          child: !tablet
+              ? Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    titleRow,
+                    ...extras,
+                    const SizedBox(height: 16),
+                    Expanded(child: details),
+                    ...controls,
+                  ],
+                )
+              : isTabletLandscape(context)
+              // Board T2: the page on the left, current line highlighted (zoom, high
+              // contrast) for low-vision readers; the reading panel on the right.
+              ? Row(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Expanded(
+                      flex: 11,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          titleRow,
+                          const SizedBox(height: 12),
+                          Expanded(child: _pageView()),
+                          const SizedBox(height: 12),
+                          _viewControls(),
+                        ],
+                      ),
+                    ),
+                    const SizedBox(width: 20),
+                    Expanded(
+                      flex: 9,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          ...extras,
+                          const SizedBox(height: 12),
+                          Expanded(child: details),
+                          ...controls,
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              // Portrait tablet: the same, stacked.
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    titleRow,
+                    ...extras,
+                    const SizedBox(height: 12),
+                    Expanded(flex: 5, child: _pageView()),
+                    const SizedBox(height: 10),
+                    _viewControls(),
+                    const SizedBox(height: 16),
+                    Expanded(flex: 4, child: details),
+                    ...controls,
+                  ],
+                ),
         ),
       ),
     );
@@ -1296,15 +1454,28 @@ class _ControlButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
+    // Board T2: 72 px targets and 20 px text on a tablet.
+    final tablet = isTablet(context);
+    return Labelled(
       label: semantics,
-      excludeSemantics: true,
       onTap: onPressed,
+      radius: 18,
       child: OutlinedButton(
         onPressed: onPressed,
-        style: outlinedTile(),
-        child: Text(label),
+        style: tablet
+            ? outlinedTile().copyWith(
+                minimumSize: const WidgetStatePropertyAll(Size(72, 72)),
+                textStyle: const WidgetStatePropertyAll(
+                  TextStyle(
+                    fontFamily: fontFamily,
+                    fontFamilyFallback: fontFallback,
+                    fontSize: 20,
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+              )
+            : outlinedTile(),
+        child: Text(label, textAlign: TextAlign.center),
       ),
     );
   }

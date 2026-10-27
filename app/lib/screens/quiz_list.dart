@@ -123,6 +123,7 @@ class _QuizListScreenState extends State<QuizListScreen> {
     final level = profile.level;
     final bands = level == null ? Band.values : [level.band];
     return PageScaffold(
+      sayName: true,
       body: [
         ScreenHeader(
           title: l.practiceQuiz,

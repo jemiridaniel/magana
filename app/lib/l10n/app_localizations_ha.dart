@@ -2402,4 +2402,106 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get msg_barcode_skipped =>
       'Na tsallake lambar barcode a wannan shafi.';
+
+  @override
+  String get touchTapAgain => 'Ka sake taɓawa don buɗewa.';
+
+  @override
+  String touchOf(int n, int total) {
+    return '$n cikin $total';
+  }
+
+  @override
+  String touchChoices(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'zaɓuɓɓuka $count',
+      one: 'zaɓi 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get touchExplore => 'Ka taɓa don ji, ko ka faɗi suna.';
+
+  @override
+  String get touchToHear => 'Taɓa don ji';
+
+  @override
+  String get touchToHearDetail =>
+      'Ka taɓa abu don jin menene; ka sake taɓa shi don buɗewa. Ba a amfani da shi idan VoiceOver ko TalkBack yana kunne.';
+
+  @override
+  String get touchToHearOn => 'Taɓa don ji: a kunne';
+
+  @override
+  String get touchToHearOff => 'Taɓa don ji: a kashe';
+
+  @override
+  String get touchIntroTitle => 'Amfani da Magana ta taɓawa';
+
+  @override
+  String get touchIntroBody =>
+      'Mai karanta allo na wayarka a kashe yake, don haka Magana za ta yi maka jagora da murya.';
+
+  @override
+  String get touchStep1Body =>
+      'Ka zura yatsanka. Magana za ta faɗi abin da ke ƙarƙashinsa.';
+
+  @override
+  String get touchStep2Title => 'Sake taɓawa don buɗewa';
+
+  @override
+  String get touchStep2Body => 'Taɓawa ta biyu a kan abu ɗaya tana buɗe shi.';
+
+  @override
+  String get touchStep3Title => 'Ko kawai ka faɗa';
+
+  @override
+  String get touchStep3Body =>
+      'Danna maɓalli mai rawaya ka faɗi suna, kamar “medicine label”.';
+
+  @override
+  String get touchPractice => 'Gwada a nan';
+
+  @override
+  String get touchPracticeBody =>
+      'Ka taɓa wannan akwati. Sannan ka sake taɓa shi.';
+
+  @override
+  String get touchPracticeDone => 'Madalla. Haka ake buɗe abubuwa.';
+
+  @override
+  String get touchGotIt => 'Na gane, mu fara';
+
+  @override
+  String get touchUseScreenReader => 'Ina amfani da VoiceOver / TalkBack';
+
+  @override
+  String get sayName => 'Faɗi suna';
+
+  @override
+  String nameNotFound(String heard) {
+    return 'Na ji “$heard”, amma babu abin da ke da wannan suna a wannan shafi.';
+  }
+
+  @override
+  String get framingGuidanceTablet =>
+      'Shimfiɗa shafin a wuri mai haske, ka riƙe tablet ɗin a samansa. Zan gaya maka yadda za ka matsa, kuma zan ɗauki hoton idan shafin duka ya tsaya. Kana iya taɓa Ɗauki hoto kuma.';
+
+  @override
+  String get readPageTablet => 'Shimfiɗa shafin. Riƙe tablet a samansa.';
+
+  @override
+  String get zoomIn => 'Ƙara girman rubutu';
+
+  @override
+  String get zoomOut => 'Rage girman rubutu';
+
+  @override
+  String get highContrast => 'Bambanci mai ƙarfi';
+
+  @override
+  String get pageViewLabel => 'Takardarka, an haskaka layin da ake karantawa';
 }

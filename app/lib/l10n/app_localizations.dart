@@ -3875,6 +3875,174 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I skipped a barcode on this page.'**
   String get msg_barcode_skipped;
+
+  /// No description provided for @touchTapAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap again to open.'**
+  String get touchTapAgain;
+
+  /// No description provided for @touchOf.
+  ///
+  /// In en, this message translates to:
+  /// **'{n} of {total}'**
+  String touchOf(int n, int total);
+
+  /// No description provided for @touchChoices.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 choice} other{{count} choices}}'**
+  String touchChoices(int count);
+
+  /// No description provided for @touchExplore.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch to explore, or say a name.'**
+  String get touchExplore;
+
+  /// No description provided for @touchToHear.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch to hear'**
+  String get touchToHear;
+
+  /// No description provided for @touchToHearDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch something to hear what it is; tap it again to open it. Not used while VoiceOver or TalkBack is on.'**
+  String get touchToHearDetail;
+
+  /// No description provided for @touchToHearOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch to hear: on'**
+  String get touchToHearOn;
+
+  /// No description provided for @touchToHearOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch to hear: off'**
+  String get touchToHearOff;
+
+  /// No description provided for @touchIntroTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Using Magana by touch'**
+  String get touchIntroTitle;
+
+  /// No description provided for @touchIntroBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your phone\'s screen reader is off, so Magana will talk you through it.'**
+  String get touchIntroBody;
+
+  /// No description provided for @touchStep1Body.
+  ///
+  /// In en, this message translates to:
+  /// **'Slide your finger. Magana says what\'s under it.'**
+  String get touchStep1Body;
+
+  /// No description provided for @touchStep2Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap again to open'**
+  String get touchStep2Title;
+
+  /// No description provided for @touchStep2Body.
+  ///
+  /// In en, this message translates to:
+  /// **'A second tap on the same thing opens it.'**
+  String get touchStep2Body;
+
+  /// No description provided for @touchStep3Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Or just say it'**
+  String get touchStep3Title;
+
+  /// No description provided for @touchStep3Body.
+  ///
+  /// In en, this message translates to:
+  /// **'Press the yellow button and say a name, like “medicine label”.'**
+  String get touchStep3Body;
+
+  /// No description provided for @touchPractice.
+  ///
+  /// In en, this message translates to:
+  /// **'Practice here'**
+  String get touchPractice;
+
+  /// No description provided for @touchPracticeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Touch this box. Then tap it again.'**
+  String get touchPracticeBody;
+
+  /// No description provided for @touchPracticeDone.
+  ///
+  /// In en, this message translates to:
+  /// **'Well done. That is how you open things.'**
+  String get touchPracticeDone;
+
+  /// No description provided for @touchGotIt.
+  ///
+  /// In en, this message translates to:
+  /// **'Got it, start'**
+  String get touchGotIt;
+
+  /// No description provided for @touchUseScreenReader.
+  ///
+  /// In en, this message translates to:
+  /// **'I use VoiceOver / TalkBack'**
+  String get touchUseScreenReader;
+
+  /// No description provided for @sayName.
+  ///
+  /// In en, this message translates to:
+  /// **'Say a name'**
+  String get sayName;
+
+  /// No description provided for @nameNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'I heard “{heard}”, but nothing on this screen has that name.'**
+  String nameNotFound(String heard);
+
+  /// No description provided for @framingGuidanceTablet.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay the page flat in good light and hold the tablet above it. I\'ll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.'**
+  String get framingGuidanceTablet;
+
+  /// No description provided for @readPageTablet.
+  ///
+  /// In en, this message translates to:
+  /// **'Lay the page flat. Hold the tablet above it.'**
+  String get readPageTablet;
+
+  /// No description provided for @zoomIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Bigger text'**
+  String get zoomIn;
+
+  /// No description provided for @zoomOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Smaller text'**
+  String get zoomOut;
+
+  /// No description provided for @highContrast.
+  ///
+  /// In en, this message translates to:
+  /// **'High contrast'**
+  String get highContrast;
+
+  /// No description provided for @pageViewLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your page, current line highlighted'**
+  String get pageViewLabel;
 }
 
 class _AppLocalizationsDelegate

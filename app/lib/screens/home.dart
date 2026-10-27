@@ -9,6 +9,7 @@ import '../speech.dart';
 import '../theme.dart';
 import '../widgets.dart';
 import '../commands.dart';
+import '../layout.dart';
 import '../voice_input.dart';
 import 'capture.dart';
 import 'explain.dart';
@@ -17,41 +18,113 @@ import 'reminders.dart';
 import 'settings.dart';
 import 'everyday.dart';
 import 'library.dart';
+import 'pdf.dart';
 import 'quiz_list.dart';
 import 'report_problem.dart';
 import 'score.dart';
 import 'skills.dart';
+import 'touch_intro.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
+  void initState() {
+    super.initState();
+    // Set up before Touch to hear existed, screen reader off: the practice once (board 10b).
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted || !shouldIntroduceTouch(context)) return;
+      Navigator.of(context).push(
+        MaterialPageRoute(
+          builder: (_) =>
+              TouchIntroScreen(onDone: (c) => Navigator.of(c).pop()),
+        ),
+      );
+    });
+    // "Magana. 7 choices. Touch to explore, or say a name." (board 10)
+    speakOnOpen(context, () => AppLocalizations.of(context).appTitle);
+  }
 
   void _openCapture(BuildContext context) {
     Navigator.of(context)
         .push(MaterialPageRoute(builder: (_) => const CaptureScreen()));
   }
 
+  void _open(Widget screen) =>
+      Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
+
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final can = AppScope.of(context).profile.can;
+    final tablet = isTablet(context);
+    // Only what this age tier may use: a screen-reader user never
+    // reaches a dead end (CLAUDE.md rule 4).
+    final tiles = [
+      if (can(Feature.openChat))
+        _Tile(
+          Icons.help_outline,
+          l.askQuestion,
+          () => _open(const ExplainScreen(lines: [], source: '')),
+        ),
+      if (can(Feature.quiz))
+        _Tile(
+          Icons.task_alt,
+          l.practiceQuiz,
+          () => _open(const QuizListScreen()),
+        ),
+      if (can(Feature.library))
+        _Tile(
+          Icons.menu_book_outlined,
+          l.myLibrary,
+          () => _open(const LibraryScreen()),
+        ),
+      // Board T1: a PDF is one tap away on a tablet's larger home.
+      if (tablet && can(Feature.everydayLetters))
+        _Tile(
+          Icons.picture_as_pdf_outlined,
+          l.readPdf,
+          () => _open(const PdfScreen()),
+        ),
+      if (can(Feature.everydayHealth))
+        _Tile(
+          Icons.description_outlined,
+          l.everydayPapers,
+          () => _open(const EverydayScreen()),
+        ),
+    ];
+    final chips = [
+      if (can(Feature.skills))
+        _Tile(
+          Icons.school_outlined,
+          l.skills,
+          () => _open(const SkillsScreen()),
+        ),
+      if (can(Feature.score))
+        _Tile(Icons.trending_up, l.myScore, () => _open(const ScoreScreen())),
+    ];
+    final pad = tablet
+        ? const EdgeInsets.fromLTRB(40, 40, 40, 36)
+        : const EdgeInsets.fromLTRB(20, 24, 20, 20);
     return Scaffold(
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, box) => SingleChildScrollView(
-            padding: const EdgeInsets.fromLTRB(20, 24, 20, 20),
+            padding: pad,
             child: ConstrainedBox(
-              constraints: BoxConstraints(minHeight: box.maxHeight - 44),
+              constraints: BoxConstraints(
+                minHeight: (box.maxHeight - pad.vertical).clamp(0, double.infinity),
+              ),
               child: IntrinsicHeight(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _Header(
-                      onSettings: () => Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (_) => const SettingsScreen(),
-                        ),
-                      ),
-                    ),
+                    _Header(onSettings: () => _open(const SettingsScreen())),
                     const SizedBox(height: 20),
                     // Waiting for the guardian (13–17), or removed by the teacher.
                     ListenableBuilder(
@@ -71,85 +144,24 @@ class HomeScreen extends StatelessWidget {
                       },
                     ),
                     _ReadPageButton(onPressed: () => _openCapture(context)),
-                    const SizedBox(height: 14),
-                    // Only what this age tier may use: a screen-reader user never
-                    // reaches a dead end (CLAUDE.md rule 4).
-                    _TileGrid(
-                      tiles: [
-                        if (can(Feature.openChat))
-                          _Tile(
-                            Icons.help_outline,
-                            l.askQuestion,
-                            () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) =>
-                                    const ExplainScreen(lines: [], source: ''),
-                              ),
+                    SizedBox(height: tablet ? 18 : 14),
+                    if (tablet)
+                      // Board T1: one 3-column grid, skills and score included.
+                      _TileGrid(tiles: [...tiles, ...chips], columns: 3)
+                    else ...[
+                      _TileGrid(tiles: tiles),
+                      const SizedBox(height: 14),
+                      Row(
+                        children: [
+                          for (final (i, c) in chips.indexed) ...[
+                            if (i > 0) const SizedBox(width: 14),
+                            Expanded(
+                              child: _Chip(c.icon, c.label, c.onPressed),
                             ),
-                          ),
-                        if (can(Feature.quiz))
-                          _Tile(
-                            Icons.task_alt,
-                            l.practiceQuiz,
-                            () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const QuizListScreen(),
-                              ),
-                            ),
-                          ),
-                        if (can(Feature.library))
-                          _Tile(
-                            Icons.menu_book_outlined,
-                            l.myLibrary,
-                            () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const LibraryScreen(),
-                              ),
-                            ),
-                          ),
-                        if (can(Feature.everydayHealth))
-                          _Tile(
-                            Icons.description_outlined,
-                            l.everydayPapers,
-                            () => Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (_) => const EverydayScreen(),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
-                    const SizedBox(height: 14),
-                    Row(
-                      children: [
-                        if (can(Feature.skills))
-                          Expanded(
-                            child: _Chip(
-                              Icons.school_outlined,
-                              l.skills,
-                              () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => const SkillsScreen(),
-                                ),
-                              ),
-                            ),
-                          ),
-                        if (can(Feature.skills) && can(Feature.score))
-                          const SizedBox(width: 14),
-                        if (can(Feature.score))
-                          Expanded(
-                            child: _Chip(
-                              Icons.trending_up,
-                              l.myScore,
-                              () => Navigator.of(context).push(
-                                MaterialPageRoute(
-                                  builder: (_) => const ScoreScreen(),
-                                ),
-                              ),
-                            ),
-                          ),
-                      ],
-                    ),
+                          ],
+                        ],
+                      ),
+                    ],
                     const Spacer(),
                     const SizedBox(height: 20),
                     const _SpeakButton(),
@@ -172,6 +184,7 @@ class _Header extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final language = languageFor(Localizations.localeOf(context));
+    final tablet = isTablet(context);
     return Row(
       children: [
         Expanded(
@@ -184,8 +197,8 @@ class _Header extends StatelessWidget {
                   children: [
                     SvgPicture.asset(
                       'assets/brand/magana_mark.svg',
-                      width: 36,
-                      height: 36,
+                      width: tablet ? 44 : 36,
+                      height: tablet ? 44 : 36,
                       semanticsLabel: 'Magana',
                     ),
                     const SizedBox(width: 8),
@@ -194,8 +207,8 @@ class _Header extends StatelessWidget {
                       child: ExcludeSemantics(
                         child: Text(
                           l.appTitle,
-                          style: const TextStyle(
-                            fontSize: 28,
+                          style: TextStyle(
+                            fontSize: tablet ? 38 : 28,
                             fontWeight: FontWeight.w700,
                           ),
                         ),
@@ -205,8 +218,8 @@ class _Header extends StatelessWidget {
                 ),
                 Text(
                   l.greeting,
-                  style: const TextStyle(
-                    fontSize: 16,
+                  style: TextStyle(
+                    fontSize: tablet ? 20 : 16,
                     color: MaganaColors.muted,
                   ),
                 ),
@@ -214,11 +227,10 @@ class _Header extends StatelessWidget {
             ),
           ),
         ),
-        Semantics(
-          button: true,
+        Labelled(
           label: l.languageButtonLabel(language.name),
-          excludeSemantics: true,
           onTap: () => showLanguagePicker(context),
+          radius: 32,
           child: OutlinedButton(
             onPressed: () => showLanguagePicker(context),
             style: outlinedTile(radius: 32).copyWith(
@@ -237,17 +249,30 @@ class _Header extends StatelessWidget {
           ),
         ),
         const SizedBox(width: 8),
-        Semantics(
-          button: true,
+        Labelled(
           label: l.settings,
-          excludeSemantics: true,
           onTap: onSettings,
+          radius: 32,
           child: OutlinedButton(
             onPressed: onSettings,
-            style: outlinedTile(
-              radius: 32,
-            ).copyWith(padding: const WidgetStatePropertyAll(EdgeInsets.zero)),
-            child: const Icon(Icons.tune, size: 28),
+            style: outlinedTile(radius: 32).copyWith(
+              padding: WidgetStatePropertyAll(
+                tablet
+                    ? const EdgeInsets.symmetric(horizontal: 22)
+                    : EdgeInsets.zero,
+              ),
+            ),
+            // Board T1: the word itself on a tablet, there is room for it.
+            child: tablet
+                ? Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const Icon(Icons.tune, size: 28),
+                      const SizedBox(width: 8),
+                      Text(l.settings),
+                    ],
+                  )
+                : const Icon(Icons.tune, size: 28),
           ),
         ),
       ],
@@ -392,46 +417,52 @@ class _ReadPageButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     // Health and money papers are for adults only; don't promise them to under-18s.
-    final subtitle = AppScope.of(context).profile.can(Feature.everydayHealth)
+    final tablet = isTablet(context);
+    // Board T1: on a tablet, how to hold it.
+    final subtitle = tablet
+        ? l.readPageTablet
+        : AppScope.of(context).profile.can(Feature.everydayHealth)
         ? l.readPageSubtitle
         : l.readPageSubtitleSchool;
-    return Semantics(
-      button: true,
+    return Labelled(
       label: '${l.readPage}. $subtitle',
-      excludeSemantics: true,
       onTap: onPressed,
+      radius: tablet ? 28 : 22,
       child: FilledButton(
         onPressed: onPressed,
         style: FilledButton.styleFrom(
           backgroundColor: MaganaColors.green,
           foregroundColor: Colors.white,
-          minimumSize: const Size.fromHeight(140),
-          padding: const EdgeInsets.symmetric(horizontal: 22, vertical: 24),
+          minimumSize: Size.fromHeight(tablet ? 200 : 140),
+          padding: EdgeInsets.symmetric(
+            horizontal: tablet ? 32 : 22,
+            vertical: 24,
+          ),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(22),
+            borderRadius: BorderRadius.circular(tablet ? 28 : 22),
           ),
           alignment: Alignment.centerLeft,
         ),
         child: Row(
           children: [
-            const Icon(Icons.photo_camera_outlined, size: 44),
-            const SizedBox(width: 18),
+            Icon(Icons.photo_camera_outlined, size: tablet ? 64 : 44),
+            SizedBox(width: tablet ? 24 : 18),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
                     l.readPage,
-                    style: const TextStyle(
-                      fontSize: 26,
+                    style: TextStyle(
+                      fontSize: tablet ? 34 : 26,
                       fontWeight: FontWeight.w700,
                     ),
                   ),
                   const SizedBox(height: 6),
                   Text(
                     subtitle,
-                    style: const TextStyle(
-                      fontSize: 17,
+                    style: TextStyle(
+                      fontSize: tablet ? 20 : 17,
                       height: 1.35,
                       fontWeight: FontWeight.w400,
                     ),
@@ -454,35 +485,43 @@ class _Tile {
 }
 
 class _TileGrid extends StatelessWidget {
-  const _TileGrid({required this.tiles});
+  const _TileGrid({required this.tiles, this.columns = 2});
   final List<_Tile> tiles;
+
+  /// 2 on a phone; 3 on a tablet, with larger tiles (board T1).
+  final int columns;
 
   @override
   Widget build(BuildContext context) {
+    final big = columns > 2;
+    final gap = big ? 18.0 : 14.0;
     Widget tile(_Tile t) => Expanded(
-      child: Semantics(
-        button: true,
+      child: Labelled(
         label: t.label,
-        excludeSemantics: true,
         onTap: t.onPressed,
+        radius: big ? 24 : 20,
         child: OutlinedButton(
           onPressed: t.onPressed,
-          style: outlinedTile(radius: 20).copyWith(
-            minimumSize: const WidgetStatePropertyAll(Size.fromHeight(128)),
+          style: outlinedTile(radius: big ? 24 : 20).copyWith(
+            minimumSize: WidgetStatePropertyAll(
+              Size.fromHeight(big ? 170 : 128),
+            ),
             alignment: Alignment.topLeft,
-            padding: const WidgetStatePropertyAll(
-              EdgeInsets.fromLTRB(18, 20, 18, 20),
+            padding: WidgetStatePropertyAll(
+              big
+                  ? const EdgeInsets.all(24)
+                  : const EdgeInsets.fromLTRB(18, 20, 18, 20),
             ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(t.icon, size: 34),
+              Icon(t.icon, size: big ? 40 : 34),
               const SizedBox(height: 12),
               Text(
                 t.label,
-                style: const TextStyle(
-                  fontSize: 21,
+                style: TextStyle(
+                  fontSize: big ? 24 : 21,
                   fontWeight: FontWeight.w700,
                 ),
               ),
@@ -493,18 +532,16 @@ class _TileGrid extends StatelessWidget {
     );
     return Column(
       children: [
-        for (var i = 0; i < tiles.length; i += 2) ...[
-          if (i > 0) const SizedBox(height: 14),
+        for (var i = 0; i < tiles.length; i += columns) ...[
+          if (i > 0) SizedBox(height: gap),
           IntrinsicHeight(
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                tile(tiles[i]),
-                const SizedBox(width: 14),
-                if (i + 1 < tiles.length)
-                  tile(tiles[i + 1])
-                else
-                  const Spacer(),
+                for (var j = i; j < i + columns; j++) ...[
+                  if (j > i) SizedBox(width: gap),
+                  if (j < tiles.length) tile(tiles[j]) else const Spacer(),
+                ],
               ],
             ),
           ),
@@ -522,10 +559,8 @@ class _Chip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Semantics(
-      button: true,
+    return Labelled(
       label: label,
-      excludeSemantics: true,
       onTap: onPressed,
       child: FilledButton(
         onPressed: onPressed,
@@ -618,29 +653,36 @@ class _SpeakButtonState extends State<_SpeakButton> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final label = _listening ? l.listeningCommand : l.speakCommand;
-    return Semantics(
-      button: true,
+    final tablet = isTablet(context);
+    return Labelled(
       label: label,
-      excludeSemantics: true,
       onTap: _tap,
+      counted: false,
+      radius: tablet ? 44 : 38,
       child: OutlinedButton.icon(
         onPressed: _tap,
-        icon: Icon(_listening ? Icons.stop : Icons.mic_none, size: 30),
-        label: Text(label),
-        style: outlinedTile(radius: 38, bg: MaganaColors.amber).copyWith(
-          minimumSize: const WidgetStatePropertyAll(Size.fromHeight(76)),
-          side: const WidgetStatePropertyAll(
-            BorderSide(color: MaganaColors.ink, width: 3),
-          ),
-          textStyle: const WidgetStatePropertyAll(
-            TextStyle(
-              fontFamily: fontFamily,
-              fontFamilyFallback: fontFallback,
-              fontSize: 21,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
+        icon: Icon(
+          _listening ? Icons.stop : Icons.mic_none,
+          size: tablet ? 34 : 30,
         ),
+        label: Text(label),
+        style: outlinedTile(radius: tablet ? 44 : 38, bg: MaganaColors.amber)
+            .copyWith(
+              minimumSize: WidgetStatePropertyAll(
+                Size.fromHeight(tablet ? 88 : 76),
+              ),
+              side: const WidgetStatePropertyAll(
+                BorderSide(color: MaganaColors.ink, width: 3),
+              ),
+              textStyle: WidgetStatePropertyAll(
+                TextStyle(
+                  fontFamily: fontFamily,
+                  fontFamilyFallback: fontFallback,
+                  fontSize: tablet ? 24 : 21,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
       ),
     );
   }
@@ -654,6 +696,9 @@ void runCommand(BuildContext context, String transcript) {
   void open(Widget screen) =>
       Navigator.of(context).push(MaterialPageRoute(builder: (_) => screen));
   switch (matchCommand(transcript, can)) {
+    // Not a command: the name of something on Home ("my library"), else not understood.
+    case null when scope.touch.openByName(ModalRoute.of(context), transcript):
+      break;
     case null:
       scope.speaker.say(l.commandNotUnderstood(transcript));
     case VoiceCommand.readPage:

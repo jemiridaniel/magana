@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 
 import 'app_scope.dart';
 import 'l10n/app_localizations.dart';
+import 'layout.dart';
 import 'theme.dart';
+import 'touch.dart';
+import 'voice_input.dart';
 
 /// One screen-reader node for a control: our label plus its tap action.
 /// (excludeSemantics drops the child's own semantics, so the tap must be restated.)
-class Labelled extends StatelessWidget {
+/// The same label and hint are what Touch to hear says (touch.dart), so the two never differ.
+class Labelled extends StatefulWidget {
   const Labelled({
     super.key,
     required this.label,
@@ -14,7 +18,10 @@ class Labelled extends StatelessWidget {
     required this.child,
     this.hint,
     this.selected,
+    this.toggled,
     this.inGroup = false,
+    this.counted = true,
+    this.radius = 20,
   });
 
   final String label;
@@ -22,47 +29,149 @@ class Labelled extends StatelessWidget {
   final Widget child;
   final String? hint;
   final bool? selected;
+  final bool? toggled;
   final bool inGroup;
 
+  /// Counted among the screen's choices ("3 of 7"); false for Back.
+  final bool counted;
+
+  /// Corner radius of the yellow Touch to hear outline.
+  final double radius;
+
   @override
-  Widget build(BuildContext context) => Semantics(
-    button: true,
-    enabled: onTap != null,
-    selected: selected,
-    inMutuallyExclusiveGroup: inGroup,
-    label: label,
-    hint: hint,
-    onTap: onTap,
-    excludeSemantics: true,
-    child: child,
-  );
+  State<Labelled> createState() => _LabelledState();
 }
 
-/// Back button + title (+ subtitle), as on every design board.
-class ScreenHeader extends StatelessWidget {
+class _LabelledState extends State<Labelled> implements TouchTarget {
+  TouchToHear? _touch;
+  ModalRoute<Object?>? _route;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final touch = AppScope.maybeOf(context)?.touch;
+    if (touch != _touch) {
+      _touch?.unregister(this);
+      _touch = touch?..register(this);
+    }
+    _route = ModalRoute.of(context);
+  }
+
+  @override
+  void dispose() {
+    _touch?.unregister(this);
+    super.dispose();
+  }
+
+  @override
+  String get label => widget.label;
+  @override
+  String? get hint => widget.hint;
+  @override
+  VoidCallback? get onTap => widget.onTap;
+  @override
+  bool get enabled => widget.onTap != null;
+  @override
+  bool get counted => widget.counted;
+  @override
+  ModalRoute<Object?>? get route => _route;
+  @override
+  RenderBox? get box {
+    final box = mounted ? context.findRenderObject() : null;
+    return box is RenderBox && box.attached && box.hasSize ? box : null;
+  }
+
+  @override
+  void reveal() {
+    if (!mounted) return;
+    for (final policy in [
+      ScrollPositionAlignmentPolicy.keepVisibleAtEnd,
+      ScrollPositionAlignmentPolicy.keepVisibleAtStart,
+    ]) {
+      Scrollable.ensureVisible(context, alignmentPolicy: policy);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final semantics = Semantics(
+      button: true,
+      enabled: widget.onTap != null,
+      selected: widget.selected,
+      toggled: widget.toggled,
+      inMutuallyExclusiveGroup: widget.inGroup,
+      label: widget.label,
+      hint: widget.hint,
+      onTap: widget.onTap,
+      excludeSemantics: true,
+      child: widget.child,
+    );
+    final touch = _touch;
+    if (touch == null) return semantics;
+    return ListenableBuilder(
+      listenable: Listenable.merge([touch, touch.focused]),
+      builder: (context, _) {
+        if (!touch.activeIn(context)) return semantics;
+        // Touch to hear: the first touch says it (TouchExplorer), so the control itself
+        // never takes the tap; a second tap opens it through [onTap].
+        return MetaData(
+          metaData: this,
+          behavior: HitTestBehavior.opaque,
+          child: IgnorePointer(
+            child: TouchOutline(
+              show: touch.focused.value == this,
+              radius: widget.radius,
+              child: semantics,
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
+
+/// Back button + title (+ subtitle), as on every design board. With [introduce], the
+/// screen says its title and how many choices it has when it opens (board 10), for screens
+/// that don't speak on their own.
+class ScreenHeader extends StatefulWidget {
   const ScreenHeader({
     super.key,
     required this.title,
     this.subtitle,
     this.onBack,
     this.trailing,
+    this.introduce = false,
   });
 
   final String title;
   final String? subtitle;
   final VoidCallback? onBack;
   final Widget? trailing; // e.g. the quiz score
+  final bool introduce;
+
+  @override
+  State<ScreenHeader> createState() => _ScreenHeaderState();
+}
+
+class _ScreenHeaderState extends State<ScreenHeader> {
+  @override
+  void initState() {
+    super.initState();
+    if (widget.introduce) speakOnOpen(context, () => widget.title);
+  }
 
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    final back = onBack ?? () => Navigator.of(context).maybePop();
+    final back = widget.onBack ?? () => Navigator.of(context).maybePop();
     return Row(
       children: [
-        if (Navigator.of(context).canPop() || onBack != null) ...[
+        if (Navigator.of(context).canPop() || widget.onBack != null) ...[
           Labelled(
             label: l.back,
             onTap: back,
+            counted: false,
+            radius: 32,
             child: OutlinedButton(
               onPressed: back,
               style: outlinedTile(radius: 32).copyWith(
@@ -80,15 +189,15 @@ class ScreenHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  title,
+                  widget.title,
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.w700,
                   ),
                 ),
-                if (subtitle != null)
+                if (widget.subtitle != null)
                   Text(
-                    subtitle!,
+                    widget.subtitle!,
                     style: const TextStyle(
                       fontSize: 16,
                       color: MaganaColors.muted,
@@ -98,7 +207,7 @@ class ScreenHeader extends StatelessWidget {
             ),
           ),
         ),
-        ?trailing,
+        ?widget.trailing,
       ],
     );
   }
@@ -343,39 +452,58 @@ class NoteBox extends StatelessWidget {
   }
 }
 
-/// A scrollable page body with standard padding; [bottom] stays at the foot.
+/// A scrollable page body with standard padding; [bottom] stays at the foot. With [sayName]
+/// (list screens), "Say a name" opens any choice by voice (board 10). On a tablet the body is
+/// a centred column ([tabletBodyWidth]) and the targets are larger (layout.dart).
 class PageScaffold extends StatelessWidget {
-  const PageScaffold({super.key, this.bottom = const [], required this.body});
+  const PageScaffold({
+    super.key,
+    this.bottom = const [],
+    required this.body,
+    this.sayName = false,
+  });
 
   final List<Widget> bottom;
   final List<Widget> body;
+  final bool sayName;
 
   @override
   Widget build(BuildContext context) {
+    final foot = [...bottom, if (sayName) const SayNameButton()];
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      for (final c in body)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 14),
-                          child: c,
-                        ),
-                    ],
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: isTablet(context) ? tabletBodyWidth : double.infinity,
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 16, 20, 20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Expanded(
+                    // The last item can always be scrolled fully into view, clear of
+                    // the screen's foot (the Everyday list was cut off, board 10).
+                    child: SingleChildScrollView(
+                      padding: const EdgeInsets.only(bottom: 24),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          for (final c in body)
+                            Padding(
+                              padding: const EdgeInsets.only(bottom: 14),
+                              child: c,
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  for (final b in foot)
+                    Padding(padding: const EdgeInsets.only(top: 10), child: b),
+                ],
               ),
-              for (final b in bottom)
-                Padding(padding: const EdgeInsets.only(top: 10), child: b),
-            ],
+            ),
           ),
         ),
       ),
@@ -383,9 +511,89 @@ class PageScaffold extends StatelessWidget {
   }
 }
 
-/// Speaks [text] once when the screen first appears.
-void speakOnOpen(BuildContext context, String Function() text) {
-  WidgetsBinding.instance.addPostFrameCallback((_) {
-    if (context.mounted) AppScope.of(context).speaker.say(text());
-  });
+/// Speaks [text] once when the screen first appears, with how many choices it has
+/// (introduceScreen, board 10).
+void speakOnOpen(BuildContext context, String Function() text) =>
+    introduceScreen(context, text);
+
+/// "Say a name" (boards 10, 10b): hear a name, and open the control on this screen that
+/// has it ("medicine label"). The same names the screen reader and Touch to hear use.
+class SayNameButton extends StatefulWidget {
+  const SayNameButton({super.key});
+
+  @override
+  State<SayNameButton> createState() => _SayNameButtonState();
+}
+
+class _SayNameButtonState extends State<SayNameButton> {
+  late final VoiceInput _voice = voiceInputFor(context);
+  bool? _works;
+  bool _listening = false;
+
+  @override
+  void dispose() {
+    if (_listening) _voice.stop();
+    super.dispose();
+  }
+
+  Future<void> _tap() async {
+    if (_listening) {
+      await _voice.stop();
+      return;
+    }
+    final l = AppLocalizations.of(context);
+    final scope = AppScope.of(context);
+    final route = ModalRoute.of(context);
+    _works ??= await _voice.init();
+    if (!mounted) return;
+    if (_works != true) {
+      scope.speaker.say(l.voiceCommandsUnavailable);
+      return;
+    }
+    await scope.speaker.stop();
+    setState(() => _listening = true);
+    List<String> heard;
+    try {
+      heard = await _voice.listen(language: 'en');
+    } on VoiceStepFailed {
+      heard = const [];
+      if (mounted) scope.speaker.say(l.voiceCommandsUnavailable);
+    }
+    if (!mounted) return;
+    setState(() => _listening = false);
+    if (heard.isEmpty) {
+      scope.speaker.say(l.commandNothingHeard);
+      return;
+    }
+    // Any of the recogniser's guesses that names something here.
+    for (final h in heard) {
+      if (scope.touch.openByName(route, h)) return;
+    }
+    scope.speaker.say(l.nameNotFound(heard.first));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final label = _listening ? l.listeningCommand : l.sayName;
+    return Labelled(
+      label: label,
+      onTap: _tap,
+      counted: false,
+      radius: 36,
+      child: OutlinedButton.icon(
+        onPressed: _tap,
+        icon: Icon(_listening ? Icons.stop : Icons.mic_none, size: 28),
+        label: Text(label),
+        style: outlinedTile(radius: 36, bg: MaganaColors.amber).copyWith(
+          minimumSize: WidgetStatePropertyAll(
+            Size.fromHeight(isTablet(context) ? 80 : 64),
+          ),
+          side: const WidgetStatePropertyAll(
+            BorderSide(color: MaganaColors.ink, width: 3),
+          ),
+        ),
+      ),
+    );
+  }
 }

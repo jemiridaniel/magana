@@ -2398,4 +2398,105 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get msg_barcode_skipped => 'I skipped a barcode on this page.';
+
+  @override
+  String get touchTapAgain => 'Tap again to open.';
+
+  @override
+  String touchOf(int n, int total) {
+    return '$n of $total';
+  }
+
+  @override
+  String touchChoices(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count choices',
+      one: '1 choice',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get touchExplore => 'Touch to explore, or say a name.';
+
+  @override
+  String get touchToHear => 'Touch to hear';
+
+  @override
+  String get touchToHearDetail =>
+      'Touch something to hear what it is; tap it again to open it. Not used while VoiceOver or TalkBack is on.';
+
+  @override
+  String get touchToHearOn => 'Touch to hear: on';
+
+  @override
+  String get touchToHearOff => 'Touch to hear: off';
+
+  @override
+  String get touchIntroTitle => 'Using Magana by touch';
+
+  @override
+  String get touchIntroBody =>
+      'Your phone\'s screen reader is off, so Magana will talk you through it.';
+
+  @override
+  String get touchStep1Body =>
+      'Slide your finger. Magana says what\'s under it.';
+
+  @override
+  String get touchStep2Title => 'Tap again to open';
+
+  @override
+  String get touchStep2Body => 'A second tap on the same thing opens it.';
+
+  @override
+  String get touchStep3Title => 'Or just say it';
+
+  @override
+  String get touchStep3Body =>
+      'Press the yellow button and say a name, like “medicine label”.';
+
+  @override
+  String get touchPractice => 'Practice here';
+
+  @override
+  String get touchPracticeBody => 'Touch this box. Then tap it again.';
+
+  @override
+  String get touchPracticeDone => 'Well done. That is how you open things.';
+
+  @override
+  String get touchGotIt => 'Got it, start';
+
+  @override
+  String get touchUseScreenReader => 'I use VoiceOver / TalkBack';
+
+  @override
+  String get sayName => 'Say a name';
+
+  @override
+  String nameNotFound(String heard) {
+    return 'I heard “$heard”, but nothing on this screen has that name.';
+  }
+
+  @override
+  String get framingGuidanceTablet =>
+      'Lay the page flat in good light and hold the tablet above it. I\'ll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.';
+
+  @override
+  String get readPageTablet => 'Lay the page flat. Hold the tablet above it.';
+
+  @override
+  String get zoomIn => 'Bigger text';
+
+  @override
+  String get zoomOut => 'Smaller text';
+
+  @override
+  String get highContrast => 'High contrast';
+
+  @override
+  String get pageViewLabel => 'Your page, current line highlighted';
 }

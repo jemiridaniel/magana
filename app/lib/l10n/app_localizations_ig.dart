@@ -2397,4 +2397,105 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get msg_barcode_skipped => 'Awụfere m barcode dị na peeji a.';
+
+  @override
+  String get touchTapAgain => 'Pịa ya ọzọ ka imeghe ya.';
+
+  @override
+  String touchOf(int n, int total) {
+    return '$n n\'ime $total';
+  }
+
+  @override
+  String touchChoices(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'nhọrọ $count',
+      one: 'nhọrọ 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get touchExplore => 'Metụ aka ka ị nụ, ma ọ bụ kpọọ aha.';
+
+  @override
+  String get touchToHear => 'Metụ aka ka ị nụ';
+
+  @override
+  String get touchToHearDetail =>
+      'Metụ ihe aka ka ị nụ ihe ọ bụ; pịa ya ọzọ ka imeghe ya. A naghị eji ya mgbe VoiceOver ma ọ bụ TalkBack na-arụ ọrụ.';
+
+  @override
+  String get touchToHearOn => 'Metụ aka ka ị nụ: ọ na-arụ ọrụ';
+
+  @override
+  String get touchToHearOff => 'Metụ aka ka ị nụ: ọ naghị arụ ọrụ';
+
+  @override
+  String get touchIntroTitle => 'Iji Magana site n\'imetụ aka';
+
+  @override
+  String get touchIntroBody =>
+      'Ihe na-agụ ihuenyo ekwentị gị anọghị na-arụ ọrụ, ya mere Magana ga-eji olu duzie gị.';
+
+  @override
+  String get touchStep1Body =>
+      'Fee mkpịsị aka gị. Magana ga-ekwu ihe dị n\'okpuru ya.';
+
+  @override
+  String get touchStep2Title => 'Pịa ọzọ ka imeghe';
+
+  @override
+  String get touchStep2Body => 'Ịpị nke abụọ n\'otu ihe ahụ na-emeghe ya.';
+
+  @override
+  String get touchStep3Title => 'Ma ọ bụ kwuo ya';
+
+  @override
+  String get touchStep3Body =>
+      'Pịa bọtịnụ odo ma kpọọ aha, dịka “medicine label”.';
+
+  @override
+  String get touchPractice => 'Mee omume ebe a';
+
+  @override
+  String get touchPracticeBody => 'Metụ igbe a aka. Mgbe ahụ pịa ya ọzọ.';
+
+  @override
+  String get touchPracticeDone => 'Ọ dị mma. Otu a ka esi emeghe ihe.';
+
+  @override
+  String get touchGotIt => 'Aghọtala m, ka anyị malite';
+
+  @override
+  String get touchUseScreenReader => 'M na-eji VoiceOver / TalkBack';
+
+  @override
+  String get sayName => 'Kpọọ aha';
+
+  @override
+  String nameNotFound(String heard) {
+    return 'Anụrụ m “$heard”, mana ọ dịghị ihe nwere aha ahụ na ihuenyo a.';
+  }
+
+  @override
+  String get framingGuidanceTablet =>
+      'Tọgbọ peeji ahụ n\'ala ebe ìhè dị mma, jide tablet ahụ n\'elu ya. Aga m agwa gị otú ị ga-esi bugharịa ya, ma see foto ahụ mgbe peeji ahụ niile kwụsiri ọtọ. Ị nwekwara ike ịpịa See foto.';
+
+  @override
+  String get readPageTablet => 'Tọgbọ peeji ahụ. Jide tablet n\'elu ya.';
+
+  @override
+  String get zoomIn => 'Mkpụrụedemede buru ibu';
+
+  @override
+  String get zoomOut => 'Mkpụrụedemede dị nta';
+
+  @override
+  String get highContrast => 'Ọdịiche agba siri ike';
+
+  @override
+  String get pageViewLabel => 'Akwụkwọ gị, egosipụtara ahịrị a na-agụ';
 }

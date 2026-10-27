@@ -110,35 +110,32 @@ void main() {
     expect(a.report.anyway, isTrue);
   });
 
-  test(
-    'a moment of hand shake keeps the 4 s; moving away for longer restarts it',
-    () {
-      var now = DateTime(2026, 10, 27, 9);
-      final a = FrameAnalyzer(clock: () => now);
-      final still = withPrint(page(0, 10, 30, 50), 6, 2);
-      final moved = withPrint(page(0, 10, 30, 50, shift: 8), 6, 2);
-      final blank = page(0, 10, 30, 50); // no print in view
-      Advice step(LumaGrid g, int ms) {
-        final advice = a.analyze(g);
-        now = now.add(Duration(milliseconds: ms));
-        return advice;
-      }
+  test('a moment of hand shake keeps the 4 s; moving away for longer restarts it', () {
+    var now = DateTime(2026, 10, 27, 9);
+    final a = FrameAnalyzer(clock: () => now);
+    final still = withPrint(page(0, 10, 30, 50), 6, 2);
+    final moved = withPrint(page(0, 10, 30, 50, shift: 8), 6, 2);
+    final blank = page(0, 10, 30, 50); // no print in view
+    Advice step(LumaGrid g, int ms) {
+      final advice = a.analyze(g);
+      now = now.add(Duration(milliseconds: ms));
+      return advice;
+    }
 
-      step(still, 1000);
-      step(still, 1000);
-      step(moved, 500); // a shake...
-      step(still, 1000);
-      step(still, 1000); // 3.5 s
-      // 4.5 s after the text came into view: the shake didn't restart the clock.
-      expect(step(still, 1000), Advice.ready);
-      a.reset();
-      step(still, 1000);
-      step(still, 1000);
-      step(blank, 2000); // text out of view for 2 s
-      step(still, 1000);
-      expect(step(still, 1000), isNot(Advice.ready));
-    },
-  );
+    step(still, 1000);
+    step(still, 1000);
+    step(moved, 500); // a shake...
+    step(still, 1000);
+    step(still, 1000); // 3.5 s
+    // 4.5 s after the text came into view: the shake didn't restart the clock.
+    expect(step(still, 1000), Advice.ready);
+    a.reset();
+    step(still, 1000);
+    step(still, 1000);
+    step(blank, 2000); // text out of view for 2 s
+    step(still, 1000);
+    expect(step(still, 1000), isNot(Advice.ready));
+  });
 
   test('tilt never blocks: a tip only', () {
     final a = FrameAnalyzer(steadyFramesNeeded: 1);

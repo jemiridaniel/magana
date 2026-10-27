@@ -2399,4 +2399,106 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get msg_barcode_skipped => 'Mo fo barcode kan lórí ojú-ìwé yìí.';
+
+  @override
+  String get touchTapAgain => 'Tẹ̀ ẹ́ lẹ́ẹ̀kan sí i láti ṣí i.';
+
+  @override
+  String touchOf(int n, int total) {
+    return '$n nínú $total';
+  }
+
+  @override
+  String touchChoices(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'àṣàyàn $count',
+      one: 'àṣàyàn 1',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get touchExplore => 'Fọwọ́ kàn án láti gbọ́, tàbí sọ orúkọ kan.';
+
+  @override
+  String get touchToHear => 'Fọwọ́ kàn án láti gbọ́';
+
+  @override
+  String get touchToHearDetail =>
+      'Fọwọ́ kan nǹkan láti gbọ́ ohun tó jẹ́; tẹ̀ ẹ́ lẹ́ẹ̀kan sí i láti ṣí i. A kì í lò ó nígbà tí VoiceOver tàbí TalkBack bá wà ní títàn.';
+
+  @override
+  String get touchToHearOn => 'Fọwọ́ kàn án láti gbọ́: ó wà ní títàn';
+
+  @override
+  String get touchToHearOff => 'Fọwọ́ kàn án láti gbọ́: kò sí ní títàn';
+
+  @override
+  String get touchIntroTitle => 'Lílo Magana nípa fífọwọ́kàn';
+
+  @override
+  String get touchIntroBody =>
+      'Olùka-ojú-ìbojú fóònù rẹ kò sí ní títàn, nítorí náà Magana yóò máa sọ̀rọ̀ láti tọ́ ọ sọ́nà.';
+
+  @override
+  String get touchStep1Body =>
+      'Fa ìka rẹ kiri. Magana yóò sọ ohun tó wà lábẹ́ rẹ̀.';
+
+  @override
+  String get touchStep2Title => 'Tẹ̀ ẹ́ lẹ́ẹ̀kan sí i láti ṣí i';
+
+  @override
+  String get touchStep2Body => 'Títẹ̀ ẹ̀ẹ̀kejì lórí nǹkan kan náà yóò ṣí i.';
+
+  @override
+  String get touchStep3Title => 'Tàbí kí o kàn sọ ọ́';
+
+  @override
+  String get touchStep3Body =>
+      'Tẹ bọ́tìnì aláwọ̀ ofeefee kí o sọ orúkọ kan, bíi “medicine label”.';
+
+  @override
+  String get touchPractice => 'Dánrawò níbí';
+
+  @override
+  String get touchPracticeBody =>
+      'Fọwọ́ kan àpótí yìí. Lẹ́yìn náà, tẹ̀ ẹ́ lẹ́ẹ̀kan sí i.';
+
+  @override
+  String get touchPracticeDone => 'O ṣe dáadáa. Báyìí ni a ṣe ń ṣí nǹkan.';
+
+  @override
+  String get touchGotIt => 'Ó yé mi, jẹ́ ká bẹ̀rẹ̀';
+
+  @override
+  String get touchUseScreenReader => 'Mo ń lo VoiceOver / TalkBack';
+
+  @override
+  String get sayName => 'Sọ orúkọ kan';
+
+  @override
+  String nameNotFound(String heard) {
+    return 'Mo gbọ́ “$heard”, ṣùgbọ́n kò sí nǹkan tó ní orúkọ yẹn lójú ìbojú yìí.';
+  }
+
+  @override
+  String get framingGuidanceTablet =>
+      'Tẹ́ ojú-ìwé náà sílẹ̀ níbi tí ìmọ́lẹ̀ dára, kí o sì di tablet mú lókè rẹ̀. Màá sọ bí o ṣe máa sún un fún ọ, màá sì ya fọ́tò náà nígbà tí gbogbo ojú-ìwé bá dúró jẹ́ẹ́. O tún lè tẹ Ya fọ́tò.';
+
+  @override
+  String get readPageTablet => 'Tẹ́ ojú-ìwé sílẹ̀. Di tablet mú lókè rẹ̀.';
+
+  @override
+  String get zoomIn => 'Ọ̀rọ̀ tó tóbi sí i';
+
+  @override
+  String get zoomOut => 'Ọ̀rọ̀ tó kéré sí i';
+
+  @override
+  String get highContrast => 'Ìyàtọ̀ àwọ̀ tó ga';
+
+  @override
+  String get pageViewLabel => 'Ìwé rẹ, a ṣàfihàn ìlà tí a ń kà';
 }

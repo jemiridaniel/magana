@@ -34,6 +34,7 @@ class _EverydayScreenState extends State<EverydayScreen> {
     final profile = AppScope.of(context).profile;
     if (!profile.can(Feature.everydayHealth)) return const AdultsOnlyScreen();
     return PageScaffold(
+      sayName: true,
       body: [
         ScreenHeader(title: l.everydayPapers, subtitle: l.everydaySubtitle),
         if (profile.can(Feature.everydayLetters))

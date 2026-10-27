@@ -13,6 +13,26 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-27 · 0.1.0+10: Touch to hear (boards 10, 10b), tablets and iPad (T1, T2) (UNREVIEWED)
+
+No blind or low-vision tester has used these yet; everything below is from widget tests, an Android tablet emulator and iPad-size renders.
+
+**Touch to hear (screen reader off).**
+- One source of truth: every control's Touch to hear words are its screen-reader label and hint (`Labelled`). The first touch, or a finger sliding onto a control, says its name, hint, place and "Tap again to open." (e.g. "Medicine label. Labels and prescriptions. 3 of 9. Tap again to open."), outlines it in thick yellow, and shows the words at the foot for 5 s. A second tap on the same control within 3 s opens it; a long press repeats it.
+- On by default until chosen. Board 10b (practice box) appears after the language step, or once at the next start for people who set up earlier; "I use VoiceOver / TalkBack" turns it off. There is no "do you see the screen?" question in setup, so the practice screen is where people choose. Settings has a switch.
+- With VoiceOver/TalkBack on (`MediaQuery.accessibleNavigation`) Magana adds nothing: one tap opens (the screen reader's own double tap), and the screen summary is one short announcement ("Everyday papers. 9 choices."), not the voice as well (`touch_test.dart`: no double speaking). With the screen reader off, each screen says its title, its number of choices and "Touch to explore, or say a name."
+- Bugs found while building: (1) the Scrollable claims a lone finger at once and ignores hit tests while it drags, so a slide over a list found nothing; one-finger drag-scrolling is now off while Touch to hear is on (as with VoiceOver), controls are found by their on-screen boxes, and a touched control scrolls itself fully into view; this is also the fix for the Everyday list's last card being cut off (test: the card cut off at the bottom is fully shown after one touch). (2) The outline's Stack loosened constraints, so buttons in a row shrank to their text (seen on the T2 render); fixed and tested (`the outline never changes a control's size`).
+- "Say a name" on list screens (Everyday, Skills, Practice quiz, My library, Settings), and on Home after the fixed commands: the whole name, or most of its words, opens the control; ties or no match say so. Recognition is English only, as for commands.
+- Not yet measured: how fast blind users learn it, and whether the 3 s window suits them. Web (testing only) can't detect VoiceOver, so web VoiceOver users may hear the summary twice.
+
+**Tablets and iPad.**
+- One app, laid out by size: a tablet is a shorter side ≥ 600 dp (a phone held sideways stays a phone). Home (T1): 3-column grid, tiles ≥ 170 px, 24 px labels, "Read a page" 200 px with "Lay the page flat. Hold the tablet above it.", speak button 88 px. Reader (T2): landscape puts every line of the page on the left (current line highlighted and kept in view, text 18–48 px, high contrast) beside the reading panel; portrait stacks them; controls 72 px, 20 px text. The page view is hidden from screen readers (the panel reads the same text), and the reading order is back, page, zoom, panel, controls (`tablet_test.dart`). List screens are a centred 720 px column. Capture on a tablet says "Lay the page flat in good light and hold the tablet above it…", same auto-capture rules.
+- iOS: device family 1,2 and all iPad orientations were already set. The iPad simulator could not run the app: ML Kit's pods exclude arm64 simulators and iOS 26 simulators no longer run x86_64 apps. iPad sizes (834×1194, 1194×834) were checked with full renders in the Flutter test engine with the real fonts instead; the real iPad was not used (installing a debug build would replace the tester's copy).
+- Android: Pixel Tablet emulator (Android 16, 2560×1600), debug build with sample data: T1, board 10 (touched card outlined, caption), 10b, T2, Everyday last card revealed. Android 16 ignores an app's orientation lock on large screens, so tablets must work both ways; the emulator stayed in landscape.
+- New strings in Hausa, Yorùbá and Igbo are drafts, like the rest.
+
+**Builds.** APK 0.1.0+10 built (arm64, 35,422,663 bytes), not published. IPA: the archive built (iPhone + iPad, UIDeviceFamily 1,2; build 10) but the export failed, because Xcode had no Apple account signed in ("No Accounts", no "iOS Distribution" certificate). `flutter build ipa` still exited 0, and `build_ios_adhoc.sh` then reported the older 0.1.0+8 .ipa as new; the script now deletes old .ipa files first and fails when none is exported.
+
 ## 2026-10-27 · 0.1.0+9: tilt never blocks capture, the server straightens, the church card read twice, diagnostics that say why (UNREVIEWED)
 
 From the tester's 0.1.0+8 diagnostics on the church card (iPhone): page detected, sharpness 92, tilt 0.78, framing said "tilt away" and never took the photo; the Reader showed "God [unclear number] ght" and "3 lines · 3 unclear"; speech ran 1 s for 23 words; the "mixed_page" tip still fired.

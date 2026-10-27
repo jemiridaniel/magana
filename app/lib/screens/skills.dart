@@ -72,6 +72,7 @@ class _SkillsScreenState extends State<SkillsScreen> {
     }
     final next = lessons.where((x) => !progress.done(x)).firstOrNull;
     return PageScaffold(
+      sayName: true,
       body: [
         ScreenHeader(title: l.skills, subtitle: l.skillsSubtitle),
         if (next != null)

@@ -48,7 +48,11 @@ class _ChampionsScreenState extends State<ChampionsScreen> {
     final l = AppLocalizations.of(context);
     return PageScaffold(
       body: [
-        ScreenHeader(title: l.championsTitle, subtitle: l.championsSubtitle),
+        ScreenHeader(
+          title: l.championsTitle,
+          subtitle: l.championsSubtitle,
+          introduce: true,
+        ),
         Semantics(
           container: true,
           label: '${l.championSample}. Musa Abdullahi. ${l.championDetail}',

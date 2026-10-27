@@ -6,6 +6,7 @@ import '../l10n/app_localizations.dart';
 import '../language.dart';
 import '../policy.dart';
 import '../profile.dart';
+import '../theme.dart';
 import '../widgets.dart';
 import 'about.dart';
 import 'home.dart';
@@ -128,6 +129,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     final v = _version;
     final profile = AppScope.of(context).profile;
     return PageScaffold(
+      sayName: true,
       body: [
         ScreenHeader(title: l.settings),
         ChoiceCard(
@@ -136,6 +138,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           leading: const Icon(Icons.translate, size: 30),
           onTap: () => showLanguagePicker(context),
         ),
+        const TouchToHearSwitch(),
         ChoiceCard(
           title: l.settingsClass,
           detail: [
@@ -231,6 +234,55 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// Touch to hear on or off (board 10). Off makes no difference while VoiceOver or TalkBack
+/// is on: the screen reader does it then.
+class TouchToHearSwitch extends StatelessWidget {
+  const TouchToHearSwitch({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final l = AppLocalizations.of(context);
+    final scope = AppScope.of(context);
+    final touch = scope.touch;
+    return ListenableBuilder(
+      listenable: touch,
+      builder: (context, _) {
+        void flip() {
+          touch.set(!touch.on);
+          scope.speaker.say(touch.on ? l.touchToHearOn : l.touchToHearOff);
+        }
+
+        return Labelled(
+          label: l.touchToHear,
+          hint: l.touchToHearDetail,
+          toggled: touch.on,
+          onTap: flip,
+          radius: 18,
+          child: SwitchListTile(
+            value: touch.on,
+            onChanged: (_) => flip(),
+            secondary: const Icon(Icons.touch_app_outlined, size: 30),
+            title: Text(
+              l.touchToHear,
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+            ),
+            subtitle: Text(
+              l.touchToHearDetail,
+              style: const TextStyle(fontSize: 17, height: 1.4),
+            ),
+            minTileHeight: 72,
+            tileColor: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(18),
+              side: const BorderSide(color: MaganaColors.ink, width: 3),
+            ),
+          ),
+        );
+      },
     );
   }
 }

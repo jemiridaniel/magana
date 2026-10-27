@@ -54,8 +54,13 @@ class _LibraryScreenState extends State<LibraryScreen> {
     final dates = MaterialLocalizations.of(context);
     final today = DateUtils.dateOnly(DateTime.now());
     return PageScaffold(
+      sayName: true,
       body: [
-        ScreenHeader(title: l.myLibrary, subtitle: l.librarySubtitle),
+        ScreenHeader(
+          title: l.myLibrary,
+          subtitle: l.librarySubtitle,
+          introduce: true,
+        ),
         if (saved == null)
           const Center(child: CircularProgressIndicator())
         else if (saved.isEmpty)

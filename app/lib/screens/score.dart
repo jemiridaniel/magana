@@ -93,7 +93,11 @@ class _ScoreScreenState extends State<ScoreScreen> {
     }
     return PageScaffold(
       body: [
-        ScreenHeader(title: l.scoreTitle, subtitle: l.scoreSubtitle),
+        ScreenHeader(
+          title: l.scoreTitle,
+          subtitle: l.scoreSubtitle,
+          introduce: true,
+        ),
         Semantics(
           container: true,
           label: '${l.scoreTitle}: ${l.scoreOutOf(score.overall)}',

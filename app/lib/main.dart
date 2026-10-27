@@ -15,9 +15,12 @@ import 'screens/splash.dart';
 import 'screens/start.dart';
 import 'speech.dart';
 import 'theme.dart';
+import 'touch.dart';
+import 'layout.dart';
 
-/// Phones use the full width; on tablets and the web the app is a centred column.
-const double maxContentWidth = 480;
+/// Phones use the full width; on the web the app is a centred column. Tablets lay
+/// themselves out (layout.dart, boards T1 and T2).
+const double maxContentWidth = phoneMaxWidth;
 
 /// Kept for the app's lifetime: on the web, Flutter builds the screen-reader tree only
 /// when asked, behind a hidden "Enable accessibility" button that VoiceOver users may
@@ -32,10 +35,13 @@ Future<void> main() async {
   // Before the first press the browser refuses to speak: show "Start Magana".
   if (kIsWeb && !pageHasBeenActivated()) speaker.needsStart.value = true;
   final profile = ProfileController();
+  // On until the person chooses (board 10b): Magana's users are blind or low vision.
+  final touch = TouchToHear(defaultOn: true);
   // The splash shows while the saved profile, language and voice load.
   final ready = () async {
     await loadDeviceId();
     await profile.load();
+    await touch.load();
     await language.load();
     await speaker.setLanguage(language.value.languageCode);
   }();
@@ -46,26 +52,31 @@ Future<void> main() async {
       speaker: speaker,
       language: language,
       profile: profile,
+      touch: touch,
       ready: ready,
     ),
   );
 }
 
 class MaganaApp extends StatelessWidget {
-  const MaganaApp({
+  MaganaApp({
     super.key,
     required this.api,
     required this.speaker,
     required this.language,
     required this.profile,
+    TouchToHear? touch,
     this.ready,
     this.firstFrameShown,
-  });
+  }) : touch = touch ?? TouchToHear();
 
   final MaganaApi api;
   final Speaker speaker;
   final LanguageController language;
   final ProfileController profile;
+
+  /// Touch to hear (board 10); off unless given (tests).
+  final TouchToHear touch;
 
   /// Start-up work the splash waits for; null (tests) goes straight to Home.
   final Future<void>? ready;
@@ -80,6 +91,7 @@ class MaganaApp extends StatelessWidget {
       speaker: speaker,
       language: language,
       profile: profile,
+      touch: touch,
       child: ValueListenableBuilder<Locale>(
         valueListenable: language,
         builder: (context, locale, _) => MaterialApp(
@@ -100,7 +112,11 @@ class MaganaApp extends StatelessWidget {
             color: MaganaColors.ground,
             child: Center(
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: maxContentWidth),
+                constraints: BoxConstraints(
+                  maxWidth: isTablet(context)
+                      ? double.infinity
+                      : maxContentWidth,
+                ),
                 child: ValueListenableBuilder<bool>(
                   valueListenable: speaker.needsStart,
                   builder: (context, needsStart, _) {
@@ -112,7 +128,7 @@ class MaganaApp extends StatelessWidget {
                           excluding: cover,
                           child: ExcludeSemantics(
                             excluding: cover,
-                            child: child,
+                            child: TouchExplorer(child: child!),
                           ),
                         ),
                         if (cover)

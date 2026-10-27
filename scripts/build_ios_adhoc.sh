@@ -13,12 +13,20 @@ source "${MAGANA_APP_ENV:-$HOME/.magana/app.env}"
 export PATH="$HOME/development/flutter/bin:$PATH"
 cd "$(dirname "$0")/../app"
 
+# Never report an older .ipa as this build's: flutter exits 0 even when the export fails
+# (e.g. Xcode signed out: "No Accounts", 27 Oct 2026).
+rm -rf build/ios/ipa
+
 flutter build ipa --release \
   --export-options-plist=ios/ExportOptions.plist \
   --dart-define=MAGANA_API="$MAGANA_API" \
   --dart-define=MAGANA_API_KEY="$MAGANA_API_KEY"
 
-ipa=$(ls -t build/ios/ipa/*.ipa | head -1)
+ipa=$(ls -t build/ios/ipa/*.ipa 2>/dev/null | head -1 || true)
+if [ -z "$ipa" ]; then
+  echo "FAILED: no .ipa was exported (is an Apple account signed in to Xcode > Settings > Accounts?)" >&2
+  exit 1
+fi
 
 # No real secret may ship (AWS, SES, model and WhatsApp keys, signing passwords...).
 if ! ../backend/.venv/bin/python ../scripts/check_bundle_secrets.py "$ipa"; then

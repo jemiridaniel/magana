@@ -251,7 +251,11 @@ class _RemindersScreenState extends State<RemindersScreen> {
     final store = _store;
     return PageScaffold(
       body: [
-        ScreenHeader(title: l.remindersTitle, subtitle: l.remindersSubtitle),
+        ScreenHeader(
+          title: l.remindersTitle,
+          subtitle: l.remindersSubtitle,
+          introduce: true,
+        ),
         if (store == null)
           const Center(child: CircularProgressIndicator())
         else if (store.all.isEmpty)

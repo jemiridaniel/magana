@@ -29,7 +29,11 @@ void main() {
               },
             ],
             'warnings': [
-              {'block_index': 1, 'word_index': 1, 'code': 'number_low_confidence'},
+              {
+                'block_index': 1,
+                'word_index': 1,
+                'code': 'number_low_confidence',
+              },
               {'block_index': 0, 'code': 'unclear_line_end'},
             ],
           },
