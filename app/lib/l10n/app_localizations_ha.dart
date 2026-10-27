@@ -270,6 +270,9 @@ class AppLocalizationsHa extends AppLocalizations {
   String get amountUnclear => 'Ban iya karanta adadin kuɗin sarai ba';
 
   @override
+  String get currencyUnclear => 'ban iya karanta alamar kuɗin sarai ba';
+
+  @override
   String get unclearLetter => 'harafi mara tabbas';
 
   @override
@@ -296,6 +299,11 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String msg_unreadable_number(String where) {
     return 'Ban iya karanta wata lamba a $where sarai ba. Don Allah ka duba ko ka sake ɗaukar hoto.';
+  }
+
+  @override
+  String msg_currency_unclear(String where) {
+    return 'A $where na karanta lambobin adadin kuɗin amma ban iya karanta alamar kuɗin ba, don haka lambobin kawai nake faɗi. Don Allah ka duba shi a manhajar bankinka ko da wanda ka amince da shi.';
   }
 
   @override

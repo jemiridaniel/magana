@@ -2,7 +2,9 @@
 /// readings agree exactly (27 Oct 2026: Tesseract read the "₦" of a dark-mode transfer receipt
 /// as "4", "#" or "N"). The server's reading is checked against this phone's own (Apple Vision
 /// on the iPhone, ML Kit on Android): an amount the phone didn't read character for character,
-/// currency sign included, is said "I can't read the amount clearly". A page read only once
+/// currency sign included, is said "I can't read the amount clearly"; one whose digits agree
+/// but not its sign is said as its digits, then "I can't read the currency sign clearly".
+/// "Naira" is said only for a "₦" or "NGN" both read (spoken_numbers.dart). A page read only once
 /// (on the phone, without the server; or where this phone can't read, the web) has no second
 /// reading, so none of its amounts are said. The first reading is never changed: amounts are
 /// only held back.
@@ -108,42 +110,58 @@ List<_Spot> _amounts(Map<String, dynamic> json) {
   return out;
 }
 
-/// [server]'s reading (the /read response) with every money amount that [phone] (this
-/// phone's own reading of the same picture, null if there is none) doesn't also hold, exactly,
-/// marked "amount_unconfirmed". Each of the phone's amounts confirms one of the server's.
+/// [server]'s reading (the /read response) checked against [phone] (this phone's own reading
+/// of the same picture, null if there is none). Each of the phone's amounts confirms one of the
+/// server's: exactly first, then by its digits alone.
+/// - The same amount, sign included, with a likely sign: said as printed.
+/// - The same digits (commas and decimal point included) but another sign, or an unlikely sign
+///   both agree on ("₩"): the digits, then "I can't read the currency sign clearly"
+///   ("currency_unclear").
+/// - Otherwise: "I can't read the amount clearly" ("amount_unconfirmed").
 Map<String, dynamic> confirmAmounts(
   Map<String, dynamic> server,
   Map<String, dynamic>? phone,
 ) {
   final spots = _amounts(server);
   if (spots.isEmpty) return server;
-  final seen = <String, int>{};
+  final exact = <String, int>{};
+  final digits = <String, int>{};
   for (final s in phone == null ? const <_Spot>[] : _amounts(phone)) {
-    seen[s.amount] = (seen[s.amount] ?? 0) + 1;
+    exact[s.amount] = (exact[s.amount] ?? 0) + 1;
+    digits[_digits(s)] = (digits[_digits(s)] ?? 0) + 1;
   }
   final warnings = [...(server['warnings'] as List? ?? const [])];
   final cellWarnings = [...(server['cell_warnings'] as List? ?? const [])];
-  var held = 0;
-  for (final s in spots) {
-    final left = seen[s.amount] ?? 0;
-    if (left > 0 && _likelySigns.contains(s.sign)) {
-      seen[s.amount] = left - 1;
-      continue;
-    }
-    held++;
+  var held = 0, signs = 0;
+  void mark(_Spot s, String code) {
     if (s.cell case (final t, final r, final c)) {
-      cellWarnings.add({
-        'table_index': t,
-        'row': r,
-        'col': c,
-        'code': 'amount_unconfirmed',
-      });
+      cellWarnings.add({'table_index': t, 'row': r, 'col': c, 'code': code});
     } else {
-      warnings.add({
-        'block_index': s.line,
-        'word_index': s.word,
-        'code': 'amount_unconfirmed',
-      });
+      warnings.add({'block_index': s.line, 'word_index': s.word, 'code': code});
+    }
+  }
+
+  final pending = <_Spot>[];
+  for (final s in spots) {
+    if ((exact[s.amount] ?? 0) > 0) {
+      exact[s.amount] = exact[s.amount]! - 1;
+      digits[_digits(s)] = digits[_digits(s)]! - 1;
+      if (!_likelySigns.contains(s.sign)) {
+        signs++;
+        mark(s, 'currency_unclear');
+      }
+    } else {
+      pending.add(s);
+    }
+  }
+  for (final s in pending) {
+    if ((digits[_digits(s)] ?? 0) > 0) {
+      digits[_digits(s)] = digits[_digits(s)]! - 1;
+      signs++;
+      mark(s, 'currency_unclear');
+    } else {
+      held++;
+      mark(s, 'amount_unconfirmed');
     }
   }
   return {
@@ -152,7 +170,20 @@ Map<String, dynamic> confirmAmounts(
     'cell_warnings': cellWarnings,
     'amounts_checked': spots.length,
     'amounts_held': held,
+    'amounts_sign_unclear': signs,
   };
+}
+
+String _digits(_Spot s) => s.amount.substring(s.sign.length);
+
+/// The digits of the amount in [word] ("#8,000.00" → "8,000.00"), as said and shown when only
+/// its currency sign is unclear.
+String digitsOf(String word, {String? sign}) {
+  final parts = word.trim().split(RegExp(r'\s+'));
+  final a = parts.length == 2 && isSignWord(parts[0])
+      ? amountIn(parts[1], sign: parts[0])
+      : amountIn(word, sign: sign);
+  return a == null ? word : a.substring(_signOf(a).length);
 }
 
 /// Whether [page]'s amounts are checked: a screenshot (as the phone or the server found it),

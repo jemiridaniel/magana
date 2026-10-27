@@ -34,6 +34,7 @@ String messageFor(
   'unreadable_number' => l.msg_unreadable_number(where),
   'number_mismatch' => l.msg_number_mismatch(where),
   'amount_unconfirmed' => l.msg_amount_unconfirmed(where),
+  'currency_unclear' => l.msg_currency_unclear(where),
   'faint_region' => l.msg_faint_region(where),
   'missed_line' => l.msg_missed_line(where),
   'line_end_unclear' => l.msg_line_end_unclear(where),

@@ -75,6 +75,7 @@ class ReadItem {
     this.words = const [],
     this.unclearWords = const {},
     this.unclearAmounts = const {},
+    this.currencyUnclear = const {},
     this.cells = const [],
     this.codes = const [],
     this.where = '',
@@ -94,6 +95,9 @@ class ReadItem {
   final Set<int> unclearWords; // indices of words holding an unreliable number
   // Of those, money amounts: said "I can't read the amount clearly" (amount_check.dart).
   final Set<int> unclearAmounts;
+  // Amounts whose digits two readings agree on, but not the currency sign: said as the digits,
+  // then "I can't read the currency sign clearly". Not unclear numbers.
+  final Set<int> currencyUnclear;
   final List<Cell> cells; // a table row's cells
   final List<String> codes; // backend warning codes for this item
   final String where; // faint region: top | middle | bottom
@@ -118,7 +122,12 @@ class ReadItem {
   /// Word [i] is a bare currency sign ("₦", "NGN") before an amount that is held back: it
   /// isn't said or shown on its own either.
   bool heldSign(int i) =>
-      unclearAmounts.contains(i + 1) && isSignWord(words[i]);
+      (unclearAmounts.contains(i + 1) || currencyUnclear.contains(i + 1)) &&
+      isSignWord(words[i]);
+
+  /// The sign word just before word [i] ("NGN 8,000.00"), if any.
+  String? signBefore(int i) =>
+      i > 0 && isSignWord(words[i - 1]) ? words[i - 1].trim() : null;
 
   /// The code to say: number problems first, they matter most.
   String? get code => codes.isEmpty
@@ -132,13 +141,16 @@ class Cell {
     this.value, {
     this.unclear = false,
     this.amount = false,
+    this.currencyUnclear = false,
   });
   final String header;
   final String value; // exactly as printed
   final bool
   unclear; // holds an unreliable number: say "unclear number" instead
-  final bool
-  amount; // that number is a money amount: "I can't read the amount clearly"
+  // That number is a money amount: "I can't read the amount clearly".
+  final bool amount;
+  // Its digits agreed, not its sign: the digits, then "I can't read the currency sign clearly".
+  final bool currencyUnclear;
 }
 
 class ReadResult {
@@ -185,10 +197,14 @@ class ReadResult {
     final lineCodes = <int, List<String>>{};
     final unclear = <int, Set<int>>{};
     final amounts = <int, Set<int>>{};
+    final signs = <int, Set<int>>{};
     for (final w in list(json['warnings'])) {
       final i = w['block_index'] as int;
       final code = w['code'] as String? ?? 'low_confidence';
       lineCodes.putIfAbsent(i, () => []).add(code);
+      if (code == 'currency_unclear' && w['word_index'] is int) {
+        signs.putIfAbsent(i, () => {}).add(w['word_index'] as int);
+      }
       if (numberCodes.contains(code) && w['word_index'] is int) {
         unclear.putIfAbsent(i, () => {}).add(w['word_index'] as int);
         if (code == 'amount_unconfirmed') {
@@ -227,6 +243,7 @@ class ReadResult {
               : (lines[i]['text'] as String? ?? '').split(' '),
           unclearWords: unclear[i] ?? const {},
           unclearAmounts: amounts[i] ?? const {},
+          currencyUnclear: signs[i] ?? const {},
           codes: lineCodes[i] ?? const [],
           page: lines[i]['page'] as int?,
           column: lines[i]['column'] as int? ?? 1,
@@ -271,6 +288,7 @@ class ReadResult {
               c['text'] as String? ?? '',
               unclear: found.any(numberCodes.contains),
               amount: found.contains('amount_unconfirmed'),
+              currencyUnclear: found.contains('currency_unclear'),
             ),
           );
         }

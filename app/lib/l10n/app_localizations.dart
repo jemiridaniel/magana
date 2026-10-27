@@ -510,6 +510,12 @@ abstract class AppLocalizations {
   /// **'I can\'t read the amount clearly'**
   String get amountUnclear;
 
+  /// Said after an amount's digits when the server's and the phone's readings agree on the digits but not on the currency sign. Naira is never guessed.
+  ///
+  /// In en, this message translates to:
+  /// **'I can\'t read the currency sign clearly'**
+  String get currencyUnclear;
+
   /// Said instead of a word with a digit inside on a Hausa, Yorùbá or Igbo page: the digit is an unclear letter, never a number.
   ///
   /// In en, this message translates to:
@@ -551,6 +557,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'I can\'t read a number on {where} clearly. Please check it or retake the photo.'**
   String msg_unreadable_number(String where);
+
+  /// No description provided for @msg_currency_unclear.
+  ///
+  /// In en, this message translates to:
+  /// **'On {where} I can read the amount\'s digits but not its currency sign, so I say the digits only. Please check it in your bank\'s app or with someone you trust.'**
+  String msg_currency_unclear(String where);
 
   /// No description provided for @msg_amount_unconfirmed.
   ///

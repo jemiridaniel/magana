@@ -270,6 +270,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get amountUnclear => 'I can\'t read the amount clearly';
 
   @override
+  String get currencyUnclear => 'I can\'t read the currency sign clearly';
+
+  @override
   String get unclearLetter => 'unclear letter';
 
   @override
@@ -296,6 +299,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String msg_unreadable_number(String where) {
     return 'I can\'t read a number on $where clearly. Please check it or retake the photo.';
+  }
+
+  @override
+  String msg_currency_unclear(String where) {
+    return 'On $where I can read the amount\'s digits but not its currency sign, so I say the digits only. Please check it in your bank\'s app or with someone you trust.';
   }
 
   @override

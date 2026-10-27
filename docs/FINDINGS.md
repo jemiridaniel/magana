@@ -13,6 +13,37 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-27 · Receipt amounts: the digits without a sign that isn't agreed; a second server engine for WhatsApp (UNREVIEWED)
+
+**Decision (from the previous entry's open question):** when the server's and the phone's readings agree exactly on an amount's digits (commas and decimal point included) but not on its currency sign, Magana says the digits, then "I can't read the currency sign clearly". "Naira" is said only when both readings have "₦" or "NGN". Everything else is unchanged:
+- the same amount, sign included: said as printed;
+- other digits, or no second reading: "I can't read the amount clearly".
+- **Also "sign unclear":** an amount with a sign on one reading only ("8,000.00" against "N8,000.00"), and an unlikely sign both agree on ("₩").
+- **Matching order:** each second-reading amount confirms one first-reading amount, exact matches first, then digits alone.
+- **App:** the Reader says "Amount: 8,000.00, I can't read the currency sign clearly" and shows "8,000.00 [I can't read the currency sign clearly]". It isn't counted as an unclear number, and the line doesn't get "Unclear." at its end. "What's unclear?" explains it. Diagnostics count these amounts.
+- **The 5 synthetic receipts, on the iPhone path** (server against Apple Vision, both from the previous entry): the dark PNG, the only one where the server read an amount, is now said "8,000.00, I can't read the currency sign clearly" (server "#", Vision "₩"). The other 4 are still held back by the server's own rules.
+
+**WhatsApp: a second engine on the server.** WhatsApp has no phone reading, so a second engine on the server does the same check. It is RapidOCR 1.4.4: PaddleOCR's PP-OCR models on ONNX Runtime, Apache-2.0, `second_ocr.py`.
+- **Why not full PaddleOCR:** it adds about 3 GB to the image and needs more memory than the 2 GB t3.small has. RapidOCR is about 30 MB of wheels and models.
+- **Memory** (Mac, a 1080 × 2340 receipt):
+
+  | Setting | Extra memory while reading | Time per receipt |
+  |---|---|---|
+  | Default | ~650 MB | 0.5 to 0.9 s |
+  | 1 thread, images capped at 1600 px | ~400 MB | ~1.3 s |
+
+  It runs with the second setting in a child process, one photo at a time, so the memory is freed when it exits. It runs only when the first reading has an amount. The photo goes through a pipe and is never written to disk. Any failure means no second reading, so the amount is held back.
+- **Rule:** the same as the app's (`amounts.py`).
+  - Text message: "[I can't read the amount clearly]", or "8,000.00 [I can't read the currency sign clearly]" with a line warning.
+  - Voice note: "unclear number", or the digits, then the warning in the user's language.
+  - Hausa, Yorùbá and Igbo wording is a draft pending native review.
+- **Measured on the 5 synthetic receipts:** RapidOCR reads all 5 amounts as "#8,000.00", at confidence 0.94 to 0.97, so it doesn't read "₦" either. Where Tesseract's amount survives its own rules ("#8,000.00" on the dark PNG on the Mac), the two agree exactly and it is said as printed, never as naira.
+- **A bug the tests caught before shipping:** the server's first pattern let a digit count as a sign, so "48,000.00" would have matched "8,000.00". Fixed; tested.
+- **Open:** a small check on the cropped sign itself (matching ₦ against N and #) so that "naira" can be said confidently. Not done.
+- Tests: `backend/tests/test_amounts.py` (19, including a WhatsApp photo end to end with the second engine faked, and the real engine in a child process); `app/test/amount_check_test.dart` (20).
+
+---
+
 ## 2026-10-27 · Receipt amounts said only when the server and the phone agree; A–D quizzes from Primary 4 (UNREVIEWED)
 
 **Rule (app, `amount_check.dart`):** on a screenshot (found by the phone or the server) or a money paper, the phone also reads the picture itself (Apple Vision on the iPhone, ML Kit on Android). A money amount is said only when the phone's reading holds it character for character, currency sign included. Otherwise: "I can't read the amount clearly" (shown as "[I can't read the amount clearly]"). The first reading is never changed: amounts are only held back.

@@ -1,0 +1,13 @@
+# WhatsApp's second engine for money amounts (app/second_ocr.py, app/amounts.py): RapidOCR,
+# PaddleOCR's PP-OCR models on ONNX Runtime, run beside Tesseract. About 30 MB of wheels and
+# models; it reads in a child process, so its ~400 MB is only used while reading.
+# rapidocr_onnxruntime itself is installed with --no-deps (Dockerfile): it asks for the full
+# opencv-python, which needs desktop libraries; the headless build below is enough.
+onnxruntime==1.31.1        # MIT
+opencv-python-headless==5.0.0.93  # Apache-2.0
+pyclipper==1.4.0           # MIT
+shapely==2.2.0             # BSD-3-Clause
+PyYAML==6.0.3              # MIT
+six==1.17.0                # MIT
+tqdm==4.70.1               # MPL-2.0 / MIT
+# then: pip install --no-deps rapidocr_onnxruntime==1.4.4   (Apache-2.0, models included)

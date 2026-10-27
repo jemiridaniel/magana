@@ -197,6 +197,10 @@
   "whereBottom": "near the bottom of the page",
   "unclearNumber": "unclear number",
   "amountUnclear": "I can't read the amount clearly",
+  "currencyUnclear": "I can't read the currency sign clearly",
+  "@currencyUnclear": {
+    "description": "Said after an amount's digits when the server's and the phone's readings agree on the digits but not on the currency sign. Naira is never guessed."
+  },
   "@amountUnclear": {
     "description": "Said in place of a money amount on a receipt, screenshot or bank paper when the server's and the phone's readings of it do not match exactly (never guessed)."
   },
@@ -228,6 +232,14 @@
   },
   "msg_unreadable_number": "I can't read a number on {where} clearly. Please check it or retake the photo.",
   "@msg_unreadable_number": {
+    "placeholders": {
+      "where": {
+        "type": "String"
+      }
+    }
+  },
+  "msg_currency_unclear": "On {where} I can read the amount's digits but not its currency sign, so I say the digits only. Please check it in your bank's app or with someone you trust.",
+  "@msg_currency_unclear": {
     "placeholders": {
       "where": {
         "type": "String"

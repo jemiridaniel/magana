@@ -538,7 +538,8 @@ class _CaptureScreenState extends State<CaptureScreen>
       page = await confirmOnPhone(page, bytes, phone: phoneReading);
       diagnostics.last
         ?..amountsChecked = page.json?['amounts_checked'] as int? ?? 0
-        ..amountsHeld = page.json?['amounts_held'] as int? ?? 0;
+        ..amountsHeld = page.json?['amounts_held'] as int? ?? 0
+        ..amountsSignUnclear = page.json?['amounts_sign_unclear'] as int? ?? 0;
       if (!mounted) return;
     }
     await TaskLog.record(TaskKind.forPaper(kind));

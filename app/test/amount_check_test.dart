@@ -46,6 +46,8 @@ List<String> said(Map<String, dynamic> json) => [
               ? '[amount]'
               : i.unclearWords.contains(n)
               ? '[number]'
+              : i.currencyUnclear.contains(n)
+              ? '${digitsOf(w, sign: i.signBefore(n))} [sign?]'
               : w,
     ].join(' '),
 ];
@@ -100,7 +102,7 @@ void main() {
       'Account number: 0123456789',
     ]);
 
-    test('agreed exactly: said; a different sign or digit: held back', () {
+    test('agreed exactly: said; same digits, another sign: digits only', () {
       final phone = reading([
         'Transfer successful',
         'Amount: ₦8,000.00', // the phone read the sign the server read as "#"
@@ -109,10 +111,11 @@ void main() {
       ]);
       final out = confirmAmounts(server, phone);
       expect(out['amounts_checked'], 2);
-      expect(out['amounts_held'], 1);
+      expect(out['amounts_held'], 0);
+      expect(out['amounts_sign_unclear'], 1);
       expect(said(out), [
         'Transfer successful',
-        'Amount: [amount]',
+        'Amount: 8,000.00 [sign?]',
         'Fee: ₦10.75',
         'Account number: 0123456789', // not an amount: the number rules cover it
       ]);
@@ -124,9 +127,35 @@ void main() {
       expect(said(confirmAmounts(s, p)), ['Amount: [amount]']);
     });
 
-    test('both read "₩" (Apple Vision\'s "₦"): agreed, but held back', () {
+    test('both read "₩" (Apple Vision\'s "₦"): the digits, not the sign', () {
       final s = reading(['Amount: ₩8,000.00', 'Fee: \$5.00']);
-      expect(said(confirmAmounts(s, s)), ['Amount: [amount]', 'Fee: \$5.00']);
+      expect(said(confirmAmounts(s, s)), [
+        'Amount: 8,000.00 [sign?]',
+        'Fee: \$5.00',
+      ]);
+    });
+
+    test('a sign on one reading only: the digits, not the sign', () {
+      final s = reading(['Amount: 8,000.00']);
+      expect(said(confirmAmounts(s, reading(['Amount: N8,000.00']))), [
+        'Amount: 8,000.00 [sign?]',
+      ]);
+    });
+
+    test('digits must agree exactly, commas and decimal point included', () {
+      final s = reading(['Amount: #8,000.00']);
+      for (final p in ['₦8000.00', '₦8,000', '₦8,000.50', '₦80,000.00']) {
+        expect(said(confirmAmounts(s, reading(['Amount: $p']))), [
+          'Amount: [amount]',
+        ], reason: p);
+      }
+    });
+
+    test('an exact match is used before a digits-only one', () {
+      final s = reading(['#500.00 ₦500.00']);
+      expect(said(confirmAmounts(s, reading(['₦500.00 ₦500.00']))), [
+        '500.00 [sign?] ₦500.00',
+      ]);
     });
 
     test('no second reading: every amount is held back', () {
@@ -147,6 +176,9 @@ void main() {
       expect(said(confirmAmounts(s, reading(['Total NGN 1,250,000.50']))), [
         'Total [amount]',
       ]);
+      expect(said(confirmAmounts(s, reading(['Total N1,250,000.00']))), [
+        'Total 1,250,000.00 [sign?]',
+      ]);
     });
 
     test('each of the phone\'s amounts confirms one of the server\'s', () {
@@ -156,7 +188,7 @@ void main() {
       ]);
     });
 
-    test('a table cell is held back as a cell', () {
+    test('a table cell: digits agreed, sign unclear', () {
       final s = {
         ...reading([]),
         'tables': [
@@ -178,10 +210,14 @@ void main() {
       final row = ReadResult.fromJson(
         confirmAmounts(s, reading(['27 Oct ₦8,000.00'])),
       ).items.single;
-      expect(row.cells.map((c) => (c.value, c.unclear, c.amount)), [
-        ('27 Oct', false, false),
-        ('#8,000.00', true, true),
-      ]);
+      expect(
+        row.cells.map((c) => (c.value, c.unclear, c.amount, c.currencyUnclear)),
+        [('27 Oct', false, false, false), ('#8,000.00', false, false, true)],
+      );
+      final held = ReadResult.fromJson(
+        confirmAmounts(s, reading(['27 Oct ₦6,000.00'])),
+      ).items.single;
+      expect(held.cells.last.amount, isTrue);
     });
 
     test('a page with no amounts is left exactly as it is', () {
@@ -245,7 +281,7 @@ void main() {
       return speaker;
     }
 
-    testWidgets('the server read "#", the phone "₦": the amount is not said', (
+    testWidgets('the server read "#", the phone "₦": the digits, no naira', (
       tester,
     ) async {
       final speaker = await readReceipt(
@@ -253,9 +289,20 @@ void main() {
         server: ['Amount: #8,000.00', 'Recipient: Ada Okonkwo'],
         phone: ['Amount: ₦8,000.00', 'Recipient: Ada Okonkwo'],
       );
+      expect(speaker.said, contains('Amount: 8,000.00, ${en.currencyUnclear}'));
+      expect(speaker.said.where((s) => s.contains('naira')), isEmpty);
+      expect(speaker.said.where((s) => s.contains('#')), isEmpty);
+      expect(speaker.said, contains('Recipient: Ada Okonkwo'));
+    });
+
+    testWidgets('the digits differ: the amount is not said', (tester) async {
+      final speaker = await readReceipt(
+        tester,
+        server: ['Amount: 48,000.00'],
+        phone: ['Amount: ₦8,000.00'],
+      );
       expect(speaker.said, contains('Amount: ${en.amountUnclear}'));
       expect(speaker.said.where((s) => s.contains('8,000')), isEmpty);
-      expect(speaker.said, contains('Recipient: Ada Okonkwo'));
     });
 
     testWidgets('both read "₦8,000.00": said "8,000 naira"', (tester) async {

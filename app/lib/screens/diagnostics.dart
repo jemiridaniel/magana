@@ -82,7 +82,8 @@ class _DiagnosticsScreenState extends State<DiagnosticsScreen> {
         if (a.amountsChecked case final n?)
           (
             'Money amounts',
-            '$n checked against a second reading, ${a.amountsHeld ?? 0} held back',
+            '$n checked against a second reading, ${a.amountsHeld ?? 0} held back, '
+                '${a.amountsSignUnclear ?? 0} said without their sign',
           ),
         ('Server status', a.status?.toString() ?? 'no answer'),
         if (a.code != null) ('Server code', a.code!),

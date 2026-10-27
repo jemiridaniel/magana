@@ -29,7 +29,7 @@ from typing import Awaitable, Callable
 import httpx
 from starlette.concurrency import run_in_threadpool
 
-from . import language, safety, spoken, triage, tts, wa_store as store
+from . import amounts, language, safety, second_ocr, spoken, triage, tts, wa_store as store
 from .iba_client import IbaClient
 from .messages import ENGLISH
 from .placeholders import content_dir
@@ -38,7 +38,8 @@ from .wa_client import WhatsAppClient, WhatsAppError
 log = logging.getLogger("magana.whatsapp")
 
 LANGS = ("en", "ha", "yo", "ig")
-NUMBER_CODES = {"unreadable_number", "low_confidence_number", "number_mismatch", "handwritten_number"}
+NUMBER_CODES = {"unreadable_number", "low_confidence_number", "number_mismatch", "handwritten_number",
+                "amount_unconfirmed"}
 # Below the hard limit, keep a few messages for people already mid-conversation: new photos
 # and checks get "limit reached" instead.
 SOFT_MARGIN = 50
@@ -124,8 +125,14 @@ def read_photo(data: bytes, engine) -> dict | None:
                 + safety.line_end_warnings(result["lines"]) + safety.line_part_warnings(result["lines"]))
     if "second_pass" in result:
         warnings += safety.number_mismatches(result, result.pop("second_pass"), scale=SECOND_PASS_SCALE)[0]
-    warnings = safety.letters_not_numbers(warnings, result)
-    return {"lines": result["lines"], "warnings": [w.__dict__ for w in warnings],
+    warnings = [w.__dict__ for w in safety.letters_not_numbers(warnings, result)]
+    # Money amounts: said only when a second engine agrees (amounts.py). A number already
+    # unclear stays "unclear number".
+    if amounts.amounts(result["lines"]):
+        flagged = {(w["block_index"], w.get("word_index")) for w in warnings if w["code"] in NUMBER_CODES}
+        warnings += [w for w in amounts.confirm(result["lines"], second_ocr.read_lines(data))
+                     if (w["block_index"], w["word_index"]) not in flagged]
+    return {"lines": result["lines"], "warnings": warnings,
             "faint_regions": result.get("faint_regions", []), "letter_marks": result.get("letter_marks", [])}
 
 
@@ -134,10 +141,16 @@ def reading_messages(lang: str, result: dict) -> tuple[list[str], list[tuple[str
     lines = result["lines"]
     codes: dict[int, list[str]] = {}
     unclear: dict[int, set[int]] = {}
+    held: dict[int, set[int]] = {}  # amounts the second engine didn't confirm
+    sign: dict[int, set[int]] = {}  # amounts whose digits it confirmed, but not the sign
     for w in result["warnings"]:
         codes.setdefault(w["block_index"], []).append(w["code"])
         if w["code"] in NUMBER_CODES and isinstance(w.get("word_index"), int):
             unclear.setdefault(w["block_index"], set()).add(w["word_index"])
+        if w["code"] == "amount_unconfirmed":
+            held.setdefault(w["block_index"], set()).add(w["word_index"])
+        if w["code"] == "currency_unclear":
+            sign.setdefault(w["block_index"], set()).add(w["word_index"])
     # A digit inside a word on a Hausa, Yorùbá or Igbo page (letters.digit_in_word): an unclear
     # letter, shown beside the word as read and never said as a number.
     letter = {(m["block_index"], m["word_index"]) for m in result.get("letter_marks") or []
@@ -146,16 +159,39 @@ def reading_messages(lang: str, result: dict) -> tuple[list[str], list[tuple[str
     shown, voice, warnings = [], [], []
     for i, line in enumerate(lines):
         words = [w["text"] for w in line.get("words") or []] or line["text"].split()
-        text = " ".join(marker if j in unclear.get(i, ()) else f"{w} {t(lang, 'unclear_letter')}" if (i, j) in letter
-                        else w for j, w in enumerate(words))
+        held_i, sign_i = held.get(i, set()), sign.get(i, set())
+        # A bare sign word ("NGN 8,000.00") goes with its amount when that is held or unsure.
+        skip = {j for j in range(len(words) - 1) if (j + 1 in held_i or j + 1 in sign_i)
+                and amounts.is_sign_word(words[j])}
+
+        def sign_before(j: int) -> str | None:
+            return words[j - 1].strip() if j and amounts.is_sign_word(words[j - 1]) else None
+
+        def shown_word(j: int, w: str) -> str:
+            if j in held_i:
+                return t(lang, "unclear_amount")
+            if j in unclear.get(i, ()):
+                return marker
+            if j in sign_i:
+                return f"{amounts.digits_of(w, sign_before(j))} {t(lang, 'unclear_currency')}"
+            return f"{w} {t(lang, 'unclear_letter')}" if (i, j) in letter else w
+
+        def said_word(j: int, w: str) -> str:
+            if j in unclear.get(i, ()):
+                return spoken_unclear
+            if j in sign_i:
+                return amounts.digits_of(w, sign_before(j))
+            return spoken_unclear_letter if (i, j) in letter else w
+
+        text = " ".join(shown_word(j, w) for j, w in enumerate(words) if j not in skip)
         shown.append(f"{i + 1}. {text}")
         c = codes.get(i, [])
-        key = ("number" if any(x in NUMBER_CODES for x in c) else "line_end" if "line_end_unclear" in c
+        key = ("amount" if "amount_unconfirmed" in c else "number" if any(x in NUMBER_CODES for x in c)
+               else "currency" if "currency_unclear" in c else "line_end" if "line_end_unclear" in c
                else "unsure" if c else None)
         if key:
             warnings.append(t(lang, f"warn_{key}", line=i + 1))
-        said = " ".join(spoken_unclear if j in unclear.get(i, ()) else spoken_unclear_letter if (i, j) in letter
-                        else w for j, w in enumerate(words))
+        said = " ".join(said_word(j, w) for j, w in enumerate(words) if j not in skip)
         voice.append((said, key))
     header = t(lang, "page_header_one") if len(lines) == 1 else t(lang, "page_header", count=len(lines))
     messages = _chunks(header, shown)

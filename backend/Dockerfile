@@ -27,8 +27,10 @@ RUN TD=$(dirname "$(find /usr/share/tesseract-ocr -name eng.traineddata | head -
 
 RUN useradd --create-home --uid 10001 magana
 WORKDIR /srv
-COPY requirements.txt requirements-paddle.txt requirements-asr.txt ./
-RUN pip install --no-cache-dir -r requirements.txt \
+COPY requirements.txt requirements-paddle.txt requirements-asr.txt requirements-second-ocr.txt ./
+# The second engine for WhatsApp's money amounts is always installed (requirements-second-ocr.txt).
+RUN pip install --no-cache-dir -r requirements.txt -r requirements-second-ocr.txt \
+ && pip install --no-cache-dir --no-deps rapidocr_onnxruntime==1.4.4 \
  && if [ "$OCR_ENGINE" = "paddle" ]; then pip install --no-cache-dir -r requirements-paddle.txt; fi \
  && if [ "$SPEECH" = "on" ]; then pip install --no-cache-dir -r requirements-asr.txt; fi
 

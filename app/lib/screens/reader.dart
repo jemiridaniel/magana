@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../amount_check.dart';
 import '../api.dart';
 import '../app_scope.dart';
 import '../commands.dart';
@@ -345,12 +346,18 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 ? _l.amountUnclear
                 : item.unclearWords.contains(i)
                 ? _l.unclearNumber
+                : item.currencyUnclear.contains(i)
+                ? '${digitsOf(w, sign: item.signBefore(i))}, ${_l.currencyUnclear}'
                 : item.unclearLetters.contains(i)
                 ? _l.unclearLetter
                 : w,
       ].join(' '),
       ItemKind.row =>
-        '${_position(item)}. ${[for (final c in item.cells) (c.header.isEmpty ? '' : '${c.header}: ') + (c.unclear ? (c.amount ? _l.amountUnclear : _l.unclearNumber) : c.value)].join('. ')}',
+        '${_position(item)}. ${[for (final c in item.cells) (c.header.isEmpty ? '' : '${c.header}: ') + (c.unclear
+                  ? (c.amount ? _l.amountUnclear : _l.unclearNumber)
+                  : c.currencyUnclear
+                  ? '${digitsOf(c.value)}, ${_l.currencyUnclear}'
+                  : c.value)].join('. ')}',
     };
   }
 
@@ -739,7 +746,11 @@ class _ReaderScreenState extends State<ReaderScreen> {
         for (final c in item.cells)
           [
             if (c.header.isNotEmpty) '${c.header}:',
-            c.unclear ? (c.amount ? amount : unclear) : c.value,
+            c.unclear
+                ? (c.amount ? amount : unclear)
+                : c.currencyUnclear
+                ? '${digitsOf(c.value)} [${_l.currencyUnclear}]'
+                : c.value,
           ].join(' '),
       ].join(' · ');
     }
@@ -751,6 +762,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
               ? amount
               : item.unclearWords.contains(i)
               ? unclear
+              : item.currencyUnclear.contains(i)
+              ? '${digitsOf(w, sign: item.signBefore(i))} [${_l.currencyUnclear}]'
               : w,
     ].join(' ');
   }
@@ -1380,6 +1393,13 @@ class _ItemCard extends StatelessWidget {
                       Text.rich(
                         c.unclear
                             ? _unclear(context, amount: c.amount)
+                            : c.currencyUnclear
+                            ? TextSpan(
+                                children: [
+                                  TextSpan(text: '${digitsOf(c.value)} '),
+                                  _unclear(context, sign: true),
+                                ],
+                              )
                             : TextSpan(text: c.value),
                         style: const TextStyle(
                           fontSize: 24,
@@ -1400,6 +1420,16 @@ class _ItemCard extends StatelessWidget {
                             ? _unclear(
                                 context,
                                 amount: item.unclearAmounts.contains(i),
+                              )
+                            : item.currencyUnclear.contains(i)
+                            ? TextSpan(
+                                children: [
+                                  TextSpan(
+                                    text: digitsOf(w, sign: item.signBefore(i)),
+                                  ),
+                                  const TextSpan(text: ' '),
+                                  _unclear(context, sign: true),
+                                ],
                               )
                             : item.letterMarks.contains(i)
                             ? TextSpan(text: w, style: _marked)
@@ -1423,8 +1453,14 @@ class _ItemCard extends StatelessWidget {
 /// A number the backend could not read reliably: shown as "[unclear number]",
 /// highlighted, never as the digit OCR guessed. A money amount two readings didn't agree
 /// on: "[I can't read the amount clearly]".
-TextSpan _unclear(BuildContext context, {bool amount = false}) => TextSpan(
-  text: amount
+TextSpan _unclear(
+  BuildContext context, {
+  bool amount = false,
+  bool sign = false,
+}) => TextSpan(
+  text: sign
+      ? '[${AppLocalizations.of(context).currencyUnclear}]'
+      : amount
       ? '[${AppLocalizations.of(context).amountUnclear}]'
       : '[${AppLocalizations.of(context).unclearNumber}]',
   style: const TextStyle(

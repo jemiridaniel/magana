@@ -21,8 +21,9 @@ class PageWarnings {
   static bool _number(String code) => numberCodes.contains(code);
 
   /// Something on [i] other than a number is unclear: a word, the line's end, a part of it.
+  /// An unclear currency sign is said at the amount itself, not again at the line's end.
   static bool unclearText(ReadItem i) =>
-      !i.isFaint && i.codes.any((c) => !_number(c));
+      !i.isFaint && i.codes.any((c) => !_number(c) && c != 'currency_unclear');
 
   /// A number warning on [i] that no word or cell carries: said at the line's end.
   static bool unmarkedNumber(ReadItem i) =>
