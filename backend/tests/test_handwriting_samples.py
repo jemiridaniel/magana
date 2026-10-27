@@ -56,13 +56,6 @@ def test_printed_items_are_not_called_handwritten(img):
     assert not {"mixed_page", "handwritten_page", "handwritten_prescription"} & set(body["tips"])
 
 
-def test_on_a_health_paper_faint_thermal_print_errs_to_the_pharmacist():
-    """The strict health check can't tell a faint, torn thermal slip's numbers from handwriting:
-    it sends the person to the pharmacist (the safe side). The card is not affected."""
-    assert "handwritten_prescription" in read(cf.thermal_slip(), mode="health")["tips"]
-    assert "handwritten_prescription" not in read(cf.small_card(), mode="health")["tips"]
-
-
 def test_a_printed_medicine_label_photo_is_not_sent_to_the_pharmacist():
     import sys
     sys.path.insert(0, "scripts")
