@@ -13,6 +13,82 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-27 · 0.1.0+11: why the iPhone read offline, capture that always finishes, one voice at a time, show-through and shadows, Apple Vision offline (UNREVIEWED)
+
+From the tester's iPhone (build 10): "Magana's server isn't answering" at about 11:47 and 11:58; capture that never fired; the previous screen's speech carrying on; "unclear" after every sentence of a thin book page; a torch shine on a card.
+
+**Was 0.1.0+9 or +10 ever installed?** No IPA of +9 was built. The +10 IPA was built by the tester after signing in to Xcode (my own export had failed with "No Accounts"). The phone's build can't be checked from here, so Capture now shows it small under its title ("0.1.0 (11)"), and so does Settings → About.
+
+**"Server isn't answering": what the server saw.**
+- `api.magana.ng/health` answered every 30 s all morning.
+- Server log for the window (read-only "Server requests" workflow; it prints only times and status codes, never IPs):
+  - 11:47:25 a `/read` arrived and was answered **200 OK**, after the app had given up at 8 s.
+  - 11:58: no `/read` arrived at all. The upload didn't finish in time; a cancelled upload leaves no log line.
+  - No 429 and no 5xx. One 401 (wrong key) at 11:41 came from something else.
+- Measured from the Mac: a card takes 1.5–3 s, and a dense or full book-like page 5.4–6.6 s, before any mobile upload.
+- **Cause:** the app's 8 s limit covered upload plus reading.
+- **Fixes:**
+  - The phone waits 25 s, saying "Still reading…" at 5 s.
+  - A failed send or a server error is retried once within those 25 s.
+  - A 429 is said as it is ("busy this minute" / "today's server readings are used up") and the page is read on the phone.
+  - Each case gets its own wording; "isn't answering" is gone.
+  - The server now logs each read: status, milliseconds, size and the first 8 characters of the install ID. Before this, Magana's own info lines never reached the log at all.
+  - Pilot phones are exempt from the daily cap by install ID (`RATE_EXEMPT_DEVICES`; Settings → tap the version 7 times shows the ID). This uses the ID, not the key, because the key is in every copy of the app.
+
+**Capture always finishes.**
+- **The bug:** the old 4 s rule counted only frames where the phone was not moving. Constant small hand shake crossed the movement threshold on every frame, so it never started.
+- **Now there are two clocks per attempt that nothing resets:**
+  - 4 s after text is first seen, the photo is taken;
+  - with no text at all, 8 s after the camera opens. If that photo has no text: "I couldn't find text. Try moving the phone further away", then the next attempt.
+  - Capture also has its own timer, so stalled frames can't hold it.
+- **Before every photo:** the shutter sound (now also with the iPhone's silent switch on), a vibration, and "Picture taken. Reading…".
+- "Hold still" is said at most twice per attempt.
+- **Torch glare** (0.5–20% of the view blown out, on paper otherwise below that) turns the torch off, with "The light was shining back off the page, so I turned it off."
+- Tests (`small_items_test.dart`):
+  - 60 s of constant shake: every capture comes within 4 s with text and within 8 s without, 7 or more captures each way;
+  - no text: taken at 8 s;
+  - glare: seen; plain paper: not.
+
+**One voice at a time.**
+- Every screen now speaks through a speaker bound to its own screen (`route_speech.dart`; `AppScope.of` gives it). A covered or closed screen's words are dropped.
+- Every push, pop or replace stops the voice and clears the Touch to hear caption before the new screen speaks. Going to the background (another app, the lock button, a call) stops it too.
+- With VoiceOver or TalkBack on, an utterance the screen reader cuts off is not repeated.
+- Words said as a screen closes ("Class changed", "Deleted", "Reminder saved") use the app's own voice, after the close.
+- Test (`route_speech_test.dart`, a 400 ms-per-utterance voice): Read a page, Everyday papers, My library, Practice quiz, Reader, Quiz and Settings each start talking, then Back. All pass with nothing more said after 100 ms; with the fix switched off, all 8 tests fail.
+
+**Show-through and shadows (server).** Synthetic book page: dark print, the other side's print mirrored at about a quarter of its darkness, with and without a hand shadow.
+- **Before:**
+  - plain: 6 "missed line" alarms (the new check read the back of the page);
+  - with shadow: a garbage line ("epnids 19030…"), a broken line and 5 warnings.
+- **Show-through** is measured against the page's own confidently read print:
+  - ink under 30% of its darkness is the page behind. Real show-through is about 23%; a blurred smudge on real print is about 45%, and must still be flagged;
+  - such words that the OCR was unsure of are dropped;
+  - every later ink check ignores that ink;
+  - a light row is dropped if it reads better mirrored, or if it is one of several unreadable light rows on a page of print. A lone faint line (a faded dose) is still read or reported, as before.
+- **Shadow** is a dark patch left after taking out the light's slope across the page (a fitted plane):
+  - at most 0.04 on the 20 photo-like pages, 0.13 with a hand shadow; the threshold is 0.07;
+  - a shadowed page is also read on an evened-out copy, and the better reading is kept.
+- **After:** both book pages read all 6 lines, with no warnings and nothing from the back.
+- **40-page set:** unchanged (0 missed-line or faint alarms, 0 shadow pages, words found 99.7% at 1080 px). The tester's two photos: unchanged.
+- Joined-up script makes one piece of ink per word, so a missed line needs 3 pieces now, not 4. The card still gets its alarm.
+
+**iPhone offline reading: Apple Vision instead of ML Kit.**
+- Settings: `VNRecognizeTextRequest`, accurate, en-US, language correction off (a number is never "corrected" into a word), on the device.
+- Vision's confidence is per line, not per word: each word carries its line's, often 0.3, 0.5 or 1.0. A number still needs 0.90 and an agreeing re-read of a crop around it.
+- Same images; Vision run on the Mac with the app's own code (`tools/vision/run.sh`), ML Kit on the Android emulator (`tool/measure_offline.dart`). Counts only for the tester's photos:
+
+  | Image | Apple Vision | ML Kit (Android) |
+  |---|---|---|
+  | Synthetic script card | 4 lines, all 10 words right ("in all things", "Psalm 37:4"), mean 1.00 | 4 lines, mean 0.60, the number under 0.90, 3 lines unsure |
+  | Book page with shadow | 15 lines (9 of them show-through scraps, some at 1.00, one "29"), 6 after the filter | 13 lines, 8 after the filter (2 scraps remain) |
+  | IMG_2041 (card) | 6 lines, 27 words, mean 1.00, 1 of 1 numbers at 0.90+ | 6 lines, 25 words, mean 0.85, 0 of 1 |
+  | IMG_2042 (boarding pass) | 19 lines, 31 words, mean 0.98, 5 of 5 | 15 lines, 27 words, mean 0.73, 1 of 5 |
+
+- Because Vision gives show-through scraps full confidence, the phone filters by ink instead: a native `inkDepth` (Swift and Kotlin) measures each word's darkness, and the same 30% rule as the server applies (`dropShowThrough`).
+- ML Kit is still linked into the iOS app but no longer used there. Its pods still block arm64 iOS simulators, and iOS 26 simulators no longer run x86_64 apps, so the iPad simulator still can't run the app.
+
+**Also:** a "Can't install?" section on magana.ng/android (Samsung Auto Blocker; Tecno, Infinix and itel; Xiaomi, Redmi and Poco; download from Chrome, not WhatsApp; turning protection back on; updates). The version is shown in Settings → About.
+
 ## 2026-10-27 · Missed lines are said, not lost; teachers' lesson notes (private, counts only); Basic 4 and 5 (UNREVIEWED)
 
 **Silent line loss.** On the script-font card Tesseract dropped a whole line ("in all things") with no warning: the faint-print check saw one tall band (the card's own edges join every row) and nothing else looked for it.

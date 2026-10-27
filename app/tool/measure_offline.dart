@@ -23,6 +23,20 @@ Future<void> main() async {
   }
   for (final f in files) {
     final bytes = await f.readAsBytes();
+    // The recogniser alone, comparable with Apple Vision's counts (tools/vision/run.sh).
+    final photo = await pageRecognizer.open(bytes);
+    if (photo != null) {
+      final seen = await photo.read();
+      final words = [for (final l in seen) ...l.words];
+      final confs = [for (final w in words) ?w.confidence];
+      final numbers = words.where((w) => RegExp(r'\d').hasMatch(w.text));
+      final kept = await dropShowThrough(photo, seen);
+      debugPrint('MEASURE ${f.uri.pathSegments.last} raw: lines ${seen.length} words ${words.length} '
+          'with confidence ${confs.length} mean ${confs.isEmpty ? 0 : (confs.reduce((a, b) => a + b) / confs.length).toStringAsFixed(2)} '
+          'numbers ${numbers.length} numbers >= 0.90 ${numbers.where((w) => (w.confidence ?? 0) >= 0.9).length}; '
+          'after show-through: lines ${kept.length} words ${[for (final l in kept) ...l.words].length}');
+      await photo.close();
+    }
     for (final on in [false, true]) {
       offlineFlatten = on;
       final watch = Stopwatch()..start();

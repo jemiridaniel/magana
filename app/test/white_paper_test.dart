@@ -131,6 +131,8 @@ class FakePhoto implements OfflinePhoto {
     double s,
   ) async => crop == null ? null : crop!(l, t, w, h);
   @override
+  Future<List<double>?> inkDepth(List<SeenWord> words) async => null;
+  @override
   Future<void> close() async => closed = true;
 }
 

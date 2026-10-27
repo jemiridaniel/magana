@@ -50,6 +50,9 @@ object OfflineChannels {
                             call.argument<Int>("quality")!!)
                     )
                     "delete" -> result.success(File(call.argument<String>("path")!!).delete())
+                    "inkDepth" -> result.success(
+                        inkDepth(call.argument<String>("path")!!, call.argument<List<List<Int>>>("boxes")!!)
+                    )
                     else -> result.notImplemented()
                 }
             } catch (e: Exception) {
@@ -158,6 +161,39 @@ object OfflineChannels {
      * on an image an eighth of the size (about the server's Gaussian of 25 px), sampled back
      * bilinearly. Returns a grey private JPEG, like [upright].
      */
+    /**
+     * For each box [left, top, width, height]: how dark its strokes are against the paper around
+     * it (the paper's 90th percentile brightness minus the box's 5th). Show-through is faint.
+     */
+    private fun inkDepth(path: String, boxes: List<List<Int>>): List<Double> {
+        val bitmap = BitmapFactory.decodeFile(path) ?: return boxes.map { 0.0 }
+        val w = bitmap.width
+        val h = bitmap.height
+        val pixels = IntArray(w * h)
+        bitmap.getPixels(pixels, 0, w, 0, 0, w, h)
+        bitmap.recycle()
+        fun values(x0: Int, y0: Int, x1: Int, y1: Int): IntArray {
+            val l = maxOf(0, x0); val t = maxOf(0, y0); val r = minOf(w, x1); val b = minOf(h, y1)
+            if (r <= l || b <= t) return IntArray(0)
+            val out = IntArray((r - l) * (b - t))
+            var i = 0
+            for (y in t until b) for (x in l until r) {
+                val p = pixels[y * w + x]
+                out[i++] = (((p shr 16) and 255) * 299 + ((p shr 8) and 255) * 587 + (p and 255) * 114) / 1000
+            }
+            out.sort()
+            return out
+        }
+        return boxes.map { box ->
+            if (box.size != 4) return@map 0.0
+            val (l, t, bw, bh) = box
+            val ink = values(l, t, l + bw, t + bh)
+            val paper = values(l - bh, t - bh, l + bw + bh, t + 2 * bh)
+            if (ink.isEmpty() || paper.isEmpty()) 0.0
+            else maxOf(0.0, (paper[paper.size * 9 / 10] - ink[ink.size / 20]).toDouble())
+        }
+    }
+
     private fun flatten(context: Context, path: String): Map<String, Any> {
         val src = BitmapFactory.decodeFile(path) ?: throw IllegalArgumentException("not an image")
         val w = src.width

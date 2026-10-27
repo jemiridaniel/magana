@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
@@ -61,6 +62,10 @@ abstract class OfflinePhoto {
   /// this phone can't make one. Its reading replaces this one only if it finds more words.
   Future<OfflinePhoto?> flattened();
 
+  /// How dark each box's strokes are against its own paper (grey levels), or null if this
+  /// phone can't measure it. Finds the back of a thin page showing through ([dropShowThrough]).
+  Future<List<double>?> inkDepth(List<SeenWord> words);
+
   /// Deletes every file made for this photo.
   Future<void> close();
 }
@@ -94,8 +99,11 @@ class MlKitRecognizer implements PageRecognizer {
 }
 
 class _MlKitPhoto implements OfflinePhoto {
-  _MlKitPhoto(this.path, this.width, this.height);
+  _MlKitPhoto(this.path, this.width, this.height, {this.vision = false});
   final String path;
+
+  /// Read with Apple's Vision (iPhone) instead of ML Kit.
+  final bool vision;
   @override
   final int width;
   @override
@@ -121,8 +129,31 @@ class _MlKitPhoto implements OfflinePhoto {
   ];
 
   @override
-  Future<List<SeenLine>> read() async =>
-      _lines(await _recognizer.processImage(InputImage.fromFilePath(path)));
+  Future<List<SeenLine>> read() => _readFile(path);
+
+  Future<List<SeenLine>> _readFile(String file) async => vision
+      ? _visionLines(
+          await MlKitRecognizer._channel.invokeListMethod<Object?>('read', {
+                'path': file,
+              }) ??
+              const [],
+        )
+      : _lines(await _recognizer.processImage(InputImage.fromFilePath(file)));
+
+  static List<SeenLine> _visionLines(List<Object?> raw) => [
+    for (final l in raw.cast<Map<Object?, Object?>>())
+      SeenLine([
+        for (final w in (l['words']! as List).cast<Map<Object?, Object?>>())
+          SeenWord(
+            w['text']! as String,
+            (w['confidence'] as num?)?.toDouble(),
+            w['left']! as int,
+            w['top']! as int,
+            w['width']! as int,
+            w['height']! as int,
+          ),
+      ]),
+  ];
 
   @override
   Future<List<SeenLine>?> readCrop(
@@ -143,9 +174,7 @@ class _MlKitPhoto implements OfflinePhoto {
     if (crop == null) return null;
     _files.add(crop);
     try {
-      return _lines(
-        await _recognizer.processImage(InputImage.fromFilePath(crop)),
-      );
+      return await _readFile(crop);
     } finally {
       await MlKitRecognizer._channel.invokeMethod('delete', {'path': crop});
       _files.remove(crop);
@@ -161,7 +190,22 @@ class _MlKitPhoto implements OfflinePhoto {
       flat['path']! as String,
       flat['width']! as int,
       flat['height']! as int,
+      vision: vision,
     );
+  }
+
+  @override
+  Future<List<double>?> inkDepth(List<SeenWord> words) async {
+    final depths = await MlKitRecognizer._channel.invokeListMethod<num>(
+      'inkDepth',
+      {
+        'path': path,
+        'boxes': [
+          for (final w in words) [w.left, w.top, w.width, w.height],
+        ],
+      },
+    );
+    return depths?.map((d) => d.toDouble()).toList();
   }
 
   @override
@@ -173,8 +217,24 @@ class _MlKitPhoto implements OfflinePhoto {
   }
 }
 
-/// The recognizer the app uses; tests replace it.
-PageRecognizer pageRecognizer = MlKitRecognizer();
+/// The recognizer the app uses; tests replace it. iPhone: Apple's Vision (it gives a confidence;
+/// ML Kit on iOS gave none, so every number was "unclear"). Android: ML Kit.
+PageRecognizer pageRecognizer =
+    !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS
+    ? VisionRecognizer()
+    : MlKitRecognizer();
+
+/// Apple's Vision framework on the iPhone (ios/Runner/MaganaChannels.swift, VisionText), with
+/// the same upright, crop and flatten helpers as ML Kit.
+class VisionRecognizer implements PageRecognizer {
+  @override
+  Future<OfflinePhoto?> open(Uint8List bytes) async {
+    final photo = await MlKitRecognizer().open(bytes);
+    return photo is _MlKitPhoto
+        ? _MlKitPhoto(photo.path, photo.width, photo.height, vision: true)
+        : photo;
+  }
+}
 
 const numberThreshold = 0.90; // as the server: pending clinical sign-off
 const lineThreshold = 0.75;
@@ -221,6 +281,7 @@ Future<ReadResult?> readOnPhone(
         }
       }
     }
+    seen = await dropShowThrough(photo, seen);
     return ReadResult.fromJson(
       await _reading(photo, mode, seen, enhanced: enhanced),
     );
@@ -228,6 +289,47 @@ Future<ReadResult?> readOnPhone(
     await photo.close();
   }
 }
+
+/// The back of a thin page showing through (as the server's reader.show_through): words whose
+/// ink is under [showThrough] of the page's main print are dropped, never spoken. Vision on the
+/// iPhone reads mirrored show-through as junk lines, some at confidence 1.00 ("29", "Db"), so
+/// confidence can't catch it: the ink can (docs/FINDINGS.md, 27 Oct 2026). Pages whose print is
+/// itself pale, or phones that can't measure ink, are left as they are.
+Future<List<SeenLine>> dropShowThrough(
+  OfflinePhoto photo,
+  List<SeenLine> seen,
+) async {
+  final words = [for (final l in seen) ...l.words];
+  if (words.length < 4) return seen;
+  final List<double>? depths;
+  try {
+    depths = await photo.inkDepth(words);
+  } catch (_) {
+    return seen;
+  }
+  if (depths == null || depths.length != words.length) return seen;
+  final depthOf = {for (final (i, w) in words.indexed) w: depths[i]};
+  // The page's own print: words on lines of 3 or more words (show-through junk comes in scraps).
+  final main = [
+    for (final l in seen)
+      if (l.words.length >= 3)
+        for (final w in l.words)
+          if (w.text.trim().length >= 2) depthOf[w]!,
+  ]..sort();
+  if (main.length < 3) return seen;
+  final print = main[main.length ~/ 2];
+  if (print < showThroughMinPrint) return seen;
+  final floor = showThrough * print;
+  return [
+    for (final l in seen)
+      if (l.words.where((w) => depthOf[w]! >= floor).toList() case final kept
+          when kept.isNotEmpty)
+        SeenLine(kept),
+  ];
+}
+
+const showThrough = 0.3; // as the server's SHOW_THROUGH
+const showThroughMinPrint = 60.0;
 
 /// Faint-print retry on the phone: on unless a measurement turns it off.
 bool offlineFlatten = true;

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../l10n/app_localizations.dart';
+import '../version.dart';
 import '../widgets.dart';
 
 /// The credit lines the N-ATLaS Terms of Use v1.0 require "in all public use", quoted
@@ -49,6 +50,17 @@ class AboutScreen extends StatelessWidget {
     return PageScaffold(
       body: [
         ScreenHeader(title: l.aboutTitle, subtitle: version, introduce: true),
+        // Which build this is, so a tester can say (docs/TESTER_INSTALL.md).
+        FutureBuilder(
+          future: appVersion(),
+          builder: (context, v) => switch (v.data) {
+            final v? => Text(
+              l.settingsVersion(v.version, v.build),
+              style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w700),
+            ),
+            null => const SizedBox.shrink(),
+          },
+        ),
         NoteBox(text: l.aboutContact(supportEmail)),
         SecondaryButton(
           label: l.emailSupport(supportEmail),

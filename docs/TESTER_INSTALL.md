@@ -12,7 +12,7 @@ On your phone, open **https://magana.ng/android/** and tap **Download for Androi
 
 Android only installs apps from the Play Store unless you allow it.
 
-1. Open the APK file, for example from your Downloads or from the WhatsApp chat.
+1. Open the APK file from your Downloads. Download it in Chrome from **magana.ng/download/android** rather than opening a copy sent on WhatsApp: WhatsApp adds extra warnings.
 2. Your phone says something like "For your security, your phone is not allowed to install unknown apps from this source." Tap **Settings**.
 3. Turn on **Allow from this source**, then go back.
 4. Tap **Install**.
@@ -27,6 +27,47 @@ Google Play Protect may say **"App blocked to protect your device"** or "Unsafe 
 2. Tap **Install anyway**.
 
 If you only see **OK**, tap the small arrow or **More details** first. Magana is safe to install. It is only unknown to Google because it is not in the Play Store yet.
+
+## Can't install?
+
+Some phones add their own protection. Find your phone below and follow the steps. When Magana is installed, you can turn the protection back on. Until Magana is in a store, each update needs the same steps.
+
+### Any phone
+
+1. Open **Chrome**.
+2. Go to **magana.ng/download/android**.
+3. Open the file when it has downloaded, and follow the steps for your phone below.
+
+Don't install from a file sent on WhatsApp: WhatsApp shows extra warnings, and the file may be an older version.
+
+### Samsung
+
+Samsung's **Auto Blocker** stops the install, even after you allow unknown apps.
+
+1. Open **Settings**.
+2. Tap **Security and privacy**.
+3. Tap **Auto Blocker** and turn it **off**.
+4. Install Magana.
+5. Go back to **Auto Blocker** and turn it **on** again.
+
+### Tecno, Infinix and itel
+
+1. Open **Settings**.
+2. Tap **Security**. On some phones it is **Special app access** instead.
+3. Tap **Install unknown apps**.
+4. Tap **Chrome**.
+5. Turn on **Allow from this source**.
+6. Install Magana.
+
+### Xiaomi, Redmi and Poco
+
+1. When you open the file, your phone asks to allow Chrome to install unknown apps. Tap **Settings** and turn it **on**.
+2. If a **security scan** then says not to install, tap **Install anyway**.
+3. Install Magana.
+
+### After installing
+
+You can turn your phone's protection back on: Magana keeps working. Updates need the same steps until Magana is in a store.
 
 ## 3. Turn on TalkBack (if you don't use it already)
 
@@ -71,7 +112,7 @@ Please send us three things, by email to **support@magana.ng**, or by WhatsApp t
 2. **What you did.** For example: "I took a photo of my paracetamol box in my kitchen in the evening."
 3. **What Magana said.** As close to the exact words as you can. A voice note is fine.
 
-Also tell us your **version**: Home → **Settings** → it says, for example, "Version 0.1.0 (build 1)".
+Also tell us your **version**: Home → **Settings** → **About Magana**, for example "Version 0.1.0 (build 11)". It is also shown small under the title of the **Read a page** screen.
 
 Please don't send photos of private papers such as your own bank statement or medical results. Describe them instead.
 

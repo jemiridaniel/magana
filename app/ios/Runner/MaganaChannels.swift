@@ -2,12 +2,15 @@ import CryptoKit
 import Flutter
 import Speech
 import UIKit
+import Vision
 
 /// The iPhone side of the channels Android has in OfflineChannels.kt and MainActivity.kt.
 /// Nothing here leaves the phone.
-/// - "magana/offline": an upright copy of a photo for on-device text recognition (ML Kit),
-///   crops of it so each number is read a second time, and a flattened copy for faint print. Files live in the app's private caches
-///   folder and the app deletes each one as soon as it is read.
+/// - "magana/offline": an upright copy of a photo for on-device text recognition (Apple's Vision
+///   framework, VisionText below: ML Kit on iOS gave no confidence, so every number was
+///   "unclear"), crops of it so each number is read a second time, and a flattened copy for
+///   faint print. Files live in the app's private caches folder and the app deletes each one as
+///   soon as it is read.
 /// - "magana/vault": AES-GCM with a 256-bit key kept in the Keychain (this device only), for
 ///   photos waiting for a full reading (lib/offline/photo_queue.dart). Same format as Android:
 ///   the 12-byte nonce, then the ciphertext and the 16-byte tag.
@@ -43,6 +46,21 @@ enum MaganaChannels {
         case "delete":
           guard let path = a["path"] as? String else { throw ChannelError.badArguments }
           result((try? FileManager.default.removeItem(atPath: path)) != nil)
+        case "inkDepth":
+          guard let path = a["path"] as? String, let boxes = a["boxes"] as? [[Int]] else { throw ChannelError.badArguments }
+          result(try inkDepth(path: path, boxes: boxes))
+        case "read":
+          guard let path = a["path"] as? String else { throw ChannelError.badArguments }
+          // Vision works off the main thread; the answer goes back on it.
+          DispatchQueue.global(qos: .userInitiated).async {
+            let lines: Any
+            if let image = UIImage(contentsOfFile: path)?.cgImage {
+              lines = (try? VisionText.lines(image)) ?? FlutterError(code: "offline", message: "vision", details: nil)
+            } else {
+              lines = FlutterError(code: "offline", message: "image", details: nil)
+            }
+            DispatchQueue.main.async { result(lines) }
+          }
         default:
           result(FlutterMethodNotImplemented)
         }
@@ -254,3 +272,73 @@ enum MaganaChannels {
     return made
   }
 }
+
+
+extension MaganaChannels {
+  /// For each box [left, top, width, height]: how dark its strokes are against the paper around
+  /// it (the paper's 90th percentile brightness minus the box's 5th). Show-through is faint.
+  static func inkDepth(path: String, boxes: [[Int]]) throws -> [Double] {
+    guard let image = UIImage(contentsOfFile: path)?.cgImage else { throw ChannelError.badArguments }
+    let w = image.width, h = image.height
+    var gray = [UInt8](repeating: 0, count: w * h)
+    guard let ctx = CGContext(data: &gray, width: w, height: h, bitsPerComponent: 8, bytesPerRow: w,
+                              space: CGColorSpaceCreateDeviceGray(), bitmapInfo: CGImageAlphaInfo.none.rawValue)
+    else { throw ChannelError.badArguments }
+    ctx.draw(image, in: CGRect(x: 0, y: 0, width: w, height: h))
+    func values(_ x0: Int, _ y0: Int, _ x1: Int, _ y1: Int) -> [UInt8] {
+      let l = max(0, x0), t = max(0, y0), r = min(w, x1), b = min(h, y1)
+      guard r > l, b > t else { return [] }
+      var out: [UInt8] = []
+      out.reserveCapacity((r - l) * (b - t))
+      for y in t..<b { out.append(contentsOf: gray[(y * w + l)..<(y * w + r)]) }
+      return out.sorted()
+    }
+    return boxes.map { box in
+      guard box.count == 4 else { return 0 }
+      let (l, t, bw, bh) = (box[0], box[1], box[2], box[3])
+      let ink = values(l, t, l + bw, t + bh)
+      let paper = values(l - bh, t - bh, l + bw + bh, t + 2 * bh)
+      guard !ink.isEmpty, !paper.isEmpty else { return 0 }
+      return max(0, Double(paper[paper.count * 9 / 10]) - Double(ink[ink.count / 20]))
+    }
+  }
+}
+
+// VISION-BEGIN (also compiled on a Mac by tools/vision_compare.swift, to compare with ML Kit)
+/// On-device text recognition with Apple's Vision framework: accurate mode, English, and no
+/// language correction, so a number is never "corrected" into a word. Vision gives one
+/// confidence per recognised line (in accurate mode often 0.3, 0.5 or 1.0), not per word: each
+/// word carries its line's. A number still needs 0.90 and an agreeing second reading of a crop
+/// around it before it is said (offline_reader.dart), so a confident line can't pass a misread.
+enum VisionText {
+  static func lines(_ image: CGImage) throws -> [[String: Any]] {
+    let request = VNRecognizeTextRequest()
+    request.recognitionLevel = .accurate
+    request.usesLanguageCorrection = false
+    request.recognitionLanguages = ["en-US"]
+    try VNImageRequestHandler(cgImage: image, options: [:]).perform([request])
+    let w = CGFloat(image.width), h = CGFloat(image.height)
+    var out: [[String: Any]] = []
+    for observation in request.results ?? [] {
+      guard let best = observation.topCandidates(1).first else { continue }
+      let text = best.string
+      var words: [[String: Any]] = []
+      for token in text.split(separator: " ", omittingEmptySubsequences: true) {
+        let range = token.startIndex..<token.endIndex
+        // Normalised, origin at the bottom left: to pixels from the top left.
+        let box = (try? best.boundingBox(for: range))?.boundingBox ?? observation.boundingBox
+        words.append([
+          "text": String(token),
+          "confidence": Double(best.confidence),
+          "left": Int((box.minX * w).rounded()),
+          "top": Int(((1 - box.maxY) * h).rounded()),
+          "width": Int((box.width * w).rounded()),
+          "height": Int((box.height * h).rounded()),
+        ])
+      }
+      if !words.isEmpty { out.append(["words": words]) }
+    }
+    return out
+  }
+}
+// VISION-END
