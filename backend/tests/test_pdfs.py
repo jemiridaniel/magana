@@ -172,7 +172,7 @@ def test_warnings_point_at_the_right_line_after_pages_are_joined(monkeypatch):
         Word("Balance", 0.97, 100, 100, 200, 40),
         Word("4,250.00", 0.6, 320, 100, 200, 40, reread_text="4,250.00", reread_confidence=0.6)])
     sure = Line("Statement", 0.97, 40, words=[Word("Statement", 0.97, 100, 40, 200, 40)])
-    monkeypatch.setattr(pdfs, "read_page", lambda image, engine, second_pass: {
+    monkeypatch.setattr(pdfs, "read_page", lambda image, engine, second_pass, **_: {
         "tips": [], "lines": [asdict(sure), asdict(shaky)], "tables": [], "faint_regions": []})
     body = post(scanned(["x"], pages=2), mode="health").json()  # money pages would hold back flagged lines
     flagged = [(w["block_index"], w["word_index"]) for w in body["warnings"]]

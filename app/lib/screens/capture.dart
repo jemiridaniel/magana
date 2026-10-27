@@ -14,6 +14,7 @@ import '../diagnostics.dart';
 import '../l10n/app_localizations.dart';
 import '../messages.dart';
 import '../offline/offline_reader.dart';
+import '../platform/shrink_photo.dart';
 import '../offline/photo_queue.dart';
 import '../offline/read_timing.dart';
 import '../library.dart';
@@ -127,7 +128,9 @@ class _CaptureScreenState extends State<CaptureScreen>
       );
       final camera = CameraController(
         back,
-        ResolutionPreset.high,
+        // 1080p: reads every number on the 40-page set that 720p missed, at about 37 KB a page
+        // once shrunk (shrinkPhoto); 1600 px added nothing (docs/FINDINGS.md, 27 Oct 2026).
+        ResolutionPreset.veryHigh,
         enableAudio: false,
         imageFormatGroup: cameraFrameFormat,
       );
@@ -292,7 +295,7 @@ class _CaptureScreenState extends State<CaptureScreen>
     try {
       await _stopFraming();
       final photo = await camera.takePicture();
-      final bytes = await photo.readAsBytes();
+      final bytes = await shrinkPhoto(await photo.readAsBytes());
       await discardCapture(photo);
       await _send(bytes, 'page.jpg');
     } on CameraException {

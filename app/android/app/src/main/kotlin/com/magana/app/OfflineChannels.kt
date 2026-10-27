@@ -45,6 +45,10 @@ object OfflineChannels {
                         )
                     )
                     "flatten" -> result.success(flatten(context, call.argument<String>("path")!!))
+                    "shrink" -> result.success(
+                        shrink(context, call.argument<ByteArray>("bytes")!!, call.argument<Int>("maxWidth")!!,
+                            call.argument<Int>("quality")!!)
+                    )
                     "delete" -> result.success(File(call.argument<String>("path")!!).delete())
                     else -> result.notImplemented()
                 }
@@ -89,6 +93,39 @@ object OfflineChannels {
             val out = cacheFile(context, ".jpg")
             out.outputStream().use { turned.compress(Bitmap.CompressFormat.JPEG, 92, it) }
             return mapOf("path" to out.path, "width" to turned.width, "height" to turned.height)
+        } finally {
+            raw.delete()
+        }
+    }
+
+    /**
+     * The photo to send for reading: turned upright (EXIF), at most [maxWidth] wide, re-encoded as a
+     * JPEG at [quality]. 1080 px at 85 reads all the numbers on the 40-page set that 720 px missed,
+     * at about 37 KB a page (docs/FINDINGS.md, 27 Oct 2026).
+     */
+    private fun shrink(context: Context, bytes: ByteArray, maxWidth: Int, quality: Int): ByteArray {
+        val raw = cacheFile(context, ".jpg").apply { writeBytes(bytes) }
+        try {
+            val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            BitmapFactory.decodeFile(raw.path, bounds)
+            var sample = 1
+            while (minOf(bounds.outWidth, bounds.outHeight) / (sample * 2) >= maxWidth) sample *= 2
+            val decoded = BitmapFactory.decodeFile(raw.path, BitmapFactory.Options().apply { inSampleSize = sample })
+                ?: throw IllegalArgumentException("not an image")
+            val degrees = when (ExifInterface(raw.path).getAttributeInt(ExifInterface.TAG_ORIENTATION, 1)) {
+                ExifInterface.ORIENTATION_ROTATE_90 -> 90f
+                ExifInterface.ORIENTATION_ROTATE_180 -> 180f
+                ExifInterface.ORIENTATION_ROTATE_270 -> 270f
+                else -> 0f
+            }
+            var turned = if (degrees == 0f) decoded else
+                Bitmap.createBitmap(decoded, 0, 0, decoded.width, decoded.height, Matrix().apply { postRotate(degrees) }, true)
+            if (turned.width > maxWidth) {
+                turned = Bitmap.createScaledBitmap(turned, maxWidth, (turned.height.toLong() * maxWidth / turned.width).toInt(), true)
+            }
+            val out = java.io.ByteArrayOutputStream()
+            turned.compress(Bitmap.CompressFormat.JPEG, quality, out)
+            return out.toByteArray()
         } finally {
             raw.delete()
         }

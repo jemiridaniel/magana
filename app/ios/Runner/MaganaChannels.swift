@@ -33,6 +33,10 @@ enum MaganaChannels {
                 let width = a["width"] as? Int, let height = a["height"] as? Int, let scale = a["scale"] as? Double
           else { throw ChannelError.badArguments }
           result(try crop(path: path, left: left, top: top, width: width, height: height, scale: scale))
+        case "shrink":
+          guard let bytes = a["bytes"] as? FlutterStandardTypedData, let maxWidth = a["maxWidth"] as? Int,
+                let quality = a["quality"] as? Int else { throw ChannelError.badArguments }
+          result(FlutterStandardTypedData(bytes: try shrink(bytes.data, maxWidth: maxWidth, quality: quality)))
         case "flatten":
           guard let path = a["path"] as? String else { throw ChannelError.badArguments }
           result(try flatten(path: path))
@@ -110,6 +114,21 @@ enum MaganaChannels {
     let out = try cacheFile("jpg")
     try jpeg.write(to: out, options: .completeFileProtection)
     return ["path": out.path, "width": Int(size.width), "height": Int(size.height)]
+  }
+
+  /// The photo to send for reading: upright (its EXIF orientation), at most maxWidth wide,
+  /// re-encoded as a JPEG at quality (as OfflineChannels.kt).
+  static func shrink(_ data: Data, maxWidth: Int, quality: Int) throws -> Data {
+    guard let image = UIImage(data: data) else { throw ChannelError.notAnImage }
+    let s = min(1, CGFloat(maxWidth) / image.size.width)
+    let size = CGSize(width: (image.size.width * s).rounded(), height: (image.size.height * s).rounded())
+    let format = UIGraphicsImageRendererFormat()
+    format.scale = 1
+    let drawn = UIGraphicsImageRenderer(size: size, format: format).image { _ in
+      image.draw(in: CGRect(origin: .zero, size: size))  // draw() applies the orientation
+    }
+    guard let jpeg = drawn.jpegData(compressionQuality: CGFloat(quality) / 100) else { throw ChannelError.notAnImage }
+    return jpeg
   }
 
   /// A crop of an upright photo, scaled by [scale], on a white border (like the server's).

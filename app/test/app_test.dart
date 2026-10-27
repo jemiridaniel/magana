@@ -209,17 +209,21 @@ void main() {
       expect(
         speaker.said,
         contains(
-          "Page read. 2 lines. I'm not sure about 1 of them. I'll tell you when we get there.",
+          "Page read. 2 lines. 1 line is hard to read. Say “what's unclear” to hear where.",
         ),
       );
       expect(speaker.said, contains('Food tests'));
       expect(
         speaker.said,
-        contains(
-          'Take 2 tablets every 4 to 6 hours. ${en.msg_low_confidence(en.whereLine(2))}',
-        ),
+        contains('Take 2 tablets every 4 to 6 hours. ${en.unclearMark}'),
       );
       expect(speaker.said.last, en.endOfPageHint);
+      // The full warning is said on request (and shown for the line, below).
+      await tester.ensureVisible(find.bySemanticsLabel(en.whatsUnclear));
+      await tester.pumpAndSettle();
+      await tester.tap(find.bySemanticsLabel(en.whatsUnclear));
+      await tester.pump();
+      expect(speaker.said.last, en.msg_low_confidence(en.whereLine(2)));
 
       await tester.tap(find.bySemanticsLabel('Previous line'));
       await tester.pump();
@@ -281,7 +285,7 @@ void main() {
     expect(
       speaker.said,
       contains(
-        'Row 1 of 1. Test: Haemoglobin. Result: 11.2 g/dL. ${en.msg_low_confidence(en.whereRow(1))}',
+        'Row 1 of 1. Test: Haemoglobin. Result: 11.2 g/dL. ${en.unclearMark}',
       ),
     );
     expect(find.text('Haemoglobin'), findsOneWidget);
@@ -316,9 +320,7 @@ void main() {
     await captureToReader(tester, takePhoto: ha.takePhoto);
     expect(
       speaker.said,
-      contains(
-        'Take 2 tablets every 4 to 6 hours. ${ha.msg_low_confidence(ha.whereLine(2))}',
-      ),
+      contains('Take 2 tablets every 4 to 6 hours. ${ha.unclearMark}'),
     );
     expect(find.text(ha.yourPage), findsOneWidget);
   });
@@ -374,12 +376,13 @@ void main() {
       },
     );
     await captureToReader(tester);
-    final warning = en.msg_unreadable_number(en.whereLine(1));
+    // Said at the spot as "unclear number", never the digit OCR guessed; counted in the summary.
     expect(
       speaker.said,
-      contains('Do not take more than unclear number in 24 hours. $warning'),
+      contains('Do not take more than unclear number in 24 hours'),
     );
     expect(speaker.said.where((s) => s.contains('@')), isEmpty);
+    expect(speaker.said.any((s) => s.contains(en.summaryNumbers(1))), isTrue);
     expect(
       find.textContaining('Do not take more than [unclear number] in 24 hours'),
       findsOneWidget,
@@ -525,9 +528,6 @@ void main() {
       },
     );
     await captureToReader(tester);
-    expect(
-      speaker.said,
-      contains('Do not take more. ${en.msg_line_end_unclear(en.whereLine(1))}'),
-    );
+    expect(speaker.said, contains('Do not take more. ${en.unclearMark}'));
   });
 }

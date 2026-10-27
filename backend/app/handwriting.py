@@ -54,19 +54,88 @@ def _wander(words: list[Word]) -> float:
     return max(spread(heights), spread(bottoms))
 
 
-def is_handwritten(line: Line) -> bool:
+def is_handwritten(line: Line, typical_height: float = 0) -> bool:
+    """Unsure OCR, and wandering words (or very unsure OCR). Not judged as handwriting: a single
+    "word" with no digit (a speck, an ornament, a logo), or a line under half the page's usual
+    text height (fine print, which the OCR is unsure of for its size). Both were what made the
+    tester's printed church card and thermal boarding pass "look handwritten" (27 Oct 2026). A
+    line with a digit is always judged: a handwritten dose must never pass as print."""
     words = [w for w in line.words if w.text.strip()]
     if not words:
         return False
+    has_digit = any(ch.isdigit() for w in words for ch in w.text)
+    if not has_digit:
+        if len(words) == 1:
+            return False
+        if typical_height and line.height and line.height < SMALL_PRINT * typical_height:
+            return False
     conf = median(w.confidence for w in words)
     return conf < VERY_UNSURE or (conf < UNSURE and _wander(words) >= WANDER)
 
 
-def classify(page: Page) -> str:
-    """Marks each line's `script` and returns the page's: printed, handwritten or mixed."""
+SMALL_PRINT = 0.5  # a line under half the usual text height: fine print, not handwriting
+
+# Health papers (strict): a line with a number whose letters wobble off their word's baseline
+# this much (in letter heights) is handwriting, however sure the OCR is. Neat handwriting can
+# read with confidence: jittered handwritten doses (Caveat) read at 0.50–0.95 and wobble
+# 0.075–0.126, while number lines on the 20 printed benchmark readings wobble at most 0.039
+# (27 Oct 2026). A faint thermal receipt can reach 0.07: the safe side, it goes to the pharmacist.
+WOBBLE = 0.06
+
+
+def word_wobble(gray, word: Word) -> float | None:
+    """How far a word's letters sit off their shared baseline, in letter heights: the ink cut
+    into pieces at blank columns, each piece's lowest ink compared with the word's median
+    (descenders, the worst quarter, left out). None when there are under 3 pieces to judge."""
+    import numpy as np
+
+    pad = max(2, word.height // 4)
+    crop = gray[max(0, word.top - pad):word.top + word.height + pad, max(0, word.left):word.left + word.width]
+    if crop.size == 0 or word.width < 8:
+        return None
+    hi, lo = np.percentile(crop, 90), np.percentile(crop, 5)
+    if hi - lo < 25:
+        return None
+    ink = crop < hi - 0.4 * (hi - lo)
+    cols = ink.any(axis=0)
+    bottoms, heights, x, n = [], [], 0, len(cols)
+    while x < n:
+        if not cols[x]:
+            x += 1
+            continue
+        start = x
+        while x < n and cols[x]:
+            x += 1
+        rows = np.where(ink[:, start:x].any(axis=1))[0]
+        if len(rows) and x - start >= 2:
+            bottoms.append(rows[-1])
+            heights.append(rows[-1] - rows[0] + 1)
+    if len(bottoms) < 3:
+        return None
+    h = float(np.median(heights)) or 1.0
+    dev = np.sort(np.abs(np.array(bottoms, dtype=float) - np.median(bottoms)) / h)
+    return float(np.mean(dev[: max(2, int(len(dev) * 0.75))]))
+
+
+def wobbles(gray, line: Line) -> bool:
+    values = [v for w in line.words if w.width for v in [word_wobble(gray, w)] if v is not None]
+    return bool(values) and median(values) >= WOBBLE
+
+
+def classify(page: Page, image: Image.Image | None = None, strict: bool = False) -> str:
+    """Marks each line's `script` and returns the page's: printed, handwritten or mixed. With
+    [strict] (health papers) and the photo, a line with a number that wobbles is handwritten too."""
+    import numpy as np
+
     hand = 0
+    sure = [l.height for l in page.lines if l.height and l.confidence >= UNSURE]
+    typical = median(sure) if sure else 0
+    gray = np.asarray(image.convert("L"), dtype=float) if strict and image is not None else None
     for line in page.lines:
-        line.script = "handwritten" if is_handwritten(line) else "printed"
+        written = is_handwritten(line, typical)
+        if not written and gray is not None and any(ch.isdigit() for ch in line.text):
+            written = wobbles(gray, line)
+        line.script = "handwritten" if written else "printed"
         hand += line.script == "handwritten"
     if not hand:
         return "printed"

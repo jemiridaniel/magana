@@ -76,6 +76,13 @@ AppLanguage? namedLanguage(String transcript) {
 /// Specific before general: "next column" before "next".
 enum ReaderCommand {
   report(['report a problem', 'problem']),
+  unclear([
+    "what's unclear",
+    'what is unclear',
+    'unclear',
+    'warnings',
+    'warning',
+  ]),
   nextColumn(['next column', 'column']),
   headings(['heading', 'headings']),
   spell(['spell']),

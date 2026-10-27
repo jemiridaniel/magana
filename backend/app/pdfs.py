@@ -347,7 +347,8 @@ def pages(data: bytes, password: str | None = None):
         pdf.close()
 
 
-def read_pdf(data: bytes, password: str | None, engine: OCREngine, second_pass: bool, check) -> dict:
+def read_pdf(data: bytes, password: str | None, engine: OCREngine, second_pass: bool, check,
+             strict_handwriting: bool = False) -> dict:
     """The whole PDF as one /read response. `check(result)` adds the safety warnings for
     one page (main.checked); their indexes are shifted as pages are joined."""
     out = {"tips": [], "lines": [], "tables": [], "faint_regions": [], "warnings": [], "cell_warnings": [],
@@ -362,7 +363,7 @@ def read_pdf(data: bytes, password: str | None, engine: OCREngine, second_pass: 
                       "faint_regions": [], "warnings": [], "cell_warnings": []}
             source = "text"
         else:
-            result = read_page(render(p), engine, second_pass=second_pass)
+            result = read_page(render(p), engine, second_pass=second_pass, strict_handwriting=strict_handwriting)
             result = check(result)
             source = "scan"
             cols = None

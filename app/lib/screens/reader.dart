@@ -22,6 +22,7 @@ import 'report_problem.dart';
 import '../messages.dart';
 import '../speech.dart';
 import '../theme.dart';
+import '../warnings.dart';
 
 const _speeds = [0.75, 1.0, 1.25, 1.5];
 
@@ -182,14 +183,29 @@ class _ReaderScreenState extends State<ReaderScreen> {
         ? _l.columnStart(item.column, _columns)
         : null;
     final marked = _marked(item);
+    // Doubt is said briefly at the spot ("unclear number" in place of digits, "Unclear." at the
+    // end of a line); the full warnings are on request ("what's unclear?", warnings.dart). A
+    // band of faint print is its own item: its warning is what it says.
+    final marks = PageWarnings.marks(_l, item);
     final spoken = [
       ?page,
       ?column,
       if (body.isNotEmpty) item.heading ? _l.headingSpoken(body) : body,
       if (marked.isNotEmpty) _l.letterCheckWords(marked.join(', ')),
-      ?warning,
+      ...marks,
+      if (item.isFaint) ?warning,
     ].join('. ');
-    return item.isRow && warning == null ? '$spoken.' : spoken;
+    return item.isRow && marks.isEmpty ? '$spoken.' : spoken;
+  }
+
+  late final _warnings = PageWarnings(_items);
+
+  /// "What's unclear?": every spot and its full warning, in reading order.
+  void _whatsUnclear() {
+    _run++;
+    setState(() => _playing = false);
+    final details = _warnings.details(_l, _where);
+    _speaker.say(details.isEmpty ? _l.whatsUnclearNone : details.join(' '));
   }
 
   /// Words on [item] that may have lost a special letter, as read (never changed).
@@ -294,6 +310,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
         _play(_index);
       case ReaderCommand.help:
         _speaker.say(l.readerCommandHelp);
+      case ReaderCommand.unclear:
+        _whatsUnclear();
       case ReaderCommand.report:
         _run++;
         _speaker.stop();
@@ -519,7 +537,6 @@ class _ReaderScreenState extends State<ReaderScreen> {
   };
 
   String _intro() {
-    final unsure = widget.result.unsureCount;
     final marks = widget.result.letterMarkCount;
     return [
       if (widget.result.offline) ...[
@@ -535,7 +552,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
         _l.letterCount(marks),
       _l.pageRead,
       '${_counts()}.',
-      if (unsure > 0) _l.unsureSummary(unsure),
+      ..._warnings.summary(_l),
     ].join(' ');
   }
 
@@ -915,6 +932,13 @@ class _ReaderScreenState extends State<ReaderScreen> {
                       if (warning != null) ...[
                         const SizedBox(height: 16),
                         _WarningNote(text: warning),
+                      ],
+                      if (_warnings.any) ...[
+                        const SizedBox(height: 16),
+                        SecondaryButton(
+                          label: l.whatsUnclear,
+                          onTap: _whatsUnclear,
+                        ),
                       ],
                       if (_canSave) ...[
                         const SizedBox(height: 16),

@@ -3833,6 +3833,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'The print is faint, so I darkened it to read it. Check important numbers with a person.'**
   String get msg_faint_print;
+
+  /// No description provided for @summaryNumbers.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 number is unclear.} other{{count} numbers are unclear.}}'**
+  String summaryNumbers(int count);
+
+  /// No description provided for @summaryLines.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 line is hard to read.} other{{count} lines are hard to read.}}'**
+  String summaryLines(int count);
+
+  /// No description provided for @summaryAsk.
+  ///
+  /// In en, this message translates to:
+  /// **'Say “what\'s unclear” to hear where.'**
+  String get summaryAsk;
+
+  /// No description provided for @unclearMark.
+  ///
+  /// In en, this message translates to:
+  /// **'Unclear.'**
+  String get unclearMark;
+
+  /// No description provided for @whatsUnclear.
+  ///
+  /// In en, this message translates to:
+  /// **'What\'s unclear?'**
+  String get whatsUnclear;
+
+  /// No description provided for @whatsUnclearNone.
+  ///
+  /// In en, this message translates to:
+  /// **'Nothing on this page is unclear.'**
+  String get whatsUnclearNone;
+
+  /// No description provided for @msg_barcode_skipped.
+  ///
+  /// In en, this message translates to:
+  /// **'I skipped a barcode on this page.'**
+  String get msg_barcode_skipped;
 }
 
 class _AppLocalizationsDelegate

@@ -2361,4 +2361,41 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get msg_faint_print =>
       'The print is faint, so I darkened it to read it. Check important numbers with a person.';
+
+  @override
+  String summaryNumbers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count numbers are unclear.',
+      one: '1 number is unclear.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String summaryLines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lines are hard to read.',
+      one: '1 line is hard to read.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get summaryAsk => 'Say “what\'s unclear” to hear where.';
+
+  @override
+  String get unclearMark => 'Unclear.';
+
+  @override
+  String get whatsUnclear => 'What\'s unclear?';
+
+  @override
+  String get whatsUnclearNone => 'Nothing on this page is unclear.';
+
+  @override
+  String get msg_barcode_skipped => 'I skipped a barcode on this page.';
 }

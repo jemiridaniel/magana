@@ -36,10 +36,15 @@ Future<void> loadDeviceId() async {
   deviceId = id;
 }
 
+/// Which message codes this app knows how to say (backend messages.SINCE): the server
+/// leaves newer page tips out for older apps rather than have them say "I couldn't read it".
+const messagesLevel = 2;
+
 /// Headers every call to the Magana server carries.
 Map<String, String> get serverHeaders => {
   if (apiKey.isNotEmpty) 'X-Magana-Key': apiKey,
   if (deviceId.isNotEmpty) 'X-Magana-Device': deviceId,
+  'X-Magana-Messages': '$messagesLevel',
 };
 
 enum ItemKind { line, row, faint }

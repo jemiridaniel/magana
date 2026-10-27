@@ -622,5 +622,12 @@
   "msg_daily_limit": "Ị gụọla ọtụtụ peeji taa. Magana nwere ike ịgụkwu echi. Peeji ndị ị chekwara dị n'Ọbá akwụkwọ m.",
   "msg_edge_cut_left": "Ebipụla ụfọdụ okwu n'akụkụ aka ekpe.",
   "msg_edge_cut_right": "Ebipụla ụfọdụ okwu n'akụkụ aka nri.",
-  "msg_faint_print": "Ederede ahụ adịghị ahụ anya nke ọma, ya mere eme m ka ọ gbaa ọchịchịrị ka m gụọ ya. Lelee nọmba ndị dị mkpa ya na mmadụ."
+  "msg_faint_print": "Ederede ahụ adịghị ahụ anya nke ọma, ya mere eme m ka ọ gbaa ọchịchịrị ka m gụọ ya. Lelee nọmba ndị dị mkpa ya na mmadụ.",
+  "summaryNumbers": "{count, plural, =1{Nọmba 1 edoghị anya.} other{Nọmba {count} edoghị anya.}}",
+  "summaryLines": "{count, plural, =1{Ahịrị 1 siri ike ịgụ.} other{Ahịrị {count} siri ike ịgụ.}}",
+  "summaryAsk": "Kwuo “what's unclear” ka ị nụ ebe ha dị.",
+  "unclearMark": "Edoghị anya.",
+  "whatsUnclear": "Gịnị edoghị anya?",
+  "whatsUnclearNone": "Ọ dịghị ihe edoghị anya na peeji a.",
+  "msg_barcode_skipped": "Awụfere m barcode dị na peeji a."
 }

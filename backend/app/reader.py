@@ -498,6 +498,41 @@ def edge_cuts(image: Image.Image, page: Page, bounds: dict | None = None) -> lis
             if n and sum(e[key] for e in bounds.values()) >= need]
 
 
+# ---------- Barcodes: not text
+
+BAR_SHARE = 0.25  # of a "line"'s columns that are ink from top to bottom...
+BAR_MIN = 12      # ...in at least this many separate bars: a barcode, not words
+
+
+def is_barcode(gray, line: Line) -> bool:
+    """A boarding pass's or a parcel's barcode, which the OCR reads as a line of junk words (on
+    the tester's boarding pass, 27 Oct 2026, 27–65% of such a line's columns were full-height
+    bars; letters, even capitals, leave space above or below most columns)."""
+    import numpy as np
+
+    crop = gray[line.top:line.top + line.height, line.left:line.left + line.width]
+    if crop.size == 0 or line.height < 6:
+        return False
+    hi, lo = np.percentile(crop, 90), np.percentile(crop, 5)
+    if hi - lo < 40:
+        return False
+    tall = (crop < hi - 0.5 * (hi - lo)).mean(axis=0) > 0.85
+    bars = int(np.count_nonzero(tall[1:] & ~tall[:-1]) + (1 if tall.size and tall[0] else 0))
+    return tall.mean() >= BAR_SHARE and bars >= BAR_MIN
+
+
+def drop_barcodes(image: Image.Image, page: Page) -> int:
+    """Leaves barcodes out of the reading (their junk could be read as numbers) and says how
+    many there were: the page then says "I skipped a barcode"."""
+    import numpy as np
+
+    gray = np.asarray(image.convert("L"), dtype=float)
+    kept = [l for l in page.lines if not is_barcode(gray, l)]
+    dropped = len(page.lines) - len(kept)
+    page.lines[:] = kept
+    return dropped
+
+
 # ---------- Thermal and faint print: flatten the paper, then stretch
 
 def flatten_contrast(image: Image.Image) -> Image.Image:
@@ -769,8 +804,25 @@ def _page_dict(page: Page) -> dict:
     return {"lines": [asdict(l) for l in page.lines], "tables": [asdict(t) for t in page.tables]}
 
 
+def upright(image: Image.Image) -> Image.Image:
+    """The photo the way it was held: phone cameras (CameraX, the iPhone) often save the pixels
+    sideways with an EXIF orientation tag. Applied before every reading (the phone's own offline
+    reader does the same in its "upright" step)."""
+    from PIL import ImageOps
+
+    try:
+        if image.getexif().get(0x0112, 1) == 1:
+            # Already upright: the same object, so pytesseract hands Tesseract the photo exactly
+            # as before (it re-saves a JPEG as JPEG; a copy would go as PNG and read differently).
+            return image
+        turned = ImageOps.exif_transpose(image)
+    except Exception:  # a broken tag: read it as it is
+        return image
+    return turned if turned is not None else image
+
+
 def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: bool = False,
-              handwriting=None) -> dict:
+              handwriting=None, strict_handwriting: bool = False) -> dict:
     """OCR one photo. With second_pass, also read a differently prepared copy so the
     safety layer can compare every number between the two readings. `handwriting` is an
     optional second reader for handwritten lines (handwriting.py; schoolwork only)."""
@@ -780,6 +832,7 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     from . import layout, letters
 
     engine = engine or default_engine()
+    image = upright(image)
     original = image  # where the paper ends is judged on the photo as taken
     page = engine.read(image)
     # A Hausa, Yorùbá or Igbo page: read again with the model that keeps more of its letters
@@ -811,18 +864,24 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
                 page = reader.read(image)
             faint = recover_faint(image, page, reader)
             tiny = [t for t in small_print(page) if t != "read_little"]
+    barcodes = drop_barcodes(original, page)
     bounds = paper_bounds(np.asarray(original.convert("L"), dtype=float), page)
     columns = layout.arrange(page, image)
     # On the photo as taken: flattening amplifies noise into "ink"; faint print is still ink there.
     mark_unclear_line_ends(original, page, bounds)
     mark_unread_parts(original, page, bounds)
     reread_numbers(image, page, engine)
-    script = hw.classify(page)
+    # Health papers: stricter, so a neatly handwritten dose is never read (handwriting.WOBBLE).
+    script = hw.classify(page, original, strict=strict_handwriting)
     if handwriting is not None and script != "printed":
         hw.reread_handwritten(image, page, handwriting)
     tips = (capture_check(original) + cut_off(original, page) + edge_cuts(original, page, bounds) + tiny
-            + (["faint_print"] if enhanced else [])
-            + ([f"{script}_page"] if script != "printed" else []) + ([f"letters_{language}"] if language else []))
+            + (["faint_print"] if enhanced else []) + (["barcode_skipped"] if barcodes else [])
+            # "This page looks handwritten" only when most of it does. A few unsure lines on a
+            # printed page were called "mixed" from OCR doubt alone: a thermal slip and a
+            # decorative card (27 Oct 2026). Their lines keep the handwriting number rules; the
+            # app says "N lines are hard to read" instead (warning summary).
+            + (["handwritten_page"] if script == "handwritten" else []) + ([f"letters_{language}"] if language else []))
     result = {"tips": tips, **_page_dict(page), "faint_regions": faint, "script": script, "columns": columns,
               "page_language": language}
     if language:

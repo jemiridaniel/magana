@@ -89,16 +89,20 @@ def _post(mode):
 
 def test_on_a_health_paper_handwritten_numbers_are_never_read():
     body = _post("health").json()
-    assert "mixed_page" in body["tips"] and "handwritten_prescription" in body["tips"]
+    # A few handwritten-looking lines on a printed page: no "looks handwritten" page claim (it
+    # fired on printed thermal slips and cards), but the prescription rule always holds.
+    assert "mixed_page" not in body["tips"] and "handwritten_prescription" in body["tips"]
     hand = [i for i, l in enumerate(body["lines"]) if l["script"] == "handwritten"]
     flagged = {(w["block_index"], w["word_index"]) for w in body["warnings"] if w["code"] == "handwritten_number"}
     digits = {(i, j) for i in hand for j, w in enumerate(body["lines"][i]["words"]) if any(c.isdigit() for c in w["text"])}
     assert digits and digits <= flagged
 
 
-def test_schoolwork_says_it_is_handwritten_but_has_no_prescription_message():
+def test_schoolwork_keeps_the_handwriting_number_rules_without_a_page_claim():
     body = _post("school").json()
-    assert "mixed_page" in body["tips"] and "handwritten_prescription" not in body["tips"]
+    assert "mixed_page" not in body["tips"] and "handwritten_prescription" not in body["tips"]
+    assert body["script"] == "mixed"
+    assert any(l["script"] == "handwritten" for l in body["lines"])  # its numbers need two readings
 
 
 class FakeReader:

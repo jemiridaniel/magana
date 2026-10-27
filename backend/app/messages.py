@@ -19,6 +19,7 @@ ENGLISH = {
     "cut_off_right": "Part of the page is cut off at the right.",
     "edge_cut_left": "Some words at the left edge are cut off.",
     "edge_cut_right": "Some words at the right edge are cut off.",
+    "barcode_skipped": "I skipped a barcode on this page.",
     "faint_print": "The print is faint, so I darkened it to read it. Check important numbers with a person.",
     # A Hausa, Yorùbá or Igbo page (letters.py): said once per page
     "letters_ha": "Hausa page. I can miss letters like ƙ, ɗ and ɓ. Marked words may have one of these. Spell a word or check it with someone.",
@@ -212,6 +213,15 @@ PORTAL.update({
     "staff_removed_already": "This person was already removed.",
 })
 PORTAL_CODES = frozenset(PORTAL)
+
+# Page tips an app may not know yet, by the X-Magana-Messages level that first knows them (the
+# app's api.messagesLevel). Apps before 0.1.0+8 send no level (1) and say "I couldn't read it"
+# for a code they don't know, so newer tips are left out for them (tips_for).
+SINCE = {"barcode_skipped": 2}
+
+
+def tips_for(tips: list[str], level: int) -> list[str]:
+    return [t for t in tips if SINCE.get(t, 1) <= level]
 
 # Codes only Meta's servers see, from the WhatsApp webhook (app/wa_flow.py): no app wording.
 WEBHOOK = {

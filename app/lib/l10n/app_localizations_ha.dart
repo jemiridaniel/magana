@@ -2364,4 +2364,42 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get msg_faint_print =>
       'Rubutun ya dushe, don haka na ƙara masa duhu don karanta shi. Duba muhimman lambobi tare da wani.';
+
+  @override
+  String summaryNumbers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Lambobi $count ba su bayyana ba.',
+      one: 'Lamba 1 ba ta bayyana ba.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String summaryLines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Layuka $count suna da wahalar karantawa.',
+      one: 'Layi 1 yana da wahalar karantawa.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get summaryAsk => 'Faɗi “what\'s unclear” don jin inda suke.';
+
+  @override
+  String get unclearMark => 'Ba a bayyana ba.';
+
+  @override
+  String get whatsUnclear => 'Me bai bayyana ba?';
+
+  @override
+  String get whatsUnclearNone => 'Babu abin da bai bayyana ba a wannan shafi.';
+
+  @override
+  String get msg_barcode_skipped =>
+      'Na tsallake lambar barcode a wannan shafi.';
 }

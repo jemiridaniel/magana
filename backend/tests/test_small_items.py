@@ -66,3 +66,26 @@ def test_ordinary_pages_are_not_called_torn():
         d.text((140, 80 + 120 * i), t, fill="black", font=pagefont.font(40))
     page = TesseractEngine().read(img)
     assert edge_cuts(img, page) == []
+
+
+def test_a_phone_photo_saved_sideways_with_its_orientation_tag_is_read_upright():
+    """Phone cameras often store the pixels sideways and an EXIF orientation tag (6: turn 90°
+    clockwise to view). The server used to read the sideways pixels."""
+    from PIL import Image, ImageDraw
+
+    import pagefont
+    page = Image.new("RGB", (1200, 500), "white")
+    d = ImageDraw.Draw(page)
+    for i, t in enumerate(["Take 2 tablets every 6 hours", "Do not take more than 8 in 24 hours"]):
+        d.text((60, 80 + 140 * i), t, fill="black", font=pagefont.font(44))
+    sideways = page.rotate(90, expand=True)  # what the camera stored
+    exif = Image.Exif()
+    exif[0x0112] = 6
+    body = client.post("/read", files={"file": ("p.jpg", jpeg_with_exif(sideways, exif))}).json()
+    assert [l["text"] for l in body["lines"]] == ["Take 2 tablets every 6 hours", "Do not take more than 8 in 24 hours"]
+
+
+def jpeg_with_exif(img, exif) -> bytes:
+    buf = io.BytesIO()
+    img.save(buf, "JPEG", quality=92, exif=exif)
+    return buf.getvalue()

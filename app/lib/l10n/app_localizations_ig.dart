@@ -2360,4 +2360,41 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get msg_faint_print =>
       'Ederede ahụ adịghị ahụ anya nke ọma, ya mere eme m ka ọ gbaa ọchịchịrị ka m gụọ ya. Lelee nọmba ndị dị mkpa ya na mmadụ.';
+
+  @override
+  String summaryNumbers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Nọmba $count edoghị anya.',
+      one: 'Nọmba 1 edoghị anya.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String summaryLines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ahịrị $count siri ike ịgụ.',
+      one: 'Ahịrị 1 siri ike ịgụ.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get summaryAsk => 'Kwuo “what\'s unclear” ka ị nụ ebe ha dị.';
+
+  @override
+  String get unclearMark => 'Edoghị anya.';
+
+  @override
+  String get whatsUnclear => 'Gịnị edoghị anya?';
+
+  @override
+  String get whatsUnclearNone => 'Ọ dịghị ihe edoghị anya na peeji a.';
+
+  @override
+  String get msg_barcode_skipped => 'Awụfere m barcode dị na peeji a.';
 }

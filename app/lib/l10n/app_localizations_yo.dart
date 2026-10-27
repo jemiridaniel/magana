@@ -2362,4 +2362,41 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get msg_faint_print =>
       'Ìtẹ̀wé náà ti fẹ́ parẹ́, nítorí náà mo mú un ṣókùnkùn kí n lè kà á. Ṣàyẹ̀wò àwọn nọ́ńbà pàtàkì pẹ̀lú ẹnìkan.';
+
+  @override
+  String summaryNumbers(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Nọ́ńbà $count kò ṣe kedere.',
+      one: 'Nọ́ńbà 1 kò ṣe kedere.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String summaryLines(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ìlà $count ṣòro láti kà.',
+      one: 'Ìlà 1 ṣòro láti kà.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get summaryAsk => 'Sọ “what\'s unclear” láti gbọ́ ibi tí wọ́n wà.';
+
+  @override
+  String get unclearMark => 'Kò ṣe kedere.';
+
+  @override
+  String get whatsUnclear => 'Kí ni kò ṣe kedere?';
+
+  @override
+  String get whatsUnclearNone => 'Kò sí ohun tí kò ṣe kedere lórí ojú-ìwé yìí.';
+
+  @override
+  String get msg_barcode_skipped => 'Mo fo barcode kan lórí ojú-ìwé yìí.';
 }

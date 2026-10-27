@@ -25,6 +25,7 @@ from . import asr, codes, curriculum, explain, handwriting, learner_api, pdfs, p
 from .wa_client import WhatsAppClient
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
+from . import messages
 from .messages import CodedError
 from .reader import SECOND_PASS_SCALE, OCREngine, check_number_reread, default_engine, read_page
 
@@ -208,7 +209,8 @@ def health() -> dict:
 
 @app.post("/read")
 async def read(file: UploadFile = File(...), mode: str = Form("school"),
-               tier: policy.Tier = Depends(caller_tier), engine: OCREngine = Depends(get_engine)) -> dict:
+               tier: policy.Tier = Depends(caller_tier), engine: OCREngine = Depends(get_engine),
+               x_magana_messages: str | None = Header(None)) -> dict:
     feature = MODE_FEATURE.get(mode)
     if feature is None:
         raise HTTPException(400, {"code": "unknown_mode"})
@@ -220,9 +222,17 @@ async def read(file: UploadFile = File(...), mode: str = Form("school"),
         raise HTTPException(400, {"code": "unreadable_image"})
     # Health and money papers get a second OCR pass so every number is read twice.
     result = read_page(image, engine, second_pass=mode in SECOND_PASS_MODES,
-                       handwriting=handwriting_reader(mode, tier))
+                       handwriting=handwriting_reader(mode, tier), strict_handwriting=mode == "health")
     # The uploaded photo is never stored: it only lives in memory for this request.
-    return checked(result, mode)
+    out = checked(result, mode)
+    return {**out, "tips": messages.tips_for(out["tips"], messages_level(x_magana_messages))}
+
+
+def messages_level(header: str | None) -> int:
+    try:
+        return max(1, int(header or 1))
+    except ValueError:
+        return 1
 
 
 @lru_cache(maxsize=1)
@@ -265,7 +275,8 @@ def checked(result: dict, mode: str = "school") -> dict:
 
 @app.post("/read-pdf")
 async def read_pdf(file: UploadFile = File(...), mode: str = Form("money"), password: str = Form(""),
-                   tier: policy.Tier = Depends(caller_tier), engine: OCREngine = Depends(get_engine)) -> dict:
+                   tier: policy.Tier = Depends(caller_tier), engine: OCREngine = Depends(get_engine),
+                   x_magana_messages: str | None = Header(None)) -> dict:
     """A shared or downloaded PDF, every page in one reading (pdfs.py). Held in memory only;
     the password opens the file for this request and is never stored or logged."""
     feature = MODE_FEATURE.get(mode)
@@ -274,8 +285,9 @@ async def read_pdf(file: UploadFile = File(...), mode: str = Form("money"), pass
     require(tier, feature)
     data = await file.read(pdfs.MAX_BYTES + 1)
     try:
-        return pdfs.read_pdf(data, password or None, engine, mode in SECOND_PASS_MODES,
-                             lambda result: checked(result, mode))
+        out = pdfs.read_pdf(data, password or None, engine, mode in SECOND_PASS_MODES,
+                            lambda result: checked(result, mode), strict_handwriting=mode == "health")
+        return {**out, "tips": messages.tips_for(out["tips"], messages_level(x_magana_messages))}
     except pdfs.PdfError as e:
         status = {"pdf_password_needed": 401, "pdf_password_wrong": 401, "pdf_too_long": 413}.get(e.code, 400)
         raise HTTPException(status, {"code": e.code}) from None
