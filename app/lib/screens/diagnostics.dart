@@ -86,12 +86,34 @@ class _DiagnosticsScreenState extends State<DiagnosticsScreen> {
               ? 'none'
               : '${a.words.length}: ${[for (final w in a.words) '${w.text} (${w.confidence == null ? 'no confidence' : (w.confidence! * 100).round()})'].join(', ')}',
         ),
+        if (a.serverLate)
+          (
+            'Server answer',
+            'arrived after the phone had read it: the Reader shows the phone\'s reading; '
+                'the server\'s went to My library',
+          ),
+        (
+          'Unclear, and why',
+          a.reasons.isEmpty ? 'nothing' : a.reasons.join(' | '),
+        ),
       ],
       ('Speech started', _time(diagnostics.speechStarted)),
       (
         'Speech finished',
         '${_time(diagnostics.speechFinished)}${diagnostics.speechOutcome == null ? '' : ' (${diagnostics.speechOutcome})'}',
       ),
+      // The exact text sent to the voice, newest last, with how long it played.
+      for (final (n, u)
+          in diagnostics.utterances.reversed.take(15).toList().reversed.indexed)
+        (
+          'Spoken ${n + 1}',
+          '${_time(u.asked)}, ${u.started == null
+                  ? 'never started'
+                  : u.finished == null
+                  ? 'still speaking'
+                  : '${u.finished!.difference(u.started!).inMilliseconds} ms'}'
+              '${u.outcome == null ? '' : ' (${u.outcome})'}: "${u.text}"',
+        ),
     ];
     return PageScaffold(
       body: [

@@ -48,7 +48,7 @@ def small_card(size: tuple[int, int] = (1512, 2016)) -> Image.Image:
         d.text((24, 22 + i * 52), line, fill=(25, 25, 30), font=f)
     card = card.rotate(2, resample=Image.BICUBIC, expand=True, fillcolor=(214, 214, 206))
     photo.paste(card, ((size[0] - card.width) // 2, (size[1] - card.height) // 2))
-    return _jpeg(photo.filter(ImageFilter.GaussianBlur(0.6)))
+    return _jpeg(photo)  # sharp, as the real card was (sharpness 92)
 
 
 def thermal_slip(size: tuple[int, int] = (2016, 1512)) -> Image.Image:
@@ -62,3 +62,23 @@ def thermal_slip(size: tuple[int, int] = (2016, 1512)) -> Image.Image:
         d.text((-18, 40 + i * 110), line, fill=(188, 186, 184), font=f)
     photo.paste(slip, ((size[0] - slip.width) // 2, (size[1] - slip.height) // 2))
     return _jpeg(photo.filter(ImageFilter.GaussianBlur(0.8)))
+
+
+SCRIPT_CARD_LINES = ["Give God", "the utmost delight", "in all things", "Psalm 37:4"]
+
+
+def script_card(size: tuple[int, int] = (1080, 1440)) -> Image.Image:
+    """A decorative church card in a script font (Dancing Script, SIL OFL), with a verse number,
+    on a pale wall, at the size the app sends: a synthetic copy of the tester's card (27 Oct
+    2026), whose words were read at 88-96%."""
+    from PIL import ImageFont
+
+    font = ImageFont.truetype(str(pagefont.PATH.parent / "DancingScript.ttf"), 72)
+    card = Image.new("RGB", (1000, 700), (252, 250, 245))
+    d = ImageDraw.Draw(card)
+    for i, line in enumerate(SCRIPT_CARD_LINES):
+        d.text((60, 60 + i * 140), line, fill=(30, 30, 40), font=font)
+    # A darker wall than the small-card fixture: the card fills most of the frame, as it did.
+    photo = Image.new("RGB", size, (120, 110, 100))
+    photo.paste(card, ((size[0] - card.width) // 2, (size[1] - card.height) // 2))
+    return _jpeg(photo)  # sharp, as the real card was (sharpness 92)

@@ -609,14 +609,12 @@ void main() {
         return g;
       }
 
-      expect(
-        FrameAnalyzer().analyze(trapezoid(topNarrow: true)),
-        Advice.tiltAway,
-      );
-      expect(
-        FrameAnalyzer().analyze(trapezoid(topNarrow: false)),
-        Advice.tiltToward,
-      );
+      // A tip only (27 Oct 2026): the photo is still taken, the server straightens it.
+      final away = FrameAnalyzer()..analyze(trapezoid(topNarrow: true));
+      expect(away.tiltTip, Advice.tiltAway);
+      expect(away.report.advice, isNot(Advice.tiltAway));
+      final toward = FrameAnalyzer()..analyze(trapezoid(topNarrow: false));
+      expect(toward.tiltTip, Advice.tiltToward);
       expect(
         FrameAnalyzer().analyze(page(6, 6, 42, 58)),
         Advice.holdStill,

@@ -498,6 +498,44 @@ def edge_cuts(image: Image.Image, page: Page, bounds: dict | None = None) -> lis
             if n and sum(e[key] for e in bounds.values()) >= need]
 
 
+# ---------- Straightening a tilted photo
+
+SKEW_MAX = 15.0   # degrees tried either way
+SKEW_MIN = 1.5    # smaller tilts read fine as they are
+
+
+def skew_angle(image: Image.Image) -> float:
+    """The angle (degrees, counter-clockwise) that makes the text rows level: the turn whose
+    row-by-row ink profile is sharpest, on a small copy. Tesseract reads a page tilted up to
+    about 6° but nothing at 8° or more (docs/FINDINGS.md, 27 Oct 2026)."""
+    import numpy as np
+
+    small = image.convert("L")
+    small.thumbnail((800, 800))
+    arr = np.asarray(small, dtype=float)
+    mask = arr < arr.mean() - 30
+    if not mask.any():
+        return 0.0  # nothing to level
+    ink = Image.fromarray((mask * 255).astype("uint8"))
+
+    def sharpness(angle: float) -> float:
+        rows = np.asarray(ink.rotate(angle, resample=Image.NEAREST, expand=True), dtype=float).sum(axis=1)
+        return float(np.var(rows))
+
+    coarse = max((a for a in range(-int(SKEW_MAX), int(SKEW_MAX) + 1)), key=sharpness)
+    fine = [coarse + d / 4 for d in range(-4, 5)]
+    return max(fine, key=sharpness)
+
+
+def straighten(image: Image.Image) -> tuple[Image.Image, float]:
+    """The photo turned so its text is level (and the angle), or the photo as it is."""
+    angle = skew_angle(image)
+    if abs(angle) < SKEW_MIN:
+        return image, 0.0
+    fill = tuple(int(v) for v in ImageStat.Stat(image.convert("RGB")).median)
+    return image.convert("RGB").rotate(angle, resample=Image.BICUBIC, expand=True, fillcolor=fill), angle
+
+
 # ---------- Barcodes: not text
 
 BAR_SHARE = 0.25  # of a "line"'s columns that are ink from top to bottom...
@@ -626,6 +664,12 @@ def recover_faint(image: Image.Image, page: Page, engine: OCREngine) -> list[dic
             l.top += y0
             for w in l.words:
                 w.top += y0
+        # A tall band can hold lines already read (a sharp card's lines and border merge into
+        # one band): only lines no existing line covers are new, or the card is read twice.
+        new = [l for l in found if not _covered((l.top, l.top + max(l.height, 1)), spans)]
+        if found and not new:
+            continue
+        found = new
         if found:
             page.lines.extend(found)
             spans += [(l.top, l.top + max(l.height, 1)) for l in found]
@@ -833,8 +877,16 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
 
     engine = engine or default_engine()
     image = upright(image)
-    original = image  # where the paper ends is judged on the photo as taken
     page = engine.read(image)
+    # A tilted photo (tilt no longer holds the camera back): a nearly empty or unsure reading
+    # is tried again on the photo turned level, kept if it finds more words.
+    if reads_faint(page) and ImageStat.Stat(image.convert("L")).stddev[0] > 3:
+        level, angle = straighten(image)
+        if angle:
+            again = engine.read(level)
+            if len(_words(again)) > len(_words(page)):
+                image, page = level, again
+    original = image  # where the paper ends is judged on the photo as taken
     # A Hausa, Yorùbá or Igbo page: read again with the model that keeps more of its letters
     # (letters.READ_AGAIN). Numbers are still re-read by the first engine, independently.
     language = letters.page_language(" ".join(l.text for l in page.lines))

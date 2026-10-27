@@ -186,6 +186,9 @@ class Speaker {
   Future<Spoken> utter(String text) async {
     await _halt();
     await iosAudio(_tts);
+    diagnostics.asked(
+      text,
+    ); // the exact text sent to the voice (diagnostics screen)
     _text = text;
     final done = _pending = Completer<Spoken>();
     _started = false;

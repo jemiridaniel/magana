@@ -93,35 +93,65 @@ void main() {
     }
   });
 
-  test('never blocked forever: 6 s of steady text and it captures anyway', () {
+  test('never blocked forever: 4 s of text in view and it captures anyway', () {
     var now = DateTime(2026, 10, 27, 9);
     final a = FrameAnalyzer(clock: () => now);
     // A slip running off the left side of the view: guidance says "move left"...
     final slip = withPrint(page(0, 10, 30, 50), 6, 2);
     final seen = <Advice>[];
-    for (var s = 0; s <= 6; s++) {
+    for (var s = 0; s <= 4; s++) {
       seen.add(a.analyze(slip));
       now = now.add(const Duration(seconds: 1));
     }
-    expect(seen.take(6), everyElement(Advice.moveLeft));
-    // ...until 6 s of steady text: then it is taken, and the server says what is cut off.
+    expect(seen.take(4), everyElement(Advice.moveLeft));
+    // ...until 4 s of text in view: then it is taken, and the server says what is cut off.
     expect(seen.last, Advice.ready);
     expect(a.readyToCapture, isTrue);
     expect(a.report.anyway, isTrue);
   });
 
-  test('moving restarts the 6 s', () {
-    var now = DateTime(2026, 10, 27, 9);
-    final a = FrameAnalyzer(clock: () => now);
-    final still = withPrint(page(0, 10, 30, 50), 6, 2);
-    final moved = withPrint(page(0, 10, 30, 50, shift: 8), 6, 2);
-    for (var s = 0; s < 5; s++) {
-      a.analyze(still);
-      now = now.add(const Duration(seconds: 1));
+  test(
+    'a moment of hand shake keeps the 4 s; moving away for longer restarts it',
+    () {
+      var now = DateTime(2026, 10, 27, 9);
+      final a = FrameAnalyzer(clock: () => now);
+      final still = withPrint(page(0, 10, 30, 50), 6, 2);
+      final moved = withPrint(page(0, 10, 30, 50, shift: 8), 6, 2);
+      final blank = page(0, 10, 30, 50); // no print in view
+      Advice step(LumaGrid g, int ms) {
+        final advice = a.analyze(g);
+        now = now.add(Duration(milliseconds: ms));
+        return advice;
+      }
+
+      step(still, 1000);
+      step(still, 1000);
+      step(moved, 500); // a shake...
+      step(still, 1000);
+      step(still, 1000); // 3.5 s
+      // 4.5 s after the text came into view: the shake didn't restart the clock.
+      expect(step(still, 1000), Advice.ready);
+      a.reset();
+      step(still, 1000);
+      step(still, 1000);
+      step(blank, 2000); // text out of view for 2 s
+      step(still, 1000);
+      expect(step(still, 1000), isNot(Advice.ready));
+    },
+  );
+
+  test('tilt never blocks: a tip only', () {
+    final a = FrameAnalyzer(steadyFramesNeeded: 1);
+    // A page whose top is much narrower than its bottom (tilted), fully in view.
+    final data = page(6, 6, 42, 58).data;
+    for (var y = 6; y < 20; y++) {
+      for (var x = 6; x < 42; x++) {
+        if (x < 14 || x >= 34) data[y * 48 + x] = 40; // the top end narrower
+      }
     }
-    a.analyze(moved); // a big change: the phone moved
-    now = now.add(const Duration(seconds: 2));
-    expect(a.analyze(moved), isNot(Advice.ready));
+    final tilted = LumaGrid(48, 64, data);
+    expect(a.analyze(tilted), Advice.ready);
+    expect(a.tiltTip, Advice.tiltAway);
   });
 
   test(

@@ -153,6 +153,8 @@ class _CaptureScreenState extends State<CaptureScreen>
     }
   }
 
+  bool _tiltSaid = false;
+
   Future<void> _startFraming() async {
     final camera = _camera;
     if (camera == null ||
@@ -198,6 +200,12 @@ class _CaptureScreenState extends State<CaptureScreen>
         lumaGridFrom(image, _camera?.description.sensorOrientation ?? 90),
       );
       if (advice != _advice && mounted) setState(() => _advice = advice);
+      // Tilt is a tip, said once; it never holds the photo back.
+      final tilt = _analyzer.tiltTip;
+      if (!_tiltSaid && tilt != null) {
+        _tiltSaid = true;
+        _say(_adviceText(tilt)!);
+      }
       if (_auto && advice == Advice.ready) {
         final r = _analyzer.report;
         _captureWithCamera(
@@ -394,7 +402,10 @@ class _CaptureScreenState extends State<CaptureScreen>
           // A slow server may still answer: its reading goes to My library. If it
           // doesn't, the photo waits, encrypted, for the next time we're online.
           online.then<void>(
-            (full) => Library.save(full, paper),
+            (full) async {
+              attempt?.serverLate = true;
+              await Library.save(full, paper);
+            },
             onError: (Object _) async {
               dropped = await photoQueue.add(bytes, mode: mode, paper: paper);
               if (dropped > 0) scope.speaker.say(l.queueDropped(dropped));

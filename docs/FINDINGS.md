@@ -13,6 +13,20 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-27 · 0.1.0+9: tilt never blocks capture, the server straightens, the church card read twice, diagnostics that say why (UNREVIEWED)
+
+From the tester's 0.1.0+8 diagnostics on the church card (iPhone): page detected, sharpness 92, tilt 0.78, framing said "tilt away" and never took the photo; the Reader showed "God [unclear number] ght" and "3 lines · 3 unclear"; speech ran 1 s for 23 words; the "mixed_page" tip still fired.
+
+- **Tilt is a tip, said once; it never holds the camera back.** The 4 s rule (text steadily in view → take it) now applies whether a page was detected or not, and a hand shake under 1.5 s keeps the clock running (`small_items_test.dart`: never blocked forever, hand shake, tilt never blocks).
+- **The server straightens a tilted photo.** On a nearly empty or unsure reading, the photo is turned level (strongest row-by-row ink profile, ±15° in ¼° steps) and read again; kept only if more words come out. Synthetic dose label tilted 8°, 12° and −10°: the angle is found within 0.5° and "Paracetamol" is read each time (`test_script_card.py`). A blank photo is never turned (it used to tie at −15° and cost a second read).
+- **Bug found: a sharp card was read twice.** On a sharp photo the card's lines and border merge into one tall ink band; the faint-text recovery read that band again and added every line a second time (synthetic small card, unblurred: 10 lines for 5). Recovered lines are now kept only where no line was already read (`test_small_items.py`, fixture now sharp, as the real card was: sharpness 92).
+- **Why the Reader said "unclear number".** On the real card (counts only), the verse number was read at 83%, below the 0.90 number threshold, so "unclear number" in its place is correct, not a bug; the 92–96% words were on other lines. No confident non-digit word is ever turned into an unclear number (`test_script_card.py`: script-font card, school/letter/health). Synthetic script card: "37:4" was read "34:4" at 65% and flagged (number_mismatch), never spoken as digits. Open: its line "in all things" is dropped by Tesseract without a warning.
+- **mixed_page:** removed in 0.1.0+8, but that deploy was blocked by a failing CI test (Linux Tesseract read the faint thermal slip differently; fixed in 12074df), so the phone was still talking to the old server.
+- **Speech "1 s for 23 words":** the old diagnostics kept only the last utterance's start and end (the page is spoken as several utterances), so 1 s was the last one only. Diagnostics now list the last 15 utterances: exact text sent to the voice, start time, duration, outcome.
+- **Diagnostics also show, for each unclear line, why:** the backend's codes and, for a number, the word and its confidence (`diagnostics_test.dart`); and whether the server answered after the phone had already read it.
+
+Test font: Dancing Script (SIL OFL, S42 in the data sources tracker).
+
 ## 2026-10-27 · 0.1.0+8: sharper camera photos, the "looks handwritten" false alarm, fewer spoken warnings (UNREVIEWED)
 
 - **Camera photo size** (`capture.dart`, `platform/shrink_photo.dart`, native "shrink"): the camera now uses the 1080p preset, and the phone turns each photo upright and sends it at most **1080 px wide, JPEG quality 85**. **Not the 1600 px asked for, because measurement showed 1600 adds nothing:**

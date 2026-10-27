@@ -218,7 +218,11 @@ class FrameAnalyzer {
 
   /// Steady text in view this long: capture anyway, whatever else the guidance says, so a
   /// card, receipt or torn slip is never refused forever (docs/FINDINGS.md, 27 Oct 2026).
-  static const captureAnywayAfter = Duration(seconds: 6);
+  static const captureAnywayAfter = Duration(seconds: 4);
+
+  /// Hand shake while holding a card doesn't restart that clock; only text out of view, or
+  /// moving for longer than this, does.
+  static const moveGrace = Duration(milliseconds: 1500);
 
   /// No page edges, but print in at least this many patches with one in the middle: a small
   /// item (card, receipt, label, boarding pass) to read as it is. Print in fewer: too small.
@@ -251,6 +255,9 @@ class FrameAnalyzer {
   int _steady = 0;
   Advice? _last;
   DateTime? _textSince;
+  DateTime? _lostSince; // text out of view or the phone moving, since
+  bool _tiltSeen =
+      false; // the page is tilted: said once as a tip, never blocks
   ({double left, double top, double right, double bottom})? _page;
   double? _tilt;
   bool _smallItem = false;
@@ -270,6 +277,11 @@ class FrameAnalyzer {
   );
 
   bool get readyToCapture => _steady >= steadyFramesNeeded;
+
+  /// The page looked tilted at some point: Capture says the tilt tip once (never blocks).
+  Advice? get tiltTip => _tiltSeen
+      ? ((_tilt ?? 1) < 1 ? Advice.tiltAway : Advice.tiltToward)
+      : null;
 
   /// How well the page fits, 0 (no page) to 1 (ready to capture). Drives the
   /// framing tone and vibration, which speed up as this rises.
@@ -291,6 +303,8 @@ class FrameAnalyzer {
     _steady = 0;
     _last = null;
     _textSince = null;
+    _lostSince = null;
+    _tiltSeen = false;
     _anyway = false;
   }
 
@@ -302,8 +316,14 @@ class FrameAnalyzer {
     _previous = g;
     _lastGrid = g;
     final now = _clock();
-    // Never block reading forever: steady text for captureAnywayAfter, and it is captured.
+    // Never block reading forever: text in view for captureAnywayAfter (page found or not,
+    // whatever the guidance says) and it is captured. A moment of hand shake doesn't reset it.
     if (g.textInView && !moving) {
+      // Back after longer than a shake: the clock starts again.
+      if (_lostSince != null && now.difference(_lostSince!) > moveGrace) {
+        _textSince = null;
+      }
+      _lostSince = null;
       _textSince ??= now;
       if (now.difference(_textSince!) >= captureAnywayAfter) {
         _anyway = true;
@@ -311,7 +331,8 @@ class FrameAnalyzer {
         return _last = Advice.ready;
       }
     } else {
-      _textSince = null;
+      _lostSince ??= now;
+      if (now.difference(_lostSince!) > moveGrace) _textSince = null;
     }
     _anyway = false;
     final advice = _frame(g, moving);
@@ -420,8 +441,10 @@ class FrameAnalyzer {
       ].reduce(math.max);
       if (upper > 0 && lower > 0) {
         _tilt = upper / lower;
-        if (upper < lower * tiltLimit) return Advice.tiltAway;
-        if (lower < upper * tiltLimit) return Advice.tiltToward;
+        // A tip only (Capture says it once): a tilted page is still captured, and the
+        // server straightens it. On the tester's card a 0.78 tilt blocked capture for good.
+        _tiltSeen =
+            _tiltSeen || upper < lower * tiltLimit || lower < upper * tiltLimit;
       }
     }
     if (moving) return Advice.holdStill;
