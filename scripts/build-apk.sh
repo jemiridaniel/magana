@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
-# Build the tester APKs (release, signed with the upload key, one per CPU type) and print
-# the arm64 one, which fits almost all current Android phones.
+# Build the tester APK (release, signed with the upload key): one universal APK with every CPU
+# type (32-bit ARM armeabi-v7a, 64-bit ARM arm64-v8a, x86_64), so the website's one download
+# installs on any Android phone, old 32-bit ones included (Nurse Balogun's review, build 7).
 # Reads ~/.magana/app.env (outside the repo):
 #   MAGANA_API=https://api.magana.ng             # the server (docs/INFRA.md)
 #   MAGANA_API_KEY=...                           # the server's MAGANA_API_KEY
@@ -14,11 +15,11 @@ export PATH="$HOME/development/flutter/bin:$PATH"
 cd "$(dirname "$0")/../app"
 [ -e android/key.properties ] || { echo "android/key.properties missing (docs/TESTER_INSTALL.md, signing)" >&2; exit 1; }
 
-flutter build apk --release --split-per-abi \
+flutter build apk --release --target-platform android-arm,android-arm64,android-x64 \
   --dart-define=MAGANA_API="$MAGANA_API" \
   --dart-define=MAGANA_API_KEY="$MAGANA_API_KEY"
 
-apk="build/app/outputs/flutter-apk/app-arm64-v8a-release.apk"
+apk="build/app/outputs/flutter-apk/app-release.apk"
 version=$(grep '^version:' pubspec.yaml | awk '{print $2}')
 echo
 echo "Version: $version"
@@ -26,3 +27,5 @@ echo "APK:     $(pwd)/$apk"
 echo "Size:    $(du -h "$apk" | cut -f1) ($(stat -f%z "$apk") bytes)"
 apksigner=$(ls -d "$HOME"/Library/Android/sdk/build-tools/*/ | tail -1)apksigner
 echo "Signed:  $("$apksigner" verify --print-certs "$apk" | grep -m1 'SHA-256' | sed 's/.*: //')"
+# Every CPU type is inside: lib/<abi>/libflutter.so for each.
+echo "ABIs:    $(unzip -l "$apk" | awk '/lib\/.*\/libflutter.so/{split($4,p,"/"); print p[2]}' | sort | paste -sd' ' -)"

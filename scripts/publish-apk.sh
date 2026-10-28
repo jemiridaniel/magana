@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Publish the latest signed arm64 APK for testers. Run after scripts/build-apk.sh.
+# Publish the latest signed universal APK (every CPU type) for testers. Run after scripts/build-apk.sh.
 #   scripts/publish-apk.sh [release-notes.md]
 # 1. Makes the GitHub release v<version> (the repository is public, so its files are too) with:
 #    magana.apk (always this name), magana-<version>.apk and latest.json (version, size, date,
@@ -11,7 +11,7 @@
 #    never goes to Cloudflare Pages (files over 25 MB aren't allowed there).
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-APK="$ROOT/app/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk"
+APK="$ROOT/app/build/app/outputs/flutter-apk/app-release.apk"
 VERSION=$(grep '^version:' "$ROOT/app/pubspec.yaml" | awk '{print $2}')
 TAG="v$VERSION"
 NOTES="${1:-}"
@@ -28,7 +28,7 @@ d, version = sys.argv[1], sys.argv[2]
 apk = os.path.join(d, "magana.apk")
 lagos = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=1)))
 json.dump({"version": version, "bytes": os.path.getsize(apk), "date": lagos.date().isoformat(),
-           "min_android": "7.0", "sha256": hashlib.sha256(open(apk, "rb").read()).hexdigest()},
+           "min_android": "7.0", "abis": ["armeabi-v7a", "arm64-v8a", "x86_64"], "sha256": hashlib.sha256(open(apk, "rb").read()).hexdigest()},
           open(os.path.join(d, "latest.json"), "w"), indent=1)
 PY
 export GH_TOKEN="${GH_TOKEN:-$(gh auth token --user jemiridaniel 2>/dev/null || gh auth token)}"
