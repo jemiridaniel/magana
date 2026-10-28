@@ -1,6 +1,7 @@
 import 'package:flutter/widgets.dart';
 
 import 'clips.dart';
+import 'guidance.dart';
 import 'speech.dart';
 import 'voices.dart';
 import 'touch.dart';
@@ -70,6 +71,28 @@ class RouteSpeaker implements Speaker {
   Future<void> setLanguage(String code) => shared.setLanguage(code);
   @override
   String get language => shared.language;
+  @override
+  EnglishGuidance get guidance => shared.guidance;
+  @override
+  set guidance(EnglishGuidance g) => shared.guidance = g;
+  @override
+  bool get englishGuidance => shared.englishGuidance;
+  @override
+  set englishGuidance(bool on) => shared.englishGuidance = on;
+  @override
+  String Function(String language)? get englishGuidanceNotice =>
+      shared.englishGuidanceNotice;
+  @override
+  set englishGuidanceNotice(String Function(String language)? f) =>
+      shared.englishGuidanceNotice = f;
+  @override
+  void Function(String language)? get onEnglishGuidance =>
+      shared.onEnglishGuidance;
+  @override
+  set onEnglishGuidance(void Function(String language)? f) =>
+      shared.onEnglishGuidance = f;
+  @override
+  Set<String> get englishGuidanceTold => shared.englishGuidanceTold;
   @override
   ClipLibrary get clips => shared.clips;
   @override

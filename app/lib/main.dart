@@ -50,6 +50,9 @@ Future<void> main() async {
     await speaker.setRate(await VoiceSettings.rate());
     await speaker.setLanguage(language.value.languageCode);
     unawaited(speaker.clips.load()); // recorded prompts, where there are any (clips.dart)
+    speaker.englishGuidance = await VoiceSettings.englishGuidance();
+    speaker.englishGuidanceTold.addAll(await VoiceSettings.englishGuidanceTold());
+    unawaited(speaker.guidance.load());
   }();
   await precacheSplash();
   runApp(
@@ -113,11 +116,33 @@ class MaganaApp extends StatelessWidget {
       final shown = lookupAppLocalizations(language.value).noVoiceYet(name);
       appMessenger.currentState?.showSnackBar(SnackBar(content: Text(shown)));
       final appVoice = app != lang && await speaker.canSpeak(app);
+      // English guidance turned off (Settings → Voice): shown only.
+      if (!appVoice && !speaker.englishGuidance) return;
       await speaker.say(
         appVoice
             ? shown
             : lookupAppLocalizations(const Locale('en')).noVoiceYet(name),
         language: appVoice ? app : 'en',
+      );
+    };
+    // Hausa, Yorùbá or Igbo app, no voice for it: Magana's own words are said in English
+    // (guidance.dart), after this, said once per language and shown in the app language.
+    String languageName(String lang) => appLanguages
+        .firstWhere((a) => a.code == lang, orElse: () => appLanguages.first)
+        .name;
+    speaker.englishGuidanceNotice = (lang) => lookupAppLocalizations(
+      const Locale('en'),
+    ).englishGuidanceNotice(languageName(lang));
+    speaker.onEnglishGuidance = (lang) {
+      unawaited(VoiceSettings.markEnglishGuidanceTold(lang));
+      appMessenger.currentState?.showSnackBar(
+        SnackBar(
+          content: Text(
+            lookupAppLocalizations(
+              language.value,
+            ).englishGuidanceNotice(languageName(lang)),
+          ),
+        ),
       );
     };
     return AppScope(

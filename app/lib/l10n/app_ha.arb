@@ -708,5 +708,10 @@
   "screenNoChoices": "Wannan allon ba shi da maɓallan zaɓi. Koma baya don ci gaba.",
   "aiAssistantSoon": "Mataimakin lafiya na AI yana zuwa nan ba da daɗewa ba. A yanzu, ma'aikaciyar jinya ko mai sayar da magani za ta kira ka, kuma tambayoyin alamun haɗari na Magana suna gaya maka lokacin zuwa asibiti ko kiran 112.",
   "dangerCheckFirst": "Amsa 'yan tambayoyin alamun haɗari da farko",
-  "quickCheckNoteRules": "Amsoshinka suna taimaka wa ma'aikacin lafiya ya yanke shawarar lokacin da zai kira ka. Magana ba ta gano cuta. Idan kana da alamun haɗari, Magana za ta gaya maka ka je asibiti yanzu ko ka kira 112."
+  "quickCheckNoteRules": "Amsoshinka suna taimaka wa ma'aikacin lafiya ya yanke shawarar lokacin da zai kira ka. Magana ba ta gano cuta. Idan kana da alamun haɗari, Magana za ta gaya maka ka je asibiti yanzu ko ka kira 112.",
+  "englishGuidanceNotice": "Ana ba da jagora da murya cikin Turanci a yanzu. Muryar {language} tana zuwa.",
+  "voiceEnglishGuidance": "Jagorar murya cikin Turanci",
+  "voiceEnglishGuidanceDetail": "Idan wayar nan ba ta da muryar {language}, Magana tana faɗin menu, alamu da gargaɗinta cikin Turanci. Ba a taɓa karanta rubutun shafi na {language} cikin Turanci ba: ana nuna shi a kan allo.",
+  "voiceEnglishGuidanceOn": "Jagorar murya cikin Turanci: a kunne.",
+  "voiceEnglishGuidanceOff": "Jagorar murya cikin Turanci: a kashe."
 }

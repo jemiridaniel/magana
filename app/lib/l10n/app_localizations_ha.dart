@@ -2706,4 +2706,23 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get quickCheckNoteRules =>
       'Amsoshinka suna taimaka wa ma\'aikacin lafiya ya yanke shawarar lokacin da zai kira ka. Magana ba ta gano cuta. Idan kana da alamun haɗari, Magana za ta gaya maka ka je asibiti yanzu ko ka kira 112.';
+
+  @override
+  String englishGuidanceNotice(String language) {
+    return 'Ana ba da jagora da murya cikin Turanci a yanzu. Muryar $language tana zuwa.';
+  }
+
+  @override
+  String get voiceEnglishGuidance => 'Jagorar murya cikin Turanci';
+
+  @override
+  String voiceEnglishGuidanceDetail(String language) {
+    return 'Idan wayar nan ba ta da muryar $language, Magana tana faɗin menu, alamu da gargaɗinta cikin Turanci. Ba a taɓa karanta rubutun shafi na $language cikin Turanci ba: ana nuna shi a kan allo.';
+  }
+
+  @override
+  String get voiceEnglishGuidanceOn => 'Jagorar murya cikin Turanci: a kunne.';
+
+  @override
+  String get voiceEnglishGuidanceOff => 'Jagorar murya cikin Turanci: a kashe.';
 }

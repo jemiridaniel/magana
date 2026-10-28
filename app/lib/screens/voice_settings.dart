@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
 import '../language.dart';
+import '../theme.dart';
 import '../voices.dart';
 import '../widgets.dart';
 
@@ -22,6 +23,7 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
   bool _loaded = false;
   final _chosen = <String, String?>{};
   double _rate = 1.0;
+  bool _english = true;
 
   /// The app language, and English for English pages when the app is in another language.
   List<String> get _languages {
@@ -40,6 +42,7 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
     final speaker = AppScope.of(context).speaker;
     final voices = await speaker.installedVoices();
     final rate = await VoiceSettings.rate();
+    final english = await VoiceSettings.englishGuidance();
     for (final lang in _languages) {
       _chosen[lang] = await VoiceSettings.chosen(lang);
     }
@@ -47,6 +50,7 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
       setState(() {
         _voices = voices;
         _rate = rate;
+        _english = english;
         _loaded = true;
       });
     }
@@ -83,6 +87,18 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
         : await speaker.preview(v, sample);
   }
 
+  /// "Spoken guidance in English" on or off (only for Hausa, Yorùbá and Igbo).
+  Future<void> _flipEnglish() async {
+    final l = AppLocalizations.of(context);
+    final speaker = AppScope.of(context).speaker;
+    final on = !_english;
+    await VoiceSettings.setEnglishGuidance(on);
+    speaker.englishGuidance = on;
+    setState(() => _english = on);
+    // Said in the app language, so in English while there is no voice for it.
+    await speaker.say(on ? l.voiceEnglishGuidanceOn : l.voiceEnglishGuidanceOff);
+  }
+
   Future<void> _setRate(double rate) async {
     final l = AppLocalizations.of(context);
     final speaker = AppScope.of(context).speaker;
@@ -102,6 +118,8 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
         if (_loaded)
           for (final lang in _languages)
             ..._section(l, lang, voicesFor(voices ?? const [], lang)),
+        if (_loaded && ownVoiceOnly.contains(_languages.first))
+          _englishSwitch(l, _name(_languages.first)),
         if (_loaded && voices != null && betterEnglishVoiceAvailable(voices))
           NoteBox(
             text: '${l.voiceGetBetter}. ${_hint(l)}',
@@ -181,6 +199,33 @@ class _VoiceSettingsScreenState extends State<VoiceSettingsScreen> {
       SecondaryButton(label: l.voicePlaySample, onTap: () => _sample(lang)),
     ];
   }
+
+  Widget _englishSwitch(AppLocalizations l, String language) => Labelled(
+    label: l.voiceEnglishGuidance,
+    hint: l.voiceEnglishGuidanceDetail(language),
+    toggled: _english,
+    onTap: _flipEnglish,
+    radius: 18,
+    child: SwitchListTile(
+      value: _english,
+      onChanged: (_) => _flipEnglish(),
+      secondary: const Icon(Icons.translate, size: 30),
+      title: Text(
+        l.voiceEnglishGuidance,
+        style: const TextStyle(fontSize: 22, fontWeight: FontWeight.w700),
+      ),
+      subtitle: Text(
+        l.voiceEnglishGuidanceDetail(language),
+        style: const TextStyle(fontSize: 17, height: 1.4),
+      ),
+      minTileHeight: 72,
+      tileColor: Colors.white,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(18),
+        side: const BorderSide(color: MaganaColors.ink, width: 3),
+      ),
+    ),
+  );
 
   String _hint(AppLocalizations l) =>
       !kIsWeb && defaultTargetPlatform == TargetPlatform.iOS

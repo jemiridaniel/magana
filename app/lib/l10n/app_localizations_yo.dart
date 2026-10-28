@@ -2705,4 +2705,25 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get quickCheckNoteRules =>
       'Àwọn ìdáhùn rẹ ń ran òṣìṣẹ́ ìlera lọ́wọ́ láti pinnu bí ó ṣe máa pè ọ́ kíákíá. Magana kì í ṣe àyẹ̀wò àìsàn. Tí o bá ní àmì ewu, Magana yóò sọ fún ọ pé kí o lọ sí ilé ìwòsàn nísinsìnyí tàbí pe 112.';
+
+  @override
+  String englishGuidanceNotice(String language) {
+    return 'Ìtọ́sọ́nà ohùn wà ní Gẹ̀ẹ́sì fún báyìí. Ohùn $language ń bọ̀.';
+  }
+
+  @override
+  String get voiceEnglishGuidance => 'Ìtọ́sọ́nà ohùn ní Gẹ̀ẹ́sì';
+
+  @override
+  String voiceEnglishGuidanceDetail(String language) {
+    return 'Nígbà tí fóònù yìí kò ní ohùn $language, Magana máa ń sọ àwọn àkójọ, àmì àti ìkìlọ̀ rẹ̀ ní Gẹ̀ẹ́sì. A kì í ka ọ̀rọ̀ ojú ìwé $language ní Gẹ̀ẹ́sì: a máa ń fi hàn lójú ìbojú.';
+  }
+
+  @override
+  String get voiceEnglishGuidanceOn =>
+      'Ìtọ́sọ́nà ohùn ní Gẹ̀ẹ́sì: ó wà ní títàn.';
+
+  @override
+  String get voiceEnglishGuidanceOff =>
+      'Ìtọ́sọ́nà ohùn ní Gẹ̀ẹ́sì: ó wà ní pípa.';
 }

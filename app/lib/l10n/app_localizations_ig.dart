@@ -2701,4 +2701,23 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get quickCheckNoteRules =>
       'Azịza gị na-enyere onye ọrụ ahụike aka ikpebi oge ọ ga-akpọ gị. Magana anaghị achọpụta ọrịa. Ọ bụrụ na i nwere akara ihe egwu, Magana ga-agwa gị ka ị gaa ụlọ ọgwụ ugbu a ma ọ bụ kpọọ 112.';
+
+  @override
+  String englishGuidanceNotice(String language) {
+    return 'Ntụziaka olu dị na Bekee ugbu a. Olu $language na-abịa.';
+  }
+
+  @override
+  String get voiceEnglishGuidance => 'Ntụziaka olu na Bekee';
+
+  @override
+  String voiceEnglishGuidanceDetail(String language) {
+    return 'Mgbe ekwentị a enweghị olu $language, Magana na-ekwu menu, akara na ịdọ aka na ntị ya n\'asụsụ Bekee. Anaghị agụ ederede peeji $language n\'asụsụ Bekee: a na-egosi ya na ihuenyo.';
+  }
+
+  @override
+  String get voiceEnglishGuidanceOn => 'Ntụziaka olu na Bekee: agbanyere.';
+
+  @override
+  String get voiceEnglishGuidanceOff => 'Ntụziaka olu na Bekee: agbanyụrụ.';
 }

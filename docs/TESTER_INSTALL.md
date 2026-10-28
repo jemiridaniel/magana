@@ -182,7 +182,13 @@ keytool -genkeypair -v -keystore ~/.magana/magana-upload.jks -storetype PKCS12 \
    MAGANA_API_KEY=<the server's MAGANA_API_KEY>
    ```
 2. Bump `version:` in `app/pubspec.yaml`. The number after `+` must go up with every build you hand out.
-3. Run `scripts/build-apk.sh`. It prints the arm64 APK's path, size and signing fingerprint.
-4. Run `scripts/publish-apk.sh` to put it on the website: **https://magana.ng/downloads/magana.apk**, linked from https://magana.ng/android/.
+3. Run `scripts/build-apk.sh`. It builds three APKs and prints each one's size, CPU types and signing fingerprint:
+   - **64-bit ARM** (`app-arm64-v8a-release.apk`, about 34 MB): the default, for most phones from 2017 onwards.
+   - **32-bit ARM** (`app-armeabi-v7a-release.apk`): for older phones.
+   - **Universal** (`app-release.apk`, about 95 MB, every CPU type): for emulators and testing.
+4. Run `scripts/publish-apk.sh` to make the GitHub release and redeploy the website.
+   - **https://magana.ng/download/android** serves the 64-bit one.
+   - **https://magana.ng/download/android-32bit** serves the 32-bit one. The page offers it as "Older phone? If install says 'App not installed' or 'not compatible', use this version".
+   - The universal one is on the GitHub release page only, labelled "For emulators and testing".
 
-Send testers `app-arm64-v8a-release.apk`, renamed to `magana-<version>.apk`. It fits almost every phone from the last several years. Very old 32-bit phones need `app-armeabi-v7a-release.apk`.
+Send testers the 64-bit one. If install says "App not installed" or "not compatible", send the 32-bit one.

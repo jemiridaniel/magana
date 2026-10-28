@@ -2050,5 +2050,25 @@
   "quickCheckNoteRules": "Your answers help the health worker decide how soon to call you. Magana does not diagnose. If you have danger signs, Magana tells you to go to a clinic now or call 112.",
   "@aiAssistantSoon": {
     "description": "Ibà, the AI health assistant, isn't running in the test phase (no GPU): it is hidden behind MAGANA_IBA (lib/features.dart)."
-  }
+  },
+  "englishGuidanceNotice": "Spoken guidance is in English for now. {language} voice is coming.",
+  "@englishGuidanceNotice": {
+    "description": "Said once (in English) before Magana's own words are first spoken in English, because the phone has no voice for the app language.",
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "voiceEnglishGuidance": "Spoken guidance in English",
+  "voiceEnglishGuidanceDetail": "While this phone has no {language} voice, Magana says its own menus, cues and warnings in English. {language} page text is never read in English: it is shown on the screen.",
+  "@voiceEnglishGuidanceDetail": {
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "voiceEnglishGuidanceOn": "Spoken guidance in English: on.",
+  "voiceEnglishGuidanceOff": "Spoken guidance in English: off."
 }

@@ -4349,6 +4349,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your answers help the health worker decide how soon to call you. Magana does not diagnose. If you have danger signs, Magana tells you to go to a clinic now or call 112.'**
   String get quickCheckNoteRules;
+
+  /// Said once (in English) before Magana's own words are first spoken in English, because the phone has no voice for the app language.
+  ///
+  /// In en, this message translates to:
+  /// **'Spoken guidance is in English for now. {language} voice is coming.'**
+  String englishGuidanceNotice(String language);
+
+  /// No description provided for @voiceEnglishGuidance.
+  ///
+  /// In en, this message translates to:
+  /// **'Spoken guidance in English'**
+  String get voiceEnglishGuidance;
+
+  /// No description provided for @voiceEnglishGuidanceDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'While this phone has no {language} voice, Magana says its own menus, cues and warnings in English. {language} page text is never read in English: it is shown on the screen.'**
+  String voiceEnglishGuidanceDetail(String language);
+
+  /// No description provided for @voiceEnglishGuidanceOn.
+  ///
+  /// In en, this message translates to:
+  /// **'Spoken guidance in English: on.'**
+  String get voiceEnglishGuidanceOn;
+
+  /// No description provided for @voiceEnglishGuidanceOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Spoken guidance in English: off.'**
+  String get voiceEnglishGuidanceOff;
 }
 
 class _AppLocalizationsDelegate

@@ -2702,4 +2702,23 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get quickCheckNoteRules =>
       'Your answers help the health worker decide how soon to call you. Magana does not diagnose. If you have danger signs, Magana tells you to go to a clinic now or call 112.';
+
+  @override
+  String englishGuidanceNotice(String language) {
+    return 'Spoken guidance is in English for now. $language voice is coming.';
+  }
+
+  @override
+  String get voiceEnglishGuidance => 'Spoken guidance in English';
+
+  @override
+  String voiceEnglishGuidanceDetail(String language) {
+    return 'While this phone has no $language voice, Magana says its own menus, cues and warnings in English. $language page text is never read in English: it is shown on the screen.';
+  }
+
+  @override
+  String get voiceEnglishGuidanceOn => 'Spoken guidance in English: on.';
+
+  @override
+  String get voiceEnglishGuidanceOff => 'Spoken guidance in English: off.';
 }

@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:app/clips.dart';
+import 'package:app/guidance.dart';
 import 'package:app/l10n/app_localizations.dart';
 import 'package:app/speech.dart';
 import 'package:app/voice_input.dart';
@@ -84,8 +85,8 @@ void main() {
       final s = FakeSpeaker()..noVoiceFor.add('ha');
       final told = <String>[];
       s.onNoVoice = told.add;
-      expect(await s.say('Sannu', language: 'ha'), isTrue); // nothing to hear
-      expect(await s.say('Yaya kake', language: 'ha'), isTrue);
+      expect(await s.say('Ruwa yana da muhimmanci', language: 'ha'), isTrue); // nothing to hear
+      expect(await s.say('Kasar tana da dalibai', language: 'ha'), isTrue);
       expect(s.said, isEmpty);
       expect(told, ['ha']);
     });
@@ -253,6 +254,11 @@ void main() {
       await tapLabel(tester, RegExp('^${ha.settings}'));
       await tapLabel(tester, RegExp('^${ha.voiceTitle}'));
       expect(find.text(ha.voiceNone('Hausa')), findsOneWidget);
+      // Spoken guidance in English: on by default, turned off here.
+      expect(await VoiceSettings.englishGuidance(), isTrue);
+      await tapLabel(tester, RegExp('^${RegExp.escape(ha.voiceEnglishGuidance)}'));
+      expect(await VoiceSettings.englishGuidance(), isFalse);
+      expect(speaker.englishGuidance, isFalse);
     });
   });
 
@@ -313,6 +319,85 @@ void main() {
         expect(words, inInclusiveRange(120, 240), reason: lang);
       }
     });
+  });
+
+  group('English guidance when the app language has no voice', () {
+    final ha = lookupAppLocalizations(const Locale('ha'));
+
+    test("Magana's own phrases, in English; page text never", () async {
+      final g = EnglishGuidance();
+      expect(await g.toEnglish('ha', ha.readPage), en.readPage);
+      // A phrase with a blank.
+      expect(
+        await g.toEnglish('ha', ha.languageButtonLabel('Hausa')),
+        en.languageButtonLabel('Hausa'),
+      );
+      // Two phrases joined; a sentence from a page in between is dropped.
+      final mixed = await g.toEnglish(
+        'ha',
+        '${ha.ageTitle} Ruwa yana da muhimmanci. ${ha.tourTitle}',
+      );
+      expect(mixed, contains(en.ageTitle));
+      expect(mixed, contains(en.tourTitle));
+      expect(mixed, isNot(contains('Ruwa')));
+      expect(await g.toEnglish('ha', 'Ruwa yana da muhimmanci.'), isNull);
+    });
+
+    test('told once, then English; off means nothing said', () async {
+      final s = FakeSpeaker()
+        ..noVoiceFor.add('ha')
+        ..englishGuidanceNotice = (lang) => 'Spoken guidance is in English for now.';
+      final told = <String>[];
+      s.onEnglishGuidance = told.add;
+      await s.say(ha.readPage, language: 'ha');
+      await s.say(ha.settings, language: 'ha');
+      expect(s.said, [
+        'Spoken guidance is in English for now. ${en.readPage}',
+        en.settings,
+      ]);
+      expect(told, ['ha']);
+      // A Hausa page line is never said in English.
+      await s.sayParts([
+        const SpeechPart('Ruwa yana da muhimmanci', 'ha', guidance: false),
+      ]);
+      expect(s.said, hasLength(2));
+      // Turned off in Settings → Voice: nothing said.
+      s.englishGuidance = false;
+      await s.say(ha.readPage, language: 'ha');
+      expect(s.said, hasLength(2));
+    });
+
+    testWidgets(
+      'Hausa app, no Hausa voice, a Hausa page: guidance in English, the page shown',
+      (tester) async {
+        final speaker = FakeSpeaker()..noVoiceFor.add('ha');
+        await tester.runAsync(() => speaker.guidance.load()); // real file reading
+        await speaker.setLanguage('ha'); // as main() does at start
+        await pumpApp(
+          tester,
+          speaker,
+          language: 'ha',
+          body: {
+            'tips': <String>[],
+            'lines': [
+              {'text': 'Ruwa yana da muhimmanci', 'confidence': 0.96, 'top': 40},
+            ],
+            'warnings': <Object>[],
+            'page_language': 'ha',
+          },
+        );
+        await captureToReader(tester, takePhoto: ha.takePhoto);
+        await tester.pump(const Duration(seconds: 1));
+        expect(
+          speaker.said.where((t) => t.contains('Spoken guidance is in English for now')),
+          hasLength(1),
+          reason: '${speaker.said}',
+        );
+        expect(speaker.said.where((t) => t.contains('Ruwa yana da')), isEmpty);
+        expect(speaker.said, contains(en.noVoiceYet('Hausa')));
+        expect(find.text('Ruwa yana da muhimmanci'), findsWidgets);
+      },
+    );
   });
 
   test('Bluetooth headsets: the Android permissions the recogniser needs', () {

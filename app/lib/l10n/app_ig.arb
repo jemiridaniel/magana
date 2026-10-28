@@ -708,5 +708,10 @@
   "screenNoChoices": "Ihuenyo a enweghị bọtịnụ a ga-ahọrọ. Laghachi azụ ka ị gaa n'ihu.",
   "aiAssistantSoon": "Onye inyeaka ahụike AI na-abịa n'oge na-adịghị anya. Ugbu a, nọọsụ ma ọ bụ onye na-ere ọgwụ ga-akpọghachi gị, ajụjụ akara ihe egwu nke Magana ga-agwakwa gị mgbe ị ga-aga ụlọ ọgwụ ma ọ bụ kpọọ 112.",
   "dangerCheckFirst": "Zaa ajụjụ ole na ole gbasara akara ihe egwu mbụ",
-  "quickCheckNoteRules": "Azịza gị na-enyere onye ọrụ ahụike aka ikpebi oge ọ ga-akpọ gị. Magana anaghị achọpụta ọrịa. Ọ bụrụ na i nwere akara ihe egwu, Magana ga-agwa gị ka ị gaa ụlọ ọgwụ ugbu a ma ọ bụ kpọọ 112."
+  "quickCheckNoteRules": "Azịza gị na-enyere onye ọrụ ahụike aka ikpebi oge ọ ga-akpọ gị. Magana anaghị achọpụta ọrịa. Ọ bụrụ na i nwere akara ihe egwu, Magana ga-agwa gị ka ị gaa ụlọ ọgwụ ugbu a ma ọ bụ kpọọ 112.",
+  "englishGuidanceNotice": "Ntụziaka olu dị na Bekee ugbu a. Olu {language} na-abịa.",
+  "voiceEnglishGuidance": "Ntụziaka olu na Bekee",
+  "voiceEnglishGuidanceDetail": "Mgbe ekwentị a enweghị olu {language}, Magana na-ekwu menu, akara na ịdọ aka na ntị ya n'asụsụ Bekee. Anaghị agụ ederede peeji {language} n'asụsụ Bekee: a na-egosi ya na ihuenyo.",
+  "voiceEnglishGuidanceOn": "Ntụziaka olu na Bekee: agbanyere.",
+  "voiceEnglishGuidanceOff": "Ntụziaka olu na Bekee: agbanyụrụ."
 }

@@ -5,6 +5,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 import 'clips.dart';
 import 'diagnostics.dart';
+import 'guidance.dart';
 import 'platform.dart';
 import 'platform/speech_support.dart';
 import 'voices.dart';
@@ -12,9 +13,13 @@ import 'voices.dart';
 /// A piece of what is said, in its own language: a page line in the page's language, Magana's
 /// own words in the app's ([Speaker.sayParts]).
 class SpeechPart {
-  const SpeechPart(this.text, this.language);
+  const SpeechPart(this.text, this.language, {this.guidance = true});
   final String text;
   final String language;
+
+  /// Magana's own words (menus, cues, warnings), which may be said in English when [language]
+  /// has no voice (guidance.dart). False for page text: never said by another language's voice.
+  final bool guidance;
 }
 
 /// How one utterance ended.
@@ -51,6 +56,19 @@ class Speaker {
 
   /// Recorded prompts, played instead of the phone's voice where a clip exists (clips.dart).
   ClipLibrary clips;
+
+  /// Magana's own words in English when Hausa, Yorùbá or Igbo has no voice (guidance.dart).
+  EnglishGuidance guidance = EnglishGuidance();
+
+  /// Settings → Voice: "Spoken guidance in English" (on unless turned off).
+  bool englishGuidance = true;
+
+  /// The English sentence said once per language before the first English guidance ("Spoken
+  /// guidance is in English for now. Hausa voice is coming."), and the app shows it
+  /// ([onEnglishGuidance], main.dart). Languages already told (kept on the phone).
+  String Function(String language)? englishGuidanceNotice;
+  void Function(String language)? onEnglishGuidance;
+  final englishGuidanceTold = <String>{};
   ClipPlayer? _clipPlayer;
   ClipPlayer get clipPlayer => _clipPlayer ??= AssetClipPlayer();
   set clipPlayer(ClipPlayer p) => _clipPlayer = p;
@@ -297,10 +315,16 @@ class Speaker {
     final merged = <SpeechPart>[];
     for (final p in parts) {
       if (p.text.trim().isEmpty) continue;
-      if (merged.isNotEmpty && merged.last.language == p.language) {
+      // Page text and Magana's words stay apart only where it matters: in a language that may
+      // have no voice (Magana's words then go into English, the page's never).
+      if (merged.isNotEmpty &&
+          merged.last.language == p.language &&
+          (merged.last.guidance == p.guidance ||
+              !ownVoiceOnly.contains(p.language))) {
         merged.last = SpeechPart(
           '${merged.last.text}. ${p.text}',
           p.language,
+          guidance: merged.last.guidance && p.guidance,
         );
       } else {
         merged.add(p);
@@ -322,7 +346,13 @@ class Speaker {
         first = false;
         final ok = piece.clip != null
             ? await _playClip(piece, part.language, turn, wanted)
-            : await _sayWithVoice(piece.text, part.language, turn, wanted);
+            : await _sayWithVoice(
+                piece.text,
+                part.language,
+                turn,
+                wanted,
+                guidance: part.guidance,
+              );
         if (!ok) return false;
       }
     }
@@ -333,9 +363,25 @@ class Speaker {
     String text,
     String lang,
     int turn,
-    bool Function()? wanted,
-  ) async {
+    bool Function()? wanted, {
+    bool guidance = true,
+  }) async {
     if (!(voiceKnown(lang) ?? await _checkVoice(lang))) {
+      // Magana's own words: in English, if the person hasn't turned that off.
+      if (guidance && englishGuidance && ownVoiceOnly.contains(lang)) {
+        final english = await this.guidance.toEnglish(lang, text);
+        if (turn != _turn) return false;
+        if (english != null && (voiceKnown('en') ?? await _checkVoice('en'))) {
+          var say = english;
+          if (englishGuidanceTold.add(lang)) {
+            onEnglishGuidance?.call(lang);
+            if (englishGuidanceNotice?.call(lang) case final notice?) {
+              say = '$notice $english';
+            }
+          }
+          return _sayWithVoice(say, 'en', turn, wanted);
+        }
+      }
       devLog('speech: no $lang voice on this phone; not said: "$text"');
       if (_noVoiceTold.add(lang)) onNoVoice?.call(lang);
       return true; // nothing to hear: the text is on the screen

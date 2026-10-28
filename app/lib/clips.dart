@@ -167,18 +167,39 @@ class _Index {
   final Map<String, List<ClipPattern>> patterns; // lang → health templates
 }
 
-/// A health template as fixed words and number slots, in order (scripts/export_phrases.py).
+/// A health template, or one of the app's phrases with blanks, as fixed words and slots in order
+/// (scripts/export_phrases.py). A slot's [text] is its name ("a", "language").
 class ClipPattern {
-  ClipPattern(this.id, this.pieces)
-    : regex = RegExp(
-        '^${[for (final p in pieces) p.slot ? '(.+?)' : RegExp.escape(p.text.trim()).replaceAll(' ', r'\s+')].join(r'\s*')}\$',
-        caseSensitive: false,
-        unicode: true,
-      );
+  ClipPattern(this.id, this.pieces) : regex = _regex(pieces);
 
   final String id;
   final List<({String text, String? id, bool slot})> pieces;
   final RegExp regex;
+
+  List<String> get slotNames => [
+    for (final p in pieces)
+      if (p.slot) p.text,
+  ];
+
+  static RegExp _regex(List<({String text, String? id, bool slot})> pieces) {
+    final parts = <String>[];
+    for (final (i, p) in pieces.indexed) {
+      if (p.slot) {
+        parts.add('(.+?)');
+        continue;
+      }
+      var t = p.text.trim();
+      // The final full stop is optional, as in ClipLibrary.normalise.
+      if (i == pieces.length - 1) t = t.replaceAll(RegExp(r'[.!?…]+$'), '');
+      if (t.isEmpty) continue;
+      parts.add(RegExp.escape(t).replaceAll(' ', r'\s+'));
+    }
+    return RegExp(
+      '^${parts.join(r'\s*')}[.!?…]*\$',
+      caseSensitive: false,
+      unicode: true,
+    );
+  }
 
   static ClipPattern? fromJson(Object? json) {
     if (json is! Map || json['pattern'] is! List) return null;
@@ -186,7 +207,7 @@ class ClipPattern {
       for (final p in json['pattern'] as List)
         if (p is Map)
           p.containsKey('slot')
-              ? (text: '', id: null, slot: true)
+              ? (text: '${p['slot']}', id: null, slot: true)
               : (text: '${p['text']}', id: p['id'] as String?, slot: false),
     ]);
   }

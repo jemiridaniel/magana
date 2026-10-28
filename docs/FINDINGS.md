@@ -13,6 +13,30 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-28 · English guidance while Hausa, Yorùbá or Igbo has no voice; APKs per CPU type
+
+- **English guidance** (`app/lib/guidance.dart`):
+  - **How it works:**
+    - With Hausa, Yorùbá or Igbo as the app language and no voice for it, Magana's own words (menus, cues, the tour, warnings) are said in English with the English voice.
+    - First, once per language: "Spoken guidance is in English for now. Hausa voice is coming." It is said in English and shown in the app language.
+    - Each phrase is translated by its ID in the app's texts (`assets/voice/phrases.json`), never by a model.
+    - A sentence that isn't one of Magana's phrases is dropped, so page text can't reach the English voice even if it is mislabelled. Page lines are also marked as page text.
+    - A Hausa page with no Hausa voice is shown, not read: "I don't have a Hausa voice yet. The text is on the screen."
+  - **Setting:** Settings → Voice → "Spoken guidance in English" (on by default). Off, nothing is said in English, and the notices are shown only.
+  - **A safety catch found by the tests:**
+    - The problem: a phrase with blanks and almost no words of its own ("{voice}. {speed}") matched a Hausa page sentence. The page's words went into the blanks, ready for the English voice.
+    - Now: a phrase must have at least 6 letters of its own outside the blanks to match. A blank may hold only one of Magana's phrases or short data (up to 3 words, no sentence).
+  - **Tests:** `voice_feedback_test.dart`, 21 tests:
+    - real phrase lookups; a page sentence dropped;
+    - the notice said once;
+    - the switch turns it all off;
+    - a Hausa page with guidance in English and the page not read.
+  - **Not tried on a phone. The translations are the app's own texts, so the Hausa drafts still need a native speaker.**
+- **APKs per CPU type:** 64-bit ARM is the default download (about 34 MB, "Most phones from 2017 onwards"). The 32-bit ARM one is for older phones (`/download/android-32bit`). The universal one (about 95 MB) is on the GitHub release page only, for emulators and testing.
+  - **Website:** it shows each size from `latest.json`. Its Playwright tests check the default link, the 64 px "Older phone?" link and that the 95 MB file isn't offered.
+  - **Not tested on a 32-bit phone:** Apple Silicon has no 32-bit Android emulator. The arm64 images for API 28 and 30 list no 32-bit ABIs. The universal APK carries the same 7 native libraries for each CPU type.
+- **Tests:** app 367 passed; website 33 passed.
+
 ## 2026-10-28 · Open TTS for Hausa, Yorùbá, Igbo and Nigerian English: licences first, then the Oracle server (evaluation only)
 
 Not shipped. Details, sources and samples: docs/TTS_EVALUATION.md.

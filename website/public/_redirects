@@ -3,3 +3,6 @@
 /download/android   https://github.com/jemiridaniel/magana/releases/latest/download/magana.apk  302
 /download/android/  https://github.com/jemiridaniel/magana/releases/latest/download/magana.apk  302
 /downloads/magana.apk  https://github.com/jemiridaniel/magana/releases/latest/download/magana.apk  302
+# Older 32-bit phones ("App not installed" / "not compatible" with the default one).
+/download/android-32bit   https://github.com/jemiridaniel/magana/releases/latest/download/magana-32bit.apk  302
+/download/android-32bit/  https://github.com/jemiridaniel/magana/releases/latest/download/magana-32bit.apk  302

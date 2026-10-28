@@ -235,6 +235,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
               ? _textWords.headingSpoken(spokenNumbers(body))
               : spokenNumbers(body),
           text,
+          guidance: false, // the page's own words: never in another language's voice
         ),
       if (marked.isNotEmpty)
         SpeechPart(_l.letterCheckWords(marked.join(', ')), app),

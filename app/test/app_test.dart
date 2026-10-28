@@ -51,7 +51,10 @@ class FakeSpeaker extends Speaker {
   @override
   Future<void> setRate(double rate) async => rates.add(_rate = rate);
   @override
-  Future<void> setLanguage(String code) async => language = code;
+  Future<void> setLanguage(String code) async {
+    language = code;
+    await super.setLanguage(code); // the app language Magana's own words are said in
+  }
 
   /// Languages this "phone" has no voice for (Speaker.voiceReady); the engine isn't asked.
   final noVoiceFor = <String>{};

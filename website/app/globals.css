@@ -235,6 +235,10 @@ img { max-width: 100%; height: auto; }
 .prose th { background: var(--stone); }
 .download-card { display: flex; flex-direction: column; gap: 14px; padding: 26px; border-radius: 22px; background: var(--ink); color: #fff; }
 .download-card .meta { font-size: 17px; color: #d5d9de; overflow-wrap: anywhere; }
+.download-for { margin: -6px 0 0; font-size: 18px; color: #d5d9de; }
+/* The 32-bit build for older phones: a full 64 px target, light on the dark card. */
+.download-older { margin: 0; }
+.download-older a { display: flex; align-items: center; min-height: 64px; font-size: 18px; color: #fff; text-decoration: underline; text-underline-offset: 4px; }
 
 /* Footer */
 .site-footer { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; padding: 56px var(--pad); background: var(--ink); color: #fff; }

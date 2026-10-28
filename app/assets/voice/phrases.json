@@ -574,7 +574,10 @@
   "This screen has no buttons to choose. Go back to continue.": "screenNoChoices",
   "AI health assistant coming soon. For now, a nurse or pharmacist calls you back, and Magana's own danger-sign questions tell you when to go to a clinic or call 112.": "aiAssistantSoon",
   "Answer a few danger-sign questions first": "dangerCheckFirst",
-  "Your answers help the health worker decide how soon to call you. Magana does not diagnose. If you have danger signs, Magana tells you to go to a clinic now or call 112.": "quickCheckNoteRules"
+  "Your answers help the health worker decide how soon to call you. Magana does not diagnose. If you have danger signs, Magana tells you to go to a clinic now or call 112.": "quickCheckNoteRules",
+  "Spoken guidance in English": "voiceEnglishGuidance",
+  "Spoken guidance in English: on.": "voiceEnglishGuidanceOn",
+  "Spoken guidance in English: off.": "voiceEnglishGuidanceOff"
  },
  "ha": {
   "Magana": "appTitle",
@@ -1152,7 +1155,10 @@
   "Wannan allon ba shi da maɓallan zaɓi. Koma baya don ci gaba.": "screenNoChoices",
   "Mataimakin lafiya na AI yana zuwa nan ba da daɗewa ba. A yanzu, ma'aikaciyar jinya ko mai sayar da magani za ta kira ka, kuma tambayoyin alamun haɗari na Magana suna gaya maka lokacin zuwa asibiti ko kiran 112.": "aiAssistantSoon",
   "Amsa 'yan tambayoyin alamun haɗari da farko": "dangerCheckFirst",
-  "Amsoshinka suna taimaka wa ma'aikacin lafiya ya yanke shawarar lokacin da zai kira ka. Magana ba ta gano cuta. Idan kana da alamun haɗari, Magana za ta gaya maka ka je asibiti yanzu ko ka kira 112.": "quickCheckNoteRules"
+  "Amsoshinka suna taimaka wa ma'aikacin lafiya ya yanke shawarar lokacin da zai kira ka. Magana ba ta gano cuta. Idan kana da alamun haɗari, Magana za ta gaya maka ka je asibiti yanzu ko ka kira 112.": "quickCheckNoteRules",
+  "Jagorar murya cikin Turanci": "voiceEnglishGuidance",
+  "Jagorar murya cikin Turanci: a kunne.": "voiceEnglishGuidanceOn",
+  "Jagorar murya cikin Turanci: a kashe.": "voiceEnglishGuidanceOff"
  },
  "yo": {
   "Magana": "appTitle",
@@ -1731,7 +1737,10 @@
   "Ojú ìbojú yìí kò ní bọ́tìnnì láti yàn. Padà sẹ́yìn láti tẹ̀síwájú.": "screenNoChoices",
   "Olùrànlọ́wọ́ ìlera AI ń bọ̀ láìpẹ́. Fún báyìí, nọ́ọ̀sì tàbí oníṣègùn òògùn yóò pè ọ́ padà, àwọn ìbéèrè àmì ewu ti Magana yóò sì sọ fún ọ ìgbà tí o yẹ kí o lọ sí ilé ìwòsàn tàbí pe 112.": "aiAssistantSoon",
   "Dáhùn àwọn ìbéèrè díẹ̀ nípa àmì ewu lákọ̀ọ́kọ́": "dangerCheckFirst",
-  "Àwọn ìdáhùn rẹ ń ran òṣìṣẹ́ ìlera lọ́wọ́ láti pinnu bí ó ṣe máa pè ọ́ kíákíá. Magana kì í ṣe àyẹ̀wò àìsàn. Tí o bá ní àmì ewu, Magana yóò sọ fún ọ pé kí o lọ sí ilé ìwòsàn nísinsìnyí tàbí pe 112.": "quickCheckNoteRules"
+  "Àwọn ìdáhùn rẹ ń ran òṣìṣẹ́ ìlera lọ́wọ́ láti pinnu bí ó ṣe máa pè ọ́ kíákíá. Magana kì í ṣe àyẹ̀wò àìsàn. Tí o bá ní àmì ewu, Magana yóò sọ fún ọ pé kí o lọ sí ilé ìwòsàn nísinsìnyí tàbí pe 112.": "quickCheckNoteRules",
+  "Ìtọ́sọ́nà ohùn ní Gẹ̀ẹ́sì": "voiceEnglishGuidance",
+  "Ìtọ́sọ́nà ohùn ní Gẹ̀ẹ́sì: ó wà ní títàn.": "voiceEnglishGuidanceOn",
+  "Ìtọ́sọ́nà ohùn ní Gẹ̀ẹ́sì: ó wà ní pípa.": "voiceEnglishGuidanceOff"
  },
  "ig": {
   "Magana": "appTitle",
@@ -2308,7 +2317,10 @@
   "Ihuenyo a enweghị bọtịnụ a ga-ahọrọ. Laghachi azụ ka ị gaa n'ihu.": "screenNoChoices",
   "Onye inyeaka ahụike AI na-abịa n'oge na-adịghị anya. Ugbu a, nọọsụ ma ọ bụ onye na-ere ọgwụ ga-akpọghachi gị, ajụjụ akara ihe egwu nke Magana ga-agwakwa gị mgbe ị ga-aga ụlọ ọgwụ ma ọ bụ kpọọ 112.": "aiAssistantSoon",
   "Zaa ajụjụ ole na ole gbasara akara ihe egwu mbụ": "dangerCheckFirst",
-  "Azịza gị na-enyere onye ọrụ ahụike aka ikpebi oge ọ ga-akpọ gị. Magana anaghị achọpụta ọrịa. Ọ bụrụ na i nwere akara ihe egwu, Magana ga-agwa gị ka ị gaa ụlọ ọgwụ ugbu a ma ọ bụ kpọọ 112.": "quickCheckNoteRules"
+  "Azịza gị na-enyere onye ọrụ ahụike aka ikpebi oge ọ ga-akpọ gị. Magana anaghị achọpụta ọrịa. Ọ bụrụ na i nwere akara ihe egwu, Magana ga-agwa gị ka ị gaa ụlọ ọgwụ ugbu a ma ọ bụ kpọọ 112.": "quickCheckNoteRules",
+  "Ntụziaka olu na Bekee": "voiceEnglishGuidance",
+  "Ntụziaka olu na Bekee: agbanyere.": "voiceEnglishGuidanceOn",
+  "Ntụziaka olu na Bekee: agbanyụrụ.": "voiceEnglishGuidanceOff"
  },
  "_patterns": {
   "ha": [
@@ -2965,6 +2977,5135 @@
      {
       "text": "Maka iji n'akpụkpọ ahụ naanị.",
       "id": "tpl-medicine_label-external_use_only-1"
+     }
+    ]
+   }
+  ]
+ },
+ "_english": {
+  "appTitle": "Magana",
+  "greeting": "Hello",
+  "languageButtonLabel": "App language: {language}. Change language",
+  "chooseLanguage": "Choose app language",
+  "languageChanged": "App language is now {language}.",
+  "settings": "Settings",
+  "readPage": "Read a page",
+  "readPageSubtitle": "Schoolwork, medical reports, bank statements, letters — anything printed",
+  "askQuestion": "Ask a question",
+  "practiceQuiz": "Practice quiz",
+  "myLibrary": "My library",
+  "everydayPapers": "Everyday papers",
+  "skills": "Skills",
+  "myScore": "My score",
+  "holdToSpeak": "Hold to speak",
+  "holdToSpeakLabel": "Hold to speak a command",
+  "voiceCommands": "Voice commands",
+  "comingSoonHint": "Coming soon",
+  "comingSoon": "{feature} is coming soon.",
+  "backToHome": "Back to home",
+  "framingGuidance": "Lay the page flat in good light and hold the phone about one forearm above it. I'll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.",
+  "repeat": "Repeat",
+  "repeatInstructions": "Hear the instructions again",
+  "takePhoto": "Take photo",
+  "gallery": "Gallery",
+  "galleryLabel": "Choose a photo from the gallery",
+  "cameraFailed": "I couldn't open the camera. Try Gallery instead.",
+  "readingPage": "Reading the page. Please wait.",
+  "noTextFound": "I couldn't find any text. Check the page is face up and try again.",
+  "cannotReach": "I couldn't reach Magana. Check the connection and try again.",
+  "serverSleeping": "Magana’s server is sleeping. Please try again later.",
+  "readFailed": "Something went wrong reading the page. Please try again.",
+  "yourPage": "Your page",
+  "unclearCount": "{count} unclear",
+  "linePosition": "Line {number} of {total}",
+  "rowPosition": "Row {number} of {total}",
+  "rowPositionInTable": "Row {number} of {total}, table {table}",
+  "nowReading": "now reading",
+  "previous": "Prev",
+  "next": "Next",
+  "previousLine": "Previous line",
+  "previousRow": "Previous row",
+  "nextLine": "Next line",
+  "nextRow": "Next row",
+  "repeatLine": "Repeat this line",
+  "repeatRow": "Repeat this row",
+  "speed": "Speed {value}",
+  "speedLabel": "Reading speed {value}. Tap to change",
+  "pause": "Pause",
+  "play": "Play",
+  "pauseLabel": "Pause reading",
+  "playLabel": "Read from here",
+  "pageRead": "Page read.",
+  "firstLine": "This is the first line.",
+  "firstRow": "This is the first row.",
+  "endOfPage": "End of page.",
+  "endOfPageHint": "End of page. Tap Repeat, or go back to read another page.",
+  "whereLine": "line {number}",
+  "whereRow": "row {number}",
+  "whereCell": "row {row}, column {col}",
+  "whereTop": "near the top of the page",
+  "whereMiddle": "in the middle of the page",
+  "whereBottom": "near the bottom of the page",
+  "unclearNumber": "unclear number",
+  "amountUnclear": "I can't read the amount clearly",
+  "currencyUnclear": "I can't read the currency sign clearly",
+  "unclearLetter": "unclear letter",
+  "faintPrint": "Faint print",
+  "msg_too_dark": "It's quite dark. Turn on the torch or move to more light.",
+  "msg_blurry": "The photo looks blurry. Hold the phone still and try again.",
+  "msg_low_confidence": "I'm not sure about {where}. Please check it or retake the photo.",
+  "msg_low_confidence_number": "I can't read a number on {where} clearly. Please check it or retake the photo.",
+  "msg_unreadable_number": "I can't read a number on {where} clearly. Please check it or retake the photo.",
+  "msg_currency_unclear": "On {where} I can read the amount's digits but not its currency sign, so I say the digits only. Please check it in your bank's app or with someone you trust.",
+  "msg_amount_unconfirmed": "I can't read the amount on {where} clearly, so it isn't said. Magana says an amount only when two separate readings of it match exactly. Please check it in your bank's app or with someone you trust.",
+  "msg_number_mismatch": "I can't read a number on {where} clearly. Please check it or retake the photo.",
+  "msg_faint_region": "There is faint print {where} that I can't read. Try more light, or retake the photo.",
+  "msg_unknown_mode": "Choose schoolwork, health or money.",
+  "msg_not_allowed_for_tier": "This isn't available on this account.",
+  "msg_consent_required": "Learners aged 13 to 17 need a parent's or guardian's consent first.",
+  "msg_teacher_session_required": "Learners under 13 can only use Magana in a teacher-run session.",
+  "msg_unreadable_image": "I couldn't open that photo. Please try again.",
+  "msg_numbers_unconfirmed": "I couldn't explain this page safely. Here it is read again.",
+  "msg_class_code_wrong": "That class code isn't right. Check it with your teacher.",
+  "msg_code_locked": "Too many wrong codes. Please wait 5 minutes, then try again.",
+  "msg_teacher_code_needed": "Only your teacher can move you to another class. Ask them to enter their teacher code.",
+  "msg_teacher_code_wrong": "That teacher code isn't right. Ask your teacher to check it.",
+  "msg_class_has_no_accounts": "This class only has lessons your teacher runs. Ask your teacher.",
+  "msg_not_linked": "This phone isn't in a class now. You can still read pages.",
+  "msg_class_joined": "You're in the class.",
+  "msg_class_changed": "Your class has changed.",
+  "msg_explain_wrong_language": "I couldn't explain this in your language, so I'll read the page exactly instead.",
+  "msg_go_to_clinic_now": "This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.",
+  "msg_nurse_call_within_2_hours": "Thank you. A nurse will call you within 2 hours.",
+  "msg_nurse_call_working_hours": "Thank you. A nurse will call you back during working hours.",
+  "autoCapture": "Auto-capture",
+  "torchOn": "Turn on torch",
+  "torchOff": "Turn off torch",
+  "cameraView": "Camera view",
+  "cameraUnavailable": "I can't use the camera. Allow camera access in Settings, or choose a photo from the gallery.",
+  "msg_q_fever": "Do you have a fever, or does your body feel very hot?",
+  "msg_q_fever_days": "For how many days have you had the fever?",
+  "msg_q_fits": "Have you had fits, or shaking of the body you could not stop?",
+  "msg_q_cannot_drink": "Are you unable to drink anything, or is the baby unable to breastfeed?",
+  "msg_q_vomits_everything": "Are you vomiting everything you eat or drink?",
+  "msg_q_very_sleepy": "Are you very sleepy, confused, or hard to wake?",
+  "msg_q_bleeding": "Are you bleeding without a clear reason, from the nose or gums, or in vomit or stool?",
+  "msg_q_yellow_eyes": "Have your eyes or skin turned yellow?",
+  "msg_q_hard_breathing": "Are you breathing very fast, or struggling to breathe?",
+  "msg_q_very_pale": "Are your palms, lips or inner eyelids very pale?",
+  "msg_q_dark_urine": "Is your urine very dark, like cola or tea?",
+  "msg_q_too_weak": "Are you too weak to sit up or stand without help?",
+  "msg_line_end_unclear": "I can't read the end of {where}. Please check it or retake the photo.",
+  "cueHigher": "Higher",
+  "cueLower": "Lower",
+  "cueLeft": "Left",
+  "cueRight": "Right",
+  "cueHoldStill": "Hold still",
+  "cueCloser": "Closer",
+  "cueFurther": "Further",
+  "cueMoreLight": "More light",
+  "cueNoPage": "No page",
+  "stepOf": "Step {n} of {total}",
+  "chooseLanguageTitle": "Choose your language",
+  "chooseLanguageBody": "Magana will speak to you in this language. You can change it any time from the Home screen.",
+  "languageHearsHint": "Each option is read aloud in its own language when you touch it.",
+  "continueLabel": "Continue",
+  "welcome": "Welcome",
+  "ageTitle": "How old are you?",
+  "ageBody": "We ask so Magana is safe and right for you.",
+  "ageAdult": "I am 18 or older",
+  "ageAdultDetail": "Use everything in Magana, including health and money papers.",
+  "ageTeen": "I am 13 to 17",
+  "ageTeenDetail": "A parent, guardian or teacher agrees first. Magana helps with school subjects only.",
+  "ageChild": "I am under 13",
+  "ageChildDetail": "Your teacher will use Magana with you in class.",
+  "privacyNote": "Photos of your pages are deleted after reading. We never share your details.",
+  "hearAgain": "Hear this page again",
+  "readyTitle": "You're ready",
+  "readyBody": "Hold your phone over any printed page and Magana will read it to you.",
+  "startLabel": "Start",
+  "consentTitle": "Ask a parent, guardian or teacher",
+  "consentBody": "Please read or listen to this together.",
+  "consentPoint1": "Magana helps with school subjects only.",
+  "consentPoint2": "No health or money papers, no WhatsApp and no open chat.",
+  "consentPoint3": "Photos are deleted after reading.",
+  "consentConfirm": "I am the parent, guardian or teacher, and I agree",
+  "classroomTitle": "Magana in class",
+  "classroomBody": "Your teacher starts Magana with you in class. When the lesson ends, close the app.",
+  "classroomStart": "Teacher: start the class session",
+  "classroomConfirmTitle": "Are you the teacher?",
+  "classroomConfirmYes": "Yes, start the session",
+  "cancel": "Cancel",
+  "back": "Back",
+  "msg_unknown_tier": "Please set up Magana again: your age group wasn't recognised.",
+  "readPageSubtitleSchool": "Schoolwork, notes, textbooks and tests",
+  "everydaySubtitle": "Health and money papers · 18+",
+  "paperMedicine": "Medicine label",
+  "paperMedicineDetail": "Labels and prescriptions",
+  "paperReport": "Medical report",
+  "paperReportDetail": "Test results and discharge notes",
+  "paperStatement": "Bank statement",
+  "paperStatementDetail": "Statements, receipts and bills",
+  "talkToNurse": "Talk to a nurse",
+  "talkToNurseDetail": "With the Ibà quick check",
+  "everydayPrivacy": "Private papers are read on your phone and not saved. Magana never asks for your PIN or password.",
+  "readExactly": "Read exactly as printed",
+  "noteMedicine": "Magana reads what is printed. It does not give medical advice. If anything on the label is unclear, ask your pharmacist before taking it.",
+  "noteReport": "Numbers and ranges are read exactly as printed. Magana does not interpret results: only your health worker can explain what they mean for you.",
+  "noteStatement": "Amounts are read exactly as printed. This statement is not saved. Magana never asks for your PIN or password. If an amount is unclear, check it with your bank or a trusted person.",
+  "askPharmacistOrNurse": "Ask a pharmacist or nurse",
+  "adultsOnly": "This is for adults (18 and over).",
+  "healthWorkerTitle": "Talk to a health worker",
+  "healthWorkerSubtitle": "A nurse or pharmacist calls you back",
+  "helpWithTitle": "What do you need help with?",
+  "reasonMedicine": "Understanding my medicine",
+  "reasonResults": "Understanding my results",
+  "reasonOther": "Something else",
+  "callLanguage": "Language for the call",
+  "answerIbaFirst": "Answer a few quick questions first (Ibà)",
+  "requestCallback": "Request a call back",
+  "emergencyBold": "Emergency?",
+  "emergencyText": "Do not wait for a call back. Call 112 now.",
+  "call112": "Call 112",
+  "quickCheckTitle": "Quick health check",
+  "quickCheckProgress": "Powered by Ibà · question {n} of {total}",
+  "yes": "Yes",
+  "no": "No",
+  "moreDays": "One more day",
+  "fewerDays": "One day fewer",
+  "nextLabel": "Next",
+  "quickCheckNote": "Your answers help the nurse decide how soon to call you. Ibà does not diagnose. If you have danger signs, Magana tells you to go to a clinic now.",
+  "resultTitle": "Your result",
+  "checkingAnswers": "Checking your answers.",
+  "backHome": "Back to home",
+  "msg_callback_booked": "Your call back is booked. A nurse or pharmacist will call you.",
+  "msg_callback_unavailable": "Call backs are not available yet. If you need help now, go to a clinic or call 112.",
+  "quickCheckProgressFallback": "Built-in safety check · question {n} of {total}",
+  "resultUrgent": "A nurse should call you within 2 hours. Request a call back now. If you get worse, go to a clinic or call 112.",
+  "resultRoutine": "A nurse can call you back during working hours. Request a call back. If you get worse, go to a clinic or call 112.",
+  "quizProgress": "Question {n} of {total}",
+  "quizScoreLabel": "{correct} right out of {answered} answered",
+  "quizSayAnswer": "Say {letters}",
+  "quizListening": "Listening… Tap to stop",
+  "quizCorrect": "Correct! You chose {letter}.",
+  "quizWrong": "Not quite. You chose {letter}. The answer is {answer}.",
+  "quizUnclear": "I heard “{heard}”. Please say {letters}.",
+  "quizNothingHeard": "I did not hear an answer. Say {letters}, or double tap an answer.",
+  "quizRepeat": "Repeat question",
+  "quizNext": "Next question",
+  "quizFinish": "See my result",
+  "quizYourAnswerRight": "your answer, correct",
+  "quizYourAnswerWrong": "your answer, not correct",
+  "quizRightAnswer": "correct answer",
+  "quizResultTitle": "Practice finished",
+  "quizResult": "You got {correct} out of {total} right.",
+  "quizAgain": "Practise again",
+  "skillsSubtitle": "Short spoken lessons, at your pace",
+  "nextLesson": "Next lesson · {minutes} min",
+  "playLesson": "Play lesson",
+  "pauseLesson": "Pause",
+  "practiseNow": "Practise now",
+  "lessonDone": "Done",
+  "lessonStepOf": "Step {step} of {total}",
+  "lessonNotStarted": "Not started",
+  "allLessonsDone": "You have finished every lesson. Well done!",
+  "practiseWithChampion": "Practise with a Magana Champion",
+  "skillsNote": "Sample lessons written by the Magana team, to be reviewed by rehabilitation trainers. Lessons are in English for now.",
+  "previousStep": "Previous step",
+  "nextStep": "Next step",
+  "lessonFinished": "Lesson finished.",
+  "scoreTitle": "My Independence Score",
+  "scoreSubtitle": "Tasks you finished in Magana",
+  "scoreOutOf": "{score} out of 100",
+  "scoreByArea": "By area",
+  "areaLearning": "Learning",
+  "areaHealth": "Health papers",
+  "areaMoney": "Money and letters",
+  "areaSkills": "Skills",
+  "areaScoreLabel": "{area}: {score} out of 100",
+  "scoreThisWeek": "This week",
+  "scoreNothingThisWeek": "No tasks yet this week. Read a page or take a quiz to start.",
+  "scoreHow": "Your score counts real tasks you finished in Magana in the last 30 days. It stays on this phone; only you see it.",
+  "championsTitle": "Magana Champions",
+  "championsSubtitle": "Learn from people who have been there",
+  "championSample": "Sample profile",
+  "championDetail": "Blind since age 12 · Kano · Hausa, English",
+  "championNotYet": "This is a sample profile. Champions will be matched to you through partner organisations. Calls are not available yet.",
+  "becomeChampion": "Become a Champion",
+  "becomeChampionBody": "Help others in your community and earn a certificate.",
+  "champStepBasics": "Finish Phone basics",
+  "champStepPhotos": "Finish Taking clear photos",
+  "champStepScore": "Reach an Independence Score of 60",
+  "champStepTraining": "Join a 2-hour Champion training",
+  "champStepHelp": "Help your first 3 people",
+  "stepDone": "done",
+  "stepNotDone": "not done yet",
+  "championsPartnerNote": "Champion training will be run with partner organisations. It is not open yet.",
+  "librarySubtitle": "Saved readings, kept for 30 days",
+  "libraryEmpty": "Nothing saved yet. After Magana reads a page, choose Save to my library.",
+  "librarySavedOn": "Saved {date}",
+  "libraryPrivacy": "Saved readings stay on this phone and are deleted after 30 days. Photos are never saved.",
+  "saveToLibrary": "Save to my library",
+  "savedToLibrary": "Saved to my library. It stays on this phone for 30 days.",
+  "deleteFromLibrary": "Delete from my library",
+  "deleteConfirm": "Delete this reading from your library?",
+  "deleteYes": "Delete",
+  "deletedFromLibrary": "Deleted from your library.",
+  "remindersTitle": "Today's medicines",
+  "remindersSubtitle": "Times set with your pharmacist",
+  "remindersCard": "Medicine reminders",
+  "remindersCardDetail": "Times for your medicines",
+  "remindersEmpty": "No reminders yet. Add the times your pharmacist or doctor gave you.",
+  "doseTaken": "Taken",
+  "doseDue": "Due now",
+  "doseLater": "Later today",
+  "doseLabel": "{time}, {state}. {medicine}. {amount}",
+  "iTookIt": "I've taken it",
+  "remindLater": "Remind in 15 min",
+  "remindLaterSet": "I will remind you again in 15 minutes.",
+  "markedTaken": "Marked as taken.",
+  "addReminder": "Add a reminder",
+  "medicineName": "Medicine name, as on the label",
+  "medicineAmount": "How much, as your pharmacist said (for example, 2 tablets)",
+  "reminderTime": "Time",
+  "earlierHour": "One hour earlier",
+  "laterHour": "One hour later",
+  "earlierMinutes": "15 minutes earlier",
+  "laterMinutes": "15 minutes later",
+  "saveReminder": "Save reminder",
+  "medicineNameNeeded": "Type the medicine name first.",
+  "reminderSaved": "Reminder saved for {time}.",
+  "deleteReminder": "Delete reminder",
+  "deleteReminderConfirm": "Delete the {time} reminder for {medicine}?",
+  "reminderNotice": "Your phone rings and vibrates at each time, as a notification. Magana reminds you at the times you set. It never changes a dose.",
+  "notificationsOff": "Notifications are off for Magana, so reminders only show when Magana is open. You can turn them on in your phone's settings.",
+  "missedDose": "Missed a dose? Ask a pharmacist",
+  "reminderNotifyTitle": "Time for your medicine",
+  "exactTitle": "Ring on time?",
+  "exactBody": "To ring at the exact minute, your phone needs to allow Magana to set alarms and reminders. The next screen has one switch: turn it on, then go back.",
+  "exactOpen": "Open the setting",
+  "notNow": "Not now",
+  "remindersMayBeLate": "On this phone, reminders may ring up to an hour late. To ring on time, allow alarms and reminders for Magana.",
+  "allowOnTime": "Allow on-time reminders",
+  "msg_q_bleeding_no_sight": "Have you felt or tasted blood, or has anyone told you that you are bleeding, from your nose, gums, vomit or stool?",
+  "msg_q_yellow_eyes_no_sight": "Has anyone told you that your eyes or skin look yellow?",
+  "msg_q_very_pale_no_sight": "Has anyone told you that you look very pale? Do you feel very weak, dizzy or out of breath when you stand?",
+  "msg_q_dark_urine_no_sight": "Has someone near you seen that your urine is very dark, like cola or tea?",
+  "msg_ask_someone_to_check": "Please ask someone near you to check, or go to a clinic.",
+  "cantTell": "I can't tell",
+  "appLanguageTitle": "App language",
+  "languageSheetBody": "Menus, buttons, help and Magana's voice all switch to the language you choose.",
+  "languageVoiceTip": "You can also say “change language to Igbo” after pressing Speak a command on Home.",
+  "useLanguage": "Use {language}",
+  "settingsVersion": "Version {version} (build {build})",
+  "settingsVersionNote": "Tell the Magana team this version when you report a problem.",
+  "reportProblem": "Report a problem",
+  "reportHow": "Tell the Magana team three things: the name of the screen, what you did, and what Magana said.",
+  "speakCommand": "Speak a command",
+  "listeningCommand": "Listening… Tap to stop",
+  "commandNotUnderstood": "I heard “{heard}”, but I don't know that command. Say help to hear what you can say.",
+  "commandSorry": "Sorry, I didn't catch that. Say “read a page” or “help”.",
+  "commandNothingHeard": "I didn't hear a command. Try again, or say help.",
+  "commandHelp": "You can say: {commands}. Say commands in English for now.",
+  "changeLanguageCommand": "change language",
+  "voiceCommandsUnavailable": "Voice commands are not available on this phone. Use the buttons instead.",
+  "explainTitle": "Explain",
+  "explainFrom": "From: {source}",
+  "explainPreviewBanner": "Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.",
+  "answerLanguage": "Answer language, currently {language}",
+  "youSaid": "You said",
+  "readExactlyNote": "Numbers and words from the page are read exactly as printed.",
+  "saySimpler": "Say it simpler",
+  "giveExample": "Give an example",
+  "explainDisclaimer": "Magana can make mistakes. Check important answers with your teacher.",
+  "askAQuestion": "Ask a question",
+  "explainNoPage": "Explanations are about a page. Read a page first, then choose Explain this.",
+  "explainThis": "Explain this",
+  "explainQuestionPreview": "When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.",
+  "msg_explain_preview": "This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",
+  "msg_explained": "Here is the explanation.",
+  "msg_explain_bad_source": "There is no page text to explain. Please read a page first.",
+  "jumpWithinPage": "Jump within page",
+  "jumpStart": "Start of the page",
+  "jumpTable": "Table {number}",
+  "jumpWarnings": "Next thing I'm not sure about",
+  "jumpNotYet": "Jumping to diagrams is not available yet.",
+  "paperLetter": "Letters & forms",
+  "paperLetterDetail": "Notices, forms, religious texts",
+  "noteLetter": "Magana reads what is printed. It does not give legal or financial advice, and never asks for your PIN or password.",
+  "readAnyPaper": "Read any paper",
+  "readAnyPaperDetail": "Magana works out what kind of paper it is",
+  "detectedPaper": "Paper type: {paper}.",
+  "readAgain": "Read again",
+  "askAboutResult": "What does this mean?",
+  "resultAnswer": "Only your health worker can explain what this result means for you. I can save your question for your next visit, or ask a nurse to call you.",
+  "youAsked": "You asked: “{question}”",
+  "saveQuestion": "Save question",
+  "questionSaved": "Saved. You will find it in Talk to a health worker.",
+  "askANurse": "Ask a nurse",
+  "savedQuestionsTitle": "Questions for your next visit",
+  "removeQuestion": "Remove: {question}",
+  "questionAbout": "{question} (about {where})",
+  "fromTheStatement": "From the statement, exactly as printed",
+  "findTransaction": "Find a transaction",
+  "findPrompt": "Say or type a word, date or amount from the transaction.",
+  "findField": "Word, date or amount",
+  "findSearch": "Find",
+  "findSpeak": "Speak instead",
+  "findNoMatch": "No row has “{query}”.",
+  "sayYesOrNo": "Say yes, no, or I can't tell",
+  "voiceAnswerUnclear": "I heard “{heard}”. Please say yes, no, or I can't tell.",
+  "shareScore": "Share my score with my teacher",
+  "shareScoreNote": "Your teacher will see your score, never your pages or questions, once your class is connected to the Magana teacher portal.",
+  "sayNameWhenLocked": "Say the medicine name when locked",
+  "sayNameNote": "Off: the lock screen says only “Magana reminder”. On: the lock screen shows the medicine and how much, and Magana says them aloud at each time, so people near you may see or hear them.",
+  "reminderGenericTitle": "Magana reminder",
+  "reminderGenericBody": "Open Magana to hear which medicine.",
+  "msg_bad_api_key": "This copy of Magana can't reach the reading service. Please update the app.",
+  "msg_explain_unavailable": "Explanations aren't available right now. Here is the page, read exactly as printed.",
+  "msg_asr_unavailable": "Speech recognition on the server is not set up; the phone's own is used.",
+  "msg_audio_too_long": "That recording is too long. Please say a short answer.",
+  "msg_unreadable_audio": "I couldn't hear that recording. Please try again.",
+  "aboutTitle": "About Magana",
+  "aboutModels": "Language models",
+  "aboutModelsNote": "Magana uses these open models under the N-ATLaS Terms of Use, version 1.0. The credit lines below are quoted as the terms require.",
+  "aboutExplain": "Explanations in your language",
+  "aboutSpeech": "Speech recognition",
+  "openSourceLicences": "Open-source licences",
+  "aboutContact": "Questions or problems: email {email}",
+  "msg_explain_not_available": "Explain isn't available yet. Here is the page, read exactly as printed.",
+  "quizConfirm": "You said {answer}. Is that right?",
+  "quizConfirmYes": "Yes, {answer}",
+  "quizConfirmNo": "No, ask me again",
+  "quizSayYesOrNo": "Say yes or no",
+  "quizSayAgain": "Please say your answer again.",
+  "quizTapInstead": "I'm having trouble hearing you. Please double tap your answer instead.",
+  "quizSayTrueFalse": "Say true or false",
+  "msg_too_many_requests": "Magana is busy right now. Please wait a minute and try again.",
+  "remindersNeedApp": "Reminders need the Android or iPhone app. In a web browser Magana can't ring at the right time.",
+  "quizVoiceUnavailable": "Voice answers aren't available on this device yet. Tap an answer instead.",
+  "quizVoiceUnavailableWeb": "Voice answers aren't available on this device yet. Tap or click an answer, or press {letters} on your keyboard.",
+  "quizKeysHint": "Tap or click an answer, or press {letters} on your keyboard.",
+  "quizKeysHintTrueFalse": "Tap or click true or false, or press A for true or B for false.",
+  "quizTapAnswer": "Tap an answer.",
+  "startMagana": "Start Magana",
+  "classTitle": "Which class are you in?",
+  "classBody": "Magana picks practice questions for your class. A teacher can change it later.",
+  "classNotInSchool": "I'm not in school",
+  "classGroupPrimary": "Primary school",
+  "classGroupJss": "Junior secondary",
+  "classGroupSss": "Senior secondary",
+  "classroomChooseClass": "Teacher: choose the class for this session",
+  "classroomNeedsClass": "Choose the class first.",
+  "settingsClass": "My class",
+  "settingsChangeClass": "Change class (teacher)",
+  "quizYourClass": "Your class: {name}",
+  "quizFromTeacher": "From your teacher",
+  "quizSamples": "Sample questions",
+  "quizCount": "{n} questions",
+  "quizChooseClassHint": "Choose your class to get questions for it. A teacher can set it in Settings.",
+  "quizSampleNote": "Sample questions written by the Magana team. They are not past questions, and a teacher will check them. The questions are in English.",
+  "quizTeacherNote": "Made by your teacher.",
+  "quizSubjectTitle": "{subject} practice",
+  "quizCorrectPrimary": "Well done! You chose {letter}.",
+  "quizWrongPrimary": "Good try! The answer is {answer}.",
+  "quizPicture": "Picture: {description}",
+  "quizOr": "or",
+  "quizSessionOpen": "Teacher: open your class session",
+  "quizSessionPrompt": "Only the teacher should open a class session. Type the session code from the teacher portal.",
+  "quizSessionCodeLabel": "Session code",
+  "quizSessionStart": "Open session",
+  "quizSessionActive": "Class session {code}",
+  "quizSessionEnd": "End class session",
+  "quizSessionEmpty": "No quizzes from your teacher in this session yet.",
+  "msg_session_code_invalid": "That session code isn't right. Check it in the teacher portal.",
+  "msg_paper_lines": "Health and money papers aren't explained by AI. Each line is read exactly, in your language only where a checked translation exists.",
+  "msg_cant_translate_line_health": "I can't translate this line safely. Please ask a pharmacist.",
+  "msg_cant_translate_line_money": "I can't translate this line safely. Please ask someone at your bank.",
+  "msg_numbers_left_out": "The exact numbers are on the page. Say ‘read again’ to hear them.",
+  "explainReadAgain": "Read the page again",
+  "quizNotSure": "I'm not sure what you said. Please say your answer again.",
+  "quizVoiceNotReady": "Voice answers in {language} aren't reliable enough yet. Tap an answer instead.",
+  "quizVoiceNotReadyWeb": "Voice answers in {language} aren't reliable enough yet. Tap or click an answer, or press {letters} on your keyboard.",
+  "quizVoicePrimaryOff": "In primary classes, tap your answer. Voice answers come later.",
+  "quizVoicePrimaryOffWeb": "In primary classes, tap or click your answer, or press {letters} on your keyboard.",
+  "whoTitle": "Who is using Magana?",
+  "whoBody": "This helps Magana choose the right lessons and quizzes for you.",
+  "whoInSchool": "I’m in school",
+  "whoInSchoolDetail": "Primary or secondary. You’ll join your class with a code from your teacher.",
+  "whoFinished": "I’ve finished school",
+  "whoFinishedDetail": "Practise for JAMB or WAEC, improve your reading, or learn new skills.",
+  "whoOther": "University or other",
+  "whoOtherDetail": "Read your own books, notes and papers. No class needed.",
+  "joinTitle": "Join your class",
+  "joinBody": "Ask your teacher for the 6-digit class code.",
+  "classCodeLabel": "Class code",
+  "teacherCodeLabel": "Teacher code",
+  "codeGroup": "{label}: {typed}, {count} of 6 digits",
+  "codeEmpty": "No digits yet. Type 6 digits.",
+  "codeProgress": "You typed {typed}. {left} more.",
+  "codeComplete": "All 6 digits: {typed}.",
+  "codeNeedsSix": "Type all 6 digits first.",
+  "keypadDelete": "Delete",
+  "keypadReadBack": "Read back",
+  "joinUnder18Note": "Under 18? Your teacher will ask a parent or guardian to agree before your class is linked. Until then you can still read pages.",
+  "joinButton": "Join class",
+  "joinNoCode": "I don’t have a code yet",
+  "joinedTitle": "You’re in!",
+  "joinedTeacher": "Teacher: {name}",
+  "joinedRightClass": "Is this the right class? If not, tell your teacher. Only your teacher can move you to a different class.",
+  "joinedWaiting": "Waiting for your parent or guardian to agree. Your teacher will ask them.",
+  "startReading": "Start reading",
+  "changeClassTitle": "Change class",
+  "changeClassNow": "Your class now",
+  "teacherCodeNeededTitle": "Your teacher needs to do this",
+  "teacherCodeBody": "Ask your teacher to enter their teacher code. It’s on their Magana teacher page.",
+  "newClassCodeTitle": "Now the new class’s code",
+  "confirmLabel": "Confirm",
+  "teacherCodeLockNote": "Wrong code 3 times? Magana waits 5 minutes before you can try again.",
+  "goalsTitle": "What would you like to do?",
+  "goalsBody": "Choose as many as you like.",
+  "goalJamb": "Prepare for JAMB",
+  "goalJambDetail": "Past-question style practice: English, Maths and more",
+  "goalWaec": "Prepare for WAEC or NECO resit",
+  "goalWaecDetail": "Practice by subject, at SS3 level",
+  "goalReading": "Practise reading",
+  "goalReadingDetail": "Short passages and stories, read with you",
+  "goalSkills": "Learn new skills",
+  "goalSkillsDetail": "Phone skills, getting around, money basics",
+  "goalPapers": "Just read my papers",
+  "goalPapersDetail": "Letters, bills, medicine labels",
+  "goalsNote": "You can change these any time in Settings. No teacher needed.",
+  "saveLabel": "Save",
+  "waitingBanner": "Waiting for your parent or guardian to agree. Until then you can read pages.",
+  "removedNotice": "Your teacher removed this phone from the class. You can still read pages.",
+  "settingsGoals": "My goals",
+  "settingsNoClass": "Not in a class",
+  "practiceLevelTitle": "My practice level",
+  "msg_unreadable_pdf": "I couldn't open that PDF. Please try another file.",
+  "msg_pdf_password_needed": "This PDF is locked. Type its password: it is often in the email that came with it.",
+  "msg_pdf_password_wrong": "That password didn't open the PDF. Please check it and try again.",
+  "msg_pdf_too_long": "This PDF is too long. I can read up to 20 pages at a time.",
+  "readPdf": "Read a PDF",
+  "readPdfDetail": "A bank statement, result or letter sent to your phone",
+  "pdfTitle": "Read a PDF",
+  "pdfBody": "Choose a PDF on your phone. You can also open one from WhatsApp, Gmail or Files with “Open with Magana” or Share.",
+  "pdfChoose": "Choose a PDF",
+  "pdfReading": "Reading the PDF. Long statements take a little while.",
+  "pdfPasswordTitle": "This PDF is locked",
+  "pdfPasswordBody": "Type its password. Banks often send it in the same email, or it's part of your phone number or date of birth.",
+  "pdfPasswordLabel": "PDF password",
+  "pdfPasswordNote": "Magana uses this password only to open this file, then forgets it. It is never saved. Magana never asks for your bank PIN or app password.",
+  "pdfOpen": "Open the PDF",
+  "pdfPasswordEmpty": "Type the password first.",
+  "pdfPasswordReadBack": "Read back",
+  "pdfPasswordSays": "You typed: {spelled}",
+  "pdfNotChosen": "No PDF chosen.",
+  "pageOf": "Page {page} of {count}",
+  "pdfShared": "A PDF was shared with Magana: {name}",
+  "msg_line_part_unclear": "Part of {where} wasn't read: there's print I couldn't make out. Please check it or retake the photo.",
+  "msg_small_print": "The print is very small or faint in this photo, so I may miss some of it. Move the phone closer, or open the PDF itself if you have it.",
+  "msg_handwritten_page": "This page looks handwritten. Handwriting is hard for me, so I may get words wrong. Numbers are only read when I'm sure.",
+  "msg_mixed_page": "Some of this page looks handwritten. I may get those parts wrong. Numbers there are only read when I'm sure.",
+  "msg_handwritten_prescription": "This looks like handwriting on a health paper. I won't read handwritten medicines or doses. Please ask the pharmacist or nurse to read it to you.",
+  "msg_handwritten_number": "On {where}, a handwritten number. I won't guess it: please ask the pharmacist or nurse.",
+  "msg_money_amounts_unreliable": "I can't read the amounts on this page reliably. Please open the PDF from your bank's app or email, or ask someone you trust.",
+  "msg_reading_incomplete": "This reading is incomplete. I'll read only the parts I could check.",
+  "columnsNote": "{count} columns. Left first, then right.",
+  "columnsSubtitle": "{count} columns · read left, then right",
+  "columnPosition": "Column {column} of {columns} · Line {number} of {total}",
+  "columnStart": "Column {column} of {columns}",
+  "columnLabel": "Column {column}",
+  "headingSpoken": "Heading: {text}",
+  "headingLabel": "Heading",
+  "nextColumn": "Next column",
+  "lastColumn": "This is the last column.",
+  "jumpHeadings": "Headings",
+  "jumpColumns": "Columns",
+  "jumpTables": "Tables",
+  "noHeadings": "I didn't find any headings on this page.",
+  "noColumns": "This page has one column.",
+  "noTables": "This page has no tables.",
+  "mapNow": "now",
+  "mapNext": "next",
+  "letterCheckWords": "These words may be missing a special letter: {words}.",
+  "spellWord": "Spell word",
+  "spellNone": "No marked words on this line.",
+  "askSomeone": "Ask someone",
+  "askSomeoneText": "Ask someone who reads {language} to check the marked words.",
+  "languagePage": "{language} page",
+  "msg_letters_ha": "Hausa page. I can miss letters like ƙ, ɗ and ɓ. Marked words may have one of these. Spell a word or check it with someone.",
+  "msg_letters_yo": "Yorùbá page. I can miss letters like ẹ, ọ and ṣ, and tone marks. Marked words may have one of these. Spell a word or check it with someone.",
+  "msg_letters_ig": "Igbo page. I can miss letters like ị, ọ and ụ. Marked words may have one of these. Spell a word or check it with someone.",
+  "msg_cut_off_top": "Part of the page is cut off at the top.",
+  "msg_cut_off_bottom": "Part of the page is cut off at the bottom.",
+  "msg_cut_off_left": "Part of the page is cut off at the left.",
+  "msg_cut_off_right": "Part of the page is cut off at the right.",
+  "offlineBanner": "No internet. Reading on this phone.",
+  "offlineBannerSlow": "Magana's server isn't answering. Reading on this phone.",
+  "offlineNote": "Basic reading only. Tables, columns and Explain need internet.",
+  "offlineQueued": "I'll keep this page and do a full reading when you're back online.",
+  "fullReadingWhenOnline": "Full reading when online",
+  "cueTiltToward": "Tilt the top of the phone toward you",
+  "cueTiltAway": "Tilt the top of the phone away from you",
+  "cueBlurry": "Blurry. Hold still",
+  "readerCommandHelp": "You can say: next, back, repeat, pause, read, next column, headings, spell or report a problem. Say commands in English for now.",
+  "msg_explain_language_coming": "Explain in {language} is coming. You can hear it in English.",
+  "explainInEnglish": "Hear it in English",
+  "msg_progress_shared": "Your totals were shared with your teacher.",
+  "helpCheckPage": "Did you read this page on your own?",
+  "helpCheckPdf": "Did you read this PDF on your own?",
+  "helpCheckQuiz": "Did you do this quiz on your own?",
+  "helpCheckHow": "Say “yes”, “some help” or “skip”, or tap.",
+  "helpOwn": "Yes, on my own",
+  "helpOwnDetail": "No sighted help",
+  "helpSome": "I needed some help",
+  "helpSomeDetail": "Someone helped with part of it",
+  "helpSkip": "Skip",
+  "helpSkipDetail": "Don’t ask today",
+  "helpCheckNoteClass": "Asked once a day at most. Your teacher sees only the totals, never what you read.",
+  "helpCheckNotePhone": "Asked once a day at most. Your answers stay on this phone.",
+  "helpCheckNotHeard": "Please say yes, some help or skip, or tap your answer.",
+  "helpCheckThanks": "Thank you.",
+  "msg_report_sent": "Thank you. Your report went to the Magana team.",
+  "msg_voice_note_adults_only": "Voice notes are for adults only. Choose what went wrong from the list.",
+  "msg_voice_note_unreadable": "I couldn't use that voice note. Please record it again or send the report without it.",
+  "msg_voice_note_too_long": "That voice note is too long. Please keep it under 60 seconds.",
+  "reportGoesTo": "Goes to the Magana team",
+  "reportWhat": "What went wrong?",
+  "reportReadWrong": "It read something wrong",
+  "reportHardToUse": "It was hard to use",
+  "reportTooSlow": "It was too slow",
+  "reportSomethingElse": "Something else",
+  "reportRecord": "Record a voice note (up to 60 seconds)",
+  "reportRecording": "Stop recording · {seconds} s",
+  "reportVoiceNote": "Voice note recorded: {seconds} seconds.",
+  "reportDeleteVoice": "Delete voice note",
+  "reportIncludeText": "Include this page’s text",
+  "reportIncludeTextNote": "Off unless you switch it on. Photos are never sent.",
+  "reportSend": "Send report",
+  "reportChooseFirst": "Choose what went wrong first.",
+  "reportNoMic": "Magana can't use the microphone. You can still send the report.",
+  "emailSupport": "Email {email}",
+  "msg_offline_no_confidence": "This phone can't say how sure it is of each word, so every number is read as “unclear number”. Check important papers when you are online, or with a person.",
+  "msg_daily_limit": "You've read a lot of pages today. Magana can read more tomorrow. Pages you saved are in My library.",
+  "msg_edge_cut_left": "Some words at the left edge are cut off.",
+  "msg_edge_cut_right": "Some words at the right edge are cut off.",
+  "msg_faint_print": "The print is faint, so I darkened it to read it. Check important numbers with a person.",
+  "summaryAsk": "Say “what's unclear” to hear where.",
+  "unclearMark": "Unclear.",
+  "whatsUnclear": "What's unclear?",
+  "whatsUnclearNone": "Nothing on this page is unclear.",
+  "msg_barcode_skipped": "I skipped a barcode on this page.",
+  "touchTapAgain": "Tap again to open.",
+  "touchOf": "{n} of {total}",
+  "touchExplore": "Touch to explore, or say a name.",
+  "touchToHear": "Touch to hear",
+  "touchToHearDetail": "Touch something to hear what it is; tap it again to open it. Not used while VoiceOver or TalkBack is on.",
+  "touchToHearOn": "Touch to hear: on",
+  "touchToHearOff": "Touch to hear: off",
+  "touchIntroTitle": "Using Magana by touch",
+  "touchIntroBody": "Your phone's screen reader is off, so Magana will talk you through it.",
+  "touchStep1Body": "Slide your finger. Magana says what's under it.",
+  "touchStep2Title": "Tap again to open",
+  "touchStep2Body": "A second tap on the same thing opens it.",
+  "touchStep3Title": "Or just say it",
+  "touchStep3Body": "Press the yellow button and say a name, like “medicine label”.",
+  "touchPractice": "Practice here",
+  "touchPracticeBody": "Touch this box. Then tap it again.",
+  "touchPracticeDone": "Well done. That is how you open things.",
+  "touchGotIt": "Got it, start",
+  "touchUseScreenReader": "I use VoiceOver / TalkBack",
+  "sayName": "Say a name",
+  "nameNotFound": "I heard “{heard}”, but nothing on this screen has that name.",
+  "framingGuidanceTablet": "Lay the page flat in good light and hold the tablet above it. I'll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.",
+  "readPageTablet": "Lay the page flat. Hold the tablet above it.",
+  "zoomIn": "Bigger text",
+  "zoomOut": "Smaller text",
+  "highContrast": "High contrast",
+  "pageViewLabel": "Your page, current line highlighted",
+  "msg_missed_line": "I may have missed a line here, {where}. Please check it or retake the photo.",
+  "missedLineLabel": "A line I may have missed",
+  "pictureTaken": "Picture taken. Reading…",
+  "stillReading": "Still reading…",
+  "noTextMoveBack": "I couldn't find text. Try moving the phone further away.",
+  "torchGlareOff": "The light was shining back off the page, so I turned it off.",
+  "offlineBannerSendFailed": "The photo didn't reach Magana's server (connection problem). Reading on this phone.",
+  "offlineBannerTimeout": "Magana's server took longer than {seconds} seconds. Reading on this phone.",
+  "offlineBannerServerError": "Magana's server had a problem with this page. Reading on this phone.",
+  "offlineBannerBusy": "Magana's server is busy this minute. Reading on this phone.",
+  "offlineBannerDailyLimit": "You've used today's server readings. Reading on this phone; the server reads again tomorrow.",
+  "msg_handwriting_read_anyway": "I read this handwriting as best I can. It may contain mistakes, and I don't read its numbers.",
+  "msg_offline_health_numbers": "Without the internet, this phone may take handwriting for print, so I don't read numbers on health papers. Read it again when you are online, or ask the pharmacist or nurse.",
+  "handwritingOffer": "This looks handwritten. Read it anyway? It may contain mistakes.",
+  "readItAnyway": "Read it anyway",
+  "serverWaking": "Magana is waking up, one moment…",
+  "offlineBannerWaking": "Magana's server was waking up, so this page was read on this phone.",
+  "msg_server_waking": "Magana is waking up, one moment…",
+  "noVoiceYet": "I don't have a {language} voice yet. The text is on the screen.",
+  "voiceTitle": "Voice",
+  "voiceSettingsDetail": "{voice}. {speed}",
+  "voiceBest": "Best voice on this phone",
+  "voiceBestDetail": "Magana chooses: Nigerian English first, then the clearest voice.",
+  "voiceFor": "Voice for {language}",
+  "voiceNone": "This phone has no {language} voice yet. Magana shows {language} text on the screen instead of reading it with another language's voice.",
+  "voicePlaySample": "Play sample",
+  "voiceSample": "Hello, I am Magana. I will read your pages to you.",
+  "voiceChosen": "{voice} chosen.",
+  "voiceSpeedTitle": "Speed",
+  "voiceSpeedSet": "Speed {value}.",
+  "voiceGetBetter": "Get a clearer voice",
+  "voiceHintAndroid": "A clearer voice can be downloaded: English (Nigeria). Open your phone's Settings and search for Speech Services by Google. Choose Install voice data, then English (Nigeria), and download it. Then choose it in Magana: Settings, Voice.",
+  "voiceHintIos": "A clearer voice can be downloaded. Open the iPhone's Settings, then Accessibility, Spoken Content, Voices, English, and download an Enhanced or Premium voice. Then choose it in Magana: Settings, Voice.",
+  "tourTitle": "A quick tour",
+  "tourScript": "Welcome to Magana. Magana reads printed pages aloud: schoolwork, medicine labels, letters and bank papers. Numbers are read exactly as printed, and Magana tells you when something is unclear. On the home screen, the top line has the language and settings buttons. Below it is the biggest button: Read a page. Under that are your other choices. At the very bottom is Hold to speak: press and hold it, say what you want, like read a page, then let go. On other screens, the Say a name button at the bottom does the same. Say what can I say to hear that screen's choices. With TalkBack or VoiceOver on, swipe right to move to the next button and double tap to choose. With it off, touch the screen to hear what is under your finger, and double tap to choose. To read a page, hold the phone above it: Magana tells you how to move it. You can hear this tour again in Settings.",
+  "tourSkip": "Skip the tour",
+  "tourAgain": "Hear the tour again",
+  "tourContinue": "Continue",
+  "tourOpen": "Hear the tour",
+  "tourOpenDetail": "What Magana does, where the buttons are, and how to use voice and touch.",
+  "screenChoices": "On this screen you can say: {choices}.",
+  "screenNoChoices": "This screen has no buttons to choose. Go back to continue.",
+  "aiAssistantSoon": "AI health assistant coming soon. For now, a nurse or pharmacist calls you back, and Magana's own danger-sign questions tell you when to go to a clinic or call 112.",
+  "dangerCheckFirst": "Answer a few danger-sign questions first",
+  "quickCheckNoteRules": "Your answers help the health worker decide how soon to call you. Magana does not diagnose. If you have danger signs, Magana tells you to go to a clinic now or call 112.",
+  "englishGuidanceNotice": "Spoken guidance is in English for now. {language} voice is coming.",
+  "voiceEnglishGuidance": "Spoken guidance in English",
+  "voiceEnglishGuidanceDetail": "While this phone has no {language} voice, Magana says its own menus, cues and warnings in English. {language} page text is never read in English: it is shown on the screen.",
+  "voiceEnglishGuidanceOn": "Spoken guidance in English: on.",
+  "voiceEnglishGuidanceOff": "Spoken guidance in English: off."
+ },
+ "_ui_patterns": {
+  "ha": [
+   {
+    "id": "languageButtonLabel",
+    "pattern": [
+     {
+      "text": "Harshen manhaja: "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": ". Canza harshe"
+     }
+    ]
+   },
+   {
+    "id": "languageChanged",
+    "pattern": [
+     {
+      "text": "Yanzu harshen manhaja shi ne "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "comingSoon",
+    "pattern": [
+     {
+      "slot": "feature"
+     },
+     {
+      "text": " yana zuwa nan ba da daɗewa ba."
+     }
+    ]
+   },
+   {
+    "id": "unclearCount",
+    "pattern": [
+     {
+      "slot": "count"
+     },
+     {
+      "text": " ba a tabbatar ba"
+     }
+    ]
+   },
+   {
+    "id": "linePosition",
+    "pattern": [
+     {
+      "text": "Layi "
+     },
+     {
+      "slot": "number"
+     },
+     {
+      "text": " cikin "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "rowPosition",
+    "pattern": [
+     {
+      "text": "Jere "
+     },
+     {
+      "slot": "number"
+     },
+     {
+      "text": " cikin "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "rowPositionInTable",
+    "pattern": [
+     {
+      "text": "Jere "
+     },
+     {
+      "slot": "number"
+     },
+     {
+      "text": " cikin "
+     },
+     {
+      "slot": "total"
+     },
+     {
+      "text": ", tebur "
+     },
+     {
+      "slot": "table"
+     }
+    ]
+   },
+   {
+    "id": "speed",
+    "pattern": [
+     {
+      "text": "Gudu "
+     },
+     {
+      "slot": "value"
+     }
+    ]
+   },
+   {
+    "id": "speedLabel",
+    "pattern": [
+     {
+      "text": "Gudun karatu "
+     },
+     {
+      "slot": "value"
+     },
+     {
+      "text": ". Taɓa don canzawa"
+     }
+    ]
+   },
+   {
+    "id": "whereLine",
+    "pattern": [
+     {
+      "text": "layi na "
+     },
+     {
+      "slot": "number"
+     }
+    ]
+   },
+   {
+    "id": "whereRow",
+    "pattern": [
+     {
+      "text": "jere na "
+     },
+     {
+      "slot": "number"
+     }
+    ]
+   },
+   {
+    "id": "whereCell",
+    "pattern": [
+     {
+      "text": "jere na "
+     },
+     {
+      "slot": "row"
+     },
+     {
+      "text": ", shafi na "
+     },
+     {
+      "slot": "col"
+     }
+    ]
+   },
+   {
+    "id": "msg_low_confidence",
+    "pattern": [
+     {
+      "text": "Ban tabbatar da "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " ba. Don Allah ka duba shi ko ka sake ɗaukar hoto."
+     }
+    ]
+   },
+   {
+    "id": "msg_low_confidence_number",
+    "pattern": [
+     {
+      "text": "Ban iya karanta wata lamba a "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " sarai ba. Don Allah ka duba ko ka sake ɗaukar hoto."
+     }
+    ]
+   },
+   {
+    "id": "msg_unreadable_number",
+    "pattern": [
+     {
+      "text": "Ban iya karanta wata lamba a "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " sarai ba. Don Allah ka duba ko ka sake ɗaukar hoto."
+     }
+    ]
+   },
+   {
+    "id": "msg_currency_unclear",
+    "pattern": [
+     {
+      "text": "A "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " na karanta lambobin adadin kuɗin amma ban iya karanta alamar kuɗin ba, don haka lambobin kawai nake faɗi. Don Allah ka duba shi a manhajar bankinka ko da wanda ka amince da shi."
+     }
+    ]
+   },
+   {
+    "id": "msg_amount_unconfirmed",
+    "pattern": [
+     {
+      "text": "Ban iya karanta adadin kuɗin da ke "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " sarai ba, don haka ban faɗe shi ba. Magana tana faɗin adadin kuɗi ne kawai idan karatu biyu daban-daban sun yi daidai sosai. Don Allah ka duba shi a manhajar bankinka ko da wanda ka amince da shi."
+     }
+    ]
+   },
+   {
+    "id": "msg_number_mismatch",
+    "pattern": [
+     {
+      "text": "Ban iya karanta wata lamba a "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " sarai ba. Don Allah ka duba ko ka sake ɗaukar hoto."
+     }
+    ]
+   },
+   {
+    "id": "msg_faint_region",
+    "pattern": [
+     {
+      "text": "Akwai rubutu mara haske "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " da ban iya karantawa ba. Ka nemi ƙarin haske, ko ka sake ɗaukar hoto."
+     }
+    ]
+   },
+   {
+    "id": "msg_line_end_unclear",
+    "pattern": [
+     {
+      "text": "Ban iya karanta ƙarshen "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " ba. Don Allah ka duba shi ko ka sake ɗaukar hoto."
+     }
+    ]
+   },
+   {
+    "id": "stepOf",
+    "pattern": [
+     {
+      "text": "Mataki na "
+     },
+     {
+      "slot": "n"
+     },
+     {
+      "text": " cikin "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "quickCheckProgress",
+    "pattern": [
+     {
+      "text": "Ibà · tambaya ta "
+     },
+     {
+      "slot": "n"
+     },
+     {
+      "text": " cikin "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "quickCheckProgressFallback",
+    "pattern": [
+     {
+      "text": "Gwajin tsaro na ciki · tambaya ta "
+     },
+     {
+      "slot": "n"
+     },
+     {
+      "text": " cikin "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "quizProgress",
+    "pattern": [
+     {
+      "text": "Tambaya ta "
+     },
+     {
+      "slot": "n"
+     },
+     {
+      "text": " cikin "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "quizScoreLabel",
+    "pattern": [
+     {
+      "slot": "correct"
+     },
+     {
+      "text": " daidai cikin "
+     },
+     {
+      "slot": "answered"
+     },
+     {
+      "text": " da ka amsa"
+     }
+    ]
+   },
+   {
+    "id": "quizSayAnswer",
+    "pattern": [
+     {
+      "text": "Faɗi "
+     },
+     {
+      "slot": "letters"
+     }
+    ]
+   },
+   {
+    "id": "quizCorrect",
+    "pattern": [
+     {
+      "text": "Daidai ne! Ka zaɓi "
+     },
+     {
+      "slot": "letter"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizWrong",
+    "pattern": [
+     {
+      "text": "Ba haka ba. Ka zaɓi "
+     },
+     {
+      "slot": "letter"
+     },
+     {
+      "text": ". Amsar ita ce "
+     },
+     {
+      "slot": "answer"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizUnclear",
+    "pattern": [
+     {
+      "text": "Na ji “"
+     },
+     {
+      "slot": "heard"
+     },
+     {
+      "text": "”. Don Allah faɗi "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizNothingHeard",
+    "pattern": [
+     {
+      "text": "Ban ji amsa ba. Faɗi "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": ", ko ka taɓa amsa sau biyu."
+     }
+    ]
+   },
+   {
+    "id": "quizResult",
+    "pattern": [
+     {
+      "text": "Ka samu "
+     },
+     {
+      "slot": "correct"
+     },
+     {
+      "text": " daidai cikin "
+     },
+     {
+      "slot": "total"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "nextLesson",
+    "pattern": [
+     {
+      "text": "Darasi na gaba · minti "
+     },
+     {
+      "slot": "minutes"
+     }
+    ]
+   },
+   {
+    "id": "lessonStepOf",
+    "pattern": [
+     {
+      "text": "Mataki na "
+     },
+     {
+      "slot": "step"
+     },
+     {
+      "text": " cikin "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "scoreOutOf",
+    "pattern": [
+     {
+      "slot": "score"
+     },
+     {
+      "text": " cikin 100"
+     }
+    ]
+   },
+   {
+    "id": "areaScoreLabel",
+    "pattern": [
+     {
+      "slot": "area"
+     },
+     {
+      "text": ": "
+     },
+     {
+      "slot": "score"
+     },
+     {
+      "text": " cikin 100"
+     }
+    ]
+   },
+   {
+    "id": "librarySavedOn",
+    "pattern": [
+     {
+      "text": "An adana "
+     },
+     {
+      "slot": "date"
+     }
+    ]
+   },
+   {
+    "id": "doseLabel",
+    "pattern": [
+     {
+      "slot": "time"
+     },
+     {
+      "text": ", "
+     },
+     {
+      "slot": "state"
+     },
+     {
+      "text": ". "
+     },
+     {
+      "slot": "medicine"
+     },
+     {
+      "text": ". "
+     },
+     {
+      "slot": "amount"
+     }
+    ]
+   },
+   {
+    "id": "reminderSaved",
+    "pattern": [
+     {
+      "text": "An adana tunatarwa na "
+     },
+     {
+      "slot": "time"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "deleteReminderConfirm",
+    "pattern": [
+     {
+      "text": "A goge tunatarwar "
+     },
+     {
+      "slot": "time"
+     },
+     {
+      "text": " ta "
+     },
+     {
+      "slot": "medicine"
+     },
+     {
+      "text": "?"
+     }
+    ]
+   },
+   {
+    "id": "useLanguage",
+    "pattern": [
+     {
+      "text": "Yi amfani da "
+     },
+     {
+      "slot": "language"
+     }
+    ]
+   },
+   {
+    "id": "settingsVersion",
+    "pattern": [
+     {
+      "text": "Siga "
+     },
+     {
+      "slot": "version"
+     },
+     {
+      "text": " (gini "
+     },
+     {
+      "slot": "build"
+     },
+     {
+      "text": ")"
+     }
+    ]
+   },
+   {
+    "id": "commandNotUnderstood",
+    "pattern": [
+     {
+      "text": "Na ji “"
+     },
+     {
+      "slot": "heard"
+     },
+     {
+      "text": "”, amma ban san wannan umarnin ba. Ka ce help don jin abin da za ka iya faɗi."
+     }
+    ]
+   },
+   {
+    "id": "commandHelp",
+    "pattern": [
+     {
+      "text": "Za ka iya cewa: "
+     },
+     {
+      "slot": "commands"
+     },
+     {
+      "text": ". Faɗi umarni da Turanci a yanzu."
+     }
+    ]
+   },
+   {
+    "id": "explainFrom",
+    "pattern": [
+     {
+      "text": "Daga: "
+     },
+     {
+      "slot": "source"
+     }
+    ]
+   },
+   {
+    "id": "answerLanguage",
+    "pattern": [
+     {
+      "text": "Harshen amsa, yanzu "
+     },
+     {
+      "slot": "language"
+     }
+    ]
+   },
+   {
+    "id": "jumpTable",
+    "pattern": [
+     {
+      "text": "Tebur "
+     },
+     {
+      "slot": "number"
+     }
+    ]
+   },
+   {
+    "id": "detectedPaper",
+    "pattern": [
+     {
+      "text": "Irin takarda: "
+     },
+     {
+      "slot": "paper"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "youAsked",
+    "pattern": [
+     {
+      "text": "Ka tambaya: “"
+     },
+     {
+      "slot": "question"
+     },
+     {
+      "text": "”"
+     }
+    ]
+   },
+   {
+    "id": "removeQuestion",
+    "pattern": [
+     {
+      "text": "Cire: "
+     },
+     {
+      "slot": "question"
+     }
+    ]
+   },
+   {
+    "id": "questionAbout",
+    "pattern": [
+     {
+      "slot": "question"
+     },
+     {
+      "text": " (game da "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ")"
+     }
+    ]
+   },
+   {
+    "id": "findNoMatch",
+    "pattern": [
+     {
+      "text": "Babu layin da ke da “"
+     },
+     {
+      "slot": "query"
+     },
+     {
+      "text": "”."
+     }
+    ]
+   },
+   {
+    "id": "voiceAnswerUnclear",
+    "pattern": [
+     {
+      "text": "Na ji “"
+     },
+     {
+      "slot": "heard"
+     },
+     {
+      "text": "”. Don Allah ka ce i, a'a, ko ban sani ba."
+     }
+    ]
+   },
+   {
+    "id": "aboutContact",
+    "pattern": [
+     {
+      "text": "Tambayoyi ko matsaloli: aika imel zuwa "
+     },
+     {
+      "slot": "email"
+     }
+    ]
+   },
+   {
+    "id": "quizConfirm",
+    "pattern": [
+     {
+      "text": "Ka ce "
+     },
+     {
+      "slot": "answer"
+     },
+     {
+      "text": ". Haka ne?"
+     }
+    ]
+   },
+   {
+    "id": "quizConfirmYes",
+    "pattern": [
+     {
+      "text": "I, "
+     },
+     {
+      "slot": "answer"
+     }
+    ]
+   },
+   {
+    "id": "quizVoiceUnavailableWeb",
+    "pattern": [
+     {
+      "text": "Har yanzu ba a iya amsa da murya a wannan na'urar ba. Taɓa ko danna amsa, ko ka danna "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": " a kan madannai."
+     }
+    ]
+   },
+   {
+    "id": "quizKeysHint",
+    "pattern": [
+     {
+      "text": "Taɓa ko danna amsa, ko ka danna "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": " a kan madannai."
+     }
+    ]
+   },
+   {
+    "id": "quizYourClass",
+    "pattern": [
+     {
+      "text": "Ajinka: "
+     },
+     {
+      "slot": "name"
+     }
+    ]
+   },
+   {
+    "id": "quizCount",
+    "pattern": [
+     {
+      "text": "Tambayoyi "
+     },
+     {
+      "slot": "n"
+     }
+    ]
+   },
+   {
+    "id": "quizSubjectTitle",
+    "pattern": [
+     {
+      "text": "Gwajin "
+     },
+     {
+      "slot": "subject"
+     }
+    ]
+   },
+   {
+    "id": "quizCorrectPrimary",
+    "pattern": [
+     {
+      "text": "Madalla! Ka zaɓi "
+     },
+     {
+      "slot": "letter"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizWrongPrimary",
+    "pattern": [
+     {
+      "text": "Ka yi ƙoƙari! Amsar ita ce "
+     },
+     {
+      "slot": "answer"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizPicture",
+    "pattern": [
+     {
+      "text": "Hoto: "
+     },
+     {
+      "slot": "description"
+     }
+    ]
+   },
+   {
+    "id": "quizSessionActive",
+    "pattern": [
+     {
+      "text": "Zaman aji "
+     },
+     {
+      "slot": "code"
+     }
+    ]
+   },
+   {
+    "id": "quizVoiceNotReady",
+    "pattern": [
+     {
+      "text": "Amsa da murya a "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " ba ta da inganci sosai tukuna. Taɓa amsa maimakon haka."
+     }
+    ]
+   },
+   {
+    "id": "quizVoiceNotReadyWeb",
+    "pattern": [
+     {
+      "text": "Amsa da murya a "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " ba ta da inganci sosai tukuna. Taɓa ko danna amsa, ko ka danna "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": " a kan madannai."
+     }
+    ]
+   },
+   {
+    "id": "quizVoicePrimaryOffWeb",
+    "pattern": [
+     {
+      "text": "A azuzuwan firamare, taɓa ko danna amsarka, ko ka danna "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": " a kan madannai."
+     }
+    ]
+   },
+   {
+    "id": "codeGroup",
+    "pattern": [
+     {
+      "slot": "label"
+     },
+     {
+      "text": ": "
+     },
+     {
+      "slot": "typed"
+     },
+     {
+      "text": ", lambobi "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " cikin 6"
+     }
+    ]
+   },
+   {
+    "id": "codeProgress",
+    "pattern": [
+     {
+      "text": "Ka rubuta "
+     },
+     {
+      "slot": "typed"
+     },
+     {
+      "text": ". Saura "
+     },
+     {
+      "slot": "left"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "codeComplete",
+    "pattern": [
+     {
+      "text": "Duk lambobi 6: "
+     },
+     {
+      "slot": "typed"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "joinedTeacher",
+    "pattern": [
+     {
+      "text": "Malami: "
+     },
+     {
+      "slot": "name"
+     }
+    ]
+   },
+   {
+    "id": "pdfPasswordSays",
+    "pattern": [
+     {
+      "text": "Ka rubuta: "
+     },
+     {
+      "slot": "spelled"
+     }
+    ]
+   },
+   {
+    "id": "pageOf",
+    "pattern": [
+     {
+      "text": "Shafi "
+     },
+     {
+      "slot": "page"
+     },
+     {
+      "text": " cikin "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "pdfShared",
+    "pattern": [
+     {
+      "text": "An raba PDF da Magana: "
+     },
+     {
+      "slot": "name"
+     }
+    ]
+   },
+   {
+    "id": "msg_line_part_unclear",
+    "pattern": [
+     {
+      "text": "Ba a karanta wani ɓangare na "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " ba: akwai rubutu da ban iya gane shi ba. Don Allah duba shi ko ka sake ɗaukar hoto."
+     }
+    ]
+   },
+   {
+    "id": "msg_handwritten_number",
+    "pattern": [
+     {
+      "text": "A "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ", lambar rubutun hannu. Ba zan yi hasashe ba: don Allah ka tambayi mai harhaɗa magunguna ko nas."
+     }
+    ]
+   },
+   {
+    "id": "columnsNote",
+    "pattern": [
+     {
+      "text": "Ginshiƙai "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": ". Na hagu da farko, sannan na dama."
+     }
+    ]
+   },
+   {
+    "id": "columnsSubtitle",
+    "pattern": [
+     {
+      "text": "Ginshiƙai "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " · hagu, sannan dama"
+     }
+    ]
+   },
+   {
+    "id": "columnPosition",
+    "pattern": [
+     {
+      "text": "Ginshiƙi "
+     },
+     {
+      "slot": "column"
+     },
+     {
+      "text": " cikin "
+     },
+     {
+      "slot": "columns"
+     },
+     {
+      "text": " · Layi "
+     },
+     {
+      "slot": "number"
+     },
+     {
+      "text": " cikin "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "columnStart",
+    "pattern": [
+     {
+      "text": "Ginshiƙi "
+     },
+     {
+      "slot": "column"
+     },
+     {
+      "text": " cikin "
+     },
+     {
+      "slot": "columns"
+     }
+    ]
+   },
+   {
+    "id": "columnLabel",
+    "pattern": [
+     {
+      "text": "Ginshiƙi "
+     },
+     {
+      "slot": "column"
+     }
+    ]
+   },
+   {
+    "id": "headingSpoken",
+    "pattern": [
+     {
+      "text": "Kanun labari: "
+     },
+     {
+      "slot": "text"
+     }
+    ]
+   },
+   {
+    "id": "letterCheckWords",
+    "pattern": [
+     {
+      "text": "Waɗannan kalmomin na iya rasa wani harafi na musamman: "
+     },
+     {
+      "slot": "words"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "askSomeoneText",
+    "pattern": [
+     {
+      "text": "Tambayi wanda ke karanta "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " ya duba kalmomin da aka yi wa alama."
+     }
+    ]
+   },
+   {
+    "id": "languagePage",
+    "pattern": [
+     {
+      "text": "Shafin "
+     },
+     {
+      "slot": "language"
+     }
+    ]
+   },
+   {
+    "id": "msg_explain_language_coming",
+    "pattern": [
+     {
+      "text": "Bayani da "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " yana zuwa. Kuna iya jin sa da Turanci."
+     }
+    ]
+   },
+   {
+    "id": "reportRecording",
+    "pattern": [
+     {
+      "text": "Tsaida nadawa · daƙiƙa "
+     },
+     {
+      "slot": "seconds"
+     }
+    ]
+   },
+   {
+    "id": "reportVoiceNote",
+    "pattern": [
+     {
+      "text": "An nada saƙon murya: daƙiƙa "
+     },
+     {
+      "slot": "seconds"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "emailSupport",
+    "pattern": [
+     {
+      "text": "Aika imel zuwa "
+     },
+     {
+      "slot": "email"
+     }
+    ]
+   },
+   {
+    "id": "touchOf",
+    "pattern": [
+     {
+      "slot": "n"
+     },
+     {
+      "text": " cikin "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "nameNotFound",
+    "pattern": [
+     {
+      "text": "Na ji “"
+     },
+     {
+      "slot": "heard"
+     },
+     {
+      "text": "”, amma babu abin da ke da wannan suna a wannan shafi."
+     }
+    ]
+   },
+   {
+    "id": "msg_missed_line",
+    "pattern": [
+     {
+      "text": "Wataƙila na tsallake layi a nan, "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ". Ka duba shi ko ka sake ɗaukar hoto."
+     }
+    ]
+   },
+   {
+    "id": "offlineBannerTimeout",
+    "pattern": [
+     {
+      "text": "Sabar Magana ta wuce daƙiƙa "
+     },
+     {
+      "slot": "seconds"
+     },
+     {
+      "text": ". Ina karantawa a wannan wayar."
+     }
+    ]
+   },
+   {
+    "id": "noVoiceYet",
+    "pattern": [
+     {
+      "text": "Ba ni da muryar "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " tukuna. Rubutun yana kan allo."
+     }
+    ]
+   },
+   {
+    "id": "voiceSettingsDetail",
+    "pattern": [
+     {
+      "slot": "voice"
+     },
+     {
+      "text": ". "
+     },
+     {
+      "slot": "speed"
+     }
+    ]
+   },
+   {
+    "id": "voiceFor",
+    "pattern": [
+     {
+      "text": "Murya don "
+     },
+     {
+      "slot": "language"
+     }
+    ]
+   },
+   {
+    "id": "voiceNone",
+    "pattern": [
+     {
+      "text": "Wayar nan ba ta da muryar "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " tukuna. Magana tana nuna rubutun "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " a kan allo maimakon ta karanta shi da muryar wani harshe."
+     }
+    ]
+   },
+   {
+    "id": "voiceChosen",
+    "pattern": [
+     {
+      "text": "An zaɓi "
+     },
+     {
+      "slot": "voice"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "voiceSpeedSet",
+    "pattern": [
+     {
+      "text": "Gudu "
+     },
+     {
+      "slot": "value"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "screenChoices",
+    "pattern": [
+     {
+      "text": "A wannan allon za ka iya faɗa: "
+     },
+     {
+      "slot": "choices"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "englishGuidanceNotice",
+    "pattern": [
+     {
+      "text": "Ana ba da jagora da murya cikin Turanci a yanzu. Muryar "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " tana zuwa."
+     }
+    ]
+   },
+   {
+    "id": "voiceEnglishGuidanceDetail",
+    "pattern": [
+     {
+      "text": "Idan wayar nan ba ta da muryar "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": ", Magana tana faɗin menu, alamu da gargaɗinta cikin Turanci. Ba a taɓa karanta rubutun shafi na "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " cikin Turanci ba: ana nuna shi a kan allo."
+     }
+    ]
+   }
+  ],
+  "yo": [
+   {
+    "id": "languageButtonLabel",
+    "pattern": [
+     {
+      "text": "Èdè áàpù: "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": ". Yí èdè padà"
+     }
+    ]
+   },
+   {
+    "id": "languageChanged",
+    "pattern": [
+     {
+      "text": "Èdè áàpù ti di "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " báyìí."
+     }
+    ]
+   },
+   {
+    "id": "comingSoon",
+    "pattern": [
+     {
+      "slot": "feature"
+     },
+     {
+      "text": " ń bọ̀ láìpẹ́."
+     }
+    ]
+   },
+   {
+    "id": "unclearCount",
+    "pattern": [
+     {
+      "slot": "count"
+     },
+     {
+      "text": " kò ṣe kedere"
+     }
+    ]
+   },
+   {
+    "id": "linePosition",
+    "pattern": [
+     {
+      "text": "Ìlà "
+     },
+     {
+      "slot": "number"
+     },
+     {
+      "text": " nínú "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "rowPosition",
+    "pattern": [
+     {
+      "text": "Ọ̀wọ́ "
+     },
+     {
+      "slot": "number"
+     },
+     {
+      "text": " nínú "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "rowPositionInTable",
+    "pattern": [
+     {
+      "text": "Ọ̀wọ́ "
+     },
+     {
+      "slot": "number"
+     },
+     {
+      "text": " nínú "
+     },
+     {
+      "slot": "total"
+     },
+     {
+      "text": ", tábìlì "
+     },
+     {
+      "slot": "table"
+     }
+    ]
+   },
+   {
+    "id": "speed",
+    "pattern": [
+     {
+      "text": "Ìyára "
+     },
+     {
+      "slot": "value"
+     }
+    ]
+   },
+   {
+    "id": "speedLabel",
+    "pattern": [
+     {
+      "text": "Ìyára kíkà "
+     },
+     {
+      "slot": "value"
+     },
+     {
+      "text": ". Tẹ̀ láti yí i padà"
+     }
+    ]
+   },
+   {
+    "id": "whereLine",
+    "pattern": [
+     {
+      "text": "ìlà "
+     },
+     {
+      "slot": "number"
+     }
+    ]
+   },
+   {
+    "id": "whereRow",
+    "pattern": [
+     {
+      "text": "ọ̀wọ́ "
+     },
+     {
+      "slot": "number"
+     }
+    ]
+   },
+   {
+    "id": "whereCell",
+    "pattern": [
+     {
+      "text": "ọ̀wọ́ "
+     },
+     {
+      "slot": "row"
+     },
+     {
+      "text": ", òpó "
+     },
+     {
+      "slot": "col"
+     }
+    ]
+   },
+   {
+    "id": "msg_low_confidence",
+    "pattern": [
+     {
+      "slot": "where"
+     },
+     {
+      "text": " kò dá mi lójú. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà."
+     }
+    ]
+   },
+   {
+    "id": "msg_low_confidence_number",
+    "pattern": [
+     {
+      "text": "Mi ò lè ka nọ́ńbà kan ní "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " kedere. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà."
+     }
+    ]
+   },
+   {
+    "id": "msg_unreadable_number",
+    "pattern": [
+     {
+      "text": "Mi ò lè ka nọ́ńbà kan ní "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " kedere. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà."
+     }
+    ]
+   },
+   {
+    "id": "msg_currency_unclear",
+    "pattern": [
+     {
+      "text": "Ní "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " mo lè ka àwọn nọ́ńbà iye owó náà ṣùgbọ́n mi ò lè ka àmì owó rẹ̀, nítorí náà àwọn nọ́ńbà nìkan ni mo sọ. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ nínú áàpù báǹkì rẹ tàbí pẹ̀lú ẹni tí o fọkàn tán."
+     }
+    ]
+   },
+   {
+    "id": "msg_amount_unconfirmed",
+    "pattern": [
+     {
+      "text": "Mi ò lè ka iye owó tó wà ní "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " kedere, nítorí náà mi ò sọ ọ́. Magana máa ń sọ iye owó kìkì nígbà tí kíkà méjì ọ̀tọ̀ọ̀tọ̀ bá bára mu gẹ́lẹ́. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ nínú áàpù báǹkì rẹ tàbí pẹ̀lú ẹni tí o fọkàn tán."
+     }
+    ]
+   },
+   {
+    "id": "msg_number_mismatch",
+    "pattern": [
+     {
+      "text": "Mi ò lè ka nọ́ńbà kan ní "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " kedere. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà."
+     }
+    ]
+   },
+   {
+    "id": "msg_faint_region",
+    "pattern": [
+     {
+      "text": "Àkọsílẹ̀ kan wà "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " tí kò hàn dáadáa, mi ò lè kà á. Wá ìmọ́lẹ̀ sí i, tàbí kí o tún fọ́tò yà."
+     }
+    ]
+   },
+   {
+    "id": "msg_line_end_unclear",
+    "pattern": [
+     {
+      "text": "Mi ò lè ka òpin "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ". Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí kí o tún fọ́tò yà."
+     }
+    ]
+   },
+   {
+    "id": "stepOf",
+    "pattern": [
+     {
+      "text": "Ìgbésẹ̀ "
+     },
+     {
+      "slot": "n"
+     },
+     {
+      "text": " nínú "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "quickCheckProgress",
+    "pattern": [
+     {
+      "text": "Ibà · ìbéèrè "
+     },
+     {
+      "slot": "n"
+     },
+     {
+      "text": " nínú "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "quickCheckProgressFallback",
+    "pattern": [
+     {
+      "text": "Àyẹ̀wò ààbò inú áàpù · ìbéèrè "
+     },
+     {
+      "slot": "n"
+     },
+     {
+      "text": " nínú "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "quizProgress",
+    "pattern": [
+     {
+      "text": "Ìbéèrè "
+     },
+     {
+      "slot": "n"
+     },
+     {
+      "text": " nínú "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "quizScoreLabel",
+    "pattern": [
+     {
+      "slot": "correct"
+     },
+     {
+      "text": " tó tọ̀nà nínú "
+     },
+     {
+      "slot": "answered"
+     },
+     {
+      "text": " tí o ti dáhùn"
+     }
+    ]
+   },
+   {
+    "id": "quizSayAnswer",
+    "pattern": [
+     {
+      "text": "Sọ "
+     },
+     {
+      "slot": "letters"
+     }
+    ]
+   },
+   {
+    "id": "quizCorrect",
+    "pattern": [
+     {
+      "text": "Ó tọ̀nà! O yan "
+     },
+     {
+      "slot": "letter"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizWrong",
+    "pattern": [
+     {
+      "text": "Kò tọ̀nà. O yan "
+     },
+     {
+      "slot": "letter"
+     },
+     {
+      "text": ". Ìdáhùn ni "
+     },
+     {
+      "slot": "answer"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizUnclear",
+    "pattern": [
+     {
+      "text": "Mo gbọ́ “"
+     },
+     {
+      "slot": "heard"
+     },
+     {
+      "text": "”. Jọ̀wọ́ sọ "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizNothingHeard",
+    "pattern": [
+     {
+      "text": "Mi ò gbọ́ ìdáhùn kankan. Sọ "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": ", tàbí tẹ ìdáhùn kan lẹ́ẹ̀mejì."
+     }
+    ]
+   },
+   {
+    "id": "quizResult",
+    "pattern": [
+     {
+      "text": "O gba "
+     },
+     {
+      "slot": "correct"
+     },
+     {
+      "text": " tó tọ̀nà nínú "
+     },
+     {
+      "slot": "total"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "nextLesson",
+    "pattern": [
+     {
+      "text": "Ẹ̀kọ́ tó kàn · ìṣẹ́jú "
+     },
+     {
+      "slot": "minutes"
+     }
+    ]
+   },
+   {
+    "id": "lessonStepOf",
+    "pattern": [
+     {
+      "text": "Ìgbésẹ̀ "
+     },
+     {
+      "slot": "step"
+     },
+     {
+      "text": " nínú "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "scoreOutOf",
+    "pattern": [
+     {
+      "slot": "score"
+     },
+     {
+      "text": " nínú 100"
+     }
+    ]
+   },
+   {
+    "id": "areaScoreLabel",
+    "pattern": [
+     {
+      "slot": "area"
+     },
+     {
+      "text": ": "
+     },
+     {
+      "slot": "score"
+     },
+     {
+      "text": " nínú 100"
+     }
+    ]
+   },
+   {
+    "id": "librarySavedOn",
+    "pattern": [
+     {
+      "text": "A fi pamọ́ ní "
+     },
+     {
+      "slot": "date"
+     }
+    ]
+   },
+   {
+    "id": "doseLabel",
+    "pattern": [
+     {
+      "slot": "time"
+     },
+     {
+      "text": ", "
+     },
+     {
+      "slot": "state"
+     },
+     {
+      "text": ". "
+     },
+     {
+      "slot": "medicine"
+     },
+     {
+      "text": ". "
+     },
+     {
+      "slot": "amount"
+     }
+    ]
+   },
+   {
+    "id": "reminderSaved",
+    "pattern": [
+     {
+      "text": "A ti fi ìrántí pamọ́ fún "
+     },
+     {
+      "slot": "time"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "deleteReminderConfirm",
+    "pattern": [
+     {
+      "text": "Ṣé kí a pa ìrántí "
+     },
+     {
+      "slot": "time"
+     },
+     {
+      "text": " fún "
+     },
+     {
+      "slot": "medicine"
+     },
+     {
+      "text": " rẹ́?"
+     }
+    ]
+   },
+   {
+    "id": "useLanguage",
+    "pattern": [
+     {
+      "text": "Lo "
+     },
+     {
+      "slot": "language"
+     }
+    ]
+   },
+   {
+    "id": "settingsVersion",
+    "pattern": [
+     {
+      "text": "Ẹ̀yà "
+     },
+     {
+      "slot": "version"
+     },
+     {
+      "text": " (kíkọ́ "
+     },
+     {
+      "slot": "build"
+     },
+     {
+      "text": ")"
+     }
+    ]
+   },
+   {
+    "id": "commandNotUnderstood",
+    "pattern": [
+     {
+      "text": "Mo gbọ́ “"
+     },
+     {
+      "slot": "heard"
+     },
+     {
+      "text": "”, ṣùgbọ́n mi ò mọ àṣẹ yẹn. Sọ help láti gbọ́ ohun tí o lè sọ."
+     }
+    ]
+   },
+   {
+    "id": "commandHelp",
+    "pattern": [
+     {
+      "text": "O lè sọ pé: "
+     },
+     {
+      "slot": "commands"
+     },
+     {
+      "text": ". Sọ àwọn àṣẹ ní èdè Gẹ̀ẹ́sì fún báyìí."
+     }
+    ]
+   },
+   {
+    "id": "explainFrom",
+    "pattern": [
+     {
+      "text": "Láti: "
+     },
+     {
+      "slot": "source"
+     }
+    ]
+   },
+   {
+    "id": "answerLanguage",
+    "pattern": [
+     {
+      "text": "Èdè ìdáhùn, lọ́wọ́lọ́wọ́ "
+     },
+     {
+      "slot": "language"
+     }
+    ]
+   },
+   {
+    "id": "jumpTable",
+    "pattern": [
+     {
+      "text": "Tábìlì "
+     },
+     {
+      "slot": "number"
+     }
+    ]
+   },
+   {
+    "id": "detectedPaper",
+    "pattern": [
+     {
+      "text": "Irú ìwé: "
+     },
+     {
+      "slot": "paper"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "youAsked",
+    "pattern": [
+     {
+      "text": "O béèrè pé: “"
+     },
+     {
+      "slot": "question"
+     },
+     {
+      "text": "”"
+     }
+    ]
+   },
+   {
+    "id": "removeQuestion",
+    "pattern": [
+     {
+      "text": "Yọ kúrò: "
+     },
+     {
+      "slot": "question"
+     }
+    ]
+   },
+   {
+    "id": "questionAbout",
+    "pattern": [
+     {
+      "slot": "question"
+     },
+     {
+      "text": " (nípa "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ")"
+     }
+    ]
+   },
+   {
+    "id": "findNoMatch",
+    "pattern": [
+     {
+      "text": "Kò sí ìlà tó ní “"
+     },
+     {
+      "slot": "query"
+     },
+     {
+      "text": "”."
+     }
+    ]
+   },
+   {
+    "id": "voiceAnswerUnclear",
+    "pattern": [
+     {
+      "text": "Mo gbọ́ “"
+     },
+     {
+      "slot": "heard"
+     },
+     {
+      "text": "”. Jọ̀wọ́ sọ bẹ́ẹ̀ni, rárá, tàbí mi ò mọ̀."
+     }
+    ]
+   },
+   {
+    "id": "aboutContact",
+    "pattern": [
+     {
+      "text": "Ìbéèrè tàbí ìṣòro: fi ímeèlì ránṣẹ́ sí "
+     },
+     {
+      "slot": "email"
+     }
+    ]
+   },
+   {
+    "id": "quizConfirm",
+    "pattern": [
+     {
+      "text": "O sọ pé "
+     },
+     {
+      "slot": "answer"
+     },
+     {
+      "text": ". Ṣé bẹ́ẹ̀ ni?"
+     }
+    ]
+   },
+   {
+    "id": "quizConfirmYes",
+    "pattern": [
+     {
+      "text": "Bẹ́ẹ̀ni, "
+     },
+     {
+      "slot": "answer"
+     }
+    ]
+   },
+   {
+    "id": "quizVoiceUnavailableWeb",
+    "pattern": [
+     {
+      "text": "Ìdáhùn pẹ̀lú ohùn kò tíì ṣiṣẹ́ lórí ẹ̀rọ yìí. Tẹ tàbí kílíkì ìdáhùn kan, tàbí tẹ "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": " lórí kíbọ́ọ̀dù rẹ."
+     }
+    ]
+   },
+   {
+    "id": "quizKeysHint",
+    "pattern": [
+     {
+      "text": "Tẹ tàbí kílíkì ìdáhùn kan, tàbí tẹ "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": " lórí kíbọ́ọ̀dù rẹ."
+     }
+    ]
+   },
+   {
+    "id": "quizYourClass",
+    "pattern": [
+     {
+      "text": "Kíláàsì rẹ: "
+     },
+     {
+      "slot": "name"
+     }
+    ]
+   },
+   {
+    "id": "quizCount",
+    "pattern": [
+     {
+      "text": "Ìbéèrè "
+     },
+     {
+      "slot": "n"
+     }
+    ]
+   },
+   {
+    "id": "quizSubjectTitle",
+    "pattern": [
+     {
+      "text": "Ìdánrawò "
+     },
+     {
+      "slot": "subject"
+     }
+    ]
+   },
+   {
+    "id": "quizCorrectPrimary",
+    "pattern": [
+     {
+      "text": "O ṣeun gan-an! O yan "
+     },
+     {
+      "slot": "letter"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizWrongPrimary",
+    "pattern": [
+     {
+      "text": "O gbìyànjú dáadáa! Ìdáhùn ni "
+     },
+     {
+      "slot": "answer"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizPicture",
+    "pattern": [
+     {
+      "text": "Àwòrán: "
+     },
+     {
+      "slot": "description"
+     }
+    ]
+   },
+   {
+    "id": "quizSessionActive",
+    "pattern": [
+     {
+      "text": "Ìpàdé kíláàsì "
+     },
+     {
+      "slot": "code"
+     }
+    ]
+   },
+   {
+    "id": "quizVoiceNotReady",
+    "pattern": [
+     {
+      "text": "Ìdáhùn pẹ̀lú ohùn ní "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " kò tíì péye tó. Tẹ ìdáhùn kan dípò rẹ̀."
+     }
+    ]
+   },
+   {
+    "id": "quizVoiceNotReadyWeb",
+    "pattern": [
+     {
+      "text": "Ìdáhùn pẹ̀lú ohùn ní "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " kò tíì péye tó. Tẹ tàbí kílíkì ìdáhùn kan, tàbí tẹ "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": " lórí kíbọ́ọ̀dù rẹ."
+     }
+    ]
+   },
+   {
+    "id": "quizVoicePrimaryOffWeb",
+    "pattern": [
+     {
+      "text": "Ní kíláàsì alákọ̀ọ́bẹ̀rẹ̀, tẹ tàbí kílíkì ìdáhùn rẹ, tàbí tẹ "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": " lórí kíbọ́ọ̀dù rẹ."
+     }
+    ]
+   },
+   {
+    "id": "codeGroup",
+    "pattern": [
+     {
+      "slot": "label"
+     },
+     {
+      "text": ": "
+     },
+     {
+      "slot": "typed"
+     },
+     {
+      "text": ", nọ́ńbà "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " nínú 6"
+     }
+    ]
+   },
+   {
+    "id": "codeProgress",
+    "pattern": [
+     {
+      "text": "O ti tẹ "
+     },
+     {
+      "slot": "typed"
+     },
+     {
+      "text": ". Ó ku "
+     },
+     {
+      "slot": "left"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "codeComplete",
+    "pattern": [
+     {
+      "text": "Gbogbo nọ́ńbà 6: "
+     },
+     {
+      "slot": "typed"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "joinedTeacher",
+    "pattern": [
+     {
+      "text": "Olùkọ́: "
+     },
+     {
+      "slot": "name"
+     }
+    ]
+   },
+   {
+    "id": "pdfPasswordSays",
+    "pattern": [
+     {
+      "text": "O tẹ̀: "
+     },
+     {
+      "slot": "spelled"
+     }
+    ]
+   },
+   {
+    "id": "pageOf",
+    "pattern": [
+     {
+      "text": "Ojú-ìwé "
+     },
+     {
+      "slot": "page"
+     },
+     {
+      "text": " nínú "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "pdfShared",
+    "pattern": [
+     {
+      "text": "A pín PDF kan pẹ̀lú Magana: "
+     },
+     {
+      "slot": "name"
+     }
+    ]
+   },
+   {
+    "id": "msg_line_part_unclear",
+    "pattern": [
+     {
+      "text": "A kò ka apá kan "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ": ọ̀rọ̀ kan wà tí mi ò lè dá mọ̀. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí tún ya fọ́tò."
+     }
+    ]
+   },
+   {
+    "id": "msg_handwritten_number",
+    "pattern": [
+     {
+      "text": "Lórí "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ", nọ́ńbà tí a fi ọwọ́ kọ. Mi ò ní fojú inú wò ó: jọ̀wọ́ béèrè lọ́wọ́ oníṣègùn-oògùn tàbí nọ́ọ̀sì."
+     }
+    ]
+   },
+   {
+    "id": "columnsNote",
+    "pattern": [
+     {
+      "text": "Ọ̀wọ̀n "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": ". Ti òsì kọ́kọ́, lẹ́yìn náà ti ọ̀tún."
+     }
+    ]
+   },
+   {
+    "id": "columnsSubtitle",
+    "pattern": [
+     {
+      "text": "Ọ̀wọ̀n "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " · òsì, lẹ́yìn náà ọ̀tún"
+     }
+    ]
+   },
+   {
+    "id": "columnPosition",
+    "pattern": [
+     {
+      "text": "Ọ̀wọ̀n "
+     },
+     {
+      "slot": "column"
+     },
+     {
+      "text": " nínú "
+     },
+     {
+      "slot": "columns"
+     },
+     {
+      "text": " · Ìlà "
+     },
+     {
+      "slot": "number"
+     },
+     {
+      "text": " nínú "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "columnStart",
+    "pattern": [
+     {
+      "text": "Ọ̀wọ̀n "
+     },
+     {
+      "slot": "column"
+     },
+     {
+      "text": " nínú "
+     },
+     {
+      "slot": "columns"
+     }
+    ]
+   },
+   {
+    "id": "columnLabel",
+    "pattern": [
+     {
+      "text": "Ọ̀wọ̀n "
+     },
+     {
+      "slot": "column"
+     }
+    ]
+   },
+   {
+    "id": "headingSpoken",
+    "pattern": [
+     {
+      "text": "Àkọlé: "
+     },
+     {
+      "slot": "text"
+     }
+    ]
+   },
+   {
+    "id": "letterCheckWords",
+    "pattern": [
+     {
+      "text": "Àwọn ọ̀rọ̀ wọ̀nyí lè ti pàdánù lẹ́tà pàtàkì kan: "
+     },
+     {
+      "slot": "words"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "askSomeoneText",
+    "pattern": [
+     {
+      "text": "Béèrè lọ́wọ́ ẹni tó ń ka "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " kó yẹ àwọn ọ̀rọ̀ tí a sàmì sí wò."
+     }
+    ]
+   },
+   {
+    "id": "languagePage",
+    "pattern": [
+     {
+      "text": "Ojú ìwé "
+     },
+     {
+      "slot": "language"
+     }
+    ]
+   },
+   {
+    "id": "msg_explain_language_coming",
+    "pattern": [
+     {
+      "text": "Àlàyé ní "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " ń bọ̀. O lè gbọ́ ọ ní èdè Gẹ̀ẹ́sì."
+     }
+    ]
+   },
+   {
+    "id": "reportRecording",
+    "pattern": [
+     {
+      "text": "Dá gbígbà dúró · ìṣẹ́jú-àáyá "
+     },
+     {
+      "slot": "seconds"
+     }
+    ]
+   },
+   {
+    "id": "reportVoiceNote",
+    "pattern": [
+     {
+      "text": "A ti gba ohùn sílẹ̀: ìṣẹ́jú-àáyá "
+     },
+     {
+      "slot": "seconds"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "emailSupport",
+    "pattern": [
+     {
+      "text": "Fi ímeèlì ránṣẹ́ sí "
+     },
+     {
+      "slot": "email"
+     }
+    ]
+   },
+   {
+    "id": "touchOf",
+    "pattern": [
+     {
+      "slot": "n"
+     },
+     {
+      "text": " nínú "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "nameNotFound",
+    "pattern": [
+     {
+      "text": "Mo gbọ́ “"
+     },
+     {
+      "slot": "heard"
+     },
+     {
+      "text": "”, ṣùgbọ́n kò sí nǹkan tó ní orúkọ yẹn lójú ìbojú yìí."
+     }
+    ]
+   },
+   {
+    "id": "msg_missed_line",
+    "pattern": [
+     {
+      "text": "Ó ṣeé ṣe kí n ti fo ìlà kan níbí, "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ". Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ tàbí ya fọ́tò náà lẹ́ẹ̀kan sí i."
+     }
+    ]
+   },
+   {
+    "id": "offlineBannerTimeout",
+    "pattern": [
+     {
+      "text": "Sáfà Magana pẹ́ ju ìṣẹ́jú-àáyá "
+     },
+     {
+      "slot": "seconds"
+     },
+     {
+      "text": " lọ. Mò ń kà á lórí fóònù yìí."
+     }
+    ]
+   },
+   {
+    "id": "noVoiceYet",
+    "pattern": [
+     {
+      "text": "Mi ò tíì ní ohùn "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": ". Ọ̀rọ̀ náà wà lójú ìbojú."
+     }
+    ]
+   },
+   {
+    "id": "voiceSettingsDetail",
+    "pattern": [
+     {
+      "slot": "voice"
+     },
+     {
+      "text": ". "
+     },
+     {
+      "slot": "speed"
+     }
+    ]
+   },
+   {
+    "id": "voiceFor",
+    "pattern": [
+     {
+      "text": "Ohùn fún "
+     },
+     {
+      "slot": "language"
+     }
+    ]
+   },
+   {
+    "id": "voiceNone",
+    "pattern": [
+     {
+      "text": "Fóònù yìí kò tíì ní ohùn "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": ". Magana máa ń fi ọ̀rọ̀ "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " hàn lójú ìbojú dípò kí ó kà á pẹ̀lú ohùn èdè mìíràn."
+     }
+    ]
+   },
+   {
+    "id": "voiceChosen",
+    "pattern": [
+     {
+      "text": "A ti yan "
+     },
+     {
+      "slot": "voice"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "voiceSpeedSet",
+    "pattern": [
+     {
+      "text": "Ìyára "
+     },
+     {
+      "slot": "value"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "screenChoices",
+    "pattern": [
+     {
+      "text": "Lójú ìbojú yìí o lè sọ: "
+     },
+     {
+      "slot": "choices"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "englishGuidanceNotice",
+    "pattern": [
+     {
+      "text": "Ìtọ́sọ́nà ohùn wà ní Gẹ̀ẹ́sì fún báyìí. Ohùn "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " ń bọ̀."
+     }
+    ]
+   },
+   {
+    "id": "voiceEnglishGuidanceDetail",
+    "pattern": [
+     {
+      "text": "Nígbà tí fóònù yìí kò ní ohùn "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": ", Magana máa ń sọ àwọn àkójọ, àmì àti ìkìlọ̀ rẹ̀ ní Gẹ̀ẹ́sì. A kì í ka ọ̀rọ̀ ojú ìwé "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " ní Gẹ̀ẹ́sì: a máa ń fi hàn lójú ìbojú."
+     }
+    ]
+   }
+  ],
+  "ig": [
+   {
+    "id": "languageButtonLabel",
+    "pattern": [
+     {
+      "text": "Asụsụ ngwa: "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": ". Gbanwee asụsụ"
+     }
+    ]
+   },
+   {
+    "id": "languageChanged",
+    "pattern": [
+     {
+      "text": "Asụsụ ngwa bụ "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " ugbu a."
+     }
+    ]
+   },
+   {
+    "id": "comingSoon",
+    "pattern": [
+     {
+      "slot": "feature"
+     },
+     {
+      "text": " na-abịa n'oge na-adịghị anya."
+     }
+    ]
+   },
+   {
+    "id": "unclearCount",
+    "pattern": [
+     {
+      "slot": "count"
+     },
+     {
+      "text": " edoghị anya"
+     }
+    ]
+   },
+   {
+    "id": "linePosition",
+    "pattern": [
+     {
+      "text": "Ahịrị "
+     },
+     {
+      "slot": "number"
+     },
+     {
+      "text": " n'ime "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "rowPosition",
+    "pattern": [
+     {
+      "text": "Usoro "
+     },
+     {
+      "slot": "number"
+     },
+     {
+      "text": " n'ime "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "rowPositionInTable",
+    "pattern": [
+     {
+      "text": "Usoro "
+     },
+     {
+      "slot": "number"
+     },
+     {
+      "text": " n'ime "
+     },
+     {
+      "slot": "total"
+     },
+     {
+      "text": ", tebụl "
+     },
+     {
+      "slot": "table"
+     }
+    ]
+   },
+   {
+    "id": "speed",
+    "pattern": [
+     {
+      "text": "Ọsọ "
+     },
+     {
+      "slot": "value"
+     }
+    ]
+   },
+   {
+    "id": "speedLabel",
+    "pattern": [
+     {
+      "text": "Ọsọ ọgụgụ "
+     },
+     {
+      "slot": "value"
+     },
+     {
+      "text": ". Pịa ka ịgbanwee ya"
+     }
+    ]
+   },
+   {
+    "id": "whereLine",
+    "pattern": [
+     {
+      "text": "ahịrị "
+     },
+     {
+      "slot": "number"
+     }
+    ]
+   },
+   {
+    "id": "whereRow",
+    "pattern": [
+     {
+      "text": "usoro "
+     },
+     {
+      "slot": "number"
+     }
+    ]
+   },
+   {
+    "id": "whereCell",
+    "pattern": [
+     {
+      "text": "usoro "
+     },
+     {
+      "slot": "row"
+     },
+     {
+      "text": ", kọlụm "
+     },
+     {
+      "slot": "col"
+     }
+    ]
+   },
+   {
+    "id": "msg_low_confidence",
+    "pattern": [
+     {
+      "text": "Ejighị m n'aka "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ". Biko lelee ya ma ọ bụ see foto ọzọ."
+     }
+    ]
+   },
+   {
+    "id": "msg_low_confidence_number",
+    "pattern": [
+     {
+      "text": "Enweghị m ike ịgụ otu nọmba na "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " nke ọma. Biko lelee ya ma ọ bụ see foto ọzọ."
+     }
+    ]
+   },
+   {
+    "id": "msg_unreadable_number",
+    "pattern": [
+     {
+      "text": "Enweghị m ike ịgụ otu nọmba na "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " nke ọma. Biko lelee ya ma ọ bụ see foto ọzọ."
+     }
+    ]
+   },
+   {
+    "id": "msg_currency_unclear",
+    "pattern": [
+     {
+      "text": "Na "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " enwere m ike ịgụ ọnụọgụ ego ahụ mana enweghị m ike ịgụ akara ego ya, ya mere ọ bụ naanị ọnụọgụ ka m na-ekwu. Biko lelee ya na ngwa ụlọ akụ gị ma ọ bụ na onye ị tụkwasịrị obi."
+     }
+    ]
+   },
+   {
+    "id": "msg_amount_unconfirmed",
+    "pattern": [
+     {
+      "text": "Enweghị m ike ịgụ ego dị na "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " nke ọma, ya mere anaghị m ekwu ya. Magana na-ekwu ego naanị mgbe ọgụgụ abụọ dị iche iche dabara kpọmkwem. Biko lelee ya na ngwa ụlọ akụ gị ma ọ bụ na onye ị tụkwasịrị obi."
+     }
+    ]
+   },
+   {
+    "id": "msg_number_mismatch",
+    "pattern": [
+     {
+      "text": "Enweghị m ike ịgụ otu nọmba na "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " nke ọma. Biko lelee ya ma ọ bụ see foto ọzọ."
+     }
+    ]
+   },
+   {
+    "id": "msg_faint_region",
+    "pattern": [
+     {
+      "text": "Enwere ederede na-adịghị ahụ anya "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": " nke m na-enweghị ike ịgụ. Chọọ ìhè karịa, ma ọ bụ see foto ọzọ."
+     }
+    ]
+   },
+   {
+    "id": "msg_line_end_unclear",
+    "pattern": [
+     {
+      "text": "Enweghị m ike ịgụ njedebe "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ". Biko lelee ya ma ọ bụ see foto ọzọ."
+     }
+    ]
+   },
+   {
+    "id": "stepOf",
+    "pattern": [
+     {
+      "text": "Nzọụkwụ "
+     },
+     {
+      "slot": "n"
+     },
+     {
+      "text": " n'ime "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "quickCheckProgress",
+    "pattern": [
+     {
+      "text": "Ibà · ajụjụ "
+     },
+     {
+      "slot": "n"
+     },
+     {
+      "text": " n'ime "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "quickCheckProgressFallback",
+    "pattern": [
+     {
+      "text": "Nyocha nchekwa dị n'ime · ajụjụ "
+     },
+     {
+      "slot": "n"
+     },
+     {
+      "text": " n'ime "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "quizProgress",
+    "pattern": [
+     {
+      "text": "Ajụjụ "
+     },
+     {
+      "slot": "n"
+     },
+     {
+      "text": " n'ime "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "quizScoreLabel",
+    "pattern": [
+     {
+      "slot": "correct"
+     },
+     {
+      "text": " ziri ezi n'ime "
+     },
+     {
+      "slot": "answered"
+     },
+     {
+      "text": " ị zara"
+     }
+    ]
+   },
+   {
+    "id": "quizSayAnswer",
+    "pattern": [
+     {
+      "text": "Kwuo "
+     },
+     {
+      "slot": "letters"
+     }
+    ]
+   },
+   {
+    "id": "quizCorrect",
+    "pattern": [
+     {
+      "text": "Ọ ziri ezi! Ị họọrọ "
+     },
+     {
+      "slot": "letter"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizWrong",
+    "pattern": [
+     {
+      "text": "Ọ bụghị ya. Ị họọrọ "
+     },
+     {
+      "slot": "letter"
+     },
+     {
+      "text": ". Azịza ya bụ "
+     },
+     {
+      "slot": "answer"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizUnclear",
+    "pattern": [
+     {
+      "text": "Anụrụ m “"
+     },
+     {
+      "slot": "heard"
+     },
+     {
+      "text": "”. Biko kwuo "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizNothingHeard",
+    "pattern": [
+     {
+      "text": "Anụghị m azịza. Kwuo "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": ", ma ọ bụ pịa azịza ugboro abụọ."
+     }
+    ]
+   },
+   {
+    "id": "quizResult",
+    "pattern": [
+     {
+      "text": "Ị nwetara "
+     },
+     {
+      "slot": "correct"
+     },
+     {
+      "text": " ziri ezi n'ime "
+     },
+     {
+      "slot": "total"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "nextLesson",
+    "pattern": [
+     {
+      "text": "Nkuzi ọzọ · nkeji "
+     },
+     {
+      "slot": "minutes"
+     }
+    ]
+   },
+   {
+    "id": "lessonStepOf",
+    "pattern": [
+     {
+      "text": "Nzọụkwụ "
+     },
+     {
+      "slot": "step"
+     },
+     {
+      "text": " n'ime "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "scoreOutOf",
+    "pattern": [
+     {
+      "slot": "score"
+     },
+     {
+      "text": " n'ime 100"
+     }
+    ]
+   },
+   {
+    "id": "areaScoreLabel",
+    "pattern": [
+     {
+      "slot": "area"
+     },
+     {
+      "text": ": "
+     },
+     {
+      "slot": "score"
+     },
+     {
+      "text": " n'ime 100"
+     }
+    ]
+   },
+   {
+    "id": "librarySavedOn",
+    "pattern": [
+     {
+      "text": "Echekwara na "
+     },
+     {
+      "slot": "date"
+     }
+    ]
+   },
+   {
+    "id": "doseLabel",
+    "pattern": [
+     {
+      "slot": "time"
+     },
+     {
+      "text": ", "
+     },
+     {
+      "slot": "state"
+     },
+     {
+      "text": ". "
+     },
+     {
+      "slot": "medicine"
+     },
+     {
+      "text": ". "
+     },
+     {
+      "slot": "amount"
+     }
+    ]
+   },
+   {
+    "id": "reminderSaved",
+    "pattern": [
+     {
+      "text": "Echekwala ihe ncheta maka "
+     },
+     {
+      "slot": "time"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "deleteReminderConfirm",
+    "pattern": [
+     {
+      "text": "Hichapụ ihe ncheta "
+     },
+     {
+      "slot": "time"
+     },
+     {
+      "text": " maka "
+     },
+     {
+      "slot": "medicine"
+     },
+     {
+      "text": "?"
+     }
+    ]
+   },
+   {
+    "id": "useLanguage",
+    "pattern": [
+     {
+      "text": "Jiri "
+     },
+     {
+      "slot": "language"
+     }
+    ]
+   },
+   {
+    "id": "settingsVersion",
+    "pattern": [
+     {
+      "text": "Ụdị "
+     },
+     {
+      "slot": "version"
+     },
+     {
+      "text": " (nke "
+     },
+     {
+      "slot": "build"
+     },
+     {
+      "text": ")"
+     }
+    ]
+   },
+   {
+    "id": "commandNotUnderstood",
+    "pattern": [
+     {
+      "text": "Anụrụ m “"
+     },
+     {
+      "slot": "heard"
+     },
+     {
+      "text": "”, mana amaghị m iwu ahụ. Kwuo help ka ị nụ ihe ị nwere ike ikwu."
+     }
+    ]
+   },
+   {
+    "id": "commandHelp",
+    "pattern": [
+     {
+      "text": "Ị nwere ike ikwu: "
+     },
+     {
+      "slot": "commands"
+     },
+     {
+      "text": ". Kwuo iwu n'asụsụ Bekee ugbu a."
+     }
+    ]
+   },
+   {
+    "id": "explainFrom",
+    "pattern": [
+     {
+      "text": "Site na: "
+     },
+     {
+      "slot": "source"
+     }
+    ]
+   },
+   {
+    "id": "answerLanguage",
+    "pattern": [
+     {
+      "text": "Asụsụ azịza, ugbu a "
+     },
+     {
+      "slot": "language"
+     }
+    ]
+   },
+   {
+    "id": "jumpTable",
+    "pattern": [
+     {
+      "text": "Tebụl "
+     },
+     {
+      "slot": "number"
+     }
+    ]
+   },
+   {
+    "id": "detectedPaper",
+    "pattern": [
+     {
+      "text": "Ụdị akwụkwọ: "
+     },
+     {
+      "slot": "paper"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "youAsked",
+    "pattern": [
+     {
+      "text": "Ị jụrụ: “"
+     },
+     {
+      "slot": "question"
+     },
+     {
+      "text": "”"
+     }
+    ]
+   },
+   {
+    "id": "removeQuestion",
+    "pattern": [
+     {
+      "text": "Wepụ: "
+     },
+     {
+      "slot": "question"
+     }
+    ]
+   },
+   {
+    "id": "questionAbout",
+    "pattern": [
+     {
+      "slot": "question"
+     },
+     {
+      "text": " (maka "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ")"
+     }
+    ]
+   },
+   {
+    "id": "findNoMatch",
+    "pattern": [
+     {
+      "text": "Enweghị ahịrị nwere “"
+     },
+     {
+      "slot": "query"
+     },
+     {
+      "text": "”."
+     }
+    ]
+   },
+   {
+    "id": "voiceAnswerUnclear",
+    "pattern": [
+     {
+      "text": "Anụrụ m “"
+     },
+     {
+      "slot": "heard"
+     },
+     {
+      "text": "”. Biko kwuo ee, mba, ma ọ bụ amaghị m."
+     }
+    ]
+   },
+   {
+    "id": "aboutContact",
+    "pattern": [
+     {
+      "text": "Ajụjụ ma ọ bụ nsogbu: zigara "
+     },
+     {
+      "slot": "email"
+     },
+     {
+      "text": " ozi email"
+     }
+    ]
+   },
+   {
+    "id": "quizConfirm",
+    "pattern": [
+     {
+      "text": "Ị kwuru "
+     },
+     {
+      "slot": "answer"
+     },
+     {
+      "text": ". Ọ bụ eziokwu?"
+     }
+    ]
+   },
+   {
+    "id": "quizConfirmYes",
+    "pattern": [
+     {
+      "text": "Ee, "
+     },
+     {
+      "slot": "answer"
+     }
+    ]
+   },
+   {
+    "id": "quizVoiceUnavailableWeb",
+    "pattern": [
+     {
+      "text": "Ịza n'olu adịbeghị na ngwaọrụ a. Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": " na kiiboodu gị."
+     }
+    ]
+   },
+   {
+    "id": "quizKeysHint",
+    "pattern": [
+     {
+      "text": "Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": " na kiiboodu gị."
+     }
+    ]
+   },
+   {
+    "id": "quizYourClass",
+    "pattern": [
+     {
+      "text": "Klaasị gị: "
+     },
+     {
+      "slot": "name"
+     }
+    ]
+   },
+   {
+    "id": "quizCount",
+    "pattern": [
+     {
+      "text": "Ajụjụ "
+     },
+     {
+      "slot": "n"
+     }
+    ]
+   },
+   {
+    "id": "quizSubjectTitle",
+    "pattern": [
+     {
+      "text": "Omume "
+     },
+     {
+      "slot": "subject"
+     }
+    ]
+   },
+   {
+    "id": "quizCorrectPrimary",
+    "pattern": [
+     {
+      "text": "Ị mere nke ọma! Ị họọrọ "
+     },
+     {
+      "slot": "letter"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizWrongPrimary",
+    "pattern": [
+     {
+      "text": "Ị nwalere nke ọma! Azịza ya bụ "
+     },
+     {
+      "slot": "answer"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "quizPicture",
+    "pattern": [
+     {
+      "text": "Foto: "
+     },
+     {
+      "slot": "description"
+     }
+    ]
+   },
+   {
+    "id": "quizSessionActive",
+    "pattern": [
+     {
+      "text": "Nnọkọ klaasị "
+     },
+     {
+      "slot": "code"
+     }
+    ]
+   },
+   {
+    "id": "quizVoiceNotReady",
+    "pattern": [
+     {
+      "text": "Ịza n'olu n'asụsụ "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " adịbeghị nke ọma. Pịa azịza kama."
+     }
+    ]
+   },
+   {
+    "id": "quizVoiceNotReadyWeb",
+    "pattern": [
+     {
+      "text": "Ịza n'olu n'asụsụ "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " adịbeghị nke ọma. Pịa ma ọ bụ kpịa azịza, ma ọ bụ pịa "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": " na kiiboodu gị."
+     }
+    ]
+   },
+   {
+    "id": "quizVoicePrimaryOffWeb",
+    "pattern": [
+     {
+      "text": "Na klaasị praịmarị, pịa ma ọ bụ kpịa azịza gị, ma ọ bụ pịa "
+     },
+     {
+      "slot": "letters"
+     },
+     {
+      "text": " na kiiboodu gị."
+     }
+    ]
+   },
+   {
+    "id": "codeGroup",
+    "pattern": [
+     {
+      "slot": "label"
+     },
+     {
+      "text": ": "
+     },
+     {
+      "slot": "typed"
+     },
+     {
+      "text": ", ọnụọgụgụ "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " n'ime 6"
+     }
+    ]
+   },
+   {
+    "id": "codeProgress",
+    "pattern": [
+     {
+      "text": "Ị tinyela "
+     },
+     {
+      "slot": "typed"
+     },
+     {
+      "text": ". Fọdụrụ "
+     },
+     {
+      "slot": "left"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "codeComplete",
+    "pattern": [
+     {
+      "text": "Ọnụọgụgụ 6 niile: "
+     },
+     {
+      "slot": "typed"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "joinedTeacher",
+    "pattern": [
+     {
+      "text": "Onye nkuzi: "
+     },
+     {
+      "slot": "name"
+     }
+    ]
+   },
+   {
+    "id": "pdfPasswordSays",
+    "pattern": [
+     {
+      "text": "Ị pịnyere: "
+     },
+     {
+      "slot": "spelled"
+     }
+    ]
+   },
+   {
+    "id": "pageOf",
+    "pattern": [
+     {
+      "text": "Peeji "
+     },
+     {
+      "slot": "page"
+     },
+     {
+      "text": " n'ime "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "pdfShared",
+    "pattern": [
+     {
+      "text": "E kesara PDF na Magana: "
+     },
+     {
+      "slot": "name"
+     }
+    ]
+   },
+   {
+    "id": "msg_line_part_unclear",
+    "pattern": [
+     {
+      "text": "Agụghị akụkụ nke "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ": e nwere ihe e dere m na-enweghị ike ịmata. Biko lelee ya ma ọ bụ see foto ọzọ."
+     }
+    ]
+   },
+   {
+    "id": "msg_handwritten_number",
+    "pattern": [
+     {
+      "text": "Na "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ", nọmba e ji aka dee. Agaghị m echere ya: biko jụọ onye na-ere ọgwụ ma ọ bụ nọọsụ."
+     }
+    ]
+   },
+   {
+    "id": "columnsNote",
+    "pattern": [
+     {
+      "text": "Kọlụm "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": ". Nke aka ekpe mbụ, emesịa nke aka nri."
+     }
+    ]
+   },
+   {
+    "id": "columnsSubtitle",
+    "pattern": [
+     {
+      "text": "Kọlụm "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " · aka ekpe, emesịa aka nri"
+     }
+    ]
+   },
+   {
+    "id": "columnPosition",
+    "pattern": [
+     {
+      "text": "Kọlụm "
+     },
+     {
+      "slot": "column"
+     },
+     {
+      "text": " n'ime "
+     },
+     {
+      "slot": "columns"
+     },
+     {
+      "text": " · Ahịrị "
+     },
+     {
+      "slot": "number"
+     },
+     {
+      "text": " n'ime "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "columnStart",
+    "pattern": [
+     {
+      "text": "Kọlụm "
+     },
+     {
+      "slot": "column"
+     },
+     {
+      "text": " n'ime "
+     },
+     {
+      "slot": "columns"
+     }
+    ]
+   },
+   {
+    "id": "columnLabel",
+    "pattern": [
+     {
+      "text": "Kọlụm "
+     },
+     {
+      "slot": "column"
+     }
+    ]
+   },
+   {
+    "id": "headingSpoken",
+    "pattern": [
+     {
+      "text": "Isiokwu: "
+     },
+     {
+      "slot": "text"
+     }
+    ]
+   },
+   {
+    "id": "letterCheckWords",
+    "pattern": [
+     {
+      "text": "Okwu ndị a nwere ike ịfụ otu mkpụrụedemede pụrụ iche: "
+     },
+     {
+      "slot": "words"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "askSomeoneText",
+    "pattern": [
+     {
+      "text": "Jụọ onye na-agụ "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " ka o lelee okwu ndị e debere akara."
+     }
+    ]
+   },
+   {
+    "id": "languagePage",
+    "pattern": [
+     {
+      "text": "Peeji "
+     },
+     {
+      "slot": "language"
+     }
+    ]
+   },
+   {
+    "id": "msg_explain_language_coming",
+    "pattern": [
+     {
+      "text": "Nkọwa n'asụsụ "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " na-abịa. Ị nwere ike ịnụ ya n'asụsụ Bekee."
+     }
+    ]
+   },
+   {
+    "id": "reportRecording",
+    "pattern": [
+     {
+      "text": "Kwụsị ndekọ · sekọnd "
+     },
+     {
+      "slot": "seconds"
+     }
+    ]
+   },
+   {
+    "id": "reportVoiceNote",
+    "pattern": [
+     {
+      "text": "E dekọrọ ozi olu: sekọnd "
+     },
+     {
+      "slot": "seconds"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "emailSupport",
+    "pattern": [
+     {
+      "text": "Zipu email na "
+     },
+     {
+      "slot": "email"
+     }
+    ]
+   },
+   {
+    "id": "touchOf",
+    "pattern": [
+     {
+      "slot": "n"
+     },
+     {
+      "text": " n'ime "
+     },
+     {
+      "slot": "total"
+     }
+    ]
+   },
+   {
+    "id": "nameNotFound",
+    "pattern": [
+     {
+      "text": "Anụrụ m “"
+     },
+     {
+      "slot": "heard"
+     },
+     {
+      "text": "”, mana ọ dịghị ihe nwere aha ahụ na ihuenyo a."
+     }
+    ]
+   },
+   {
+    "id": "msg_missed_line",
+    "pattern": [
+     {
+      "text": "Enwere ike m hapụrụ otu ahịrị ebe a, "
+     },
+     {
+      "slot": "where"
+     },
+     {
+      "text": ". Biko lelee ya ma ọ bụ see foto ahụ ọzọ."
+     }
+    ]
+   },
+   {
+    "id": "offlineBannerTimeout",
+    "pattern": [
+     {
+      "text": "Sava Magana were ihe karịrị sekọnd "
+     },
+     {
+      "slot": "seconds"
+     },
+     {
+      "text": ". A na m agụ ya na ekwentị a."
+     }
+    ]
+   },
+   {
+    "id": "noVoiceYet",
+    "pattern": [
+     {
+      "text": "Enweghị m olu "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " ugbu a. Ederede ahụ dị na ihuenyo."
+     }
+    ]
+   },
+   {
+    "id": "voiceSettingsDetail",
+    "pattern": [
+     {
+      "slot": "voice"
+     },
+     {
+      "text": ". "
+     },
+     {
+      "slot": "speed"
+     }
+    ]
+   },
+   {
+    "id": "voiceFor",
+    "pattern": [
+     {
+      "text": "Olu maka "
+     },
+     {
+      "slot": "language"
+     }
+    ]
+   },
+   {
+    "id": "voiceNone",
+    "pattern": [
+     {
+      "text": "Ekwentị a enweghị olu "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " ugbu a. Magana na-egosi ederede "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " na ihuenyo kama ịgụ ya n'olu asụsụ ọzọ."
+     }
+    ]
+   },
+   {
+    "id": "voiceChosen",
+    "pattern": [
+     {
+      "text": "Ahọrọla "
+     },
+     {
+      "slot": "voice"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "voiceSpeedSet",
+    "pattern": [
+     {
+      "text": "Ọsọ "
+     },
+     {
+      "slot": "value"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "screenChoices",
+    "pattern": [
+     {
+      "text": "Na ihuenyo a ị nwere ike ikwu: "
+     },
+     {
+      "slot": "choices"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "englishGuidanceNotice",
+    "pattern": [
+     {
+      "text": "Ntụziaka olu dị na Bekee ugbu a. Olu "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " na-abịa."
+     }
+    ]
+   },
+   {
+    "id": "voiceEnglishGuidanceDetail",
+    "pattern": [
+     {
+      "text": "Mgbe ekwentị a enweghị olu "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": ", Magana na-ekwu menu, akara na ịdọ aka na ntị ya n'asụsụ Bekee. Anaghị agụ ederede peeji "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " n'asụsụ Bekee: a na-egosi ya na ihuenyo."
      }
     ]
    }

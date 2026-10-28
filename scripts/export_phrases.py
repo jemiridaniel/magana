@@ -11,6 +11,10 @@ Writes:
 
 Fixed phrases are the app's own texts (app/lib/l10n/app_<lang>.arb) with no blank in them. A
 text with a blank ("Line {n} of {total}") is left to the phone's voice: its numbers change.
+It also holds what English guidance needs (app/lib/guidance.dart): every phrase's English text by
+ID ("_english"), and each phrase with blanks as a pattern per language ("_ui_patterns"), so
+Magana's own words can be said in English when a language has no voice yet. Plural and select
+texts are left out.
 Health templates (content/templates/*.json) are recorded in parts: the words between the number
 slots. The numbers themselves are always said by the phone, exactly as printed (CLAUDE.md, rule 1).
 """
@@ -92,10 +96,23 @@ def main() -> int:
                 pid, f"{t['lang']}-{pid}.m4a", text, t["english"],
                 f"Health template, part {i} of {n} (the phone says the numbers between parts)",
                 t["status"]])
+    # English guidance: each phrase's English text, and the phrases with blanks as patterns.
+    english = {k: v for k, v in arb("en").items() if not re.search(r"\{\w+,\s*(plural|select)", v)}
+    ui_patterns: dict[str, list[dict]] = {}
+    for lang in LANGS:
+        if lang == "en":
+            continue
+        for key, text in arb(lang).items():
+            if "{" not in text or key not in english or re.search(r"\{\w+,\s*(plural|select)", text):
+                continue
+            pieces = [({"slot": p[1:-1]} if re.fullmatch(r"\{\w+\}", p) else {"text": p})
+                      for p in re.split(r"(\{\w+\})", text) if p]
+            ui_patterns.setdefault(lang, []).append({"id": key, "pattern": pieces})
     out = ROOT / "app/assets/voice/phrases.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"_about": "Made by scripts/export_phrases.py; do not edit.",
-                               **phrases, "_patterns": patterns},
+                               **phrases, "_patterns": patterns, "_english": english,
+                               "_ui_patterns": ui_patterns},
                               ensure_ascii=False, indent=1, sort_keys=False) + "\n", encoding="utf-8")
     clips = ROOT / "app/assets/voice/clips.json"
     if not clips.exists():

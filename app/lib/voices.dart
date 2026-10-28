@@ -162,6 +162,24 @@ class VoiceSettings {
   static Future<void> setRate(double rate) async =>
       (await SharedPreferences.getInstance()).setDouble(_rateKey, rate);
 
+  /// Magana's own words in English when the app language has no voice (default on).
+  static Future<bool> englishGuidance() async =>
+      (await SharedPreferences.getInstance()).getBool('english_guidance') ?? true;
+
+  static Future<void> setEnglishGuidance(bool on) async =>
+      (await SharedPreferences.getInstance()).setBool('english_guidance', on);
+
+  /// Languages whose "Spoken guidance is in English for now" was said (once each).
+  static Future<Set<String>> englishGuidanceTold() async =>
+      ((await SharedPreferences.getInstance()).getStringList('english_guidance_told') ?? const [])
+          .toSet();
+
+  static Future<void> markEnglishGuidanceTold(String lang) async {
+    final prefs = await SharedPreferences.getInstance();
+    final told = {...?prefs.getStringList('english_guidance_told'), lang};
+    await prefs.setStringList('english_guidance_told', told.toList());
+  }
+
   /// "A better voice can be downloaded" is said once only.
   static Future<bool> hintTold() async =>
       (await SharedPreferences.getInstance()).getBool(_hintKey) ?? false;

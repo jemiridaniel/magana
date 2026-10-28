@@ -296,14 +296,22 @@ test("hero demo: with reduced motion, scene 2 shows still", async ({ browser }) 
 });
 
 
-test("Download for Android: the stable address, version, size, date, Android 7, three steps", async ({ page }) => {
+test("Download for Android: 64-bit by default, 32-bit for older phones, sizes, Android 7, three steps", async ({ page }) => {
   await page.route("**/downloads/latest.json", (r) => r.fulfill({ json: {
-    version: "0.1.0+6", bytes: 35225883, date: "2026-10-26", min_android: "7.0", sha256: "ab".repeat(32) } }));
+    version: "0.1.0+13", bytes: 35225883, date: "2026-10-28", min_android: "7.0", sha256: "ab".repeat(32),
+    files: { arm64: { bytes: 35225883, sha256: "ab".repeat(32) }, arm32: { bytes: 31457280, sha256: "cd".repeat(32) },
+             universal: { bytes: 94968062, sha256: "ef".repeat(32) } } } }));
   await ready(page, "/android/");
-  const button = page.getByRole("link", { name: "Download for Android" });
+  const button = page.getByRole("link", { name: "Download for Android (34 MB)" });
   await expect(button).toHaveAttribute("href", "/download/android");
   expect((await button.boundingBox())!.height).toBeGreaterThanOrEqual(64);
-  for (const fact of ["Version 0.1.0+6", "34 MB", "Released 26 Oct 2026", "Android 7 or newer"]) {
+  await expect(page.getByText("Most phones from 2017 onwards")).toBeVisible();
+  const older = page.getByRole("link", { name: /^Older phone\? .*use this version \(30 MB\)$/ });
+  await expect(older).toHaveAttribute("href", "/download/android-32bit");
+  expect((await older.boundingBox())!.height).toBeGreaterThanOrEqual(64);
+  // The 95 MB universal build is for emulators: on the GitHub release page only.
+  await expect(page.getByText("95 MB")).toHaveCount(0);
+  for (const fact of ["Version 0.1.0+13", "Released 28 Oct 2026", "Android 7 or newer"]) {
     await expect(page.getByText(fact, { exact: true })).toBeVisible();
   }
   await expect(page.getByRole("heading", { name: "Install it in 3 steps" })).toBeVisible();
