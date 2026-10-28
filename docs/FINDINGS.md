@@ -41,7 +41,12 @@ No real phone and no blind or low-vision tester has been used yet.
   - **Test:** `test_api_key.py::test_livez_is_open_and_never_touches_the_database`.
 - **Oracle's idle reclaim:**
   - **The rule** (Oracle docs, read 28 Oct): an instance counts as idle if, over 7 days, the 95th-percentile CPU, the network and the memory (A1) are all under 20%.
-  - **Magana will look idle:** 69 MB of 12 GB at rest. **Recommended: upgrade to Pay As You Go**, which isn't reclaimed, and keep Always Free resources only, with the $1 budget alert.
+  - **Magana will look idle:** 69 MB of 12 GB at rest. Pay As You Go isn't reclaimed, but **the account stays on the free tier** (the card hold, about €93, is a problem). If Oracle stops the instance, the monitor emails, and it is started again from the console.
+  - **Restart test:** after a full restart of the server, within about a minute, everything came back by itself with nothing done by hand:
+    - Docker, Caddy and the deploy timer were active;
+    - the 80/443 firewall rules were back;
+    - the API container was healthy;
+    - port 80 answered from outside.
   - No fake load is run.
 - **Deploys pull:** CI moves a `production` tag; the server builds, checks `/health` (commit and database), then switches between two slots.
   - **On failure:** a failed check leaves the old one serving and marks the commit failed. GitHub holds no key to the server.

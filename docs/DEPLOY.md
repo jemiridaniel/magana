@@ -25,17 +25,16 @@ To redo it on a new server: `MAGANA_SERVER=<address> scripts/server-setup.sh`, t
 
 Within a few minutes, Caddy on the server gets api.magana.ng's certificate by itself.
 
-## 2. Oracle: upgrade to Pay As You Go (recommended)
+## 2. Oracle: staying on the free tier
 
-Oracle stops Always Free instances it judges idle: under 20% CPU, network and memory over 7 days. Magana's test traffic will look idle. **Pay As You Go accounts are not reclaimed, and Always Free resources stay free on them.** docs/INFRA.md has the details.
-1. Open **cloud.oracle.com → ☰ → Billing & Cost Management → Upgrade and Manage Payment**.
-2. Choose **Upgrade your account → Pay As You Go**, and confirm the card. Oracle may place a temporary authorisation on the card and then release it.
-3. **Check your budget alert:** **Billing & Cost Management → Budgets**. Your $1 budget should be there, with an alert at $1 actual spend, emailing you.
-4. **To stay free:**
-   - Create nothing beyond Always Free: A1 at most 4 OCPU and 24 GB in all, 200 GB of block volume in all, and no paid shapes, load balancers or databases.
-   - In the console, Always Free resources show an "Always Free" label.
+**Decision (28 Oct 2026): the account stays on the free tier.** Upgrading to Pay As You Go would stop idle reclaim, but it puts a hold of about €93 on the card.
 
-If you stay on the free tier instead: when the instance is stopped, the monitor emails you, and you choose **Compute → Instances → magana-api → Start**.
+Oracle may stop the instance for looking idle: under 20% CPU, network and memory over 7 days (docs/INFRA.md). If it does:
+1. The monitor emails you within about 30 minutes.
+2. Open **cloud.oracle.com → ☰ → Compute → Instances → magana-api** and choose **Start**.
+3. That's all. Docker, Caddy, the API and the deploy timer come back by themselves within about a minute (tested with a full restart), and the monitor emails "back up".
+
+To upgrade later: **☰ → Billing & Cost Management → Upgrade and Manage Payment → Pay As You Go**. Keep the $1 budget alert, and create nothing beyond Always Free.
 
 ## 3. Oracle: allow SSH only from your address
 

@@ -105,11 +105,19 @@ The server pulls; GitHub never logs in to it and holds no key to it. So SSH can 
   - memory use (A1 shapes only).
 - **What happens:** idle instances may be stopped ("reclaimed"). Oracle's notice says a stopped instance can be started again if the shape is available. Its earlier announcement also mentions termination.
 - **Magana will look idle.** During testing, the CPU is mostly quiet between readings, and the API uses 1–2 GB of the 12 GB. So the risk is real on a free-tier account.
-- **Accounts on Pay As You Go are not reclaimed.** Always Free resources stay free there.
-- **What we do:**
-  - **Recommended: upgrade the account to Pay As You Go** (docs/DEPLOY.md, step 2), keep only Always Free resources, and keep the $1 budget alert. It is the only way to remove the reclaim risk.
-  - **No fake load.** We don't run a load generator to look busy. It wastes the free capacity, and Oracle may treat it as abuse.
-  - **The server is disposable.** If it is stopped, the monitor emails within about 30 minutes; choose **Start** in the console, and everything comes back by itself. If it is terminated, `scripts/server-setup.sh` makes a new one (docs/RESTORE.md). No data is on it.
+- **Accounts on Pay As You Go are not reclaimed**, but upgrading puts a hold of about €93 on the card. **Decision (28 Oct 2026): the account stays on the free tier for now.**
+- **No fake load.** We don't run a load generator to look busy. It wastes the free capacity, and Oracle may treat it as abuse.
+- **If Oracle stops the instance:**
+  1. The monitor emails within about 30 minutes ("Magana API is down").
+  2. Open **Oracle Cloud → Compute → Instances → magana-api** and choose **Start**.
+  3. **Nothing else is needed.** Everything comes back by itself:
+     - Docker, containerd, Caddy, `magana-deploy.timer`, the saved firewall rules (`netfilter-persistent`) and unattended upgrades are all enabled at boot.
+     - The API container has `--restart unless-stopped`.
+     - A minute after boot, the timer checks that the `production` commit is the one running, and deploys it if not.
+  4. Tested on 28 Oct 2026 with a full restart. Within about a minute: Docker, Caddy and the timer were active, the 80/443 rules were back, the container was healthy, and port 80 answered from outside.
+  5. Oracle keeps the instance's public address through a stop and start; it is released only when the instance is terminated. So the DNS record needs no change. If the address ever does change, point the `api` A record at the new one (docs/DEPLOY.md, step 1).
+  6. The monitor sends "back up" once it answers again.
+- **If Oracle terminates it,** or the account is lost: `scripts/server-setup.sh` makes a new server (docs/RESTORE.md). No data is on it.
 
 ## The database
 
