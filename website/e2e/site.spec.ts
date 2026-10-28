@@ -3,10 +3,22 @@ import { expect, test, type Page } from "@playwright/test";
 import samples from "../data/samples.json";
 
 const PAGES = ["/", "/privacy/", "/accessibility/", "/android/", "/test/"];
-const WIDTHS = [
-  { name: "desktop", width: 1280, height: 900 },
-  { name: "phone", width: 390, height: 844 },
+// Real phone sizes: iPhone 16/17 Pro, iPhone Pro Max, and a common low-cost Android.
+const PHONES = [
+  { name: "iPhone Pro", width: 402, height: 874 },
+  { name: "iPhone Pro Max", width: 440, height: 956 },
+  { name: "Android", width: 360, height: 800 },
 ];
+const WIDTHS = [{ name: "desktop", width: 1280, height: 900 }, ...PHONES];
+
+// Anything sticking out past the left or right edge (body has overflow-x: hidden, so scrollWidth
+// alone would not show it), outside the hero demo's screen, which clips its own drawing.
+const outside = (page: Page) => page.evaluate(() =>
+  [...document.querySelectorAll<HTMLElement>("body *")]
+    .filter((el) => el.getClientRects().length > 0 && !el.closest("#mg-loader, .pd-screen, .table-wrap, .visually-hidden"))
+    .map((el) => ({ el: el.outerHTML.slice(0, 80), r: el.getBoundingClientRect() }))
+    .filter((x) => x.r.width > 0 && (x.r.right > window.innerWidth + 0.5 || x.r.left < -0.5))
+    .map((x) => `${x.el} (${Math.round(x.r.left)}..${Math.round(x.r.right)})`));
 
 async function ready(page: Page, path: string) {
   await page.goto(path);
@@ -32,10 +44,108 @@ for (const size of WIDTHS) {
           .filter((x) => x.h < 64),
       );
       expect(small).toEqual([]);
+      expect(await outside(page)).toEqual([]);
       const overflow = await page.evaluate(() => document.documentElement.scrollWidth - window.innerWidth);
       expect(overflow).toBeLessThanOrEqual(0);
     });
   }
+}
+
+// ---------- phone sizes (design canvas, "Website · magana.ng home", phone board 402 wide)
+
+for (const size of PHONES) {
+  test(`home at ${size.width}×${size.height} (${size.name}): top bar, language dropdown, full-size icons, key content`, async ({ page }) => {
+    await page.setViewportSize(size);
+    await ready(page, "/");
+    const vw = size.width;
+    const shots = process.env.SCREENS_DIR;  // e.g. SCREENS_DIR=~/magana-website-screens npx playwright test
+
+    // The top bar fits: the bar and the header row stay inside the screen, logo and Menu on one row.
+    for (const sel of [".access-bar", ".site-header", ".lang-menu summary", ".home-link", ".nav-narrow summary"]) {
+      const b = (await page.locator(sel).boundingBox())!;
+      expect(b.x, sel).toBeGreaterThanOrEqual(0);
+      expect(b.x + b.width, sel).toBeLessThanOrEqual(vw);
+    }
+    const logo = (await page.locator(".home-link").boundingBox())!;
+    const menu = (await page.locator(".nav-narrow summary").boundingBox())!;
+    expect(Math.abs(logo.y + logo.height / 2 - (menu.y + menu.height / 2))).toBeLessThan(4);
+    expect(menu.height).toBeGreaterThanOrEqual(64);
+
+    // The language dropdown: visible, 64 px, opens by tap and by keyboard, lists all four, closes with Escape.
+    const summary = page.locator(".lang-menu summary");
+    await expect(summary).toBeVisible();
+    await expect(summary).toHaveAccessibleName("Website language: English");
+    expect((await summary.boundingBox())!.height).toBeGreaterThanOrEqual(64);
+    const list = page.locator(".lang-list");
+    await expect(list).toBeHidden();
+    await summary.click();
+    await expect(list).toBeVisible();
+    await expect(list.locator("li")).toHaveCount(4);
+    await expect(list.locator("[aria-current=true]")).toHaveText("English");
+    await expect(list.getByText("translation coming")).toHaveCount(3);
+    const lb = (await list.boundingBox())!;
+    expect(lb.x).toBeGreaterThanOrEqual(0);
+    expect(lb.x + lb.width).toBeLessThanOrEqual(vw);
+    for (const opt of await list.locator(".lang-option").all()) expect((await opt.boundingBox())!.height).toBeGreaterThanOrEqual(64);
+    if (shots) await page.screenshot({ path: `${shots}/home-${size.width}x${size.height}-language-open.png` });
+    expect(await outside(page)).toEqual([]);
+    await page.keyboard.press("Escape");
+    await expect(list).toBeHidden();
+    await expect(summary).toBeFocused();
+    await page.keyboard.press("Enter");
+    await expect(list).toBeVisible();
+    await page.locator(".hero .lead").click();  // a tap outside (on the opening paragraph, below the open list) closes it
+    await expect(list).toBeHidden();
+
+    // The iPhone and WhatsApp lines: icons at their full 24 × 24, text beside them, inside the screen.
+    const soon = page.locator(".soon li");
+    await expect(soon).toHaveCount(2);
+    await expect(soon.nth(0)).toContainText("iPhone app coming soon.");
+    await expect(soon.nth(1)).toContainText("WhatsApp coming soon.");
+    for (const li of await soon.all()) {
+      await li.scrollIntoViewIfNeeded();
+      await expect(li).toBeVisible();
+      const icon = (await li.locator("svg").boundingBox())!;
+      expect(Math.round(icon.width)).toBe(24);
+      expect(Math.round(icon.height)).toBe(24);
+      const text = (await li.locator("> span").boundingBox())!;
+      expect(text.x).toBeGreaterThanOrEqual(icon.x + icon.width);
+      expect(text.x + text.width).toBeLessThanOrEqual(vw);
+    }
+
+    // Key content is there, 64 px buttons inside the screen.
+    for (const name of ["Get the Android app", "Use it in your browser"]) {
+      const b = page.locator(".hero").getByRole("link", { name, exact: true });
+      await expect(b).toBeVisible();
+      const bb = (await b.boundingBox())!;
+      expect(bb.height).toBeGreaterThanOrEqual(64);
+      expect(bb.x + bb.width).toBeLessThanOrEqual(vw);
+    }
+    await page.evaluate(() => window.scrollTo(0, 0));
+    await expect(page.getByRole("heading", { level: 1, name: "Hear any printed page. In your language." })).toBeInViewport();
+    for (const h of ["How it works", "Hear a sample", "One reading engine. Three parts of life.", "Built to be trusted with what matters",
+                     "Your name in Braille", "For teachers and schools", "Made in Nigeria, with the people it serves"]) {
+      await expect(page.getByRole("heading", { level: 2, name: h })).toBeVisible();
+    }
+
+    // No text clipped: no box that hides its overflow is smaller than its content (the demo phone aside).
+    const clipped = await page.evaluate(() =>
+      [...document.querySelectorAll<HTMLElement>("body *")]
+        .filter((el) => el.getClientRects().length > 0 && !el.closest("#mg-loader, .pd, .visually-hidden, .table-wrap"))
+        .filter((el) => { const cs = getComputedStyle(el); return cs.overflowX !== "visible" || cs.overflowY !== "visible" || cs.textOverflow === "ellipsis"; })
+        .filter((el) => el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1)
+        .map((el) => el.outerHTML.slice(0, 80)));
+    expect(clipped).toEqual([]);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(vw);
+    expect(await outside(page)).toEqual([]);
+
+    if (shots) {
+      await page.screenshot({ path: `${shots}/home-${size.width}x${size.height}.png` });
+      await page.screenshot({ path: `${shots}/home-${size.width}x${size.height}-full.png`, fullPage: true });
+      await page.locator(".nav-narrow summary").click();
+      await page.screenshot({ path: `${shots}/home-${size.width}x${size.height}-menu-open.png` });
+    }
+  });
 }
 
 type Timeline = { firstVisit: boolean; frames: [number, number, number][]; shownMs: number; fullAt: number; slow: boolean };
