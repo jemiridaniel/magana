@@ -14,7 +14,7 @@ from app import accounts, codes, database, places
 from app.main import app
 
 TEAM = "team@magana.test"
-TOTP_SECRET = "JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP"  # test team members' authenticator key (development only)
+TOTP_SECRET = "JBSWY3DPEHPK3PXP" * 2  # test team members' authenticator key (development only; built at run time for secret scanners)
 APPROVE = {"decision": "approve", "checks": ["person_confirmed", "school_exists", "details_correct"]}
 PRINCIPAL = "adebayo.folake@gmail.com"
 

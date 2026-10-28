@@ -7,6 +7,13 @@ sys.path.insert(0, str(Path(__file__).parents[2] / "scripts"))
 import check_bundle_secrets as c  # noqa: E402
 
 
+# Fake keys are put together at run time, so secret scanners (GitHub, gitleaks) don't match
+# the test file itself; check_bundle_secrets.py still sees the whole value in the bundle.
+FAKE_AWS_KEY = b"AKIA" + b"ABCDEFGHIJKLMNOP"
+FAKE_AWS_TEMP_KEY = "ASIA" + "ABCDEFGHIJKLMNOP"
+FAKE_PEM_HEADER = b"-----BEGIN " + b"PRIVATE KEY-----"
+
+
 def bundle(tmp_path, text: bytes) -> Path:
     p = tmp_path / "App.ipa"
     with zipfile.ZipFile(p, "w") as z:
@@ -25,8 +32,8 @@ def test_real_secrets_are_refused(tmp_path):
     env = tmp_path / "server.env"
     env.write_text("IBA_API_KEY=iba-very-secret-value\nMAGANA_API_KEY=public-app-identifier-123\n")
     cases = {
-        b"AKIAABCDEFGHIJKLMNOP": "AWS access key",
-        b"-----BEGIN PRIVATE KEY-----": "private key",
+        FAKE_AWS_KEY: "AWS access key",
+        FAKE_PEM_HEADER: "private key",
         b"hf_" + b"a" * 34: "Hugging Face token",
         b"EAA" + b"B" * 120: "Meta access token",
         b"iba-very-secret-value": "server.env IBA_API_KEY",
@@ -44,5 +51,5 @@ def test_a_pwa_folder_is_checked_file_by_file(tmp_path):
     web = tmp_path / "web"
     (web / "assets").mkdir(parents=True)
     (web / "main.dart.js").write_text("const k='public-app-identifier-123';")
-    (web / "assets" / "x.json").write_text("ASIAABCDEFGHIJKLMNOP")
+    (web / "assets" / "x.json").write_text(FAKE_AWS_TEMP_KEY)
     assert c.check(web, {}) == ["AWS access key in assets/x.json"]

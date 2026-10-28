@@ -1,4 +1,5 @@
-# Tests on every push and pull request (backend on SQLite and Postgres, app, portal, website). On
+# Tests on every push and pull request (a secret scan; backend on SQLite and Postgres, side by
+# side; app, portal, website). On
 # main, once every test passes, two deploys run side by side:
 # - pages: the website, the PWA and the teacher portal go to Cloudflare Pages
 #   (docs/DEPLOY_PAGES.md). Built here; the PWA carries MAGANA_WEB_API_KEY, the public web key
@@ -19,12 +20,41 @@ concurrency:
   cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
 
 jobs:
-  backend:
+  # Secrets: every push and pull request scans the whole history (about a second) with the rules
+  # and the verified-fixture allowlist in .gitleaks.toml. Output redacted: never a value.
+  # The same check runs before each commit once scripts/install-hooks.sh is run.
+  secrets:
     runs-on: ubuntu-latest
+    env:
+      GITLEAKS_VERSION: "8.30.1"
+      GITLEAKS_SHA256: 551f6fc83ea457d62a0d98237cbad105af8d557003051f41f3e7ca7b3f2470eb
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0   # every commit and branch
+      - name: Install gitleaks (pinned, checksum checked)
+        run: |
+          f="gitleaks_${GITLEAKS_VERSION}_linux_x64.tar.gz"
+          curl -fsSL -o "$RUNNER_TEMP/$f" "https://github.com/gitleaks/gitleaks/releases/download/v${GITLEAKS_VERSION}/$f"
+          echo "$GITLEAKS_SHA256  $RUNNER_TEMP/$f" | sha256sum -c -
+          tar -xzf "$RUNNER_TEMP/$f" -C "$RUNNER_TEMP" gitleaks
+      - name: Scan the full history for secrets
+        run: '"$RUNNER_TEMP/gitleaks" git --redact --verbose --no-banner --log-opts=--all --config .gitleaks.toml .'
+
+  # The backend suite runs twice side by side, on SQLite and on Postgres, each spread over the
+  # runner's cores (pytest-xdist; every worker has its own data dir and schema, tests/conftest.py).
+  backend:
+    name: backend (${{ matrix.db }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        db: [sqlite, postgres]
     services:
-      # The test-phase database is Postgres (Neon or Supabase): every test runs on it too.
+      # The test-phase database is Postgres (Neon): every test runs on it too. An empty image
+      # (the SQLite run) starts no service.
       postgres:
-        image: postgres:16
+        image: ${{ matrix.db == 'postgres' && 'postgres:16' || '' }}
         env:
           POSTGRES_PASSWORD: magana
         ports: ["5432:5432"]
@@ -32,15 +62,26 @@ jobs:
     steps:
       - uses: actions/checkout@v5
       # In a server-like image, so the tests see the server's Tesseract (5.5.0), not
-      # Ubuntu's (5.3.4 reads the faint-print test pages differently).
-      - run: docker build -q -t magana-backend backend
-      - name: Tests on SQLite
-        run: docker run --rm --user root -v "$PWD:/m" -w /m/backend magana-backend python -m pytest -q -p no:cacheprovider
-      - name: Tests on Postgres
+      # Ubuntu's (5.3.4 reads the faint-print test pages differently). Its layers are cached
+      # (GitHub Actions cache): unchanged requirements aren't installed again.
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: backend
+          tags: magana-backend
+          load: true
+          cache-from: type=gha,scope=backend-image
+          cache-to: type=gha,scope=backend-image,mode=max
+      - name: Tests on ${{ matrix.db }}
+        env:
+          # The runner's throwaway Postgres service (above), not a secret; empty on SQLite.
+          TEST_DB: ${{ matrix.db == 'postgres' && 'postgresql://postgres:magana@127.0.0.1:5432/postgres' || '' }}
+        # OMP_THREAD_LIMIT=1: one thread per Tesseract. With a worker per core, Tesseract's own
+        # OpenMP threads only fight each other (4 CPUs, Docker: 85 s → 48 s; same results).
         run: |
           docker run --rm --user root --network host -v "$PWD:/m" -w /m/backend \
-            -e MAGANA_TEST_DATABASE_URL=postgresql://postgres:magana@127.0.0.1:5432/postgres \
-            magana-backend python -m pytest -q -p no:cacheprovider
+            -e MAGANA_TEST_DATABASE_URL="$TEST_DB" -e OMP_THREAD_LIMIT=1 \
+            magana-backend python -m pytest -q -p no:cacheprovider -n auto --durations=15
 
   app:
     runs-on: ubuntu-latest
@@ -92,7 +133,7 @@ jobs:
         working-directory: website
 
   deploy:
-    needs: [backend, app, portal, website]
+    needs: [secrets, backend, app, portal, website]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -112,7 +153,7 @@ jobs:
         run: scripts/wait-for-deploy.sh "${GITHUB_SHA:0:12}"
 
   pages:
-    needs: [backend, app, portal, website]
+    needs: [secrets, backend, app, portal, website]
     # Only main, and only once Cloudflare is set up (docs/DEPLOY_PAGES.md, step 2).
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.CLOUDFLARE_ACCOUNT_ID != ''
     runs-on: ubuntu-latest

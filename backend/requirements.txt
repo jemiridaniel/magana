@@ -13,5 +13,6 @@ psycopg[binary]==3.2.13  # Postgres when DATABASE_URL is set (database.py; test 
 psycopg-pool==3.2.6  # a few reused connections to it
 # dev
 pytest>=8.0
+pytest-xdist==3.8.0  # CI: pytest -n auto (each worker its own data dir and schema, tests/conftest.py)
 pypdf>=5  # tests: locked PDFs
 reportlab>=4  # tests: PDFs with a text layer

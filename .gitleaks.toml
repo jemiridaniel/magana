@@ -1,0 +1,14 @@
+# gitleaks: the default rules, plus allowlists for verified test fixtures only.
+# Run: gitleaks git --redact . (full history) · the pre-commit hook (.githooks/pre-commit) · CI (gitleaks job).
+# Add an entry here only after checking the finding is a fake value in a test, and keep it
+# narrow (one rule, one path, and the commit when it is history only). Never allowlist a real
+# secret: rotate it (docs/FINDINGS.md, 2026-10-28).
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Fake AWS keys (AKIA…/ASIA… + ABCDEFGHIJKLMNOP) that tested scripts/check_bundle_secrets.py, in history only; built at run time since 2026-10-28"
+targetRules = ["aws-access-token"]
+paths = ['''^backend/tests/test_bundle_secrets\.py$''']
+commits = ["f681f798266048fe958364209706315267bc2cbf"]

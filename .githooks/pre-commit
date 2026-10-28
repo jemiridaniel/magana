@@ -1,0 +1,17 @@
+#!/usr/bin/env bash
+# Refuse a commit whose staged changes contain a secret (gitleaks, rules in .gitleaks.toml).
+# Installed by scripts/install-hooks.sh. Output is redacted: no value is ever printed.
+# A false positive in a test: build the fake value at run time ("AKIA" + "..."), or, once
+# checked, add a narrow allowlist entry to .gitleaks.toml. Never bypass it for a real secret.
+set -euo pipefail
+if ! command -v gitleaks >/dev/null 2>&1; then
+  echo "pre-commit: gitleaks isn't installed, so the staged changes weren't scanned for secrets." >&2
+  echo "            Install it (brew install gitleaks) to turn the check on. CI scans every push." >&2
+  exit 0
+fi
+root=$(git rev-parse --show-toplevel)
+if ! gitleaks git --staged --redact --verbose --no-banner --log-level warn --config "$root/.gitleaks.toml" "$root"; then
+  echo "pre-commit: gitleaks found what looks like a secret in the staged changes (values redacted)." >&2
+  echo "            Remove it, and rotate it if it is real. Commit refused." >&2
+  exit 1
+fi
