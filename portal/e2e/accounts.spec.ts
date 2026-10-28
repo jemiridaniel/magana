@@ -479,7 +479,7 @@ test("an address that bounced shows “We couldn’t deliver to this address”,
   await expect(modal).toBeHidden();
   // What SES reports through /internal/ses-events, marked with the server's own command.
   for (const email of [bounced, next]) {
-    execFileSync(".venv/bin/python", ["-m", "app.ses_events", "--mark", email],
+    execFileSync(".venv/bin/python", ["-m", "app.mail_events", "--mark", email],
                  { cwd: "../backend", env: { ...process.env, MAGANA_DATA_DIR: dataDir!, MAGANA_ENV: "development" } });
   }
   await page.reload();

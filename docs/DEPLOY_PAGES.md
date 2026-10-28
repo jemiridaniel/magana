@@ -5,15 +5,14 @@
 | **magana.ng** (and www) | Cloudflare Pages, project `magana-website` | `website/` |
 | **app.magana.ng** | Cloudflare Pages, project `magana-app` | `app/` (Flutter web) |
 | **teachers.magana.ng** | Cloudflare Pages, project `magana-teachers`, once the portal has its own sign-in | `portal/` |
-| **api.magana.ng** | The EC2 server, behind Caddy with Let's Encrypt (docs/DEPLOY_AWS.md) | `backend/` |
-| 35-178-64-255.sslip.io | The EC2 server: the API only, for APKs older than 0.1.0+3 | `backend/` |
+| **api.magana.ng** | A Cloudflare Worker in front of the private Hugging Face Space (docs/INFRA.md, docs/DEPLOY.md) | `backend/`, `cloudflare/api-proxy/` |
 
 **Why:**
 - Pages is free, and static files are served from Cloudflare's network, close to Nigerian users.
-- The EC2 server only runs the API, so a stopped server never takes the website down.
-- When the API is asleep, the PWA and the portal say so: "Magana's server is sleeping. Please try again later." (`server_sleeping`).
+- The API runs elsewhere (docs/INFRA.md), so an API that is down or asleep never takes the website down.
+- While the API wakes up, the PWA and the portal say "Magana is waking up, one moment…" and wait up to 60 s (`server_waking`). If it stays down, they say "Magana's server is sleeping. Please try again later." (`server_sleeping`).
 
-**How it deploys:** the `pages` job in `.github/workflows/ci.yml` runs on every push to `main` once all tests pass, beside the EC2 `deploy` job.
+**How it deploys:** the `pages` job in `.github/workflows/ci.yml` runs on every push to `main` once all tests pass, beside the `space` job that deploys the API (docs/DEPLOY.md).
 1. It builds each site.
 2. It deploys with `wrangler pages deploy` (no Cloudflare Git integration needed, so the same tests guard both deploys).
 3. It checks that `*.pages.dev` answers.
@@ -32,7 +31,7 @@ The portal keeps a login. It will be **its own email sign-in** (a 6-digit code b
 - **Access's free plan stops at 50 users.** A few schools would pass that.
 - **Schools use any email** (Gmail, Yahoo, school domains). The portal's sign-in works with any address the school admin invites.
 
-**Until sign-in emails work (SES),** the portal stays on the EC2 server, with its own sign-in and no basic auth. Setting the repository variable `PORTAL_ON_PAGES=true` moves it (step 6).
+The portal is on Pages, with its own sign-in (emails through Resend, docs/INFRA.md).
 
 ## One-time setup
 
@@ -55,21 +54,7 @@ The portal keeps a login. It will be **its own email sign-in** (a 6-digit code b
 
 ### 2. The web key
 
-On the server (it makes a new random key, then copies it into GitHub without printing it):
-
-```bash
-ssh -i ~/.ssh/magana-london.pem ubuntu@35.178.64.255 \
-  'cd ~/srv/magana && (grep -q "^MAGANA_WEB_API_KEY=" .env || echo "MAGANA_WEB_API_KEY=$(openssl rand -hex 32)" >> .env) \
-   && sudo docker compose -f docker-compose.prod.yml up -d'
-ssh -i ~/.ssh/magana-london.pem ubuntu@35.178.64.255 \
-  'grep -m1 "^MAGANA_WEB_API_KEY=" ~/srv/magana/.env | cut -d= -f2-' | gh secret set MAGANA_WEB_API_KEY
-```
-
-Also allow the Pages addresses in the server's CORS setting (`.env`):
-
-```bash
-MAGANA_CORS_ORIGIN_REGEX=https://(app|teachers)\.magana\.ng|https://([a-z0-9-]+\.)?magana-(app|teachers)\.pages\.dev|https://35-178-64-255\.sslip\.io
-```
+The web key is made on your Mac with the rest of the server's settings (docs/DEPLOY.md, steps 5 and 6): `scripts/space-env-init.sh` makes it, `python3 scripts/space_secrets.py` gives it to the Space, and `scripts/space-env-init.sh --github` copies it into the GitHub secret `MAGANA_WEB_API_KEY`, without printing it. CORS for the sites is answered by the Worker on api.magana.ng (docs/INFRA.md).
 
 ### 3. The first deploy
 
@@ -81,40 +66,23 @@ Push to `main` (or run `gh workflow run ci.yml --ref main`). The `pages` job cre
 
 In **dash.cloudflare.com → magana.ng**:
 
-1. **Keep the API on the server.** In **DNS → Records**, `api` stays an **A** record to `35.178.64.255`. Set it to **DNS only** (grey cloud): Caddy must answer Let's Encrypt itself.
+1. **api.magana.ng** is the Worker's custom domain (docs/DEPLOY.md, step 7). Leave it to the Worker.
 2. **Delete** the A records for `@` (magana.ng), `app` and `teachers`, and the CNAME `www`. Pages refuses a custom domain that already has a record.
    - The website and PWA are offline from here until step 3 or 4 below, usually under a minute.
-   - **Leave `teachers` alone** until step 6 if the portal isn't on Pages yet.
 3. **Workers & Pages → `magana-website` → Custom domains → Set up a custom domain** → `magana.ng` → **Activate domain**. Cloudflare adds a proxied CNAME for it.
 4. **`magana-app` → Custom domains** → `app.magana.ng` → **Activate domain**.
 5. **www → magana.ng:**
    1. In **DNS → Records → Add record**, add a **CNAME** `www` → `magana.ng`, **Proxied** (orange).
    2. In **Rules → Redirect Rules → Create rule → "Redirect from WWW to root"** (a template), set **Custom filter**: hostname equals `www.magana.ng`.
    3. Then **Dynamic**: `concat("https://magana.ng", http.request.uri.path)`, status **301**, keep the query string. **Deploy**.
-6. **Later, when the portal's own sign-in is live:**
-   1. Run `gh variable set PORTAL_ON_PAGES --body true` and push.
-   2. Delete the `teachers` A record.
-   3. Add the custom domain `teachers.magana.ng` to `magana-teachers`.
-7. **SSL/TLS → Overview: Full (strict).** api.magana.ng has its own Let's Encrypt certificate, and the Pages names get Cloudflare's.
+6. **`magana-teachers` → Custom domains** → `teachers.magana.ng` → **Activate domain** (done 26 Oct; the portal is on Pages).
+7. **SSL/TLS → Overview: Full (strict).** Every name gets Cloudflare's certificate.
 
-**Check** with `dig +short magana.ng` (Cloudflare addresses now, not 35.178.64.255), then open each address. `curl -I https://www.magana.ng` should give `301` to `https://magana.ng/`.
-
-### 5. Tidy the server (after the DNS change)
-
-Once magana.ng, www and app no longer point at the server:
-- remove their blocks from `deploy/Caddyfile`;
-- remove the web bundle from the server deploy (`PORTAL_ON_PAGES=true` already stops it once the portal moves).
-
-The sslip.io block stays, serving the API, until every tester has the new APK.
+**Check** with `dig +short magana.ng` (Cloudflare addresses), then open each address. `curl -I https://www.magana.ng` should give `301` to `https://magana.ng/`.
 
 ## Rolling back
 
 Each Pages project keeps its deployments. Go to **Workers & Pages → project → Deployments →** an earlier one **→ Rollback**. That takes seconds and needs no rebuild.
-
-To put a site back on the server instead:
-1. Point its DNS record back to `35.178.64.255` as DNS only.
-2. Restore its Caddy block.
-3. Push.
 
 ## Cost
 

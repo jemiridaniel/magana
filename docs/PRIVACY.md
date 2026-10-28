@@ -2,7 +2,7 @@
 
 > **DRAFT for Oluremi O. Balogun** (consent and safeguarding) to review before testing with learners. It follows the Nigeria Data Protection Act 2023 (NDPA) and describes what the Magana app, server and portal do today. When they change, this notice changes in the same commit. Points marked **[check]** need a decision or a legal check.
 
-Last updated: 26 October 2026 · Contact: **support@magana.ng**
+Last updated: 28 October 2026 · Contact: **support@magana.ng**
 
 ## The short version
 
@@ -34,7 +34,7 @@ The NDPA lets us use personal data only for a clear purpose and on a lawful basi
 | **Your age group and language** | To show only what your age group may use, in your language | Legitimate interests; a guardian's consent for 13 to 17 | On your phone. Every request tells our server your age group |
 | **Reminders, saved questions, your Independence Score** | For you | Your consent | On your phone only, until you delete them (score: last 90 days) |
 | **School, teacher and class records** | To run the teacher portal | Contract with the school; legitimate interests | See "Teachers and schools" |
-| **Server logs**: time, internet address, which page of our service was asked for, errors | To keep the service working and safe | Legitimate interests | Rotated: the oldest goes when 3 files of 10 MB are full (usually a few weeks) |
+| **Server logs**: time, internet address, which page of our service was asked for, errors | To keep the service working and safe | Legitimate interests | Test phase: kept by Hugging Face only while the server runs, and gone when it restarts (at least every deploy). Cloudflare keeps its own request logs for a few days. **[check]** |
 
 Server logs never contain photos, page text, recordings or health-check answers.
 
@@ -102,7 +102,7 @@ Magana marks lines that look handwritten. It reads their numbers only when two s
 | A school we couldn't confirm | Its details are deleted 30 days after our decision, unless the principal replies |
 | Teachers' names, emails, roles and classes | While they work at the school. When removed, they are signed out at once; their name stays in the audit log |
 | Sign-in codes | 10 minutes, in a form that can't be read back. At most 5 codes an hour for one email |
-| An email address our mail couldn't reach (a permanent bounce) or that marked our mail as spam | Kept so we never email it again, with the date and which of the two it was. The email itself is never kept. Our email provider (Amazon SES) keeps its own suppression list. Email support to be taken off it |
+| An email address our mail couldn't reach (a permanent bounce) or that marked our mail as spam | Kept so we never email it again, with the date and which of the two it was. The email itself is never kept. Our email provider (Resend) keeps its own suppression list. Email support to be taken off it |
 | Sign-in sessions | Until sign-out, 30 minutes without activity, or 12 hours |
 | Classes and class codes | While the class exists. Codes are stored in a form that can't be read back, plus an encrypted copy for the class's teacher and the school's admins |
 | A learner's class link: the name the teacher gives, formats, language, under 18 or not, consent status | While they are in the class. "Remove from class" unlinks the phone at once |
@@ -137,9 +137,10 @@ We use a few service providers. They handle data only to provide their service t
 
 | Provider | What for | What they see |
 |---|---|---|
-| **Amazon Web Services** (London, UK) | Our server | Everything our server handles, encrypted on the way |
-| **Amazon SES** | Sending sign-in codes, invitations and school registration emails | The recipient's email address and the email's content |
-| **Cloudflare** | Our domain names, and hosting the website and web app | Visitors' internet addresses |
+| **Hugging Face** (United States), **test phase** | Runs our server: reads photos and PDFs, in memory only, and answers the app and portal | Everything our server handles while it handles it, encrypted on the way. Nothing is kept on its disk |
+| **Neon** (London, UK), **test phase** | Our database: schools, teachers, classes, learners as the school records them, consent, attendance, the audit log, quizzes | What the table below lists, encrypted on the way and at rest |
+| **Resend** (its sending runs in Ireland, EU) | Sending sign-in codes, invitations and school registration emails | The recipient's email address and the email's content |
+| **Cloudflare** | Our domain names, hosting the website, web app and portal, and the gateway in front of our server (api.magana.ng) | Visitors' internet addresses, and every request to our server as it passes, encrypted on the way |
 | **Meta (WhatsApp)** | Delivering WhatsApp messages | WhatsApp messages and photos |
 | **The Ibà service** | Working out call-back priority from the quick check | The answers, never stored |
 | **Google or the phone maker** | Speech recognition, adults only, as a last resort | That short recording |
@@ -149,7 +150,12 @@ During development the team also runs the explanation model on temporary Kaggle 
 
 ## Data stored outside Nigeria
 
-Our server is in **London, United Kingdom**. Sending personal data outside Nigeria is allowed under the NDPA when it stays adequately protected. The UK has its own data protection law, and we protect the data the same way wherever it is: encrypted connections, no photos kept, little data held. **[check]** Confirm the basis for this transfer with the NDPC's guidance (adequacy, or the safeguards the NDPA accepts).
+**During the test phase** (until free hosting is replaced; docs/INFRA.md):
+- **Our database is in London, United Kingdom** (Neon). Everything we keep is there.
+- **Our server runs in the United States** (a Hugging Face Space). It processes requests there, holds photos and PDFs in memory only while reading them, and keeps nothing on its disk.
+- **Emails are sent from Ireland** (Resend).
+
+Sending personal data outside Nigeria is allowed under the NDPA when it stays adequately protected. We protect it the same way wherever it is: encrypted connections, no photos kept, little data held. **[check]** Confirm the basis for these transfers (the UK, the US and the EU) with the NDPC's guidance (adequacy, or the safeguards the NDPA accepts), and whether testing with learners' data should wait for hosting in Nigeria or the UK only.
 
 ## How we keep data safe
 

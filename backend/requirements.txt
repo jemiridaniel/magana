@@ -7,9 +7,10 @@ pytesseract>=0.3.10
 pydantic>=2.6
 httpx>=0.27  # Ibà triage API client
 cryptography>=43  # class and teacher codes: encrypted so their teacher can see them (accounts.py)
-boto3>=1.35  # sign-in codes by email through AWS SES, with the instance's IAM role (mailer.py)
 pdfplumber>=0.11  # Read a PDF: the text layer, statement tables, and rendering scans (pdfs.py); MIT, with pdfminer.six and pypdfium2
 segno>=1.6  # the authenticator QR code, drawn on our own server (team setup); BSD, pure Python
+psycopg[binary]==3.2.13  # Postgres when DATABASE_URL is set (database.py; test phase: Neon or Supabase)
+psycopg-pool==3.2.6  # a few reused connections to it
 # dev
 pytest>=8.0
 pypdf>=5  # tests: locked PDFs

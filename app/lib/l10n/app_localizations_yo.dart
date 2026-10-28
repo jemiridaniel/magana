@@ -2590,4 +2590,14 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get readItAnyway => 'Kà á bẹ́ẹ̀';
+
+  @override
+  String get serverWaking => 'Magana ń jí, ẹ dúró díẹ̀…';
+
+  @override
+  String get offlineBannerWaking =>
+      'Sáfà Magana ń jí, nítorí náà a ka ojú-ìwé yìí lórí fóònù yìí.';
+
+  @override
+  String get msg_server_waking => 'Magana ń jí, ẹ dúró díẹ̀…';
 }

@@ -2587,4 +2587,14 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get readItAnyway => 'Gụọ ya otú ọ dị';
+
+  @override
+  String get serverWaking => 'Magana na-eteta, nwa oge…';
+
+  @override
+  String get offlineBannerWaking =>
+      'Sava Magana na-eteta, ya mere a gụrụ peeji a na ekwentị a.';
+
+  @override
+  String get msg_server_waking => 'Magana na-eteta, nwa oge…';
 }

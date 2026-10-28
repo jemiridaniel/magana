@@ -10,7 +10,7 @@ from pathlib import Path
 import pytest
 from fastapi.testclient import TestClient
 
-from app import spoken, triage, tts, wa_flow, wa_store
+from app import blobs, spoken, triage, tts, wa_flow, wa_store
 from app.main import app, get_whatsapp_flow
 from app.reader import TesseractEngine
 
@@ -222,10 +222,11 @@ def test_photo_is_not_stored_and_logs_hold_no_number_or_text(store, caplog, fake
     f = flow(c)
     adult(f)
     say(f, photo())
-    files = {p.name for p in (store / "whatsapp").iterdir()}
+    files = set(blobs.names("whatsapp"))
     assert files <= {"profiles.json", "usage.json"}
-    on_disk = "".join((store / "whatsapp" / n).read_text() for n in files)
-    assert USER not in on_disk and "PARACETAMOL" not in on_disk
+    stored = "".join(blobs.get_text("whatsapp", n) for n in files)
+    assert USER not in stored and "PARACETAMOL" not in stored
+    assert not (store / "whatsapp").exists()  # nothing on the server's disk
     logged = caplog.text
     assert USER not in logged and "PARACETAMOL" not in logged and "Hi" not in logged
 

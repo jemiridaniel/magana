@@ -3,7 +3,6 @@ consent, removal, deletion, the audit log and Home (portal_api.py, learner_api.p
 import io
 import json
 import re
-import sqlite3
 from datetime import timedelta
 from pathlib import Path
 
@@ -11,7 +10,7 @@ import pytest
 from fastapi.testclient import TestClient
 from PIL import Image
 
-from app import accounts, codes, places
+from app import accounts, codes, database, places
 from app.main import app
 
 TEAM = "team@magana.test"
@@ -124,10 +123,11 @@ def png():
 
 
 def everything_in_db(tmp) -> str:
-    con = sqlite3.connect(tmp / "magana.db")
+    """Every row of every table (SQLite or Postgres), for "never stored" checks."""
     out = []
-    for (t,) in con.execute("SELECT name FROM sqlite_master WHERE type='table'"):
-        out += [repr(r) for r in con.execute(f"SELECT * FROM {t}")]
+    with accounts.db() as con:
+        for t in database.tables(con):
+            out += [repr(tuple(r)) for r in con.execute(f"SELECT * FROM {t}").fetchall()]
     return "\n".join(out)
 
 

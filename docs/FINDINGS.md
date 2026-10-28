@@ -13,6 +13,56 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-28 · Free test-phase hosting: Hugging Face Space, Neon, a Cloudflare Worker, Resend (UNREVIEWED)
+
+> **Why:** the AWS account is suspended and api.magana.ng stopped answering (no TCP on 80 or 443 since 27 Oct, about 20:40 UTC). Everything moves to free services for the test phase: docs/INFRA.md (what runs where), docs/DEPLOY.md (the clicks), docs/RESTORE.md (backups).
+>
+> **Unreviewed.** For Nurse Balogun: the privacy notice now names Hugging Face (US) for processing, Neon (London) for data, Resend (Ireland) for email, all marked as the test phase, with a **[check]** on whether testing with learners should wait for UK-only hosting.
+
+- **Data:** **nothing was restored.** The only database and its only backup command were on the EC2 server. The test phase starts clean; the first Magana admin is made from the Mac (`scripts/team-setup.sh`).
+- **The database moves from one SQLite file to Postgres (Neon, London) when `DATABASE_URL` is set** (`backend/app/database.py`).
+  - **How:** the code keeps SQLite's SQL. On Postgres it is translated: placeholders, INSERT OR REPLACE → ON CONFLICT on the primary key, LIKE → ILIKE, the schema's types, 0/1 booleans, and Decimal back to int or float.
+  - **Postgres-only failures, fixed with portable SQL:**
+    - `SUM(mark != 'absent')`: Postgres can't add up booleans. Attendance and the team-member check now use `CASE WHEN … THEN 1 ELSE 0 END`.
+    - `(teacher_id = ? OR ?)`: a 0/1 parameter isn't a boolean. Now `? = 1`, in uploads.
+  - **Nested transactions:** `db()` now joins a transaction already open on the same thread. Saving a proof inside a school registration used to open a second connection, which SQLite refused ("database is locked").
+  - **Connections:** a small pool, because the server is in the US and the database in London.
+  - **Tests:** **all 712 backend tests pass on SQLite and on Postgres** (local Postgres 12; CI runs Postgres 16 too). Each test's data folder gets its own schema. A backup and restore round trip worked: `scripts/db-backup.sh` (pg_dump), then pg_restore into a new database, gave 18 tables and the admin back.
+- **Nothing important on the server's disk** (a Space loses it on restart):
+  - Teachers' quizzes, proof-of-school files (still encrypted) and WhatsApp's profiles, call-backs and monthly count move from files into the database (`blobs.py`).
+  - The tests check that nothing is written to the old folders, and that codes and phone numbers still aren't stored in readable form.
+- **The server:** a private Hugging Face Space, Docker, CPU basic, built from `deploy/hf-space/Dockerfile`.
+  - Built and run locally (amd64): it runs as user 1000, `/health` answers with `"database": "ok"`, and a page is read in 3.4 s under emulation.
+  - RapidOCR reads in its child process inside the container (7 lines from the book page).
+  - `/health` now also says whether a database query worked, and which commit is running. The deploy waits for both.
+- **api.magana.ng:** a Cloudflare Worker (`cloudflare/api-proxy`).
+  - It adds the Space's read-only token from a Worker secret. The token is never sent to a client.
+  - It passes the app key, cookies and streamed uploads through, and sets the caller's address itself (uvicorn takes the leftmost address).
+  - Limits: 300 requests a minute per address, 30 for reading.
+  - It answers CORS for the sites itself, so preflights never wake the Space.
+  - A sleeping or building Space becomes 503 `server_waking`.
+  - **9 Worker tests**, in CI.
+- **Cold start:**
+  - **App:** "Magana is waking up, one moment…", said and shown once, then it waits up to 60 s (`api.dart`). A page photo is read on the phone meanwhile ("Magana's server was waking up, so this page was read on this phone"). 4 app tests. Hausa, Yorùbá and Igbo wording are drafts.
+  - **Portal:** the same message in an alert, with retries for up to 60 s. Playwright: 3 server tests pass, desktop and phone.
+- **Email: SES → Resend.**
+  - Bounces and complaints come from Resend's signed webhook (Svix HMAC, 5-minute window), checked before anything is done. Tests cover a wrong secret, a tampered body, an old event, no secret, and a rotated secret.
+  - The weekly reputation check now uses the server's own daily counts (sent, bounced, complained). It no longer uses CloudWatch.
+  - boto3 is gone.
+- **DNS found while planning:**
+  - **magana.ng has two DMARC TXT records**, which receivers treat as no DMARC policy. The setup steps merge them into one.
+  - The root SPF still includes `amazonses.com`; the steps remove it.
+  - Resend's records go on `send` and `resend._domainkey`, so Cloudflare Email Routing is untouched.
+- **Keep-awake:** a GitHub Actions check every 6 hours (a free Space sleeps after 48 hours without a request). After two failed checks in a row, it emails daniel@magana.ng through Resend.
+- **Removed:**
+  - the AWS deploy (CI job, Systems Manager, `deploy/update.sh`, `setup-server.sh`, Caddyfile, `docker-compose.prod.yml`), the EC2 helper scripts and the SES setup;
+  - the AWS server-log workflow;
+  - docs/DEPLOY_AWS.md.
+- **Not run in the test phase:** Ibà. With `IBA_API_URL` unset, the quick check uses Magana's own danger-sign rules (CLAUDE.md rule 7's fallback).
+- **Not yet done (needs the dashboards, docs/DEPLOY.md):** creating the Space, tokens, the Neon project, Resend and the Worker's secret. Until then api.magana.ng still doesn't answer, and the apps read on the phone.
+
+---
+
 ## 2026-10-28 · TalkBack audit of the core journey; handwriting measured on the lesson notes; faint print on pharmacy labels; iPhone offline numbers on health papers (UNREVIEWED)
 
 > **Unreviewed.**

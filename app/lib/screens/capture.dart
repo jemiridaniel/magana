@@ -451,7 +451,12 @@ class _CaptureScreenState extends State<CaptureScreen>
   }
 
   /// A failed send or a server error is tried once more within [serverWait].
-  static const _retryable = {'unreachable', 'server_sleeping', 'failed'};
+  static const _retryable = {
+    'unreachable',
+    'server_sleeping',
+    'server_waking',
+    'failed',
+  };
 
   Future<void> _send(
     Uint8List bytes,

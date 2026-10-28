@@ -560,6 +560,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
     OfflineReason.sendFailed => _l.offlineBannerSendFailed,
     OfflineReason.slow => _l.offlineBannerTimeout(serverWait.inSeconds),
     OfflineReason.serverError => _l.offlineBannerServerError,
+    OfflineReason.waking => _l.offlineBannerWaking,
     OfflineReason.busy => _l.offlineBannerBusy,
     OfflineReason.dailyLimit => _l.offlineBannerDailyLimit,
     null => widget.result.offline ? _l.offlineBanner : null,

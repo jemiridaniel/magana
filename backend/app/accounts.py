@@ -1,6 +1,7 @@
 """Schools, staff, classes and learners for the teacher portal and the learner app.
 
-One SQLite file, MAGANA_DATA_DIR/magana.db (docs/PRIVACY.md, "Teachers and schools"):
+One database (database.py: SQLite in development, Postgres when DATABASE_URL is set; docs/PRIVACY.md,
+"Teachers and schools"):
 - schools     name, state and LGA codes, the principal's contact, status pending/approved
 - staff       teachers and school admins: name, email, role, status, their teacher code
 - login_codes the 6-digit sign-in code, hashed, for 10 minutes
@@ -18,15 +19,15 @@ from __future__ import annotations
 import json
 import os
 import secrets
-import sqlite3
 import threading
 from contextlib import contextmanager
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
-from . import codes
+from . import codes, database
 
 _lock = threading.RLock()
+_open = threading.local()  # the connection this thread's db() has open
 
 SCHEMA = """
 CREATE TABLE IF NOT EXISTS schools(
@@ -103,9 +104,7 @@ def new_id(prefix: str) -> str:
 
 
 def db_path() -> Path:
-    d = Path(os.environ.get("MAGANA_DATA_DIR", "data"))
-    d.mkdir(parents=True, exist_ok=True)
-    return d / "magana.db"
+    return database.data_dir() / "magana.db"
 
 
 _ready: set[str] = set()
@@ -113,29 +112,36 @@ _ready: set[str] = set()
 
 @contextmanager
 def db():
-    """One transaction: committed on success, rolled back on any error."""
-    path = str(db_path())
+    """One transaction: committed on success, rolled back on any error. SQLite in development
+    and tests, Postgres when DATABASE_URL is set (database.py)."""
     with _lock:
-        con = sqlite3.connect(path)
-        con.row_factory = sqlite3.Row
-        con.execute("PRAGMA foreign_keys = ON")
+        where = database.key()
+        outer = getattr(_open, "con", None)
+        if outer is not None and _open.where == where:
+            yield outer  # already in a transaction on this thread: part of it
+            return
+        con = database.connect()
+        _open.con, _open.where = con, where
         try:
-            if path not in _ready:
+            if where not in _ready:
                 con.executescript(SCHEMA)
                 from . import team  # the Magana team's own accounts (team.py)
                 con.executescript(team.SCHEMA)
-                from . import ses_events  # addresses that bounced or complained
-                con.executescript(ses_events.SCHEMA)
+                from . import mail_events  # addresses that bounced or complained, daily counts
+                con.executescript(mail_events.SCHEMA)
                 from .reports_api import SCHEMA as REPORTS  # "Report a problem" (board 9)
                 con.executescript(REPORTS)
+                from .blobs import SCHEMA as BLOBS  # quizzes, proofs, WhatsApp state (blobs.py)
+                con.executescript(BLOBS)
                 _migrate(con)
-                _ready.add(path)
+                _ready.add(where)
             yield con
             con.commit()
         except Exception:
             con.rollback()
             raise
         finally:
+            _open.con = None
             con.close()
 
 
@@ -155,9 +161,11 @@ COLUMNS = {
 
 def _migrate(con) -> None:
     for table, cols in COLUMNS.items():
-        have = {r[1] for r in con.execute(f"PRAGMA table_info({table})")}
+        have = database.columns(con, table)
         for name, kind in cols.items():
             if name not in have:
+                if database.is_postgres():
+                    kind = database.translate_schema(kind)
                 con.execute(f"ALTER TABLE {table} ADD COLUMN {name} {kind}")
     # Schools registered before references existed get one, in order.
     for i, r in enumerate(con.execute("SELECT id FROM schools WHERE ref IS NULL ORDER BY created_at").fetchall()):

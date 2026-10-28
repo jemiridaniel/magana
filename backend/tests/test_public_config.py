@@ -10,7 +10,7 @@ CONFIG = json.loads((ROOT / "config" / "public.json").read_text())
 ADDRESS = re.compile(r"[\w.+-]+@magana\.ng\b|[\w.+-]*magana[\w.+-]*@gmail\.com", re.I)
 # The sign-in emails' sender (mailer.py MAIL_FROM): it can't receive mail, so it's never support.
 SENDER = "no-reply@magana.ng"
-# Where the weekly SES reputation alert goes (ses_health.py SES_ALERT_EMAIL): the team, not support.
+# Where the weekly email reputation alert goes (mail_health.py MAIL_ALERT_EMAIL): the team, not support.
 ALERTS = "daniel@magana.ng"
 
 

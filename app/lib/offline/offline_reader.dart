@@ -681,13 +681,14 @@ Map<String, dynamic> _moneyCheck(Map<String, dynamic> result) {
 
 /// Why a page was read on the phone, said as it is (iPhone test, 27 Oct 2026: a slow reply was
 /// called "the server isn't answering"): no internet (the web knows), the photo didn't get
-/// there, the server took too long, the server failed, it is busy this minute (429), or today's
-/// readings are used up (429, daily cap).
+/// there, the server took too long, the server failed, it was waking up (the free test-phase
+/// server sleeps), it is busy this minute (429), or today's readings are used up (429, daily cap).
 enum OfflineReason {
   noInternet,
   sendFailed,
   slow,
   serverError,
+  waking,
   busy,
   dailyLimit;
 
@@ -696,6 +697,7 @@ enum OfflineReason {
       switch (code) {
         'unreachable' => web ? noInternet : sendFailed,
         'server_sleeping' || 'failed' => serverError,
+        'server_waking' => waking,
         'too_many_requests' => busy,
         'daily_limit' => dailyLimit,
         _ => null,

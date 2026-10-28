@@ -5,7 +5,7 @@ import re
 import pytest
 from fastapi.testclient import TestClient
 
-from app import quizzes
+from app import blobs, quizzes
 from app.main import app, get_quiz_store
 from tests.test_accounts import approved_school, fresh, invite  # noqa: F401  (fixture)
 
@@ -17,7 +17,7 @@ T: TestClient = client  # the signed-in teacher (a school admin), set per test
 @pytest.fixture(autouse=True)
 def store(fresh, monkeypatch):
     global T
-    s = quizzes.QuizStore(fresh / "quizzes")
+    s = quizzes.QuizStore()
     app.dependency_overrides[get_quiz_store] = lambda: s
     _, T = approved_school(fresh)
     yield s
@@ -83,8 +83,8 @@ def test_session_codes_are_digits_stored_hashed_and_can_be_rotated(store, fresh)
     quiz = assign(create()["quiz"]["id"])
     code = quiz["session_code"]
     assert re.fullmatch(r"\d{6}", code)
-    on_disk = "".join(p.read_text() for p in (fresh / "quizzes").glob("*.json"))
-    assert code not in on_disk
+    stored = "".join(blobs.get_text(kind, n) for kind in ("quiz", "quiz_codes") for n in blobs.names(kind))
+    assert stored and code not in stored
     new = T.post(f"/quizzes/{quiz['id']}/rotate-session-code").json()["quiz"]["session_code"]
     assert new != code and in_session(code) == [] and len(in_session(new)) == 1
 

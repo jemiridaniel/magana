@@ -59,6 +59,9 @@ Future<void> main() async {
   );
 }
 
+/// For app-wide notices ("Magana is waking up, one moment…").
+final appMessenger = GlobalKey<ScaffoldMessengerState>();
+
 class MaganaApp extends StatelessWidget {
   MaganaApp({
     super.key,
@@ -87,6 +90,13 @@ class MaganaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // The free test-phase server sleeps: while a request waits for it (up to 60 s, api.dart),
+    // "Magana is waking up, one moment…" is said and shown once.
+    onServerWaking = () {
+      final text = lookupAppLocalizations(language.value).serverWaking;
+      speaker.say(text);
+      appMessenger.currentState?.showSnackBar(SnackBar(content: Text(text)));
+    };
     return AppScope(
       api: api,
       speaker: speaker,
@@ -96,6 +106,7 @@ class MaganaApp extends StatelessWidget {
       child: ValueListenableBuilder<Locale>(
         valueListenable: language,
         builder: (context, locale, _) => MaterialApp(
+          scaffoldMessengerKey: appMessenger,
           onGenerateTitle: (context) => AppLocalizations.of(context).appTitle,
           // One screen talks at a time: a change of screen stops the voice (route_speech.dart).
           navigatorObservers: [SpeechRouteObserver(speaker, touch)],

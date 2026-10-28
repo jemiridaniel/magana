@@ -30,8 +30,8 @@ def main(key: str, value: str) -> None:
         sys.exit(f"unknown setting {key!r}; known: {[k for k in config if not k.startswith('_')]}")
     old = config[key]
     if key == "domain":
-        sys.exit("the domain also lives in the server .env, the Caddyfile's env and GitHub's "
-                 "MAGANA_DOMAIN variable: change it with docs/DEPLOY_AWS.md §6a, not here")
+        sys.exit("the domain also lives in the Worker (cloudflare/api-proxy/wrangler.toml), the Space's "
+                 "variables and GitHub's MAGANA_DOMAIN variable: change it with docs/DEPLOY.md, not here")
     changed = []
     for path in tracked_text_files():
         text = path.read_text(encoding="utf-8")

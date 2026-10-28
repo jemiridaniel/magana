@@ -2588,4 +2588,14 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get readItAnyway => 'Read it anyway';
+
+  @override
+  String get serverWaking => 'Magana is waking up, one moment…';
+
+  @override
+  String get offlineBannerWaking =>
+      'Magana\'s server was waking up, so this page was read on this phone.';
+
+  @override
+  String get msg_server_waking => 'Magana is waking up, one moment…';
 }

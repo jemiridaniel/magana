@@ -6,10 +6,11 @@ import json
 import logging
 from datetime import datetime, timedelta, timezone
 
+import pytest
 from fastapi.testclient import TestClient
 from PIL import Image
 
-from app import accounts, mailer, proofs
+from app import accounts, blobs, mailer, proofs
 from app.main import app
 from test_accounts import APPROVE, PRINCIPAL, TEAM, fresh, lagos_ikeja, make_team, outbox, sign_in  # noqa: F401
 
@@ -33,7 +34,7 @@ def test_nine_emails_each_html_and_text_with_the_same_footer_and_the_logo():
     emails = all_kinds()
     emails.append(mailer.team_invitation("Remi", "Daniel", "School reviewer", "Approve or reject schools",
                                          "remi@example.com", "https://teachers.magana.ng"))
-    emails.append(mailer.ses_reputation_alert(0.031, None))
+    emails.append(mailer.reputation_alert(0.031, None, 1000))
     emails.append(mailer.problem_report("It read something wrong", "reader", "0.1.0+6", "TECNO KI5q", "ha", "standard",
                                         voice_seconds=12, page_text=False, when=T, link="https://teachers.magana.ng/admin/reports/"))
     assert [e.kind for e in emails] == list(mailer.KINDS)
@@ -83,21 +84,38 @@ def test_every_reason_has_its_own_email_and_preview():
         assert "deleted in 30 days" in e.text
 
 
-def test_ses_sends_html_and_text_with_replies_to_support(monkeypatch):
+def test_resend_sends_html_and_text_with_replies_to_support(monkeypatch):
     calls = []
 
-    class Client:
-        def send_email(self, **kw):
-            calls.append(kw)
+    class Answer:
+        status_code = 200
 
-    import boto3
-    monkeypatch.setattr(boto3, "client", lambda *a, **k: Client())
-    monkeypatch.setenv("MAGANA_MAIL", "ses")
+    monkeypatch.setattr(mailer, "post", lambda url, **kw: calls.append((url, kw)) or Answer())
+    monkeypatch.setenv("MAGANA_MAIL", "resend")
+    monkeypatch.setenv("RESEND_API_KEY", "re_test")
     mailer.send("a@example.com", all_kinds()[3])
-    body = calls[0]
-    assert body["ReplyToAddresses"] == ["support@magana.ng"]
-    assert set(body["Content"]["Simple"]["Body"]) == {"Text", "Html"}
-    assert body["FromEmailAddress"] == "Magana for Teachers <no-reply@magana.ng>"
+    url, kw = calls[0]
+    body = kw["json"]
+    assert url == "https://api.resend.com/emails" and kw["headers"]["Authorization"] == "Bearer re_test"
+    assert body["reply_to"] == "support@magana.ng" and body["to"] == ["a@example.com"]
+    assert body["html"] and body["text"]
+    assert body["from"] == "Magana for Teachers <no-reply@magana.ng>"
+
+
+def test_resend_errors_are_mail_errors_without_the_answer_text(monkeypatch):
+    class Answer:
+        status_code = 422
+        text = "a@example.com is invalid"
+
+    monkeypatch.setattr(mailer, "post", lambda url, **kw: Answer())
+    monkeypatch.setenv("MAGANA_MAIL", "resend")
+    monkeypatch.setenv("RESEND_API_KEY", "re_test")
+    with pytest.raises(mailer.MailError) as e:
+        mailer.send("a@example.com", all_kinds()[3])
+    assert "a@example.com" not in str(e.value)
+    monkeypatch.delenv("RESEND_API_KEY")
+    with pytest.raises(mailer.MailError):
+        mailer.send("a@example.com", all_kinds()[3])
 
 
 def test_the_log_says_only_the_kind_and_the_time(fresh, caplog):
@@ -190,14 +208,14 @@ def test_only_the_team_can_see_the_approval_pages(fresh):
 
 def test_the_proof_is_encrypted_team_only_and_deleted_once_decided(fresh):
     sid = register(proof=png()).json()["school_id"]
-    stored = (fresh / "proofs" / f"{sid}.bin").read_bytes()
+    stored = blobs.get("proof", sid)
     assert b"PNG" not in stored  # encrypted at rest
     team = sign_in(fresh, TEAM)
     assert team.get("/portal/admin/schools").json()[0]["proof"] == "image/png"
     r = team.get(f"/portal/admin/schools/{sid}/proof")
     assert r.status_code == 200 and r.content.startswith(b"\x89PNG") and r.headers["cache-control"] == "no-store"
     team.post(f"/portal/admin/schools/{sid}", json=APPROVE)
-    assert not (fresh / "proofs" / f"{sid}.bin").exists()
+    assert blobs.get("proof", sid) is None and not (fresh / "proofs").exists()
     assert team.get(f"/portal/admin/schools/{sid}/proof").status_code == 404
     log = [a for a in team.get("/portal/admin/activity").json()["items"] if a["action"].startswith("school_")]
     assert [a["action"] for a in log][:3] == ["school_approved", "school_proof_viewed", "school_registered"]

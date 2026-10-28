@@ -18,6 +18,7 @@ Pitch frame: **Learn. Live. Lead.** — one reading engine that takes users from
 - `backend/` FastAPI (Python). OCR behind `OCREngine` interface: Tesseract for dev, PaddleOCR PP-Structure for production (layout, tables). Maths: LaTeX-OCR → spoken maths. Figures: vision-language model. Explanations: N-ATLAS (quantized). Speech: Whisper/MMS ASR, MMS-TTS. Braille: liblouis → BRF.
 - `app/` (to build) Flutter Android app, TalkBack-first; offline fallback with ML Kit OCR + device TTS.
 - `portal/` (to build) teacher web portal: uploads → audio/BRF/large print, classes, attendance, progress, consent, help.
+- Hosting (test phase, free; docs/INFRA.md): API on a private Hugging Face Space behind a Cloudflare Worker at api.magana.ng, Postgres on Neon (London; `database.py`, SQLite in dev/tests), email via Resend, sites on Cloudflare Pages. Nothing important on the Space's disk.
 
 ## Non-negotiable safety rules
 1. Numbers, doses, money amounts, dates and ranges are read verbatim. **The model never writes a number or unit:**
@@ -37,7 +38,7 @@ Only open-licence (CC BY / CC BY-SA), team-made, or written-permission materials
 ## Working rules
 - Push to origin/main after each set of commits, without asking, as long as all tests pass (backend `pytest -q`, app `flutter analyze` and `flutter test`).
 - After any test, bug fix or measurement that changes what we know about accuracy, safety or accessibility, add an entry to docs/FINDINGS.md in the same commit.
-- The web build (`scripts/build-web.sh`, served at `/app` by Caddy) is an installable PWA **for testing only**. The native iOS app (TestFlight) is still required before 10 Dec. Its API key is public, so the backend rate-limits per device and per IP (`ratelimit.py`).
+- The web build (`scripts/build-web.sh`, served at app.magana.ng by Cloudflare Pages) is an installable PWA **for testing only**. The native iOS app (TestFlight) is still required before 10 Dec. Its API key is public, so the backend rate-limits per device and per IP (`ratelimit.py`).
 
 ## Commands
 ```bash

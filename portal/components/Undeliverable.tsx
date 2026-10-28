@@ -1,4 +1,4 @@
-// Shown next to an address that bounced or was marked as spam (backend ses_events.py): Magana
+// Shown next to an address that bounced or was marked as spam (backend mail_events.py): Magana
 // sends nothing more to it, so invites and resends are refused too.
 export function Undeliverable({ show }: { show?: boolean }) {
   if (!show) return null;

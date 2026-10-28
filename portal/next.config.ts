@@ -1,7 +1,7 @@
 import type { NextConfig } from "next";
 
-// PORTAL_EXPORT=1 builds static files for the Caddy on the server, served at the root of
-// https://teachers.<domain>/ (CI, scripts/deploy-portal.sh); PORTAL_BASE_PATH puts them under
+// PORTAL_EXPORT=1 builds static files for Cloudflare Pages, served at the root of
+// https://teachers.<domain>/ (CI); PORTAL_BASE_PATH puts them under
 // a path instead. Without either, the usual `next dev` / `next start`.
 const basePath = process.env.PORTAL_BASE_PATH ?? "";
 const exported = process.env.PORTAL_EXPORT === "1" || basePath !== "";

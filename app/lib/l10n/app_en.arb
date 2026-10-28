@@ -1957,5 +1957,11 @@
   "readItAnyway": "Read it anyway",
   "@handwritingOffer": {
     "description": "Schoolwork only, when the page looks handwritten (Dr. Amos). Hausa, Yorùbá and Igbo are drafts."
+  },
+  "serverWaking": "Magana is waking up, one moment…",
+  "offlineBannerWaking": "Magana's server was waking up, so this page was read on this phone.",
+  "msg_server_waking": "Magana is waking up, one moment…",
+  "@serverWaking": {
+    "description": "The free test-phase server is waking up (up to 60 s). Hausa, Yorùbá and Igbo are drafts."
   }
 }

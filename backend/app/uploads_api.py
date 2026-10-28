@@ -114,7 +114,7 @@ async def upload(file: UploadFile = File(...), class_id: str = Form(""), title: 
 @router.get("")
 def list_uploads(who: Who = Depends(staff)) -> list[dict]:
     with db() as con:
-        rows = con.execute("SELECT * FROM uploads WHERE school_id = ? AND (teacher_id = ? OR ?) ORDER BY created_at DESC",
+        rows = con.execute("SELECT * FROM uploads WHERE school_id = ? AND (teacher_id = ? OR ? = 1) ORDER BY created_at DESC",
                            (who.school["id"], who.staff["id"], int(who.admin))).fetchall()
         return [_out(dict(r)) for r in rows]
 

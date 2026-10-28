@@ -1,6 +1,6 @@
 """What Magana keeps for WhatsApp, and for how long (docs/PRIVACY.md, "WhatsApp").
 
-On disk, under MAGANA_DATA_DIR/whatsapp/:
+In the database (blobs.py, kind "whatsapp"), never on the server's disk:
 - profiles.json   per user, keyed by a keyed hash of the phone number (never the number):
                   the chosen language, and "adult" or "under_18". Nothing else.
 - callbacks.jsonl call-back requests for the nurse desk: reference, phone number (the nurse
@@ -23,7 +23,8 @@ import threading
 import time
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta, timezone
-from pathlib import Path
+
+from . import blobs
 
 SESSION_MINUTES = 30
 CALLBACK_DAYS = 30
@@ -34,10 +35,7 @@ WARN_AT = 800
 _lock = threading.Lock()
 
 
-def data_dir() -> Path:
-    d = Path(os.environ.get("MAGANA_DATA_DIR", "data")) / "whatsapp"
-    d.mkdir(parents=True, exist_ok=True)
-    return d
+KIND = "whatsapp"
 
 
 def user_key(wa_id: str) -> str:
@@ -48,29 +46,28 @@ def user_key(wa_id: str) -> str:
 
 # ---------- profiles: language and age group
 
-def _read_json(path: Path, default):
+def _read_json(name: str, default):
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError):
+        text = blobs.get_text(KIND, name)
+        return default if text is None else json.loads(text)
+    except ValueError:
         return default
 
 
-def _write_json(path: Path, value) -> None:
-    tmp = path.with_suffix(".tmp")
-    tmp.write_text(json.dumps(value, ensure_ascii=False), encoding="utf-8")
-    tmp.replace(path)
+def _write_json(name: str, value) -> None:
+    blobs.put_text(KIND, name, json.dumps(value, ensure_ascii=False))
 
 
 def get_profile(wa_id: str) -> dict:
     with _lock:
-        return dict(_read_json(data_dir() / "profiles.json", {}).get(user_key(wa_id), {}))
+        return dict(_read_json("profiles.json", {}).get(user_key(wa_id), {}))
 
 
 def set_profile(wa_id: str, **changes) -> dict:
     allowed = {"lang", "age", "goodbye_sent"}
     assert set(changes) <= allowed, changes
     with _lock:
-        path = data_dir() / "profiles.json"
+        path = "profiles.json"
         all_ = _read_json(path, {})
         p = {**all_.get(user_key(wa_id), {}), **changes}
         all_[user_key(wa_id)] = p
@@ -126,20 +123,14 @@ def new_reference() -> str:
 
 
 def _callbacks() -> list[dict]:
-    path = data_dir() / "callbacks.jsonl"
-    try:
-        rows = [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
-    except OSError:
-        return []
+    text = blobs.get_text(KIND, "callbacks.jsonl") or ""
+    rows = [json.loads(line) for line in text.splitlines() if line.strip()]
     cutoff = _now() - timedelta(days=CALLBACK_DAYS)
     return [r for r in rows if datetime.fromisoformat(r["created"]) >= cutoff]
 
 
 def _save_callbacks(rows: list[dict]) -> None:
-    path = data_dir() / "callbacks.jsonl"
-    tmp = path.with_suffix(".tmp")
-    tmp.write_text("".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows), encoding="utf-8")
-    tmp.replace(path)
+    blobs.put_text(KIND, "callbacks.jsonl", "".join(json.dumps(r, ensure_ascii=False) + "\n" for r in rows))
 
 
 def add_callback(phone: str, lang: str, priority: str) -> str:
@@ -185,14 +176,14 @@ def monthly_limit() -> int:
 
 def sent_this_month() -> int:
     with _lock:
-        return int(_read_json(data_dir() / "usage.json", {}).get(month(), 0))
+        return int(_read_json("usage.json", {}).get(month(), 0))
 
 
 def count_sent(n: int = 1) -> tuple[int, bool]:
     """Add n sent messages; (the month's total, whether this is the first time it reached
     WARN_AT): the caller then warns once."""
     with _lock:
-        path = data_dir() / "usage.json"
+        path = "usage.json"
         u = _read_json(path, {})
         before = int(u.get(month(), 0))
         u[month()] = before + n

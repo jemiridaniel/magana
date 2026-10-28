@@ -7,22 +7,20 @@ hash plus a sealed copy for their teacher. Bundled sample packs use the same que
 (app/assets/quiz/).
 
 Quizzes are teacher content, never learner data: no names, answers or scores are stored
-here. Each quiz is one JSON file in MAGANA_DATA_DIR/quizzes/.
+here. Each quiz is one record in the database (blobs.py).
 """
 from __future__ import annotations
 
 import json
-import os
 import re
 import secrets
 import threading
 from datetime import datetime, timezone
-from pathlib import Path
 from typing import Literal
 
 from pydantic import BaseModel, Field, field_validator, model_validator
 
-from . import codes, curriculum
+from . import blobs, codes, curriculum
 
 LANGUAGES = ("en", "ha", "yo", "ig")
 
@@ -176,23 +174,21 @@ def for_learner(quiz: Quiz) -> dict:
 
 
 class QuizStore:
-    """One JSON file per quiz. Writes are atomic (temp file, then rename)."""
+    """One database record per quiz (blobs.py, kind "quiz"), and the classes' session codes in
+    one more ("quiz_codes"). Never on the server's disk, which the test-phase host loses."""
 
-    def __init__(self, root: Path):
-        self.root = root
+    def __init__(self, kind: str = "quiz"):
+        self.kind = kind
         self._lock = threading.Lock()
 
-    def _path(self, quiz_id: str) -> Path:
+    @staticmethod
+    def _check(quiz_id: str) -> str:
         if not re.fullmatch(r"[a-f0-9]{12}", quiz_id):
             raise KeyError(quiz_id)
-        return self.root / f"{quiz_id}.json"
+        return quiz_id
 
     def _write(self, quiz: Quiz) -> Quiz:
-        self.root.mkdir(parents=True, exist_ok=True)
-        path = self._path(quiz.id)
-        tmp = path.with_suffix(".tmp")
-        tmp.write_text(quiz.model_dump_json(indent=2), encoding="utf-8")
-        tmp.replace(path)
+        blobs.put_text(self.kind, self._check(quiz.id), quiz.model_dump_json(indent=2))
         return quiz
 
     @staticmethod
@@ -205,10 +201,10 @@ class QuizStore:
                                     owner=owner, school_id=school_id))
 
     def get(self, quiz_id: str) -> Quiz:
-        try:
-            return Quiz.model_validate_json(self._path(quiz_id).read_text(encoding="utf-8"))
-        except FileNotFoundError:
-            raise KeyError(quiz_id) from None
+        text = blobs.get_text(self.kind, self._check(quiz_id))
+        if text is None:
+            raise KeyError(quiz_id)
+        return Quiz.model_validate_json(text)
 
     def update(self, quiz_id: str, data: QuizIn) -> Quiz:
         with self._lock:
@@ -222,11 +218,11 @@ class QuizStore:
             return self._write(quiz)
 
     def _codes(self) -> dict[str, str]:
-        path = self.root / "session_codes.json"
-        try:
-            return json.loads(path.read_text(encoding="utf-8"))
-        except FileNotFoundError:
-            return {}
+        text = blobs.get_text(f"{self.kind}_codes", "session_codes")
+        return json.loads(text) if text else {}
+
+    def _save_codes(self, known: dict) -> None:
+        blobs.put_text(f"{self.kind}_codes", "session_codes", json.dumps(known, indent=2))
 
     def session_code(self, class_id: str, session: str) -> tuple[str, str]:
         """One code per class session, the same for every quiz assigned to it: (lookup, sealed)."""
@@ -236,10 +232,7 @@ class QuizStore:
             taken = {v["lookup"] for v in known.values() if isinstance(v, dict)}
             code = codes.new_code(lambda lk: lk in taken)
             known[key] = {"lookup": codes.lookup(code), "sealed": codes.seal(code)}
-            self.root.mkdir(parents=True, exist_ok=True)
-            tmp = self.root / "session_codes.tmp"
-            tmp.write_text(json.dumps(known, indent=2), encoding="utf-8")
-            tmp.replace(self.root / "session_codes.json")
+            self._save_codes(known)
         return known[key]["lookup"], known[key]["sealed"]
 
     def rotate_session_code(self, class_id: str, session: str) -> None:
@@ -247,10 +240,7 @@ class QuizStore:
         with self._lock:
             known = self._codes()
             known.pop(f"{class_id}|{session}", None)
-            tmp = self.root / "session_codes.tmp"
-            self.root.mkdir(parents=True, exist_ok=True)
-            tmp.write_text(json.dumps(known, indent=2), encoding="utf-8")
-            tmp.replace(self.root / "session_codes.json")
+            self._save_codes(known)
             lookup, sealed = self.session_code(class_id, session)
             for q in self.all():
                 if q.class_id == class_id and q.session == session:
@@ -265,18 +255,14 @@ class QuizStore:
             return self._write(quiz)
 
     def all(self) -> list[Quiz]:
-        if not self.root.exists():
-            return []
         quizzes = []
-        for p in self.root.glob("*.json"):
-            if p.name == "session_codes.json":
-                continue
+        for name in blobs.names(self.kind):
             try:
-                quizzes.append(Quiz.model_validate_json(p.read_text(encoding="utf-8")))
-            except (ValueError, OSError):
+                quizzes.append(Quiz.model_validate_json(blobs.get_text(self.kind, name) or ""))
+            except ValueError:
                 continue
         return sorted(quizzes, key=lambda q: q.updated_at, reverse=True)
 
 
 def default_store() -> QuizStore:
-    return QuizStore(Path(os.environ.get("MAGANA_DATA_DIR", Path(__file__).parents[1] / "data")) / "quizzes")
+    return QuizStore()

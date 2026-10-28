@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Build the PWA for testers: served at https://app.<domain>/ by Caddy, talking to the API at
+# Build the PWA for testers: served at https://app.<domain>/ by Cloudflare Pages, talking to the API at
 # https://api.<domain>. Writes app/build/web (and fills in the service worker's file list).
 #   scripts/build-web.sh                   # uses MAGANA_API and MAGANA_API_KEY from ~/.magana/app.env
 #   MAGANA_API=http://localhost:8765 MAGANA_API_KEY=... scripts/build-web.sh   # local test

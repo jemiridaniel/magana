@@ -28,7 +28,7 @@ from fastapi import APIRouter, Depends, HTTPException, Request, Response
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 from . import accounts as A
-from . import codes, curriculum, mailer, places, proofs, ses_events, totp
+from . import codes, curriculum, mail_events, mailer, places, proofs, totp
 from . import team as tm  # the Magana team's accounts (team.py); `team` below is the dependency
 from .accounts import db, iso, now, parse
 
@@ -526,7 +526,7 @@ def _school_out(r, bad: set[str] = frozenset()) -> dict:
             "reason": d.get("reason"), "reason_label": mailer.REASONS.get(d.get("reason") or "", None),
             "decided_at": mailer.lagos_time(parse(d["decided_at"])) if d.get("decided_at") else None,
             "decided_by": d.get("decided_by"),
-            # Bounced or marked as spam (ses_events.py): "We couldn't deliver to this address".
+            # Bounced or marked as spam (mail_events.py): "We couldn't deliver to this address".
             "contact_undeliverable": (d["contact_email"] or "").lower() in bad}
 
 
@@ -536,7 +536,7 @@ def list_schools(status: str = "pending", who: Who = Depends(team)) -> list[dict
     order = "created_at" if status == "pending" else "decided_at DESC"
     with db() as con:
         rows = con.execute(f"SELECT * FROM schools WHERE status = ? ORDER BY {order}", (status,)).fetchall()
-        bad = ses_events.undeliverable_set(con, [r["contact_email"] for r in rows])
+        bad = mail_events.undeliverable_set(con, [r["contact_email"] for r in rows])
         return [_school_out(r, bad) for r in rows]
 
 
@@ -688,7 +688,7 @@ def _actor_of(r: dict, removed: set[str]) -> dict:
 
 def _removed_team(con) -> set[str]:
     return {f"team:{e}" for (e,) in con.execute(
-        "SELECT email FROM team_members GROUP BY email HAVING SUM(status != 'removed') = 0")}
+        "SELECT email FROM team_members GROUP BY email HAVING SUM(CASE WHEN status != 'removed' THEN 1 ELSE 0 END) = 0")}
 
 
 def _about(r: dict, people: dict) -> str:
@@ -773,7 +773,7 @@ def _staff_out(con, s: dict) -> dict:
     return {"id": s["id"], "name": s["name"], "email": s["email"], "role": s["role"], "title": s["title"],
             "status": "expired" if expired else s["status"], "invited_at": s["invited_at"],
             "removed_at": s["removed_at"], "classes": [dict(c) for c in classes],
-            "undeliverable": bool(ses_events.undeliverable_set(con, [s["email"]]))}
+            "undeliverable": bool(mail_events.undeliverable_set(con, [s["email"]]))}
 
 
 @router.get("/staff")
@@ -804,7 +804,7 @@ def invite(body: InviteIn, who: Who = Depends(admin)) -> dict:
             fail(409, "email_taken")
         if tm.is_team_email(con, body.email):
             fail(409, "email_is_team")  # one role per email
-        if ses_events.undeliverable_set(con, [body.email]):
+        if mail_events.undeliverable_set(con, [body.email]):
             fail(409, "mail_undeliverable")
         sid = A.new_id("stf")
         _, lk, sealed = A.fresh_code(con, "staff")
@@ -849,7 +849,7 @@ def resend_invite(staff_id: str, who: Who = Depends(admin)) -> dict:
         s = _staff_in_school(con, who, staff_id)
         if s["status"] != "invited":
             fail(409, "not_invited")
-        if ses_events.undeliverable_set(con, [s["email"]]):
+        if mail_events.undeliverable_set(con, [s["email"]]):
             fail(409, "mail_undeliverable")
         con.execute("UPDATE staff SET invited_at = ?, invite_expires = ? WHERE id = ?",
                     (iso(t), iso(t + timedelta(days=A.INVITE_DAYS)), staff_id))
@@ -969,7 +969,7 @@ def _class_out(con, c: dict) -> dict:
     learners = con.execute("SELECT consent, status FROM learners WHERE class_id = ? AND status = 'active'",
                            (c["id"],)).fetchall()
     teacher = con.execute("SELECT name FROM staff WHERE id = ?", (c["teacher_id"],)).fetchone()
-    att = con.execute("SELECT SUM(mark != 'absent'), COUNT(*) FROM attendance WHERE class_id = ?", (c["id"],)).fetchone()
+    att = con.execute("SELECT SUM(CASE WHEN mark != 'absent' THEN 1 ELSE 0 END), COUNT(*) FROM attendance WHERE class_id = ?", (c["id"],)).fetchone()
     return {"id": c["id"], "name": c["name"], "level": c["level"], "mode": c["mode"],
             "teacher_id": c["teacher_id"], "teacher": teacher["name"] if teacher else None,
             "code": codes.unseal(c["code_sealed"]),
@@ -1078,7 +1078,7 @@ def _learner_out(con, l: dict, detail: bool = False) -> dict:
            "removed_at": l["removed_at"], "removed_reason": l["removed_reason"], "joined_at": l["created_at"],
            "reminder_at": l["reminder_at"]}
     if detail:
-        att = con.execute("SELECT SUM(mark != 'absent'), COUNT(*) FROM attendance WHERE learner_id = ?", (l["id"],)).fetchone()
+        att = con.execute("SELECT SUM(CASE WHEN mark != 'absent' THEN 1 ELSE 0 END), COUNT(*) FROM attendance WHERE learner_id = ?", (l["id"],)).fetchone()
         st = con.execute("SELECT SUM(pages), SUM(unaided), AVG(quiz_avg), SUM(answered) FROM learner_stats"
                          " WHERE learner_id = ?", (l["id"],)).fetchone()
         out["term"] = {"sessions_attended": att[0] or 0, "sessions": att[1],
@@ -1302,13 +1302,13 @@ def home(who: Who = Depends(staff)) -> dict:
                               "learners": [{"id": l["id"], "name": l["name"], "class": by_class.get(l["class_id"])}
                                            for l in pending[:5]]})
         uploads = [dict(r) for r in con.execute(
-            "SELECT id, title, status, note FROM uploads WHERE school_id = ? AND (teacher_id = ? OR ?) AND status IN ('check','ready')"
+            "SELECT id, title, status, note FROM uploads WHERE school_id = ? AND (teacher_id = ? OR ? = 1) AND status IN ('check','ready')"
             " ORDER BY created_at DESC", (who.school["id"], who.staff["id"], int(who.admin)))]
         for u in uploads:
             attention.append({"kind": "upload_check" if u["status"] == "check" else "upload_ready",
                               "upload": {"id": u["id"], "title": u["title"], "note": u["note"]}})
         for l in learners:
-            att = con.execute("SELECT SUM(mark != 'absent'), COUNT(*) FROM attendance WHERE learner_id = ?", (l["id"],)).fetchone()
+            att = con.execute("SELECT SUM(CASE WHEN mark != 'absent' THEN 1 ELSE 0 END), COUNT(*) FROM attendance WHERE learner_id = ?", (l["id"],)).fetchone()
             if att[1] >= 3 and 100 * (att[0] or 0) / att[1] < LOW_ATTENDANCE:
                 attention.append({"kind": "low_attendance", "learner": {"id": l["id"], "name": l["name"],
                                   "class": by_class.get(l["class_id"])}, "attended": att[0] or 0, "sessions": att[1],

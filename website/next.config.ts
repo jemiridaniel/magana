@@ -1,6 +1,6 @@
 import type { NextConfig } from "next";
 
-// The website at https://magana.ng: static files only (Caddy serves out/; deploy/Caddyfile).
+// The website at https://magana.ng: static files only (Cloudflare Pages serves out/; docs/DEPLOY_PAGES.md).
 // No cookies, analytics or trackers, and no API calls.
 const nextConfig: NextConfig = {
   output: "export",

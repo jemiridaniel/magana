@@ -2,11 +2,11 @@
 
 Magana on WhatsApp (design canvas W1–W5) is for adults. Send a photo of a page and Magana sends back the text exactly as printed, then a voice note. It also runs the Ibà quick check for a nurse call-back.
 
-The code is ready on the server at **https://api.magana.ng/whatsapp/webhook**. It answers "not configured" until the settings below are in the server's `.env`.
+The code is ready on the server at **https://api.magana.ng/whatsapp/webhook**. It answers "not configured" until the settings below are in the Space's secrets (docs/INFRA.md).
 
 **The test number is free.** It can message up to 5 phone numbers that you verify. Nothing here costs money. Going live with a real number later means business verification, and Meta may charge per conversation; agree that before doing it.
 
-**Never paste the token or app secret into a chat, an email or the repo.** They go only into the server's `.env`.
+**Never paste the token or app secret into a chat, an email or the repo.** They go only into `~/.magana/space.env` on your Mac and the Space's secrets.
 
 ## 1. Create the app (about 10 minutes)
 
@@ -28,28 +28,24 @@ In the left menu, open **WhatsApp → API Setup**:
 4. Open **App settings → Basic** and copy the **App secret** (choose **Show**).
 5. Make up a verify token, any long random word. On your Mac: `openssl rand -hex 16`.
 
-## 3. Put them on the server
+## 3. Put them in the Space's secrets
 
-```bash
-ssh -i ~/.ssh/magana-london.pem ubuntu@35.178.64.255
-nano ~/srv/magana/.env
-```
-
-Add these lines, with your values:
+In `~/.magana/space.env` on your Mac (docs/DEPLOY.md, step 5), fill in:
 
 ```bash
 WHATSAPP_TOKEN=...              # the system user token
 WHATSAPP_PHONE_NUMBER_ID=...    # from API Setup
 WHATSAPP_APP_SECRET=...         # App settings → Basic
 WHATSAPP_VERIFY_TOKEN=...       # the random word you made
-WHATSAPP_VOICE=off              # voice notes need a bigger server (docs/FINDINGS.md)
 ```
 
-Then restart the backend so it reads them:
+Then send them to the Space (it restarts and reads them):
 
 ```bash
-cd ~/srv/magana && sudo docker compose -f docker-compose.prod.yml up -d
+python3 scripts/space_secrets.py
 ```
+
+Voice notes stay off (`WHATSAPP_VOICE` unset): they need server speech, which the free Space doesn't run.
 
 ## 4. Connect the webhook
 
@@ -68,19 +64,15 @@ From your own phone, send **Hi** to the test number. You should get:
 
 With `WHATSAPP_VOICE=off`, Magana says once that voice notes aren't ready yet.
 
-If nothing comes back, check the backend log:
+If nothing comes back, check the server's log: Hugging Face → the Space → **Logs**.
 
-```bash
-sudo docker compose -f ~/srv/magana/docker-compose.prod.yml logs --tail 50 magana
-```
-
-Logs show `whatsapp in kind=…` lines with a short hashed user id, never a phone number or message text. A `401 bad_signature` means the app secret on the server doesn't match the app's.
+Logs show `whatsapp in kind=…` lines with a short hashed user id, never a phone number or message text. A `401 bad_signature` means the app secret in the Space's secrets doesn't match the app's.
 
 ## How it stays safe
 
 - **Signed requests only.** Every message from Meta carries `X-Hub-Signature-256`, an HMAC of the body with the app secret. Anything unsigned or wrongly signed gets 401 and is never read. Meta doesn't send the Magana app key, so the webhook doesn't need it; the signature replaces it.
-- **Secrets live only in the server's `.env`** (not in GitHub, not in the app).
-- **The free messages are counted** (`MAGANA_DATA_DIR/whatsapp/usage.json`, per month):
+- **Secrets live only in the Space's secrets** (and `~/.magana/space.env`), not in GitHub, not in the app.
+- **The free messages are counted** (per month, in the database: `blobs.py`, kind `whatsapp`):
   - At **800** sent, Magana logs a warning, and posts it to `MAGANA_ALERT_WEBHOOK_URL` if that is set.
   - At **950**, new photos and checks get "Magana on WhatsApp has reached its limit for this month".
   - At **1,000**, nothing more is sent except the emergency message ("go to a clinic now or call 112"), which always goes.
@@ -91,9 +83,10 @@ Logs show `whatsapp in kind=…` lines with a short hashed user id, never a phon
 
 When the quick check ends, Magana logs a call-back request with a reference such as `MG-4821`. The user can change the number or cancel it.
 
-- **Until a nurse desk is connected,** requests are kept on the server in `MAGANA_DATA_DIR/whatsapp/callbacks.jsonl`: reference, phone number, language, priority, time and status. Never the answers. Each is deleted after 30 days.
-- **Read them with:**
+- **Until a nurse desk is connected,** requests are kept in the database (`blobs.py`, kind `whatsapp`, `callbacks.jsonl`): reference, phone number, language, priority, time and status. Never the answers. Each is deleted after 30 days.
+- **Read them from your Mac** (they hold phone numbers: don't paste them anywhere):
   ```bash
-  sudo docker compose -f ~/srv/magana/docker-compose.prod.yml exec magana cat /data/whatsapp/callbacks.jsonl
+  source ~/.magana/space.env && cd backend && DATABASE_URL="$DATABASE_URL" \
+    .venv/bin/python -c "from app import blobs; print(blobs.get_text('whatsapp', 'callbacks.jsonl') or 'none')"
   ```
 - **With `MAGANA_CALLBACK_URL` set,** each request is also sent to the desk.

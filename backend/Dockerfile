@@ -1,8 +1,9 @@
 # Magana backend. OCR_ENGINE=tesseract (default, small) or paddle (PP-StructureV3; about
 # 3 GB bigger, its models are downloaded into the image at build time, not on the first
-# request). docker-compose.prod.yml passes OCR_ENGINE from the server's .env.
+# request).
 # SPEECH=on adds server speech (requirements-asr.txt: Whisper ASR and the MMS voices for
-# WhatsApp; about 2 GB bigger, and an instance with 8 GiB: docs/DEPLOY_AWS.md §9a).
+# WhatsApp; about 2 GB bigger). For local Docker and CI tests; the test-phase server is built from
+# deploy/hf-space/Dockerfile (docs/INFRA.md).
 FROM python:3.12-slim
 
 ARG OCR_ENGINE=tesseract

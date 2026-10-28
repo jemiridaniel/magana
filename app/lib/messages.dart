@@ -106,6 +106,7 @@ String messageFor(
   'q_dark_urine_no_sight' => l.msg_q_dark_urine_no_sight,
   'unreachable' => l.cannotReach,
   'server_sleeping' => l.serverSleeping,
+  'server_waking' => l.msg_server_waking,
   _ => l.readFailed,
 };
 

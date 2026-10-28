@@ -678,5 +678,8 @@
   "msg_handwriting_read_anyway": "Mo ka ìkọ̀wé ọwọ́ yìí bí mo ṣe lè ṣe tó. Ó lè ní àṣìṣe, èmi kò sì ka àwọn nọ́ńbà rẹ̀.",
   "msg_offline_health_numbers": "Láìsí íńtánẹ́ẹ̀tì, fóònù yìí lè ka ìkọ̀wé ọwọ́ sí ìtẹ̀wé, nítorí náà èmi kò ka nọ́ńbà lórí ìwé ìlera. Tún un kà nígbà tí o bá wà lórí íńtánẹ́ẹ̀tì, tàbí bi oníṣègùn òògùn tàbí nọ́ọ̀sì.",
   "handwritingOffer": "Èyí dà bí ìkọ̀wé ọwọ́. Ṣé kí n kà á bẹ́ẹ̀? Ó lè ní àṣìṣe.",
-  "readItAnyway": "Kà á bẹ́ẹ̀"
+  "readItAnyway": "Kà á bẹ́ẹ̀",
+  "serverWaking": "Magana ń jí, ẹ dúró díẹ̀…",
+  "offlineBannerWaking": "Sáfà Magana ń jí, nítorí náà a ka ojú-ìwé yìí lórí fóònù yìí.",
+  "msg_server_waking": "Magana ń jí, ẹ dúró díẹ̀…"
 }

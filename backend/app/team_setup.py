@@ -1,7 +1,7 @@
-"""Make the first Magana admin (role "owner"). Run on the server, once (never through the web):
+"""Make the first Magana admin (role "owner"). Run once, from the Mac, against the test-phase
+database (never through the web; docs/DEPLOY.md, step 8):
 
-    sudo docker compose -f docker-compose.prod.yml exec magana \\
-        python -m app.team_setup --email you@example.com --name "Your Name"
+    scripts/team-setup.sh --email you@example.com --name "Your Name"
 
 It refuses if an owner already exists: from then on, owners add team members in the portal
 (Magana team). The new owner signs in at teachers.magana.ng with that email; the first sign-in
@@ -9,8 +9,7 @@ sets up the authenticator app and shows the backup codes once.
 
 If an owner's authenticator key leaks or their phone is lost and no other owner can help:
 
-    sudo docker compose -f docker-compose.prod.yml exec magana \\
-        python -m app.team_setup --email you@example.com --reset-authenticator
+    scripts/team-setup.sh --email you@example.com --reset-authenticator
 
 forgets that member's key and backup codes and signs them out; the next sign-in sets up a new one.
 

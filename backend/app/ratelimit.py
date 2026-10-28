@@ -8,9 +8,10 @@ Daily caps on the same heavy calls, counted per Lagos calendar day: RATE_HEAVY_D
 (300) per device and RATE_HEAVY_IP_PER_DAY (3000) per IP (a school's learners often share one
 connection). Over a cap: 429 "daily_limit" until midnight in Lagos.
 The device is the app's random install ID (X-Magana-Device); without one, only the IP limits
-apply. Behind Caddy the IP comes from X-Forwarded-For (uvicorn --proxy-headers).
+apply. Behind the Worker on api.magana.ng the IP comes from X-Forwarded-For, which the Worker sets
+(uvicorn --proxy-headers; docs/INFRA.md).
 The app key (X-Magana-Key) is an app identifier, not a secret: it ships in the APK, the IPA and
-the PWA. These limits, not the key, are what protect the server (docs/DEPLOY_AWS.md, "API key").
+the PWA. These limits, not the key, are what protect the server (docs/INFRA.md).
 
 The signed-in teacher portal is limited per session instead (RATE_PORTAL_SESSION_PER_MIN,
 300): a school's teachers often share one internet connection, and one portal page makes

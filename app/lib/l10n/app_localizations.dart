@@ -4169,6 +4169,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Read it anyway'**
   String get readItAnyway;
+
+  /// The free test-phase server is waking up (up to 60 s). Hausa, Yorùbá and Igbo are drafts.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana is waking up, one moment…'**
+  String get serverWaking;
+
+  /// No description provided for @offlineBannerWaking.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana\'s server was waking up, so this page was read on this phone.'**
+  String get offlineBannerWaking;
+
+  /// No description provided for @msg_server_waking.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana is waking up, one moment…'**
+  String get msg_server_waking;
 }
 
 class _AppLocalizationsDelegate

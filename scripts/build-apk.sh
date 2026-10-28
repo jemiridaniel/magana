@@ -2,7 +2,7 @@
 # Build the tester APKs (release, signed with the upload key, one per CPU type) and print
 # the arm64 one, which fits almost all current Android phones.
 # Reads ~/.magana/app.env (outside the repo):
-#   MAGANA_API=https://api.magana.ng             # the server (docs/DEPLOY_AWS.md)
+#   MAGANA_API=https://api.magana.ng             # the server (docs/INFRA.md)
 #   MAGANA_API_KEY=...                           # the server's MAGANA_API_KEY
 # Bump `version:` in app/pubspec.yaml before each build you hand out (the +N must grow).
 set -euo pipefail

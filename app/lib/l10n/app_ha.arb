@@ -678,5 +678,8 @@
   "msg_handwriting_read_anyway": "Na karanta wannan rubutun hannu gwargwadon iyawata. Yana iya ƙunsar kurakurai, kuma ba na karanta lambobinsa.",
   "msg_offline_health_numbers": "Ba tare da intanet ba, wannan waya na iya ɗaukar rubutun hannu a matsayin bugu, don haka ba na karanta lambobi a takardun lafiya. Sake karantawa idan kana kan intanet, ko ka tambayi mai ba da magani ko nas.",
   "handwritingOffer": "Wannan yana kama da rubutun hannu. A karanta duk da haka? Yana iya ƙunsar kurakurai.",
-  "readItAnyway": "A karanta duk da haka"
+  "readItAnyway": "A karanta duk da haka",
+  "serverWaking": "Magana na farkawa, ɗan lokaci kaɗan…",
+  "offlineBannerWaking": "Sabar Magana tana farkawa, don haka an karanta wannan shafin a wannan waya.",
+  "msg_server_waking": "Magana na farkawa, ɗan lokaci kaɗan…"
 }

@@ -9,6 +9,7 @@ from contextlib import asynccontextmanager
 from datetime import date, datetime, timedelta, timezone
 from functools import lru_cache
 import os
+from pathlib import Path
 
 from fastapi import BackgroundTasks, Depends, FastAPI, File, Form, Header, HTTPException, Query, Request, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
@@ -22,7 +23,7 @@ from typing import Literal
 import httpx
 from pydantic import BaseModel, ConfigDict, Field
 
-from . import asr, codes, curriculum, explain, handwriting, learner_api, pdfs, policy, portal_api, quizzes, ratelimit, reports_api, safety, ses_events, ses_health, templates, team_api, triage, uploads_api, wa_flow
+from . import accounts, asr, codes, curriculum, explain, handwriting, learner_api, mail_events, mail_health, pdfs, policy, portal_api, quizzes, ratelimit, reports_api, safety, templates, team_api, triage, uploads_api, wa_flow
 from .wa_client import WhatsAppClient
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
@@ -41,8 +42,8 @@ async def lifespan(app: FastAPI):
     interval = float(os.environ.get("IBA_PROBE_S", "60"))
     if IbaClient.from_env() is not None and interval > 0:
         task = asyncio.create_task(_probe_iba(interval))
-    # The weekly SES bounce and complaint check (ses_health.py).
-    reputation = asyncio.create_task(ses_health.loop()) if ses_health.enabled() else None
+    # The weekly bounce and complaint check (mail_health.py).
+    reputation = asyncio.create_task(mail_health.loop()) if mail_health.enabled() else None
     yield
     for t in (task, reputation):
         if t:
@@ -83,7 +84,7 @@ app.include_router(team_api.router)
 app.include_router(reports_api.router)
 
 WHATSAPP_WEBHOOK = "/whatsapp/webhook"
-SES_EVENTS = "/internal/ses-events"  # Amazon SNS, which proves itself with its signature (ses_events.py)
+MAIL_EVENTS = "/internal/mail-events"  # Resend's webhook, which proves itself with its signature (mail_events.py)
 
 
 @app.middleware("http")
@@ -135,8 +136,8 @@ async def require_api_key(request, call_next):
     preflights pass. Unset (local development): no key needed. The key keeps out casual
     callers and bots, not a determined attacker: the rate limits and daily caps do that."""
     key = os.environ.get("MAGANA_API_KEY", "")
-    # The WhatsApp webhook and SES events are called by Meta and Amazon, which sign instead.
-    if key and request.method != "OPTIONS" and request.url.path not in ("/health", WHATSAPP_WEBHOOK, SES_EVENTS):
+    # The WhatsApp webhook and the mail events are called by Meta and Resend, which sign instead.
+    if key and request.method != "OPTIONS" and request.url.path not in ("/health", WHATSAPP_WEBHOOK, MAIL_EVENTS):
         sent = request.headers.get("x-magana-key", "").encode()
         if not any(hmac.compare_digest(sent, k.encode()) for k in accepted_keys()):
             return JSONResponse({"detail": {"code": "bad_api_key"}}, status_code=401)
@@ -230,10 +231,25 @@ def health_caller(tier: policy.Tier = Depends(caller_tier)) -> policy.Tier:
     return tier
 
 
+# The commit this server was built from (scripts/build-space.sh writes it), so a deploy can tell
+# when the new one is answering. Empty in development.
+_build_file = Path(__file__).with_name("build.txt")
+BUILD = _build_file.read_text().strip()[:12] if _build_file.exists() else ""
+
+
 @app.get("/health")
 def health() -> dict:
+    """Open to uptime checks (the deploy and the 6-hourly keep-awake, docs/INFRA.md). "database"
+    says whether a query worked: the server can be up while its database isn't."""
     iba = {"configured": bool(os.environ.get("IBA_API_URL", "").strip()), **iba_monitor.status()}
-    return {"status": "ok", "iba": iba}
+    try:
+        with accounts.db() as con:
+            con.execute("SELECT 1").fetchone()
+        database = "ok"
+    except Exception as e:
+        log.error("health: database unreachable (%s)", type(e).__name__)
+        database = "unreachable"
+    return {"status": "ok", "database": database, "build": BUILD, "iba": iba}
 
 
 @app.post("/read")
@@ -634,22 +650,16 @@ def get_whatsapp_flow() -> wa_flow.Flow | None:
     return wa_flow.Flow(client, get_engine) if client else None
 
 
-@app.post(SES_EVENTS)
-async def ses_events_in(request: Request) -> dict:
-    """Bounces, complaints and deliveries from AWS SES, through SNS (text/plain JSON). Only
-    messages signed by SNS for our own topic are acted on; everything else gets 403."""
+@app.post(MAIL_EVENTS)
+async def mail_events_in(request: Request) -> dict:
+    """Bounces and complaints from Resend's webhook. Only events signed with our webhook's secret,
+    and less than 5 minutes old, are acted on; everything else gets 403."""
     body = await request.body()
     if len(body) > 256_000:
         raise HTTPException(413, {"code": "too_large"})
     try:
-        msg = json.loads(body)
-        if not isinstance(msg, dict):
-            raise ValueError
-    except ValueError:
-        raise HTTPException(400, {"code": "bad_request"}) from None
-    try:
-        done = await run_in_threadpool(ses_events.handle, msg)
-    except ses_events.Refused:
+        done = await run_in_threadpool(mail_events.handle, request.headers, body)
+    except mail_events.Refused:
         raise HTTPException(403, {"code": "bad_signature"}) from None
     return {"code": "ok", "done": done}
 

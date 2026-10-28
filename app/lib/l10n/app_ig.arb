@@ -678,5 +678,8 @@
   "msg_handwriting_read_anyway": "Agụrụ m ihe e ji aka dee a ka m nwere ike. O nwere ike inwe mperi, agụghịkwa m nọmba ya.",
   "msg_offline_health_numbers": "Na-enweghị ịntanetị, ekwentị a nwere ike iwere ihe e ji aka dee dị ka ihe e biri ebi, ya mere anaghị m agụ nọmba n'akwụkwọ ahụike. Gụọ ya ọzọ mgbe ị nọ n'ịntanetị, ma ọ bụ jụọ onye na-ere ọgwụ ma ọ bụ nọọsụ.",
   "handwritingOffer": "Nke a dị ka e ji aka dee ya. Gụọ ya otú ọ dị? O nwere ike inwe mperi.",
-  "readItAnyway": "Gụọ ya otú ọ dị"
+  "readItAnyway": "Gụọ ya otú ọ dị",
+  "serverWaking": "Magana na-eteta, nwa oge…",
+  "offlineBannerWaking": "Sava Magana na-eteta, ya mere a gụrụ peeji a na ekwentị a.",
+  "msg_server_waking": "Magana na-eteta, nwa oge…"
 }

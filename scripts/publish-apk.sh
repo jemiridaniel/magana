@@ -16,7 +16,7 @@ VERSION=$(grep '^version:' "$ROOT/app/pubspec.yaml" | awk '{print $2}')
 TAG="v$VERSION"
 NOTES="${1:-}"
 [ -f "$APK" ] || { echo "no APK: run scripts/build-apk.sh first" >&2; exit 1; }
-# Never publish a build with a real secret in it (docs/DEPLOY_AWS.md §8d).
+# Never publish a build with a real secret in it (docs/INFRA.md, "Secrets").
 "$ROOT/backend/.venv/bin/python" "$ROOT/scripts/check_bundle_secrets.py" "$APK"
 tmp=$(mktemp -d)
 trap 'rm -rf "$tmp"' EXIT

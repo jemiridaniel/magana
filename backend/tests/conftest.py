@@ -1,4 +1,15 @@
+import os
+
 import pytest
+
+# MAGANA_TEST_DATABASE_URL=postgresql://… runs every test on Postgres, as the test-phase server does
+# (docs/INFRA.md): each test's MAGANA_DATA_DIR gets its own schema, as it gets its own SQLite file.
+if os.environ.get("MAGANA_TEST_DATABASE_URL"):
+    os.environ["DATABASE_URL"] = os.environ["MAGANA_TEST_DATABASE_URL"]
+    os.environ["MAGANA_DB_SCHEMA_PER_DATA_DIR"] = "1"
+else:
+    os.environ.pop("DATABASE_URL", None)
+
 
 
 @pytest.fixture(autouse=True)

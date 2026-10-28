@@ -11,7 +11,7 @@ from fastapi import APIRouter, Depends
 from pydantic import BaseModel, Field
 
 from . import accounts as A
-from . import mailer, places, ses_events, team
+from . import mail_events, mailer, places, team
 from .accounts import db, iso, now, parse
 from .portal_api import EmailIn, Who, _mail, fail, owner, portal_url, team_audit
 from .portal_api import team as any_team
@@ -33,7 +33,7 @@ def _member_out(m: dict, bad: set[str] = frozenset()) -> dict:
 def members(who: Who = Depends(owner)) -> list[dict]:
     with db() as con:
         rows = con.execute("SELECT * FROM team_members WHERE status != 'removed' ORDER BY role = 'owner' DESC, created_at").fetchall()
-        bad = ses_events.undeliverable_set(con, [r["email"] for r in rows])
+        bad = mail_events.undeliverable_set(con, [r["email"] for r in rows])
         return [_member_out(dict(r), bad) for r in rows]
 
 
@@ -54,7 +54,7 @@ def add_member(body: MemberIn, who: Who = Depends(owner)) -> dict:
             fail(409, "email_is_teacher")  # one role per email
         if m := team.member_by_email(con, body.email):
             fail(409, "team_already_member" if m["status"] == "active" else "team_already_invited")
-        if ses_events.undeliverable_set(con, [body.email]):
+        if mail_events.undeliverable_set(con, [body.email]):
             fail(409, "mail_undeliverable")
         if body.role == "owner" and team.admins(con) >= team.MAX_ADMINS:
             fail(409, "team_admins_max")
@@ -110,7 +110,7 @@ def resend_member_invite(member_id: str, who: Who = Depends(owner)) -> dict:
         m = _member_or_404(con, member_id)
         if m["status"] != "invited":
             fail(409, "not_invited")
-        if ses_events.undeliverable_set(con, [m["email"]]):
+        if mail_events.undeliverable_set(con, [m["email"]]):
             fail(409, "mail_undeliverable")
         t = now()
         con.execute("UPDATE team_members SET invited_at = ?, invite_expires = ? WHERE id = ?",

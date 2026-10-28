@@ -2593,4 +2593,14 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get readItAnyway => 'A karanta duk da haka';
+
+  @override
+  String get serverWaking => 'Magana na farkawa, ɗan lokaci kaɗan…';
+
+  @override
+  String get offlineBannerWaking =>
+      'Sabar Magana tana farkawa, don haka an karanta wannan shafin a wannan waya.';
+
+  @override
+  String get msg_server_waking => 'Magana na farkawa, ɗan lokaci kaɗan…';
 }

@@ -425,6 +425,14 @@ String noAnswerCode() =>
 bool serverAsleep(int status) =>
     status == 502 || status == 503 || status == 504;
 
+/// How long a request waits for Magana's server to wake up (test phase: a free Hugging Face
+/// Space, docs/INFRA.md) before it fails.
+Duration serverWakeWait = const Duration(seconds: 60);
+
+/// Says "Magana is waking up, one moment…" (main.dart); called once per waiting request.
+/// Replaceable in tests.
+void Function()? onServerWaking;
+
 /// The phone's link to a class (a random token the backend knows only by hash).
 class ClassLink {
   const ClassLink({
@@ -499,7 +507,36 @@ class MaganaApi {
   /// Age tier and consent headers, sent with every request (see ProfileController).
   final Map<String, String> Function() _headers;
 
+  /// [_jsonOnce], tried again while Magana's server wakes up (the free test-phase server sleeps;
+  /// the Worker on api.magana.ng answers `server_waking`): "Magana is waking up, one moment…" is
+  /// said once ([onServerWaking]), then it waits up to [serverWakeWait] instead of failing.
   Future<Map<String, dynamic>> _json(
+    String method,
+    String path, {
+    Object? body,
+    Map<String, String> extra = const {},
+  }) async {
+    final started = DateTime.now();
+    var told = false;
+    while (true) {
+      try {
+        return await _jsonOnce(method, path, body: body, extra: extra);
+      } on ApiException catch (e) {
+        final waited = DateTime.now().difference(started);
+        if (e.code != 'server_waking') rethrow;
+        if (waited >= serverWakeWait) throw ApiException('server_sleeping');
+        if (!told) {
+          told = true;
+          onServerWaking?.call();
+        }
+        final pause = Duration(seconds: (e.retryAfter ?? 5).clamp(1, 10));
+        final left = serverWakeWait - waited;
+        await Future<void>.delayed(pause < left ? pause : left);
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> _jsonOnce(
     String method,
     String path, {
     Object? body,

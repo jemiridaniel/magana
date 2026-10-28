@@ -1,11 +1,11 @@
-# Tests on every push and pull request (backend, app, portal, website). On main, once every
-# test passes, two deploys run side by side:
-# - pages: the website, the PWA and (once it has its own sign-in) the teacher portal go to
-#   Cloudflare Pages (docs/DEPLOY_PAGES.md). Built here; the PWA carries MAGANA_WEB_API_KEY,
-#   the public web key (a GitHub secret). The APK key never comes to GitHub.
-# - deploy: the API on the AWS server (docs/DEPLOY_AWS.md §8a): GitHub signs in to AWS with
-#   OIDC (no AWS keys stored here) and Systems Manager runs deploy/update.sh (no SSH). Until the
-#   portal is on Pages, the server still gets a web bundle with placeholders it fills in.
+# Tests on every push and pull request (backend on SQLite and Postgres, app, portal, website, the
+# api.magana.ng Worker). On main, once every test passes, two deploys run side by side:
+# - pages: the website, the PWA and the teacher portal go to Cloudflare Pages
+#   (docs/DEPLOY_PAGES.md). Built here; the PWA carries MAGANA_WEB_API_KEY, the public web key
+#   (a GitHub secret). The APK key never comes to GitHub.
+# - space: the API goes to the private Hugging Face Space (docs/DEPLOY.md): the bundle is pushed to
+#   the Space's repository, the Worker on api.magana.ng is deployed, and the job waits until
+#   https://api.magana.ng/health answers from the new commit with its database working.
 name: CI
 
 on:
@@ -20,12 +20,36 @@ concurrency:
 jobs:
   backend:
     runs-on: ubuntu-latest
+    services:
+      # The test-phase database is Postgres (Neon or Supabase): every test runs on it too.
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_PASSWORD: magana
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
     steps:
       - uses: actions/checkout@v4
-      # In the production image, so the tests see the server's Tesseract (5.5.0), not
+      # In a server-like image, so the tests see the server's Tesseract (5.5.0), not
       # Ubuntu's (5.3.4 reads the faint-print test pages differently).
       - run: docker build -q -t magana-backend backend
-      - run: docker run --rm --user root -v "$PWD:/m" -w /m/backend magana-backend python -m pytest -q -p no:cacheprovider
+      - name: Tests on SQLite
+        run: docker run --rm --user root -v "$PWD:/m" -w /m/backend magana-backend python -m pytest -q -p no:cacheprovider
+      - name: Tests on Postgres
+        run: |
+          docker run --rm --user root --network host -v "$PWD:/m" -w /m/backend \
+            -e MAGANA_TEST_DATABASE_URL=postgresql://postgres:magana@127.0.0.1:5432/postgres \
+            magana-backend python -m pytest -q -p no:cacheprovider
+
+  worker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm test
+        working-directory: cloudflare/api-proxy
 
   app:
     runs-on: ubuntu-latest
@@ -76,98 +100,69 @@ jobs:
       - run: npx playwright test --reporter=line
         working-directory: website
 
-  deploy:
-    needs: [backend, app, portal, website]
-    # Only main, and only once the AWS role is set up (repository variables).
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.AWS_DEPLOY_ROLE_ARN != ''
+  space:
+    needs: [backend, app, portal, website, worker]
+    # Only main, and only once the Space is set up (repository variable HF_SPACE, docs/DEPLOY.md).
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.HF_SPACE != ''
     runs-on: ubuntu-latest
     concurrency:
-      group: deploy
+      group: space
       cancel-in-progress: false
-    permissions:
-      contents: write   # the web bundle goes on the "web-build" release
-      id-token: write   # OIDC sign-in to AWS
     env:
+      HF_SPACE: ${{ vars.HF_SPACE }}          # e.g. jemiridaniel/magana-api
       DOMAIN: ${{ vars.MAGANA_DOMAIN }}
-      GH_TOKEN: ${{ github.token }}
     steps:
       - uses: actions/checkout@v4
-      # The server's web bundle: only until the teacher portal is on Cloudflare Pages too.
-      - uses: subosito/flutter-action@v2
-        if: vars.PORTAL_ON_PAGES != 'true'
-        with:
-          flutter-version: "3.47.7"
-          cache: true
-      - uses: actions/setup-node@v4
-        if: vars.PORTAL_ON_PAGES != 'true'
-        with:
-          node-version: "22"
-          cache: npm
-          cache-dependency-path: portal/package-lock.json
 
-      - name: Build the PWA, teacher portal and website (placeholders instead of keys)
-        if: vars.PORTAL_ON_PAGES != 'true'
-        run: |
-          MAGANA_API="https://api.$DOMAIN" MAGANA_API_KEY=__MAGANA_API_KEY__ scripts/build-web.sh
-          (cd portal && npm ci && PORTAL_EXPORT=1 NEXT_PUBLIC_API_URL="https://api.$DOMAIN" \
-            NEXT_PUBLIC_API_KEY=__MAGANA_API_KEY__ \
-            npx next build)
-          mkdir -p bundle && cp -r app/build/web bundle/web && cp -r portal/out bundle/teachers
-          if [ -d website ]; then (cd website && npm ci && npx next build) && cp -r website/out bundle/site; fi
-          grep -rqF __MAGANA_API_KEY__ bundle/web
-          tar -czf magana-web.tar.gz -C bundle .
-          echo "SUM=$(sha256sum magana-web.tar.gz | cut -d' ' -f1)" >> "$GITHUB_ENV"
-
-      - name: Upload the bundle to the web-build release
-        if: vars.PORTAL_ON_PAGES != 'true'
-        run: |
-          gh release view web-build >/dev/null 2>&1 || gh release create web-build --prerelease \
-            --title "Server web bundle (not a release)" \
-            --notes "Built by CI for the server: the PWA, teacher portal and website, without keys."
-          gh release upload web-build magana-web.tar.gz --clobber
-
-      - uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ vars.AWS_DEPLOY_ROLE_ARN }}
-          aws-region: eu-west-2
-
-      - name: Update the server through Systems Manager
+      - name: Push the bundle to the Space's repository
         env:
-          INSTANCE: ${{ vars.MAGANA_INSTANCE_ID }}
+          HF_DEPLOY_TOKEN: ${{ secrets.HF_DEPLOY_TOKEN }}   # write access to this Space only
         run: |
-          url=""
-          [ -n "${SUM:-}" ] && url="https://github.com/${{ github.repository }}/releases/download/web-build/magana-web.tar.gz"
-          script="set -e; cd /home/ubuntu/srv/magana; as() { sudo -Hu ubuntu \"\$@\"; }; \
-            prev=\$(as git rev-parse HEAD); as git fetch -q origin main; as git merge -q --ff-only $GITHUB_SHA; \
-            as deploy/update.sh \$prev $url ${SUM:-}"
-          id=$(aws ssm send-command --instance-ids "$INSTANCE" --document-name AWS-RunShellScript \
-            --comment "CI ${GITHUB_SHA:0:7}" --timeout-seconds 600 \
-            --parameters "$(jq -nc --arg s "$script" '{commands: [$s], executionTimeout: ["1500"]}')" \
-            --query Command.CommandId --output text)
-          for _ in $(seq 1 180); do
-            status=$(aws ssm get-command-invocation --command-id "$id" --instance-id "$INSTANCE" \
-              --query Status --output text 2>/dev/null || echo Pending)
-            case "$status" in Pending|InProgress|Delayed) sleep 10 ;; *) break ;; esac
+          [ -n "$HF_DEPLOY_TOKEN" ] || { echo "Set the HF_DEPLOY_TOKEN secret (docs/DEPLOY.md)"; exit 1; }
+          owner="${HF_SPACE%%/*}"
+          git clone -q --depth 1 "https://$owner:$HF_DEPLOY_TOKEN@huggingface.co/spaces/$HF_SPACE" space
+          find space -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          MAGANA_BUILD="$GITHUB_SHA" scripts/build-space.sh space
+          cd space
+          git config user.name "Magana CI" && git config user.email "ci@magana.ng"
+          git add -A
+          git commit -q -m "Deploy ${GITHUB_SHA:0:12} from github.com/${{ github.repository }}" || echo "nothing changed"
+          git push -q origin HEAD:main
+
+      - name: Deploy the Worker on api.magana.ng
+        if: vars.CLOUDFLARE_ACCOUNT_ID != ''
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+        working-directory: cloudflare/api-proxy
+        run: npx --yes wrangler@4.40.0 deploy --var "UPSTREAM:https://${HF_SPACE%%/*}-${HF_SPACE##*/}.hf.space"
+
+      - name: Wait for the new server (the Space builds it; up to 20 minutes)
+        run: |
+          want="${GITHUB_SHA:0:12}"
+          for i in $(seq 1 80); do
+            body=$(curl -s --max-time 20 "https://api.$DOMAIN/health" || true)
+            build=$(echo "$body" | jq -r '.build // empty' 2>/dev/null || true)
+            db=$(echo "$body" | jq -r '.database // empty' 2>/dev/null || true)
+            if [ "$build" = "$want" ] && [ "$db" = ok ]; then echo "live: $body"; break; fi
+            echo "waiting ($i): build=${build:-none} database=${db:-none}"
+            sleep 15
           done
-          aws ssm get-command-invocation --command-id "$id" --instance-id "$INSTANCE" \
-            --query '[StandardOutputContent, StandardErrorContent]' --output text
-          echo "status: $status"
-          [ "$status" = Success ]
+          [ "$build" = "$want" ] || { echo "the Space didn't come up with $want"; exit 1; }
+          [ "$db" = ok ] || { echo "the server is up but its database isn't"; exit 1; }
 
       - name: Check from outside
         run: |
-          curl -fsS --max-time 10 "https://api.$DOMAIN/health"; echo
           code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "https://api.$DOMAIN/read")
-          [ "$code" = 401 ] || { echo "a call without the key gave $code, not 401"; exit 1; }
-          curl -fsS -o /dev/null "https://app.$DOMAIN/"
-          if [ "${{ vars.PORTAL_ON_PAGES }}" != "true" ]; then  # still on the server, with its own sign-in
-            curl -fsS -o /dev/null "https://teachers.$DOMAIN/sign-in/"
-            code=$(curl -s -o /dev/null -w '%{http_code}' "https://api.$DOMAIN/portal/me")
-            [ "$code" = 401 ] || { echo "the portal API without a session gave $code, not 401"; exit 1; }
-          fi
+          [ "$code" = 401 ] || { echo "a call without the app key gave $code, not 401"; exit 1; }
+          code=$(curl -s -o /dev/null -w '%{http_code}' "https://api.$DOMAIN/portal/me" -H "X-Magana-Key: x")
+          [ "$code" = 401 ] || { echo "the portal API without a key or session gave $code, not 401"; exit 1; }
+          # The Space itself refuses anyone without the token.
+          code=$(curl -s -o /dev/null -w '%{http_code}' "https://${HF_SPACE%%/*}-${HF_SPACE##*/}.hf.space/health")
+          case "$code" in 401|403|404) echo "the Space is private ($code)";; *) echo "the Space answered $code without a token"; exit 1;; esac
 
   pages:
-    needs: [backend, app, portal, website]
+    needs: [backend, app, portal, website, worker]
     # Only main, and only once Cloudflare is set up (docs/DEPLOY_PAGES.md, step 2).
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.CLOUDFLARE_ACCOUNT_ID != ''
     runs-on: ubuntu-latest
@@ -214,8 +209,7 @@ jobs:
           MAGANA_API="https://api.$DOMAIN" scripts/build-web.sh
           $WRANGLER pages deploy app/build/web --project-name magana-app --branch main --commit-hash "$GITHUB_SHA"
 
-      - name: Teacher portal (teachers.magana.ng), once it has its own sign-in
-        if: vars.PORTAL_ON_PAGES == 'true'
+      - name: Teacher portal (teachers.magana.ng)
         env:
           NEXT_PUBLIC_API_KEY: ${{ secrets.MAGANA_WEB_API_KEY }}
         run: |
