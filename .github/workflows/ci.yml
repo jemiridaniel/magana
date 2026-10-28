@@ -127,8 +127,9 @@ jobs:
         working-directory: website
       - run: npx next build
         working-directory: website
-      # axe (WCAG 2.2 A/AA + 7:1 contrast) at 1280 and 390 px, 64 px controls, the loader,
-      # Braille and samples, in the runner's Google Chrome.
+      # axe (WCAG 2.2 A/AA + 7:1 contrast) at 1280 px and at the phone sizes 402×874, 440×956 and
+      # 360×800, 64 px controls, nothing off-screen or clipped, the language dropdown, full-size
+      # icons, the loader, Braille and samples, in the runner's Google Chrome.
       - run: npx playwright test --reporter=line
         working-directory: website
 

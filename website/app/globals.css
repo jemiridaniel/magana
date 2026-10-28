@@ -71,14 +71,31 @@ img { max-width: 100%; height: auto; }
   display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 10px 24px;
   padding: 10px var(--pad); background: var(--ink); color: #fff; font-size: 17px;
 }
-.langs { display: flex; flex-wrap: wrap; gap: 8px 14px; margin: 0; padding: 0; list-style: none; align-items: center; }
-.langs li { display: inline-flex; align-items: center; gap: 6px; }
-.lang {
-  display: inline-flex; align-items: center; min-height: 40px; padding: 0 14px; border-radius: 20px;
-  border: 2px solid #fff; color: #fff; font-weight: 700; font-size: 16px;
+/* The language dropdown (components/LangMenu.tsx) */
+.lang-menu { position: relative; }
+.lang-menu summary {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 64px; padding: 0 20px; border-radius: 32px;
+  border: 2px solid #fff; color: #fff; font-size: 17px; font-weight: 700; cursor: pointer; list-style: none; white-space: nowrap;
 }
-.lang-current { background: var(--amber); border-color: var(--amber); color: var(--ink); }
-.lang-note { font-size: 14px; color: #d5d9de; }
+.lang-menu summary::-webkit-details-marker { display: none; }
+.lang-menu summary svg { flex: none; }
+.lang-menu summary:hover { background: #2a2f34; }
+.lang-menu[open] .lang-chevron { transform: rotate(180deg); }
+.lang-list {
+  position: absolute; right: 0; top: calc(100% + 8px); z-index: 30; width: 300px; max-width: calc(100vw - 2 * var(--pad));
+  display: flex; flex-direction: column; gap: 4px; margin: 0; padding: 8px; list-style: none;
+  background: #fff; color: var(--ink); border: 3px solid var(--ink); border-radius: 20px; box-shadow: 0 12px 32px rgba(20, 23, 26, .25);
+}
+.lang-option {
+  display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 4px 10px; min-height: 64px; padding: 8px 14px;
+  border-radius: 14px; font-size: 18px; font-weight: 700;
+}
+.lang-option.lang-current { background: var(--mint); color: var(--green-ink); }
+.lang-option svg { flex: none; }
+.lang-note { font-size: 16px; font-weight: 400; color: var(--muted); }
+.access-bar :focus-visible { outline-color: #fff; }
+/* Phones: the bar wraps and the dropdown starts its own line on the left, so its list opens to the right. */
+@media (max-width: 700px) { .lang-list { right: auto; left: 0; } }
 
 /* Header */
 .site-header {
@@ -102,6 +119,7 @@ img { max-width: 100%; height: auto; }
 }
 @media (max-width: 900px) {
   .nav-wide { display: none; }
+  .nav-narrow summary { padding: 0 20px; }
   .nav-narrow { display: block; }
 }
 
@@ -117,9 +135,16 @@ img { max-width: 100%; height: auto; }
 .hero { display: flex; flex-wrap: wrap; align-items: center; gap: 56px; padding: clamp(48px, 8vw, 80px) var(--pad) clamp(56px, 8vw, 88px); }
 .hero-text { flex: 1 1 520px; display: flex; flex-direction: column; gap: 26px; min-width: 0; }
 .hero-text > p.lead { font-size: 22px; max-width: 600px; }
+/* Phones (canvas phone board): full-width buttons and a 150 px logo. */
+@media (max-width: 600px) {
+  .hero .btn-row .btn { width: 100%; }
+  .home-link svg { width: 150px; height: auto; }
+}
 .hero-art { flex: 1 1 300px; display: flex; justify-content: center; }
 .soon { display: flex; flex-direction: column; gap: 8px; margin: 0; padding: 0; list-style: none; font-size: 17px; color: var(--muted); }
-.soon li { display: flex; gap: 8px; align-items: flex-start; }
+.soon li { display: flex; gap: 10px; align-items: flex-start; }
+/* The iPhone and WhatsApp icons keep their full 24 px; the text wraps beside them. */
+.soon svg { flex: none; width: 24px; height: 24px; }
 .soon strong { color: var(--ink); }
 
 .cards3 { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; margin: 0; padding: 0; list-style: none; }
@@ -197,6 +222,8 @@ img { max-width: 100%; height: auto; }
 .prose h3 { font-size: 24px; margin-top: 12px; }
 .prose ul, .prose ol { margin: 0; padding-left: 28px; display: flex; flex-direction: column; gap: 6px; }
 .prose blockquote { margin: 0; padding: 14px 18px; border-radius: 14px; background: var(--cream); color: var(--amber-ink); }
+/* Long addresses (https://magana.ng/download/android) break instead of running off a 360 px screen. */
+.prose a { overflow-wrap: anywhere; }
 .prose code { font-size: 0.9em; background: var(--stone); padding: 1px 6px; border-radius: 6px; overflow-wrap: anywhere; }
 .prose pre { background: var(--stone); padding: 14px; border-radius: 12px; overflow-x: auto; }
 .prose pre code { background: none; padding: 0; }

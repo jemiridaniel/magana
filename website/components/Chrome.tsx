@@ -1,26 +1,14 @@
 // The accessibility bar, header and footer on every page (design canvas, "Website · magana.ng home").
 import Link from "next/link";
+import LangMenu from "@/components/LangMenu";
 import Lockup, { Mark } from "@/components/Lockup";
 import { PORTAL_URL, SUPPORT_EMAIL } from "@/lib/site";
-
-const LANGUAGES = [
-  { code: "ha", name: "Hausa" },
-  { code: "yo", name: "Yorùbá" },
-  { code: "ig", name: "Igbo" },
-];
 
 function AccessBar() {
   return (
     <div className="access-bar">
       <p>This website works with screen readers, keyboards and zoom.</p>
-      <ul className="langs" aria-label="Website language">
-        <li><span className="lang lang-current" lang="en" aria-current="true">English</span></li>
-        {LANGUAGES.map((l) => (
-          <li key={l.code}>
-            <span className="lang" lang={l.code}>{l.name}</span> <span className="lang-note">translation coming</span>
-          </li>
-        ))}
-      </ul>
+      <LangMenu />
     </div>
   );
 }
@@ -44,7 +32,12 @@ export function Header() {
       </nav>
       {/* Phones: the same links behind one button, with no JavaScript needed. */}
       <details className="nav-narrow">
-        <summary className="btn btn-outline">Menu</summary>
+        <summary className="btn btn-outline">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" aria-hidden="true" focusable="false">
+            <path d="M4 7h16M4 12h16M4 17h16" />
+          </svg>
+          Menu
+        </summary>
         <nav aria-label="Main">
           {NAV.map((n) => <a key={n.href} href={n.href}>{n.label}</a>)}
           <Link href="/android/" className="btn btn-primary">Get Magana</Link>

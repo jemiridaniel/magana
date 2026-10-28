@@ -7,7 +7,7 @@ Test names refer to `backend/tests/` (pytest) and `app/test/` (flutter test).
 Devices used so far:
 - **Mac**: development machine, Tesseract 5.5.3, pages rendered or photographed for tests.
 - **Emulator**: Android emulator `Medium_Phone_API_36.1` (Android 16, API 36) with TalkBack 16, debug or profile build, backend on the Mac with Tesseract.
-- **Chrome**: desktop Chrome driven by Playwright, at 1280×900 and 390×844.
+- **Chrome**: desktop Chrome driven by Playwright, at 1280×900 and (website, from 28 Oct 2026) the phone sizes 402×874, 440×956 and 360×800 (earlier: 390×844).
 
 No real phone and no blind or low-vision tester has been used yet.
 
@@ -92,6 +92,21 @@ No real phone and no blind or low-vision tester has been used yet.
   - Measured on the Mac (10 cores): serial 172.6 s, `-n auto` 28.6–39.8 s (twice a run paused for about 4 minutes while the network was failing; no test makes a network connection, checked with a socket probe). In the CI image limited to 4 CPUs: serial 117 s; `-n 4` 85 s; `-n 4` with `OMP_THREAD_LIMIT=1` 48 s; Postgres `-n auto` 65 s.
   - The slowest tests are the photo ones (book page with a hand shadow 13.5 s, plain book page 11.2 s, hand shadow detection 7.6 s, handwritten letter and prescription 4–6 s each, RapidOCR in a child process 5.1 s, faint dose 4.5 s). They are slow because they OCR real-size photos several times; nothing cheap to cut without testing less.
   - **Not yet measured:** the new CI time on GitHub's runners (its serial SQLite run, 1552 s, was about 9× the Mac's, mostly in the OCR-heavy files).
+## 2026-10-28 · Website at real phone sizes: 402×874, 440×956 and 360×800
+
+- **What changed:** the website's phone checks moved from 390×844 to three real sizes: 402×874 (iPhone 16/17 Pro, the design canvas's phone board), 440×956 (iPhone Pro Max) and 360×800 (a common low-cost Android). The top bar now has the canvas's language dropdown (globe, "English", chevron; English current, Hausa, Yorùbá and Igbo "translation coming"), a `<details>` menu that works without JavaScript and closes with Escape or a tap outside. The iPhone and WhatsApp lines keep their icons at full size (`flex: none`; before, the icons could shrink beside long text). On phones the logo is 150 px wide (as on the canvas), the Menu button has the canvas's three-line icon, and the two hero buttons are full width.
+- **Measured** in desktop Chrome (Playwright), home page, dropdown open:
+
+  | Size | Page width | Top bar | Language button | Open list | Logo · Menu (one row) | iPhone / WhatsApp icons | "Get the Android app" |
+  |---|---|---|---|---|---|---|---|
+  | 402×874 | 402 (no sideways scroll) | 145 px tall, inside 0–402 | 159×64 | 300 px, x 20–320 | 150×56 · 133×64 | 24×24, 24×24 | 362×64 |
+  | 440×956 | 440 | 145 px, inside 0–440 | 159×64 | 300 px, x 22–322 | 150×56 · 133×64 | 24×24, 24×24 | 396×64 |
+  | 360×800 | 360 | 145 px, inside 0–360 | 159×64 | 300 px, x 18–318 | 150×56 · 133×64 (Menu ends at 342) | 24×24, 24×24 | 324×64 |
+
+- **Found and fixed:** at 360 px the Android page's address `https://magana.ng/download/android` ran 9 px past the right edge (hidden by the page's `overflow-x: hidden`, so the old scrollWidth check could miss it). Links in text pages now break anywhere.
+- **Tests** (`website/e2e/site.spec.ts`): every page at 1280 and the three phone sizes passes axe (WCAG 2.2 A/AA + 7:1), 64 px controls, no sideways scroll and no element past either edge; at each phone size the home page checks the top bar fits with logo and Menu on one row, the dropdown opens by tap and by keyboard, lists four 64 px options inside the screen and closes with Escape (focus back on the button) and a tap outside, the two icons are 24×24 with their text beside them, the hero buttons and all section headings are visible, and no box clips its text. `SCREENS_DIR=…` saves screenshots (top, full page, dropdown open, menu open).
+- **Differences from the canvas:** the language button and the Menu button are 64 px tall (canvas: 44 and 56) to keep the 64 px touch-target rule; the Menu button keeps its word "Menu" next to the icon; the bar's sentence stays "works with screen readers, keyboards and zoom" (the canvas's "Every page is also available read aloud" is not true of the site yet).
+- **Not yet:** a real phone, TalkBack or VoiceOver on the website, and translated pages (the other three languages are listed as "translation coming").
 
 ## 2026-10-28 · Server SSH: fail2ban now, Tailscale next, then port 22 closed to the internet
 
