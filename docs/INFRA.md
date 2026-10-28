@@ -31,8 +31,9 @@
   - **Firewall:**
     - Oracle's own iptables rules stay (`/etc/iptables/rules.v4`; they also protect the instance's metadata and boot volume). 80 and 443 are added before the final REJECT, live and in the saved file, so they survive restarts.
     - It doesn't use ufw: Oracle advises against it on these images.
-    - Oracle's network security group lets in 80 and 443. The default security list lets in 22: restrict it to your own address (docs/DEPLOY.md, step 3).
-  - **SSH:** keys only, no root login, no passwords.
+    - Oracle's network security group lets in 80 and 443. SSH: see "SSH" below.
+  - **SSH:** keys only, no root login, no passwords. fail2ban shuts out an address after 5 failed logins in 10 minutes: an hour the first time, longer each time it returns, up to a week.
+  - **Tailscale** joins the server to your private network as `magana-api`, for SSH.
   - **Docker and Caddy:** both start at boot and restart if they stop (Caddy has `Restart=always`; containers have `--restart unless-stopped`).
 - **Caddy** (`deploy/server/Caddyfile`):
   - **Certificate:** it gets and renews api.magana.ng's TLS certificate itself (Let's Encrypt).
@@ -75,7 +76,7 @@
 
 ## Deploys and rollbacks
 
-The server pulls; GitHub never logs in to it and holds no key to it. So SSH can be restricted to your own address.
+The server pulls; GitHub never logs in to it and holds no key to it. So nothing in a deploy needs SSH, and port 22 can be closed to the internet ("SSH" below).
 1. On every push to main, once every test passes, the CI job `deploy` moves the git tag **`production`** to the commit. That is the only thing CI can change, and it uses `contents: write` for this repository only.
 2. Every minute, `magana-deploy` on the server reads the tag from the public repository (`magana-deploy.timer`; no key, no account).
 3. **A new commit:**
@@ -96,6 +97,28 @@ The server pulls; GitHub never logs in to it and holds no key to it. So SSH can 
 **Rolling back by hand:** **GitHub → Actions → Rollback → Run workflow**, with an earlier commit on main. It moves the tag back, and the server switches within a minute; recent commits need no rebuild. The next push to main deploys as usual. On the server: `sudo magana-deploy --status`.
 
 **New settings:** `scripts/server-env.sh --push` (or `sudo nano /etc/magana/magana.env` on the server, then `sudo magana-deploy --restart`). The restart works the same way: a new container with the new settings, checked before the old one stops. If the check fails, the old settings stay live.
+
+## SSH
+
+You move between places, so SSH isn't limited to one home address. It goes over **Tailscale** instead (free personal plan): a private network between your computers and the server, encrypted end to end.
+- **The server's name** on it is `magana-api` (MagicDNS), so `ssh -i ~/.ssh/magana_oracle.key ubuntu@magana-api` works from anywhere your Mac has Tailscale on.
+- **The scripts** (`server-setup.sh`, `server-env.sh`, `team-setup.sh`, `server-ssh.sh`) use `magana-api` by default. `MAGANA_SERVER=<address>` overrides it, for example for a brand-new server.
+- **The firewall:** anything arriving on the `tailscale0` interface is let in (iptables, before the final REJECT).
+- **Port 22 from the internet:** open, guarded by fail2ban, until `/etc/magana/ssh-tailscale-only` exists. `scripts/server-ssh.sh --tailscale-only` sets it, and refuses unless it is itself running over Tailscale, so it can't lock you out. The rule is then removed live and from the saved rules, and bootstrap keeps it removed. Oracle's security list rule for 22 is removed too (docs/DEPLOY.md, step 3), so 22 is closed at two layers. 80 and 443 stay open.
+  - **Not ufw:** Oracle advises against ufw on these images, so the host firewall stays Oracle's iptables rules, changed the same way as for 80 and 443.
+- **What doesn't use SSH:**
+  - Deploys: the server pulls the `production` tag over HTTPS.
+  - The monitor: `https://api.magana.ng/livez` and `/health`.
+  - Backups: GitHub talks to Neon and the backups repository, never to the server.
+  - CI's wait: `https://api.magana.ng/deploy-status`.
+
+  None of them change when port 22 closes.
+- **Two Tailscale settings that matter** (docs/DEPLOY.md, step 3):
+  - **Key expiry is turned off for `magana-api`.** Otherwise Tailscale drops the server from the network after 180 days.
+  - **The server's connection** goes out through Tailscale's relays, or direct where possible. No inbound port is opened for it.
+- **Locked out** (Tailscale down, or its sign-in lost):
+  - Oracle's console connection still reaches the server (docs/RESTORE.md). It needs the `ubuntu` password set beforehand (docs/DEPLOY.md, step 3b). SSH never accepts passwords.
+  - From there, `sudo rm /etc/magana/ssh-tailscale-only` and the port 22 rule reopen SSH.
 
 ## Oracle's idle reclaim
 

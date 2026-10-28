@@ -6,7 +6,7 @@
 # From any computer with the server's SSH key; or, on the server itself:
 #   sudo magana-deploy exec python -m app.team_setup --email … --name …
 set -euo pipefail
-HOST="${MAGANA_SERVER:-api.magana.ng}"
+HOST="${MAGANA_SERVER:-magana-api}"  # the server's Tailscale name (docs/INFRA.md)
 KEY="${MAGANA_SSH_KEY:-$HOME/.ssh/magana_oracle.key}"
 args=$(printf ' %q' "$@")
 ssh -t -i "$KEY" "ubuntu@$HOST" "sudo magana-deploy exec python -m app.team_setup$args"

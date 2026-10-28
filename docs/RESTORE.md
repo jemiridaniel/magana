@@ -62,6 +62,14 @@ age -d -i ~/.magana/backup-age-key.txt -o ~/.magana/server.env magana-backups/se
 
 Nothing else needs restoring: the data is in Neon.
 
+**Locked out of SSH** (Tailscale down or signed out, with port 22 closed):
+1. Open **Oracle → Compute → Instances → magana-api → Resources → Console connection → Launch Cloud Shell connection**.
+2. Sign in as `ubuntu`. This needs a password; set one beforehand with `sudo passwd ubuntu`, which works only on the console, not over SSH.
+3. Reconnect Tailscale with `sudo tailscale up`, or reopen public SSH:
+   - `sudo rm /etc/magana/ssh-tailscale-only`, then `sudo iptables -I INPUT 4 -p tcp --dport 22 -j ACCEPT`;
+   - also re-add the port 22 rule in Oracle's security list.
+4. A lost server can always be replaced instead (above): nothing on it is the only copy.
+
 **A bad deploy:** the server keeps the old version if the new one fails its checks (docs/INFRA.md). To put an earlier commit back by hand: **GitHub → Actions → Rollback → Run workflow**.
 
 **An owner locked out of the portal:**

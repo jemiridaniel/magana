@@ -36,15 +36,38 @@ Oracle may stop the instance for looking idle: under 20% CPU, network and memory
 
 To upgrade later: **☰ → Billing & Cost Management → Upgrade and Manage Payment → Pay As You Go**. Keep the $1 budget alert, and create nothing beyond Always Free.
 
-## 3. Oracle: allow SSH only from your address
+## 3. SSH over Tailscale, then close port 22 to the internet
 
-1. Find your address: search "what is my IP" in a browser (for example `102.89.x.x`).
-2. Open **☰ → Networking → Virtual cloud networks →** your VCN **→ Security** tab **→ Security Lists → Default Security List for …**.
-3. Under **Security rules → Ingress rules**, find the rule with **Destination port 22** and **Source 0.0.0.0/0**. Choose **⋮ → Edit**.
-4. Set **Source CIDR** to `<your address>/32` (for example `102.89.12.34/32`), then **Save changes**.
-5. Leave the network security group `ig-quick-action-NSG` (80 and 443 from anywhere) as it is.
+Already done on the server:
+- fail2ban guards SSH;
+- Tailscale is installed and waiting to be joined to your network as `magana-api`.
 
-Deploys don't use SSH (docs/INFRA.md), so this breaks nothing. Your home address may change, though. If SSH stops answering, edit the rule again with your new address. If you're locked out, Oracle's **Cloud Shell** still works: add its address the same way.
+**a. Your Tailscale network, and the server in it:**
+1. Open the sign-in link Claude gave you (from `sudo tailscale up --hostname magana-api` on the server). Sign in with Google, GitHub or Microsoft; this creates your free tailnet. Choose **Connect**.
+   - If the link has expired, ask for a new one, or run that command on the server yourself.
+2. Open **login.tailscale.com/admin/machines → magana-api → ⋯ → Disable key expiry**. Otherwise the server drops off after 180 days.
+3. **DNS** tab: check that **MagicDNS** is on (it is by default).
+
+**b. Your Mac:**
+1. Install Tailscale: the **Mac App Store** ("Tailscale"), or `brew install --cask tailscale`.
+2. Open it from Applications. Allow the VPN configuration when macOS asks, then **Log in** with the **same account** as in a1.
+3. In a terminal:
+   ```bash
+   ssh -i ~/.ssh/magana_oracle.key ubuntu@magana-api 'echo "$SSH_CONNECTION" | cut -d" " -f1'
+   ```
+   It should print an address starting with `100.`. That means the connection went over Tailscale.
+4. **Set a console password**, the way back in if Tailscale ever fails (docs/RESTORE.md):
+   1. Run `ssh -t -i ~/.ssh/magana_oracle.key ubuntu@magana-api sudo passwd ubuntu`.
+   2. Choose a long password and keep it in your password manager.
+   3. SSH still refuses passwords; this one works only on Oracle's console.
+5. **Tell Claude it works.** Then Claude runs (or you run) `scripts/server-ssh.sh --tailscale-only`. It closes port 22 on the server itself, and refuses unless run over Tailscale.
+
+**c. Oracle's security list (after b5):**
+1. Open **☰ → Networking → Virtual cloud networks →** your VCN **→ Security** tab **→ Security Lists → Default Security List for …**.
+2. Under **Security rules → Ingress rules**, find the rule with **Destination port 22**. Choose **⋮ → Remove**.
+3. Leave the network security group `ig-quick-action-NSG` (80 and 443 from anywhere) as it is.
+
+**Other computers or a phone:** install Tailscale and log in with the same account, then copy `~/.ssh/magana_oracle.key` to that computer.
 
 ## 4. The database: Neon (London)
 

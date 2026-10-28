@@ -13,6 +13,15 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-28 · Server SSH: fail2ban now, Tailscale next, then port 22 closed to the internet
+
+- **Why:** the team moves between places, so SSH can't be limited to one home address.
+- **fail2ban** (sshd, systemd backend) is installed and active. An address is shut out after 5 failed logins in 10 minutes: 1 hour the first time, doubling up to a week. Tailscale's 100.64.0.0/10 addresses are never shut out. Keys only, no root and no passwords are unchanged.
+- **Tailscale** is installed (from its apt repository; its updates go with the unattended security updates), and the firewall lets in `tailscale0`. It is waiting for its one-time sign-in.
+- **Port 22 is still open**, until SSH over Tailscale has been confirmed. Then `scripts/server-ssh.sh --tailscale-only` closes it on the host, refusing unless run over Tailscale, and the Oracle security list rule is removed.
+- **Nothing else needs SSH:** deploys pull over HTTPS, and the monitor, the backups and CI's wait use HTTPS too.
+- **Not yet tested:** SSH over Tailscale and the close itself (they need the sign-in).
+
 ## 2026-10-28 · The API moves to an Oracle Cloud Always Free server in London (UNREVIEWED)
 
 > **Why:** a free Hugging Face Docker Space now needs a paid plan, so the Space and its Cloudflare Worker (the entry below) were never deployed. The API runs on an Oracle Cloud Always Free server instead: `magana-api`, A1 Flex, 2 OCPU, 12 GB, arm64, Ubuntu 24.04, UK South (London). Neon (London) and Resend (Ireland) stay as planned. docs/INFRA.md has the details; docs/DEPLOY.md lists the clicks still to do.

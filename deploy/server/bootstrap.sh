@@ -32,6 +32,7 @@ cat > /etc/apt/apt.conf.d/52magana-unattended <<'EOF'
 Unattended-Upgrade::Origins-Pattern {
         "origin=Docker,label=Docker CE";
         "site=dl.cloudsmith.io,label=caddy-stable";
+        "origin=Tailscale";
 };
 Unattended-Upgrade::Remove-Unused-Dependencies "true";
 Unattended-Upgrade::Automatic-Reboot "true";
@@ -53,14 +54,66 @@ for port in 80 443; do
       -p tcp -m state --state NEW -m tcp --dport "$port" -j ACCEPT
 done
 grep -c -- "--dport \(80\|443\) -j ACCEPT" "$RULES" | grep -qx 2 || { echo "couldn't add 80/443 to $RULES"; exit 1; }
+# Anything over Tailscale (the private network for SSH, below) is let in, before the final REJECT.
+TS_RULE="-A INPUT -i tailscale0 -j ACCEPT"
+grep -qF -- "$TS_RULE" "$RULES" || sed -i "0,/^-A INPUT -j REJECT/s//${TS_RULE}\n-A INPUT -j REJECT/" "$RULES"
+iptables -C INPUT -i tailscale0 -j ACCEPT 2>/dev/null || \
+  iptables -I INPUT "$(iptables -L INPUT --line-numbers | awk '$2=="REJECT"{print $1; exit}')" -i tailscale0 -j ACCEPT
+# SSH from the internet: open until /etc/magana/ssh-tailscale-only exists (scripts/server-ssh.sh
+# --tailscale-only, once SSH over Tailscale works). Then port 22 answers only over Tailscale.
+SSH_RULE="-A INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT"
+if [ -f /etc/magana/ssh-tailscale-only ]; then
+  [ "$(tailscale status --json 2>/dev/null | jq -r .BackendState)" = Running ] \
+    || { echo "refusing to close public SSH: Tailscale isn't connected"; exit 1; }
+  sed -i "\#^${SSH_RULE}\$#d" "$RULES"
+  while iptables -C INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT 2>/dev/null; do
+    iptables -D INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
+  done
+  echo "public SSH: closed (Tailscale only)"
+else
+  grep -qF -- "$SSH_RULE" "$RULES" || sed -i "0,/^-A INPUT -j REJECT/s//${SSH_RULE}\n-A INPUT -j REJECT/" "$RULES"
+  iptables -C INPUT -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT 2>/dev/null || \
+    iptables -I INPUT "$(iptables -L INPUT --line-numbers | awk '$2=="REJECT"{print $1; exit}')" -p tcp -m state --state NEW -m tcp --dport 22 -j ACCEPT
+  echo "public SSH: open (fail2ban guards it)"
+fi
 
-echo "== ssh"
+echo "== ssh, fail2ban"
 cat > /etc/ssh/sshd_config.d/60-magana.conf <<'EOF'
 PasswordAuthentication no
 KbdInteractiveAuthentication no
 PermitRootLogin no
 EOF
 sshd -t && systemctl reload ssh
+# fail2ban: an address with 5 failed logins in 10 minutes is shut out for an hour, longer each
+# time it comes back (up to a week). Never Tailscale's own addresses.
+apt-get -y -q install fail2ban
+cat > /etc/fail2ban/jail.d/magana.local <<'EOF'
+[DEFAULT]
+backend = systemd
+banaction = iptables-multiport
+ignoreip = 127.0.0.1/8 ::1 100.64.0.0/10
+
+[sshd]
+enabled = true
+mode = aggressive
+maxretry = 5
+findtime = 10m
+bantime = 1h
+bantime.increment = true
+bantime.maxtime = 1w
+EOF
+fail2ban-client -t >/dev/null && systemctl enable fail2ban >/dev/null && systemctl restart fail2ban
+
+echo "== tailscale"
+# The private network for SSH (docs/INFRA.md). Joining it needs a one-time sign-in:
+# "sudo tailscale up --hostname magana-api" prints a link to open.
+if ! command -v tailscale >/dev/null; then
+  curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/noble.noarmor.gpg -o /usr/share/keyrings/tailscale-archive-keyring.gpg
+  curl -fsSL https://pkgs.tailscale.com/stable/ubuntu/noble.tailscale-keyring.list -o /etc/apt/sources.list.d/tailscale.list
+  apt-get update -q && apt-get -y -q install tailscale
+fi
+systemctl enable --now tailscaled >/dev/null
+echo "tailscale: $(tailscale status --json 2>/dev/null | jq -r .BackendState)"
 
 echo "== docker"
 if ! command -v docker >/dev/null; then
@@ -102,4 +155,4 @@ systemctl enable --now magana-deploy.timer >/dev/null
 
 echo "== done"
 echo "settings: $( [ -f /etc/magana/magana.env ] && echo present || echo 'missing (scripts/server-env.sh --push)')"
-systemctl is-active docker caddy magana-deploy.timer unattended-upgrades | paste -sd' ' -
+systemctl is-active docker caddy magana-deploy.timer unattended-upgrades fail2ban tailscaled | paste -sd' ' -

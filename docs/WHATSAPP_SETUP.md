@@ -64,7 +64,7 @@ From your own phone, send **Hi** to the test number. You should get:
 
 With `WHATSAPP_VOICE=off`, Magana says once that voice notes aren't ready yet.
 
-If nothing comes back, check the server's log: `ssh ubuntu@api.magana.ng 'sudo docker logs --since 10m magana-api-a magana-api-b'` (whichever slot is live: `sudo magana-deploy --status`).
+If nothing comes back, check the server's log: `ssh ubuntu@magana-api 'sudo docker logs --since 10m magana-api-a magana-api-b'` (whichever slot is live: `sudo magana-deploy --status`).
 
 Logs show `whatsapp in kind=…` lines with a short hashed user id, never a phone number or message text. A `401 bad_signature` means the app secret in the server's settings doesn't match the app's.
 
@@ -86,6 +86,6 @@ When the quick check ends, Magana logs a call-back request with a reference such
 - **Until a nurse desk is connected,** requests are kept in the database (`blobs.py`, kind `whatsapp`, `callbacks.jsonl`): reference, phone number, language, priority, time and status. Never the answers. Each is deleted after 30 days.
 - **Read them on the server** (they hold phone numbers: don't paste them anywhere):
   ```bash
-  ssh -t ubuntu@api.magana.ng "sudo magana-deploy exec python -c \"from app import blobs; print(blobs.get_text('whatsapp', 'callbacks.jsonl') or 'none')\""
+  ssh -t ubuntu@magana-api "sudo magana-deploy exec python -c \"from app import blobs; print(blobs.get_text('whatsapp', 'callbacks.jsonl') or 'none')\""
   ```
 - **With `MAGANA_CALLBACK_URL` set,** each request is also sent to the desk.

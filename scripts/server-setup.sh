@@ -5,7 +5,7 @@
 # Prints no secrets: the settings file is written by scripts/server-env.sh.
 set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-HOST="${MAGANA_SERVER:-api.magana.ng}"
+HOST="${MAGANA_SERVER:-magana-api}"  # the server's Tailscale name (docs/INFRA.md)
 KEY="${MAGANA_SSH_KEY:-$HOME/.ssh/magana_oracle.key}"
 SSH=(ssh -i "$KEY" -o StrictHostKeyChecking=accept-new "ubuntu@$HOST")
 COPYFILE_DISABLE=1 tar -C "$ROOT/deploy" -czf - server | "${SSH[@]}" 'rm -rf /tmp/magana-setup && mkdir -p /tmp/magana-setup && tar -C /tmp/magana-setup -xzf -'

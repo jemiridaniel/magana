@@ -15,7 +15,7 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 F="${MAGANA_SERVER_ENV:-$HOME/.magana/server.env}"
 APP_ENV="${MAGANA_APP_ENV:-$HOME/.magana/app.env}"
-HOST="${MAGANA_SERVER:-api.magana.ng}"
+HOST="${MAGANA_SERVER:-magana-api}"  # the server's Tailscale name (docs/INFRA.md)
 KEY="${MAGANA_SSH_KEY:-$HOME/.ssh/magana_oracle.key}"
 BACKUPS="${MAGANA_BACKUP_REPO:-jemiridaniel/magana-backups}"
 REQUIRED="DATABASE_URL MAGANA_CODE_KEY MAGANA_API_KEY MAGANA_WEB_API_KEY RESEND_API_KEY RESEND_WEBHOOK_SECRET"
