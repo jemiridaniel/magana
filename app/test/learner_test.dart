@@ -239,7 +239,7 @@ void main() {
     await tap(tester, en.back);
 
     await say(tester, voice, 'what is the weather');
-    expect(speaker.said.last, en.commandNotUnderstood('what is the weather'));
+    expect(speaker.said.last, en.commandSorry);
 
     await say(tester, voice, 'change language to Hausa');
     expect(language.value, const Locale('ha'));
@@ -392,7 +392,7 @@ void main() {
         // Classroom sessions have no voice commands for open questions either;
         // Guided learners can speak commands, but this one isn't offered.
         await say(tester, voice, 'ask a question');
-        expect(speaker.said.last, en.commandNotUnderstood('ask a question'));
+        expect(speaker.said.last, en.commandSorry);
         await say(tester, voice, 'help');
         expect(speaker.said.last, isNot(contains(en.askQuestion)));
       }

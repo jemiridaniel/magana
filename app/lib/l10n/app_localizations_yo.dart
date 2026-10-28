@@ -1258,6 +1258,10 @@ class AppLocalizationsYo extends AppLocalizations {
   }
 
   @override
+  String get commandSorry =>
+      'Má bínú, ọ̀rọ̀ yẹn kò yé mi. Sọ “read a page” tàbí “help”.';
+
+  @override
   String get commandNothingHeard =>
       'Mi ò gbọ́ àṣẹ kankan. Tún gbìyànjú, tàbí sọ help.';
 
@@ -2571,4 +2575,19 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get offlineBannerDailyLimit =>
       'O ti lo ìkàwé sáfà ti òní tán. Mò ń kà á lórí fóònù yìí; sáfà yóò tún kà lọ́la.';
+
+  @override
+  String get msg_handwriting_read_anyway =>
+      'Mo ka ìkọ̀wé ọwọ́ yìí bí mo ṣe lè ṣe tó. Ó lè ní àṣìṣe, èmi kò sì ka àwọn nọ́ńbà rẹ̀.';
+
+  @override
+  String get msg_offline_health_numbers =>
+      'Láìsí íńtánẹ́ẹ̀tì, fóònù yìí lè ka ìkọ̀wé ọwọ́ sí ìtẹ̀wé, nítorí náà èmi kò ka nọ́ńbà lórí ìwé ìlera. Tún un kà nígbà tí o bá wà lórí íńtánẹ́ẹ̀tì, tàbí bi oníṣègùn òògùn tàbí nọ́ọ̀sì.';
+
+  @override
+  String get handwritingOffer =>
+      'Èyí dà bí ìkọ̀wé ọwọ́. Ṣé kí n kà á bẹ́ẹ̀? Ó lè ní àṣìṣe.';
+
+  @override
+  String get readItAnyway => 'Kà á bẹ́ẹ̀';
 }

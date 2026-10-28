@@ -10,7 +10,8 @@ import 'package:record/record.dart';
 import 'package:speech_to_text/speech_recognition_result.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 
-import 'package:flutter/widgets.dart' show BuildContext;
+import 'package:flutter/services.dart' show HapticFeedback;
+import 'package:flutter/widgets.dart' show BuildContext, WidgetsBinding;
 
 import 'api.dart';
 import 'app_scope.dart';
@@ -92,6 +93,15 @@ VoiceInput Function(Tier tier) voiceInput = (tier) =>
 VoiceInput voiceInputFor(BuildContext context) =>
     voiceInput(AppScope.of(context).profile.tier ?? Tier.classroom);
 
+/// A screen reader (TalkBack, VoiceOver) is on. Replaceable in tests.
+bool Function() screenReaderRunning = () => WidgetsBinding
+    .instance
+    .platformDispatcher
+    .accessibilityFeatures
+    .accessibleNavigation;
+
+const _waitForReader = Duration(seconds: 3);
+
 class ChainVoiceInput extends VoiceInput {
   ChainVoiceInput(this.steps, {this.skipped = const {}});
   final List<VoiceInput> steps;
@@ -151,6 +161,10 @@ class ChainVoiceInput extends VoiceInput {
     AnswerChoices? choices,
   }) async {
     _logSkipped();
+    // With TalkBack on, its own words ("Speak a command, button", the new label) would be
+    // heard as the command: wait until it is quiet, then a short vibration says "speak now".
+    if (screenReaderRunning()) await screenReaderQuiet(max: _waitForReader);
+    await HapticFeedback.mediumImpact();
     for (final step in steps) {
       if (_usable[step] == false) {
         devLog('voice: ${step.name} skipped: ${_why[step]}');
@@ -188,7 +202,20 @@ class SpeechVoiceInput extends VoiceInput {
   /// Only the phone's on-device recogniser, checked first: speech_to_text quietly
   /// uses the network recogniser when the phone has no on-device one.
   final bool onDevice;
-  final _stt = SpeechToText();
+
+  /// speech_to_text is one recogniser for the whole app (`SpeechToText()` is a singleton,
+  /// and a second initialize keeps the first one's callbacks). Its status and errors go to
+  /// the step listening now ([_owner]): before, the online step's errors went to the
+  /// on-device step, and "Speak a command" said "Listening…" for ever on a phone without an
+  /// on-device English model (TalkBack audit, 27 Oct 2026).
+  static SpeechToText get _stt => SpeechToText();
+  static SpeechVoiceInput? _owner;
+  static Future<bool>? _initialised;
+  static String? _initError;
+
+  /// The longest a listen may take before Magana stops it (10 s of listening, 3 s pause,
+  /// and the recogniser's own start): never "Listening…" for ever.
+  static Duration watchdog = const Duration(seconds: 16);
   Completer<List<String>>? _pending;
   List<String> _heard = const []; // the latest result, final or not
   List<LocaleName> _locales = const [];
@@ -218,26 +245,17 @@ class SpeechVoiceInput extends VoiceInput {
             : 'this phone has no on-device recogniser';
         return false;
       }
-      String? error;
-      final ok = await _stt.initialize(
-        onStatus: (status) {
-          devLog('voice: $name status "$status"');
-          if (status != SpeechToText.doneStatus) return;
-          // "done" can arrive just before the final result; give it a moment.
-          final waiting = _pending;
-          Timer(const Duration(milliseconds: 500), () {
-            if (identical(_pending, waiting)) _finish(_heard);
-          });
-        },
+      final ok = await (_initialised ??= _stt.initialize(
+        onStatus: (status) => _owner?._onStatus(status),
         onError: (e) {
-          devLog('voice: $name error "${e.errorMsg}"');
-          error = e.errorMsg;
-          _heardNothing.contains(e.errorMsg)
-              ? _finish(_heard) // heard nothing: not a failure
-              : _fail(_explain(e.errorMsg));
+          _initError = e.errorMsg;
+          _owner?._onError(e.errorMsg);
         },
-      );
+      ));
       if (!ok) {
+        _initialised =
+            null; // asked again next time (the microphone may be allowed then)
+        final error = _initError;
         _why = kIsWeb
             ? 'this browser has no speech recognition${error == null ? '' : ' ($error)'}'
             : 'no speech recogniser on this phone${error == null ? '' : ' ($error)'}';
@@ -246,9 +264,27 @@ class SpeechVoiceInput extends VoiceInput {
       _locales = await _stt.locales();
       return true;
     } catch (e) {
+      _initialised = null;
       _why = 'error: $e';
       return false;
     }
+  }
+
+  void _onStatus(String status) {
+    devLog('voice: $name status "$status"');
+    if (status != SpeechToText.doneStatus) return;
+    // "done" can arrive just before the final result; give it a moment.
+    final waiting = _pending;
+    Timer(const Duration(milliseconds: 500), () {
+      if (identical(_pending, waiting)) _finish(_heard);
+    });
+  }
+
+  void _onError(String error) {
+    devLog('voice: $name error "$error"');
+    _heardNothing.contains(error)
+        ? _finish(_heard) // heard nothing: not a failure
+        : _fail(_explain(error));
   }
 
   static String _explain(String error) => switch (error) {
@@ -267,11 +303,18 @@ class SpeechVoiceInput extends VoiceInput {
   /// (English only: another language without a model is a failure).
   String? _localeFor(String language) {
     String norm(LocaleName l) => l.localeId.replaceAll('-', '_');
-    final ng = _locales.where((l) => norm(l) == '${language}_NG').firstOrNull;
+    LocaleName? exactly(String id) =>
+        _locales.where((l) => norm(l) == id).firstOrNull;
+    // English: British, then American, before the first in the list (the emulator's was
+    // Australian English).
+    final preferred = [
+      '${language}_NG',
+      if (language == 'en') ...['en_GB', 'en_US'],
+    ].map(exactly).nonNulls.firstOrNull;
     final any = _locales
         .where((l) => norm(l).startsWith('${language}_'))
         .firstOrNull;
-    final found = (ng ?? any)?.localeId;
+    final found = (preferred ?? any)?.localeId;
     if (found == null && language != 'en') {
       throw VoiceStepFailed('no $language recogniser');
     }
@@ -287,6 +330,13 @@ class SpeechVoiceInput extends VoiceInput {
     final locale = _localeFor(language);
     _heard = const [];
     final done = _pending = Completer<List<String>>();
+    _owner = this;
+    final watch = Timer(watchdog, () {
+      devLog('voice: $name gave no answer in ${watchdog.inSeconds} s; stopped');
+      _stt.stop();
+      _finish(_heard);
+    });
+    done.future.whenComplete(watch.cancel).ignore();
     await _stt.listen(
       onResult: _onResult,
       listenOptions: SpeechListenOptions(
@@ -418,7 +468,12 @@ class ServerVoiceInput extends VoiceInput {
             if (!stopped.isCompleted) stopped.complete();
           }
         });
+    // Never longer than 8 s, even if the microphone reports no levels at all.
+    final watch = Timer(const Duration(seconds: 9), () {
+      if (!stopped.isCompleted) stopped.complete();
+    });
     await stopped.future;
+    watch.cancel();
     await levels.cancel();
     final recorded = await _recorder.stop();
     try {

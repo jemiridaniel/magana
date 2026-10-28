@@ -2094,6 +2094,12 @@ abstract class AppLocalizations {
   /// **'I heard “{heard}”, but I don\'t know that command. Say help to hear what you can say.'**
   String commandNotUnderstood(String heard);
 
+  /// Speak a command heard nothing, or nothing it knows (Nurse Balogun's wording). The commands are English for now.
+  ///
+  /// In en, this message translates to:
+  /// **'Sorry, I didn\'t catch that. Say “read a page” or “help”.'**
+  String get commandSorry;
+
   /// No description provided for @commandNothingHeard.
   ///
   /// In en, this message translates to:
@@ -4139,6 +4145,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You\'ve used today\'s server readings. Reading on this phone; the server reads again tomorrow.'**
   String get offlineBannerDailyLimit;
+
+  /// No description provided for @msg_handwriting_read_anyway.
+  ///
+  /// In en, this message translates to:
+  /// **'I read this handwriting as best I can. It may contain mistakes, and I don\'t read its numbers.'**
+  String get msg_handwriting_read_anyway;
+
+  /// No description provided for @msg_offline_health_numbers.
+  ///
+  /// In en, this message translates to:
+  /// **'Without the internet, this phone may take handwriting for print, so I don\'t read numbers on health papers. Read it again when you are online, or ask the pharmacist or nurse.'**
+  String get msg_offline_health_numbers;
+
+  /// Schoolwork only, when the page looks handwritten (Dr. Amos). Hausa, Yorùbá and Igbo are drafts.
+  ///
+  /// In en, this message translates to:
+  /// **'This looks handwritten. Read it anyway? It may contain mistakes.'**
+  String get handwritingOffer;
+
+  /// No description provided for @readItAnyway.
+  ///
+  /// In en, this message translates to:
+  /// **'Read it anyway'**
+  String get readItAnyway;
 }
 
 class _AppLocalizationsDelegate

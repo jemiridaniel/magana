@@ -1263,6 +1263,10 @@ class AppLocalizationsHa extends AppLocalizations {
   }
 
   @override
+  String get commandSorry =>
+      'Yi haƙuri, ban gane ba. Ka ce “read a page” ko “help”.';
+
+  @override
   String get commandNothingHeard =>
       'Ban ji umarni ba. Sake gwadawa, ko ka ce help.';
 
@@ -2574,4 +2578,19 @@ class AppLocalizationsHa extends AppLocalizations {
   @override
   String get offlineBannerDailyLimit =>
       'Ka gama karatun sabar na yau. Ina karantawa a wannan wayar; sabar za ta sake karantawa gobe.';
+
+  @override
+  String get msg_handwriting_read_anyway =>
+      'Na karanta wannan rubutun hannu gwargwadon iyawata. Yana iya ƙunsar kurakurai, kuma ba na karanta lambobinsa.';
+
+  @override
+  String get msg_offline_health_numbers =>
+      'Ba tare da intanet ba, wannan waya na iya ɗaukar rubutun hannu a matsayin bugu, don haka ba na karanta lambobi a takardun lafiya. Sake karantawa idan kana kan intanet, ko ka tambayi mai ba da magani ko nas.';
+
+  @override
+  String get handwritingOffer =>
+      'Wannan yana kama da rubutun hannu. A karanta duk da haka? Yana iya ƙunsar kurakurai.';
+
+  @override
+  String get readItAnyway => 'A karanta duk da haka';
 }

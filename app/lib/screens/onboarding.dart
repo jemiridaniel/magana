@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 
 import '../api.dart' show ClassLink;
 import '../app_scope.dart';
@@ -119,19 +120,32 @@ class _ProfileGateState extends State<ProfileGate> with WidgetsBindingObserver {
   }
 }
 
-class _OnboardingFlow extends StatelessWidget {
+class _OnboardingFlow extends StatefulWidget {
   const _OnboardingFlow();
 
   @override
-  Widget build(BuildContext context) => Navigator(
-    observers: [
-      SpeechRouteObserver(
-        AppScope.of(context).voice,
-        AppScope.of(context).touch,
-      ),
-    ],
-    onGenerateRoute: (_) =>
-        MaterialPageRoute(builder: (_) => const LanguageStep()),
+  State<_OnboardingFlow> createState() => _OnboardingFlowState();
+}
+
+class _OnboardingFlowState extends State<_OnboardingFlow> {
+  final _steps = GlobalKey<NavigatorState>();
+
+  // Android's Back (and TalkBack's back gesture) goes one step back. Before, it went to the
+  // app's own navigator, which had nothing to go back to, and Magana closed (TalkBack audit).
+  @override
+  Widget build(BuildContext context) => NavigatorPopHandler<Object?>(
+    onPopWithResult: (_) => _steps.currentState?.maybePop(),
+    child: Navigator(
+      key: _steps,
+      observers: [
+        SpeechRouteObserver(
+          AppScope.of(context).voice,
+          AppScope.of(context).touch,
+        ),
+      ],
+      onGenerateRoute: (_) =>
+          MaterialPageRoute(builder: (_) => const LanguageStep()),
+    ),
   );
 }
 
@@ -711,35 +725,61 @@ class _StepTitle extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (Navigator.of(context).canPop())
-          Padding(
-            padding: const EdgeInsets.only(bottom: 12),
-            child: ScreenHeader(
-              title: step == null ? '' : l.stepOf(step!, total),
+    // TalkBack lands on a new screen's first item: the title, then the step and Back.
+    return Semantics(
+      container: true,
+      explicitChildNodes: true,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (Navigator.of(context).canPop())
+            Semantics(
+              container: true,
+              sortKey: const OrdinalSortKey(1),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: ScreenHeader(
+                  title: step == null ? '' : l.stepOf(step!, total),
+                  titleIsHeading: false,
+                ),
+              ),
+            ),
+          if (!Navigator.of(context).canPop() && step != null)
+            Semantics(
+              container: true,
+              sortKey: const OrdinalSortKey(1),
+              child: Text(
+                l.stepOf(step!, total),
+                style: const TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ),
+          Semantics(
+            container: true,
+            sortKey: const OrdinalSortKey(0),
+            header: true,
+            child: Text(
+              title,
+              style: const TextStyle(
+                fontSize: 32,
+                height: 1.15,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
-        if (!Navigator.of(context).canPop() && step != null)
-          Text(
-            l.stepOf(step!, total),
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
-          ),
-        Semantics(
-          header: true,
-          child: Text(
-            title,
-            style: const TextStyle(
-              fontSize: 32,
-              height: 1.15,
-              fontWeight: FontWeight.w700,
+          const SizedBox(height: 10),
+          Semantics(
+            container: true,
+            sortKey: const OrdinalSortKey(2),
+            child: Text(
+              body,
+              style: const TextStyle(fontSize: 19, height: 1.45),
             ),
           ),
-        ),
-        const SizedBox(height: 10),
-        Text(body, style: const TextStyle(fontSize: 19, height: 1.45)),
-      ],
+        ],
+      ),
     );
   }
 }

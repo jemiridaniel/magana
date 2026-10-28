@@ -255,11 +255,17 @@ String _digitsOf(String w) => w.replaceAll(RegExp(r'[^\d]'), '');
 
 /// Reads [bytes] on this phone into the same shape as the server's /read, or null
 /// where this phone can't read offline.
+/// With [handwriting] (schoolwork only, "Read it anyway"), every line is read as best it can be
+/// and every number is held back.
 Future<ReadResult?> readOnPhone(
   Uint8List bytes, {
   required String mode,
   PageRecognizer? recognizer,
+  bool handwriting = false,
 }) async {
+  // Handwriting read anyway is for schoolwork only: never a health, money or letter paper.
+  assert(!handwriting || mode == 'school');
+  if (handwriting && mode != 'school') return null;
   final opened = await (recognizer ?? pageRecognizer).open(bytes);
   if (opened == null) return null;
   var photo = opened;
@@ -284,7 +290,13 @@ Future<ReadResult?> readOnPhone(
     seen = await dropShowThrough(photo, seen);
     seen = pairLabels(seen);
     return ReadResult.fromJson(
-      await _reading(photo, mode, seen, enhanced: enhanced),
+      await _reading(
+        photo,
+        mode,
+        seen,
+        enhanced: enhanced,
+        handwriting: handwriting,
+      ),
     );
   } finally {
     await photo.close();
@@ -447,6 +459,7 @@ Future<Map<String, dynamic>> _reading(
   String mode,
   List<SeenLine> read, {
   bool enhanced = false,
+  bool handwriting = false,
 }) async {
   final seen = [...read]..sort((a, b) => a.top.compareTo(b.top));
   final lines = <Map<String, dynamic>>[];
@@ -457,6 +470,7 @@ Future<Map<String, dynamic>> _reading(
     [for (final l in seen) ...l.words.map((w) => w.text)].join(' '),
   );
   final letterMarks = <Map<String, dynamic>>[];
+  final visionHealth = mode == 'health' && photo is _MlKitPhoto && photo.vision;
   // ML Kit on iOS gives no confidence at all. Then every number is "unclear number" (below);
   // the lines get one page warning instead of a warning on every line.
   final sure = seen.any((l) => l.words.any((w) => w.confidence != null));
@@ -493,7 +507,14 @@ Future<Map<String, dynamic>> _reading(
         });
         continue;
       }
-      final code = await _numberCheck(photo, line, j);
+      // Held without a check: every number in handwriting read anyway (schoolwork only), and
+      // on a health paper every number Apple Vision reads. Vision stays sure of handwriting
+      // (73 of 89 handwritten lines with digits at 0.90 or more on the teachers' lesson notes;
+      // ML Kit: none), and the phone has no handwriting check yet (docs/FINDINGS.md, 28 Oct
+      // 2026). DRAFT, pending Dr. Amos.
+      final code = handwriting || visionHealth
+          ? 'low_confidence_number'
+          : await _numberCheck(photo, line, j);
       if (code != null) {
         warnings.add({'block_index': i, 'word_index': j, 'code': code});
         numberFlagged = true;
@@ -508,6 +529,10 @@ Future<Map<String, dynamic>> _reading(
     'columns': 1,
     'tips': [
       if (!sure && seen.isNotEmpty) 'offline_no_confidence',
+      if (handwriting) 'handwriting_read_anyway',
+      if (visionHealth &&
+          seen.any((l) => l.words.any((w) => _digit.hasMatch(w.text))))
+        'offline_health_numbers',
       if (enhanced) 'faint_print',
       ..._cutOff(photo, seen),
       if (language != null) 'letters_$language',

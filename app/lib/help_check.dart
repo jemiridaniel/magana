@@ -9,6 +9,7 @@ import 'tasks.dart';
 import 'theme.dart';
 import 'voice_input.dart';
 import 'widgets.dart';
+import 'touch.dart';
 
 /// "Did you read this page on your own?" (board 8): asked after a page, a PDF or a quiz is
 /// finished, at most once a day. Kept on this phone: the date, the kind of task and the
@@ -120,7 +121,8 @@ Future<HelpAnswer?> maybeAskForHelp(BuildContext context, HelpTask task) async {
   final answer = await showModalBottomSheet<HelpAnswer>(
     context: context,
     isScrollControlled: true,
-    showDragHandle: true,
+    // TalkBack lands on the sheet's question, not a "Dismiss" handle above it.
+    showDragHandle: !screenReaderOn(context),
     backgroundColor: MaganaColors.ground,
     builder: (_) => HelpCheckSheet(task: task, sharing: sharing),
   );

@@ -333,6 +333,7 @@
   "speakCommand": "Faɗi umarni",
   "listeningCommand": "Ina saurare… Taɓa don tsayawa",
   "commandNotUnderstood": "Na ji “{heard}”, amma ban san wannan umarnin ba. Ka ce help don jin abin da za ka iya faɗi.",
+  "commandSorry": "Yi haƙuri, ban gane ba. Ka ce “read a page” ko “help”.",
   "commandNothingHeard": "Ban ji umarni ba. Sake gwadawa, ko ka ce help.",
   "commandHelp": "Za ka iya cewa: {commands}. Faɗi umarni da Turanci a yanzu.",
   "changeLanguageCommand": "change language",
@@ -673,5 +674,9 @@
   "offlineBannerTimeout": "Sabar Magana ta wuce daƙiƙa {seconds}. Ina karantawa a wannan wayar.",
   "offlineBannerServerError": "Sabar Magana ta sami matsala da wannan shafi. Ina karantawa a wannan wayar.",
   "offlineBannerBusy": "Sabar Magana tana aiki sosai a wannan minti. Ina karantawa a wannan wayar.",
-  "offlineBannerDailyLimit": "Ka gama karatun sabar na yau. Ina karantawa a wannan wayar; sabar za ta sake karantawa gobe."
+  "offlineBannerDailyLimit": "Ka gama karatun sabar na yau. Ina karantawa a wannan wayar; sabar za ta sake karantawa gobe.",
+  "msg_handwriting_read_anyway": "Na karanta wannan rubutun hannu gwargwadon iyawata. Yana iya ƙunsar kurakurai, kuma ba na karanta lambobinsa.",
+  "msg_offline_health_numbers": "Ba tare da intanet ba, wannan waya na iya ɗaukar rubutun hannu a matsayin bugu, don haka ba na karanta lambobi a takardun lafiya. Sake karantawa idan kana kan intanet, ko ka tambayi mai ba da magani ko nas.",
+  "handwritingOffer": "Wannan yana kama da rubutun hannu. A karanta duk da haka? Yana iya ƙunsar kurakurai.",
+  "readItAnyway": "A karanta duk da haka"
 }

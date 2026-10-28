@@ -876,6 +876,10 @@
       }
     }
   },
+  "commandSorry": "Sorry, I didn't catch that. Say “read a page” or “help”.",
+  "@commandSorry": {
+    "description": "Speak a command heard nothing, or nothing it knows (Nurse Balogun's wording). The commands are English for now."
+  },
   "commandNothingHeard": "I didn't hear a command. Try again, or say help.",
   "commandHelp": "You can say: {commands}. Say commands in English for now.",
   "@commandHelp": {
@@ -1946,5 +1950,12 @@
   },
   "offlineBannerServerError": "Magana's server had a problem with this page. Reading on this phone.",
   "offlineBannerBusy": "Magana's server is busy this minute. Reading on this phone.",
-  "offlineBannerDailyLimit": "You've used today's server readings. Reading on this phone; the server reads again tomorrow."
+  "offlineBannerDailyLimit": "You've used today's server readings. Reading on this phone; the server reads again tomorrow.",
+  "msg_handwriting_read_anyway": "I read this handwriting as best I can. It may contain mistakes, and I don't read its numbers.",
+  "msg_offline_health_numbers": "Without the internet, this phone may take handwriting for print, so I don't read numbers on health papers. Read it again when you are online, or ask the pharmacist or nurse.",
+  "handwritingOffer": "This looks handwritten. Read it anyway? It may contain mistakes.",
+  "readItAnyway": "Read it anyway",
+  "@handwritingOffer": {
+    "description": "Schoolwork only, when the page looks handwritten (Dr. Amos). Hausa, Yorùbá and Igbo are drafts."
+  }
 }

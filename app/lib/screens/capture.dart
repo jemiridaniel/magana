@@ -3,6 +3,7 @@ import 'dart:typed_data';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../api.dart';
@@ -21,6 +22,7 @@ import '../offline/read_timing.dart';
 import '../library.dart';
 import '../papers.dart';
 import '../platform.dart';
+import '../platform/speech_support.dart';
 import '../policy.dart';
 import '../tasks.dart';
 import '../theme.dart';
@@ -33,6 +35,13 @@ import 'reader.dart';
 /// takes the server 5–7 s, plus the upload on mobile data: the old 8 s sent most real pages
 /// to the phone while the server answered moments later (logs, 27 Oct 2026).
 const serverWait = Duration(seconds: 25);
+
+/// "This looks handwritten. Read it anyway?" on schoolwork (Dr. Amos, 28 Oct 2026): the page is
+/// read again on the phone (Apple Vision, ML Kit), every line marked as possibly wrong and every
+/// number held back. Never for health, money or letter papers. OFF until it is measured against
+/// typed transcripts of real handwriting: on the teachers' lesson notes at most 24% (ML Kit) and
+/// 48% (Vision) of the words read were dictionary words (docs/FINDINGS.md). Replaceable in tests.
+bool handwritingReading = const bool.fromEnvironment('MAGANA_HANDWRITING');
 
 /// "Still reading…" after this long, so a wait is never silent.
 const stillReadingAfter = Duration(seconds: 5);
@@ -87,6 +96,7 @@ class _CaptureScreenState extends State<CaptureScreen>
   Timer? _statusTimer;
   late final CaptureFeedback _feedback = widget.feedback ?? CaptureFeedback();
   DateTime _quietSince = DateTime.now();
+  bool _readerTalking = false; // TalkBack was speaking at the last check
 
   AppLocalizations get _l => AppLocalizations.of(context);
 
@@ -319,13 +329,20 @@ class _CaptureScreenState extends State<CaptureScreen>
     if (!mounted || _busy || _status != null || !_streaming) return;
     final speaker = AppScope.of(context).speaker;
     final now = DateTime.now();
-    if (speaker.speaking) {
+    if (speaker.speaking || _readerTalking) {
       _quietSince = now;
       return;
     }
+    // With TalkBack on, a cue waits for TalkBack to be quiet, and for longer: the person may
+    // be moving around the screen (docs/TALKBACK_AUDIT.md).
+    if (speaker.screenReaderOn) {
+      screenReaderSpeaking().then((talking) => _readerTalking = talking);
+    }
     final text = _adviceText(_advice);
-    if (text == null ||
-        now.difference(_quietSince) < const Duration(seconds: 1)) {
+    final gap = speaker.screenReaderOn
+        ? const Duration(milliseconds: 2500)
+        : const Duration(seconds: 1);
+    if (text == null || now.difference(_quietSince) < gap) {
       return;
     }
     if (text == _l.cueHoldStill && _holdStillSaid >= holdStillMax) return;
@@ -403,6 +420,34 @@ class _CaptureScreenState extends State<CaptureScreen>
         : await shrinkTo(raw, galleryMaxWidth, galleryQuality);
     diagnostics.last?.screenshot = whole;
     await _send(bytes, photo.name, screenshot: whole);
+  }
+
+  /// "This looks handwritten. Read it anyway? It may contain mistakes." True for Read it anyway.
+  Future<bool> _offerHandwriting() async {
+    if (!mounted) return false;
+    final l = _l;
+    AppScope.of(context).speaker.say(l.handwritingOffer);
+    final yes = await showDialog<bool>(
+      context: context,
+      builder: (dialog) => AlertDialog(
+        title: Text(
+          l.handwritingOffer,
+          style: const TextStyle(fontSize: 24, fontWeight: FontWeight.w700),
+        ),
+        actions: [
+          SecondaryButton(
+            label: l.notNow,
+            onTap: () => Navigator.of(dialog).pop(false),
+          ),
+          const SizedBox(height: 8),
+          PrimaryButton(
+            label: l.readItAnyway,
+            onTap: () => Navigator.of(dialog).pop(true),
+          ),
+        ],
+      ),
+    );
+    return yes == true && mounted;
   }
 
   /// A failed send or a server error is tried once more within [serverWait].
@@ -513,6 +558,16 @@ class _CaptureScreenState extends State<CaptureScreen>
       });
     }
     var page = result;
+    // Schoolwork that looks handwritten: offered, never automatic (handwritingReading).
+    if (handwritingReading &&
+        mode == 'school' &&
+        paper == null &&
+        !widget.detect &&
+        page.tips.contains('handwritten_page') &&
+        await _offerHandwriting()) {
+      final hand = await readOnPhone(bytes, mode: 'school', handwriting: true);
+      if (hand != null && hand.readableCount > 0) page = hand;
+    }
     attempt
       ?..path = why == null ? 'server' : 'phone (${why.name})'
       ..read(page);
@@ -601,81 +656,104 @@ class _CaptureScreenState extends State<CaptureScreen>
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Row(
-                children: [
-                  Labelled(
-                    label: l.backToHome,
-                    counted: false,
-                    radius: 32,
-                    onTap: () => Navigator.of(context).maybePop(),
-                    child: OutlinedButton(
-                      onPressed: () => Navigator.of(context).maybePop(),
-                      style: onDark.copyWith(
-                        padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-                      ),
-                      child: const Icon(Icons.chevron_left, size: 32),
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        Semantics(
-                          header: true,
-                          child: Text(
-                            widget.detect
-                                ? l.readAnyPaper
-                                : widget.paper?.title(l) ?? l.readPage,
-                            textAlign: TextAlign.center,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 21,
-                              fontWeight: FontWeight.w700,
+              // TalkBack lands on the first item: the title, then Back and the torch.
+              Semantics(
+                container: true,
+                explicitChildNodes: true,
+                child: Row(
+                  children: [
+                    Semantics(
+                      container: true,
+                      sortKey: const OrdinalSortKey(1),
+                      child: Labelled(
+                        label: l.backToHome,
+                        counted: false,
+                        radius: 32,
+                        onTap: () => Navigator.of(context).maybePop(),
+                        child: OutlinedButton(
+                          onPressed: () => Navigator.of(context).maybePop(),
+                          style: onDark.copyWith(
+                            padding: const WidgetStatePropertyAll(
+                              EdgeInsets.zero,
                             ),
                           ),
+                          child: const Icon(Icons.chevron_left, size: 32),
                         ),
-                        // The installed build, for testers; not read aloud.
-                        ExcludeSemantics(
-                          child: FutureBuilder<String>(
-                            future: appVersionLabel(),
-                            builder: (context, v) => Text(
-                              v.data ?? '',
-                              style: const TextStyle(
-                                color: Color(0xFFB8BEC4),
-                                fontSize: 13,
+                      ),
+                    ),
+                    Expanded(
+                      child: Semantics(
+                        container: true,
+                        sortKey: const OrdinalSortKey(0),
+                        child: Column(
+                          children: [
+                            Semantics(
+                              header: true,
+                              child: Text(
+                                widget.detect
+                                    ? l.readAnyPaper
+                                    : widget.paper?.title(l) ?? l.readPage,
+                                textAlign: TextAlign.center,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 21,
+                                  fontWeight: FontWeight.w700,
+                                ),
                               ),
                             ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  if (live && _torchWorks)
-                    Labelled(
-                      toggled: _torchOn,
-                      label: _torchOn ? l.torchOff : l.torchOn,
-                      onTap: () => _setTorch(!_torchOn),
-                      child: OutlinedButton(
-                        onPressed: () => _setTorch(!_torchOn),
-                        style: onDark.copyWith(
-                          padding: const WidgetStatePropertyAll(
-                            EdgeInsets.zero,
-                          ),
-                          backgroundColor: WidgetStatePropertyAll(
-                            _torchOn ? MaganaColors.amber : Colors.transparent,
-                          ),
-                          foregroundColor: WidgetStatePropertyAll(
-                            _torchOn ? MaganaColors.ink : Colors.white,
-                          ),
-                        ),
-                        child: Icon(
-                          _torchOn ? Icons.flashlight_on : Icons.flashlight_off,
-                          size: 28,
+                            // The installed build, for testers; not read aloud.
+                            ExcludeSemantics(
+                              child: FutureBuilder<String>(
+                                future: appVersionLabel(),
+                                builder: (context, v) => Text(
+                                  v.data ?? '',
+                                  style: const TextStyle(
+                                    color: Color(0xFFB8BEC4),
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
-                    )
-                  else
-                    const SizedBox(width: minTarget),
-                ],
+                    ),
+                    if (live && _torchWorks)
+                      Semantics(
+                        container: true,
+                        sortKey: const OrdinalSortKey(2),
+                        child: Labelled(
+                          toggled: _torchOn,
+                          label: _torchOn ? l.torchOff : l.torchOn,
+                          onTap: () => _setTorch(!_torchOn),
+                          child: OutlinedButton(
+                            onPressed: () => _setTorch(!_torchOn),
+                            style: onDark.copyWith(
+                              padding: const WidgetStatePropertyAll(
+                                EdgeInsets.zero,
+                              ),
+                              backgroundColor: WidgetStatePropertyAll(
+                                _torchOn
+                                    ? MaganaColors.amber
+                                    : Colors.transparent,
+                              ),
+                              foregroundColor: WidgetStatePropertyAll(
+                                _torchOn ? MaganaColors.ink : Colors.white,
+                              ),
+                            ),
+                            child: Icon(
+                              _torchOn
+                                  ? Icons.flashlight_on
+                                  : Icons.flashlight_off,
+                              size: 28,
+                            ),
+                          ),
+                        ),
+                      )
+                    else
+                      const SizedBox(width: minTarget),
+                  ],
+                ),
               ),
               const SizedBox(height: 18),
               Expanded(

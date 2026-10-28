@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 
 import 'app_scope.dart';
 import 'l10n/app_localizations.dart';
@@ -92,17 +93,28 @@ class _LabelledState extends State<Labelled> implements TouchTarget {
     }
   }
 
+  /// The person moved TalkBack or VoiceOver to this control: Magana stops talking so the
+  /// screen reader is heard (the Reader pauses on its line; Play goes on from there). A new
+  /// screen's own first focus is its title, never a control (docs/TALKBACK_AUDIT.md).
+  void _quiet() {
+    final speaker = AppScope.maybeOf(context)?.speaker;
+    if (speaker != null && speaker.speaking) speaker.stop();
+  }
+
   @override
   Widget build(BuildContext context) {
     final semantics = Semantics(
       button: true,
       enabled: widget.onTap != null,
-      selected: widget.selected,
+      // One of a group (a language, a class): TalkBack says "radio button, checked".
+      selected: widget.inGroup ? null : widget.selected,
+      checked: widget.inGroup ? widget.selected : null,
       toggled: widget.toggled,
       inMutuallyExclusiveGroup: widget.inGroup,
       label: widget.label,
       hint: widget.hint,
       onTap: widget.onTap,
+      onDidGainAccessibilityFocus: _quiet,
       excludeSemantics: true,
       child: widget.child,
     );
@@ -141,10 +153,14 @@ class ScreenHeader extends StatefulWidget {
     this.onBack,
     this.trailing,
     this.introduce = false,
+    this.titleIsHeading = true,
   });
 
   final String title;
   final String? subtitle;
+
+  /// False when the screen's heading is below (onboarding's "Step 2 of 4").
+  final bool titleIsHeading;
   final VoidCallback? onBack;
   final Widget? trailing; // e.g. the quiz score
   final bool introduce;
@@ -164,51 +180,68 @@ class _ScreenHeaderState extends State<ScreenHeader> {
   Widget build(BuildContext context) {
     final l = AppLocalizations.of(context);
     final back = widget.onBack ?? () => Navigator.of(context).maybePop();
-    return Row(
-      children: [
-        if (Navigator.of(context).canPop() || widget.onBack != null) ...[
-          Labelled(
-            label: l.back,
-            onTap: back,
-            counted: false,
-            radius: 32,
-            child: OutlinedButton(
-              onPressed: back,
-              style: outlinedTile(radius: 32).copyWith(
-                padding: const WidgetStatePropertyAll(EdgeInsets.zero),
-              ),
-              child: const Icon(Icons.chevron_left, size: 32),
-            ),
-          ),
-          const SizedBox(width: 12),
-        ],
-        Expanded(
-          child: Semantics(
-            header: true,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.title,
-                  style: const TextStyle(
-                    fontSize: 22,
-                    fontWeight: FontWeight.w700,
+    // TalkBack puts its focus on a new screen's first item: the title, then Back (Android
+    // TalkBack audit, docs/TALKBACK_AUDIT.md).
+    return Semantics(
+      container: true,
+      explicitChildNodes: true,
+      child: Row(
+        children: [
+          if (Navigator.of(context).canPop() || widget.onBack != null) ...[
+            Semantics(
+              container: true,
+              sortKey: const OrdinalSortKey(1),
+              child: Labelled(
+                label: l.back,
+                onTap: back,
+                counted: false,
+                radius: 32,
+                child: OutlinedButton(
+                  onPressed: back,
+                  style: outlinedTile(radius: 32).copyWith(
+                    padding: const WidgetStatePropertyAll(EdgeInsets.zero),
                   ),
+                  child: const Icon(Icons.chevron_left, size: 32),
                 ),
-                if (widget.subtitle != null)
+              ),
+            ),
+            const SizedBox(width: 12),
+          ],
+          Expanded(
+            child: Semantics(
+              container: true,
+              sortKey: const OrdinalSortKey(0),
+              header: widget.titleIsHeading,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    widget.subtitle!,
+                    widget.title,
                     style: const TextStyle(
-                      fontSize: 16,
-                      color: MaganaColors.muted,
+                      fontSize: 22,
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-              ],
+                  if (widget.subtitle != null)
+                    Text(
+                      widget.subtitle!,
+                      style: const TextStyle(
+                        fontSize: 16,
+                        color: MaganaColors.muted,
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
-        ),
-        ?widget.trailing,
-      ],
+          if (widget.trailing case final trailing?)
+            Semantics(
+              container: true,
+              sortKey: const OrdinalSortKey(2),
+              child: trailing,
+            ),
+        ],
+      ),
     );
   }
 }
@@ -562,7 +595,7 @@ class _SayNameButtonState extends State<SayNameButton> {
     if (!mounted) return;
     setState(() => _listening = false);
     if (heard.isEmpty) {
-      scope.speaker.say(l.commandNothingHeard);
+      scope.speaker.say(l.commandSorry);
       return;
     }
     // Any of the recogniser's guesses that names something here.

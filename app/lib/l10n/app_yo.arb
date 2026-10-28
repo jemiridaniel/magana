@@ -333,6 +333,7 @@
   "speakCommand": "Sọ àṣẹ kan",
   "listeningCommand": "Mo ń gbọ́… Tẹ̀ láti dúró",
   "commandNotUnderstood": "Mo gbọ́ “{heard}”, ṣùgbọ́n mi ò mọ àṣẹ yẹn. Sọ help láti gbọ́ ohun tí o lè sọ.",
+  "commandSorry": "Má bínú, ọ̀rọ̀ yẹn kò yé mi. Sọ “read a page” tàbí “help”.",
   "commandNothingHeard": "Mi ò gbọ́ àṣẹ kankan. Tún gbìyànjú, tàbí sọ help.",
   "commandHelp": "O lè sọ pé: {commands}. Sọ àwọn àṣẹ ní èdè Gẹ̀ẹ́sì fún báyìí.",
   "changeLanguageCommand": "change language",
@@ -673,5 +674,9 @@
   "offlineBannerTimeout": "Sáfà Magana pẹ́ ju ìṣẹ́jú-àáyá {seconds} lọ. Mò ń kà á lórí fóònù yìí.",
   "offlineBannerServerError": "Sáfà Magana ní ìṣòro pẹ̀lú ojú-ìwé yìí. Mò ń kà á lórí fóònù yìí.",
   "offlineBannerBusy": "Sáfà Magana ń ṣiṣẹ́ lọ́wọ́ ní ìṣẹ́jú yìí. Mò ń kà á lórí fóònù yìí.",
-  "offlineBannerDailyLimit": "O ti lo ìkàwé sáfà ti òní tán. Mò ń kà á lórí fóònù yìí; sáfà yóò tún kà lọ́la."
+  "offlineBannerDailyLimit": "O ti lo ìkàwé sáfà ti òní tán. Mò ń kà á lórí fóònù yìí; sáfà yóò tún kà lọ́la.",
+  "msg_handwriting_read_anyway": "Mo ka ìkọ̀wé ọwọ́ yìí bí mo ṣe lè ṣe tó. Ó lè ní àṣìṣe, èmi kò sì ka àwọn nọ́ńbà rẹ̀.",
+  "msg_offline_health_numbers": "Láìsí íńtánẹ́ẹ̀tì, fóònù yìí lè ka ìkọ̀wé ọwọ́ sí ìtẹ̀wé, nítorí náà èmi kò ka nọ́ńbà lórí ìwé ìlera. Tún un kà nígbà tí o bá wà lórí íńtánẹ́ẹ̀tì, tàbí bi oníṣègùn òògùn tàbí nọ́ọ̀sì.",
+  "handwritingOffer": "Èyí dà bí ìkọ̀wé ọwọ́. Ṣé kí n kà á bẹ́ẹ̀? Ó lè ní àṣìṣe.",
+  "readItAnyway": "Kà á bẹ́ẹ̀"
 }

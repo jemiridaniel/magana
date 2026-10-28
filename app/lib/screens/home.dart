@@ -24,6 +24,7 @@ import 'report_problem.dart';
 import 'score.dart';
 import 'skills.dart';
 import 'touch_intro.dart';
+import '../touch.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -202,18 +203,17 @@ class _Header extends StatelessWidget {
                       'assets/brand/magana_mark.svg',
                       width: tablet ? 44 : 36,
                       height: tablet ? 44 : 36,
-                      semanticsLabel: 'Magana',
+                      // The name is read with the greeting, as one heading ("Magana,
+                      // Hello"): TalkBack read the mark as a separate "Magana, image".
+                      excludeFromSemantics: true,
                     ),
                     const SizedBox(width: 8),
-                    // The mark already announces "Magana"; don't read the name twice.
                     Flexible(
-                      child: ExcludeSemantics(
-                        child: Text(
-                          l.appTitle,
-                          style: TextStyle(
-                            fontSize: tablet ? 38 : 28,
-                            fontWeight: FontWeight.w700,
-                          ),
+                      child: Text(
+                        l.appTitle,
+                        style: TextStyle(
+                          fontSize: tablet ? 38 : 28,
+                          fontWeight: FontWeight.w700,
                         ),
                       ),
                     ),
@@ -285,14 +285,16 @@ class _Header extends StatelessWidget {
 
 /// The app-language sheet (design 3b): each option says its own welcome word and
 /// is heard in its own language; "Use [language]" applies the choice.
-Future<void> showLanguagePicker(BuildContext context) =>
-    showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      backgroundColor: MaganaColors.ground,
-      showDragHandle: true,
-      builder: (_) => const LanguageSheet(),
-    );
+Future<void> showLanguagePicker(
+  BuildContext context,
+) => showModalBottomSheet<void>(
+  context: context,
+  isScrollControlled: true,
+  backgroundColor: MaganaColors.ground,
+  // TalkBack lands on the sheet's question, not a "Dismiss" handle above it.
+  showDragHandle: !screenReaderOn(context),
+  builder: (_) => const LanguageSheet(),
+);
 
 class LanguageSheet extends StatefulWidget {
   const LanguageSheet({super.key});
@@ -647,7 +649,7 @@ class _SpeakButtonState extends State<_SpeakButton> {
     if (!mounted) return;
     setState(() => _listening = false);
     if (heard.isEmpty) {
-      speaker.say(l.commandNothingHeard);
+      speaker.say(l.commandSorry);
       return;
     }
     runCommand(context, heard.first);
@@ -704,7 +706,7 @@ void runCommand(BuildContext context, String transcript) {
     case null when scope.touch.openByName(ModalRoute.of(context), transcript):
       break;
     case null:
-      scope.speaker.say(l.commandNotUnderstood(transcript));
+      scope.speaker.say(l.commandSorry);
     case VoiceCommand.readPage:
       open(const CaptureScreen());
     case VoiceCommand.everyday:

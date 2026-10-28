@@ -1260,6 +1260,10 @@ class AppLocalizationsIg extends AppLocalizations {
   }
 
   @override
+  String get commandSorry =>
+      'Ndo, aghọtaghị m nke ahụ. Kwuo “read a page” ma ọ bụ “help”.';
+
+  @override
   String get commandNothingHeard =>
       'Anụghị m iwu ọ bụla. Nwaa ọzọ, ma ọ bụ kwuo help.';
 
@@ -2568,4 +2572,19 @@ class AppLocalizationsIg extends AppLocalizations {
   @override
   String get offlineBannerDailyLimit =>
       'Ị jirila ọgụgụ sava nke taa. A na m agụ ya na ekwentị a; sava ga-agụ ọzọ echi.';
+
+  @override
+  String get msg_handwriting_read_anyway =>
+      'Agụrụ m ihe e ji aka dee a ka m nwere ike. O nwere ike inwe mperi, agụghịkwa m nọmba ya.';
+
+  @override
+  String get msg_offline_health_numbers =>
+      'Na-enweghị ịntanetị, ekwentị a nwere ike iwere ihe e ji aka dee dị ka ihe e biri ebi, ya mere anaghị m agụ nọmba n\'akwụkwọ ahụike. Gụọ ya ọzọ mgbe ị nọ n\'ịntanetị, ma ọ bụ jụọ onye na-ere ọgwụ ma ọ bụ nọọsụ.';
+
+  @override
+  String get handwritingOffer =>
+      'Nke a dị ka e ji aka dee ya. Gụọ ya otú ọ dị? O nwere ike inwe mperi.';
+
+  @override
+  String get readItAnyway => 'Gụọ ya otú ọ dị';
 }

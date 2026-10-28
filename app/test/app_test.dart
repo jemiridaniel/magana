@@ -183,10 +183,8 @@ void main() {
     }
     expect(find.bySemanticsLabel(RegExp('^Read a page')), findsOneWidget);
     expect(find.bySemanticsLabel('Speak a command'), findsOneWidget);
-    expect(
-      find.bySemanticsLabel('Magana'),
-      findsOneWidget,
-    ); // the logo, announced once
+    // The name and the greeting are one heading (TalkBack audit: the logo was a second stop).
+    expect(find.bySemanticsLabel(RegExp(r'^Magana\s+Hello')), findsOneWidget);
     expect(find.text('Hello'), findsOneWidget);
   });
 

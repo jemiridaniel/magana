@@ -1258,6 +1258,10 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get commandSorry =>
+      'Sorry, I didn\'t catch that. Say “read a page” or “help”.';
+
+  @override
   String get commandNothingHeard =>
       'I didn\'t hear a command. Try again, or say help.';
 
@@ -2569,4 +2573,19 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get offlineBannerDailyLimit =>
       'You\'ve used today\'s server readings. Reading on this phone; the server reads again tomorrow.';
+
+  @override
+  String get msg_handwriting_read_anyway =>
+      'I read this handwriting as best I can. It may contain mistakes, and I don\'t read its numbers.';
+
+  @override
+  String get msg_offline_health_numbers =>
+      'Without the internet, this phone may take handwriting for print, so I don\'t read numbers on health papers. Read it again when you are online, or ask the pharmacist or nurse.';
+
+  @override
+  String get handwritingOffer =>
+      'This looks handwritten. Read it anyway? It may contain mistakes.';
+
+  @override
+  String get readItAnyway => 'Read it anyway';
 }

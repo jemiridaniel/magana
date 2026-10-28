@@ -1,6 +1,8 @@
 package com.magana.app
 
 import android.content.Intent
+import android.media.AudioAttributes
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.provider.OpenableColumns
@@ -28,6 +30,7 @@ class MainActivity : FlutterActivity() {
                         Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
                             SpeechRecognizer.isOnDeviceRecognitionAvailable(this)
                     )
+                    "screenReaderSpeaking" -> result.success(screenReaderSpeaking())
                     else -> result.notImplemented()
                 }
             }
@@ -96,5 +99,20 @@ class MainActivity : FlutterActivity() {
 
     companion object {
         const val MAX_BYTES = 15 * 1024 * 1024
+    }
+
+    /**
+     * TalkBack is talking right now, so Magana waits before speaking or opening the microphone
+     * (docs/TALKBACK_AUDIT.md). Its speech plays from the TTS engine as accessibility audio
+     * while it talks, and the player goes away when it stops; its sound effects are players
+     * of music content that stay listed while idle, so they don't count.
+     */
+    private fun screenReaderSpeaking(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O) return false
+        val audio = getSystemService(AUDIO_SERVICE) as AudioManager
+        return audio.activePlaybackConfigurations.any {
+            it.audioAttributes.usage == AudioAttributes.USAGE_ASSISTANCE_ACCESSIBILITY &&
+                it.audioAttributes.contentType != AudioAttributes.CONTENT_TYPE_MUSIC
+        }
     }
 }

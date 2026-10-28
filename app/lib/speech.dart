@@ -5,6 +5,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 import 'diagnostics.dart';
 import 'platform.dart';
+import 'platform/speech_support.dart';
 
 /// How one utterance ended.
 enum Spoken {
@@ -191,6 +192,13 @@ class Speaker {
   @protected
   Future<Spoken> utter(String text) async {
     await _halt();
+    // Never over TalkBack: it is reading what the person touched (docs/TALKBACK_AUDIT.md).
+    if (screenReaderOn) {
+      final turn = _turn;
+      await screenReaderQuiet();
+      // Stopped or replaced meanwhile.
+      if (turn != _turn) return Spoken.stoppedByMagana;
+    }
     await iosAudio(_tts);
     diagnostics.asked(
       text,

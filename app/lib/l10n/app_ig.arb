@@ -333,6 +333,7 @@
   "speakCommand": "Kwuo iwu",
   "listeningCommand": "Ana m ege ntị… Pịa ka ọ kwụsị",
   "commandNotUnderstood": "Anụrụ m “{heard}”, mana amaghị m iwu ahụ. Kwuo help ka ị nụ ihe ị nwere ike ikwu.",
+  "commandSorry": "Ndo, aghọtaghị m nke ahụ. Kwuo “read a page” ma ọ bụ “help”.",
   "commandNothingHeard": "Anụghị m iwu ọ bụla. Nwaa ọzọ, ma ọ bụ kwuo help.",
   "commandHelp": "Ị nwere ike ikwu: {commands}. Kwuo iwu n'asụsụ Bekee ugbu a.",
   "changeLanguageCommand": "change language",
@@ -673,5 +674,9 @@
   "offlineBannerTimeout": "Sava Magana were ihe karịrị sekọnd {seconds}. A na m agụ ya na ekwentị a.",
   "offlineBannerServerError": "Sava Magana nwere nsogbu na peeji a. A na m agụ ya na ekwentị a.",
   "offlineBannerBusy": "Sava Magana nọ n'ọrụ n'oge a. A na m agụ ya na ekwentị a.",
-  "offlineBannerDailyLimit": "Ị jirila ọgụgụ sava nke taa. A na m agụ ya na ekwentị a; sava ga-agụ ọzọ echi."
+  "offlineBannerDailyLimit": "Ị jirila ọgụgụ sava nke taa. A na m agụ ya na ekwentị a; sava ga-agụ ọzọ echi.",
+  "msg_handwriting_read_anyway": "Agụrụ m ihe e ji aka dee a ka m nwere ike. O nwere ike inwe mperi, agụghịkwa m nọmba ya.",
+  "msg_offline_health_numbers": "Na-enweghị ịntanetị, ekwentị a nwere ike iwere ihe e ji aka dee dị ka ihe e biri ebi, ya mere anaghị m agụ nọmba n'akwụkwọ ahụike. Gụọ ya ọzọ mgbe ị nọ n'ịntanetị, ma ọ bụ jụọ onye na-ere ọgwụ ma ọ bụ nọọsụ.",
+  "handwritingOffer": "Nke a dị ka e ji aka dee ya. Gụọ ya otú ọ dị? O nwere ike inwe mperi.",
+  "readItAnyway": "Gụọ ya otú ọ dị"
 }

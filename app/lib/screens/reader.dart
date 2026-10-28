@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/semantics.dart';
 
 import '../amount_check.dart';
 import '../api.dart';
@@ -27,6 +28,7 @@ import '../speech.dart';
 import '../spoken_numbers.dart';
 import '../theme.dart';
 import '../warnings.dart';
+import '../touch.dart';
 
 const _speeds = [0.75, 1.0, 1.25, 1.5];
 
@@ -508,7 +510,8 @@ class _ReaderScreenState extends State<ReaderScreen> {
     ];
     final target = await showModalBottomSheet<int>(
       context: context,
-      showDragHandle: true,
+      // TalkBack lands on the sheet's question, not a "Dismiss" handle above it.
+      showDragHandle: !screenReaderOn(context),
       backgroundColor: MaganaColors.ground,
       builder: (sheet) => SafeArea(
         child: SingleChildScrollView(
@@ -896,79 +899,97 @@ class _ReaderScreenState extends State<ReaderScreen> {
     final row = item.isRow;
     final warning = _warning(item);
     final unsure = widget.result.unsureCount;
-    final titleRow = Row(
-      children: [
-        Labelled(
-          label: l.backToHome,
-          counted: false,
-          radius: 32,
-          onTap: () => Navigator.of(context).maybePop(),
-          child: OutlinedButton(
-            onPressed: () => Navigator.of(context).maybePop(),
-            style: outlinedTile(
+    // TalkBack lands on the first item: the title, then Back, Jump and Speak a command.
+    Widget order(double n, Widget child) =>
+        Semantics(container: true, sortKey: OrdinalSortKey(n), child: child);
+    final titleRow = Semantics(
+      container: true,
+      explicitChildNodes: true,
+      child: Row(
+        children: [
+          order(
+            1,
+            Labelled(
+              label: l.backToHome,
+              counted: false,
               radius: 32,
-            ).copyWith(padding: const WidgetStatePropertyAll(EdgeInsets.zero)),
-            child: const Icon(Icons.chevron_left, size: 32),
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Semantics(
-            header: true,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  widget.paper?.title(l) ?? l.yourPage,
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w700,
-                  ),
+              onTap: () => Navigator.of(context).maybePop(),
+              child: OutlinedButton(
+                onPressed: () => Navigator.of(context).maybePop(),
+                style: outlinedTile(radius: 32).copyWith(
+                  padding: const WidgetStatePropertyAll(EdgeInsets.zero),
                 ),
-                Text(
-                  [
-                    if (widget.paper != null) l.readExactly,
-                    if (widget.result.pageLanguage != null)
-                      l.languagePage(_languageName),
-                    if (_columns > 1) l.columnsSubtitle(_columns),
-                    _counts(),
-                    if (unsure > 0) l.unclearCount(unsure),
-                  ].join(' · '),
-                  style: const TextStyle(
-                    fontSize: 16,
-                    color: MaganaColors.muted,
-                  ),
-                ),
-              ],
+                child: const Icon(Icons.chevron_left, size: 32),
+              ),
             ),
           ),
-        ),
-        const SizedBox(width: 8),
-        Labelled(
-          label: l.jumpWithinPage,
-          onTap: _jump,
-          child: OutlinedButton(
-            onPressed: _jump,
-            style: outlinedTile(
-              radius: 32,
-            ).copyWith(padding: const WidgetStatePropertyAll(EdgeInsets.zero)),
-            child: const Icon(Icons.list, size: 30),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Semantics(
+              container: true,
+              sortKey: const OrdinalSortKey(0),
+              header: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    widget.paper?.title(l) ?? l.yourPage,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Text(
+                    [
+                      if (widget.paper != null) l.readExactly,
+                      if (widget.result.pageLanguage != null)
+                        l.languagePage(_languageName),
+                      if (_columns > 1) l.columnsSubtitle(_columns),
+                      _counts(),
+                      if (unsure > 0) l.unclearCount(unsure),
+                    ].join(' · '),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      color: MaganaColors.muted,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
-        ),
-        const SizedBox(width: 8),
-        Labelled(
-          label: _listening ? l.listeningCommand : l.speakCommand,
-          onTap: _command,
-          child: OutlinedButton(
-            onPressed: _command,
-            style: outlinedTile(
-              radius: 32,
-              bg: MaganaColors.amber,
-            ).copyWith(padding: const WidgetStatePropertyAll(EdgeInsets.zero)),
-            child: Icon(_listening ? Icons.stop : Icons.mic_none, size: 30),
+          const SizedBox(width: 8),
+          order(
+            2,
+            Labelled(
+              label: l.jumpWithinPage,
+              onTap: _jump,
+              child: OutlinedButton(
+                onPressed: _jump,
+                style: outlinedTile(radius: 32).copyWith(
+                  padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+                ),
+                child: const Icon(Icons.list, size: 30),
+              ),
+            ),
           ),
-        ),
-      ],
+          const SizedBox(width: 8),
+          order(
+            3,
+            Labelled(
+              label: _listening ? l.listeningCommand : l.speakCommand,
+              onTap: _command,
+              child: OutlinedButton(
+                onPressed: _command,
+                style: outlinedTile(radius: 32, bg: MaganaColors.amber)
+                    .copyWith(
+                      padding: const WidgetStatePropertyAll(EdgeInsets.zero),
+                    ),
+                child: Icon(_listening ? Icons.stop : Icons.mic_none, size: 30),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
     final extras = <Widget>[
       if (!widget.result.offline) ...[

@@ -20,6 +20,8 @@ String messageFor(
   'letters_ha' => l.msg_letters_ha,
   'daily_limit' => l.msg_daily_limit,
   'offline_no_confidence' => l.msg_offline_no_confidence,
+  'handwriting_read_anyway' => l.msg_handwriting_read_anyway,
+  'offline_health_numbers' => l.msg_offline_health_numbers,
   'letters_yo' => l.msg_letters_yo,
   'letters_ig' => l.msg_letters_ig,
   'small_print' => l.msg_small_print,

@@ -6,10 +6,83 @@ Test names refer to `backend/tests/` (pytest) and `app/test/` (flutter test).
 
 Devices used so far:
 - **Mac**: development machine, Tesseract 5.5.3, pages rendered or photographed for tests.
-- **Emulator**: Android emulator `Medium_Phone_API_36.1` (Android 16, API 36) with TalkBack, debug build, backend on the Mac with Tesseract.
+- **Emulator**: Android emulator `Medium_Phone_API_36.1` (Android 16, API 36) with TalkBack 16, debug or profile build, backend on the Mac with Tesseract.
 - **Chrome**: desktop Chrome driven by Playwright, at 1280×900 and 390×844.
 
 No real phone and no blind or low-vision tester has been used yet.
+
+---
+
+## 2026-10-28 · TalkBack audit of the core journey; handwriting measured on the lesson notes; faint print on pharmacy labels; iPhone offline numbers on health papers (UNREVIEWED)
+
+> **Unreviewed.**
+> - For Nurse Balogun: the TalkBack fixes, on a real phone, with TalkBack on.
+> - For Dr. Amos: the iPhone offline hold on health numbers (below), and faint print on health papers.
+> - For native speakers: the new wording in Hausa, Yorùbá and Igbo.
+
+### TalkBack (Nurse Balogun, Android 0.1.0+7: "the TalkBack voice command isn't working")
+
+The full checklist is in `docs/TALKBACK_AUDIT.md`. It was run on the emulator (API 36, TalkBack 16) with real TalkBack gestures and TalkBack's own captions.
+
+- **Voice commands never finished.**
+  - The emulator has no on-device English model (`error_language_unavailable`), so Magana falls back to the online recogniser.
+  - Both recognisers share one speech_to_text instance, and the second `initialize` kept the first one's handlers. The online step's "heard nothing" went to the on-device step, and the button said "Listening… Tap to stop" for over 30 s with nothing more said.
+  - **Fixed:** the plugin's events go to the step that is listening. A 16 s watchdog stops any listen, and the server recogniser stops after 9 s even without microphone levels. Checked on the emulator: the online step now ends, and "Sorry, I didn't catch that. Say “read a page” or “help”." follows.
+- **The microphone opened while TalkBack was talking**, so it heard TalkBack.
+  - With TalkBack on, Magana now waits until TalkBack is quiet (up to 3 s), then vibrates once and listens.
+  - Magana's own speech waits the same way (up to 4 s; "waited 720 ms for the screen reader" on the emulator).
+  - How it knows: TalkBack's speech plays as accessibility audio only while it talks (`MainActivity.screenReaderSpeaking`).
+- **Magana stops talking** when the person moves TalkBack to a control. The Reader pauses on its line.
+- **Capture's spoken framing cues** wait for TalkBack and leave 2.5 s between cues (1 s without TalkBack).
+- **Focus after opening a screen:**
+  - It landed on "Back" (onboarding steps, Capture, Reader) or on a bottom sheet's "Dismiss" handle.
+  - The title now comes first in reading order, and the handle is left out with a screen reader on.
+  - Checked on the emulator for onboarding, Capture and the Reader; Home and Everyday papers already landed on their titles.
+- **Android Back in onboarding closed the app**, because the steps' own navigator didn't get it. It now goes back one step.
+- **Smaller fixes:**
+  - Radio buttons: "English, Radio button, checked".
+  - The Home logo is no longer a separate "Magana, Image" stop.
+  - The recogniser prefers Nigerian, then British, then American English (the emulator's first was Australian).
+- **Not tested:** recognising a real spoken command. The emulator's microphone got no sound ("no speech" every time). It needs a phone.
+
+### Handwriting (Dr. Amos: faint print and handwriting both get "unclear")
+
+- **Measured** on the 26 handwritten lesson notes (private, read only on this Mac and the emulator, counts only). The photos are 720×1280.
+  - Apple Vision ran on the Mac as the iPhone uses it, and again with Apple's language correction.
+  - ML Kit ran on the emulator, from the app's own private folder, deleted after.
+  - **There are still no typed transcripts**, so these are proxies, not word accuracy. "Dictionary words" is roughly an upper bound on word accuracy: a non-word is surely wrong.
+
+  | Engine | Lines | Mean confidence | Dictionary words | Words another engine also read |
+  |---|---|---|---|---|
+  | Tesseract (server) | 593 | 0.33 | 39% | 11% |
+  | TrOCR (earlier, invents text) | 593 | 0.40 | 78% | 31% |
+  | ML Kit (Android) | 442 | 0.37 | 24% | 20% |
+  | Apple Vision (iPhone setting) | 731 | 0.93 | 48% | 16% |
+  | Vision + language correction | 711 | 0.92 | 63% | 18% |
+
+- **Decision: built, switched off.**
+  - "This looks handwritten. Read it anyway? It may contain mistakes." is offered only on schoolwork the server calls handwritten.
+  - The page is then read again on the phone: every line is marked as possibly wrong, and every number is held back ("unclear number").
+  - It is never offered for health, money or letter papers, and `readOnPhone` refuses them.
+  - It is off (`handwritingReading`, `--dart-define=MAGANA_HANDWRITING=true` to try it). At most 24% (Android) or 48% (iPhone) of the words read are even dictionary words.
+  - To decide properly: type 5 to 10 notes into `~/magana-private-pages/testset/lessonnote/transcripts/noteNN.txt`, and `lesson_notes.py accuracy` scores word and character error.
+- **Safety finding: Apple Vision is sure of handwriting.**
+  - Of 89 handwritten lines with digits, Vision put 73 at 0.90 or more (with correction, 66 of 85); ML Kit put none.
+  - Offline on the iPhone, a number needs 0.90 plus an agreeing second reading of a crop. Both readings are Vision's, and the phone has no handwriting check.
+  - So a handwritten dose read offline on an iPhone could have been said.
+  - **Interim fix (DRAFT, for Dr. Amos):** offline on the iPhone, every number on a health paper is held, with "Without the internet, this phone may take handwriting for print, so I don't read numbers on health papers…".
+  - Online reading, Android, and schoolwork offline are unchanged.
+  - The real fix is a handwriting check on the phone.
+- **Faint print, on pharmacy-style labels:**
+  - **Fixtures:** synthetic dispensing labels at 720 px, with uneven light and blur. Ink was 90, 60 or 40 grey levels darker than the paper, at two print sizes. There is also the faint thermal slip.
+  - **Comparison:** the +7 server and today's, both in health mode.
+  - **Same in both:** all lines read, the usual number warnings, the thermal slip gets "faint_print".
+  - **Fixed in +8:** the faintest, smallest label no longer gets "Some of this page looks handwritten".
+  - **Not fixed:** that label still gets "This looks like handwriting on a health paper… ask the pharmacist", in both versions. On health papers the strict handwriting check still takes the faintest print for handwriting. It is the safe side, so it is left as it is until Dr. Amos's own photo shows what he saw.
+
+### Tests
+- `app/test/talkback_test.dart` (5): the hang, the watchdog, waiting for TalkBack, title first, Android Back.
+- `app/test/handwriting_offer_test.dart` (8): off by default; offered on schoolwork only; numbers held; never on a medicine label; iPhone health numbers held, school numbers unchanged.
 
 ---
 
