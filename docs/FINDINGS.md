@@ -13,6 +13,33 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-28 · Open TTS for Hausa, Yorùbá, Igbo and Nigerian English: licences first, then the Oracle server (evaluation only)
+
+Not shipped. Details, sources and samples: docs/TTS_EVALUATION.md.
+
+- **Licences (read 28 Oct):**
+  - **Commercial use allowed:**
+    - Open Bible VITS (ha, yo, ig): CC BY-SA 4.0, credit to Biblica / open.bible.
+    - YarnGPT2 (en, ha, yo, ig): Apache 2.0, but its training data is Nigerian films and podcasts, so the rights are unclear. Ask the author before public or paid use.
+  - **Non-commercial only:** MMS-TTS (CC BY-NC; no Igbo voice exists) and OmniVoice (CC BY-NC).
+  - **Ruled out:** XTTS-v2 (CPML; no Nigerian languages). NCAIR1 publishes no TTS.
+- **Server** (ARM, 1.5 CPUs and 6 GB for the test):
+
+  | Model | Real-time factor | Peak memory |
+  |---|---|---|
+  | MMS | 1.0–1.06 | 0.8 GB |
+  | Open Bible VITS | 1.2–1.9 | 1.9 GB |
+  | YarnGPT2 (float32) | 14–17 | 3.2 GB |
+  | OmniVoice | 36–213 | 3 GB |
+
+  - Only MMS and Open Bible are near real time on this CPU. YarnGPT2's own bfloat16 setting didn't finish one phrase in 25 minutes: this CPU has no bf16.
+- **Found in the code:** YarnGPT2 strips tone marks and hooked letters (a–z only), and says numbers as English words in every language. MMS English knows only the digits 0–6; `spoken.for_voice` already spells numbers out for it.
+- **A recogniser's rough check** (not a quality judgement) found number words changed:
+  - MMS Yorùbá: "méje" (seven) came back as "méjì" (two).
+  - YarnGPT2 Hausa: "uku" (three) was dropped.
+  - Native speakers must confirm these.
+- **Next:** play the 28 samples to Nurse Balogun and native speakers, with tone and every number word in mind.
+
 ## 2026-10-28 · Nurse Balogun's voice note (build 7, eyes closed): voices, tour, help, guessed types (UNREVIEWED)
 
 > **Unreviewed.**
