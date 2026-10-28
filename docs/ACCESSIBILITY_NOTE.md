@@ -50,7 +50,7 @@ Every task can also be started by voice ("Speak a command" on each screen). Prob
 | --- | --- |
 | Better voices | Hausa, Yorùbá and Igbo are never read with an English voice; the best installed voice is chosen, with a choice in Settings → Voice; recorded prompts. |
 | Commands from a Bluetooth headset | Voice commands through a Bluetooth headset. |
-| More time to speak | A 25-second listening limit. (In the code as of this note, a command listens for up to 10 s, with a 16 s safety stop.) |
+| More time to speak | A command listens for up to 25 s (was 10 s), still ending after 3 s of quiet; the safety stop is 30 s (`app/lib/voice_input.dart`). |
 | Knowing what to do | A 60-second guided tour, and "What can I say?" on every screen. |
 | Wrong document types | Magana never announces a document type it has only guessed. |
 | Team setup wording | Clearer wording in team setup. |
