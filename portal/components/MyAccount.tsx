@@ -5,6 +5,7 @@
 // the old key stops working at once and you're signed out everywhere.
 import { useRouter } from "next/navigation";
 import { useState, type FormEvent } from "react";
+import CodeInput from "@/components/CodeInput";
 import { useMe } from "@/components/SessionGate";
 import { messageFor } from "@/lib/messages";
 import { portal, PortalError } from "@/lib/portal";
@@ -44,13 +45,18 @@ export default function MyAccount() {
         <p>Do this if someone may have seen your setup key or QR code, or you have a new phone. Your old key stops working
           at once, your backup codes are cancelled, and you’re signed out everywhere. Then sign in again to set up a new one.</p>
         <form onSubmit={reset} className="form-grid" noValidate>
-          <div className="field">
-            <label htmlFor="reset-code">{useBackup ? "A backup code" : "Your current authenticator code"}</label>
-            <input id="reset-code" className="input code-input" inputMode="numeric" autoComplete="one-time-code" maxLength={9}
-                   value={value} onChange={(e) => setValue(e.target.value.replace(/[^\d -]/g, ""))}
-                   aria-describedby="reset-hint" aria-invalid={error ? true : undefined} />
-            <span id="reset-hint" className="hint">We ask for it to make sure it’s really you.</span>
-          </div>
+          {useBackup ? (
+            <div className="field">
+              <label htmlFor="reset-code">A backup code</label>
+              <input id="reset-code" className="input code-input" inputMode="numeric" autoComplete="off" maxLength={9}
+                     value={value} onChange={(e) => setValue(e.target.value.replace(/[^\d -]/g, ""))}
+                     aria-describedby="reset-hint" aria-invalid={error ? true : undefined} />
+            </div>
+          ) : (
+            <CodeInput id="reset-code" label="Your current authenticator code" value={value} onChange={setValue}
+                       invalid={!!error} describedBy="reset-hint" />
+          )}
+          <span id="reset-hint" className="hint">We ask for it to make sure it’s really you.</span>
           <p role="alert" className="form-error">{error}</p>
           <div className="actions">
             <button type="submit" className="btn btn-primary" disabled={busy}>Reset my authenticator</button>

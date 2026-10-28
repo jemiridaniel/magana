@@ -10,12 +10,13 @@ import { messageFor } from "@/lib/messages";
 import { API_URL } from "@/lib/server";
 import { portal, PortalError, type Check, type Reason, type SchoolRequest } from "@/lib/portal";
 import { Undeliverable } from "@/components/Undeliverable";
+import { addressText } from "@/components/AddressFields";
 
 export type Tab = "pending" | "approved" | "rejected";
 const CHECKS: { id: Check; label: string }[] = [
   { id: "person_confirmed", label: "I spoke to the person and they confirmed their role" },
   { id: "school_exists", label: "The school exists (called the school or found its listing)" },
-  { id: "details_correct", label: "Location and school name are correct" },
+  { id: "details_correct", label: "Address, location and school name are correct" },
 ];
 
 function SupportTools({ s }: { s: SchoolRequest }) {
@@ -81,6 +82,8 @@ function Request({ s, onDone, viewOnly }: { s: SchoolRequest; onDone: (msg: stri
           Call by {s.call_by} · {s.days_left <= 0 ? "due today" : `${s.days_left} day${s.days_left === 1 ? "" : "s"} left`}</span>
       </div>
       <dl className="req-facts">
+        <div><dt>School address</dt><dd>{addressText(s)}</dd></div>
+        <div><dt>Nearest landmark</dt><dd>{s.landmark || "Not given"}</dd></div>
         <div><dt>Location</dt><dd>{s.lga_name}, {s.state_name}</dd></div>
         <div><dt>Registered by</dt><dd>{s.contact_name}</dd></div>
         <div><dt>Role</dt><dd>{s.contact_role}</dd></div>
@@ -148,7 +151,9 @@ function Decided({ rows, rejected }: { rows: SchoolRequest[]; rejected: boolean 
         <tbody>{rows.map((s) => (
           <tr key={s.id}>
             <th scope="row">{s.name}<span className="sub">{s.reference}</span></th>
-            <td>{s.lga_name}, {s.state_name}</td>
+            <td>{s.lga_name}, {s.state_name}
+              <span className="sub">Address: {addressText(s)}</span>
+              <span className="sub">Nearest landmark: {s.landmark || "Not given"}</span></td>
             <td>{s.contact_name}<span className="sub">{s.contact_role}</span></td>
             {rejected && <td>{s.reason_label}</td>}
             <td>{s.decided_at}<span className="sub">{s.decided_by}</span></td>

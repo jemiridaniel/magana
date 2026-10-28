@@ -2,7 +2,8 @@
 
 One database (database.py: SQLite in development, Postgres when DATABASE_URL is set; docs/PRIVACY.md,
 "Teachers and schools"):
-- schools     name, state and LGA codes, the principal's contact, status pending/approved
+- schools     name, state and LGA codes, the address (street, town or area, nearest landmark),
+              the principal's contact, status pending/approved
 - staff       teachers and school admins: name, email, role, status, their teacher code
 - login_codes the 6-digit sign-in code, hashed, for 10 minutes
 - sessions    signed-in portal sessions (hashed token), ended after 30 minutes idle
@@ -152,7 +153,11 @@ COLUMNS = {
     # removed account still shows its name and email.
     "audit": {"actor_name": "TEXT", "actor_email": "TEXT", "actor_role": "TEXT"},
     "schools": {"ref": "INTEGER", "call_notes": "TEXT NOT NULL DEFAULT ''", "checks": "TEXT NOT NULL DEFAULT ''",
-                "reason": "TEXT", "proof_type": "TEXT", "ministry_no": "TEXT NOT NULL DEFAULT ''"},
+                "reason": "TEXT", "proof_type": "TEXT", "ministry_no": "TEXT NOT NULL DEFAULT ''",
+                # The school's address: schools registered before it was asked for get empty
+                # values, which the portal shows as "Not given".
+                "address": "TEXT NOT NULL DEFAULT ''", "town": "TEXT NOT NULL DEFAULT ''",
+                "landmark": "TEXT NOT NULL DEFAULT ''"},
     # Tasks with a "Did you need help?" answer (own + some help): the share done unaided is
     # unaided / answered, not unaided / pages (board 8).
     "learner_stats": {"answered": "INTEGER NOT NULL DEFAULT 0"},

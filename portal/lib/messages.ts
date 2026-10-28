@@ -92,6 +92,12 @@ export const portalMessages: Record<string, string> = {
   register_saved: "Register saved.",
   class_has_no_accounts: "Classroom classes are teacher-led only: learners don’t join them with a code.",
   staff_removed_already: "This person was already removed.",
+  address_required: "Enter the school’s address: the street and number.",
+  address_too_long: "The school address is too long. Keep it under 200 characters.",
+  town_required: "Enter the town or area the school is in.",
+  town_too_long: "The town or area is too long. Keep it under 100 characters.",
+  landmark_too_long: "The nearest landmark is too long. Keep it under 120 characters.",
+  school_details_saved: "School details saved.",
   too_many_requests: "Magana is busy right now. Please wait a minute and try again.",
   // The portal's own (no server reply).
   unreachable: "Can't reach the Magana server. Your quiz is still on this page: try again.",

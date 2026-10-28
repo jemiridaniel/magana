@@ -1,10 +1,10 @@
 """Email from no-reply@magana.ng (boards "Emails & school approval"): six kinds, each as HTML
 and plain text, replies going to support@magana.ng.
 
-  sign_in_code            the code in the subject ("642 126 is your Magana sign-in code"),
-                          when and from roughly where it was asked for
+  sign_in_code            the code in the subject ("Your Magana verification code: 642126") and
+                          in the first line, when and from roughly where it was asked for
   registration_received   to the principal who registered a school
-  new_school_request      to every active Owner and School reviewer (team.py)
+  new_school_request      to every active Owner and School reviewer (team.py), with the address
   school_approved         to the principal
   school_not_approved     to the principal, with the reason the team chose
   teacher_invitation      to an invited teacher
@@ -204,7 +204,9 @@ def _text(*parts: str) -> str:
 # ---------- the six emails
 
 def sign_in_code(code: str, name: str | None, requested: datetime, user_agent: str = "", tz: str = "") -> Email:
-    spaced = f"{code[:3]} {code[3:]}"
+    # "verification code" and the six digits together, in the subject and the first line: what
+    # Gmail, Apple Mail and iOS look for to offer "Copy code" or fill the code in for you.
+    first = f"Your Magana verification code is {code}."
     hello = f"Hello {name}, use" if name else "Use"
     place = rough_place(tz)
     where = f"Requested from {device(user_agent)}{f' in {place}' if place else ''} at {lagos_time(requested).split(', ')[1]} (Nigerian time), {day(requested)}."
@@ -216,13 +218,15 @@ def sign_in_code(code: str, name: str | None, requested: datetime, user_agent: s
            f'letter-spacing:10px;color:{INK};-webkit-user-select:all;user-select:all">{code}</div>'
            f'<p style="margin:12px 0 0;font-size:15px;color:{MUTED}">Tap and hold (or double-click) the code to copy it. '
            f'It works for 10 minutes.</p></div>')
-    body = (_h1("Your sign-in code") + _p(f"{escape(hello)} this code to sign in to Magana for Teachers:") + box
+    body = (_p(escape(first)) + box + _p(f"{escape(hello)} this code to sign in to Magana for Teachers.")
             + _p(f"{escape(where)} Didn’t ask for this? Ignore this email: nobody can sign in without the code.", small=True))
+    # No code here: the inbox shows the subject (with the code) and this line, so it's said once.
     pre = f"Works for 10 minutes. {hello} this code to sign in."
-    # The code alone on its own line, so it's easy to select in plain-text mail apps.
-    text = _text(f"{hello} this code to sign in to Magana for Teachers:", code, "It works for 10 minutes.",
+    # The code alone on its own line too, so it's easy to select in plain-text mail apps.
+    text = _text(first, code, f"{hello} this code to sign in to Magana for Teachers. It works for 10 minutes.",
                  f"{where} Didn't ask for this? Ignore this email: nobody can sign in without the code.")
-    return Email("sign_in_code", f"{spaced} is your Magana sign-in code", pre, _page("Your sign-in code", pre, body), text)
+    return Email("sign_in_code", f"Your Magana verification code: {code}", pre,
+                 _page("Your Magana verification code", pre, body), text)
 
 
 def registration_received(name: str, school: str, place: str, role: str, phone: str, reference: str,
@@ -248,8 +252,10 @@ def registration_received(name: str, school: str, place: str, role: str, phone: 
 
 
 def new_school_request(school: str, place: str, name: str, role: str, email: str, phone: str, reference: str,
-                       registered: datetime, portal_url: str, proof: bool, ministry_no: str) -> Email:
-    pairs = [("School", school), ("Location", place), ("Registered by", f"{name}, {role}"), ("Email", email),
+                       registered: datetime, portal_url: str, proof: bool, ministry_no: str,
+                       address: str = "", town: str = "", landmark: str = "") -> Email:
+    pairs = [("School", school), ("Address", address or "Not given"), ("Town or area", town or "Not given"),
+             ("Nearest landmark", landmark or "Not given"), ("Location", place), ("Registered by", f"{name}, {role}"), ("Email", email),
              ("Phone", local_phone(phone)), ("Registered", lagos_time(registered)), ("Reference", reference),
              ("Proof of school", "Uploaded" if proof else "None"), ("Ministry approval no.", ministry_no or "None")]
     checks = ["Call the phone number and confirm the person and role.",

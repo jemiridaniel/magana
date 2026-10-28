@@ -19,6 +19,13 @@ export function useMe(): Me {
   return s.me;
 }
 
+/** Loads /portal/me again, after a change to what it holds (the school's address). */
+export function useRefreshMe(): () => void {
+  const s = useContext(SessionContext);
+  if (!s) throw new Error("useRefreshMe outside SessionGate");
+  return s.refresh;
+}
+
 export function useStaff(): Staff | null {
   const me = useMe();
   return me.kind === "staff" ? me : null;

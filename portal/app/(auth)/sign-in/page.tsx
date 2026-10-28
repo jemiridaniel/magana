@@ -7,7 +7,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Suspense, useEffect, useRef, useState, type FormEvent } from "react";
-import CodeBoxes from "@/components/CodeBoxes";
+import CodeInput from "@/components/CodeInput";
 import { messageFor } from "@/lib/messages";
 import { portal, PortalError } from "@/lib/portal";
 
@@ -88,15 +88,20 @@ function SignIn() {
     }
   }
 
-  const totpField = (
+  // The authenticator's 6 digits in the one-time-code field; a backup code ("4821-9037") in a plain one.
+  const totpField = useBackup ? (
     <div className="field">
-      <label htmlFor="totp">{useBackup ? "Backup code" : "Authenticator code"}</label>
-      <input id="totp" className="input code-input" inputMode="numeric" autoComplete="one-time-code" maxLength={9}
+      <label htmlFor="totp">Backup code</label>
+      <input id="totp" className="input code-input" inputMode="numeric" autoComplete="off" maxLength={9}
              value={team} onChange={(e) => setTeam(e.target.value.replace(/[^\d -]/g, ""))}
              aria-describedby="totp-hint" aria-invalid={error ? true : undefined} />
-      <span id="totp-hint" className="hint">{useBackup ? "One of the 8 codes you saved. Each works once."
-        : "6 digits. They change every 30 seconds."}</span>
+      <span id="totp-hint" className="hint">One of the 8 codes you saved. Each works once.</span>
     </div>
+  ) : (
+    <>
+      <CodeInput id="totp" label="Authenticator code" value={team} onChange={setTeam} invalid={!!error} describedBy="totp-hint" />
+      <span id="totp-hint" className="hint">From your authenticator app. They change every 30 seconds.</span>
+    </>
   );
 
   if (step === "setup" && setup) {
@@ -176,8 +181,8 @@ function SignIn() {
         <h1 ref={heading} tabIndex={-1}>Check your email</h1>
         <p className="lead">We sent a 6-digit code to <strong>{email}</strong>. It works for 10 minutes.</p>
         <form onSubmit={verify} className="form-grid" noValidate>
-          <CodeBoxes label="Sign-in code" value={code} onChange={setCode} invalid={!!error} describedBy="code-hint" />
-          <span id="code-hint" className="hint">6 digits, from the email “Your Magana sign-in code”. Paste the whole code into the first box.</span>
+          <CodeInput id="code" label="Verification code" value={code} onChange={setCode} invalid={!!error} describedBy="code-hint" />
+          <span id="code-hint" className="hint">From the email “Your Magana verification code”. Paste the whole code, or let your phone fill it in.</span>
           <p role="alert" className="form-error">{error}</p>
           <button type="submit" className="btn btn-primary btn-block" disabled={busy}>{busy ? "Signing in…" : "Sign in"}</button>
         </form>

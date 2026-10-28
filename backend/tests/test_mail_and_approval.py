@@ -51,12 +51,21 @@ def test_nine_emails_each_html_and_text_with_the_same_footer_and_the_logo():
 
 def test_the_sign_in_code_is_in_the_subject_with_when_and_roughly_where():
     e = all_kinds()[0]
-    assert e.subject == "642 126 is your Magana sign-in code"  # spaced in the subject
-    # One box, six digits together (so mail apps offer "Copy code"), monospace at 44 px.
-    assert e.html.count(">642126<") == 1 and "642 126" not in e.html.split("<body")[1].split("YOUR CODE")[1][:400]
+    # "verification code" and the digits together, as Gmail, Apple Mail and iOS autofill look for.
+    assert e.subject == "Your Magana verification code: 642126"
+    assert "642" not in e.preheader  # the inbox shows the subject and the preheader: the code once
+    visible = e.html.split("</div>", 1)[1]  # after the hidden preheader
+    # The first line says it in words, then one box with the six digits together, monospace at 44 px.
+    assert visible.index("<p") < visible.index("YOUR CODE")
+    assert ">Your Magana verification code is 642126.</p>" in e.html
+    assert e.html.count(">642126<") == 1 and "642 126" not in e.html
     assert "font-size:44px" in e.html and "monospace" in e.html and "user-select:all" in e.html
-    assert "Tap and hold (or double-click) the code to copy it." in e.html
-    assert "\n642126\n" in e.text  # the code alone on its own line in the plain text
+    assert "Tap and hold (or double-click) the code to copy it." in e.html and "It works for 10 minutes." in e.html
+    assert "nobody can sign in without the code" in e.html
+    # Plain text: the same first line, then the code alone on its own line, then the rest.
+    assert e.text.startswith("Your Magana verification code is 642126.\n\n642126\n\n")
+    assert "It works for 10 minutes." in e.text and "nobody can sign in without the code" in e.text
+    assert "642 126" not in e.text
     assert "Requested from Chrome on a Mac in Nigeria at 09:36 (Nigerian time), Mon 26 Oct." in e.text
     plain = mailer.sign_in_code("642126", None, T, "", "")
     assert "Requested from a browser at 09:36" in plain.text  # no device or place given: nothing invented
@@ -137,7 +146,7 @@ def png() -> str:
 def register(**extra):
     state, lga = lagos_ikeja()
     body = {"email": PRINCIPAL, "name": "Mrs Folake Adebayo", "role": "Principal", "phone": "0803 000 0000",
-            "school": "Ikeja Community School", "state": state, "lga": lga, "agree": True, **extra}
+            "school": "Ikeja Community School", "state": state, "lga": lga, "agree": True, "address": "14 Allen Avenue", "town": "Ikeja", **extra}
     return TestClient(app).post("/portal/schools/register", json=body)
 
 

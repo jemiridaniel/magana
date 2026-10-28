@@ -4,6 +4,7 @@
 // school stays "pending" until the Magana team confirms it by phone.
 import Link from "next/link";
 import { useRef, useState, type FormEvent } from "react";
+import AddressFields, { addressField, checkAddress, focusFirst, NO_ADDRESS, type AddressErrors } from "@/components/AddressFields";
 import DropZone from "@/components/DropZone";
 import PlacePicker, { type PlaceValue } from "@/components/PlacePicker";
 import { messageFor } from "@/lib/messages";
@@ -24,6 +25,8 @@ function dataUrl(file: File): Promise<string> {
 
 export default function RegisterPage() {
   const [place, setPlace] = useState<PlaceValue>({ state: "", lga: "" });
+  const [address, setAddress] = useState(NO_ADDRESS);
+  const [addressErrors, setAddressErrors] = useState<AddressErrors>({});
   const [error, setError] = useState("");
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -36,6 +39,7 @@ export default function RegisterPage() {
     e.preventDefault();
     setTried(true);
     setError("");
+    setAddressErrors({});
     const f = new FormData(e.currentTarget);
     const body = {
       name: String(f.get("name") ?? "").trim(), role: String(f.get("role") ?? ""),
@@ -44,18 +48,23 @@ export default function RegisterPage() {
     };
     if (!body.name || !body.email || !body.phone || !body.school) { setError("Fill in every field."); return; }
     if (!body.state || !body.lga) { setError(messageFor("place_unknown")); return; }
+    const where = checkAddress(address);
+    setAddress(where.value);
+    if (Object.keys(where.errors).length) { setAddressErrors(where.errors); focusFirst("r", where.errors); return; }
     if (!body.agree) { setError(messageFor("agree_required")); return; }
     if (proof && !PROOF_TYPES.includes(proof.type)) { setError(messageFor("proof_wrong_type")); return; }
     if (proof && proof.size > PROOF_MAX) { setError(messageFor("proof_too_big")); return; }
     setBusy(true);
     try {
-      const r = await portal.register({ ...body, ministry_no: String(f.get("ministry_no") ?? "").trim(),
+      const r = await portal.register({ ...body, ...where.value, ministry_no: String(f.get("ministry_no") ?? "").trim(),
                                         proof: proof ? await dataUrl(proof) : null });
       setReference(r.reference);
       setDone(true);
       requestAnimationFrame(() => doneHead.current?.focus());
     } catch (err) {
       const code = (err as PortalError).code;
+      const field = addressField(code);
+      if (field) { setAddressErrors({ [field]: messageFor(code) }); focusFirst("r", { [field]: code }); return; }
       setError(code === "form_invalid" ? "Check the email address and the phone number (for example 0803 000 0000)." : messageFor(code));
     } finally {
       setBusy(false);
@@ -94,6 +103,7 @@ export default function RegisterPage() {
         <div className="field"><label htmlFor="r-school">School name</label>
           <input id="r-school" name="school" className="input" autoComplete="organization" /></div>
         <PlacePicker value={place} onChange={setPlace} invalid={tried} />
+        <AddressFields idPrefix="r" value={address} onChange={setAddress} errors={addressErrors} />
         <fieldset className="proof">
           <legend>Proof of school <span className="hint">(optional, speeds up confirmation)</span></legend>
           <p className="hint">One of: a photo of the school’s letterhead or stamp, the Ministry of Education approval letter, or your staff ID card.</p>

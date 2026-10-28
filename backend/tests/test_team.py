@@ -190,7 +190,7 @@ def test_a_team_email_cant_be_a_teacher_and_a_teacher_cant_join_the_team(fresh):
     assert principal.post("/portal/staff", json={"email": TEAM, "name": "Team Person", "role": "teacher"}).json()["detail"]["code"] == "email_is_team"
     r = TestClient(app).post("/portal/schools/register", json={
         "email": TEAM, "name": "Mr T", "role": "Principal", "phone": "0803 000 0009", "school": "T School",
-        "state": "NG-LA", "lga": "NG-LA-IKEJA", "agree": True})
+        "state": "NG-LA", "lga": "NG-LA-IKEJA", "agree": True, "address": "14 Allen Avenue", "town": "Ikeja"})
     assert r.json()["detail"]["code"] == "email_is_team"
     assert team_setup.main(["--email", PRINCIPAL, "--name", "Principal", "--role", "support"]) == 1
 

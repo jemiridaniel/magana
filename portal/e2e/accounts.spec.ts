@@ -18,10 +18,10 @@ test("sign in: the email, then the code; a wrong code says so; both pages pass t
   await expect(page.getByText(/ask for a new code in \d+ s/)).toBeVisible();
   await designChecks(page);
   const right = await emailedCode(email);
-  await page.getByRole("textbox", { name: /^Sign-in code/ }).fill(right === "730913" ? "815204" : "730913");
+  await page.getByRole("textbox", { name: "Verification code, 6 digits" }).fill(right === "730913" ? "815204" : "730913");
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.locator(".form-error")).toHaveText(/That code isn’t right/);
-  await page.getByRole("textbox", { name: /^Sign-in code/ }).fill(right);
+  await page.getByRole("textbox", { name: "Verification code, 6 digits" }).fill(right);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText("Mrs Folake Adebayo");
 });
@@ -63,6 +63,29 @@ test("register your school: State and LGA side by side, LGA by keyboard, proof o
   await expect(lga).toHaveAttribute("aria-activedescendant", /opt-1$/);
   await lga.press("Enter");
   await expect(lga).toHaveValue("Ikorodu");
+  // The address: labelled, 64 px, length limits; a missing one is said under its field and focused.
+  const street = page.getByRole("textbox", { name: "School address" });
+  const town = page.getByRole("textbox", { name: "Town or area" });
+  const landmark = page.getByRole("textbox", { name: "Nearest landmark (optional)" });
+  await expect(street).toHaveAttribute("maxlength", "200");
+  await expect(town).toHaveAttribute("maxlength", "100");
+  await expect(landmark).toHaveAttribute("maxlength", "120");
+  await expect(street).toHaveAccessibleDescription(/Street and number, as you’d give it to a visitor\./);
+  await page.getByRole("button", { name: "Register school" }).click();
+  await expect(street).toBeFocused();
+  await expect(street).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator("#r-address-err")).toHaveText("Enter the school’s address: the street and number.");
+  await expect(street).toHaveAccessibleDescription(/Enter the school’s address/);
+  await expect(page.locator("#r-address-err")).toHaveAttribute("aria-live", "polite");
+  await street.fill("   14 Adeniran Ogunsanya Street  ");
+  await town.fill("   ");  // spaces only: still empty
+  await page.getByRole("button", { name: "Register school" }).click();
+  await expect(town).toBeFocused();
+  await expect(page.locator("#r-town-err")).toHaveText("Enter the town or area the school is in.");
+  await expect(street).toHaveValue("14 Adeniran Ogunsanya Street");  // spaces trimmed
+  await expect(street).not.toHaveAttribute("aria-invalid", "true");
+  await designChecks(page);
+  await town.fill("Surulere");
   // Proof of school: the drop zone, by keyboard: Tab reaches the file input itself.
   const file = page.locator(".proof input[type=file]");
   await file.focus();
@@ -234,6 +257,9 @@ test("team admin: three checks unlock Approve; Don’t approve needs a reason an
   const kano = page.getByRole("article", { name: "Kano Model School" }).first();
   await expect(kano).toBeVisible();
   await expect(kano.getByRole("link", { name: /^Call 0803 000 0001/ })).toHaveAttribute("href", "tel:+2348030000001");
+  // The address, in the location block.
+  await expect(kano.locator(".req-facts div").filter({ hasText: "School address" }).locator("dd")).toHaveText("14 Allen Avenue, Ikeja");
+  await expect(kano.locator(".req-facts div").filter({ hasText: "Nearest landmark" }).locator("dd")).toHaveText("Opposite Ikeja City Mall");
   await designChecks(page);
   const approve = kano.getByRole("button", { name: /^Approve school/ });
   await expect(approve).toHaveAttribute("aria-disabled", "true");
@@ -244,7 +270,7 @@ test("team admin: three checks unlock Approve; Don’t approve needs a reason an
   await kano.getByRole("button", { name: /^Save notes/ }).click();
   await expect(kano.getByRole("status")).toHaveText("Call notes saved.");
   await kano.getByLabel(/The school exists/).check();
-  await kano.getByLabel(/Location and school name are correct/).check();
+  await kano.getByLabel(/location and school name are correct/).check();
   await expect(approve).toHaveAttribute("aria-disabled", "false");
   await approve.click();
   await expect(page.getByRole("status").filter({ hasText: "Kano Model School is approved." })).toBeVisible({ timeout: 15_000 });
@@ -261,9 +287,12 @@ test("team admin: three checks unlock Approve; Don’t approve needs a reason an
 
   await page.getByRole("link", { name: "Approved schools" }).click();
   await expect(page.getByRole("row").filter({ hasText: "Kano Model School" }).first()).toContainText(teamEmail);
+  await expect(page.getByRole("row").filter({ hasText: "Kano Model School" }).first())
+    .toContainText("Address: 14 Allen Avenue, IkejaNearest landmark: Opposite Ikeja City Mall");
   await designChecks(page);
   await page.getByRole("link", { name: "Not approved" }).click();
   await expect(page.getByRole("row").filter({ hasText: "Bright Future Academy" }).first()).toContainText("Couldn’t reach them after 3 calls");
+  await expect(page.getByRole("row").filter({ hasText: "Bright Future Academy" }).first()).toContainText("Address: 14 Allen Avenue, Ikeja");
   await designChecks(page);
   await page.getByRole("link", { name: "Activity log" }).click();
   await expect(page.getByText("Magana staff only")).toBeVisible();
@@ -365,7 +394,7 @@ test("Magana team (owner): invite a reviewer, their first sign-in sets up the au
   await expect(them.getByLabel("Email address")).toHaveValue(email);  // from the invitation link
   const asked = Date.now();
   await them.getByRole("button", { name: "Send me a code" }).click();
-  await them.getByRole("textbox", { name: /^Sign-in code/ }).fill(await emailedCode(email, asked));
+  await them.getByRole("textbox", { name: "Verification code, 6 digits" }).fill(await emailedCode(email, asked));
   await them.getByRole("button", { name: "Sign in" }).click();
   await expect(them.getByRole("heading", { name: "Set up your authenticator" })).toBeFocused();
   await designChecks(them);
@@ -438,12 +467,12 @@ test("My account: Reset my authenticator needs a current code, signs you out, an
   await page.getByLabel("Email address").fill(email);
   const asked = Date.now();
   await page.getByRole("button", { name: "Send me a code" }).click();
-  await page.getByRole("textbox", { name: /^Sign-in code/ }).fill(await emailedCode(email, asked));
+  await page.getByRole("textbox", { name: "Verification code, 6 digits" }).fill(await emailedCode(email, asked));
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByRole("heading", { name: "Set up your authenticator" })).toBeFocused();
 });
 
-test("sign-in code: pasting the whole code into the first box fills all six", async ({ page }) => {
+test("verification code: one input the phone can fill; a pasted code fills it, even with a space or a dash", async ({ page }) => {
   const email = uniqueEmail("paste");
   await approve(await registerSchool(email));
   await page.goto("/sign-in/");
@@ -451,20 +480,60 @@ test("sign-in code: pasting the whole code into the first box fills all six", as
   const asked = Date.now();
   await page.getByRole("button", { name: "Send me a code" }).click();
   const code = await emailedCode(email, asked);
-  const first = page.getByRole("textbox", { name: /^Sign-in code, digit 1 of 6/ });
-  await first.focus();
-  await first.evaluate((el, text) => {
+  // One real input, named "Verification code, 6 digits"; the six boxes are drawn, hidden from screen readers.
+  const input = page.getByRole("textbox", { name: "Verification code, 6 digits", exact: true });
+  await expect(page.getByRole("textbox")).toHaveCount(1);
+  for (const [name, value] of [["autocomplete", "one-time-code"], ["inputmode", "numeric"], ["pattern", "[0-9]*"], ["maxlength", "6"]]) {
+    await expect(input).toHaveAttribute(name, value);
+  }
+  await expect(page.locator(".code-box[aria-hidden=true]")).toHaveCount(6);
+  const paste = (text: string) => input.evaluate((el, t) => {
     const data = new DataTransfer();
-    data.setData("text/plain", text);
+    data.setData("text/plain", t);
     el.dispatchEvent(new ClipboardEvent("paste", { clipboardData: data, bubbles: true, cancelable: true }));
-  }, `${code.slice(0, 3)} ${code.slice(3)}`);  // as copied from the subject, with its space
-  const boxes = page.getByRole("group", { name: "Sign-in code" }).getByRole("textbox");
-  await expect(boxes).toHaveCount(6);
-  for (let i = 0; i < 6; i++) await expect(boxes.nth(i)).toHaveValue(code[i]);
-  await expect(boxes.nth(5)).toBeFocused();
+  }, text);
+  await input.focus();
+  for (const pasted of [`${code.slice(0, 3)}-${code.slice(3)}`, ` ${code.slice(0, 3)} ${code.slice(3)} `]) {
+    await input.fill("");
+    await paste(pasted);
+    await expect(input).toHaveValue(code);
+    await expect(page.locator(".code-box")).toHaveText(code.split(""));
+  }
+  await input.fill("12a 3");  // typed: digits only
+  await expect(input).toHaveValue("123");
+  await input.fill("");
+  await paste(code);
   await designChecks(page);
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText(/Good (morning|afternoon|evening)/);
+});
+
+test("School details: an older school's address shows “Not given”; the admin adds it, checked, and it's in the log", async ({ page }) => {
+  const { schoolId } = await newSchool(page);
+  // A school registered before the address was asked for: empty values (the server's own database).
+  execFileSync(".venv/bin/python", ["-c",
+    "import sys\nfrom app import accounts\nwith accounts.db() as con:\n"
+    + "    con.execute(\"UPDATE schools SET address = '', town = '', landmark = '' WHERE id = ?\", (sys.argv[1],))", schoolId],
+    { cwd: "../backend", env: { ...process.env, MAGANA_DATA_DIR: dataDir!, MAGANA_ENV: "development" } });
+  await page.goto("/school/");
+  const facts = page.getByRole("region", { name: "School address" }).locator("dd");
+  await expect(facts).toHaveText(["Not given", "Not given", "Not given"]);
+  await designChecks(page);
+  await page.getByRole("button", { name: /^Edit address/ }).click();
+  const street = page.getByRole("textbox", { name: "School address" });
+  await expect(street).toBeFocused();
+  await page.getByRole("button", { name: "Save address" }).click();
+  await expect(street).toHaveAttribute("aria-invalid", "true");
+  await expect(page.locator("#s-address-err")).toHaveText("Enter the school’s address: the street and number.");
+  await designChecks(page);
+  await street.fill("  16 Allen Avenue ");
+  await page.getByRole("textbox", { name: "Town or area" }).fill("Ikeja");
+  await page.getByRole("button", { name: "Save address" }).click();
+  await expect(page.getByRole("region", { name: "School address" }).getByRole("status")).toHaveText("School details saved.");
+  await expect(facts).toHaveText(["16 Allen Avenue", "Ikeja", "Not given"]);
+  await expect(page.getByRole("button", { name: /^Edit address/ })).toBeFocused();
+  await expect(page.locator(".audit")).toContainText("Mrs Folake Adebayo changed the school’s address");
+  await designChecks(page);
 });
 
 test("an address that bounced shows “We couldn’t deliver to this address”, and a new invite to it says so on the field", async ({ page }) => {

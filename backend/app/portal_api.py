@@ -387,7 +387,8 @@ def me(who: Who = Depends(signed_in)) -> dict:
     return {"kind": "staff", "id": who.staff["id"], "name": who.staff["name"], "email": who.email,
             "role": who.staff["role"], "title": who.staff["title"],
             "school": {"id": school["id"], "name": school["name"], "status": school["status"],
-                       "state": school["state"], "lga": school["lga"], **_pending_details(school)}}
+                       "state": school["state"], "lga": school["lga"], **_address_out(school),
+                       **_pending_details(school)}}
 
 
 def _pending_details(school: dict) -> dict:
@@ -399,6 +400,34 @@ def _pending_details(school: dict) -> dict:
             "registered": mailer.lagos_time(registered), "call_by": mailer.day(mailer.call_by(registered)),
             "phone_masked": mailer.masked_phone(school["contact_phone"] or ""),
             "reason": school.get("reason")}
+
+
+# ---------- the school's address (registration, and the school admin's School details)
+
+# Longest street address, town or area, and landmark, in characters (the portal's maxLength too).
+ADDRESS_MAX = {"address": 200, "town": 100, "landmark": 120}
+ADDRESS_LABEL = {"address": "School address", "town": "Town or area", "landmark": "Nearest landmark"}
+
+
+def _address_in(body) -> dict[str, str]:
+    """Address, town or area (both needed) and nearest landmark (optional), spaces trimmed."""
+    a = {k: (getattr(body, k) or "").strip() for k in ADDRESS_MAX}
+    if not a["address"]:
+        fail(400, "address_required")
+    if len(a["address"]) > ADDRESS_MAX["address"]:
+        fail(400, "address_too_long")
+    if not a["town"]:
+        fail(400, "town_required")
+    if len(a["town"]) > ADDRESS_MAX["town"]:
+        fail(400, "town_too_long")
+    if len(a["landmark"]) > ADDRESS_MAX["landmark"]:
+        fail(400, "landmark_too_long")
+    return a
+
+
+def _address_out(school: dict) -> dict[str, str]:
+    """Empty for schools registered before the address was asked for: the portal says "Not given"."""
+    return {k: school.get(k) or "" for k in ADDRESS_MAX}
 
 
 # ---------- registering a school (public), approving it (Magana team)
@@ -413,6 +442,10 @@ class RegisterIn(EmailIn):
     lga: str
     agree: bool
     ministry_no: str = Field("", max_length=60)
+    # Checked in _address_in, so a missing or long one gets its own message code.
+    address: str = Field("", max_length=2000)
+    town: str = Field("", max_length=2000)
+    landmark: str = Field("", max_length=2000)
     proof: str | None = Field(None, max_length=8_000_000)  # a data URL or base64: a photo or PDF, 5 MB at most
 
     @field_validator("phone")
@@ -434,6 +467,7 @@ def register_school(body: RegisterIn, request: Request) -> dict:
         fail(400, "agree_required")
     if not places.valid(body.state, body.lga):
         fail(400, "place_unknown")
+    address = _address_in(body)
     proof = None
     if body.proof:
         try:
@@ -451,9 +485,11 @@ def register_school(body: RegisterIn, request: Request) -> dict:
         sid, aid = A.new_id("sch"), A.new_id("stf")
         n = con.execute("SELECT COALESCE(MAX(ref), 1046) + 1 FROM schools").fetchone()[0]
         con.execute("INSERT INTO schools(id, name, state, lga, status, contact_name, contact_role, contact_email,"
-                    " contact_phone, created_at, ref, ministry_no) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+                    " contact_phone, created_at, ref, ministry_no, address, town, landmark)"
+                    " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                     (sid, body.school.strip(), body.state, body.lga, "pending", body.name.strip(), body.role,
-                     body.email, body.phone, iso(t), n, body.ministry_no.strip()))
+                     body.email, body.phone, iso(t), n, body.ministry_no.strip(),
+                     address["address"], address["town"], address["landmark"]))
         if proof:
             con.execute("UPDATE schools SET proof_type = ? WHERE id = ?", (proofs.save(sid, proof), sid))
         _, lk, sealed = A.fresh_code(con, "staff")
@@ -467,7 +503,8 @@ def register_school(body: RegisterIn, request: Request) -> dict:
         alerts = tm.alert_emails(con)
     for team_email in alerts:
         alert = mailer.new_school_request(body.school.strip(), place, body.name.strip(), body.role, body.email, body.phone,
-                                          mailer.ref(n), t, portal_url(), bool(proof), body.ministry_no.strip())
+                                          mailer.ref(n), t, portal_url(), bool(proof), body.ministry_no.strip(),
+                                          **address)
         emails.append({"subject": alert.subject, "to": "Magana team", "sent": _mail(team_email, alert)})
     with db() as con:
         A.audit(con, sid, aid, "school_registered", sid, proof=bool(proof), emails=emails)
@@ -516,7 +553,7 @@ def _school_out(r, bad: set[str] = frozenset()) -> dict:
     registered = parse(d["created_at"])
     by = mailer.call_by(registered)
     return {"id": d["id"], "name": d["name"], "status": d["status"], "reference": mailer.ref(d["ref"]),
-            "state_name": places.state_name(d["state"]), "lga_name": places.lga_name(d["lga"]),
+            "state_name": places.state_name(d["state"]), "lga_name": places.lga_name(d["lga"]), **_address_out(d),
             "contact_name": d["contact_name"], "contact_role": d["contact_role"], "contact_email": d["contact_email"],
             "contact_phone": mailer.local_phone(d["contact_phone"] or ""), "phone_tel": d["contact_phone"],
             "registered": mailer.lagos_time(registered), "call_by": mailer.day(by),
@@ -650,7 +687,7 @@ ACTION_LABELS = {
     "team_member_invited": "Invited member", "team_role_changed": "Role changed", "team_member_removed": "Removed member",
     "team_invite_resent": "Invite resent", "team_invite_cancelled": "Invite cancelled", "team_owner_created": "First Magana admin made",
     "team_member_created": "Member made", "team_email_undeliverable": "Email undeliverable",
-    "team_report_voice_played": "Played a voice note",
+    "team_report_voice_played": "Played a voice note", "school_details_changed": "School details changed",
 }
 LOG_YEARS = 2
 
@@ -1330,6 +1367,31 @@ def home(who: Who = Depends(staff)) -> dict:
                            "quiz_average": round(st[2]) if st[2] is not None else None}
         return {"me": me(who), "classes": [_class_out(con, c) for c in classes], "attention": attention,
                 "week": figures}
+
+
+# ---------- the school's own details (school admins)
+
+class SchoolEdit(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    address: str = Field("", max_length=2000)
+    town: str = Field("", max_length=2000)
+    landmark: str = Field("", max_length=2000)
+
+
+@router.patch("/school")
+def edit_school(body: SchoolEdit, who: Who = Depends(admin)) -> dict:
+    """The address, checked as at registration. Each changed field goes in the audit log."""
+    new = _address_in(body)
+    sid = who.school["id"]
+    with db() as con:
+        s = A.row(con.execute("SELECT * FROM schools WHERE id = ?", (sid,)).fetchone())
+        changes = [{"field": ADDRESS_LABEL[k], "before": s.get(k) or "", "after": v}
+                   for k, v in new.items() if (s.get(k) or "") != v]
+        if changes:
+            con.execute("UPDATE schools SET address = ?, town = ?, landmark = ? WHERE id = ?",
+                        (new["address"], new["town"], new["landmark"], sid))
+            A.audit(con, sid, who.id, "school_details_changed", sid, changes=changes)
+    return {"code": "school_details_saved", "address": new}
 
 
 # ---------- audit log (admins)
