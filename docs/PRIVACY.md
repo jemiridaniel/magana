@@ -34,7 +34,7 @@ The NDPA lets us use personal data only for a clear purpose and on a lawful basi
 | **Your age group and language** | To show only what your age group may use, in your language | Legitimate interests; a guardian's consent for 13 to 17 | On your phone. Every request tells our server your age group |
 | **Reminders, saved questions, your Independence Score** | For you | Your consent | On your phone only, until you delete them (score: last 90 days) |
 | **School, teacher and class records** | To run the teacher portal | Contract with the school; legitimate interests | See "Teachers and schools" |
-| **Server logs**: time, internet address, which page of our service was asked for, errors | To keep the service working and safe | Legitimate interests | Test phase: kept by Hugging Face only while the server runs, and gone when it restarts (at least every deploy). Cloudflare keeps its own request logs for a few days. **[check]** |
+| **Server logs**: time, internet address, which page of our service was asked for, errors | To keep the service working and safe | Legitimate interests | Test phase: on our server in London (Oracle Cloud), at most 100 MB of logs per server version, the oldest overwritten first; deleted with that version, usually within weeks. **[check]** |
 
 Server logs never contain photos, page text, recordings or health-check answers.
 
@@ -137,7 +137,8 @@ We use a few service providers. They handle data only to provide their service t
 
 | Provider | What for | What they see |
 |---|---|---|
-| **Hugging Face** (United States), **test phase** | Runs our server: reads photos and PDFs, in memory only, and answers the app and portal | Everything our server handles while it handles it, encrypted on the way. Nothing is kept on its disk |
+| **Oracle Cloud** (London, UK), **test phase** | Runs our server: reads photos and PDFs, in memory only, and answers the app and portal | Everything our server handles while it handles it, encrypted on the way. Its disk holds only our server's logs (above) |
+| **GitHub** (United States), **test phase** | Keeps our daily database backups, in a private repository | The database's contents, **encrypted before they leave our backup job**: GitHub can't read them. Kept 30 days, and one a month for 12 months |
 | **Neon** (London, UK), **test phase** | Our database: schools, teachers, classes, learners as the school records them, consent, attendance, the audit log, quizzes | What the table below lists, encrypted on the way and at rest |
 | **Resend** (its sending runs in Ireland, EU) | Sending sign-in codes, invitations and school registration emails | The recipient's email address and the email's content |
 | **Cloudflare** | Our domain names, hosting the website, web app and portal, and the gateway in front of our server (api.magana.ng) | Visitors' internet addresses, and every request to our server as it passes, encrypted on the way |
@@ -152,7 +153,8 @@ During development the team also runs the explanation model on temporary Kaggle 
 
 **During the test phase** (until free hosting is replaced; docs/INFRA.md):
 - **Our database is in London, United Kingdom** (Neon). Everything we keep is there.
-- **Our server runs in the United States** (a Hugging Face Space). It processes requests there, holds photos and PDFs in memory only while reading them, and keeps nothing on its disk.
+- **Our server runs in London, United Kingdom** (Oracle Cloud). It processes requests there and holds photos and PDFs in memory only while reading them.
+- **Our database backups are kept by GitHub** (United States), encrypted so that only we can open them.
 - **Emails are sent from Ireland** (Resend).
 
 Sending personal data outside Nigeria is allowed under the NDPA when it stays adequately protected. We protect it the same way wherever it is: encrypted connections, no photos kept, little data held. **[check]** Confirm the basis for these transfers (the UK, the US and the EU) with the NDPC's guidance (adequacy, or the safeguards the NDPA accepts), and whether testing with learners' data should wait for hosting in Nigeria or the UK only.

@@ -1,0 +1,13 @@
+# Deploys the "production" commit if it isn't live (magana-deploy; docs/INFRA.md).
+[Unit]
+Description=Magana API deploy check
+After=docker.service network-online.target
+Wants=network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/bin/magana-deploy
+# A build after a change to requirements takes several minutes on this server.
+TimeoutStartSec=45min
+Nice=5

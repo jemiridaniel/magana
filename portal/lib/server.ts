@@ -1,8 +1,8 @@
 // Every call to the Magana API goes through apiFetch, so "the server isn't answering" is
 // told the same way everywhere: the portal is on Cloudflare Pages and stays up when the API
-// is down (docs/DEPLOY_PAGES.md). The test-phase API is a free Hugging Face Space that sleeps
-// (docs/INFRA.md): while it wakes, the Worker on api.magana.ng answers 503 "server_waking", and
-// apiFetch shows "Magana is waking up, one moment…" and tries again for up to 60 s.
+// is down (docs/DEPLOY_PAGES.md). While the API restarts (docs/INFRA.md), Caddy on api.magana.ng
+// answers 503 "server_waking", and apiFetch shows "Magana is waking up, one moment…" and tries
+// again for up to 60 s.
 export const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "";
 
 export const SERVER_EVENT = "magana:server";

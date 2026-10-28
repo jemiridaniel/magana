@@ -1,0 +1,74 @@
+# api.magana.ng on the test-phase server (docs/INFRA.md). Installed by magana-deploy as
+# /etc/caddy/Caddyfile after each good deploy (checked with "caddy validate" first).
+# Caddy gets and renews the TLS certificate itself (Let's Encrypt, HTTP or TLS-ALPN check; the DNS
+# record is "DNS only", docs/DEPLOY.md). The API runs in one of two containers, slots a (8001) and b
+# (8002), published on 127.0.0.1 only; a deploy starts the new slot, checks it, then stops the old.
+{
+	email daniel@magana.ng
+	servers {
+		# Only if the record is ever switched to "Proxied": the caller's address then comes from
+		# Cloudflare's header, believed only from Cloudflare's own addresses (cloudflare.com/ips).
+		trusted_proxies static 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22 2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32 2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32
+		client_ip_headers CF-Connecting-IP
+	}
+}
+
+api.magana.ng {
+	# Photos and PDFs; the API keeps its own, smaller limits per route.
+	request_body {
+		max_size 100MB
+	}
+
+	# Where a deploy is (magana-deploy writes it; CI reads it): commits and states only.
+	handle /deploy-status {
+		root * /var/lib/magana/public
+		rewrite * /status.json
+		header Cache-Control no-store
+		file_server
+	}
+
+	handle {
+		reverse_proxy 127.0.0.1:8001 127.0.0.1:8002 {
+			# The first healthy slot. During a deploy the old slot answers until it stops; then
+			# requests (and retries of ones it refused) go to the new one.
+			lb_policy first
+			lb_try_duration 15s
+			lb_try_interval 250ms
+			fail_duration 10s
+			# /livez never queries the database, so Neon's free compute can sleep.
+			health_uri /livez
+			health_interval 5s
+			health_timeout 3s
+			# Exactly the caller's address (uvicorn takes the first): the API's per-address limits.
+			header_up X-Forwarded-For {client_ip}
+			transport http {
+				read_timeout 180s
+				write_timeout 180s
+			}
+		}
+	}
+
+	# No slot answering (a restart, a crash being restarted): the code the app and the portal
+	# already wait on, "Magana is waking up, one moment…" (up to 60 s), with CORS for the portal.
+	handle_errors 502 503 504 {
+		@web header_regexp Origin ^https://((app|teachers|www)\.)?magana\.ng$
+		header @web Access-Control-Allow-Origin {http.request.header.Origin}
+		header @web Access-Control-Allow-Credentials true
+		header @web Vary Origin
+		@preflight {
+			method OPTIONS
+			header_regexp Origin ^https://((app|teachers|www)\.)?magana\.ng$
+		}
+		handle @preflight {
+			header Access-Control-Allow-Methods "GET, POST, PUT, PATCH, DELETE"
+			header Access-Control-Allow-Headers {http.request.header.Access-Control-Request-Headers}
+			header Access-Control-Max-Age 600
+			respond 204
+		}
+		handle {
+			header Content-Type application/json
+			header Retry-After 5
+			respond `{"detail": {"code": "server_waking", "retry_after": 5}}` 503
+		}
+	}
+}

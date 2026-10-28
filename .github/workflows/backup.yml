@@ -1,0 +1,98 @@
+# Every day at 02:40 UTC: a full dump of the Neon database, encrypted, into the private repository
+# jemiridaniel/magana-backups (docs/RESTORE.md). Runs on GitHub, so it works when the server or
+# the cloud account is gone (the AWS lesson). The dump is encrypted here with the public key in
+# deploy/backup/age-recipient.txt before it leaves this job; only the private key, kept in the
+# password manager, opens it. This repository is public: the log shows sizes and dates only.
+# Kept: the newest 30 daily dumps, and the first of each month for 12 months. If a backup fails,
+# it emails ALERT_EMAIL.
+name: Backup
+
+on:
+  schedule:
+    - cron: "40 2 * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: backup
+  cancel-in-progress: false
+
+jobs:
+  dump:
+    runs-on: ubuntu-latest
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      BACKUP_REPO: ${{ vars.BACKUP_REPO || 'jemiridaniel/magana-backups' }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Settings in place?
+        id: ready
+        env:
+          BACKUP_DEPLOY_KEY: ${{ secrets.BACKUP_DEPLOY_KEY }}
+        run: |
+          if [ -z "$DATABASE_URL" ] || [ -z "$BACKUP_DEPLOY_KEY" ]; then
+            echo "::warning::DATABASE_URL or BACKUP_DEPLOY_KEY isn't set yet (docs/DEPLOY.md): no backup made"
+            echo "ok=no" >> "$GITHUB_OUTPUT"
+          else
+            echo "ok=yes" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Dump and encrypt
+        if: steps.ready.outputs.ok == 'yes'
+        run: |
+          sudo apt-get install -y -q age >/dev/null
+          day=$(date -u +%F)
+          # pg_dump must be at least the server's version (Neon: 17 today); 18 reads both.
+          docker run --rm -e DATABASE_URL postgres:18 \
+            sh -c 'pg_dump --format=custom --no-owner --no-privileges --dbname="$DATABASE_URL"' > db.dump
+          docker run --rm -i postgres:18 pg_restore --list < db.dump > /dev/null   # a readable dump
+          tables=$(docker run --rm -i postgres:18 pg_restore --list < db.dump | grep -c ' TABLE ' || true)
+          [ "$tables" -gt 0 ] || { echo "the dump has no tables"; exit 1; }
+          age -r "$(cat deploy/backup/age-recipient.txt)" -o "magana-$day.dump.age" db.dump
+          shred -u db.dump
+          echo "dump: $tables tables, $(du -h "magana-$day.dump.age" | cut -f1) encrypted"
+          echo "DAY=$day" >> "$GITHUB_ENV"
+
+      - name: Store in the private backups repository
+        if: steps.ready.outputs.ok == 'yes'
+        env:
+          BACKUP_DEPLOY_KEY: ${{ secrets.BACKUP_DEPLOY_KEY }}   # write access to that repository only
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$BACKUP_DEPLOY_KEY" > ~/.ssh/backup && chmod 600 ~/.ssh/backup
+          ssh-keyscan -q github.com >> ~/.ssh/known_hosts
+          export GIT_SSH_COMMAND="ssh -i ~/.ssh/backup -o IdentitiesOnly=yes"
+          git clone -q --depth 1 "git@github.com:$BACKUP_REPO.git" store
+          mkdir -p store/daily store/monthly
+          mv "magana-$DAY.dump.age" store/daily/
+          [ "$(date -u +%d)" = 01 ] && cp "store/daily/magana-$DAY.dump.age" store/monthly/
+          # Retention: 30 daily, 12 monthly (by name: magana-YYYY-MM-DD).
+          ls -1 store/daily/magana-*.dump.age | sort | head -n -30 | xargs -r rm -f
+          ls -1 store/monthly/magana-*.dump.age 2>/dev/null | sort | head -n -12 | xargs -r rm -f
+          n=$(ls -1 store/daily | wc -l)
+          [ "$n" -ge 1 ] || { echo "refusing: no daily dump would be left"; exit 1; }
+          # One commit holding only what is kept, so the repository doesn't grow forever.
+          cd store
+          git config user.name "Magana backup" && git config user.email "ci@magana.ng"
+          git checkout -q --orphan kept && git add -A && git commit -q -m "Backups up to $DAY ($n daily)"
+          git push -q --force origin kept:main
+          echo "stored: $n daily, $(ls -1 monthly | wc -l) monthly"
+
+      - name: Email if the backup failed
+        if: failure()
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          TO: ${{ vars.ALERT_EMAIL || 'daniel@magana.ng' }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+        run: |
+          [ -n "$RESEND_API_KEY" ] || { echo "no RESEND_API_KEY secret: can't email"; exit 0; }
+          jq -n --arg to "$TO" --arg run "$RUN" '{
+            from: "Magana alerts <no-reply@magana.ng>", to: [$to],
+            subject: "Magana: the daily database backup failed",
+            text: ("Today'"'"'s backup of the Neon database failed. The earlier backups are untouched.\n\nRun: " + $run)
+          }' > mail.json
+          curl -s -o /dev/null -w 'alert email: %{http_code}\n' https://api.resend.com/emails \
+            -H "Authorization: Bearer $RESEND_API_KEY" -H "Content-Type: application/json" -d @mail.json

@@ -1,5 +1,4 @@
-// The free test-phase server sleeps (docs/INFRA.md): while it wakes, the Worker on api.magana.ng
-// answers 503 "server_waking". The app says "Magana is waking up, one moment…" once and waits
+// While the API restarts (docs/INFRA.md), Caddy on api.magana.ng answers 503 "server_waking". The app says "Magana is waking up, one moment…" once and waits
 // (up to 60 s) instead of failing; a page photo is read on the phone meanwhile.
 import 'dart:convert';
 

@@ -1,0 +1,105 @@
+# Every 10 minutes: is https://api.magana.ng answering? (docs/INFRA.md). Runs on GitHub, so it
+# still works when the server is gone. /livez says the API is up without waking the database; once
+# an hour /health also checks the database (more often would use up Neon's free compute hours).
+# Down for 30 minutes or more (this run and the failed runs just before it): one email to
+# ALERT_EMAIL, again every 6 hours while it stays down, and one when it is back.
+# GitHub may start scheduled runs some minutes late, so an alert can come a little after 30 minutes.
+# The repository is public: the log shows only status codes and the health answer.
+name: Monitor
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  actions: read
+  contents: read
+
+concurrency:
+  group: monitor
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    env:
+      API: https://api.${{ vars.MAGANA_DOMAIN || 'magana.ng' }}
+      GH_TOKEN: ${{ github.token }}
+    steps:
+      - name: Is the API up?
+        id: check
+        run: |
+          ok=no
+          for i in 1 2 3; do
+            body=$(curl -s --max-time 20 "$API/livez" || true)
+            if [ "$(echo "$body" | jq -r '.status // empty' 2>/dev/null)" = ok ]; then ok=yes; break; fi
+            echo "livez not ok ($i): $(echo "$body" | head -c 200)"
+            sleep 20
+          done
+          if [ "$ok" = yes ] && [ "$(date -u +%M | sed 's/^0//')" -lt 10 ]; then   # hourly: the database too
+            body=$(curl -s --max-time 30 "$API/health" || true)
+            [ "$(echo "$body" | jq -r '.database // empty' 2>/dev/null)" = ok ] || { ok=no; echo "database: $(echo "$body" | head -c 200)"; }
+          fi
+          echo "up: $ok"
+          echo "ok=$ok" >> "$GITHUB_OUTPUT"
+
+      - name: How long has it been down?
+        id: streak
+        run: |
+          now=$(date -u +%s)
+          # The runs before this one, newest first: the failures just before it are the same outage.
+          gh api "repos/${{ github.repository }}/actions/workflows/monitor.yml/runs?status=completed&per_page=60" \
+            --jq '.workflow_runs[] | select(.id != ${{ github.run_id }}) | "\(.conclusion) \(.run_started_at)"' > runs.txt
+          start=""; prev_start=""; prev=""
+          while read -r conclusion at; do
+            [ "$conclusion" = failure ] || break
+            start=$(date -u -d "$at" +%s)
+            [ -z "$prev" ] && prev=$start   # the newest failed run before this one
+          done < runs.txt
+          down_before=0; [ -n "$start" ] && down_before=$(( prev - start ))
+          if [ "${{ steps.check.outputs.ok }}" = yes ]; then
+            # Back after an outage that was emailed about (30 minutes or more).
+            was=0; [ -n "$start" ] && was=$(( now - start ))
+            echo "back=$([ $was -ge 1800 ] && echo yes || echo no)" >> "$GITHUB_OUTPUT"
+            echo "minutes=$(( was / 60 ))" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          [ -n "$start" ] || start=$now
+          down=$(( now - start ))
+          echo "down for $(( down / 60 )) minutes"
+          # Email when the outage first passes 30 minutes, then every 6 hours.
+          alert=no
+          if [ $down -ge 1800 ]; then
+            if [ $down_before -lt 1800 ] || [ $(( (down - 1800) / 21600 )) -gt $(( (down_before - 1800) / 21600 )) ]; then alert=yes; fi
+          fi
+          echo "alert=$alert" >> "$GITHUB_OUTPUT"
+          echo "minutes=$(( down / 60 ))" >> "$GITHUB_OUTPUT"
+
+      - name: Email
+        if: steps.streak.outputs.alert == 'yes' || steps.streak.outputs.back == 'yes'
+        env:
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          TO: ${{ vars.ALERT_EMAIL || 'daniel@magana.ng' }}
+          RUN: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          BACK: ${{ steps.streak.outputs.back }}
+          MINUTES: ${{ steps.streak.outputs.minutes }}
+        run: |
+          [ -n "$RESEND_API_KEY" ] || { echo "no RESEND_API_KEY secret: can't email"; exit 0; }
+          if [ "$BACK" = yes ]; then
+            subject="Magana API is back up (down about $MINUTES minutes)"
+            text="api.magana.ng is answering again."
+          else
+            subject="Magana API is down (about $MINUTES minutes)"
+            text="api.magana.ng has not answered for about $MINUTES minutes.\n\nCheck, in order:\n1. Oracle Cloud → Compute → Instances → magana-api: is it Running? If it was stopped (an idle reclaim), choose Start: everything comes back by itself.\n2. https://api.magana.ng/deploy-status, and on the server: sudo magana-deploy --status\n3. Neon: is the project there and not over its limits?"
+          fi
+          jq -n --arg to "$TO" --arg s "$subject" --arg t "$text" --arg run "$RUN" '{
+            from: "Magana alerts <no-reply@magana.ng>", to: [$to], subject: $s,
+            text: (($t | gsub("\\\\n"; "\n")) + "\n\nThis check: " + $run)
+          }' > mail.json
+          curl -s -o /dev/null -w 'email: %{http_code}\n' https://api.resend.com/emails \
+            -H "Authorization: Bearer $RESEND_API_KEY" -H "Content-Type: application/json" -d @mail.json
+
+      - name: Fail the run when down (so the next run knows)
+        if: steps.check.outputs.ok != 'yes'
+        run: exit 1

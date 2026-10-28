@@ -425,8 +425,8 @@ String noAnswerCode() =>
 bool serverAsleep(int status) =>
     status == 502 || status == 503 || status == 504;
 
-/// How long a request waits for Magana's server to wake up (test phase: a free Hugging Face
-/// Space, docs/INFRA.md) before it fails.
+/// How long a request waits for Magana's server to wake up (a restart or a deploy: Caddy on
+/// api.magana.ng answers `server_waking` while no server is answering, docs/INFRA.md) before it fails.
 Duration serverWakeWait = const Duration(seconds: 60);
 
 /// Says "Magana is waking up, one moment…" (main.dart); called once per waiting request.
@@ -507,8 +507,8 @@ class MaganaApi {
   /// Age tier and consent headers, sent with every request (see ProfileController).
   final Map<String, String> Function() _headers;
 
-  /// [_jsonOnce], tried again while Magana's server wakes up (the free test-phase server sleeps;
-  /// the Worker on api.magana.ng answers `server_waking`): "Magana is waking up, one moment…" is
+  /// [_jsonOnce], tried again while Magana's server wakes up (while it restarts, Caddy on
+  /// api.magana.ng answers `server_waking`): "Magana is waking up, one moment…" is
   /// said once ([onServerWaking]), then it waits up to [serverWakeWait] instead of failing.
   Future<Map<String, dynamic>> _json(
     String method,

@@ -27,7 +27,7 @@ test("a 503 page from the proxy counts as asleep too", async ({ page }) => {
 });
 
 test("the server waking up: 'Magana is waking up, one moment…', then the portal carries on", async ({ page }) => {
-  // The Worker on api.magana.ng answers 503 server_waking while the free Space wakes (docs/INFRA.md).
+  // Caddy on api.magana.ng answers 503 server_waking while the API restarts (docs/INFRA.md).
   let waking = 2;
   await page.route(`${apiUrl}/**`, (route) => {
     if (waking > 0) {

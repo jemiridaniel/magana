@@ -18,7 +18,7 @@ Pitch frame: **Learn. Live. Lead.** — one reading engine that takes users from
 - `backend/` FastAPI (Python). OCR behind `OCREngine` interface: Tesseract for dev, PaddleOCR PP-Structure for production (layout, tables). Maths: LaTeX-OCR → spoken maths. Figures: vision-language model. Explanations: N-ATLAS (quantized). Speech: Whisper/MMS ASR, MMS-TTS. Braille: liblouis → BRF.
 - `app/` (to build) Flutter Android app, TalkBack-first; offline fallback with ML Kit OCR + device TTS.
 - `portal/` (to build) teacher web portal: uploads → audio/BRF/large print, classes, attendance, progress, consent, help.
-- Hosting (test phase, free; docs/INFRA.md): API on a private Hugging Face Space behind a Cloudflare Worker at api.magana.ng, Postgres on Neon (London; `database.py`, SQLite in dev/tests), email via Resend, sites on Cloudflare Pages. Nothing important on the Space's disk.
+- Hosting (test phase, free; docs/INFRA.md): API on an Oracle Cloud Always Free server in London (arm64, Caddy, Docker; `deploy/server/`) at api.magana.ng (DNS only). CI tags `production` and the server pulls, checks and switches (`magana-deploy`, automatic rollback; manual: the Rollback workflow). Postgres on Neon (London; `database.py`, SQLite in dev/tests); frequent checks use `/livez` so Neon can sleep. Daily encrypted backups to the private repo magana-backups (`backup.yml`); 10-minute monitor (`monitor.yml`). Email via Resend; sites on Cloudflare Pages. The server is disposable: nothing important on its disk.
 
 ## Non-negotiable safety rules
 1. Numbers, doses, money amounts, dates and ranges are read verbatim. **The model never writes a number or unit:**

@@ -8,8 +8,8 @@ Daily caps on the same heavy calls, counted per Lagos calendar day: RATE_HEAVY_D
 (300) per device and RATE_HEAVY_IP_PER_DAY (3000) per IP (a school's learners often share one
 connection). Over a cap: 429 "daily_limit" until midnight in Lagos.
 The device is the app's random install ID (X-Magana-Device); without one, only the IP limits
-apply. Behind the Worker on api.magana.ng the IP comes from X-Forwarded-For, which the Worker sets
-(uvicorn --proxy-headers; docs/INFRA.md).
+apply. Behind Caddy on api.magana.ng the IP comes from X-Forwarded-For, which Caddy sets to the
+caller's address (uvicorn --proxy-headers; deploy/server/Caddyfile, docs/INFRA.md).
 The app key (X-Magana-Key) is an app identifier, not a secret: it ships in the APK, the IPA and
 the PWA. These limits, not the key, are what protect the server (docs/INFRA.md).
 
@@ -26,7 +26,7 @@ import time
 from dataclasses import dataclass, field
 
 HEAVY_PATHS = ("/read", "/asr", "/asr/choose", "/explain")
-EXEMPT_PATHS = ("/health", "/whatsapp/webhook")  # Meta signs its calls; usage is capped instead
+EXEMPT_PATHS = ("/health", "/livez", "/whatsapp/webhook")  # Meta signs its calls; usage is capped instead
 PORTAL_PUBLIC = ("/portal/auth/", "/portal/schools/register", "/portal/places")
 _DEVICE = re.compile(r"^[A-Za-z0-9-]{8,64}$")
 

@@ -1,5 +1,5 @@
-"""Small named files kept in the database, not on the server's disk: the test-phase server (a
-Hugging Face Space, docs/INFRA.md) loses its disk on every restart. Used for teachers' quizzes
+"""Small named files kept in the database, not on the server's disk: the server is disposable
+(docs/INFRA.md), and everything that matters is in the database, which is backed up daily. Used for teachers' quizzes
 (quizzes.py), proof-of-school files, encrypted (proofs.py), and WhatsApp's profiles, call-back
 requests and monthly count (wa_store.py). Never photos or page text."""
 from __future__ import annotations

@@ -72,14 +72,14 @@ _pools: dict = {}
 
 
 def _pool():
-    """A few open connections, reused: the database is an ocean away from the server (London and
-    the US), so a new TLS connection per request would add about 0.3 s. Prepared statements are
+    """A few connections, reused while requests come, closed after 2 idle minutes (min_size 0) so
+    Neon's free compute can scale to zero between uses (docs/INFRA.md). Prepared statements are
     off, for the providers' poolers (PgBouncer, Supavisor) in transaction mode."""
     from psycopg_pool import ConnectionPool
 
     u = url()
     if u not in _pools:
-        _pools[u] = ConnectionPool(u, min_size=1, max_size=int(os.environ.get("DATABASE_POOL_SIZE", "4")),
+        _pools[u] = ConnectionPool(u, min_size=0, max_size=int(os.environ.get("DATABASE_POOL_SIZE", "4")), max_idle=120,
                                    kwargs={"autocommit": False, "prepare_threshold": None},
                                    check=ConnectionPool.check_connection, open=True)
     return _pools[u]

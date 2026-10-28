@@ -13,6 +13,46 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-28 · The API moves to an Oracle Cloud Always Free server in London (UNREVIEWED)
+
+> **Why:** a free Hugging Face Docker Space now needs a paid plan, so the Space and its Cloudflare Worker (the entry below) were never deployed. The API runs on an Oracle Cloud Always Free server instead: `magana-api`, A1 Flex, 2 OCPU, 12 GB, arm64, Ubuntu 24.04, UK South (London). Neon (London) and Resend (Ireland) stay as planned. docs/INFRA.md has the details; docs/DEPLOY.md lists the clicks still to do.
+>
+> **Unreviewed.** For Nurse Balogun: the privacy notice now names Oracle Cloud (London) for processing and GitHub (US) for encrypted backups, in place of Hugging Face (US). Server logs, which hold internet addresses, are now kept on our server (at most 100 MB per version) instead of being lost at each restart. It is marked **[check]**.
+
+- **Server set up and checked over SSH** (`deploy/server/bootstrap.sh`, idempotent; run twice):
+  - **Updates:** daily unattended security updates, with a 03:30 UTC restart when needed.
+  - **Firewall:** 80 and 443 added to Oracle's iptables rules, live and saved. `iptables -S INPUT` shows 22, 80 and 443 before the final REJECT.
+  - **SSH:** keys only, no root.
+  - **Services:** Docker 29.9 and Caddy 2.11, both start at boot and restart when they stop. The deploy timer runs every minute.
+- **The image builds on the server** (arm64): 1.05 GB on disk.
+- **The image runs on the server:**
+  - It runs read-only, with no capabilities, published on 127.0.0.1 only.
+  - `/health` answered `status ok, database ok`.
+  - A synthetic schoolwork page (3 printed lines) was read in **0.59 s** through `/read`, with confidence 0.96 on the first line.
+  - RapidOCR, the second engine, read the same 3 lines exactly, in the read-only container.
+  - Memory at rest: **69 MB**.
+- **Caddy:**
+  - It answers port 80 with a redirect to HTTPS. Until the DNS record points at the server it has no certificate (TLS refused). The deploy treats that as "not checkable yet" and relies on the slot's own check.
+  - With no API container answering, it gives the existing `server_waking` code (with CORS for the portal), so the app's and the portal's 60-second wait still applies during restarts.
+- **The Cloudflare Worker is removed.** It only existed to add the Space's token. The API already does CORS and per-address and per-device limits itself. The DNS record is **DNS only**, so Caddy renews its own certificate and the API sees real callers' addresses (reasons in docs/INFRA.md).
+- **Neon's free compute** is now 100 CU-hours a month (Neon's plans page, read 28 Oct), about 400 hours at the smallest size against 730 in a month. Health checks that query the database every few seconds would have kept it awake all month.
+  - **Fix:** a new `/livez` answers without touching the database. Caddy (every 5 s), Docker and the 10-minute monitor use it.
+  - The connection pool now closes idle connections after 2 minutes (min_size 0).
+  - **Test:** `test_api_key.py::test_livez_is_open_and_never_touches_the_database`.
+- **Oracle's idle reclaim:**
+  - **The rule** (Oracle docs, read 28 Oct): an instance counts as idle if, over 7 days, the 95th-percentile CPU, the network and the memory (A1) are all under 20%.
+  - **Magana will look idle:** 69 MB of 12 GB at rest. **Recommended: upgrade to Pay As You Go**, which isn't reclaimed, and keep Always Free resources only, with the $1 budget alert.
+  - No fake load is run.
+- **Deploys pull:** CI moves a `production` tag; the server builds, checks `/health` (commit and database), then switches between two slots.
+  - **On failure:** a failed check leaves the old one serving and marks the commit failed. GitHub holds no key to the server.
+  - **Not yet run end to end:** it needs the tag, which the first CI run on main sets.
+- **Monitor:** the outage logic was run with 9 made-up run histories:
+  - nothing before 30 minutes down, one email when the outage passes 30 minutes, none at the next run;
+  - again every 6 hours while it is down;
+  - "back up" only after an outage of 30 minutes or more.
+- **Backups:** daily `pg_dump`, encrypted with `age` before it leaves the job, to a private repository. Not yet run: it needs the Neon project and the backups repository (docs/DEPLOY.md, steps 4–5).
+- **Tests:** backend 713 passed (1 skipped); app `flutter analyze` clean and 343 passed.
+
 ## 2026-10-28 · Free test-phase hosting: Hugging Face Space, Neon, a Cloudflare Worker, Resend (UNREVIEWED)
 
 > **Why:** the AWS account is suspended and api.magana.ng stopped answering (no TCP on 80 or 443 since 27 Oct, about 20:40 UTC). Everything moves to free services for the test phase: docs/INFRA.md (what runs where), docs/DEPLOY.md (the clicks), docs/RESTORE.md (backups).

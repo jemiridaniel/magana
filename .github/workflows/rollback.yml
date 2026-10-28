@@ -1,0 +1,39 @@
+# Put an earlier commit of main back on the server (docs/INFRA.md, "Rolling back"). Moves the
+# "production" tag to it; the server switches within a minute, without a rebuild if it is one of
+# the last few commits. The next push to main deploys as usual again.
+# GitHub → Actions → Rollback → Run workflow → the commit (from the list of commits on main).
+name: Rollback
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: "Commit on main to put back (at least 7 characters)"
+        required: true
+
+permissions:
+  contents: write   # the "production" tag only
+
+concurrency:
+  group: deploy
+  cancel-in-progress: true
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    env:
+      DOMAIN: ${{ vars.MAGANA_DOMAIN || 'magana.ng' }}
+      COMMIT: ${{ inputs.commit }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Move the production tag
+        run: |
+          [[ "$COMMIT" =~ ^[0-9a-f]{7,40}$ ]] || { echo "not a commit"; exit 1; }
+          sha=$(git rev-parse --verify "$COMMIT^{commit}")
+          git merge-base --is-ancestor "$sha" origin/main || { echo "$COMMIT isn't on main"; exit 1; }
+          git push --force origin "$sha:refs/tags/production"
+          echo "SHORT=${sha:0:12}" >> "$GITHUB_ENV"
+      - name: Wait for the server
+        run: scripts/wait-for-deploy.sh "$SHORT" 30

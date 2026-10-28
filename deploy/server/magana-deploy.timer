@@ -1,0 +1,11 @@
+# Every minute: has CI moved the "production" tag? (magana-deploy; docs/INFRA.md)
+[Unit]
+Description=Magana API deploy check, every minute
+
+[Timer]
+OnBootSec=30s
+OnUnitInactiveSec=60s
+AccuracySec=5s
+
+[Install]
+WantedBy=timers.target

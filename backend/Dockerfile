@@ -3,7 +3,7 @@
 # request).
 # SPEECH=on adds server speech (requirements-asr.txt: Whisper ASR and the MMS voices for
 # WhatsApp; about 2 GB bigger). For local Docker and CI tests; the test-phase server is built from
-# deploy/hf-space/Dockerfile (docs/INFRA.md).
+# deploy/server/Dockerfile (docs/INFRA.md).
 FROM python:3.12-slim
 
 ARG OCR_ENGINE=tesseract

@@ -1,11 +1,12 @@
-# Tests on every push and pull request (backend on SQLite and Postgres, app, portal, website, the
-# api.magana.ng Worker). On main, once every test passes, two deploys run side by side:
+# Tests on every push and pull request (backend on SQLite and Postgres, app, portal, website). On
+# main, once every test passes, two deploys run side by side:
 # - pages: the website, the PWA and the teacher portal go to Cloudflare Pages
 #   (docs/DEPLOY_PAGES.md). Built here; the PWA carries MAGANA_WEB_API_KEY, the public web key
 #   (a GitHub secret). The APK key never comes to GitHub.
-# - space: the API goes to the private Hugging Face Space (docs/DEPLOY.md): the bundle is pushed to
-#   the Space's repository, the Worker on api.magana.ng is deployed, and the job waits until
-#   https://api.magana.ng/health answers from the new commit with its database working.
+# - deploy: the API goes to the test-phase server (docs/INFRA.md). This job moves the git tag
+#   "production" to the commit; the server sees it within a minute, builds it, checks it and
+#   switches over (deploy/server/magana-deploy). GitHub holds no key to the server. The job waits
+#   until https://api.magana.ng/health answers from the new commit with its database working.
 name: CI
 
 on:
@@ -40,16 +41,6 @@ jobs:
           docker run --rm --user root --network host -v "$PWD:/m" -w /m/backend \
             -e MAGANA_TEST_DATABASE_URL=postgresql://postgres:magana@127.0.0.1:5432/postgres \
             magana-backend python -m pytest -q -p no:cacheprovider
-
-  worker:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: "22"
-      - run: npm test
-        working-directory: cloudflare/api-proxy
 
   app:
     runs-on: ubuntu-latest
@@ -100,69 +91,28 @@ jobs:
       - run: npx playwright test --reporter=line
         working-directory: website
 
-  space:
-    needs: [backend, app, portal, website, worker]
-    # Only main, and only once the Space is set up (repository variable HF_SPACE, docs/DEPLOY.md).
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.HF_SPACE != ''
+  deploy:
+    needs: [backend, app, portal, website]
+    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write   # the "production" tag only
     concurrency:
-      group: space
-      cancel-in-progress: false
+      group: deploy
+      cancel-in-progress: true   # a newer commit replaces one still waiting
     env:
-      HF_SPACE: ${{ vars.HF_SPACE }}          # e.g. jemiridaniel/magana-api
-      DOMAIN: ${{ vars.MAGANA_DOMAIN }}
+      DOMAIN: ${{ vars.MAGANA_DOMAIN || 'magana.ng' }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Push the bundle to the Space's repository
-        env:
-          HF_DEPLOY_TOKEN: ${{ secrets.HF_DEPLOY_TOKEN }}   # write access to this Space only
-        run: |
-          [ -n "$HF_DEPLOY_TOKEN" ] || { echo "Set the HF_DEPLOY_TOKEN secret (docs/DEPLOY.md)"; exit 1; }
-          owner="${HF_SPACE%%/*}"
-          git clone -q --depth 1 "https://$owner:$HF_DEPLOY_TOKEN@huggingface.co/spaces/$HF_SPACE" space
-          find space -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          MAGANA_BUILD="$GITHUB_SHA" scripts/build-space.sh space
-          cd space
-          git config user.name "Magana CI" && git config user.email "ci@magana.ng"
-          git add -A
-          git commit -q -m "Deploy ${GITHUB_SHA:0:12} from github.com/${{ github.repository }}" || echo "nothing changed"
-          git push -q origin HEAD:main
+      - name: Tag the commit for the server
+        run: git push --force origin "$GITHUB_SHA:refs/tags/production"
 
-      - name: Deploy the Worker on api.magana.ng
-        if: vars.CLOUDFLARE_ACCOUNT_ID != ''
-        env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
-        working-directory: cloudflare/api-proxy
-        run: npx --yes wrangler@4.40.0 deploy --var "UPSTREAM:https://${HF_SPACE%%/*}-${HF_SPACE##*/}.hf.space"
-
-      - name: Wait for the new server (the Space builds it; up to 20 minutes)
-        run: |
-          want="${GITHUB_SHA:0:12}"
-          for i in $(seq 1 80); do
-            body=$(curl -s --max-time 20 "https://api.$DOMAIN/health" || true)
-            build=$(echo "$body" | jq -r '.build // empty' 2>/dev/null || true)
-            db=$(echo "$body" | jq -r '.database // empty' 2>/dev/null || true)
-            if [ "$build" = "$want" ] && [ "$db" = ok ]; then echo "live: $body"; break; fi
-            echo "waiting ($i): build=${build:-none} database=${db:-none}"
-            sleep 15
-          done
-          [ "$build" = "$want" ] || { echo "the Space didn't come up with $want"; exit 1; }
-          [ "$db" = ok ] || { echo "the server is up but its database isn't"; exit 1; }
-
-      - name: Check from outside
-        run: |
-          code=$(curl -s -o /dev/null -w '%{http_code}' -X POST "https://api.$DOMAIN/read")
-          [ "$code" = 401 ] || { echo "a call without the app key gave $code, not 401"; exit 1; }
-          code=$(curl -s -o /dev/null -w '%{http_code}' "https://api.$DOMAIN/portal/me" -H "X-Magana-Key: x")
-          [ "$code" = 401 ] || { echo "the portal API without a key or session gave $code, not 401"; exit 1; }
-          # The Space itself refuses anyone without the token.
-          code=$(curl -s -o /dev/null -w '%{http_code}' "https://${HF_SPACE%%/*}-${HF_SPACE##*/}.hf.space/health")
-          case "$code" in 401|403|404) echo "the Space is private ($code)";; *) echo "the Space answered $code without a token"; exit 1;; esac
+      - name: Wait for the server to switch to it (it builds it; up to 30 minutes)
+        run: scripts/wait-for-deploy.sh "${GITHUB_SHA:0:12}"
 
   pages:
-    needs: [backend, app, portal, website, worker]
+    needs: [backend, app, portal, website]
     # Only main, and only once Cloudflare is set up (docs/DEPLOY_PAGES.md, step 2).
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.CLOUDFLARE_ACCOUNT_ID != ''
     runs-on: ubuntu-latest

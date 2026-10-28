@@ -1,0 +1,171 @@
+#!/usr/bin/env bash
+# Deploys Magana's API on the test-phase server (docs/INFRA.md). Runs as root every minute
+# (magana-deploy.timer). The server pulls; GitHub never logs in to it:
+# 1. CI moves the git tag "production" to a commit once every test has passed (or a rollback moves
+#    it back). This reads the tag from the public repository: no key, no account.
+# 2. A new commit is built here (arm64) as magana-api:<commit>, started in the free slot (a: 8001,
+#    b: 8002) and checked: /health must answer with this commit and its database working.
+# 3. Good: the old slot is stopped; Caddy sends everything to the new one (deploy/server/Caddyfile)
+#    and must answer with it within 30 s, or the old one is started again. Bad: the new container is
+#    removed, the old one keeps serving, and the commit is not tried again.
+# Its state is at https://api.magana.ng/deploy-status (commits only), for CI.
+#   magana-deploy                 deploy the "production" commit if it isn't live
+#   magana-deploy --force         also retry a commit that failed before
+#   magana-deploy --restart       restart the live commit with new settings (/etc/magana/magana.env)
+#   magana-deploy --status        what is live
+#   magana-deploy exec <cmd…>     run a command in the live container (e.g. python -m app.team_setup)
+set -euo pipefail
+
+REPO="${MAGANA_REPO:-https://github.com/jemiridaniel/magana.git}"
+SRC=/opt/magana/src
+STATE=/var/lib/magana
+PUBLIC="$STATE/public"
+ENV_FILE=/etc/magana/magana.env
+LOG="$STATE/deploy.log"
+declare -A PORT=([a]=8001 [b]=8002)
+
+log() { echo "$(date -u +%FT%TZ) $*" | tee -a "$LOG"; }
+status() {  # state, commit, message
+  printf '{"state": "%s", "build": "%s", "live": "%s", "message": "%s", "at": "%s"}\n' \
+    "$1" "$2" "$(cat "$STATE/live" 2>/dev/null || true)" "$3" "$(date -u +%FT%TZ)" > "$PUBLIC/status.json.tmp"
+  chmod 644 "$PUBLIC/status.json.tmp" && mv "$PUBLIC/status.json.tmp" "$PUBLIC/status.json"
+}
+build_of() { docker inspect -f '{{index .Config.Labels "magana.build"}}' "magana-api-$1" 2>/dev/null || true; }
+running() { [ "$(docker inspect -f '{{.State.Running}}' "magana-api-$1" 2>/dev/null)" = true ]; }
+live_slot() { for s in a b; do running "$s" && [ "$(build_of "$s")" = "$(cat "$STATE/live" 2>/dev/null)" ] && { echo "$s"; return; }; done; for s in a b; do running "$s" && { echo "$s"; return; }; done; true; }
+
+start() {  # slot, commit
+  docker rm -f "magana-api-$1" >/dev/null 2>&1 || true
+  # The container: read-only, no extra privileges, published on 127.0.0.1 only (Caddy in front).
+  # /data holds only the SQLite fallback used when DATABASE_URL is unset.
+  docker run -d --name "magana-api-$1" --label "magana.build=$2" --restart unless-stopped \
+    -p "127.0.0.1:${PORT[$1]}:8000" --env-file "$ENV_FILE" \
+    --read-only --tmpfs /tmp:size=1g,mode=1777 -v magana-data:/data \
+    --cap-drop ALL --security-opt no-new-privileges --memory 8g --pids-limit 1024 \
+    --stop-timeout 60 "magana-api:$2" >/dev/null
+}
+
+healthy() {  # slot, commit, seconds: /health with this commit and a working database
+  local end=$((SECONDS + $3)) body
+  while [ $SECONDS -lt $end ]; do
+    body=$(curl -s --max-time 10 "http://127.0.0.1:${PORT[$1]}/health" || true)
+    if [ "$(jq -r '.status // empty' <<<"$body" 2>/dev/null)" = ok ] && \
+       [ "$(jq -r '.database // empty' <<<"$body" 2>/dev/null)" = ok ] && \
+       [ "$(jq -r '.build // empty' <<<"$body" 2>/dev/null)" = "$2" ]; then return 0; fi
+    running "$1" || return 1
+    sleep 3
+  done
+  return 1
+}
+
+through_caddy() {  # commit: Caddy answers with it
+  local end=$((SECONDS + 30)) out rc
+  while [ $SECONDS -lt $end ]; do
+    rc=0; out=$(curl -sk --max-time 5 --resolve api.magana.ng:443:127.0.0.1 https://api.magana.ng/livez) || rc=$?
+    # 35: no certificate yet (the DNS record doesn't point here yet): the slot's own check counts.
+    [ "$rc" = 35 ] && return 0
+    [ "$(jq -r '.build // empty' <<<"$out" 2>/dev/null)" = "$1" ] && return 0
+    sleep 2
+  done
+  return 1
+}
+
+update_host_files() {  # the Caddyfile, this script and its timer, from the commit now live
+  if ! cmp -s "$SRC/deploy/server/Caddyfile" /etc/caddy/Caddyfile; then
+    if caddy validate --config "$SRC/deploy/server/Caddyfile" --adapter caddyfile >/dev/null 2>&1; then
+      install -m 644 "$SRC/deploy/server/Caddyfile" /etc/caddy/Caddyfile && systemctl reload caddy && log "Caddyfile updated"
+    else
+      log "the new Caddyfile doesn't validate: kept the old one"
+    fi
+  fi
+  for u in magana-deploy.service magana-deploy.timer; do
+    cmp -s "$SRC/deploy/server/$u" "/etc/systemd/system/$u" || { install -m 644 "$SRC/deploy/server/$u" /etc/systemd/system/; systemctl daemon-reload; }
+  done
+  cmp -s "$SRC/deploy/server/magana-deploy" /usr/local/bin/magana-deploy || \
+    { bash -n "$SRC/deploy/server/magana-deploy" && install -m 755 "$SRC/deploy/server/magana-deploy" /usr/local/bin/magana-deploy.new \
+      && mv /usr/local/bin/magana-deploy.new /usr/local/bin/magana-deploy && log "magana-deploy updated"; }
+}
+
+prune() {  # keep the live image and the 3 newest others (instant rollbacks), and 5 GB of build cache
+  local keep; keep=$(cat "$STATE/live")
+  docker images magana-api --format '{{.Tag}} {{.CreatedAt}}' | sort -k2 -r | awk '{print $1}' | grep -vx "$keep" \
+    | tail -n +4 | xargs -r -I{} docker rmi "magana-api:{}" >/dev/null 2>&1 || true
+  docker builder prune -f --keep-storage 5GB >/dev/null 2>&1 || true
+}
+
+deploy() {  # commit (12), full sha
+  local want="$1" sha="$2" old new
+  old=$(live_slot); new=$([ "$old" = a ] && echo b || echo a)
+  log "deploying $want (old slot: ${old:-none}, new: $new)"
+  if ! docker image inspect "magana-api:$want" >/dev/null 2>&1; then
+    status building "$want" ""
+    [ -d "$SRC/.git" ] || git clone -q --filter=blob:none "$REPO" "$SRC"
+    git -C "$SRC" fetch -q --force origin "$sha" && git -C "$SRC" checkout -q --force --detach "$sha" && git -C "$SRC" clean -qfdx
+    if ! docker build --progress=plain -f "$SRC/deploy/server/Dockerfile" --build-arg "BUILD=$want" -t "magana-api:$want" "$SRC" >>"$LOG" 2>&1; then
+      echo "$sha" >> "$STATE/failed"; status failed "$want" "build failed"; log "build of $want failed"; return 1
+    fi
+  else
+    git -C "$SRC" fetch -q --force origin "$sha" && git -C "$SRC" checkout -q --force --detach "$sha" || true
+  fi
+  status checking "$want" ""
+  start "$new" "$want"
+  if ! healthy "$new" "$want" 180; then
+    docker logs --tail 50 "magana-api-$new" >>"$LOG" 2>&1 || true
+    docker rm -f "magana-api-$new" >/dev/null 2>&1 || true
+    echo "$sha" >> "$STATE/failed"; status failed "$want" "the new server didn't pass /health; the old one is still live"
+    log "$want failed its health check; ${old:-nothing} stays live"; return 1
+  fi
+  local previous; previous=$(cat "$STATE/live" 2>/dev/null || true)
+  [ -n "$old" ] && docker stop -t 60 "magana-api-$old" >/dev/null
+  echo "$want" > "$STATE/live"
+  if ! through_caddy "$want"; then
+    log "Caddy didn't answer with $want: rolling back to ${previous:-nothing}"
+    echo "$previous" > "$STATE/live"
+    [ -n "$old" ] && docker start "magana-api-$old" >/dev/null
+    docker rm -f "magana-api-$new" >/dev/null 2>&1 || true
+    echo "$sha" >> "$STATE/failed"; status failed "$want" "Caddy didn't reach the new server; rolled back"; return 1
+  fi
+  [ -n "$old" ] && docker rm "magana-api-$old" >/dev/null 2>&1 || true
+  [ -n "$previous" ] && [ "$previous" != "$want" ] && echo "$previous" > "$STATE/previous"
+  status live "$want" ""
+  log "$want is live"
+  update_host_files
+  prune
+}
+
+mkdir -p "$PUBLIC" && chmod 755 "$STATE" "$PUBLIC"
+[ "$(stat -c %s "$LOG" 2>/dev/null || echo 0)" -lt 5000000 ] || mv -f "$LOG" "$LOG.1"
+exec 9>/run/magana-deploy.lock
+flock -n 9 || { [ "${1:-}" = exec ] || [ "${1:-}" = --status ] || { echo "a deploy is running"; exit 0; }; }
+
+case "${1:-}" in
+  --status)
+    echo "live: $(cat "$STATE/live" 2>/dev/null || echo none)   previous: $(cat "$STATE/previous" 2>/dev/null || echo none)"
+    docker ps --filter name=magana-api- --format '{{.Names}} {{.Status}} {{.Label "magana.build"}}'
+    cat "$PUBLIC/status.json" 2>/dev/null; exit 0 ;;
+  exec)
+    shift; s=$(live_slot); [ -n "$s" ] || { echo "no live server"; exit 1; }
+    flags=(-i); [ -t 0 ] && flags+=(-t)
+    exec 9>&-
+    exec docker exec "${flags[@]}" "magana-api-$s" "$@" ;;
+  --restart)
+    s=$(live_slot); want=$(cat "$STATE/live" 2>/dev/null || true); [ -n "$s" ] && [ -n "$want" ] || { echo "no live server"; exit 1; }
+    new=$([ "$s" = a ] && echo b || echo a)
+    start "$new" "$want"
+    if healthy "$new" "$want" 180; then docker stop -t 60 "magana-api-$s" >/dev/null; docker rm "magana-api-$s" >/dev/null; log "restarted $want with new settings"; status live "$want" "restarted"
+    else docker logs --tail 50 "magana-api-$new" >>"$LOG" 2>&1; docker rm -f "magana-api-$new" >/dev/null; log "restart with new settings failed its health check: the old settings stay live"; echo "failed: see $LOG"; exit 1; fi
+    exit 0 ;;
+esac
+
+[ -f "$ENV_FILE" ] || { status waiting "" "no settings yet"; exit 0; }
+sha=$(git ls-remote "$REPO" refs/tags/production | cut -f1)
+[ -n "$sha" ] || { status waiting "" "no production tag yet"; exit 0; }
+want=${sha:0:12}
+s=$(live_slot)
+if [ -n "$s" ] && [ "$(build_of "$s")" = "$want" ]; then
+  [ "$(cat "$STATE/live" 2>/dev/null)" = "$want" ] || echo "$want" > "$STATE/live"
+  exit 0
+fi
+if [ "${1:-}" != --force ] && grep -qx "$sha" "$STATE/failed" 2>/dev/null; then exit 0; fi
+[ "${1:-}" = --force ] && sed -i "/^$sha\$/d" "$STATE/failed" 2>/dev/null || true
+deploy "$want" "$sha"

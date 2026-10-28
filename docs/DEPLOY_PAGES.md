@@ -5,14 +5,14 @@
 | **magana.ng** (and www) | Cloudflare Pages, project `magana-website` | `website/` |
 | **app.magana.ng** | Cloudflare Pages, project `magana-app` | `app/` (Flutter web) |
 | **teachers.magana.ng** | Cloudflare Pages, project `magana-teachers`, once the portal has its own sign-in | `portal/` |
-| **api.magana.ng** | A Cloudflare Worker in front of the private Hugging Face Space (docs/INFRA.md, docs/DEPLOY.md) | `backend/`, `cloudflare/api-proxy/` |
+| **api.magana.ng** | The API on the test-phase server, Oracle Cloud London, with Caddy (docs/INFRA.md, docs/DEPLOY.md) | `backend/`, `deploy/server/` |
 
 **Why:**
 - Pages is free, and static files are served from Cloudflare's network, close to Nigerian users.
 - The API runs elsewhere (docs/INFRA.md), so an API that is down or asleep never takes the website down.
-- While the API wakes up, the PWA and the portal say "Magana is waking up, one moment…" and wait up to 60 s (`server_waking`). If it stays down, they say "Magana's server is sleeping. Please try again later." (`server_sleeping`).
+- While the API restarts, the PWA and the portal say "Magana is waking up, one moment…" and wait up to 60 s (`server_waking`). If it stays down, they say "Magana's server is sleeping. Please try again later." (`server_sleeping`).
 
-**How it deploys:** the `pages` job in `.github/workflows/ci.yml` runs on every push to `main` once all tests pass, beside the `space` job that deploys the API (docs/DEPLOY.md).
+**How it deploys:** the `pages` job in `.github/workflows/ci.yml` runs on every push to `main` once all tests pass, beside the `deploy` job that deploys the API (docs/INFRA.md).
 1. It builds each site.
 2. It deploys with `wrangler pages deploy` (no Cloudflare Git integration needed, so the same tests guard both deploys).
 3. It checks that `*.pages.dev` answers.
@@ -54,7 +54,7 @@ The portal is on Pages, with its own sign-in (emails through Resend, docs/INFRA.
 
 ### 2. The web key
 
-The web key is made on your Mac with the rest of the server's settings (docs/DEPLOY.md, steps 5 and 6): `scripts/space-env-init.sh` makes it, `python3 scripts/space_secrets.py` gives it to the Space, and `scripts/space-env-init.sh --github` copies it into the GitHub secret `MAGANA_WEB_API_KEY`, without printing it. CORS for the sites is answered by the Worker on api.magana.ng (docs/INFRA.md).
+The web key is made on your Mac with the rest of the server's settings (docs/DEPLOY.md, step 7): `scripts/server-env.sh` makes it, `scripts/server-env.sh --push` gives it to the server, and `scripts/server-env.sh --github` copies it into the GitHub secret `MAGANA_WEB_API_KEY`, without printing it. CORS for the sites is answered by the API itself (`MAGANA_CORS_ORIGIN_REGEX`, docs/INFRA.md).
 
 ### 3. The first deploy
 
@@ -66,7 +66,7 @@ Push to `main` (or run `gh workflow run ci.yml --ref main`). The `pages` job cre
 
 In **dash.cloudflare.com → magana.ng**:
 
-1. **api.magana.ng** is the Worker's custom domain (docs/DEPLOY.md, step 7). Leave it to the Worker.
+1. **api.magana.ng** is an A record to the server, DNS only (docs/DEPLOY.md, step 1). Leave it as it is.
 2. **Delete** the A records for `@` (magana.ng), `app` and `teachers`, and the CNAME `www`. Pages refuses a custom domain that already has a record.
    - The website and PWA are offline from here until step 3 or 4 below, usually under a minute.
 3. **Workers & Pages → `magana-website` → Custom domains → Set up a custom domain** → `magana.ng` → **Activate domain**. Cloudflare adds a proxied CNAME for it.

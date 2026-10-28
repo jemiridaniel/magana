@@ -132,12 +132,12 @@ def accepted_keys(today: date | None = None) -> list[str]:
 async def require_api_key(request, call_next):
     """An app key must come with every request as X-Magana-Key: the APK and IPA carry
     MAGANA_API_KEY, the web app and portal MAGANA_WEB_API_KEY, and during a rotation the
-    previous keys still work (accepted_keys). /health stays open for uptime checks; CORS
+    previous keys still work (accepted_keys). /health and /livez stay open for uptime checks; CORS
     preflights pass. Unset (local development): no key needed. The key keeps out casual
     callers and bots, not a determined attacker: the rate limits and daily caps do that."""
     key = os.environ.get("MAGANA_API_KEY", "")
     # The WhatsApp webhook and the mail events are called by Meta and Resend, which sign instead.
-    if key and request.method != "OPTIONS" and request.url.path not in ("/health", WHATSAPP_WEBHOOK, MAIL_EVENTS):
+    if key and request.method != "OPTIONS" and request.url.path not in ("/health", "/livez", WHATSAPP_WEBHOOK, MAIL_EVENTS):
         sent = request.headers.get("x-magana-key", "").encode()
         if not any(hmac.compare_digest(sent, k.encode()) for k in accepted_keys()):
             return JSONResponse({"detail": {"code": "bad_api_key"}}, status_code=401)
@@ -231,7 +231,7 @@ def health_caller(tier: policy.Tier = Depends(caller_tier)) -> policy.Tier:
     return tier
 
 
-# The commit this server was built from (scripts/build-space.sh writes it), so a deploy can tell
+# The commit this server was built from (deploy/server/Dockerfile writes it), so a deploy can tell
 # when the new one is answering. Empty in development.
 _build_file = Path(__file__).with_name("build.txt")
 BUILD = _build_file.read_text().strip()[:12] if _build_file.exists() else ""
@@ -239,8 +239,9 @@ BUILD = _build_file.read_text().strip()[:12] if _build_file.exists() else ""
 
 @app.get("/health")
 def health() -> dict:
-    """Open to uptime checks (the deploy and the 6-hourly keep-awake, docs/INFRA.md). "database"
-    says whether a query worked: the server can be up while its database isn't."""
+    """Open to uptime checks (the deploy and the 6-hourly database check, docs/INFRA.md). "database"
+    says whether a query worked: the server can be up while its database isn't. Frequent checks
+    use /livez instead, so the database can sleep."""
     iba = {"configured": bool(os.environ.get("IBA_API_URL", "").strip()), **iba_monitor.status()}
     try:
         with accounts.db() as con:
@@ -250,6 +251,13 @@ def health() -> dict:
         log.error("health: database unreachable (%s)", type(e).__name__)
         database = "unreachable"
     return {"status": "ok", "database": database, "build": BUILD, "iba": iba}
+
+
+@app.get("/livez")
+def livez() -> dict:
+    """Is this server process answering? No database query: Caddy, Docker and the 10-minute
+    monitor call it often, and Neon's free compute must be left to scale to zero (docs/INFRA.md)."""
+    return {"status": "ok", "build": BUILD}
 
 
 @app.post("/read")

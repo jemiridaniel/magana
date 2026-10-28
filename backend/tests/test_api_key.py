@@ -26,6 +26,16 @@ def test_health_stays_open_for_uptime_checks(monkeypatch):
     assert client.get("/health").status_code == 200
 
 
+def test_livez_is_open_and_never_touches_the_database(monkeypatch):
+    """Caddy, Docker and the monitor call /livez often; Neon's free compute must be left to sleep."""
+    from app import accounts
+
+    monkeypatch.setenv("MAGANA_API_KEY", "s3cret-key")
+    monkeypatch.setattr(accounts, "db", lambda: (_ for _ in ()).throw(AssertionError("db used")))
+    r = client.get("/livez")
+    assert r.status_code == 200 and r.json()["status"] == "ok" and "build" in r.json()
+
+
 def test_cors_preflight_is_not_blocked(monkeypatch):
     monkeypatch.setenv("MAGANA_API_KEY", "s3cret-key")
     r = client.options("/read", headers={"Origin": "http://localhost:5173",

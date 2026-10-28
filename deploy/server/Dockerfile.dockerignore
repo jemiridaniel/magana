@@ -1,0 +1,9 @@
+# Only what the server image needs (BuildKit reads this for deploy/server/Dockerfile).
+*
+!backend/app
+!backend/requirements.txt
+!backend/requirements-second-ocr.txt
+!content
+**/__pycache__
+**/*.pyc
+backend/app/build.txt
