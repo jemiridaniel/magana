@@ -1,6 +1,12 @@
 import os
+import tempfile
 
 import pytest
+
+# Tests that don't set their own MAGANA_DATA_DIR (most set tmp_path) share one per test process,
+# never backend/data/: under pytest-xdist (-n auto) each worker then has its own SQLite file
+# and, on Postgres, its own schema (database._schema hashes the data dir).
+os.environ["MAGANA_DATA_DIR"] = tempfile.mkdtemp(prefix="magana-tests-")
 
 # MAGANA_TEST_DATABASE_URL=postgresql://… runs every test on Postgres, as the test-phase server does
 # (docs/INFRA.md): each test's MAGANA_DATA_DIR gets its own schema, as it gets its own SQLite file.
