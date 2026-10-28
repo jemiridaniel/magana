@@ -53,6 +53,7 @@ Map<String, Object?> page(List<String> lines, {List<List<String>>? table}) => {
 final medicine = page([
   'Paracetamol 500 mg tablets',
   'Take 2 tablets every 6 hours',
+  'Expiry 03/2027', // a type is said only with 3 clear signs (detectPaper)
 ]);
 final report = page(
   ['Full blood count'],
@@ -193,20 +194,27 @@ Future<void> openPaper(WidgetTester tester, Pattern card) async {
 
 void main() {
   group('read any paper: fixed word rules', () {
-    Paper kind(Map<String, Object?> json) =>
+    Paper? kind(Map<String, Object?> json) =>
         detectPaper(ReadResult.fromJson(json));
 
-    test('medicine, report, statement, else a letter', () {
+    test('medicine, report, statement; a letter is no type at all', () {
       expect(kind(medicine), Paper.medicine);
       expect(kind(report), Paper.report);
       expect(kind(statement), Paper.statement);
-      expect(kind(letter), Paper.letter);
+      expect(kind(letter), isNull);
     });
 
-    test('one sign is not enough, and a tie is a letter', () {
-      expect(kind(page(['Take one tablet'])), Paper.letter);
-      // Two statement signs and two report signs: a tie.
-      expect(kind(page(['Account balance, results and range'])), Paper.letter);
+    test('a type only when clear: never a guess (Nurse Balogun, build 7)', () {
+      expect(kind(page(['Take one tablet'])), isNull);
+      // A food container: "ml" and "expiry" are two medicine signs, not enough.
+      expect(kind(page(['Groundnut oil 500 ml', 'Expiry 2027'])), isNull);
+      // Three medicine signs but two statement signs too: not clear enough.
+      expect(
+        kind(page(['Tablets 500 mg', 'Expiry 2027', 'Account balance'])),
+        isNull,
+      );
+      expect(kind(page(['Account balance, results and range'])), isNull);
+      expect(kind(page(['Paracetamol 500 mg tablets', 'Expiry 2027'])), Paper.medicine);
     });
   });
 
@@ -255,6 +263,31 @@ void main() {
     handle.dispose();
   });
 
+  testWidgets('Read any paper, type unclear: no type said or shown, just read', (
+    tester,
+  ) async {
+    // A food container (Nurse Balogun, build 7): two medicine-like words only.
+    final (speaker, backend, _) = await start(
+      tester,
+      page(['Groundnut oil 500 ml', 'Expiry 2027']),
+    );
+    await tap(tester, RegExp('^${en.everydayPapers}'));
+    await tap(tester, RegExp('^${en.readAnyPaper}'));
+    await takePhoto(tester);
+    expect(backend.modes.last, 'letter'); // still the strict checks
+    for (final type in [
+      en.paperMedicine,
+      en.paperLetter,
+      en.paperReport,
+      en.paperStatement,
+    ]) {
+      expect(find.text(type), findsNothing);
+      expect(speaker.said.where((s) => s.contains(en.detectedPaper(type))), isEmpty);
+    }
+    expect(find.text(en.yourPage), findsOneWidget);
+    expect(speaker.said, contains('Groundnut oil 500 ml'));
+  });
+
   testWidgets('letters: letter mode and the no-advice note', (tester) async {
     final (_, backend, _) = await start(tester, letter);
     await openPaper(tester, RegExp('^${en.paperLetter}'));
@@ -292,7 +325,7 @@ void main() {
     final saved = await SavedQuestions.load();
     expect(saved.single, startsWith('is my result bad (about '));
 
-    await tap(tester, en.askANurse);
+    await tap(tester, en.healthWorkerTitle); // Ibà off: no "Ask a nurse" (features.dart)
     expect(find.text(en.savedQuestionsTitle), findsOneWidget);
     expect(find.text(saved.single), findsOneWidget);
     expectAccessible(tester, 'Health worker with saved questions');

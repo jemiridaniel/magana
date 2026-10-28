@@ -175,16 +175,16 @@ void main() {
       final handle = tester.ensureSemantics();
       final (speaker, backend, _) = await open(tester);
       expectAccessible(tester, 'Talk to a health worker');
-      await tap(tester, en.answerIbaFirst);
+      await tap(tester, en.dangerCheckFirst);
       expect(
-        find.text(en.quickCheckProgress(1, 2)),
+        find.text(en.quickCheckProgressFallback(1, 2)),
         findsOneWidget,
       ); // fever_days not asked yet
       expect(speaker.said.last, questions[0]['text']);
       expectAccessible(tester, 'Quick check');
       await tap(tester, en.yes);
       expect(
-        find.text(en.quickCheckProgress(2, 3)),
+        find.text(en.quickCheckProgressFallback(2, 3)),
         findsOneWidget,
       ); // follow-up appears
       await tap(tester, en.moreDays);
@@ -205,7 +205,7 @@ void main() {
       expectAccessible(tester, 'Result');
       await tap(tester, en.requestCallback);
       expect(find.text(en.healthWorkerTitle), findsOneWidget);
-      expect(find.bySemanticsLabel(en.answerIbaFirst), findsNothing);
+      expect(find.bySemanticsLabel(en.dangerCheckFirst), findsNothing);
       await tap(tester, en.requestCallback);
       expect(backend.body('/callback')['priority'], 'urgent');
       handle.dispose();
@@ -218,7 +218,7 @@ void main() {
       screen: const QuickCheckScreen(),
     );
     await tap(tester, en.no);
-    expect(find.text(en.quickCheckProgress(2, 2)), findsOneWidget);
+    expect(find.text(en.quickCheckProgressFallback(2, 2)), findsOneWidget);
     await tap(tester, en.no);
     expect(backend.body('/triage/assess'), {'fever': false, 'fits': false});
   });

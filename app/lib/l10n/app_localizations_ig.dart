@@ -2597,4 +2597,108 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get msg_server_waking => 'Magana na-eteta, nwa oge…';
+
+  @override
+  String noVoiceYet(String language) {
+    return 'Enweghị m olu $language ugbu a. Ederede ahụ dị na ihuenyo.';
+  }
+
+  @override
+  String get voiceTitle => 'Olu';
+
+  @override
+  String voiceSettingsDetail(String voice, String speed) {
+    return '$voice. $speed';
+  }
+
+  @override
+  String get voiceBest => 'Olu kacha mma na ekwentị a';
+
+  @override
+  String get voiceBestDetail =>
+      'Magana ga-ahọrọ: Bekee Naịjirịa mbụ, mgbe ahụ olu kacha doo anya.';
+
+  @override
+  String voiceFor(String language) {
+    return 'Olu maka $language';
+  }
+
+  @override
+  String voiceNone(String language) {
+    return 'Ekwentị a enweghị olu $language ugbu a. Magana na-egosi ederede $language na ihuenyo kama ịgụ ya n\'olu asụsụ ọzọ.';
+  }
+
+  @override
+  String get voicePlaySample => 'Kpọọ ihe atụ';
+
+  @override
+  String get voiceSample => 'Ndewo, abụ m Magana. M ga-agụrụ gị peeji gị.';
+
+  @override
+  String voiceChosen(String voice) {
+    return 'Ahọrọla $voice.';
+  }
+
+  @override
+  String get voiceSpeedTitle => 'Ọsọ';
+
+  @override
+  String voiceSpeedSet(String value) {
+    return 'Ọsọ $value.';
+  }
+
+  @override
+  String get voiceGetBetter => 'Nweta olu doro anya karịa';
+
+  @override
+  String get voiceHintAndroid =>
+      'Enwere ike ibudata olu doro anya karịa: Bekee (Naịjirịa). Mepee Ntọala ekwentị gị, chọọ Speech Services by Google. Họrọ Install voice data, mgbe ahụ English (Nigeria), budata ya. Mgbe ahụ họrọ ya na Magana: Ntọala, Olu.';
+
+  @override
+  String get voiceHintIos =>
+      'Enwere ike ibudata olu doro anya karịa. Mepee Ntọala iPhone, mgbe ahụ Accessibility, Spoken Content, Voices, English, budata olu Enhanced ma ọ bụ Premium. Mgbe ahụ họrọ ya na Magana: Ntọala, Olu.';
+
+  @override
+  String get tourTitle => 'Njem nlegharị anya dị mkpirikpi';
+
+  @override
+  String get tourScript =>
+      'Nnọọ na Magana. Magana na-agụpụta peeji e biri ebi n\'olu dara ụda: ọrụ ụlọ akwụkwọ, akara ọgwụ, akwụkwọ ozi na akwụkwọ ụlọ akụ. A na-agụ ọnụọgụgụ dịka e biri ha, Magana na-agwakwa gị mgbe ihe adịghị edo anya. Na ihuenyo mbụ, ahịrị elu nwere bọtịnụ asụsụ na ntọala. N\'okpuru ya bụ bọtịnụ kacha ukwuu: Gụọ peeji. N\'okpuru ya bụ nhọrọ gị ndị ọzọ. Na ala ala bụ Jide ka ị kwuo: pịa ma jide ya, kwuo ihe ị chọrọ, dịka gụọ peeji, wee hapụ ya. Na ihuenyo ndị ọzọ, bọtịnụ Kwuo aha dị n\'ala na-eme otu ihe ahụ. Kwuo gịnị ka m nwere ike ikwu iji nụ nhọrọ ihuenyo ahụ. Ọ bụrụ na TalkBack ma ọ bụ VoiceOver gbanyere, fee aka nri ka ị gaa na bọtịnụ ọzọ, pịa ugboro abụọ iji họrọ. Ọ bụrụ na ọ gbanyụrụ, metụ ihuenyo aka ka ị nụ ihe dị n\'okpuru mkpịsị aka gị, pịa ugboro abụọ iji họrọ. Iji gụọ peeji, jide ekwentị n\'elu ya: Magana ga-agwa gị otu ị ga-esi bugharịa ya. Ị nwere ike ịnụ njem a ọzọ na Ntọala.';
+
+  @override
+  String get tourSkip => 'Wụfee njem ahụ';
+
+  @override
+  String get tourAgain => 'Nụ njem ahụ ọzọ';
+
+  @override
+  String get tourContinue => 'Gaa n\'ihu';
+
+  @override
+  String get tourOpen => 'Nụ njem ahụ';
+
+  @override
+  String get tourOpenDetail =>
+      'Ihe Magana na-eme, ebe bọtịnụ dị, na otu e si eji olu na mmetụ aka.';
+
+  @override
+  String screenChoices(String choices) {
+    return 'Na ihuenyo a ị nwere ike ikwu: $choices.';
+  }
+
+  @override
+  String get screenNoChoices =>
+      'Ihuenyo a enweghị bọtịnụ a ga-ahọrọ. Laghachi azụ ka ị gaa n\'ihu.';
+
+  @override
+  String get aiAssistantSoon =>
+      'Onye inyeaka ahụike AI na-abịa n\'oge na-adịghị anya. Ugbu a, nọọsụ ma ọ bụ onye na-ere ọgwụ ga-akpọghachi gị, ajụjụ akara ihe egwu nke Magana ga-agwakwa gị mgbe ị ga-aga ụlọ ọgwụ ma ọ bụ kpọọ 112.';
+
+  @override
+  String get dangerCheckFirst =>
+      'Zaa ajụjụ ole na ole gbasara akara ihe egwu mbụ';
+
+  @override
+  String get quickCheckNoteRules =>
+      'Azịza gị na-enyere onye ọrụ ahụike aka ikpebi oge ọ ga-akpọ gị. Magana anaghị achọpụta ọrịa. Ọ bụrụ na i nwere akara ihe egwu, Magana ga-agwa gị ka ị gaa ụlọ ọgwụ ugbu a ma ọ bụ kpọọ 112.';
 }

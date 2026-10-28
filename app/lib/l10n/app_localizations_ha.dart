@@ -2603,4 +2603,107 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get msg_server_waking => 'Magana na farkawa, ɗan lokaci kaɗan…';
+
+  @override
+  String noVoiceYet(String language) {
+    return 'Ba ni da muryar $language tukuna. Rubutun yana kan allo.';
+  }
+
+  @override
+  String get voiceTitle => 'Murya';
+
+  @override
+  String voiceSettingsDetail(String voice, String speed) {
+    return '$voice. $speed';
+  }
+
+  @override
+  String get voiceBest => 'Mafi kyawun murya a wayar nan';
+
+  @override
+  String get voiceBestDetail =>
+      'Magana za ta zaɓa: Turancin Najeriya da farko, sannan murya mafi bayyana.';
+
+  @override
+  String voiceFor(String language) {
+    return 'Murya don $language';
+  }
+
+  @override
+  String voiceNone(String language) {
+    return 'Wayar nan ba ta da muryar $language tukuna. Magana tana nuna rubutun $language a kan allo maimakon ta karanta shi da muryar wani harshe.';
+  }
+
+  @override
+  String get voicePlaySample => 'Kunna samfuri';
+
+  @override
+  String get voiceSample => 'Sannu, ni ce Magana. Zan karanta maka shafukanka.';
+
+  @override
+  String voiceChosen(String voice) {
+    return 'An zaɓi $voice.';
+  }
+
+  @override
+  String get voiceSpeedTitle => 'Gudu';
+
+  @override
+  String voiceSpeedSet(String value) {
+    return 'Gudu $value.';
+  }
+
+  @override
+  String get voiceGetBetter => 'Samu murya mafi bayyana';
+
+  @override
+  String get voiceHintAndroid =>
+      'Ana iya sauke murya mafi bayyana: Turanci (Najeriya). Buɗe Saitunan wayarka ka nemi Speech Services by Google. Zaɓi Install voice data, sannan English (Nigeria), ka sauke shi. Sannan ka zaɓe shi a Magana: Saituna, Murya.';
+
+  @override
+  String get voiceHintIos =>
+      'Ana iya sauke murya mafi bayyana. Buɗe Saitunan iPhone, sannan Accessibility, Spoken Content, Voices, English, ka sauke murya mai alamar Enhanced ko Premium. Sannan ka zaɓe ta a Magana: Saituna, Murya.';
+
+  @override
+  String get tourTitle => 'Ɗan rangadi';
+
+  @override
+  String get tourScript =>
+      'Barka da zuwa Magana. Magana tana karanta shafukan da aka buga da babbar murya: aikin makaranta, alamomin magani, wasiƙu da takardun banki. Ana karanta lambobi daidai yadda aka buga su, kuma Magana tana gaya maka idan wani abu bai bayyana ba. A babban allo, layin sama yana da maɓallan harshe da saituna. A ƙarƙashinsa akwai maɓalli mafi girma: Karanta shafi. A ƙarƙashinsa akwai sauran zaɓuɓɓukanka. A ƙasa gaba ɗaya akwai Riƙe don magana: danna ka riƙe, faɗi abin da kake so, kamar karanta shafi, sannan ka saki. A sauran allo, maɓallin Faɗi suna a ƙasa yana yin haka. Faɗi me zan iya faɗa don jin zaɓuɓɓukan allon. Idan TalkBack ko VoiceOver yana kunne, ja dama don zuwa maɓalli na gaba, ka taɓa sau biyu don zaɓa. Idan a kashe yake, taɓa allon don jin abin da ke ƙarƙashin yatsanka, ka taɓa sau biyu don zaɓa. Don karanta shafi, riƙe wayar a saman sa: Magana za ta gaya maka yadda za ka motsa ta. Za ka iya sake jin wannan rangadin a Saituna.';
+
+  @override
+  String get tourSkip => 'Tsallake rangadin';
+
+  @override
+  String get tourAgain => 'Sake jin rangadin';
+
+  @override
+  String get tourContinue => 'Ci gaba';
+
+  @override
+  String get tourOpen => 'Ji rangadin';
+
+  @override
+  String get tourOpenDetail =>
+      'Abin da Magana take yi, inda maɓallai suke, da yadda ake amfani da murya da taɓawa.';
+
+  @override
+  String screenChoices(String choices) {
+    return 'A wannan allon za ka iya faɗa: $choices.';
+  }
+
+  @override
+  String get screenNoChoices =>
+      'Wannan allon ba shi da maɓallan zaɓi. Koma baya don ci gaba.';
+
+  @override
+  String get aiAssistantSoon =>
+      'Mataimakin lafiya na AI yana zuwa nan ba da daɗewa ba. A yanzu, ma\'aikaciyar jinya ko mai sayar da magani za ta kira ka, kuma tambayoyin alamun haɗari na Magana suna gaya maka lokacin zuwa asibiti ko kiran 112.';
+
+  @override
+  String get dangerCheckFirst => 'Amsa \'yan tambayoyin alamun haɗari da farko';
+
+  @override
+  String get quickCheckNoteRules =>
+      'Amsoshinka suna taimaka wa ma\'aikacin lafiya ya yanke shawarar lokacin da zai kira ka. Magana ba ta gano cuta. Idan kana da alamun haɗari, Magana za ta gaya maka ka je asibiti yanzu ko ka kira 112.';
 }

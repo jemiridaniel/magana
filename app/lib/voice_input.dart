@@ -213,9 +213,9 @@ class SpeechVoiceInput extends VoiceInput {
   static Future<bool>? _initialised;
   static String? _initError;
 
-  /// The longest a listen may take before Magana stops it (10 s of listening, 3 s pause,
+  /// The longest a listen may take before Magana stops it (25 s of listening, 3 s pause,
   /// and the recogniser's own start): never "Listening…" for ever.
-  static Duration watchdog = const Duration(seconds: 16);
+  static Duration watchdog = const Duration(seconds: 30);
   Completer<List<String>>? _pending;
   List<String> _heard = const []; // the latest result, final or not
   List<LocaleName> _locales = const [];
@@ -245,6 +245,8 @@ class SpeechVoiceInput extends VoiceInput {
             : 'this phone has no on-device recogniser';
         return false;
       }
+      // Before the recogniser starts: it decides about a Bluetooth microphone only then.
+      if (_initialised == null) await prepareBluetoothMicrophone();
       final ok = await (_initialised ??= _stt.initialize(
         onStatus: (status) => _owner?._onStatus(status),
         onError: (e) {
@@ -348,7 +350,8 @@ class SpeechVoiceInput extends VoiceInput {
         partialResults: kIsWeb,
         cancelOnError: true,
         listenMode: ListenMode.confirmation,
-        listenFor: const Duration(seconds: 10),
+        // Up to 25 s for a slow or hesitant speaker (Nurse Balogun); 3 s of quiet ends it.
+        listenFor: const Duration(seconds: 25),
         pauseFor: const Duration(seconds: 3),
       ),
     );

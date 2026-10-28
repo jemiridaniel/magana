@@ -2598,4 +2598,108 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get msg_server_waking => 'Magana is waking up, one moment…';
+
+  @override
+  String noVoiceYet(String language) {
+    return 'I don\'t have a $language voice yet. The text is on the screen.';
+  }
+
+  @override
+  String get voiceTitle => 'Voice';
+
+  @override
+  String voiceSettingsDetail(String voice, String speed) {
+    return '$voice. $speed';
+  }
+
+  @override
+  String get voiceBest => 'Best voice on this phone';
+
+  @override
+  String get voiceBestDetail =>
+      'Magana chooses: Nigerian English first, then the clearest voice.';
+
+  @override
+  String voiceFor(String language) {
+    return 'Voice for $language';
+  }
+
+  @override
+  String voiceNone(String language) {
+    return 'This phone has no $language voice yet. Magana shows $language text on the screen instead of reading it with another language\'s voice.';
+  }
+
+  @override
+  String get voicePlaySample => 'Play sample';
+
+  @override
+  String get voiceSample =>
+      'Hello, I am Magana. I will read your pages to you.';
+
+  @override
+  String voiceChosen(String voice) {
+    return '$voice chosen.';
+  }
+
+  @override
+  String get voiceSpeedTitle => 'Speed';
+
+  @override
+  String voiceSpeedSet(String value) {
+    return 'Speed $value.';
+  }
+
+  @override
+  String get voiceGetBetter => 'Get a clearer voice';
+
+  @override
+  String get voiceHintAndroid =>
+      'A clearer voice can be downloaded: English (Nigeria). Open your phone\'s Settings and search for Speech Services by Google. Choose Install voice data, then English (Nigeria), and download it. Then choose it in Magana: Settings, Voice.';
+
+  @override
+  String get voiceHintIos =>
+      'A clearer voice can be downloaded. Open the iPhone\'s Settings, then Accessibility, Spoken Content, Voices, English, and download an Enhanced or Premium voice. Then choose it in Magana: Settings, Voice.';
+
+  @override
+  String get tourTitle => 'A quick tour';
+
+  @override
+  String get tourScript =>
+      'Welcome to Magana. Magana reads printed pages aloud: schoolwork, medicine labels, letters and bank papers. Numbers are read exactly as printed, and Magana tells you when something is unclear. On the home screen, the top line has the language and settings buttons. Below it is the biggest button: Read a page. Under that are your other choices. At the very bottom is Hold to speak: press and hold it, say what you want, like read a page, then let go. On other screens, the Say a name button at the bottom does the same. Say what can I say to hear that screen\'s choices. With TalkBack or VoiceOver on, swipe right to move to the next button and double tap to choose. With it off, touch the screen to hear what is under your finger, and double tap to choose. To read a page, hold the phone above it: Magana tells you how to move it. You can hear this tour again in Settings.';
+
+  @override
+  String get tourSkip => 'Skip the tour';
+
+  @override
+  String get tourAgain => 'Hear the tour again';
+
+  @override
+  String get tourContinue => 'Continue';
+
+  @override
+  String get tourOpen => 'Hear the tour';
+
+  @override
+  String get tourOpenDetail =>
+      'What Magana does, where the buttons are, and how to use voice and touch.';
+
+  @override
+  String screenChoices(String choices) {
+    return 'On this screen you can say: $choices.';
+  }
+
+  @override
+  String get screenNoChoices =>
+      'This screen has no buttons to choose. Go back to continue.';
+
+  @override
+  String get aiAssistantSoon =>
+      'AI health assistant coming soon. For now, a nurse or pharmacist calls you back, and Magana\'s own danger-sign questions tell you when to go to a clinic or call 112.';
+
+  @override
+  String get dangerCheckFirst => 'Answer a few danger-sign questions first';
+
+  @override
+  String get quickCheckNoteRules =>
+      'Your answers help the health worker decide how soon to call you. Magana does not diagnose. If you have danger signs, Magana tells you to go to a clinic now or call 112.';
 }

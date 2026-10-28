@@ -24,3 +24,6 @@ backend/data/
 magana-private-pages/
 .venv-*/
 backend/app/build.txt
+
+# Claude Code worktrees (parallel work, merged by hand)
+.claude/worktrees/

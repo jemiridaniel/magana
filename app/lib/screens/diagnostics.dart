@@ -127,6 +127,7 @@ class _DiagnosticsScreenState extends State<DiagnosticsScreen> {
         ),
     ];
     return PageScaffold(
+      sayName: false, // a testers' screen
       body: [
         const ScreenHeader(
           title: 'Diagnostics',

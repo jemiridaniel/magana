@@ -77,7 +77,7 @@ void main() {
     onDeviceSpeechAvailable = realOnDevice;
     screenReaderRunning = realReaderRunning;
     screenReaderSpeaking = realReaderSpeaking;
-    SpeechVoiceInput.watchdog = const Duration(seconds: 16);
+    SpeechVoiceInput.watchdog = const Duration(seconds: 30);
   });
 
   test('no on-device English model: the online step still answers, never "Listening…" '

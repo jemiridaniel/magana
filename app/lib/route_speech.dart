@@ -1,6 +1,8 @@
 import 'package:flutter/widgets.dart';
 
+import 'clips.dart';
 import 'speech.dart';
+import 'voices.dart';
 import 'touch.dart';
 
 /// One voice, owned by one screen at a time (iPhone test, 27 Oct 2026: "Read a page" kept talking
@@ -19,14 +21,37 @@ class RouteSpeaker implements Speaker {
   bool get inFront => route.isCurrent;
 
   @override
-  Future<bool> say(String text, {bool Function()? wanted}) async {
+  Future<bool> say(
+    String text, {
+    bool Function()? wanted,
+    String? language,
+  }) async {
     if (!inFront) return false;
-    return shared.say(text, wanted: () => inFront && (wanted?.call() ?? true));
+    return shared.say(
+      text,
+      wanted: () => inFront && (wanted?.call() ?? true),
+      language: language,
+    );
   }
 
   @override
-  Future<bool> sayThrough(String text, {required bool Function() wanted}) =>
-      say(text, wanted: wanted);
+  Future<bool> sayParts(
+    List<SpeechPart> parts, {
+    bool Function()? wanted,
+  }) async {
+    if (!inFront) return false;
+    return shared.sayParts(
+      parts,
+      wanted: () => inFront && (wanted?.call() ?? true),
+    );
+  }
+
+  @override
+  Future<bool> sayThrough(
+    String text, {
+    required bool Function() wanted,
+    String? language,
+  }) => say(text, wanted: wanted, language: language);
 
   @override
   Future<void> stop() => shared.stop();
@@ -43,6 +68,34 @@ class RouteSpeaker implements Speaker {
   set screenReaderOn(bool on) => shared.screenReaderOn = on;
   @override
   Future<void> setLanguage(String code) => shared.setLanguage(code);
+  @override
+  String get language => shared.language;
+  @override
+  ClipLibrary get clips => shared.clips;
+  @override
+  set clips(ClipLibrary c) => shared.clips = c;
+  @override
+  ClipPlayer get clipPlayer => shared.clipPlayer;
+  @override
+  set clipPlayer(ClipPlayer p) => shared.clipPlayer = p;
+  @override
+  void Function(String language)? get onNoVoice => shared.onNoVoice;
+  @override
+  set onNoVoice(void Function(String language)? f) => shared.onNoVoice = f;
+  @override
+  Voice? get voice => shared.voice;
+  @override
+  Future<List<Voice>?> installedVoices() => shared.installedVoices();
+  @override
+  void refreshVoices() => shared.refreshVoices();
+  @override
+  Future<bool> canSpeak(String lang) => shared.canSpeak(lang);
+  @override
+  Future<bool> voiceReady(String lang) => shared.voiceReady(lang);
+  @override
+  bool? voiceKnown(String lang) => shared.voiceKnown(lang);
+  @override
+  Future<bool> preview(Voice v, String text) => shared.preview(v, text);
   @override
   Future<void> setRate(double rate) => shared.setRate(rate);
   @override

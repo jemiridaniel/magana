@@ -94,6 +94,8 @@ void main() {
       await tester.pumpAndSettle();
       await tap(tester, en.settings);
       final version = find.text(en.settingsVersion('0.1.0', '3'));
+      await tester.ensureVisible(version); // below Voice and the tour in Settings
+      await tester.pumpAndSettle();
       for (var i = 0; i < 6; i++) {
         await tester.tap(version);
         await tester.pump();

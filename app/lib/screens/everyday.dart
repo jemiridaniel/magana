@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../features.dart';
 import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
 import '../papers.dart';
@@ -77,8 +78,8 @@ class _EverydayScreenState extends State<EverydayScreen> {
           ),
         if (profile.can(Feature.healthCallback))
           ChoiceCard(
-            title: l.talkToNurse,
-            detail: l.talkToNurseDetail,
+            title: ibaAssistant ? l.talkToNurse : l.healthWorkerTitle,
+            detail: ibaAssistant ? l.talkToNurseDetail : l.healthWorkerSubtitle,
             leading: const Icon(Icons.support_agent, size: 34),
             onTap: () => openHealthWorker(context),
           ),

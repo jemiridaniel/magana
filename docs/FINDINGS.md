@@ -13,6 +13,74 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-10-28 · Nurse Balogun's voice note (build 7, eyes closed): voices, tour, help, guessed types (UNREVIEWED)
+
+> **Unreviewed.**
+> - **Hausa, Yorùbá and Igbo:** the new texts (tour, voice settings, "no voice yet", the health-worker wording) are machine-made drafts. They need a native speaker.
+> - **Health questions:** "Talk to a health worker" without Ibà uses Magana's own danger-sign questions, which are still pending Dr. Amos.
+> - **Real phones:** none of this has been tried on a real phone yet.
+
+- **Never read with another language's voice** (`speech.dart`, `voices.dart`).
+  - **How it works:**
+    - Every utterance now has a language. A page line goes in the page's language (`page_language`; English unless the page is clearly Hausa, Yorùbá or Igbo). Magana's own words go in the app language.
+    - The words Magana puts inside a line ("unclear number", "unclear letter") are said in the line's language.
+    - Neighbouring parts in the same language are said as one sentence, so English-only reading is unchanged.
+  - **No voice for the language:** Hausa, Yorùbá or Igbo without a voice of its own on the phone is not said.
+    - Once per language, Magana says "I don't have a Hausa voice yet. The text is on the screen." It says this in the app language when that has a voice, otherwise in English, and shows it too.
+    - A Hausa page then isn't read aloud; the text and Spell word stay.
+  - **What this means today:** most phones have no Hausa, Yorùbá or Igbo voice. With one of those as the app language, Magana speaks only its English parts (and any recorded clips) until a voice or clips exist. TalkBack and VoiceOver still read the screen.
+  - **Tests:** `voice_feedback_test.dart` (a Hausa page with no Hausa voice: no line said, the notice said and shown).
+  - **Earlier tests changed:** three tests in `app_test.dart`, `digit_letters_test.dart` and `white_paper_test.dart` encoded mixed-language sentences. Their expectations now check each language's part.
+- **The best voice, and Settings → Voice.**
+  - **Automatic choice:** Nigerian English (en-NG) first, then British English for English. Higher quality is preferred (premium, enhanced, neural over compact). iPhone novelty and robot voices are pushed to the bottom, and offline voices are preferred.
+  - **Settings → Voice:**
+    - Each installed voice for the app language (and English) is listed with its language, country and quality, best first. Choosing one plays a sample in it, and "Play sample" plays it again.
+    - The speed (0.75–1.5×) is kept, and the Reader's speed button starts at it.
+  - **Download tip:** once, on Home, if a clearer English voice can be downloaded:
+    - Android: English (Nigeria) from Speech Services by Google.
+    - iPhone: an enhanced or premium voice in Spoken Content.
+  - **Tests:** scoring and the screen with fake voice lists. Real phones' voice lists are not tested yet.
+- **Recorded prompts** (`clips.dart`, `scripts/export_phrases.py`, `scripts/import_clips.py`, `docs/recording/`).
+  - **How it works:**
+    - Every fixed phrase can be played from a native speaker's clip, sentence by sentence. Where there's no clip, the phone's voice says it.
+    - Health template lines are matched as patterns: their fixed words from clips, their numbers always by the phone, exactly as printed.
+  - **The list:** the export lists every fixed phrase: 571 English, 597 Hausa, 599 Yorùbá and 596 Igbo.
+    - Each unique text is listed once.
+    - Health templates appear as parts between the numbers.
+    - Texts with a blank (numbers, names) are left to the phone.
+    - The list is a spreadsheet with one sheet per language, plus CSVs and a one-page recording guide.
+  - **The import:** it converts clips (mono AAC, loudness −16 LUFS, silence trimmed). It was tested on a synthetic tone, then removed.
+  - **No clips are recorded yet.**
+  - **Guard:** a test fails if the app gains a fixed phrase that isn't in the list.
+- **Bluetooth headsets** (docs/BLUETOOTH.md):
+  - **The gap:** on Android, Hold to speak never used a headset's microphone. `speech_to_text` uses one only with `BLUETOOTH_CONNECT`, which the app didn't declare.
+  - **Now:** it's declared, plus `BLUETOOTH` for older Android and `MODIFY_AUDIO_SETTINGS`. It's asked for at the first Hold to speak when a headset is connected, before the recogniser starts.
+  - **iPhone:** both recognisers already allow Bluetooth microphones.
+  - **Not tried with a real headset.** BLUETOOTH.md has the checklist.
+- **Guided start:**
+  - **The tour:** after language and age, a spoken tour (`tour.dart`), about a minute.
+    - **Length:** English is 164 words; the test keeps each language between 120 and 240.
+    - **What it covers:** what Magana does, where the big buttons are, voice and touch, with and without TalkBack.
+    - **Ways out and back:** Skip or Continue. Back from the next step returns to the age step. It can be heard again from Settings or by saying "tour" on Home.
+  - **Say a name on every screen:** it's now at the foot of every screen, Capture included. The exceptions are screens that listen for answers themselves (quiz question, quick-check question) and diagnostics.
+  - **"Help" / "What can I say?":** on any screen it lists that screen's choices by name.
+  - **Tests:** the tour after age, the tour from Settings, and help on Settings.
+- **No guessed document type.** In "Read any paper", a type is said and shown only with at least 3 of its signs, and 2 more than any other type.
+  - **Before:** 2 signs were enough. A food container with "ml" and "expiry" was called a medicine label, and "Letter" was said when unsure.
+  - **Now:** when unsure, Magana says no type and shows "Your page". The strict letter checks and the no-advice note stay.
+  - **No product names:** Magana never names a product. It found none being made up; it reads only what is printed.
+  - **Tests:** `everyday_more_test.dart`.
+- **Listening time:** Hold to speak listens up to 25 s (was 10 s), still ending after 3 s of quiet. The watchdog moves from 16 s to 30 s.
+- **Talk to a health worker (written review):**
+  - **Why:** Ibà isn't running (no GPU), so every Ibà and AI mention is behind `MAGANA_IBA`, off (`features.dart`).
+  - **What stays:**
+    - the call-back request;
+    - Magana's own danger-sign questions ("Answer a few danger-sign questions first"), with the clinic / 112 wording;
+    - "AI health assistant coming soon".
+  - **Tests:** `iba_off_test.dart`: every tap path, with no "Ibà" anywhere reachable.
+- **Team setup:** the wording is now "… is a Magana admin." (was "is a Magana team Magana admin").
+- **Tests:** app 364 passed, `flutter analyze` clean.
+
 ## 2026-10-28 · Server SSH: fail2ban now, Tailscale next, then port 22 closed to the internet
 
 - **Why:** the team moves between places, so SSH can't be limited to one home address.

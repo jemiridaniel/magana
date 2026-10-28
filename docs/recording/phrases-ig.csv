@@ -1,0 +1,600 @@
+Phrase ID,File name,Text to record,English meaning,Kind,Text status,Recorded? (yes/no),Notes
+appTitle,ig-appTitle.m4a,Magana,Magana,App phrase,draft
+greeting,ig-greeting.m4a,Ndewo,Hello,App phrase,draft
+chooseLanguage,ig-chooseLanguage.m4a,Họrọ asụsụ ngwa,Choose app language,App phrase,draft
+settings,ig-settings.m4a,Ntọala,Settings,App phrase,draft
+readPage,ig-readPage.m4a,Gụọ peeji,Read a page,App phrase,draft
+readPageSubtitle,ig-readPageSubtitle.m4a,"Ihe ọmụmụ ụlọ akwụkwọ, akụkọ ahụike, nkwupụta ụlọ akụ, akwụkwọ ozi — ihe ọ bụla e biri ebi","Schoolwork, medical reports, bank statements, letters — anything printed",App phrase,draft
+askQuestion,ig-askQuestion.m4a,Jụọ ajụjụ,Ask a question,App phrase (also used as askAQuestion),draft
+practiceQuiz,ig-practiceQuiz.m4a,Ajụjụ omume,Practice quiz,App phrase,draft
+myLibrary,ig-myLibrary.m4a,Ọbá akwụkwọ m,My library,App phrase,draft
+everydayPapers,ig-everydayPapers.m4a,Akwụkwọ kwa ụbọchị,Everyday papers,App phrase,draft
+skills,ig-skills.m4a,Nkà,Skills,App phrase,draft
+myScore,ig-myScore.m4a,Akara m,My score,App phrase,draft
+holdToSpeak,ig-holdToSpeak.m4a,Jide ka ị kwuo okwu,Hold to speak,App phrase,draft
+holdToSpeakLabel,ig-holdToSpeakLabel.m4a,Jide ka ị kwuo iwu,Hold to speak a command,App phrase,draft
+voiceCommands,ig-voiceCommands.m4a,Iwu olu,Voice commands,App phrase,draft
+comingSoonHint,ig-comingSoonHint.m4a,Ọ na-abịa n'oge na-adịghị anya,Coming soon,App phrase,draft
+backToHome,ig-backToHome.m4a,Laghachi n'ụlọ,Back to home,App phrase (also used as backHome),draft
+framingGuidance,ig-framingGuidance.m4a,"Tọgbọ peeji ahụ n'ala ebe ìhè dị mma, jide ekwentị ahụ n'elu ya ihe dịka ogologo aka gị. Aga m agwa gị otú ị ga-esi bugharịa ya, ma see foto ahụ mgbe peeji ahụ niile kwụsiri ọtọ. Ị nwekwara ike ịpịa See foto.","Lay the page flat in good light and hold the phone about one forearm above it. I'll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.",App phrase,draft
+repeat,ig-repeat.m4a,Kwughachi,Repeat,App phrase,draft
+repeatInstructions,ig-repeatInstructions.m4a,Nụghachi ntụziaka,Hear the instructions again,App phrase,draft
+takePhoto,ig-takePhoto.m4a,See foto,Take photo,App phrase,draft
+gallery,ig-gallery.m4a,Foto,Gallery,App phrase,draft
+galleryLabel,ig-galleryLabel.m4a,Họrọ foto site na foto gị,Choose a photo from the gallery,App phrase,draft
+cameraFailed,ig-cameraFailed.m4a,Enweghị m ike imepe igwefoto. Nwaa Foto kama.,I couldn't open the camera. Try Gallery instead.,App phrase,draft
+readingPage,ig-readingPage.m4a,Ana m agụ peeji ahụ. Biko chere.,Reading the page. Please wait.,App phrase,draft
+noTextFound,ig-noTextFound.m4a,"Ahụghị m ederede ọ bụla. Lelee na peeji ahụ chere ihu elu, ma nwaa ọzọ.",I couldn't find any text. Check the page is face up and try again.,App phrase,draft
+cannotReach,ig-cannotReach.m4a,Enweghị m ike iru Magana. Lelee njikọ gị ma nwaa ọzọ.,I couldn't reach Magana. Check the connection and try again.,App phrase,draft
+serverSleeping,ig-serverSleeping.m4a,Sava Magana na-ehi ụra. Biko nwaa ọzọ ma emechaa.,Magana’s server is sleeping. Please try again later.,App phrase,draft
+readFailed,ig-readFailed.m4a,Nsogbu mere mgbe m na-agụ peeji ahụ. Biko nwaa ọzọ.,Something went wrong reading the page. Please try again.,App phrase,draft
+yourPage,ig-yourPage.m4a,Peeji gị,Your page,App phrase,draft
+nowReading,ig-nowReading.m4a,a na-agụ ya ugbu a,now reading,App phrase,draft
+previous,ig-previous.m4a,Azụ,Prev,App phrase,draft
+next,ig-next.m4a,Ọzọ,Next,App phrase,draft
+previousLine,ig-previousLine.m4a,Ahịrị gara aga,Previous line,App phrase,draft
+previousRow,ig-previousRow.m4a,Usoro gara aga,Previous row,App phrase,draft
+nextLine,ig-nextLine.m4a,Ahịrị na-esote,Next line,App phrase,draft
+nextRow,ig-nextRow.m4a,Usoro na-esote,Next row,App phrase,draft
+repeatLine,ig-repeatLine.m4a,Gụghachi ahịrị a,Repeat this line,App phrase,draft
+repeatRow,ig-repeatRow.m4a,Gụghachi usoro a,Repeat this row,App phrase,draft
+pause,ig-pause.m4a,Kwụsịtụ,Pause,App phrase (also used as pauseLesson),draft
+play,ig-play.m4a,Malite,Play,App phrase (also used as startLabel),draft
+pauseLabel,ig-pauseLabel.m4a,Kwụsịtụ ọgụgụ,Pause reading,App phrase,draft
+playLabel,ig-playLabel.m4a,Gụọ site ebe a,Read from here,App phrase,draft
+pageRead,ig-pageRead.m4a,Agụchaala m peeji ahụ.,Page read.,App phrase,draft
+firstLine,ig-firstLine.m4a,Nke a bụ ahịrị mbụ.,This is the first line.,App phrase,draft
+firstRow,ig-firstRow.m4a,Nke a bụ usoro mbụ.,This is the first row.,App phrase,draft
+endOfPage,ig-endOfPage.m4a,Njedebe peeji.,End of page.,App phrase,draft
+endOfPageHint,ig-endOfPageHint.m4a,"Njedebe peeji. Pịa Kwughachi, ma ọ bụ laghachi ka ịgụọ peeji ọzọ.","End of page. Tap Repeat, or go back to read another page.",App phrase,draft
+whereTop,ig-whereTop.m4a,n'elu peeji ahụ,near the top of the page,App phrase,draft
+whereMiddle,ig-whereMiddle.m4a,n'etiti peeji ahụ,in the middle of the page,App phrase,draft
+whereBottom,ig-whereBottom.m4a,n'okpuru peeji ahụ,near the bottom of the page,App phrase,draft
+unclearNumber,ig-unclearNumber.m4a,nọmba edoghị anya,unclear number,App phrase,draft
+amountUnclear,ig-amountUnclear.m4a,Enweghị m ike ịgụ ego ahụ nke ọma,I can't read the amount clearly,App phrase,draft
+currencyUnclear,ig-currencyUnclear.m4a,enweghị m ike ịgụ akara ego ahụ nke ọma,I can't read the currency sign clearly,App phrase,draft
+unclearLetter,ig-unclearLetter.m4a,mkpụrụedemede edoghị anya,unclear letter,App phrase,draft
+faintPrint,ig-faintPrint.m4a,Ederede na-adịghị ahụ anya,Faint print,App phrase,draft
+msg_too_dark,ig-msg_too_dark.m4a,Ọ gbara ọchịchịrị. Gbanye ọkụ ekwentị ma ọ bụ gaa ebe ìhè dị.,It's quite dark. Turn on the torch or move to more light.,App phrase,draft
+msg_blurry,ig-msg_blurry.m4a,Foto ahụ edoghị anya. Jide ekwentị ahụ nke ọma ma nwaa ọzọ.,The photo looks blurry. Hold the phone still and try again.,App phrase,draft
+msg_unknown_mode,ig-msg_unknown_mode.m4a,"Họrọ ihe ọmụmụ ụlọ akwụkwọ, ahụike ma ọ bụ ego.","Choose schoolwork, health or money.",App phrase,draft
+msg_not_allowed_for_tier,ig-msg_not_allowed_for_tier.m4a,Nke a adịghị na akaụntụ a.,This isn't available on this account.,App phrase,draft
+msg_consent_required,ig-msg_consent_required.m4a,Ụmụ akwụkwọ dị afọ 13 ruo 17 chọrọ nkwenye nne na nna ma ọ bụ onye na-elekọta ha mbụ.,Learners aged 13 to 17 need a parent's or guardian's consent first.,App phrase,draft
+msg_teacher_session_required,ig-msg_teacher_session_required.m4a,Ụmụ akwụkwọ na-erubeghị afọ 13 nwere ike iji Magana naanị n'oge nkuzi onye nkuzi na-edu.,Learners under 13 can only use Magana in a teacher-run session.,App phrase,draft
+msg_unreadable_image,ig-msg_unreadable_image.m4a,Enweghị m ike imepe foto ahụ. Biko nwaa ọzọ.,I couldn't open that photo. Please try again.,App phrase,draft
+msg_numbers_unconfirmed,ig-msg_numbers_unconfirmed.m4a,"Enweghị m ike ịkọwa peeji a n'enweghị nsogbu. Lee ya, agụgharịrị ya ọzọ.",I couldn't explain this page safely. Here it is read again.,App phrase,draft
+msg_class_code_wrong,ig-msg_class_code_wrong.m4a,Koodu klaasị ahụ ezighị ezi. Lelee ya na onye nkuzi gị.,That class code isn't right. Check it with your teacher.,App phrase,draft
+msg_code_locked,ig-msg_code_locked.m4a,"Koodu ezighị ezi adịla ọtụtụ. Biko chere nkeji 5, wee nwaa ọzọ.","Too many wrong codes. Please wait 5 minutes, then try again.",App phrase,draft
+msg_teacher_code_needed,ig-msg_teacher_code_needed.m4a,Naanị onye nkuzi gị nwere ike ibuga gị na klaasị ọzọ. Rịọ ha ka ha tinye koodu onye nkuzi ha.,Only your teacher can move you to another class. Ask them to enter their teacher code.,App phrase,draft
+msg_teacher_code_wrong,ig-msg_teacher_code_wrong.m4a,Koodu onye nkuzi ahụ ezighị ezi. Rịọ onye nkuzi gị ka o lelee ya.,That teacher code isn't right. Ask your teacher to check it.,App phrase,draft
+msg_class_has_no_accounts,ig-msg_class_has_no_accounts.m4a,Klaasị a nwere naanị nkuzi onye nkuzi gị na-eduzi. Jụọ onye nkuzi gị.,This class only has lessons your teacher runs. Ask your teacher.,App phrase,draft
+msg_not_linked,ig-msg_not_linked.m4a,Ekwentị a anọghị na klaasị ugbu a. Ị ka nwere ike ịgụ peeji.,This phone isn't in a class now. You can still read pages.,App phrase,draft
+msg_class_joined,ig-msg_class_joined.m4a,Ị banyela na klaasị ahụ.,You're in the class.,App phrase,draft
+msg_class_changed,ig-msg_class_changed.m4a,Agbanweela klaasị gị.,Your class has changed.,App phrase,draft
+msg_explain_wrong_language,ig-msg_explain_wrong_language.m4a,"Enweghị m ike ịkọwa nke a n'asụsụ gị, ya mere aga m agụ peeji ahụ otú o si dị.","I couldn't explain this in your language, so I'll read the page exactly instead.",App phrase,draft
+autoCapture,ig-autoCapture.m4a,See foto n'onwe ya,Auto-capture,App phrase,draft
+torchOn,ig-torchOn.m4a,Gbanye ọkụ ekwentị,Turn on torch,App phrase,draft
+torchOff,ig-torchOff.m4a,Gbanyụọ ọkụ ekwentị,Turn off torch,App phrase,draft
+cameraView,ig-cameraView.m4a,Ihe igwefoto na-ahụ,Camera view,App phrase,draft
+cameraUnavailable,ig-cameraUnavailable.m4a,"Enweghị m ike iji igwefoto. Nye ikike igwefoto na Ntọala, ma ọ bụ họrọ foto site na foto gị.","I can't use the camera. Allow camera access in Settings, or choose a photo from the gallery.",App phrase,draft
+cueHigher,ig-cueHigher.m4a,Elu,Higher,App phrase,draft
+cueLower,ig-cueLower.m4a,Ala,Lower,App phrase,draft
+cueLeft,ig-cueLeft.m4a,Aka ekpe,Left,App phrase,draft
+cueRight,ig-cueRight.m4a,Aka nri,Right,App phrase,draft
+cueHoldStill,ig-cueHoldStill.m4a,Kwụsị ọtọ,Hold still,App phrase,draft
+cueCloser,ig-cueCloser.m4a,Bịaruo nso,Closer,App phrase,draft
+cueFurther,ig-cueFurther.m4a,Pụọ azụ,Further,App phrase,draft
+cueMoreLight,ig-cueMoreLight.m4a,Ìhè karịa,More light,App phrase,draft
+cueNoPage,ig-cueNoPage.m4a,Enweghị peeji,No page,App phrase,draft
+msg_q_fever,ig-msg_q_fever.m4a,"Ị nwere ahụ ọkụ, ka ahụ gị na-ekpo ọkụ nke ukwuu?","Do you have a fever, or does your body feel very hot?",App phrase,draft
+msg_q_fever_days,ig-msg_q_fever_days.m4a,Ụbọchị ole ka ahụ ọkụ ahụ jịdere gị?,For how many days have you had the fever?,App phrase,draft
+msg_q_fits,ig-msg_q_fits.m4a,"Ị nwere akwụkwụ, ma ọ bụ ahụ ịma jijiji ị na-enweghị ike ịkwụsị?","Have you had fits, or shaking of the body you could not stop?",App phrase,draft
+msg_q_cannot_drink,ig-msg_q_cannot_drink.m4a,"Ị nweghị ike ịṅụ ihe ọ bụla, ka nwa ọhụrụ enweghị ike ịṅụ ara?","Are you unable to drink anything, or is the baby unable to breastfeed?",App phrase,draft
+msg_q_vomits_everything,ig-msg_q_vomits_everything.m4a,Ị na-agbọpụta ihe niile i riri ma ọ bụ ṅụọ?,Are you vomiting everything you eat or drink?,App phrase,draft
+msg_q_very_sleepy,ig-msg_q_very_sleepy.m4a,"Ụra ọ na-atụ gị nke ukwuu, uche gị ọ gbagwojuru anya, ka ọ na-esiri ike ịkpọte gị?","Are you very sleepy, confused, or hard to wake?",App phrase,draft
+msg_q_bleeding,ig-msg_q_bleeding.m4a,"Ọbara ọ na-esi gị n'enweghị ihe kpatara ya, site n'imi ma ọ bụ ọnụ eze, ma ọ bụ n'agbọ ma ọ bụ nsị?","Are you bleeding without a clear reason, from the nose or gums, or in vomit or stool?",App phrase,draft
+msg_q_yellow_eyes,ig-msg_q_yellow_eyes.m4a,Anya gị ma ọ bụ akpụkpọ ahụ gị ọ ghọrọ odo odo?,Have your eyes or skin turned yellow?,App phrase,draft
+msg_q_hard_breathing,ig-msg_q_hard_breathing.m4a,"Ị na-eku ume ọsọ ọsọ nke ukwuu, ka ọ na-esiri gị ike iku ume?","Are you breathing very fast, or struggling to breathe?",App phrase,draft
+msg_q_very_pale,ig-msg_q_very_pale.m4a,"Ọbụ aka gị, egbugbere ọnụ gị ma ọ bụ ime akpụkpọ anya gị ọ chachara nke ukwuu?","Are your palms, lips or inner eyelids very pale?",App phrase,draft
+msg_q_dark_urine,ig-msg_q_dark_urine.m4a,"Mamịrị gị ọ gbara oji nke ukwuu, dịka kola ma ọ bụ tii?","Is your urine very dark, like cola or tea?",App phrase,draft
+msg_q_too_weak,ig-msg_q_too_weak.m4a,Ahụ ọ gwụrụ gị nke na ị nweghị ike ịnọdụ ala ma ọ bụ iguzo n'enweghị enyemaka?,Are you too weak to sit up or stand without help?,App phrase,draft
+msg_go_to_clinic_now,ig-msg_go_to_clinic_now.m4a,"Nke a nwere ike ịdị njọ. Biko gaa n'ụlọ ọgwụ kacha nso ugbu a, ma ọ bụ kpọọ 112. Echerela ka a kpọọ gị.","This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.",App phrase,draft
+msg_nurse_call_within_2_hours,ig-msg_nurse_call_within_2_hours.m4a,Daalụ. Otu nọọsụ ga-akpọ gị n'ime awa 2.,Thank you. A nurse will call you within 2 hours.,App phrase,draft
+msg_nurse_call_working_hours,ig-msg_nurse_call_working_hours.m4a,Daalụ. Otu nọọsụ ga-akpọghachi gị n'oge ọrụ.,Thank you. A nurse will call you back during working hours.,App phrase,draft
+chooseLanguageTitle,ig-chooseLanguageTitle.m4a,Họrọ asụsụ gị,Choose your language,App phrase,draft
+chooseLanguageBody,ig-chooseLanguageBody.m4a,Magana ga-agwa gị okwu n'asụsụ a. Ị nwere ike ịgbanwe ya oge ọ bụla site na ihuenyo mbụ.,Magana will speak to you in this language. You can change it any time from the Home screen.,App phrase,draft
+languageHearsHint,ig-languageHearsHint.m4a,A ga-agụ nhọrọ ọ bụla n'asụsụ nke ya mgbe i metụrụ ya aka.,Each option is read aloud in its own language when you touch it.,App phrase,draft
+continueLabel,ig-continueLabel.m4a,Gaa n'ihu,Continue,App phrase (also used as tourContinue),draft
+welcome,ig-welcome.m4a,Nnọọ,Welcome,App phrase,draft
+ageTitle,ig-ageTitle.m4a,Afọ ole ka ị dị?,How old are you?,App phrase,draft
+ageBody,ig-ageBody.m4a,Anyị na-ajụ ka Magana wee dị nchebe ma kwekọọ gị.,We ask so Magana is safe and right for you.,App phrase,draft
+ageAdult,ig-ageAdult.m4a,Adị m afọ 18 ma ọ bụ karịa,I am 18 or older,App phrase,draft
+ageAdultDetail,ig-ageAdultDetail.m4a,"Jiri ihe niile dị na Magana, gụnyere akwụkwọ ahụike na nke ego.","Use everything in Magana, including health and money papers.",App phrase,draft
+ageTeen,ig-ageTeen.m4a,Adị m afọ 13 ruo 17,I am 13 to 17,App phrase,draft
+ageTeenDetail,ig-ageTeenDetail.m4a,"Nne na nna, onye na-elekọta gị ma ọ bụ onye nkuzi ga-ebu ụzọ kwenye. Magana na-enyere naanị n'ihe ọmụmụ ụlọ akwụkwọ.","A parent, guardian or teacher agrees first. Magana helps with school subjects only.",App phrase,draft
+ageChild,ig-ageChild.m4a,Erubeghị m afọ 13,I am under 13,App phrase,draft
+ageChildDetail,ig-ageChildDetail.m4a,Onye nkuzi gị ga-eji Magana na gị n'ime klaasị.,Your teacher will use Magana with you in class.,App phrase,draft
+privacyNote,ig-privacyNote.m4a,A na-ehichapụ foto peeji gị mgbe a gụchara ha. Anyị anaghị ekesa nkọwa gị.,Photos of your pages are deleted after reading. We never share your details.,App phrase,draft
+hearAgain,ig-hearAgain.m4a,Nụghachi peeji a,Hear this page again,App phrase,draft
+readyTitle,ig-readyTitle.m4a,Ị dị njikere,You're ready,App phrase,draft
+readyBody,ig-readyBody.m4a,"Jide ekwentị gị n'elu peeji e biri ebi, Magana ga-agụrụ gị ya.",Hold your phone over any printed page and Magana will read it to you.,App phrase,draft
+consentTitle,ig-consentTitle.m4a,"Jụọ nne na nna, onye na-elekọta gị ma ọ bụ onye nkuzi","Ask a parent, guardian or teacher",App phrase,draft
+consentBody,ig-consentBody.m4a,Biko gụọ ma ọ bụ gee nke a ọnụ.,Please read or listen to this together.,App phrase,draft
+consentPoint1,ig-consentPoint1.m4a,Magana na-enyere naanị n'ihe ọmụmụ ụlọ akwụkwọ.,Magana helps with school subjects only.,App phrase,draft
+consentPoint2,ig-consentPoint2.m4a,"Enweghị akwụkwọ ahụike ma ọ bụ nke ego, enweghị WhatsApp, enweghị mkparịta ụka efu.","No health or money papers, no WhatsApp and no open chat.",App phrase,draft
+consentPoint3,ig-consentPoint3.m4a,A na-ehichapụ foto mgbe a gụchara ha.,Photos are deleted after reading.,App phrase,draft
+consentConfirm,ig-consentConfirm.m4a,"Abụ m nne ma ọ bụ nna, onye na-elekọta ma ọ bụ onye nkuzi, ekwenyere m","I am the parent, guardian or teacher, and I agree",App phrase,draft
+classroomTitle,ig-classroomTitle.m4a,Magana n'ime klaasị,Magana in class,App phrase,draft
+classroomBody,ig-classroomBody.m4a,"Onye nkuzi gị ga-amalite Magana na gị n'ime klaasị. Mgbe nkuzi gwụchara, mechie ngwa ahụ.","Your teacher starts Magana with you in class. When the lesson ends, close the app.",App phrase,draft
+classroomStart,ig-classroomStart.m4a,Onye nkuzi: malite oge klaasị,Teacher: start the class session,App phrase,draft
+classroomConfirmTitle,ig-classroomConfirmTitle.m4a,Ị bụ onye nkuzi?,Are you the teacher?,App phrase,draft
+classroomConfirmYes,ig-classroomConfirmYes.m4a,"Ee, malite oge ahụ","Yes, start the session",App phrase,draft
+cancel,ig-cancel.m4a,Kagbuo,Cancel,App phrase,draft
+back,ig-back.m4a,Laghachi,Back,App phrase,draft
+msg_unknown_tier,ig-msg_unknown_tier.m4a,Biko hazie Magana ọzọ: amataghị otu afọ gị.,Please set up Magana again: your age group wasn't recognised.,App phrase,draft
+readPageSubtitleSchool,ig-readPageSubtitleSchool.m4a,"Ihe ọmụmụ ụlọ akwụkwọ, ndetu, akwụkwọ ọgụgụ na ule","Schoolwork, notes, textbooks and tests",App phrase,draft
+everydaySubtitle,ig-everydaySubtitle.m4a,Akwụkwọ ahụike na nke ego · 18+,Health and money papers · 18+,App phrase,draft
+paperMedicine,ig-paperMedicine.m4a,Akara ọgwụ,Medicine label,App phrase,draft
+paperMedicineDetail,ig-paperMedicineDetail.m4a,Akara na ndenye ọgwụ,Labels and prescriptions,App phrase,draft
+paperReport,ig-paperReport.m4a,Akụkọ ahụike,Medical report,App phrase,draft
+paperReportDetail,ig-paperReportDetail.m4a,Nsonaazụ ule na akwụkwọ ntọhapụ,Test results and discharge notes,App phrase,draft
+paperStatement,ig-paperStatement.m4a,Nkwupụta ụlọ akụ,Bank statement,App phrase,draft
+paperStatementDetail,ig-paperStatementDetail.m4a,"Nkwupụta, nnata na ụgwọ","Statements, receipts and bills",App phrase,draft
+talkToNurse,ig-talkToNurse.m4a,Gwa nọọsụ okwu,Talk to a nurse,App phrase,draft
+talkToNurseDetail,ig-talkToNurseDetail.m4a,Ya na nyocha ọsọ ọsọ Ibà,With the Ibà quick check,App phrase,draft
+everydayPrivacy,ig-everydayPrivacy.m4a,"A na-agụ akwụkwọ nzuzo na ekwentị gị, anaghị echekwa ha. Magana anaghị arịọ PIN ma ọ bụ okwuntughe gị.",Private papers are read on your phone and not saved. Magana never asks for your PIN or password.,App phrase,draft
+readExactly,ig-readExactly.m4a,A na-agụ ya otú e biri ya,Read exactly as printed,App phrase,draft
+noteMedicine,ig-noteMedicine.m4a,"Magana na-agụ ihe e biri ebi. Ọ naghị enye ndụmọdụ ahụike. Ọ bụrụ na ihe ọ bụla dị na akara edoghị anya, jụọ onye na-ere ọgwụ gị tupu ị ṅụọ ya.","Magana reads what is printed. It does not give medical advice. If anything on the label is unclear, ask your pharmacist before taking it.",App phrase,draft
+noteReport,ig-noteReport.m4a,A na-agụ nọmba na oke otú e biri ha. Magana anaghị akọwa nsonaazụ: naanị onye ọrụ ahụike gị nwere ike ịkọwa ihe ha pụtara nye gị.,Numbers and ranges are read exactly as printed. Magana does not interpret results: only your health worker can explain what they mean for you.,App phrase,draft
+noteStatement,ig-noteStatement.m4a,"A na-agụ ego otú e biri ya. Anaghị echekwa nkwupụta a. Magana anaghị arịọ PIN ma ọ bụ okwuntughe gị. Ọ bụrụ na ego ọ bụla edoghị anya, lelee ya na ụlọ akụ gị ma ọ bụ onye ị tụkwasịrị obi.","Amounts are read exactly as printed. This statement is not saved. Magana never asks for your PIN or password. If an amount is unclear, check it with your bank or a trusted person.",App phrase,draft
+askPharmacistOrNurse,ig-askPharmacistOrNurse.m4a,Jụọ onye na-ere ọgwụ ma ọ bụ nọọsụ,Ask a pharmacist or nurse,App phrase,draft
+adultsOnly,ig-adultsOnly.m4a,Nke a bụ maka ndị okenye (afọ 18 gaa n'ihu).,This is for adults (18 and over).,App phrase,draft
+healthWorkerTitle,ig-healthWorkerTitle.m4a,Gwa onye ọrụ ahụike okwu,Talk to a health worker,App phrase,draft
+healthWorkerSubtitle,ig-healthWorkerSubtitle.m4a,Nọọsụ ma ọ bụ onye na-ere ọgwụ ga-akpọghachi gị,A nurse or pharmacist calls you back,App phrase,draft
+helpWithTitle,ig-helpWithTitle.m4a,Gịnị ka ị chọrọ enyemaka na ya?,What do you need help with?,App phrase,draft
+reasonMedicine,ig-reasonMedicine.m4a,Ịghọta ọgwụ m,Understanding my medicine,App phrase,draft
+reasonResults,ig-reasonResults.m4a,Ịghọta nsonaazụ m,Understanding my results,App phrase,draft
+reasonOther,ig-reasonOther.m4a,Ihe ọzọ,Something else,App phrase (also used as reportSomethingElse),draft
+callLanguage,ig-callLanguage.m4a,Asụsụ maka oku ahụ,Language for the call,App phrase,draft
+answerIbaFirst,ig-answerIbaFirst.m4a,Buru ụzọ zaa ajụjụ ole na ole (Ibà),Answer a few quick questions first (Ibà),App phrase,draft
+requestCallback,ig-requestCallback.m4a,Rịọ ka a kpọghachi gị,Request a call back,App phrase,draft
+emergencyBold,ig-emergencyBold.m4a,Ihe mberede?,Emergency?,App phrase,draft
+emergencyText,ig-emergencyText.m4a,Echerela ka a kpọghachi gị. Kpọọ 112 ugbu a.,Do not wait for a call back. Call 112 now.,App phrase,draft
+call112,ig-call112.m4a,Kpọọ 112,Call 112,App phrase,draft
+quickCheckTitle,ig-quickCheckTitle.m4a,Nyocha ahụike ọsọ ọsọ,Quick health check,App phrase,draft
+yes,ig-yes.m4a,Ee,Yes,App phrase,draft
+no,ig-no.m4a,Mba,No,App phrase,draft
+moreDays,ig-moreDays.m4a,Otu ụbọchị ọzọ,One more day,App phrase,draft
+fewerDays,ig-fewerDays.m4a,Otu ụbọchị belata,One day fewer,App phrase,draft
+nextLabel,ig-nextLabel.m4a,Na-esote,Next,App phrase,draft
+quickCheckNote,ig-quickCheckNote.m4a,"Azịza gị na-enyere nọọsụ aka ịkpebi otú ọ ga-esi kpọọ gị ọsọ ọsọ. Ibà anaghị achọpụta ọrịa. Ọ bụrụ na ị nwere ihe ịrịba ama ihe ize ndụ, Magana ga-agwa gị ka ị gaa n'ụlọ ọgwụ ugbu a.","Your answers help the nurse decide how soon to call you. Ibà does not diagnose. If you have danger signs, Magana tells you to go to a clinic now.",App phrase,draft
+resultTitle,ig-resultTitle.m4a,Nsonaazụ gị,Your result,App phrase,draft
+checkingAnswers,ig-checkingAnswers.m4a,Ana m enyocha azịza gị.,Checking your answers.,App phrase,draft
+msg_callback_booked,ig-msg_callback_booked.m4a,E debela oku gị. Nọọsụ ma ọ bụ onye na-ere ọgwụ ga-akpọ gị.,Your call back is booked. A nurse or pharmacist will call you.,App phrase,draft
+msg_callback_unavailable,ig-msg_callback_unavailable.m4a,"Enweghị oku nkpọghachi ugbu a. Ọ bụrụ na ịchọrọ enyemaka ugbu a, gaa n'ụlọ ọgwụ ma ọ bụ kpọọ 112.","Call backs are not available yet. If you need help now, go to a clinic or call 112.",App phrase,draft
+resultUrgent,ig-resultUrgent.m4a,"Nọọsụ kwesịrị ịkpọ gị n'ime awa 2. Rịọ ka a kpọghachi gị ugbu a. Ọ bụrụ na ọ ka njọ, gaa n'ụlọ ọgwụ ma ọ bụ kpọọ 112.","A nurse should call you within 2 hours. Request a call back now. If you get worse, go to a clinic or call 112.",App phrase,draft
+resultRoutine,ig-resultRoutine.m4a,"Nọọsụ nwere ike ịkpọghachi gị n'oge ọrụ. Rịọ ka a kpọghachi gị. Ọ bụrụ na ọ ka njọ, gaa n'ụlọ ọgwụ ma ọ bụ kpọọ 112.","A nurse can call you back during working hours. Request a call back. If you get worse, go to a clinic or call 112.",App phrase,draft
+quizListening,ig-quizListening.m4a,Ana m ege ntị… Pịa ka ọ kwụsị,Listening… Tap to stop,App phrase (also used as listeningCommand),draft
+quizRepeat,ig-quizRepeat.m4a,Kwughachi ajụjụ,Repeat question,App phrase,draft
+quizNext,ig-quizNext.m4a,Ajụjụ ọzọ,Next question,App phrase,draft
+quizFinish,ig-quizFinish.m4a,Hụ nsonaazụ m,See my result,App phrase,draft
+quizYourAnswerRight,ig-quizYourAnswerRight.m4a,"azịza gị, ọ ziri ezi","your answer, correct",App phrase,draft
+quizYourAnswerWrong,ig-quizYourAnswerWrong.m4a,"azịza gị, o zighị ezi","your answer, not correct",App phrase,draft
+quizRightAnswer,ig-quizRightAnswer.m4a,azịza ziri ezi,correct answer,App phrase,draft
+quizResultTitle,ig-quizResultTitle.m4a,Omume agwụla,Practice finished,App phrase,draft
+quizAgain,ig-quizAgain.m4a,Mee omume ọzọ,Practise again,App phrase,draft
+skillsSubtitle,ig-skillsSubtitle.m4a,"Nkuzi dị mkpụmkpụ a na-ekwu, n'oge gị","Short spoken lessons, at your pace",App phrase,draft
+playLesson,ig-playLesson.m4a,Kpọọ nkuzi,Play lesson,App phrase,draft
+practiseNow,ig-practiseNow.m4a,Mee ya ugbu a,Practise now,App phrase,draft
+lessonDone,ig-lessonDone.m4a,Emechara,Done,App phrase,draft
+lessonNotStarted,ig-lessonNotStarted.m4a,Amabeghị,Not started,App phrase,draft
+allLessonsDone,ig-allLessonsDone.m4a,Ị mechaala nkuzi niile. Ị mere nke ọma!,You have finished every lesson. Well done!,App phrase,draft
+practiseWithChampion,ig-practiseWithChampion.m4a,Mee omume ya na Onye mmeri Magana,Practise with a Magana Champion,App phrase,draft
+skillsNote,ig-skillsNote.m4a,Nkuzi ndị a bụ ihe atụ ndị otu Magana dere; ndị nkuzi mgbake ga-enyocha ha. Nkuzi dị n'asụsụ Bekee ugbu a.,"Sample lessons written by the Magana team, to be reviewed by rehabilitation trainers. Lessons are in English for now.",App phrase,draft
+previousStep,ig-previousStep.m4a,Nzọụkwụ gara aga,Previous step,App phrase,draft
+nextStep,ig-nextStep.m4a,Nzọụkwụ ọzọ,Next step,App phrase,draft
+lessonFinished,ig-lessonFinished.m4a,Nkuzi agwụla.,Lesson finished.,App phrase,draft
+scoreTitle,ig-scoreTitle.m4a,Akara Nnwere Onwe M,My Independence Score,App phrase,draft
+scoreSubtitle,ig-scoreSubtitle.m4a,Ọrụ ị mechara na Magana,Tasks you finished in Magana,App phrase,draft
+scoreByArea,ig-scoreByArea.m4a,Site na mpaghara,By area,App phrase,draft
+areaLearning,ig-areaLearning.m4a,Mmụta,Learning,App phrase,draft
+areaHealth,ig-areaHealth.m4a,Akwụkwọ ahụike,Health papers,App phrase,draft
+areaMoney,ig-areaMoney.m4a,Ego na akwụkwọ ozi,Money and letters,App phrase,draft
+areaSkills,ig-areaSkills.m4a,Nka,Skills,App phrase,draft
+scoreThisWeek,ig-scoreThisWeek.m4a,Izu a,This week,App phrase,draft
+scoreNothingThisWeek,ig-scoreNothingThisWeek.m4a,Enweghị ọrụ n'izu a. Gụọ peeji ma ọ bụ mee ajụjụ ka ịmalite.,No tasks yet this week. Read a page or take a quiz to start.,App phrase,draft
+scoreHow,ig-scoreHow.m4a,Akara gị na-agụ ezigbo ọrụ ị mechara na Magana n'ime ụbọchị 30 gara aga. Ọ na-anọ na ekwentị a; naanị gị na-ahụ ya.,Your score counts real tasks you finished in Magana in the last 30 days. It stays on this phone; only you see it.,App phrase,draft
+championsTitle,ig-championsTitle.m4a,Ndị mmeri Magana,Magana Champions,App phrase,draft
+championsSubtitle,ig-championsSubtitle.m4a,Mụta n'aka ndị gabigara ya,Learn from people who have been there,App phrase,draft
+championSample,ig-championSample.m4a,Ihe atụ profaịlụ,Sample profile,App phrase,draft
+championDetail,ig-championDetail.m4a,"Kpuru ìsì kemgbe afọ 12 · Kano · Hausa, Bekee","Blind since age 12 · Kano · Hausa, English",App phrase,draft
+championNotYet,ig-championNotYet.m4a,Nke a bụ ihe atụ. A ga-ejikọ gị na Onye mmeri site n'òtù ndị mmekọ. Oku adịbeghị.,This is a sample profile. Champions will be matched to you through partner organisations. Calls are not available yet.,App phrase,draft
+becomeChampion,ig-becomeChampion.m4a,Bụrụ Onye mmeri,Become a Champion,App phrase,draft
+becomeChampionBody,ig-becomeChampionBody.m4a,Nyere ndị ọzọ aka n'obodo gị ma nweta asambodo.,Help others in your community and earn a certificate.,App phrase,draft
+champStepBasics,ig-champStepBasics.m4a,Mechaa nkuzi Ntọala ekwentị,Finish Phone basics,App phrase,draft
+champStepPhotos,ig-champStepPhotos.m4a,Mechaa nkuzi Ịse foto doro anya,Finish Taking clear photos,App phrase,draft
+champStepScore,ig-champStepScore.m4a,Ruo Akara Nnwere Onwe 60,Reach an Independence Score of 60,App phrase,draft
+champStepTraining,ig-champStepTraining.m4a,Sonye na ọzụzụ Onye mmeri awa 2,Join a 2-hour Champion training,App phrase,draft
+champStepHelp,ig-champStepHelp.m4a,Nyere mmadụ 3 mbụ aka,Help your first 3 people,App phrase,draft
+stepDone,ig-stepDone.m4a,emechara,done,App phrase,draft
+stepNotDone,ig-stepNotDone.m4a,emechabeghị,not done yet,App phrase,draft
+championsPartnerNote,ig-championsPartnerNote.m4a,A ga-eme ọzụzụ Onye mmeri na òtù ndị mmekọ. Emepebeghị ya.,Champion training will be run with partner organisations. It is not open yet.,App phrase,draft
+librarySubtitle,ig-librarySubtitle.m4a,"Ihe agụrụ e chekwara, ruo ụbọchị 30","Saved readings, kept for 30 days",App phrase,draft
+libraryEmpty,ig-libraryEmpty.m4a,"Enweghị ihe echekwara ugbu a. Mgbe Magana gụchara peeji, họrọ Chekwaa n'ọbá akwụkwọ m.","Nothing saved yet. After Magana reads a page, choose Save to my library.",App phrase,draft
+libraryPrivacy,ig-libraryPrivacy.m4a,"Ihe agụrụ e chekwara na-anọ na ekwentị a, a na-ehichapụkwa ha mgbe ụbọchị 30 gachara. Anaghị echekwa foto.",Saved readings stay on this phone and are deleted after 30 days. Photos are never saved.,App phrase,draft
+saveToLibrary,ig-saveToLibrary.m4a,Chekwaa n'ọbá akwụkwọ m,Save to my library,App phrase,draft
+savedToLibrary,ig-savedToLibrary.m4a,Echekwala ya n'ọbá akwụkwọ gị. Ọ ga-anọ na ekwentị a ruo ụbọchị 30.,Saved to my library. It stays on this phone for 30 days.,App phrase,draft
+deleteFromLibrary,ig-deleteFromLibrary.m4a,Hichapụ ya n'ọbá akwụkwọ m,Delete from my library,App phrase,draft
+deleteConfirm,ig-deleteConfirm.m4a,Ị chọrọ ihichapụ ihe a agụrụ n'ọbá akwụkwọ gị?,Delete this reading from your library?,App phrase,draft
+deleteYes,ig-deleteYes.m4a,Hichapụ,Delete,App phrase (also used as keypadDelete),draft
+deletedFromLibrary,ig-deletedFromLibrary.m4a,Ehichapụla ya n'ọbá akwụkwọ gị.,Deleted from your library.,App phrase,draft
+remindersTitle,ig-remindersTitle.m4a,Ọgwụ taa,Today's medicines,App phrase,draft
+remindersSubtitle,ig-remindersSubtitle.m4a,Oge gị na onye na-ere ọgwụ setịrị,Times set with your pharmacist,App phrase,draft
+remindersCard,ig-remindersCard.m4a,Ihe ncheta ọgwụ,Medicine reminders,App phrase,draft
+remindersCardDetail,ig-remindersCardDetail.m4a,Oge maka ọgwụ gị,Times for your medicines,App phrase,draft
+remindersEmpty,ig-remindersEmpty.m4a,Enweghị ihe ncheta ugbu a. Tinye oge onye na-ere ọgwụ ma ọ bụ dọkịta nyere gị.,No reminders yet. Add the times your pharmacist or doctor gave you.,App phrase,draft
+doseTaken,ig-doseTaken.m4a,Aṅụọla,Taken,App phrase,draft
+doseDue,ig-doseDue.m4a,Oge eruola,Due now,App phrase,draft
+doseLater,ig-doseLater.m4a,Ma emechaa taa,Later today,App phrase,draft
+iTookIt,ig-iTookIt.m4a,Aṅụọla m ya,I've taken it,App phrase,draft
+remindLater,ig-remindLater.m4a,Chetara m n'ime nkeji 15,Remind in 15 min,App phrase,draft
+remindLaterSet,ig-remindLaterSet.m4a,M ga-echetara gị ọzọ n'ime nkeji 15.,I will remind you again in 15 minutes.,App phrase,draft
+markedTaken,ig-markedTaken.m4a,Edere na ị ṅụọla ya.,Marked as taken.,App phrase,draft
+addReminder,ig-addReminder.m4a,Tinye ihe ncheta,Add a reminder,App phrase,draft
+medicineName,ig-medicineName.m4a,"Aha ọgwụ, dị ka o dị n'akara","Medicine name, as on the label",App phrase,draft
+medicineAmount,ig-medicineAmount.m4a,"Ole ka onye na-ere ọgwụ kwuru (dịka, mkpụrụ 2)","How much, as your pharmacist said (for example, 2 tablets)",App phrase,draft
+reminderTime,ig-reminderTime.m4a,Oge,Time,App phrase,draft
+earlierHour,ig-earlierHour.m4a,Otu awa tupu,One hour earlier,App phrase,draft
+laterHour,ig-laterHour.m4a,Otu awa mgbe,One hour later,App phrase,draft
+earlierMinutes,ig-earlierMinutes.m4a,Nkeji 15 tupu,15 minutes earlier,App phrase,draft
+laterMinutes,ig-laterMinutes.m4a,Nkeji 15 mgbe,15 minutes later,App phrase,draft
+saveReminder,ig-saveReminder.m4a,Chekwaa ihe ncheta,Save reminder,App phrase,draft
+medicineNameNeeded,ig-medicineNameNeeded.m4a,Buru ụzọ dee aha ọgwụ ahụ.,Type the medicine name first.,App phrase,draft
+deleteReminder,ig-deleteReminder.m4a,Hichapụ ihe ncheta,Delete reminder,App phrase,draft
+reminderNotice,ig-reminderNotice.m4a,"Ekwentị gị ga-ada ụda ma maa jijiji n'oge ọ bụla, dị ka ọkwa. Magana na-echetara gị n'oge ị setịrị. Ọ naghị agbanwe ọnụọgụ ọgwụ.","Your phone rings and vibrates at each time, as a notification. Magana reminds you at the times you set. It never changes a dose.",App phrase,draft
+notificationsOff,ig-notificationsOff.m4a,"Agbanyụrụ ọkwa maka Magana, ya mere ihe ncheta ga-apụta naanị mgbe Magana mepere emepe. Ị nwere ike ịgbanye ha na ntọala ekwentị gị.","Notifications are off for Magana, so reminders only show when Magana is open. You can turn them on in your phone's settings.",App phrase,draft
+missedDose,ig-missedDose.m4a,Ị ṅụghị ọgwụ n'oge? Jụọ onye na-ere ọgwụ,Missed a dose? Ask a pharmacist,App phrase,draft
+reminderNotifyTitle,ig-reminderNotifyTitle.m4a,Oge ịṅụ ọgwụ gị eruola,Time for your medicine,App phrase,draft
+exactTitle,ig-exactTitle.m4a,Ka ọ daa n'oge?,Ring on time?,App phrase,draft
+exactBody,ig-exactBody.m4a,"Ka ọ daa n'otu nkeji ahụ, ekwentị gị ga-ekwe Magana ka o setịa mkpu na ihe ncheta. Ihuenyo na-esote nwere otu mgbanwe: gbanye ya, wee laghachi.","To ring at the exact minute, your phone needs to allow Magana to set alarms and reminders. The next screen has one switch: turn it on, then go back.",App phrase,draft
+exactOpen,ig-exactOpen.m4a,Mepee ntọala ahụ,Open the setting,App phrase,draft
+notNow,ig-notNow.m4a,Ọ bụghị ugbu a,Not now,App phrase,draft
+remindersMayBeLate,ig-remindersMayBeLate.m4a,"Na ekwentị a, ihe ncheta nwere ike ịda ruo otu awa mgbe oge gachara. Ka ọ daa n'oge, kwe Magana maka mkpu na ihe ncheta.","On this phone, reminders may ring up to an hour late. To ring on time, allow alarms and reminders for Magana.",App phrase,draft
+allowOnTime,ig-allowOnTime.m4a,Kwe ihe ncheta n'oge,Allow on-time reminders,App phrase,draft
+msg_q_bleeding_no_sight,ig-msg_q_bleeding_no_sight.m4a,"Ị nụrụ ma ọ bụ detụ ọbara ire, ma ọ bụ onye ọ gwara gị na ọbara na-esi gị, site n'imi, ọnụ eze, agbọ ma ọ bụ nsị?","Have you felt or tasted blood, or has anyone told you that you are bleeding, from your nose, gums, vomit or stool?",App phrase,draft
+msg_q_yellow_eyes_no_sight,ig-msg_q_yellow_eyes_no_sight.m4a,Onye ọ gwara gị na anya gị ma ọ bụ akpụkpọ ahụ gị dị ka odo odo?,Has anyone told you that your eyes or skin look yellow?,App phrase,draft
+msg_q_very_pale_no_sight,ig-msg_q_very_pale_no_sight.m4a,"Onye ọ gwara gị na ị chachara nke ukwuu? Ị na-adịkarị ike nke ukwuu, isi na-agba gị gburugburu ma ọ bụ ume na-ekupụ gị mgbe ị guzoro?","Has anyone told you that you look very pale? Do you feel very weak, dizzy or out of breath when you stand?",App phrase,draft
+msg_q_dark_urine_no_sight,ig-msg_q_dark_urine_no_sight.m4a,"Onye nọ gị nso ọ hụla na mamịrị gị gbara oji nke ukwuu, dịka kola ma ọ bụ tii?","Has someone near you seen that your urine is very dark, like cola or tea?",App phrase,draft
+msg_ask_someone_to_check,ig-msg_ask_someone_to_check.m4a,"Biko rịọ onye nọ gị nso ka o lelee ya, ma ọ bụ gaa ụlọ ọgwụ.","Please ask someone near you to check, or go to a clinic.",App phrase,draft
+cantTell,ig-cantTell.m4a,Amaghị m,I can't tell,App phrase,draft
+appLanguageTitle,ig-appLanguageTitle.m4a,Asụsụ ngwa,App language,App phrase,draft
+languageSheetBody,ig-languageSheetBody.m4a,"Menu, bọtịnụ, enyemaka na olu Magana ga-agbanwe gaa n'asụsụ ị họọrọ.","Menus, buttons, help and Magana's voice all switch to the language you choose.",App phrase,draft
+languageVoiceTip,ig-languageVoiceTip.m4a,Ị nwekwara ike ikwu “change language to Igbo” mgbe ị pịrị Kwuo iwu na ihuenyo mbụ.,You can also say “change language to Igbo” after pressing Speak a command on Home.,App phrase,draft
+settingsVersionNote,ig-settingsVersionNote.m4a,Gwa ndị otu Magana ụdị a mgbe ị na-akọ nsogbu.,Tell the Magana team this version when you report a problem.,App phrase,draft
+reportProblem,ig-reportProblem.m4a,Kọọ nsogbu,Report a problem,App phrase,draft
+reportHow,ig-reportHow.m4a,"Gwa ndị otu Magana ihe atọ: aha ihuenyo ahụ, ihe ị mere, na ihe Magana kwuru.","Tell the Magana team three things: the name of the screen, what you did, and what Magana said.",App phrase,draft
+speakCommand,ig-speakCommand.m4a,Kwuo iwu,Speak a command,App phrase,draft
+commandSorry,ig-commandSorry.m4a,"Ndo, aghọtaghị m nke ahụ. Kwuo “read a page” ma ọ bụ “help”.","Sorry, I didn't catch that. Say “read a page” or “help”.",App phrase,draft
+commandNothingHeard,ig-commandNothingHeard.m4a,"Anụghị m iwu ọ bụla. Nwaa ọzọ, ma ọ bụ kwuo help.","I didn't hear a command. Try again, or say help.",App phrase,draft
+changeLanguageCommand,ig-changeLanguageCommand.m4a,change language,change language,App phrase,draft
+voiceCommandsUnavailable,ig-voiceCommandsUnavailable.m4a,Enweghị ike iji iwu olu na ekwentị a. Jiri bọtịnụ kama.,Voice commands are not available on this phone. Use the buttons instead.,App phrase,draft
+explainTitle,ig-explainTitle.m4a,Nkọwa,Explain,App phrase,draft
+explainPreviewBanner,ig-explainPreviewBanner.m4a,"Nlele. N-ATLAS, nke ga-akọwa peeji n'asụsụ gị, ejikọbeghị. Ugbu a Magana na-agụ ederede peeji ahụ kpọmkwem ka e si bipụta ya.","Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.",App phrase,draft
+youSaid,ig-youSaid.m4a,Ị kwuru,You said,App phrase,draft
+readExactlyNote,ig-readExactlyNote.m4a,A na-agụ nọmba na okwu sitere na peeji ahụ kpọmkwem ka e si bipụta ha.,Numbers and words from the page are read exactly as printed.,App phrase,draft
+saySimpler,ig-saySimpler.m4a,Kwuo ya n'ụzọ dị mfe,Say it simpler,App phrase,draft
+giveExample,ig-giveExample.m4a,Nye ihe atụ,Give an example,App phrase,draft
+explainDisclaimer,ig-explainDisclaimer.m4a,Magana nwere ike imehie. Lelee azịza ndị dị mkpa na onye nkuzi gị.,Magana can make mistakes. Check important answers with your teacher.,App phrase,draft
+explainNoPage,ig-explainNoPage.m4a,"Nkọwa bụ maka peeji. Buru ụzọ gụọ peeji, wee họrọ Kọwaa nke a.","Explanations are about a page. Read a page first, then choose Explain this.",App phrase,draft
+explainThis,ig-explainThis.m4a,Kọwaa nke a,Explain this,App phrase,draft
+explainQuestionPreview,ig-explainQuestionPreview.m4a,"Mgbe ejikọrọ N-ATLAS, Magana ga-aza ajụjụ gị site na peeji a. Ugbu a, lee peeji ahụ.","When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.",App phrase,draft
+msg_explain_preview,ig-msg_explain_preview.m4a,"Nke a bụ nlele. Nkọwa n'asụsụ gị ga-abịa mgbe ejikọrọ N-ATLAS. Lee peeji ahụ, a gụrụ ya kpọmkwem ka e si bipụta ya.","This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",App phrase,draft
+msg_explained,ig-msg_explained.m4a,Lee nkọwa ahụ.,Here is the explanation.,App phrase,draft
+msg_explain_bad_source,ig-msg_explain_bad_source.m4a,Enweghị ederede peeji a ga-akọwa. Biko buru ụzọ gụọ peeji.,There is no page text to explain. Please read a page first.,App phrase,draft
+jumpWithinPage,ig-jumpWithinPage.m4a,Wụga n'ime peeji,Jump within page,App phrase,draft
+jumpStart,ig-jumpStart.m4a,Mmalite peeji,Start of the page,App phrase,draft
+jumpWarnings,ig-jumpWarnings.m4a,Ihe na-esote m na-ejighị n'aka,Next thing I'm not sure about,App phrase,draft
+jumpNotYet,ig-jumpNotYet.m4a,Enweghị ike ịwụga n'eserese ugbu a.,Jumping to diagrams is not available yet.,App phrase,draft
+paperLetter,ig-paperLetter.m4a,Akwụkwọ ozi na fọm,Letters & forms,App phrase,draft
+paperLetterDetail,ig-paperLetterDetail.m4a,"Ọkwa, fọm, ederede okpukpe","Notices, forms, religious texts",App phrase,draft
+noteLetter,ig-noteLetter.m4a,"Magana na-agụ ihe e biri ebi. Ọ naghị enye ndụmọdụ iwu ma ọ bụ ego, ọ naghịkwa ajụ PIN ma ọ bụ okwuntughe gị.","Magana reads what is printed. It does not give legal or financial advice, and never asks for your PIN or password.",App phrase,draft
+readAnyPaper,ig-readAnyPaper.m4a,Gụọ akwụkwọ ọ bụla,Read any paper,App phrase,draft
+readAnyPaperDetail,ig-readAnyPaperDetail.m4a,Magana ga-achọpụta ụdị akwụkwọ ọ bụ,Magana works out what kind of paper it is,App phrase,draft
+readAgain,ig-readAgain.m4a,Gụọ ya ọzọ,Read again,App phrase,draft
+askAboutResult,ig-askAboutResult.m4a,Gịnị ka nke a pụtara?,What does this mean?,App phrase,draft
+resultAnswer,ig-resultAnswer.m4a,"Naanị onye ọrụ ahụike gị nwere ike ịkọwa ihe nsonaazụ a pụtara maka gị. Enwere m ike ichekwa ajụjụ gị maka nleta gị ọzọ, ma ọ bụ rịọ nọọsụ ka ọ kpọọ gị.","Only your health worker can explain what this result means for you. I can save your question for your next visit, or ask a nurse to call you.",App phrase,draft
+saveQuestion,ig-saveQuestion.m4a,Chekwaa ajụjụ,Save question,App phrase,draft
+questionSaved,ig-questionSaved.m4a,Echekwala ya. Ị ga-ahụ ya na Gwa onye ọrụ ahụike okwu.,Saved. You will find it in Talk to a health worker.,App phrase,draft
+askANurse,ig-askANurse.m4a,Jụọ nọọsụ,Ask a nurse,App phrase,draft
+savedQuestionsTitle,ig-savedQuestionsTitle.m4a,Ajụjụ maka nleta gị ọzọ,Questions for your next visit,App phrase,draft
+fromTheStatement,ig-fromTheStatement.m4a,"Site na akwụkwọ ụlọ akụ, kpọmkwem ka e si bipụta ya","From the statement, exactly as printed",App phrase,draft
+findTransaction,ig-findTransaction.m4a,Chọta azụmahịa,Find a transaction,App phrase,draft
+findPrompt,ig-findPrompt.m4a,"Kwuo ma ọ bụ dee okwu, ụbọchị ma ọ bụ ego site na azụmahịa ahụ.","Say or type a word, date or amount from the transaction.",App phrase,draft
+findField,ig-findField.m4a,"Okwu, ụbọchị ma ọ bụ ego","Word, date or amount",App phrase,draft
+findSearch,ig-findSearch.m4a,Chọta,Find,App phrase,draft
+findSpeak,ig-findSpeak.m4a,Kwuo ya kama,Speak instead,App phrase,draft
+sayYesOrNo,ig-sayYesOrNo.m4a,"Kwuo ee, mba, ma ọ bụ amaghị m","Say yes, no, or I can't tell",App phrase,draft
+shareScore,ig-shareScore.m4a,Kekọrịta akara m na onye nkuzi m,Share my score with my teacher,App phrase,draft
+shareScoreNote,ig-shareScoreNote.m4a,"Onye nkuzi gị ga-ahụ akara gị, ọ bụghị peeji ma ọ bụ ajụjụ gị, ozugbo ejikọrọ klaasị gị na ọnụ ụzọ ndị nkuzi Magana.","Your teacher will see your score, never your pages or questions, once your class is connected to the Magana teacher portal.",App phrase,draft
+sayNameWhenLocked,ig-sayNameWhenLocked.m4a,Kwuo aha ọgwụ mgbe ekwentị kpọchiri,Say the medicine name when locked,App phrase,draft
+sayNameNote,ig-sayNameNote.m4a,"Agbanyụọ: ihuenyo mkpọchi ga-ekwu naanị “Ihe ncheta Magana”. Agbanyere: ihuenyo mkpọchi ga-egosi ọgwụ na ole, Magana ga-ekwukwa ha n'oke olu n'oge ọ bụla, ya mere ndị nọ gị nso nwere ike ịhụ ma ọ bụ nụ ha.","Off: the lock screen says only “Magana reminder”. On: the lock screen shows the medicine and how much, and Magana says them aloud at each time, so people near you may see or hear them.",App phrase,draft
+reminderGenericTitle,ig-reminderGenericTitle.m4a,Ihe ncheta Magana,Magana reminder,App phrase,draft
+reminderGenericBody,ig-reminderGenericBody.m4a,Mepee Magana ka ị nụ ọgwụ ole.,Open Magana to hear which medicine.,App phrase,draft
+msg_bad_api_key,ig-msg_bad_api_key.m4a,Mbipụta Magana a enweghị ike iru ọrụ ịgụ ihe. Biko melite ngwa ahụ.,This copy of Magana can't reach the reading service. Please update the app.,App phrase,draft
+msg_explain_unavailable,ig-msg_explain_unavailable.m4a,"Enweghị nkọwa ugbu a. Lee peeji ahụ, a gụrụ ya kpọmkwem ka e si bipụta ya.","Explanations aren't available right now. Here is the page, read exactly as printed.",App phrase,draft
+msg_asr_unavailable,ig-msg_asr_unavailable.m4a,Edoziteghị nghọta olu na sava; a na-eji nke ekwentị.,Speech recognition on the server is not set up; the phone's own is used.,App phrase,draft
+msg_audio_too_long,ig-msg_audio_too_long.m4a,Ndekọ ahụ ogologo nke ukwuu. Biko kwuo azịza dị mkpụmkpụ.,That recording is too long. Please say a short answer.,App phrase,draft
+msg_unreadable_audio,ig-msg_unreadable_audio.m4a,Anụghị m ndekọ ahụ. Biko nwaa ọzọ.,I couldn't hear that recording. Please try again.,App phrase,draft
+aboutTitle,ig-aboutTitle.m4a,Banyere Magana,About Magana,App phrase,draft
+aboutModels,ig-aboutModels.m4a,Ụdị asụsụ,Language models,App phrase,draft
+aboutModelsNote,ig-aboutModelsNote.m4a,"Magana na-eji ụdị mepere emepe ndị a n'okpuru Usoro Ojiji N-ATLaS, ụdị 1.0. A kọpịrị ahịrị nkwanye ùgwù ndị dị n'okpuru ka usoro ahụ si chọọ.","Magana uses these open models under the N-ATLaS Terms of Use, version 1.0. The credit lines below are quoted as the terms require.",App phrase,draft
+aboutExplain,ig-aboutExplain.m4a,Nkọwa n'asụsụ gị,Explanations in your language,App phrase,draft
+aboutSpeech,ig-aboutSpeech.m4a,Nghọta olu,Speech recognition,App phrase,draft
+openSourceLicences,ig-openSourceLicences.m4a,Ikikere isi mmalite mepere emepe,Open-source licences,App phrase,draft
+msg_explain_not_available,ig-msg_explain_not_available.m4a,"Nkọwa adịbeghị. Lee peeji ahụ, a gụrụ ya kpọmkwem ka e si bipụta ya.","Explain isn't available yet. Here is the page, read exactly as printed.",App phrase,draft
+quizConfirmNo,ig-quizConfirmNo.m4a,"Mba, jụọ m ọzọ","No, ask me again",App phrase,draft
+quizSayYesOrNo,ig-quizSayYesOrNo.m4a,Kwuo ee ma ọ bụ mba,Say yes or no,App phrase,draft
+quizSayAgain,ig-quizSayAgain.m4a,Biko kwughachi azịza gị.,Please say your answer again.,App phrase,draft
+quizTapInstead,ig-quizTapInstead.m4a,O siri m ike ịnụ gị. Biko pịa azịza gị ugboro abụọ kama.,I'm having trouble hearing you. Please double tap your answer instead.,App phrase,draft
+quizSayTrueFalse,ig-quizSayTrueFalse.m4a,Kwuo eziokwu ma ọ bụ ụgha,Say true or false,App phrase,draft
+msg_too_many_requests,ig-msg_too_many_requests.m4a,Magana na-arụsi ọrụ ike ugbu a. Biko chere otu nkeji wee nwaa ọzọ.,Magana is busy right now. Please wait a minute and try again.,App phrase,draft
+remindersNeedApp,ig-remindersNeedApp.m4a,"Ihe ncheta chọrọ ngwa Android ma ọ bụ iPhone. Na ihe nchọgharị, Magana enweghị ike ịda n'oge kwesịrị ekwesị.",Reminders need the Android or iPhone app. In a web browser Magana can't ring at the right time.,App phrase,draft
+quizVoiceUnavailable,ig-quizVoiceUnavailable.m4a,Ịza n'olu adịbeghị na ngwaọrụ a. Pịa azịza kama.,Voice answers aren't available on this device yet. Tap an answer instead.,App phrase,draft
+quizKeysHintTrueFalse,ig-quizKeysHintTrueFalse.m4a,"Pịa ma ọ bụ kpịa eziokwu ma ọ bụ ụgha, ma ọ bụ pịa A maka eziokwu ma ọ bụ B maka ụgha.","Tap or click true or false, or press A for true or B for false.",App phrase,draft
+quizTapAnswer,ig-quizTapAnswer.m4a,Pịa azịza.,Tap an answer.,App phrase,draft
+startMagana,ig-startMagana.m4a,Malite Magana,Start Magana,App phrase,draft
+classTitle,ig-classTitle.m4a,Klaasị ole ka ị nọ?,Which class are you in?,App phrase,draft
+classBody,ig-classBody.m4a,Magana ga-ahọrọ ajụjụ omume maka klaasị gị. Onye nkuzi nwere ike ịgbanwe ya ma emechaa.,Magana picks practice questions for your class. A teacher can change it later.,App phrase,draft
+classNotInSchool,ig-classNotInSchool.m4a,Anọghị m n'ụlọ akwụkwọ,I'm not in school,App phrase,draft
+classGroupPrimary,ig-classGroupPrimary.m4a,Ụlọ akwụkwọ praịmarị,Primary school,App phrase,draft
+classGroupJss,ig-classGroupJss.m4a,Sekọndrị nta,Junior secondary,App phrase,draft
+classGroupSss,ig-classGroupSss.m4a,Sekọndrị ukwu,Senior secondary,App phrase,draft
+classroomChooseClass,ig-classroomChooseClass.m4a,Onye nkuzi: họrọ klaasị maka nnọkọ a,Teacher: choose the class for this session,App phrase,draft
+classroomNeedsClass,ig-classroomNeedsClass.m4a,Buru ụzọ họrọ klaasị.,Choose the class first.,App phrase,draft
+settingsClass,ig-settingsClass.m4a,Klaasị m,My class,App phrase,draft
+settingsChangeClass,ig-settingsChangeClass.m4a,Gbanwee klaasị (onye nkuzi),Change class (teacher),App phrase,draft
+quizFromTeacher,ig-quizFromTeacher.m4a,Site n'aka onye nkuzi gị,From your teacher,App phrase,draft
+quizSamples,ig-quizSamples.m4a,Ajụjụ ihe atụ,Sample questions,App phrase,draft
+quizChooseClassHint,ig-quizChooseClassHint.m4a,Họrọ klaasị gị iji nweta ajụjụ ya. Onye nkuzi nwere ike idozi ya na Ntọala.,Choose your class to get questions for it. A teacher can set it in Settings.,App phrase,draft
+quizSampleNote,ig-quizSampleNote.m4a,"Ajụjụ ihe atụ ndị otu Magana dere. Ha abụghị ajụjụ ochie, onye nkuzi ga-elele ha. Ajụjụ ndị a dị n'asụsụ Bekee.","Sample questions written by the Magana team. They are not past questions, and a teacher will check them. The questions are in English.",App phrase,draft
+quizTeacherNote,ig-quizTeacherNote.m4a,Onye nkuzi gị mere ya.,Made by your teacher.,App phrase,draft
+quizOr,ig-quizOr.m4a,ma ọ bụ,or,App phrase,draft
+quizSessionOpen,ig-quizSessionOpen.m4a,Onye nkuzi: meghee nnọkọ klaasị gị,Teacher: open your class session,App phrase,draft
+quizSessionPrompt,ig-quizSessionPrompt.m4a,Ọ bụ naanị onye nkuzi kwesịrị imeghe nnọkọ klaasị. Dee koodu nnọkọ si na ọdụ ndị nkuzi.,Only the teacher should open a class session. Type the session code from the teacher portal.,App phrase,draft
+quizSessionCodeLabel,ig-quizSessionCodeLabel.m4a,Koodu nnọkọ,Session code,App phrase,draft
+quizSessionStart,ig-quizSessionStart.m4a,Meghee nnọkọ,Open session,App phrase,draft
+quizSessionEnd,ig-quizSessionEnd.m4a,Kwụsị nnọkọ klaasị,End class session,App phrase,draft
+quizSessionEmpty,ig-quizSessionEmpty.m4a,Enweghị ajụjụ site n'aka onye nkuzi gị na nnọkọ a ugbu a.,No quizzes from your teacher in this session yet.,App phrase,draft
+msg_session_code_invalid,ig-msg_session_code_invalid.m4a,Koodu nnọkọ ahụ ezighi ezi. Lelee ya na ọdụ ndị nkuzi.,That session code isn't right. Check it in the teacher portal.,App phrase,draft
+msg_paper_lines,ig-msg_paper_lines.m4a,"Anaghị eji AI akọwa akwụkwọ ahụike na nke ego. A na-agụ ahịrị ọ bụla kpọmkwem, n'asụsụ gị naanị ebe enwere ntụgharị a lelere.","Health and money papers aren't explained by AI. Each line is read exactly, in your language only where a checked translation exists.",App phrase,draft
+msg_cant_translate_line_health,ig-msg_cant_translate_line_health.m4a,Enweghị m ike ịtụgharị ahịrị a n'enweghị nsogbu. Biko jụọ onye na-ere ọgwụ (pharmacist).,I can't translate this line safely. Please ask a pharmacist.,App phrase,draft
+msg_cant_translate_line_money,ig-msg_cant_translate_line_money.m4a,Enweghị m ike ịtụgharị ahịrị a n'enweghị nsogbu. Biko jụọ mmadụ n'ụlọ akụ gị.,I can't translate this line safely. Please ask someone at your bank.,App phrase,draft
+msg_numbers_left_out,ig-msg_numbers_left_out.m4a,Ọnụọgụgụ kpọmkwem dị na peeji ahụ. Kwuo ‘read again’ ka ị nụ ha.,The exact numbers are on the page. Say ‘read again’ to hear them.,App phrase,draft
+explainReadAgain,ig-explainReadAgain.m4a,Gụgharịa peeji ahụ ọzọ,Read the page again,App phrase,draft
+quizNotSure,ig-quizNotSure.m4a,Amaghị m nke ọma ihe ị kwuru. Biko kwughachi azịza gị.,I'm not sure what you said. Please say your answer again.,App phrase,draft
+quizVoicePrimaryOff,ig-quizVoicePrimaryOff.m4a,"Na klaasị praịmarị, pịa azịza gị. Ịza n'olu ga-abịa ma emechaa.","In primary classes, tap your answer. Voice answers come later.",App phrase,draft
+whoTitle,ig-whoTitle.m4a,Onye na-eji Magana?,Who is using Magana?,App phrase,draft
+whoBody,ig-whoBody.m4a,Nke a na-enyere Magana aka ịhọrọ ihe ọmụmụ na ajụjụ kwesịrị gị.,This helps Magana choose the right lessons and quizzes for you.,App phrase,draft
+whoInSchool,ig-whoInSchool.m4a,Anọ m n'ụlọ akwụkwọ,I’m in school,App phrase,draft
+whoInSchoolDetail,ig-whoInSchoolDetail.m4a,Praịmarị ma ọ bụ sekọndrị. Ị ga-abanye na klaasị gị site na koodu sitere n'aka onye nkuzi gị.,Primary or secondary. You’ll join your class with a code from your teacher.,App phrase,draft
+whoFinished,ig-whoFinished.m4a,Agụchaala m akwụkwọ,I’ve finished school,App phrase,draft
+whoFinishedDetail,ig-whoFinishedDetail.m4a,"Kwadebe maka JAMB ma ọ bụ WAEC, meziwanye ịgụ akwụkwọ gị, ma ọ bụ mụta nkà ọhụrụ.","Practise for JAMB or WAEC, improve your reading, or learn new skills.",App phrase,draft
+whoOther,ig-whoOther.m4a,Mahadum ma ọ bụ ihe ọzọ,University or other,App phrase,draft
+whoOtherDetail,ig-whoOtherDetail.m4a,"Gụọ akwụkwọ gị, ndetu gị na akwụkwọ gị. Ọ dịghị klaasị achọrọ.","Read your own books, notes and papers. No class needed.",App phrase,draft
+joinTitle,ig-joinTitle.m4a,Banye na klaasị gị,Join your class,App phrase,draft
+joinBody,ig-joinBody.m4a,Rịọ onye nkuzi gị koodu klaasị nwere ọnụọgụgụ 6.,Ask your teacher for the 6-digit class code.,App phrase,draft
+classCodeLabel,ig-classCodeLabel.m4a,Koodu klaasị,Class code,App phrase,draft
+teacherCodeLabel,ig-teacherCodeLabel.m4a,Koodu onye nkuzi,Teacher code,App phrase,draft
+codeEmpty,ig-codeEmpty.m4a,Ọ nweghị ọnụọgụgụ ugbu a. Tinye ọnụọgụgụ 6.,No digits yet. Type 6 digits.,App phrase,draft
+codeNeedsSix,ig-codeNeedsSix.m4a,Buru ụzọ tinye ọnụọgụgụ 6 niile.,Type all 6 digits first.,App phrase,draft
+keypadReadBack,ig-keypadReadBack.m4a,Gụghachi,Read back,App phrase,draft
+joinUnder18Note,ig-joinUnder18Note.m4a,Erubeghị 18? Onye nkuzi gị ga-arịọ nne na nna ma ọ bụ onye na-elekọta gị ka ha kwenye tupu ejikọta klaasị gị. Ruo mgbe ahụ ị ka nwere ike ịgụ peeji.,Under 18? Your teacher will ask a parent or guardian to agree before your class is linked. Until then you can still read pages.,App phrase,draft
+joinButton,ig-joinButton.m4a,Banye na klaasị,Join class,App phrase,draft
+joinNoCode,ig-joinNoCode.m4a,Enwebeghị m koodu,I don’t have a code yet,App phrase,draft
+joinedTitle,ig-joinedTitle.m4a,Ị banyela!,You’re in!,App phrase,draft
+joinedRightClass,ig-joinedRightClass.m4a,"Nke a ọ bụ klaasị ziri ezi? Ọ bụrụ na ọ bụghị, gwa onye nkuzi gị. Naanị onye nkuzi gị nwere ike ibuga gị na klaasị ọzọ.","Is this the right class? If not, tell your teacher. Only your teacher can move you to a different class.",App phrase,draft
+joinedWaiting,ig-joinedWaiting.m4a,A na-eche ka nne na nna gị ma ọ bụ onye na-elekọta gị kwenye. Onye nkuzi gị ga-ajụ ha.,Waiting for your parent or guardian to agree. Your teacher will ask them.,App phrase,draft
+startReading,ig-startReading.m4a,Malite ịgụ,Start reading,App phrase,draft
+changeClassTitle,ig-changeClassTitle.m4a,Gbanwee klaasị,Change class,App phrase,draft
+changeClassNow,ig-changeClassNow.m4a,Klaasị gị ugbu a,Your class now,App phrase,draft
+teacherCodeNeededTitle,ig-teacherCodeNeededTitle.m4a,Onye nkuzi gị kwesịrị ime nke a,Your teacher needs to do this,App phrase,draft
+teacherCodeBody,ig-teacherCodeBody.m4a,Rịọ onye nkuzi gị ka ha tinye koodu onye nkuzi ha. Ọ dị na peeji onye nkuzi Magana ha.,Ask your teacher to enter their teacher code. It’s on their Magana teacher page.,App phrase,draft
+newClassCodeTitle,ig-newClassCodeTitle.m4a,Ugbu a koodu klaasị ọhụrụ,Now the new class’s code,App phrase,draft
+confirmLabel,ig-confirmLabel.m4a,Kwado,Confirm,App phrase,draft
+teacherCodeLockNote,ig-teacherCodeLockNote.m4a,Koodu ezighị ezi ugboro 3? Magana na-eche nkeji 5 tupu ị nwaa ọzọ.,Wrong code 3 times? Magana waits 5 minutes before you can try again.,App phrase,draft
+goalsTitle,ig-goalsTitle.m4a,Gịnị ka ị ga-achọ ime?,What would you like to do?,App phrase,draft
+goalsBody,ig-goalsBody.m4a,Họrọ ọnụọgụgụ ọ bụla masịrị gị.,Choose as many as you like.,App phrase,draft
+goalJamb,ig-goalJamb.m4a,Kwadebe maka JAMB,Prepare for JAMB,App phrase,draft
+goalJambDetail,ig-goalJambDetail.m4a,"Omume dị ka ajụjụ ochie: Bekee, Mgbakọ na mwepụ na ndị ọzọ","Past-question style practice: English, Maths and more",App phrase,draft
+goalWaec,ig-goalWaec.m4a,Kwadebe maka iweghachi WAEC ma ọ bụ NECO,Prepare for WAEC or NECO resit,App phrase,draft
+goalWaecDetail,ig-goalWaecDetail.m4a,"Omume site n'isiokwu, n'ọkwa SS3","Practice by subject, at SS3 level",App phrase,draft
+goalReading,ig-goalReading.m4a,Mee omume ịgụ akwụkwọ,Practise reading,App phrase,draft
+goalReadingDetail,ig-goalReadingDetail.m4a,"Obere akụkụ na akụkọ, a gụrụ ha gị na gị","Short passages and stories, read with you",App phrase,draft
+goalSkills,ig-goalSkills.m4a,Mụta nkà ọhụrụ,Learn new skills,App phrase,draft
+goalSkillsDetail,ig-goalSkillsDetail.m4a,"Nkà ekwentị, ịgagharị, ihe ndabere ego","Phone skills, getting around, money basics",App phrase,draft
+goalPapers,ig-goalPapers.m4a,Naanị gụọ akwụkwọ m,Just read my papers,App phrase,draft
+goalPapersDetail,ig-goalPapersDetail.m4a,"Akwụkwọ ozi, ụgwọ, akara ọgwụ","Letters, bills, medicine labels",App phrase,draft
+goalsNote,ig-goalsNote.m4a,Ị nwere ike ịgbanwe ha oge ọ bụla na Ntọala. Ọ dịghị mkpa onye nkuzi.,You can change these any time in Settings. No teacher needed.,App phrase,draft
+saveLabel,ig-saveLabel.m4a,Chekwaa,Save,App phrase,draft
+waitingBanner,ig-waitingBanner.m4a,A na-eche ka nne na nna gị ma ọ bụ onye na-elekọta gị kwenye. Ruo mgbe ahụ ị nwere ike ịgụ peeji.,Waiting for your parent or guardian to agree. Until then you can read pages.,App phrase,draft
+removedNotice,ig-removedNotice.m4a,Onye nkuzi gị wepụrụ ekwentị a na klaasị ahụ. Ị ka nwere ike ịgụ peeji.,Your teacher removed this phone from the class. You can still read pages.,App phrase,draft
+settingsGoals,ig-settingsGoals.m4a,Ebumnuche m,My goals,App phrase,draft
+settingsNoClass,ig-settingsNoClass.m4a,Anọghị na klaasị,Not in a class,App phrase,draft
+practiceLevelTitle,ig-practiceLevelTitle.m4a,Ọkwa omume m,My practice level,App phrase,draft
+msg_unreadable_pdf,ig-msg_unreadable_pdf.m4a,Enweghị m ike imeghe PDF ahụ. Biko nwalee faịlụ ọzọ.,I couldn't open that PDF. Please try another file.,App phrase,draft
+msg_pdf_password_needed,ig-msg_pdf_password_needed.m4a,Akpọchiri PDF a. Pịnye okwuntughe ya: ọ na-anọkarị n'ozi ịmeel bịara ya.,This PDF is locked. Type its password: it is often in the email that came with it.,App phrase,draft
+msg_pdf_password_wrong,ig-msg_pdf_password_wrong.m4a,Okwuntughe ahụ emegheghị PDF ahụ. Biko lelee ya ma nwaa ọzọ.,That password didn't open the PDF. Please check it and try again.,App phrase,draft
+msg_pdf_too_long,ig-msg_pdf_too_long.m4a,PDF a dị ogologo karịa. Enwere m ike ịgụ ihe ruru peeji 20 n'otu oge.,This PDF is too long. I can read up to 20 pages at a time.,App phrase,draft
+readPdf,ig-readPdf.m4a,Gụọ PDF,Read a PDF,App phrase (also used as pdfTitle),draft
+readPdfDetail,ig-readPdfDetail.m4a,"Akwụkwọ ndekọ ụlọ akụ, nsonaazụ ma ọ bụ akwụkwọ ozi e zitere na ekwentị gị","A bank statement, result or letter sent to your phone",App phrase,draft
+pdfBody,ig-pdfBody.m4a,"Họrọ PDF na ekwentị gị. Ị nwekwara ike imeghe ya site na WhatsApp, Gmail ma ọ bụ Files site na “Mepee na Magana” ma ọ bụ Kesaa.","Choose a PDF on your phone. You can also open one from WhatsApp, Gmail or Files with “Open with Magana” or Share.",App phrase,draft
+pdfChoose,ig-pdfChoose.m4a,Họrọ PDF,Choose a PDF,App phrase,draft
+pdfReading,ig-pdfReading.m4a,A na-agụ PDF ahụ. Ndekọ ogologo na-ewe obere oge.,Reading the PDF. Long statements take a little while.,App phrase,draft
+pdfPasswordTitle,ig-pdfPasswordTitle.m4a,Akpọchiri PDF a,This PDF is locked,App phrase,draft
+pdfPasswordBody,ig-pdfPasswordBody.m4a,"Pịnye okwuntughe ya. Ụlọ akụ na-ezitekarị ya n'otu ozi ịmeel ahụ, ma ọ bụ ọ bụ akụkụ nke nọmba ekwentị gị ma ọ bụ ụbọchị ọmụmụ gị.","Type its password. Banks often send it in the same email, or it's part of your phone number or date of birth.",App phrase,draft
+pdfPasswordLabel,ig-pdfPasswordLabel.m4a,Okwuntughe PDF,PDF password,App phrase,draft
+pdfPasswordNote,ig-pdfPasswordNote.m4a,"Magana na-eji okwuntughe a naanị imeghe faịlụ a, wee chefuo ya. A naghị echekwa ya. Magana anaghị ajụ PIN ụlọ akụ gị ma ọ bụ okwuntughe ngwa gị.","Magana uses this password only to open this file, then forgets it. It is never saved. Magana never asks for your bank PIN or app password.",App phrase,draft
+pdfOpen,ig-pdfOpen.m4a,Mepee PDF ahụ,Open the PDF,App phrase,draft
+pdfPasswordEmpty,ig-pdfPasswordEmpty.m4a,Buru ụzọ pịnye okwuntughe.,Type the password first.,App phrase,draft
+pdfPasswordReadBack,ig-pdfPasswordReadBack.m4a,Gụghachi ya,Read back,App phrase,draft
+pdfNotChosen,ig-pdfNotChosen.m4a,A họrọghị PDF ọ bụla.,No PDF chosen.,App phrase,draft
+msg_small_print,ig-msg_small_print.m4a,"Ihe e dere na foto a pere mpe nke ukwuu ma ọ bụ adịghị ahụ nke ọma, ya mere enwere m ike ịhapụ ụfọdụ. Bịaruo ekwentị nso, ma ọ bụ mepee PDF ahụ n'onwe ya ma ọ bụrụ na i nwere ya.","The print is very small or faint in this photo, so I may miss some of it. Move the phone closer, or open the PDF itself if you have it.",App phrase,draft
+msg_handwritten_page,ig-msg_handwritten_page.m4a,"Peeji a dị ka e ji aka dee ya. Ihe e ji aka dee na-esiri m ike, ya mere enwere m ike ịgụhie okwu. A na-agụ nọmba naanị mgbe o doro m anya.","This page looks handwritten. Handwriting is hard for me, so I may get words wrong. Numbers are only read when I'm sure.",App phrase,draft
+msg_mixed_page,ig-msg_mixed_page.m4a,Akụkụ peeji a dị ka e ji aka dee ya. Enwere m ike ịgụhie akụkụ ndị ahụ. A na-agụ nọmba ebe ahụ naanị mgbe o doro m anya.,Some of this page looks handwritten. I may get those parts wrong. Numbers there are only read when I'm sure.,App phrase,draft
+msg_handwritten_prescription,ig-msg_handwritten_prescription.m4a,Nke a dị ka e ji aka dee ya n'akwụkwọ ahụike. Agaghị m agụ ọgwụ ma ọ bụ ọnụọgụ e ji aka dee. Biko rịọ onye na-ere ọgwụ ma ọ bụ nọọsụ ka ha gụọrọ gị ya.,This looks like handwriting on a health paper. I won't read handwritten medicines or doses. Please ask the pharmacist or nurse to read it to you.,App phrase,draft
+msg_money_amounts_unreliable,ig-msg_money_amounts_unreliable.m4a,"Enweghị m ike ịgụ ego ndị dị na peeji a nke ọma. Biko mepee PDF site na ngwa ụlọ akụ gị ma ọ bụ ozi ịmeel, ma ọ bụ jụọ onye ị tụkwasịrị obi.","I can't read the amounts on this page reliably. Please open the PDF from your bank's app or email, or ask someone you trust.",App phrase,draft
+msg_reading_incomplete,ig-msg_reading_incomplete.m4a,Ọgụgụ a ezughị ezu. Aga m agụ naanị akụkụ ndị m nwere ike ịlele.,This reading is incomplete. I'll read only the parts I could check.,App phrase,draft
+headingLabel,ig-headingLabel.m4a,Isiokwu,Heading,App phrase (also used as jumpHeadings),draft
+nextColumn,ig-nextColumn.m4a,Kọlụm na-esote,Next column,App phrase,draft
+lastColumn,ig-lastColumn.m4a,Nke a bụ kọlụm ikpeazụ.,This is the last column.,App phrase,draft
+jumpColumns,ig-jumpColumns.m4a,Kọlụm,Columns,App phrase,draft
+jumpTables,ig-jumpTables.m4a,Tebụl,Tables,App phrase,draft
+noHeadings,ig-noHeadings.m4a,Ahụghị m isiokwu ọ bụla na peeji a.,I didn't find any headings on this page.,App phrase,draft
+noColumns,ig-noColumns.m4a,Peeji a nwere otu kọlụm.,This page has one column.,App phrase,draft
+noTables,ig-noTables.m4a,Peeji a enweghị tebụl.,This page has no tables.,App phrase,draft
+mapNow,ig-mapNow.m4a,ugbu a,now,App phrase,draft
+mapNext,ig-mapNext.m4a,na-esote,next,App phrase,draft
+spellWord,ig-spellWord.m4a,Sụpee okwu,Spell word,App phrase,draft
+spellNone,ig-spellNone.m4a,Enweghị okwu akara na ahịrị a.,No marked words on this line.,App phrase,draft
+askSomeone,ig-askSomeone.m4a,Jụọ mmadụ,Ask someone,App phrase,draft
+msg_letters_ha,ig-msg_letters_ha.m4a,"Peeji Hausa. Enwere m ike ịfụ mkpụrụedemede dịka ƙ, ɗ na ɓ. Okwu ndị e debere akara nwere ike inwe otu n'ime ha. Sụpee okwu ma ọ bụ lelee ya na mmadụ.","Hausa page. I can miss letters like ƙ, ɗ and ɓ. Marked words may have one of these. Spell a word or check it with someone.",App phrase,draft
+msg_letters_yo,ig-msg_letters_yo.m4a,"Peeji Yorùbá. Enwere m ike ịfụ mkpụrụedemede dịka ẹ, ọ na ṣ, na akara ụda. Okwu ndị e debere akara nwere ike inwe otu n'ime ha. Sụpee okwu ma ọ bụ lelee ya na mmadụ.","Yorùbá page. I can miss letters like ẹ, ọ and ṣ, and tone marks. Marked words may have one of these. Spell a word or check it with someone.",App phrase,draft
+msg_letters_ig,ig-msg_letters_ig.m4a,"Peeji Igbo. Enwere m ike ịfụ mkpụrụedemede dịka ị, ọ na ụ. Okwu ndị e debere akara nwere ike inwe otu n'ime ha. Sụpee okwu ma ọ bụ lelee ya na mmadụ.","Igbo page. I can miss letters like ị, ọ and ụ. Marked words may have one of these. Spell a word or check it with someone.",App phrase,draft
+msg_cut_off_top,ig-msg_cut_off_top.m4a,Akụkụ peeji ahụ bepụrụ n'elu.,Part of the page is cut off at the top.,App phrase,draft
+msg_cut_off_bottom,ig-msg_cut_off_bottom.m4a,Akụkụ peeji ahụ bepụrụ n'ala.,Part of the page is cut off at the bottom.,App phrase,draft
+msg_cut_off_left,ig-msg_cut_off_left.m4a,Akụkụ peeji ahụ bepụrụ n'aka ekpe.,Part of the page is cut off at the left.,App phrase,draft
+msg_cut_off_right,ig-msg_cut_off_right.m4a,Akụkụ peeji ahụ bepụrụ n'aka nri.,Part of the page is cut off at the right.,App phrase,draft
+offlineBanner,ig-offlineBanner.m4a,Enweghị ịntanetị. Ana m agụ ya na ekwentị a.,No internet. Reading on this phone.,App phrase,draft
+offlineBannerSlow,ig-offlineBannerSlow.m4a,Sava Magana anaghị aza. Ana m agụ ya na ekwentị a.,Magana's server isn't answering. Reading on this phone.,App phrase,draft
+offlineNote,ig-offlineNote.m4a,"Ọgụgụ bụ isi naanị. Tebụl, kọlụm na Nkọwa chọrọ ịntanetị.","Basic reading only. Tables, columns and Explain need internet.",App phrase,draft
+offlineQueued,ig-offlineQueued.m4a,Aga m edebe peeji a ma gụchaa ya mgbe ịntanetị lọghachiri.,I'll keep this page and do a full reading when you're back online.,App phrase,draft
+fullReadingWhenOnline,ig-fullReadingWhenOnline.m4a,Ọgụgụ zuru ezu mgbe ịntanetị dị,Full reading when online,App phrase,draft
+cueTiltToward,ig-cueTiltToward.m4a,Hulata elu ekwentị gaa n'ebe ị nọ,Tilt the top of the phone toward you,App phrase,draft
+cueTiltAway,ig-cueTiltAway.m4a,Hulata elu ekwentị pụọ n'ebe ị nọ,Tilt the top of the phone away from you,App phrase,draft
+cueBlurry,ig-cueBlurry.m4a,Ọ dị nzuzu. Kwụsị ọtọ,Blurry. Hold still,App phrase,draft
+readerCommandHelp,ig-readerCommandHelp.m4a,"Ị nwere ike ikwu: next, back, repeat, pause, read, next column, headings ma ọ bụ spell. Kwuo iwu n'asụsụ Bekee ugbu a.","You can say: next, back, repeat, pause, read, next column, headings, spell or report a problem. Say commands in English for now.",App phrase,draft
+explainInEnglish,ig-explainInEnglish.m4a,Nụ ya n'asụsụ Bekee,Hear it in English,App phrase,draft
+msg_progress_shared,ig-msg_progress_shared.m4a,E zigara onye nkuzi gị ngụkọta gị.,Your totals were shared with your teacher.,App phrase,draft
+helpCheckPage,ig-helpCheckPage.m4a,Ị gụrụ peeji a n'onwe gị?,Did you read this page on your own?,App phrase,draft
+helpCheckPdf,ig-helpCheckPdf.m4a,Ị gụrụ PDF a n'onwe gị?,Did you read this PDF on your own?,App phrase,draft
+helpCheckQuiz,ig-helpCheckQuiz.m4a,Ị mere ule a n'onwe gị?,Did you do this quiz on your own?,App phrase,draft
+helpCheckHow,ig-helpCheckHow.m4a,"Kwuo “ee”, “enyemaka” ma ọ bụ “wụfee”, ma ọ bụ pịa.","Say “yes”, “some help” or “skip”, or tap.",App phrase,draft
+helpOwn,ig-helpOwn.m4a,"Ee, n'onwe m","Yes, on my own",App phrase,draft
+helpOwnDetail,ig-helpOwnDetail.m4a,Enweghị enyemaka onye na-ahụ ụzọ,No sighted help,App phrase,draft
+helpSome,ig-helpSome.m4a,Achọrọ m enyemaka ntakịrị,I needed some help,App phrase,draft
+helpSomeDetail,ig-helpSomeDetail.m4a,Mmadụ nyere aka n'otu akụkụ,Someone helped with part of it,App phrase,draft
+helpSkip,ig-helpSkip.m4a,Wụfee,Skip,App phrase,draft
+helpSkipDetail,ig-helpSkipDetail.m4a,Ajụla taa,Don’t ask today,App phrase,draft
+helpCheckNoteClass,ig-helpCheckNoteClass.m4a,"A na-ajụ naanị otu ugboro n'ụbọchị. Onye nkuzi gị na-ahụ naanị ngụkọta, ọ bụghị ihe ị gụrụ.","Asked once a day at most. Your teacher sees only the totals, never what you read.",App phrase,draft
+helpCheckNotePhone,ig-helpCheckNotePhone.m4a,A na-ajụ naanị otu ugboro n'ụbọchị. Azịza gị na-anọ na ekwentị a.,Asked once a day at most. Your answers stay on this phone.,App phrase,draft
+helpCheckNotHeard,ig-helpCheckNotHeard.m4a,"Biko kwuo ee, enyemaka ma ọ bụ wụfee, ma ọ bụ pịa azịza gị.","Please say yes, some help or skip, or tap your answer.",App phrase,draft
+helpCheckThanks,ig-helpCheckThanks.m4a,Daalụ.,Thank you.,App phrase,draft
+msg_report_sent,ig-msg_report_sent.m4a,Daalụ. Akụkọ gị erutela ndị otu Magana.,Thank you. Your report went to the Magana team.,App phrase,draft
+msg_voice_note_adults_only,ig-msg_voice_note_adults_only.m4a,Ozi olu bụ naanị maka ndị okenye. Họrọ ihe mere n'ndepụta.,Voice notes are for adults only. Choose what went wrong from the list.,App phrase,draft
+msg_voice_note_unreadable,ig-msg_voice_note_unreadable.m4a,Enweghị m ike iji ozi olu ahụ. Biko dekọọ ya ọzọ ma ọ bụ zipu akụkọ ahụ na-enweghị ya.,I couldn't use that voice note. Please record it again or send the report without it.,App phrase,draft
+msg_voice_note_too_long,ig-msg_voice_note_too_long.m4a,Ozi olu ahụ ogologo karịa. Biko mee ka ọ dị n'okpuru sekọnd 60.,That voice note is too long. Please keep it under 60 seconds.,App phrase,draft
+reportGoesTo,ig-reportGoesTo.m4a,Ọ na-aga n'aka ndị otu Magana,Goes to the Magana team,App phrase,draft
+reportWhat,ig-reportWhat.m4a,Gịnị mere?,What went wrong?,App phrase,draft
+reportReadWrong,ig-reportReadWrong.m4a,Ọ gụrụ ihe ụfọdụ n'ụzọ na-ezighi ezi,It read something wrong,App phrase,draft
+reportHardToUse,ig-reportHardToUse.m4a,Ọ siri ike iji,It was hard to use,App phrase,draft
+reportTooSlow,ig-reportTooSlow.m4a,Ọ dị nwayọ nke ukwuu,It was too slow,App phrase,draft
+reportRecord,ig-reportRecord.m4a,Dekọọ ozi olu (ruo sekọnd 60),Record a voice note (up to 60 seconds),App phrase,draft
+reportDeleteVoice,ig-reportDeleteVoice.m4a,Hichapụ ozi olu,Delete voice note,App phrase,draft
+reportIncludeText,ig-reportIncludeText.m4a,Tinye ederede peeji a,Include this page’s text,App phrase,draft
+reportIncludeTextNote,ig-reportIncludeTextNote.m4a,Ọ gbanyụrụ ma ọ bụrụ na ị gbanyeghị ya. A naghị eziga foto ọ bụla.,Off unless you switch it on. Photos are never sent.,App phrase,draft
+reportSend,ig-reportSend.m4a,Zipu akụkọ,Send report,App phrase,draft
+reportChooseFirst,ig-reportChooseFirst.m4a,Buru ụzọ họrọ ihe mere.,Choose what went wrong first.,App phrase,draft
+reportNoMic,ig-reportNoMic.m4a,Magana enweghị ike iji igwe okwu. Ị ka nwere ike izipu akụkọ ahụ.,Magana can't use the microphone. You can still send the report.,App phrase,draft
+msg_offline_no_confidence,ig-msg_offline_no_confidence.m4a,"Ekwentị a enweghị ike ịkọ otú o si ji n'aka banyere okwu ọ bụla, ya mere a na-agụ nọmba ọ bụla dị ka “nọmba edoghị anya”. Lelee akwụkwọ ndị dị mkpa mgbe ị nọ n'ịntanetị, ma ọ bụ ya na mmadụ.","This phone can't say how sure it is of each word, so every number is read as “unclear number”. Check important papers when you are online, or with a person.",App phrase,draft
+msg_daily_limit,ig-msg_daily_limit.m4a,Ị gụọla ọtụtụ peeji taa. Magana nwere ike ịgụkwu echi. Peeji ndị ị chekwara dị n'Ọbá akwụkwọ m.,You've read a lot of pages today. Magana can read more tomorrow. Pages you saved are in My library.,App phrase,draft
+msg_edge_cut_left,ig-msg_edge_cut_left.m4a,Ebipụla ụfọdụ okwu n'akụkụ aka ekpe.,Some words at the left edge are cut off.,App phrase,draft
+msg_edge_cut_right,ig-msg_edge_cut_right.m4a,Ebipụla ụfọdụ okwu n'akụkụ aka nri.,Some words at the right edge are cut off.,App phrase,draft
+msg_faint_print,ig-msg_faint_print.m4a,"Ederede ahụ adịghị ahụ anya nke ọma, ya mere eme m ka ọ gbaa ọchịchịrị ka m gụọ ya. Lelee nọmba ndị dị mkpa ya na mmadụ.","The print is faint, so I darkened it to read it. Check important numbers with a person.",App phrase,draft
+summaryAsk,ig-summaryAsk.m4a,Kwuo “what's unclear” ka ị nụ ebe ha dị.,Say “what's unclear” to hear where.,App phrase,draft
+unclearMark,ig-unclearMark.m4a,Edoghị anya.,Unclear.,App phrase,draft
+whatsUnclear,ig-whatsUnclear.m4a,Gịnị edoghị anya?,What's unclear?,App phrase,draft
+whatsUnclearNone,ig-whatsUnclearNone.m4a,Ọ dịghị ihe edoghị anya na peeji a.,Nothing on this page is unclear.,App phrase,draft
+msg_barcode_skipped,ig-msg_barcode_skipped.m4a,Awụfere m barcode dị na peeji a.,I skipped a barcode on this page.,App phrase,draft
+touchTapAgain,ig-touchTapAgain.m4a,Pịa ya ọzọ ka imeghe ya.,Tap again to open.,App phrase,draft
+touchExplore,ig-touchExplore.m4a,"Metụ aka ka ị nụ, ma ọ bụ kpọọ aha.","Touch to explore, or say a name.",App phrase,draft
+touchToHear,ig-touchToHear.m4a,Metụ aka ka ị nụ,Touch to hear,App phrase,draft
+touchToHearDetail,ig-touchToHearDetail.m4a,Metụ ihe aka ka ị nụ ihe ọ bụ; pịa ya ọzọ ka imeghe ya. A naghị eji ya mgbe VoiceOver ma ọ bụ TalkBack na-arụ ọrụ.,Touch something to hear what it is; tap it again to open it. Not used while VoiceOver or TalkBack is on.,App phrase,draft
+touchToHearOn,ig-touchToHearOn.m4a,Metụ aka ka ị nụ: ọ na-arụ ọrụ,Touch to hear: on,App phrase,draft
+touchToHearOff,ig-touchToHearOff.m4a,Metụ aka ka ị nụ: ọ naghị arụ ọrụ,Touch to hear: off,App phrase,draft
+touchIntroTitle,ig-touchIntroTitle.m4a,Iji Magana site n'imetụ aka,Using Magana by touch,App phrase,draft
+touchIntroBody,ig-touchIntroBody.m4a,"Ihe na-agụ ihuenyo ekwentị gị anọghị na-arụ ọrụ, ya mere Magana ga-eji olu duzie gị.","Your phone's screen reader is off, so Magana will talk you through it.",App phrase,draft
+touchStep1Body,ig-touchStep1Body.m4a,Fee mkpịsị aka gị. Magana ga-ekwu ihe dị n'okpuru ya.,Slide your finger. Magana says what's under it.,App phrase,draft
+touchStep2Title,ig-touchStep2Title.m4a,Pịa ọzọ ka imeghe,Tap again to open,App phrase,draft
+touchStep2Body,ig-touchStep2Body.m4a,Ịpị nke abụọ n'otu ihe ahụ na-emeghe ya.,A second tap on the same thing opens it.,App phrase,draft
+touchStep3Title,ig-touchStep3Title.m4a,Ma ọ bụ kwuo ya,Or just say it,App phrase,draft
+touchStep3Body,ig-touchStep3Body.m4a,"Pịa bọtịnụ odo ma kpọọ aha, dịka “medicine label”.","Press the yellow button and say a name, like “medicine label”.",App phrase,draft
+touchPractice,ig-touchPractice.m4a,Mee omume ebe a,Practice here,App phrase,draft
+touchPracticeBody,ig-touchPracticeBody.m4a,Metụ igbe a aka. Mgbe ahụ pịa ya ọzọ.,Touch this box. Then tap it again.,App phrase,draft
+touchPracticeDone,ig-touchPracticeDone.m4a,Ọ dị mma. Otu a ka esi emeghe ihe.,Well done. That is how you open things.,App phrase,draft
+touchGotIt,ig-touchGotIt.m4a,"Aghọtala m, ka anyị malite","Got it, start",App phrase,draft
+touchUseScreenReader,ig-touchUseScreenReader.m4a,M na-eji VoiceOver / TalkBack,I use VoiceOver / TalkBack,App phrase,draft
+sayName,ig-sayName.m4a,Kpọọ aha,Say a name,App phrase,draft
+framingGuidanceTablet,ig-framingGuidanceTablet.m4a,"Tọgbọ peeji ahụ n'ala ebe ìhè dị mma, jide tablet ahụ n'elu ya. Aga m agwa gị otú ị ga-esi bugharịa ya, ma see foto ahụ mgbe peeji ahụ niile kwụsiri ọtọ. Ị nwekwara ike ịpịa See foto.","Lay the page flat in good light and hold the tablet above it. I'll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.",App phrase,draft
+readPageTablet,ig-readPageTablet.m4a,Tọgbọ peeji ahụ. Jide tablet n'elu ya.,Lay the page flat. Hold the tablet above it.,App phrase,draft
+zoomIn,ig-zoomIn.m4a,Mkpụrụedemede buru ibu,Bigger text,App phrase,draft
+zoomOut,ig-zoomOut.m4a,Mkpụrụedemede dị nta,Smaller text,App phrase,draft
+highContrast,ig-highContrast.m4a,Ọdịiche agba siri ike,High contrast,App phrase,draft
+pageViewLabel,ig-pageViewLabel.m4a,"Akwụkwọ gị, egosipụtara ahịrị a na-agụ","Your page, current line highlighted",App phrase,draft
+missedLineLabel,ig-missedLineLabel.m4a,Ahịrị m nwere ike ịhapụ,A line I may have missed,App phrase,draft
+pictureTaken,ig-pictureTaken.m4a,E sere foto. A na m agụ ya…,Picture taken. Reading…,App phrase,draft
+stillReading,ig-stillReading.m4a,A ka na m agụ ya…,Still reading…,App phrase,draft
+noTextMoveBack,ig-noTextMoveBack.m4a,Ahụghị m ederede. Nwaa ibuli ekwentị ahụ elu ntakịrị.,I couldn't find text. Try moving the phone further away.,App phrase,draft
+torchGlareOff,ig-torchGlareOff.m4a,"Ọkụ ahụ na-enwu n'elu akwụkwọ ahụ, ya mere m gbanyụrụ ya.","The light was shining back off the page, so I turned it off.",App phrase,draft
+offlineBannerSendFailed,ig-offlineBannerSendFailed.m4a,Foto ahụ eruteghị sava Magana (nsogbu njikọ). A na m agụ ya na ekwentị a.,The photo didn't reach Magana's server (connection problem). Reading on this phone.,App phrase,draft
+offlineBannerServerError,ig-offlineBannerServerError.m4a,Sava Magana nwere nsogbu na peeji a. A na m agụ ya na ekwentị a.,Magana's server had a problem with this page. Reading on this phone.,App phrase,draft
+offlineBannerBusy,ig-offlineBannerBusy.m4a,Sava Magana nọ n'ọrụ n'oge a. A na m agụ ya na ekwentị a.,Magana's server is busy this minute. Reading on this phone.,App phrase,draft
+offlineBannerDailyLimit,ig-offlineBannerDailyLimit.m4a,Ị jirila ọgụgụ sava nke taa. A na m agụ ya na ekwentị a; sava ga-agụ ọzọ echi.,You've used today's server readings. Reading on this phone; the server reads again tomorrow.,App phrase,draft
+msg_handwriting_read_anyway,ig-msg_handwriting_read_anyway.m4a,"Agụrụ m ihe e ji aka dee a ka m nwere ike. O nwere ike inwe mperi, agụghịkwa m nọmba ya.","I read this handwriting as best I can. It may contain mistakes, and I don't read its numbers.",App phrase,draft
+msg_offline_health_numbers,ig-msg_offline_health_numbers.m4a,"Na-enweghị ịntanetị, ekwentị a nwere ike iwere ihe e ji aka dee dị ka ihe e biri ebi, ya mere anaghị m agụ nọmba n'akwụkwọ ahụike. Gụọ ya ọzọ mgbe ị nọ n'ịntanetị, ma ọ bụ jụọ onye na-ere ọgwụ ma ọ bụ nọọsụ.","Without the internet, this phone may take handwriting for print, so I don't read numbers on health papers. Read it again when you are online, or ask the pharmacist or nurse.",App phrase,draft
+handwritingOffer,ig-handwritingOffer.m4a,Nke a dị ka e ji aka dee ya. Gụọ ya otú ọ dị? O nwere ike inwe mperi.,This looks handwritten. Read it anyway? It may contain mistakes.,App phrase,draft
+readItAnyway,ig-readItAnyway.m4a,Gụọ ya otú ọ dị,Read it anyway,App phrase,draft
+serverWaking,ig-serverWaking.m4a,"Magana na-eteta, nwa oge…","Magana is waking up, one moment…",App phrase (also used as msg_server_waking),draft
+offlineBannerWaking,ig-offlineBannerWaking.m4a,"Sava Magana na-eteta, ya mere a gụrụ peeji a na ekwentị a.","Magana's server was waking up, so this page was read on this phone.",App phrase,draft
+voiceTitle,ig-voiceTitle.m4a,Olu,Voice,App phrase,draft
+voiceBest,ig-voiceBest.m4a,Olu kacha mma na ekwentị a,Best voice on this phone,App phrase,draft
+voiceBestDetail,ig-voiceBestDetail.m4a,"Magana ga-ahọrọ: Bekee Naịjirịa mbụ, mgbe ahụ olu kacha doo anya.","Magana chooses: Nigerian English first, then the clearest voice.",App phrase,draft
+voicePlaySample,ig-voicePlaySample.m4a,Kpọọ ihe atụ,Play sample,App phrase,draft
+voiceSample,ig-voiceSample.m4a,"Ndewo, abụ m Magana. M ga-agụrụ gị peeji gị.","Hello, I am Magana. I will read your pages to you.",App phrase,draft
+voiceSpeedTitle,ig-voiceSpeedTitle.m4a,Ọsọ,Speed,App phrase,draft
+voiceGetBetter,ig-voiceGetBetter.m4a,Nweta olu doro anya karịa,Get a clearer voice,App phrase,draft
+voiceHintAndroid,ig-voiceHintAndroid.m4a,"Enwere ike ibudata olu doro anya karịa: Bekee (Naịjirịa). Mepee Ntọala ekwentị gị, chọọ Speech Services by Google. Họrọ Install voice data, mgbe ahụ English (Nigeria), budata ya. Mgbe ahụ họrọ ya na Magana: Ntọala, Olu.","A clearer voice can be downloaded: English (Nigeria). Open your phone's Settings and search for Speech Services by Google. Choose Install voice data, then English (Nigeria), and download it. Then choose it in Magana: Settings, Voice.",App phrase,draft
+voiceHintIos,ig-voiceHintIos.m4a,"Enwere ike ibudata olu doro anya karịa. Mepee Ntọala iPhone, mgbe ahụ Accessibility, Spoken Content, Voices, English, budata olu Enhanced ma ọ bụ Premium. Mgbe ahụ họrọ ya na Magana: Ntọala, Olu.","A clearer voice can be downloaded. Open the iPhone's Settings, then Accessibility, Spoken Content, Voices, English, and download an Enhanced or Premium voice. Then choose it in Magana: Settings, Voice.",App phrase,draft
+tourTitle,ig-tourTitle.m4a,Njem nlegharị anya dị mkpirikpi,A quick tour,App phrase,draft
+tourScript,ig-tourScript.m4a,"Nnọọ na Magana. Magana na-agụpụta peeji e biri ebi n'olu dara ụda: ọrụ ụlọ akwụkwọ, akara ọgwụ, akwụkwọ ozi na akwụkwọ ụlọ akụ. A na-agụ ọnụọgụgụ dịka e biri ha, Magana na-agwakwa gị mgbe ihe adịghị edo anya. Na ihuenyo mbụ, ahịrị elu nwere bọtịnụ asụsụ na ntọala. N'okpuru ya bụ bọtịnụ kacha ukwuu: Gụọ peeji. N'okpuru ya bụ nhọrọ gị ndị ọzọ. Na ala ala bụ Jide ka ị kwuo: pịa ma jide ya, kwuo ihe ị chọrọ, dịka gụọ peeji, wee hapụ ya. Na ihuenyo ndị ọzọ, bọtịnụ Kwuo aha dị n'ala na-eme otu ihe ahụ. Kwuo gịnị ka m nwere ike ikwu iji nụ nhọrọ ihuenyo ahụ. Ọ bụrụ na TalkBack ma ọ bụ VoiceOver gbanyere, fee aka nri ka ị gaa na bọtịnụ ọzọ, pịa ugboro abụọ iji họrọ. Ọ bụrụ na ọ gbanyụrụ, metụ ihuenyo aka ka ị nụ ihe dị n'okpuru mkpịsị aka gị, pịa ugboro abụọ iji họrọ. Iji gụọ peeji, jide ekwentị n'elu ya: Magana ga-agwa gị otu ị ga-esi bugharịa ya. Ị nwere ike ịnụ njem a ọzọ na Ntọala.","Welcome to Magana. Magana reads printed pages aloud: schoolwork, medicine labels, letters and bank papers. Numbers are read exactly as printed, and Magana tells you when something is unclear. On the home screen, the top line has the language and settings buttons. Below it is the biggest button: Read a page. Under that are your other choices. At the very bottom is Hold to speak: press and hold it, say what you want, like read a page, then let go. On other screens, the Say a name button at the bottom does the same. Say what can I say to hear that screen's choices. With TalkBack or VoiceOver on, swipe right to move to the next button and double tap to choose. With it off, touch the screen to hear what is under your finger, and double tap to choose. To read a page, hold the phone above it: Magana tells you how to move it. You can hear this tour again in Settings.",App phrase,draft
+tourSkip,ig-tourSkip.m4a,Wụfee njem ahụ,Skip the tour,App phrase,draft
+tourAgain,ig-tourAgain.m4a,Nụ njem ahụ ọzọ,Hear the tour again,App phrase,draft
+tourOpen,ig-tourOpen.m4a,Nụ njem ahụ,Hear the tour,App phrase,draft
+tourOpenDetail,ig-tourOpenDetail.m4a,"Ihe Magana na-eme, ebe bọtịnụ dị, na otu e si eji olu na mmetụ aka.","What Magana does, where the buttons are, and how to use voice and touch.",App phrase,draft
+screenNoChoices,ig-screenNoChoices.m4a,Ihuenyo a enweghị bọtịnụ a ga-ahọrọ. Laghachi azụ ka ị gaa n'ihu.,This screen has no buttons to choose. Go back to continue.,App phrase,draft
+aiAssistantSoon,ig-aiAssistantSoon.m4a,"Onye inyeaka ahụike AI na-abịa n'oge na-adịghị anya. Ugbu a, nọọsụ ma ọ bụ onye na-ere ọgwụ ga-akpọghachi gị, ajụjụ akara ihe egwu nke Magana ga-agwakwa gị mgbe ị ga-aga ụlọ ọgwụ ma ọ bụ kpọọ 112.","AI health assistant coming soon. For now, a nurse or pharmacist calls you back, and Magana's own danger-sign questions tell you when to go to a clinic or call 112.",App phrase,draft
+dangerCheckFirst,ig-dangerCheckFirst.m4a,Zaa ajụjụ ole na ole gbasara akara ihe egwu mbụ,Answer a few danger-sign questions first,App phrase,draft
+quickCheckNoteRules,ig-quickCheckNoteRules.m4a,"Azịza gị na-enyere onye ọrụ ahụike aka ikpebi oge ọ ga-akpọ gị. Magana anaghị achọpụta ọrịa. Ọ bụrụ na i nwere akara ihe egwu, Magana ga-agwa gị ka ị gaa ụlọ ọgwụ ugbu a ma ọ bụ kpọọ 112.","Your answers help the health worker decide how soon to call you. Magana does not diagnose. If you have danger signs, Magana tells you to go to a clinic now or call 112.",App phrase,draft
+tpl-medicine_label-take_times_a_day-1,ig-tpl-medicine_label-take_times_a_day-1.m4a,Ṅụọ mkpụrụ ọgwụ,Take {a} tablets {b} times a day,"Health template, part 1 of 3 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_times_a_day-2,ig-tpl-medicine_label-take_times_a_day-2.m4a,ugboro,Take {a} tablets {b} times a day,"Health template, part 2 of 3 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_times_a_day-3,ig-tpl-medicine_label-take_times_a_day-3.m4a,n'ụbọchị.,Take {a} tablets {b} times a day,"Health template, part 3 of 3 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_range_every_range_hours_as_needed-1,ig-tpl-medicine_label-take_range_every_range_hours_as_needed-1.m4a,Ṅụọ mkpụrụ ọgwụ,Take {a} to {b} tablets every {c} to {d} hours as needed,"Health template, part 1 of 5 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_range_every_range_hours_as_needed-2,ig-tpl-medicine_label-take_range_every_range_hours_as_needed-2.m4a,ruo,Take {a} to {b} tablets every {c} to {d} hours as needed,"Health template, part 2 of 5 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_range_every_range_hours_as_needed-3,ig-tpl-medicine_label-take_range_every_range_hours_as_needed-3.m4a,kwa awa,Take {a} to {b} tablets every {c} to {d} hours as needed,"Health template, part 3 of 5 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_range_every_range_hours_as_needed-4,ig-tpl-medicine_label-take_range_every_range_hours_as_needed-4.m4a,ruo,Take {a} to {b} tablets every {c} to {d} hours as needed,"Health template, part 4 of 5 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_range_every_range_hours_as_needed-5,ig-tpl-medicine_label-take_range_every_range_hours_as_needed-5.m4a,dịka achọrọ.,Take {a} to {b} tablets every {c} to {d} hours as needed,"Health template, part 5 of 5 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_every_hours-1,ig-tpl-medicine_label-take_every_hours-1.m4a,Ṅụọ mkpụrụ ọgwụ,Take {a} tablets every {b} hours,"Health template, part 1 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_every_hours-2,ig-tpl-medicine_label-take_every_hours-2.m4a,kwa awa,Take {a} tablets every {b} hours,"Health template, part 2 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-not_more_than_in_hours-1,ig-tpl-medicine_label-not_more_than_in_hours-1.m4a,Ewerela karịa mkpụrụ ọgwụ,Do not take more than {a} tablets in {b} hours,"Health template, part 1 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-not_more_than_in_hours-2,ig-tpl-medicine_label-not_more_than_in_hours-2.m4a,n'ime awa,Do not take more than {a} tablets in {b} hours,"Health template, part 2 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-after_meals-1,ig-tpl-medicine_label-after_meals-1.m4a,Ṅụọ ya mgbe i richara nri.,Take after meals,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-before_meals-1,ig-tpl-medicine_label-before_meals-1.m4a,Ṅụọ ya tupu i rie nri.,Take before meals,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-swallow_whole_with_water-1,ig-tpl-medicine_label-swallow_whole_with_water-1.m4a,Nwere mmiri loo ya dum.,Swallow whole with water,"Health template, part 1 of 1 (the phone says the numbers between parts)",native_reviewed
+tpl-medicine_label-do_not_chew_or_crush-1,ig-tpl-medicine_label-do_not_chew_or_crush-1.m4a,"Atala ya, egwerekwala ya.",Do not chew or crush,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-shake_well-1,ig-tpl-medicine_label-shake_well-1.m4a,Kpatụọ ya nke ọma tupu i jiri ya.,Shake well before use,"Health template, part 1 of 1 (the phone says the numbers between parts)",native_reviewed
+tpl-medicine_label-keep_from_children-1,ig-tpl-medicine_label-keep_from_children-1.m4a,Debe ya ebe aka ụmụaka na-agaghị eru.,Keep out of the reach of children,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-store_below_degrees-1,ig-tpl-medicine_label-store_below_degrees-1.m4a,Chekwaa ya n'okpuru ogo,Store below {a} degrees C,"Health template, part 1 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-store_below_degrees-2,ig-tpl-medicine_label-store_below_degrees-2.m4a,Celsius.,Store below {a} degrees C,"Health template, part 2 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-store_cool_dry-1,ig-tpl-medicine_label-store_cool_dry-1.m4a,Chekwaa ya n’ebe di juu mana mmiri agaghi emetu ya.,Store in a cool dry place,"Health template, part 1 of 1 (the phone says the numbers between parts)",native_reviewed
+tpl-medicine_label-expiry_date-1,ig-tpl-medicine_label-expiry_date-1.m4a,Ubochi mmebi:,Expiry date: {a},"Health template, part 1 of 1 (the phone says the numbers between parts)",native_reviewed
+tpl-medicine_label-adults_and_children_over_years-1,ig-tpl-medicine_label-adults_and_children_over_years-1.m4a,Ndị okenye na ụmụaka karịrị afọ,Adults and children over {a} years,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-external_use_only-1,ig-tpl-medicine_label-external_use_only-1.m4a,Maka iji n'akpụkpọ ahụ naanị.,For external use only,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved

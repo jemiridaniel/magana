@@ -60,3 +60,23 @@ Future<void> screenReaderQuiet({
     );
   }
 }
+
+/// Hold to speak through a Bluetooth headset (docs/BLUETOOTH.md). On Android, speech_to_text
+/// uses the headset's microphone only with the Bluetooth permission, which it asks for only
+/// together with the first microphone permission, and checks once, when it starts. So before
+/// it starts: if a headset is connected and the permission isn't given, it is asked for here.
+/// Without it, the phone's own microphone is used, as before. iPhones need nothing: both
+/// recognisers allow Bluetooth microphones. Replaceable in tests.
+Future<void> Function() prepareBluetoothMicrophone = () async {
+  if (kIsWeb || defaultTargetPlatform != TargetPlatform.android) return;
+  try {
+    if (await _channel.invokeMethod<bool>('bluetoothHeadset') != true) return;
+    if (await _channel.invokeMethod<bool>('bluetoothAllowed') == true) return;
+    final ok = await _channel.invokeMethod<bool>('askBluetooth') ?? false;
+    devLog('speech: Bluetooth headset ${ok ? 'allowed' : 'not allowed'}');
+  } on PlatformException {
+    return;
+  } on MissingPluginException {
+    return;
+  }
+};

@@ -33,7 +33,9 @@ def test_the_first_owner_is_made_once_on_the_server(fresh, monkeypatch, capsys):
     assert team_setup.main(["--email", "x@magana.test", "--name", "X", "--totp-secret", TOTP_SECRET]) == 2
     with accounts.db() as con:
         assert con.execute("UPDATE team_members SET status = 'removed'").rowcount == 1
+    capsys.readouterr()
     assert team_setup.main(["--email", "daniel@magana.test", "--name", "Jemiri Daniel Taiwo"]) == 0
+    assert "daniel@magana.test is a Magana admin." in capsys.readouterr().out  # not "a Magana team Magana admin"
     with accounts.db() as con:
         m = team.member_by_email(con, "daniel@magana.test")
     assert (m["role"], m["status"], m["totp_confirmed_at"]) == ("owner", "active", None)

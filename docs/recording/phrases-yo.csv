@@ -1,0 +1,603 @@
+Phrase ID,File name,Text to record,English meaning,Kind,Text status,Recorded? (yes/no),Notes
+appTitle,yo-appTitle.m4a,Magana,Magana,App phrase,draft
+greeting,yo-greeting.m4a,Ẹ n lẹ́ o,Hello,App phrase,draft
+chooseLanguage,yo-chooseLanguage.m4a,Yan èdè áàpù,Choose app language,App phrase,draft
+settings,yo-settings.m4a,Ètò,Settings,App phrase,draft
+readPage,yo-readPage.m4a,Ka ojú-ìwé kan,Read a page,App phrase,draft
+readPageSubtitle,yo-readPageSubtitle.m4a,"Iṣẹ́ ilé-ìwé, àbájáde ìwòsàn, ìwé àkọsílẹ̀ báǹkì, lẹ́tà — ohunkóhun tí a tẹ̀ jáde","Schoolwork, medical reports, bank statements, letters — anything printed",App phrase,draft
+askQuestion,yo-askQuestion.m4a,Béèrè ìbéèrè,Ask a question,App phrase (also used as askAQuestion),draft
+practiceQuiz,yo-practiceQuiz.m4a,Ìdánrawò ìbéèrè,Practice quiz,App phrase,draft
+myLibrary,yo-myLibrary.m4a,Ilé-ìkàwé mi,My library,App phrase,draft
+everydayPapers,yo-everydayPapers.m4a,Ìwé ojoojúmọ́,Everyday papers,App phrase,draft
+skills,yo-skills.m4a,Ọgbọ́n iṣẹ́,Skills,App phrase,draft
+myScore,yo-myScore.m4a,Máàkì mi,My score,App phrase,draft
+holdToSpeak,yo-holdToSpeak.m4a,Dì í mú kí o sọ̀rọ̀,Hold to speak,App phrase,draft
+holdToSpeakLabel,yo-holdToSpeakLabel.m4a,Dì í mú láti sọ àṣẹ,Hold to speak a command,App phrase,draft
+voiceCommands,yo-voiceCommands.m4a,Àṣẹ ohùn,Voice commands,App phrase,draft
+comingSoonHint,yo-comingSoonHint.m4a,Ó ń bọ̀ láìpẹ́,Coming soon,App phrase,draft
+backToHome,yo-backToHome.m4a,Padà sí ilé,Back to home,App phrase (also used as backHome),draft
+framingGuidance,yo-framingGuidance.m4a,"Tẹ́ ojú-ìwé náà sílẹ̀ níbi tí ìmọ́lẹ̀ dára, kí o sì gbé fóònù sókè lórí rẹ̀ tó ìwọ̀n apá kan. Màá sọ bí o ṣe máa sún un fún ọ, màá sì ya fọ́tò náà nígbà tí gbogbo ojú-ìwé bá dúró jẹ́ẹ́. O tún lè tẹ Ya fọ́tò.","Lay the page flat in good light and hold the phone about one forearm above it. I'll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.",App phrase,draft
+repeat,yo-repeat.m4a,Tún sọ,Repeat,App phrase,draft
+repeatInstructions,yo-repeatInstructions.m4a,Tún gbọ́ ìtọ́sọ́nà,Hear the instructions again,App phrase,draft
+takePhoto,yo-takePhoto.m4a,Ya fọ́tò,Take photo,App phrase,draft
+gallery,yo-gallery.m4a,Àwọn fọ́tò,Gallery,App phrase,draft
+galleryLabel,yo-galleryLabel.m4a,Yan fọ́tò láti inú àwọn fọ́tò,Choose a photo from the gallery,App phrase,draft
+cameraFailed,yo-cameraFailed.m4a,Mi ò lè ṣí kámẹ́rà. Gbìyànjú Àwọn fọ́tò dípò.,I couldn't open the camera. Try Gallery instead.,App phrase,draft
+readingPage,yo-readingPage.m4a,Mo ń ka ojú-ìwé náà. Jọ̀wọ́ dúró.,Reading the page. Please wait.,App phrase,draft
+noTextFound,yo-noTextFound.m4a,"Mi ò rí ọ̀rọ̀ kankan. Rí i dájú pé ojú-ìwé náà dojú kọ òkè, kí o tún gbìyànjú.",I couldn't find any text. Check the page is face up and try again.,App phrase,draft
+cannotReach,yo-cannotReach.m4a,"Mi ò lè dé ọ̀dọ̀ Magana. Ṣàyẹ̀wò ìsopọ̀ rẹ, kí o tún gbìyànjú.",I couldn't reach Magana. Check the connection and try again.,App phrase,draft
+serverSleeping,yo-serverSleeping.m4a,Sáfà Magana ń sùn. Jọ̀wọ́ tún gbìyànjú lẹ́yìn náà.,Magana’s server is sleeping. Please try again later.,App phrase,draft
+readFailed,yo-readFailed.m4a,Ìṣòro kan wáyé nígbà tí mo ń ka ojú-ìwé náà. Jọ̀wọ́ tún gbìyànjú.,Something went wrong reading the page. Please try again.,App phrase,draft
+yourPage,yo-yourPage.m4a,Ojú-ìwé rẹ,Your page,App phrase,draft
+nowReading,yo-nowReading.m4a,à ń kà á báyìí,now reading,App phrase,draft
+previous,yo-previous.m4a,Ẹ̀yìn,Prev,App phrase,draft
+next,yo-next.m4a,Iwájú,Next,App phrase,draft
+previousLine,yo-previousLine.m4a,Ìlà tó ṣáájú,Previous line,App phrase,draft
+previousRow,yo-previousRow.m4a,Ọ̀wọ́ tó ṣáájú,Previous row,App phrase,draft
+nextLine,yo-nextLine.m4a,Ìlà tó kàn,Next line,App phrase,draft
+nextRow,yo-nextRow.m4a,Ọ̀wọ́ tó kàn,Next row,App phrase,draft
+repeatLine,yo-repeatLine.m4a,Tún ìlà yìí kà,Repeat this line,App phrase,draft
+repeatRow,yo-repeatRow.m4a,Tún ọ̀wọ́ yìí kà,Repeat this row,App phrase,draft
+pause,yo-pause.m4a,Dánudúró,Pause,App phrase,draft
+play,yo-play.m4a,Bẹ̀rẹ̀,Play,App phrase (also used as startLabel),draft
+pauseLabel,yo-pauseLabel.m4a,Dá kíkà dúró,Pause reading,App phrase,draft
+playLabel,yo-playLabel.m4a,Kà láti ibí,Read from here,App phrase,draft
+pageRead,yo-pageRead.m4a,Mo ti ka ojú-ìwé náà.,Page read.,App phrase,draft
+firstLine,yo-firstLine.m4a,Èyí ni ìlà àkọ́kọ́.,This is the first line.,App phrase,draft
+firstRow,yo-firstRow.m4a,Èyí ni ọ̀wọ́ àkọ́kọ́.,This is the first row.,App phrase,draft
+endOfPage,yo-endOfPage.m4a,Òpin ojú-ìwé.,End of page.,App phrase,draft
+endOfPageHint,yo-endOfPageHint.m4a,"Òpin ojú-ìwé. Tẹ Tún sọ, tàbí padà láti ka ojú-ìwé mìíràn.","End of page. Tap Repeat, or go back to read another page.",App phrase,draft
+whereTop,yo-whereTop.m4a,ní òkè ojú-ìwé náà,near the top of the page,App phrase,draft
+whereMiddle,yo-whereMiddle.m4a,ní àárín ojú-ìwé náà,in the middle of the page,App phrase,draft
+whereBottom,yo-whereBottom.m4a,ní ìsàlẹ̀ ojú-ìwé náà,near the bottom of the page,App phrase,draft
+unclearNumber,yo-unclearNumber.m4a,nọ́ńbà tí kò ṣe kedere,unclear number,App phrase,draft
+amountUnclear,yo-amountUnclear.m4a,Mi ò lè ka iye owó náà kedere,I can't read the amount clearly,App phrase,draft
+currencyUnclear,yo-currencyUnclear.m4a,mi ò lè ka àmì owó náà kedere,I can't read the currency sign clearly,App phrase,draft
+unclearLetter,yo-unclearLetter.m4a,lẹ́tà tí kò ṣe kedere,unclear letter,App phrase,draft
+faintPrint,yo-faintPrint.m4a,Àkọsílẹ̀ tí kò hàn dáadáa,Faint print,App phrase,draft
+msg_too_dark,yo-msg_too_dark.m4a,Ó ṣókùnkùn díẹ̀. Tan iná fóònù tàbí lọ síbi tí ìmọ́lẹ̀ wà.,It's quite dark. Turn on the torch or move to more light.,App phrase,draft
+msg_blurry,yo-msg_blurry.m4a,Fọ́tò náà kò mọ́ kedere. Di fóònù mú dáadáa kí o tún gbìyànjú.,The photo looks blurry. Hold the phone still and try again.,App phrase,draft
+msg_unknown_mode,yo-msg_unknown_mode.m4a,"Yan iṣẹ́ ilé-ìwé, ìlera tàbí owó.","Choose schoolwork, health or money.",App phrase,draft
+msg_not_allowed_for_tier,yo-msg_not_allowed_for_tier.m4a,Èyí kò sí fún àkọọ́lẹ̀ yìí.,This isn't available on this account.,App phrase,draft
+msg_consent_required,yo-msg_consent_required.m4a,Àwọn akẹ́kọ̀ọ́ ọmọ ọdún 13 sí 17 nílò àṣẹ òbí tàbí alágbàtọ́ wọn ná.,Learners aged 13 to 17 need a parent's or guardian's consent first.,App phrase,draft
+msg_teacher_session_required,yo-msg_teacher_session_required.m4a,Àwọn akẹ́kọ̀ọ́ tí kò tíì pé ọdún 13 lè lo Magana nínú ìpàdé tí olùkọ́ ń darí nìkan.,Learners under 13 can only use Magana in a teacher-run session.,App phrase,draft
+msg_unreadable_image,yo-msg_unreadable_image.m4a,Mi ò lè ṣí fọ́tò yẹn. Jọ̀wọ́ tún gbìyànjú.,I couldn't open that photo. Please try again.,App phrase,draft
+msg_numbers_unconfirmed,yo-msg_numbers_unconfirmed.m4a,"Mi ò lè ṣàlàyé ojú-ìwé yìí láìséwu. Ìyí ni, a tún kà á.",I couldn't explain this page safely. Here it is read again.,App phrase,draft
+msg_class_code_wrong,yo-msg_class_code_wrong.m4a,Nọ́ńbà kíláàsì yẹn kò tọ̀nà. Yẹ̀ ẹ́ wò pẹ̀lú olùkọ́ rẹ.,That class code isn't right. Check it with your teacher.,App phrase,draft
+msg_code_locked,yo-msg_code_locked.m4a,"Àwọn kóòdù tí kò tọ̀nà ti pọ̀ jù. Jọ̀wọ́ dúró fún ìṣẹ́jú 5, lẹ́yìn náà tún gbìyànjú.","Too many wrong codes. Please wait 5 minutes, then try again.",App phrase,draft
+msg_teacher_code_needed,yo-msg_teacher_code_needed.m4a,Olùkọ́ rẹ nìkan ló lè gbé ọ lọ sí kíláàsì mìíràn. Ní kí wọ́n tẹ kóòdù olùkọ́ wọn.,Only your teacher can move you to another class. Ask them to enter their teacher code.,App phrase,draft
+msg_teacher_code_wrong,yo-msg_teacher_code_wrong.m4a,Kóòdù olùkọ́ yẹn kò tọ̀nà. Ní kí olùkọ́ rẹ yẹ̀ ẹ́ wò.,That teacher code isn't right. Ask your teacher to check it.,App phrase,draft
+msg_class_has_no_accounts,yo-msg_class_has_no_accounts.m4a,Kíláàsì yìí ní ẹ̀kọ́ tí olùkọ́ rẹ ń darí nìkan. Béèrè lọ́wọ́ olùkọ́ rẹ.,This class only has lessons your teacher runs. Ask your teacher.,App phrase,draft
+msg_not_linked,yo-msg_not_linked.m4a,Fóònù yìí kò sí ní kíláàsì kankan báyìí. O ṣì lè ka ojú-ìwé.,This phone isn't in a class now. You can still read pages.,App phrase,draft
+msg_class_joined,yo-msg_class_joined.m4a,O ti wọ kíláàsì náà.,You're in the class.,App phrase,draft
+msg_class_changed,yo-msg_class_changed.m4a,A ti yí kíláàsì rẹ padà.,Your class has changed.,App phrase,draft
+msg_explain_wrong_language,yo-msg_explain_wrong_language.m4a,"Mi ò lè ṣàlàyé èyí ní èdè rẹ, nítorí náà màá ka ojú-ìwé náà gẹ́gẹ́ bí ó ṣe wà.","I couldn't explain this in your language, so I'll read the page exactly instead.",App phrase,draft
+autoCapture,yo-autoCapture.m4a,Ya fọ́tò fúnra rẹ̀,Auto-capture,App phrase,draft
+torchOn,yo-torchOn.m4a,Tan iná fóònù,Turn on torch,App phrase,draft
+torchOff,yo-torchOff.m4a,Pa iná fóònù,Turn off torch,App phrase,draft
+cameraView,yo-cameraView.m4a,Ìwòye kámẹ́rà,Camera view,App phrase,draft
+cameraUnavailable,yo-cameraUnavailable.m4a,"Mi ò lè lo kámẹ́rà. Fún kámẹ́rà láṣẹ nínú Ètò, tàbí yan fọ́tò láti inú àwọn fọ́tò.","I can't use the camera. Allow camera access in Settings, or choose a photo from the gallery.",App phrase,draft
+cueHigher,yo-cueHigher.m4a,Sókè,Higher,App phrase,draft
+cueLower,yo-cueLower.m4a,Sísàlẹ̀,Lower,App phrase,draft
+cueLeft,yo-cueLeft.m4a,Òsì,Left,App phrase,draft
+cueRight,yo-cueRight.m4a,Ọ̀tún,Right,App phrase,draft
+cueHoldStill,yo-cueHoldStill.m4a,Dúró jẹ́ẹ́,Hold still,App phrase,draft
+cueCloser,yo-cueCloser.m4a,Súnmọ́,Closer,App phrase,draft
+cueFurther,yo-cueFurther.m4a,Sẹ́yìn,Further,App phrase,draft
+cueMoreLight,yo-cueMoreLight.m4a,Ìmọ́lẹ̀ sí i,More light,App phrase,draft
+cueNoPage,yo-cueNoPage.m4a,Kò sí ojú-ìwé,No page,App phrase,draft
+msg_q_fever,yo-msg_q_fever.m4a,"Ṣé o ní ibà, tàbí ara rẹ gbóná gan-an?","Do you have a fever, or does your body feel very hot?",App phrase,draft
+msg_q_fever_days,yo-msg_q_fever_days.m4a,Ọjọ́ mélòó ni o ti ní ibà náà?,For how many days have you had the fever?,App phrase,draft
+msg_q_fits,yo-msg_q_fits.m4a,"Ṣé gìrì ti mú ọ, tàbí ara rẹ gbọ̀n tí o kò lè dá dúró?","Have you had fits, or shaking of the body you could not stop?",App phrase,draft
+msg_q_cannot_drink,yo-msg_q_cannot_drink.m4a,"Ṣé o kò lè mu ohunkóhun, tàbí ọmọ ọwọ́ kò lè mu ọmú?","Are you unable to drink anything, or is the baby unable to breastfeed?",App phrase,draft
+msg_q_vomits_everything,yo-msg_q_vomits_everything.m4a,Ṣé o ń bì gbogbo ohun tí o jẹ tàbí tí o mu?,Are you vomiting everything you eat or drink?,App phrase,draft
+msg_q_very_sleepy,yo-msg_q_very_sleepy.m4a,"Ṣé oorun ń kùn ọ́ gan-an, ṣé ọkàn rẹ dàrú, tàbí ṣé ó ṣòro láti jí ọ?","Are you very sleepy, confused, or hard to wake?",App phrase,draft
+msg_q_bleeding,yo-msg_q_bleeding.m4a,"Ṣé ẹ̀jẹ̀ ń jáde lára rẹ láìnídìí, láti imú tàbí èrìgì, tàbí nínú èébì tàbí ìgbẹ́?","Are you bleeding without a clear reason, from the nose or gums, or in vomit or stool?",App phrase,draft
+msg_q_yellow_eyes,yo-msg_q_yellow_eyes.m4a,Ṣé ojú rẹ tàbí awọ ara rẹ ti pọ́n?,Have your eyes or skin turned yellow?,App phrase,draft
+msg_q_hard_breathing,yo-msg_q_hard_breathing.m4a,"Ṣé o ń mí kíákíá gan-an, tàbí ó ń ṣòro fún ọ láti mí?","Are you breathing very fast, or struggling to breathe?",App phrase,draft
+msg_q_very_pale,yo-msg_q_very_pale.m4a,"Ṣé àtẹ́lẹwọ́ rẹ, ètè rẹ tàbí inú ìpéǹpéjú rẹ funfun gan-an?","Are your palms, lips or inner eyelids very pale?",App phrase,draft
+msg_q_dark_urine,yo-msg_q_dark_urine.m4a,"Ṣé ìtọ̀ rẹ ṣókùnkùn gan-an, bíi kóòkì tàbí tíì?","Is your urine very dark, like cola or tea?",App phrase,draft
+msg_q_too_weak,yo-msg_q_too_weak.m4a,Ṣé ara rẹ ti rẹ̀ débi pé o kò lè jókòó tàbí dìde láìsí ìrànlọ́wọ́?,Are you too weak to sit up or stand without help?,App phrase,draft
+msg_go_to_clinic_now,yo-msg_go_to_clinic_now.m4a,"Èyí lè le. Jọ̀wọ́ lọ sí ilé-ìwòsàn tó súnmọ́ ọ jù lọ báyìí, tàbí pe 112. Má ṣe dúró kí wọ́n pè ọ́ padà.","This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.",App phrase,draft
+msg_nurse_call_within_2_hours,yo-msg_nurse_call_within_2_hours.m4a,A dúpẹ́. Nọ́ọ̀sì kan yóò pè ọ́ láàrin wákàtí 2.,Thank you. A nurse will call you within 2 hours.,App phrase,draft
+msg_nurse_call_working_hours,yo-msg_nurse_call_working_hours.m4a,A dúpẹ́. Nọ́ọ̀sì kan yóò pè ọ́ padà ní àkókò iṣẹ́.,Thank you. A nurse will call you back during working hours.,App phrase,draft
+chooseLanguageTitle,yo-chooseLanguageTitle.m4a,Yan èdè rẹ,Choose your language,App phrase,draft
+chooseLanguageBody,yo-chooseLanguageBody.m4a,Magana yóò bá ọ sọ̀rọ̀ ní èdè yìí. O lè yí i padà nígbàkúùgbà láti ojú-ìwé àkọ́kọ́.,Magana will speak to you in this language. You can change it any time from the Home screen.,App phrase,draft
+languageHearsHint,yo-languageHearsHint.m4a,A ó ka àṣàyàn kọ̀ọ̀kan ní èdè tirẹ̀ nígbà tí o bá fọwọ́ kàn án.,Each option is read aloud in its own language when you touch it.,App phrase,draft
+continueLabel,yo-continueLabel.m4a,Tẹ̀síwájú,Continue,App phrase (also used as tourContinue),draft
+welcome,yo-welcome.m4a,Ẹ káàbọ̀,Welcome,App phrase,draft
+ageTitle,yo-ageTitle.m4a,Ọmọ ọdún mélòó ni ọ́?,How old are you?,App phrase,draft
+ageBody,yo-ageBody.m4a,A ń béèrè kí Magana lè jẹ́ ààbò àti kí ó bá ọ mu.,We ask so Magana is safe and right for you.,App phrase,draft
+ageAdult,yo-ageAdult.m4a,Mo ti pé ọdún 18 tàbí jù bẹ́ẹ̀ lọ,I am 18 or older,App phrase,draft
+ageAdultDetail,yo-ageAdultDetail.m4a,"Lo gbogbo ohun tí ó wà nínú Magana, pẹ̀lú ìwé ìlera àti ti owó.","Use everything in Magana, including health and money papers.",App phrase,draft
+ageTeen,yo-ageTeen.m4a,Mo wà láàrin ọdún 13 sí 17,I am 13 to 17,App phrase,draft
+ageTeenDetail,yo-ageTeenDetail.m4a,"Òbí, alágbàtọ́ tàbí olùkọ́ yóò kọ́kọ́ gbà. Magana ń ràn ọ́ lọ́wọ́ pẹ̀lú ẹ̀kọ́ ilé-ìwé nìkan.","A parent, guardian or teacher agrees first. Magana helps with school subjects only.",App phrase,draft
+ageChild,yo-ageChild.m4a,Mi ò tíì pé ọdún 13,I am under 13,App phrase,draft
+ageChildDetail,yo-ageChildDetail.m4a,Olùkọ́ rẹ yóò lo Magana pẹ̀lú rẹ ní kíláàsì.,Your teacher will use Magana with you in class.,App phrase,draft
+privacyNote,yo-privacyNote.m4a,A máa ń pa fọ́tò ojú-ìwé rẹ rẹ́ lẹ́yìn kíkà. A kì í pín àlàyé rẹ fún ẹnikẹ́ni.,Photos of your pages are deleted after reading. We never share your details.,App phrase,draft
+hearAgain,yo-hearAgain.m4a,Tún gbọ́ ojú-ìwé yìí,Hear this page again,App phrase,draft
+readyTitle,yo-readyTitle.m4a,O ti ṣetán,You're ready,App phrase,draft
+readyBody,yo-readyBody.m4a,"Gbé fóònù rẹ sórí ojú-ìwé tí a tẹ̀ jáde, Magana yóò kà á fún ọ.",Hold your phone over any printed page and Magana will read it to you.,App phrase,draft
+consentTitle,yo-consentTitle.m4a,"Bi òbí, alágbàtọ́ tàbí olùkọ́ léèrè","Ask a parent, guardian or teacher",App phrase,draft
+consentBody,yo-consentBody.m4a,Jọ̀wọ́ ẹ ka tàbí ẹ gbọ́ èyí papọ̀.,Please read or listen to this together.,App phrase,draft
+consentPoint1,yo-consentPoint1.m4a,Magana ń ràn lọ́wọ́ pẹ̀lú ẹ̀kọ́ ilé-ìwé nìkan.,Magana helps with school subjects only.,App phrase,draft
+consentPoint2,yo-consentPoint2.m4a,"Kò sí ìwé ìlera tàbí ti owó, kò sí WhatsApp, kò sí ìjíròrò ọ̀fẹ́.","No health or money papers, no WhatsApp and no open chat.",App phrase,draft
+consentPoint3,yo-consentPoint3.m4a,A máa ń pa fọ́tò rẹ́ lẹ́yìn kíkà.,Photos are deleted after reading.,App phrase,draft
+consentConfirm,yo-consentConfirm.m4a,"Èmi ni òbí, alágbàtọ́ tàbí olùkọ́, mo sì gbà","I am the parent, guardian or teacher, and I agree",App phrase,draft
+classroomTitle,yo-classroomTitle.m4a,Magana ní kíláàsì,Magana in class,App phrase,draft
+classroomBody,yo-classroomBody.m4a,"Olùkọ́ rẹ yóò bẹ̀rẹ̀ Magana pẹ̀lú rẹ ní kíláàsì. Nígbà tí ẹ̀kọ́ bá parí, ẹ pa áàpù náà.","Your teacher starts Magana with you in class. When the lesson ends, close the app.",App phrase,draft
+classroomStart,yo-classroomStart.m4a,Olùkọ́: bẹ̀rẹ̀ ìpàdé kíláàsì,Teacher: start the class session,App phrase,draft
+classroomConfirmTitle,yo-classroomConfirmTitle.m4a,Ṣé ìwọ ni olùkọ́?,Are you the teacher?,App phrase,draft
+classroomConfirmYes,yo-classroomConfirmYes.m4a,"Bẹ́ẹ̀ ni, bẹ̀rẹ̀ ìpàdé","Yes, start the session",App phrase,draft
+cancel,yo-cancel.m4a,Fagilé,Cancel,App phrase,draft
+back,yo-back.m4a,Padà,Back,App phrase,draft
+msg_unknown_tier,yo-msg_unknown_tier.m4a,Jọ̀wọ́ tún Magana ṣètò: a kò dá ẹgbẹ́ ọjọ́-orí rẹ mọ̀.,Please set up Magana again: your age group wasn't recognised.,App phrase,draft
+readPageSubtitleSchool,yo-readPageSubtitleSchool.m4a,"Iṣẹ́ ilé-ìwé, àkọsílẹ̀, ìwé ẹ̀kọ́ àti ìdánwò","Schoolwork, notes, textbooks and tests",App phrase,draft
+everydaySubtitle,yo-everydaySubtitle.m4a,Ìwé ìlera àti ti owó · 18+,Health and money papers · 18+,App phrase,draft
+paperMedicine,yo-paperMedicine.m4a,Àmì òògùn,Medicine label,App phrase,draft
+paperMedicineDetail,yo-paperMedicineDetail.m4a,Àmì àti ìwé àṣẹ dókítà,Labels and prescriptions,App phrase,draft
+paperReport,yo-paperReport.m4a,Ìjábọ̀ ìlera,Medical report,App phrase,draft
+paperReportDetail,yo-paperReportDetail.m4a,Àbájáde àyẹ̀wò àti ìwé ìdásílẹ̀,Test results and discharge notes,App phrase,draft
+paperStatement,yo-paperStatement.m4a,Ìwé àkọsílẹ̀ báǹkì,Bank statement,App phrase,draft
+paperStatementDetail,yo-paperStatementDetail.m4a,"Ìwé àkọsílẹ̀, ìwé ìsanwó àti owó tí a ó san","Statements, receipts and bills",App phrase,draft
+talkToNurse,yo-talkToNurse.m4a,Bá nọ́ọ̀sì sọ̀rọ̀,Talk to a nurse,App phrase,draft
+talkToNurseDetail,yo-talkToNurseDetail.m4a,Pẹ̀lú àyẹ̀wò kíákíá Ibà,With the Ibà quick check,App phrase,draft
+everydayPrivacy,yo-everydayPrivacy.m4a,"A ń ka àwọn ìwé àṣírí lórí fóònù rẹ, a kì í tọ́jú wọn. Magana kì í béèrè PIN tàbí ọ̀rọ̀ aṣínà rẹ.",Private papers are read on your phone and not saved. Magana never asks for your PIN or password.,App phrase,draft
+readExactly,yo-readExactly.m4a,A ń kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́,Read exactly as printed,App phrase,draft
+noteMedicine,yo-noteMedicine.m4a,"Magana ń ka ohun tí a tẹ̀. Kò fúnni ní ìmọ̀ràn ìlera. Bí ohunkóhun lórí àmì bá ṣókùnkùn, bi oníṣègùn òògùn rẹ léèrè kí o tó lò ó.","Magana reads what is printed. It does not give medical advice. If anything on the label is unclear, ask your pharmacist before taking it.",App phrase,draft
+noteReport,yo-noteReport.m4a,A ń ka nọ́ńbà àti ààlà gẹ́gẹ́ bí a ṣe tẹ̀ wọ́n. Magana kì í ṣàlàyé àbájáde: òṣìṣẹ́ ìlera rẹ nìkan ló lè ṣàlàyé ohun tí wọ́n túmọ̀ sí fún ọ.,Numbers and ranges are read exactly as printed. Magana does not interpret results: only your health worker can explain what they mean for you.,App phrase,draft
+noteStatement,yo-noteStatement.m4a,"A ń ka iye owó gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́. A kò tọ́jú ìwé yìí. Magana kì í béèrè PIN tàbí ọ̀rọ̀ aṣínà rẹ. Bí iye kan bá ṣókùnkùn, ṣàyẹ̀wò rẹ̀ pẹ̀lú báǹkì rẹ tàbí ẹni tí o fọkàn tán.","Amounts are read exactly as printed. This statement is not saved. Magana never asks for your PIN or password. If an amount is unclear, check it with your bank or a trusted person.",App phrase,draft
+askPharmacistOrNurse,yo-askPharmacistOrNurse.m4a,Bi oníṣègùn òògùn tàbí nọ́ọ̀sì léèrè,Ask a pharmacist or nurse,App phrase,draft
+adultsOnly,yo-adultsOnly.m4a,Èyí wà fún àgbàlagbà (ọdún 18 sókè).,This is for adults (18 and over).,App phrase,draft
+healthWorkerTitle,yo-healthWorkerTitle.m4a,Bá òṣìṣẹ́ ìlera sọ̀rọ̀,Talk to a health worker,App phrase,draft
+healthWorkerSubtitle,yo-healthWorkerSubtitle.m4a,Nọ́ọ̀sì tàbí oníṣègùn òògùn yóò pè ọ́ padà,A nurse or pharmacist calls you back,App phrase,draft
+helpWithTitle,yo-helpWithTitle.m4a,Kí ni o nílò ìrànlọ́wọ́ fún?,What do you need help with?,App phrase,draft
+reasonMedicine,yo-reasonMedicine.m4a,Òye òògùn mi,Understanding my medicine,App phrase,draft
+reasonResults,yo-reasonResults.m4a,Òye àbájáde mi,Understanding my results,App phrase,draft
+reasonOther,yo-reasonOther.m4a,Nǹkan mìíràn,Something else,App phrase (also used as reportSomethingElse),draft
+callLanguage,yo-callLanguage.m4a,Èdè fún ìpè náà,Language for the call,App phrase,draft
+answerIbaFirst,yo-answerIbaFirst.m4a,Kọ́kọ́ dáhùn ìbéèrè kíákíá díẹ̀ (Ibà),Answer a few quick questions first (Ibà),App phrase,draft
+requestCallback,yo-requestCallback.m4a,Béèrè kí wọ́n pè ọ́ padà,Request a call back,App phrase,draft
+emergencyBold,yo-emergencyBold.m4a,Pàjáwìrì?,Emergency?,App phrase,draft
+emergencyText,yo-emergencyText.m4a,Má ṣe dúró kí wọ́n pè ọ́ padà. Pe 112 báyìí.,Do not wait for a call back. Call 112 now.,App phrase,draft
+call112,yo-call112.m4a,Pe 112,Call 112,App phrase,draft
+quickCheckTitle,yo-quickCheckTitle.m4a,Àyẹ̀wò ìlera kíákíá,Quick health check,App phrase,draft
+yes,yo-yes.m4a,Bẹ́ẹ̀ ni,Yes,App phrase,draft
+no,yo-no.m4a,Rárá,No,App phrase,draft
+moreDays,yo-moreDays.m4a,Ọjọ́ kan sí i,One more day,App phrase,draft
+fewerDays,yo-fewerDays.m4a,Ọjọ́ kan dín,One day fewer,App phrase,draft
+nextLabel,yo-nextLabel.m4a,Èyí tó kàn,Next,App phrase,draft
+quickCheckNote,yo-quickCheckNote.m4a,"Ìdáhùn rẹ ń ran nọ́ọ̀sì lọ́wọ́ láti mọ bí ó ṣe yára tó láti pè ọ́. Ibà kì í ṣe àyẹ̀wò àìsàn. Bí o bá ní àmì ewu, Magana yóò sọ fún ọ pé kí o lọ sí ilé-ìwòsàn báyìí.","Your answers help the nurse decide how soon to call you. Ibà does not diagnose. If you have danger signs, Magana tells you to go to a clinic now.",App phrase,draft
+resultTitle,yo-resultTitle.m4a,Àbájáde rẹ,Your result,App phrase,draft
+checkingAnswers,yo-checkingAnswers.m4a,Mo ń ṣàyẹ̀wò ìdáhùn rẹ.,Checking your answers.,App phrase,draft
+msg_callback_booked,yo-msg_callback_booked.m4a,A ti ṣètò ìpè rẹ. Nọ́ọ̀sì tàbí oníṣègùn òògùn yóò pè ọ́.,Your call back is booked. A nurse or pharmacist will call you.,App phrase,draft
+msg_callback_unavailable,yo-msg_callback_unavailable.m4a,"Ìpè padà kò tíì sí. Bí o bá nílò ìrànlọ́wọ́ báyìí, lọ sí ilé-ìwòsàn tàbí pe 112.","Call backs are not available yet. If you need help now, go to a clinic or call 112.",App phrase,draft
+resultUrgent,yo-resultUrgent.m4a,"Ó yẹ kí nọ́ọ̀sì pè ọ́ láàrin wákàtí 2. Béèrè kí wọ́n pè ọ́ padà báyìí. Bí ara rẹ bá burú sí i, lọ sí ilé-ìwòsàn tàbí pe 112.","A nurse should call you within 2 hours. Request a call back now. If you get worse, go to a clinic or call 112.",App phrase,draft
+resultRoutine,yo-resultRoutine.m4a,"Nọ́ọ̀sì lè pè ọ́ padà ní àkókò iṣẹ́. Béèrè kí wọ́n pè ọ́ padà. Bí ara rẹ bá burú sí i, lọ sí ilé-ìwòsàn tàbí pe 112.","A nurse can call you back during working hours. Request a call back. If you get worse, go to a clinic or call 112.",App phrase,draft
+quizListening,yo-quizListening.m4a,Mo ń gbọ́… Tẹ̀ láti dúró,Listening… Tap to stop,App phrase (also used as listeningCommand),draft
+quizRepeat,yo-quizRepeat.m4a,Tún ìbéèrè sọ,Repeat question,App phrase,draft
+quizNext,yo-quizNext.m4a,Ìbéèrè tó kàn,Next question,App phrase,draft
+quizFinish,yo-quizFinish.m4a,Wo èsì mi,See my result,App phrase,draft
+quizYourAnswerRight,yo-quizYourAnswerRight.m4a,"ìdáhùn rẹ, ó tọ̀nà","your answer, correct",App phrase,draft
+quizYourAnswerWrong,yo-quizYourAnswerWrong.m4a,"ìdáhùn rẹ, kò tọ̀nà","your answer, not correct",App phrase,draft
+quizRightAnswer,yo-quizRightAnswer.m4a,ìdáhùn tó tọ̀nà,correct answer,App phrase,draft
+quizResultTitle,yo-quizResultTitle.m4a,Ìdánrawò ti parí,Practice finished,App phrase,draft
+quizAgain,yo-quizAgain.m4a,Tún ṣe ìdánrawò,Practise again,App phrase,draft
+skillsSubtitle,yo-skillsSubtitle.m4a,"Àwọn ẹ̀kọ́ kúkúrú tí a ń sọ, bí o ṣe fẹ́","Short spoken lessons, at your pace",App phrase,draft
+playLesson,yo-playLesson.m4a,Gbọ́ ẹ̀kọ́,Play lesson,App phrase,draft
+pauseLesson,yo-pauseLesson.m4a,Dúró díẹ̀,Pause,App phrase,draft
+practiseNow,yo-practiseNow.m4a,Ṣe é báyìí,Practise now,App phrase,draft
+lessonDone,yo-lessonDone.m4a,Ó ti parí,Done,App phrase,draft
+lessonNotStarted,yo-lessonNotStarted.m4a,Kò tíì bẹ̀rẹ̀,Not started,App phrase,draft
+allLessonsDone,yo-allLessonsDone.m4a,O ti parí gbogbo ẹ̀kọ́. O ṣe dáadáa!,You have finished every lesson. Well done!,App phrase,draft
+practiseWithChampion,yo-practiseWithChampion.m4a,Ṣe ìdánrawò pẹ̀lú Akọni Magana,Practise with a Magana Champion,App phrase,draft
+skillsNote,yo-skillsNote.m4a,"Ẹ̀kọ́ àpẹẹrẹ tí ẹgbẹ́ Magana kọ ni, àwọn olùkọ́ ìmúpadàbọ̀sípò yóò yẹ̀ wọ́n wò. Èdè Gẹ̀ẹ́sì ni ẹ̀kọ́ wà fún báyìí.","Sample lessons written by the Magana team, to be reviewed by rehabilitation trainers. Lessons are in English for now.",App phrase,draft
+previousStep,yo-previousStep.m4a,Ìgbésẹ̀ tó ṣáájú,Previous step,App phrase,draft
+nextStep,yo-nextStep.m4a,Ìgbésẹ̀ tó kàn,Next step,App phrase,draft
+lessonFinished,yo-lessonFinished.m4a,Ẹ̀kọ́ ti parí.,Lesson finished.,App phrase,draft
+scoreTitle,yo-scoreTitle.m4a,Ìwọ̀n Òmìnira Mi,My Independence Score,App phrase,draft
+scoreSubtitle,yo-scoreSubtitle.m4a,Àwọn iṣẹ́ tí o parí nínú Magana,Tasks you finished in Magana,App phrase,draft
+scoreByArea,yo-scoreByArea.m4a,Ní ẹ̀ka kọ̀ọ̀kan,By area,App phrase,draft
+areaLearning,yo-areaLearning.m4a,Ẹ̀kọ́,Learning,App phrase,draft
+areaHealth,yo-areaHealth.m4a,Ìwé ìlera,Health papers,App phrase,draft
+areaMoney,yo-areaMoney.m4a,Owó àti lẹ́tà,Money and letters,App phrase,draft
+areaSkills,yo-areaSkills.m4a,Ọgbọ́n,Skills,App phrase,draft
+scoreThisWeek,yo-scoreThisWeek.m4a,Ọ̀sẹ̀ yìí,This week,App phrase,draft
+scoreNothingThisWeek,yo-scoreNothingThisWeek.m4a,Kò sí iṣẹ́ kankan ní ọ̀sẹ̀ yìí. Ka ojú-ìwé kan tàbí ṣe ìdánrawò láti bẹ̀rẹ̀.,No tasks yet this week. Read a page or take a quiz to start.,App phrase,draft
+scoreHow,yo-scoreHow.m4a,Ìwọ̀n rẹ ń ka àwọn iṣẹ́ gidi tí o parí nínú Magana ní ọgbọ̀n ọjọ́ sẹ́yìn. Ó wà lórí fóònù yìí nìkan; ìwọ nìkan ló ń rí i.,Your score counts real tasks you finished in Magana in the last 30 days. It stays on this phone; only you see it.,App phrase,draft
+championsTitle,yo-championsTitle.m4a,Àwọn Akọni Magana,Magana Champions,App phrase,draft
+championsSubtitle,yo-championsSubtitle.m4a,Kọ́ láti ọ̀dọ̀ àwọn tó ti là á kọjá,Learn from people who have been there,App phrase,draft
+championSample,yo-championSample.m4a,Àpẹẹrẹ àkọsílẹ̀,Sample profile,App phrase,draft
+championDetail,yo-championDetail.m4a,"Afọ́jú láti ọmọ ọdún 12 · Kano · Hausa, Gẹ̀ẹ́sì","Blind since age 12 · Kano · Hausa, English",App phrase,draft
+championNotYet,yo-championNotYet.m4a,Àpẹẹrẹ ni èyí. A ó so ọ́ pọ̀ mọ́ Akọni nípasẹ̀ àwọn àjọ alábàáṣiṣẹ́pọ̀. Ìpè kò tíì ṣeé ṣe.,This is a sample profile. Champions will be matched to you through partner organisations. Calls are not available yet.,App phrase,draft
+becomeChampion,yo-becomeChampion.m4a,Di Akọni,Become a Champion,App phrase,draft
+becomeChampionBody,yo-becomeChampionBody.m4a,Ran àwọn mìíràn lọ́wọ́ ní àdúgbò rẹ kí o sì gba ìwé-ẹ̀rí.,Help others in your community and earn a certificate.,App phrase,draft
+champStepBasics,yo-champStepBasics.m4a,Parí ẹ̀kọ́ Ìpìlẹ̀ fóònù,Finish Phone basics,App phrase,draft
+champStepPhotos,yo-champStepPhotos.m4a,Parí ẹ̀kọ́ Yíya fọ́tò tó mọ́,Finish Taking clear photos,App phrase,draft
+champStepScore,yo-champStepScore.m4a,Dé Ìwọ̀n Òmìnira 60,Reach an Independence Score of 60,App phrase,draft
+champStepTraining,yo-champStepTraining.m4a,Darapọ̀ mọ́ ìdálẹ́kọ̀ọ́ Akọni wákàtí 2,Join a 2-hour Champion training,App phrase,draft
+champStepHelp,yo-champStepHelp.m4a,Ran ènìyàn mẹ́ta àkọ́kọ́ lọ́wọ́,Help your first 3 people,App phrase,draft
+stepDone,yo-stepDone.m4a,ó ti parí,done,App phrase,draft
+stepNotDone,yo-stepNotDone.m4a,kò tíì parí,not done yet,App phrase,draft
+championsPartnerNote,yo-championsPartnerNote.m4a,Ìdálẹ́kọ̀ọ́ Akọni yóò wáyé pẹ̀lú àwọn àjọ alábàáṣiṣẹ́pọ̀. Kò tíì ṣí sílẹ̀.,Champion training will be run with partner organisations. It is not open yet.,App phrase,draft
+librarySubtitle,yo-librarySubtitle.m4a,"Àwọn ìwé tí a fi pamọ́, fún ọgbọ̀n ọjọ́","Saved readings, kept for 30 days",App phrase,draft
+libraryEmpty,yo-libraryEmpty.m4a,"Kò sí ohun tí a fi pamọ́ síbẹ̀. Lẹ́yìn tí Magana bá ka ojú-ìwé kan, yan Fi pamọ́ sí ilé-ìkàwé mi.","Nothing saved yet. After Magana reads a page, choose Save to my library.",App phrase,draft
+libraryPrivacy,yo-libraryPrivacy.m4a,"Àwọn ìwé tí a fi pamọ́ wà lórí fóònù yìí, a sì ń pa wọ́n rẹ́ lẹ́yìn ọgbọ̀n ọjọ́. A kì í fi fọ́tò pamọ́ rárá.",Saved readings stay on this phone and are deleted after 30 days. Photos are never saved.,App phrase,draft
+saveToLibrary,yo-saveToLibrary.m4a,Fi pamọ́ sí ilé-ìkàwé mi,Save to my library,App phrase,draft
+savedToLibrary,yo-savedToLibrary.m4a,A ti fi pamọ́ sí ilé-ìkàwé rẹ. Yóò wà lórí fóònù yìí fún ọgbọ̀n ọjọ́.,Saved to my library. It stays on this phone for 30 days.,App phrase,draft
+deleteFromLibrary,yo-deleteFromLibrary.m4a,Pa á rẹ́ kúrò ní ilé-ìkàwé mi,Delete from my library,App phrase,draft
+deleteConfirm,yo-deleteConfirm.m4a,Ṣé kí a pa ìwé yìí rẹ́ kúrò ní ilé-ìkàwé rẹ?,Delete this reading from your library?,App phrase,draft
+deleteYes,yo-deleteYes.m4a,Pa á rẹ́,Delete,App phrase,draft
+deletedFromLibrary,yo-deletedFromLibrary.m4a,A ti pa á rẹ́ kúrò ní ilé-ìkàwé rẹ.,Deleted from your library.,App phrase,draft
+remindersTitle,yo-remindersTitle.m4a,Àwọn oògùn òní,Today's medicines,App phrase,draft
+remindersSubtitle,yo-remindersSubtitle.m4a,Àkókò tí o ṣètò pẹ̀lú oníṣègùn oògùn,Times set with your pharmacist,App phrase,draft
+remindersCard,yo-remindersCard.m4a,Ìrántí oògùn,Medicine reminders,App phrase,draft
+remindersCardDetail,yo-remindersCardDetail.m4a,Àkókò fún àwọn oògùn rẹ,Times for your medicines,App phrase,draft
+remindersEmpty,yo-remindersEmpty.m4a,Kò sí ìrántí síbẹ̀. Fi àkókò tí oníṣègùn oògùn tàbí dókítà fún ọ kún un.,No reminders yet. Add the times your pharmacist or doctor gave you.,App phrase,draft
+doseTaken,yo-doseTaken.m4a,A ti lò ó,Taken,App phrase,draft
+doseDue,yo-doseDue.m4a,Àkókò ti tó,Due now,App phrase,draft
+doseLater,yo-doseLater.m4a,Lẹ́yìn náà lónìí,Later today,App phrase,draft
+iTookIt,yo-iTookIt.m4a,Mo ti lò ó,I've taken it,App phrase,draft
+remindLater,yo-remindLater.m4a,Rán mi létí ní ìṣẹ́jú 15,Remind in 15 min,App phrase,draft
+remindLaterSet,yo-remindLaterSet.m4a,Màá tún rán ọ létí ní ìṣẹ́jú 15.,I will remind you again in 15 minutes.,App phrase,draft
+markedTaken,yo-markedTaken.m4a,A ti kọ ọ́ pé o ti lò ó.,Marked as taken.,App phrase,draft
+addReminder,yo-addReminder.m4a,Fi ìrántí kún un,Add a reminder,App phrase,draft
+medicineName,yo-medicineName.m4a,"Orúkọ oògùn, bí ó ṣe wà lórí àmì","Medicine name, as on the label",App phrase,draft
+medicineAmount,yo-medicineAmount.m4a,"Iye tí oníṣègùn oògùn sọ (fún àpẹẹrẹ, oògùn 2)","How much, as your pharmacist said (for example, 2 tablets)",App phrase,draft
+reminderTime,yo-reminderTime.m4a,Àkókò,Time,App phrase,draft
+earlierHour,yo-earlierHour.m4a,Wákàtí kan ṣáájú,One hour earlier,App phrase,draft
+laterHour,yo-laterHour.m4a,Wákàtí kan lẹ́yìn,One hour later,App phrase,draft
+earlierMinutes,yo-earlierMinutes.m4a,Ìṣẹ́jú 15 ṣáájú,15 minutes earlier,App phrase,draft
+laterMinutes,yo-laterMinutes.m4a,Ìṣẹ́jú 15 lẹ́yìn,15 minutes later,App phrase,draft
+saveReminder,yo-saveReminder.m4a,Fi ìrántí pamọ́,Save reminder,App phrase,draft
+medicineNameNeeded,yo-medicineNameNeeded.m4a,Kọ orúkọ oògùn náà kọ́kọ́.,Type the medicine name first.,App phrase,draft
+deleteReminder,yo-deleteReminder.m4a,Pa ìrántí rẹ́,Delete reminder,App phrase,draft
+reminderNotice,yo-reminderNotice.m4a,"Fóònù rẹ yóò dún, yóò sì gbọ̀n ní àkókò kọ̀ọ̀kan, gẹ́gẹ́ bí ìfitónilétí. Magana ń rán ọ létí ní àkókò tí o ṣètò. Kì í yí iye oògùn padà.","Your phone rings and vibrates at each time, as a notification. Magana reminds you at the times you set. It never changes a dose.",App phrase,draft
+notificationsOff,yo-notificationsOff.m4a,"Ìfitónilétí ti wà ní pípa fún Magana, nítorí náà ìrántí yóò hàn nígbà tí Magana bá ṣí nìkan. O lè tàn wọ́n nínú ètò fóònù rẹ.","Notifications are off for Magana, so reminders only show when Magana is open. You can turn them on in your phone's settings.",App phrase,draft
+missedDose,yo-missedDose.m4a,Ṣé o gbàgbé láti lo oògùn? Béèrè lọ́wọ́ oníṣègùn oògùn,Missed a dose? Ask a pharmacist,App phrase,draft
+reminderNotifyTitle,yo-reminderNotifyTitle.m4a,Àkókò láti lo oògùn rẹ ti tó,Time for your medicine,App phrase,draft
+exactTitle,yo-exactTitle.m4a,Ṣé kí ó dún ní àkókò gan-an?,Ring on time?,App phrase,draft
+exactBody,yo-exactBody.m4a,"Kí ó lè dún ní ìṣẹ́jú gan-an, fóònù rẹ gbọ́dọ̀ gba Magana láàyè láti ṣètò aago àti ìrántí. Ojú-ìwé tó kàn ní bọ́tìnnì kan: tàn án, lẹ́yìn náà padà sẹ́yìn.","To ring at the exact minute, your phone needs to allow Magana to set alarms and reminders. The next screen has one switch: turn it on, then go back.",App phrase,draft
+exactOpen,yo-exactOpen.m4a,Ṣí ètò náà,Open the setting,App phrase,draft
+notNow,yo-notNow.m4a,Kì í ṣe báyìí,Not now,App phrase,draft
+remindersMayBeLate,yo-remindersMayBeLate.m4a,"Lórí fóònù yìí, ìrántí lè dún ní wákàtí kan lẹ́yìn àkókò. Kí ó lè dún ní àkókò, gba Magana láàyè fún aago àti ìrántí.","On this phone, reminders may ring up to an hour late. To ring on time, allow alarms and reminders for Magana.",App phrase,draft
+allowOnTime,yo-allowOnTime.m4a,Gba ìrántí ní àkókò láàyè,Allow on-time reminders,App phrase,draft
+msg_q_bleeding_no_sight,yo-msg_q_bleeding_no_sight.m4a,"Ṣé o ti ní ìmọ̀lára tàbí tọ́ ẹ̀jẹ̀ wò, tàbí ṣé ẹnìkan ti sọ fún ọ pé ẹ̀jẹ̀ ń jáde lára rẹ, láti imú, èrìgì, èébì tàbí ìgbẹ́?","Have you felt or tasted blood, or has anyone told you that you are bleeding, from your nose, gums, vomit or stool?",App phrase,draft
+msg_q_yellow_eyes_no_sight,yo-msg_q_yellow_eyes_no_sight.m4a,Ṣé ẹnìkan ti sọ fún ọ pé ojú rẹ tàbí awọ ara rẹ dà bí ẹni pé ó ti pọ́n?,Has anyone told you that your eyes or skin look yellow?,App phrase,draft
+msg_q_very_pale_no_sight,yo-msg_q_very_pale_no_sight.m4a,"Ṣé ẹnìkan ti sọ fún ọ pé o funfun gan-an? Ṣé o ń rẹ̀wẹ̀sì gan-an, ṣé òòyì ń kọ́ ọ tàbí ṣé èémí ń já ọ nígbà tí o bá dìde dúró?","Has anyone told you that you look very pale? Do you feel very weak, dizzy or out of breath when you stand?",App phrase,draft
+msg_q_dark_urine_no_sight,yo-msg_q_dark_urine_no_sight.m4a,"Ṣé ẹnìkan tó wà nítòsí rẹ ti rí i pé ìtọ̀ rẹ ṣókùnkùn gan-an, bíi kóòkì tàbí tíì?","Has someone near you seen that your urine is very dark, like cola or tea?",App phrase,draft
+msg_ask_someone_to_check,yo-msg_ask_someone_to_check.m4a,"Jọ̀wọ́ ní kí ẹnìkan tó wà nítòsí rẹ yẹ̀ ẹ́ wò, tàbí lọ sí ilé-ìwòsàn.","Please ask someone near you to check, or go to a clinic.",App phrase,draft
+cantTell,yo-cantTell.m4a,Mi ò mọ̀,I can't tell,App phrase,draft
+appLanguageTitle,yo-appLanguageTitle.m4a,Èdè áàpù,App language,App phrase,draft
+languageSheetBody,yo-languageSheetBody.m4a,"Àwọn àkójọ, bọ́tìnnì, ìrànlọ́wọ́ àti ohùn Magana yóò yí padà sí èdè tí o yàn.","Menus, buttons, help and Magana's voice all switch to the language you choose.",App phrase,draft
+languageVoiceTip,yo-languageVoiceTip.m4a,O tún lè sọ “change language to Yoruba” lẹ́yìn tí o bá tẹ Sọ àṣẹ kan ní ojú-ìwé àkọ́kọ́.,You can also say “change language to Igbo” after pressing Speak a command on Home.,App phrase,draft
+settingsVersionNote,yo-settingsVersionNote.m4a,Sọ ẹ̀yà yìí fún ẹgbẹ́ Magana nígbà tí o bá ń ròyìn ìṣòro kan.,Tell the Magana team this version when you report a problem.,App phrase,draft
+reportProblem,yo-reportProblem.m4a,Ròyìn ìṣòro kan,Report a problem,App phrase,draft
+reportHow,yo-reportHow.m4a,"Sọ nǹkan mẹ́ta fún ẹgbẹ́ Magana: orúkọ ojú-ìwé náà, ohun tí o ṣe, àti ohun tí Magana sọ.","Tell the Magana team three things: the name of the screen, what you did, and what Magana said.",App phrase,draft
+speakCommand,yo-speakCommand.m4a,Sọ àṣẹ kan,Speak a command,App phrase,draft
+commandSorry,yo-commandSorry.m4a,"Má bínú, ọ̀rọ̀ yẹn kò yé mi. Sọ “read a page” tàbí “help”.","Sorry, I didn't catch that. Say “read a page” or “help”.",App phrase,draft
+commandNothingHeard,yo-commandNothingHeard.m4a,"Mi ò gbọ́ àṣẹ kankan. Tún gbìyànjú, tàbí sọ help.","I didn't hear a command. Try again, or say help.",App phrase,draft
+changeLanguageCommand,yo-changeLanguageCommand.m4a,change language,change language,App phrase,draft
+voiceCommandsUnavailable,yo-voiceCommandsUnavailable.m4a,A kò lè lo àṣẹ ohùn lórí fóònù yìí. Lo àwọn bọ́tìnnì dípò rẹ̀.,Voice commands are not available on this phone. Use the buttons instead.,App phrase,draft
+explainTitle,yo-explainTitle.m4a,Àlàyé,Explain,App phrase,draft
+explainPreviewBanner,yo-explainPreviewBanner.m4a,"Àyẹ̀wò. N-ATLAS, tí yóò ṣàlàyé ojú-ìwé ní èdè rẹ, kò tíì so pọ̀. Fún báyìí Magana ń ka ọ̀rọ̀ ojú-ìwé náà gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́.","Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.",App phrase,draft
+youSaid,yo-youSaid.m4a,O sọ pé,You said,App phrase,draft
+readExactlyNote,yo-readExactlyNote.m4a,A ń ka àwọn nọ́ńbà àti ọ̀rọ̀ láti ojú-ìwé náà gẹ́gẹ́ bí a ṣe tẹ̀ wọ́n.,Numbers and words from the page are read exactly as printed.,App phrase,draft
+saySimpler,yo-saySimpler.m4a,Sọ ọ́ ní ìrọ̀rùn,Say it simpler,App phrase,draft
+giveExample,yo-giveExample.m4a,Fún mi ní àpẹẹrẹ,Give an example,App phrase,draft
+explainDisclaimer,yo-explainDisclaimer.m4a,Magana lè ṣe àṣìṣe. Yẹ àwọn ìdáhùn pàtàkì wò pẹ̀lú olùkọ́ rẹ.,Magana can make mistakes. Check important answers with your teacher.,App phrase,draft
+explainNoPage,yo-explainNoPage.m4a,"Àlàyé jẹ́ nípa ojú-ìwé kan. Ka ojú-ìwé kan kọ́kọ́, lẹ́yìn náà yan Ṣàlàyé èyí.","Explanations are about a page. Read a page first, then choose Explain this.",App phrase,draft
+explainThis,yo-explainThis.m4a,Ṣàlàyé èyí,Explain this,App phrase,draft
+explainQuestionPreview,yo-explainQuestionPreview.m4a,"Nígbà tí N-ATLAS bá so pọ̀, Magana yóò dáhùn ìbéèrè rẹ láti ojú-ìwé yìí. Fún báyìí, ojú-ìwé náà nìyí.","When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.",App phrase,draft
+msg_explain_preview,yo-msg_explain_preview.m4a,"Àyẹ̀wò ni èyí. Àlàyé ní èdè rẹ yóò dé nígbà tí N-ATLAS bá so pọ̀. Ojú-ìwé náà nìyí, a kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́.","This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",App phrase,draft
+msg_explained,yo-msg_explained.m4a,Àlàyé náà nìyí.,Here is the explanation.,App phrase,draft
+msg_explain_bad_source,yo-msg_explain_bad_source.m4a,Kò sí ọ̀rọ̀ ojú-ìwé láti ṣàlàyé. Jọ̀wọ́ ka ojú-ìwé kan kọ́kọ́.,There is no page text to explain. Please read a page first.,App phrase,draft
+jumpWithinPage,yo-jumpWithinPage.m4a,Fò sí ibòmíràn nínú ojú-ìwé,Jump within page,App phrase,draft
+jumpStart,yo-jumpStart.m4a,Ìbẹ̀rẹ̀ ojú-ìwé,Start of the page,App phrase,draft
+jumpWarnings,yo-jumpWarnings.m4a,Ohun tó kàn tí mi ò dá lójú,Next thing I'm not sure about,App phrase,draft
+jumpNotYet,yo-jumpNotYet.m4a,A kò tíì lè fò sí àwọn àwòrán.,Jumping to diagrams is not available yet.,App phrase,draft
+paperLetter,yo-paperLetter.m4a,Lẹ́tà àti fọ́ọ̀mù,Letters & forms,App phrase,draft
+paperLetterDetail,yo-paperLetterDetail.m4a,"Ìkéde, fọ́ọ̀mù, ìwé ẹ̀sìn","Notices, forms, religious texts",App phrase,draft
+noteLetter,yo-noteLetter.m4a,"Magana ń ka ohun tí a tẹ̀. Kì í fúnni ní ìmọ̀ràn òfin tàbí ti owó, kì í sì í béèrè PIN tàbí ọ̀rọ̀ aṣínà rẹ.","Magana reads what is printed. It does not give legal or financial advice, and never asks for your PIN or password.",App phrase,draft
+readAnyPaper,yo-readAnyPaper.m4a,Ka ìwé èyíkéyìí,Read any paper,App phrase,draft
+readAnyPaperDetail,yo-readAnyPaperDetail.m4a,Magana yóò mọ irú ìwé tí ó jẹ́,Magana works out what kind of paper it is,App phrase,draft
+readAgain,yo-readAgain.m4a,Tún kà á,Read again,App phrase,draft
+askAboutResult,yo-askAboutResult.m4a,Kí ni èyí túmọ̀ sí?,What does this mean?,App phrase,draft
+resultAnswer,yo-resultAnswer.m4a,"Òṣìṣẹ́ ìlera rẹ nìkan ló lè ṣàlàyé ohun tí èsì yìí túmọ̀ sí fún ọ. Mo lè fi ìbéèrè rẹ pamọ́ fún ìbẹ̀wò rẹ tó kàn, tàbí kí n ní kí nọ́ọ̀sì pè ọ́.","Only your health worker can explain what this result means for you. I can save your question for your next visit, or ask a nurse to call you.",App phrase,draft
+saveQuestion,yo-saveQuestion.m4a,Fi ìbéèrè pamọ́,Save question,App phrase,draft
+questionSaved,yo-questionSaved.m4a,A ti fi pamọ́. Wà á rí i nínú Bá òṣìṣẹ́ ìlera sọ̀rọ̀.,Saved. You will find it in Talk to a health worker.,App phrase,draft
+askANurse,yo-askANurse.m4a,Béèrè lọ́wọ́ nọ́ọ̀sì,Ask a nurse,App phrase,draft
+savedQuestionsTitle,yo-savedQuestionsTitle.m4a,Àwọn ìbéèrè fún ìbẹ̀wò rẹ tó kàn,Questions for your next visit,App phrase,draft
+fromTheStatement,yo-fromTheStatement.m4a,"Láti inú ìwé bánkì, gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́","From the statement, exactly as printed",App phrase,draft
+findTransaction,yo-findTransaction.m4a,Wá ìṣòwò kan,Find a transaction,App phrase,draft
+findPrompt,yo-findPrompt.m4a,"Sọ tàbí kọ ọ̀rọ̀, ọjọ́ tàbí iye owó láti inú ìṣòwò náà.","Say or type a word, date or amount from the transaction.",App phrase,draft
+findField,yo-findField.m4a,"Ọ̀rọ̀, ọjọ́ tàbí iye","Word, date or amount",App phrase,draft
+findSearch,yo-findSearch.m4a,Wá a,Find,App phrase,draft
+findSpeak,yo-findSpeak.m4a,Sọ ọ́ dípò rẹ̀,Speak instead,App phrase,draft
+sayYesOrNo,yo-sayYesOrNo.m4a,"Sọ bẹ́ẹ̀ni, rárá, tàbí mi ò mọ̀","Say yes, no, or I can't tell",App phrase,draft
+shareScore,yo-shareScore.m4a,Pín ìwọ̀n mi pẹ̀lú olùkọ́ mi,Share my score with my teacher,App phrase,draft
+shareScoreNote,yo-shareScoreNote.m4a,"Olùkọ́ rẹ yóò rí ìwọ̀n rẹ, kì í ṣe ojú-ìwé tàbí ìbéèrè rẹ, nígbà tí a bá so kíláàsì rẹ pọ̀ mọ́ ojú-òpó olùkọ́ Magana.","Your teacher will see your score, never your pages or questions, once your class is connected to the Magana teacher portal.",App phrase,draft
+sayNameWhenLocked,yo-sayNameWhenLocked.m4a,Sọ orúkọ oògùn nígbà tí fóònù bá wà ní títì,Say the medicine name when locked,App phrase,draft
+sayNameNote,yo-sayNameNote.m4a,"Ní pípa: ojú títì yóò sọ “Ìrántí Magana” nìkan. Ní títàn: ojú títì yóò fi oògùn àti iye rẹ̀ hàn, Magana yóò sì sọ wọ́n jáde ní àkókò kọ̀ọ̀kan, nítorí náà àwọn tó wà nítòsí rẹ lè rí tàbí gbọ́ wọn.","Off: the lock screen says only “Magana reminder”. On: the lock screen shows the medicine and how much, and Magana says them aloud at each time, so people near you may see or hear them.",App phrase,draft
+reminderGenericTitle,yo-reminderGenericTitle.m4a,Ìrántí Magana,Magana reminder,App phrase,draft
+reminderGenericBody,yo-reminderGenericBody.m4a,Ṣí Magana láti gbọ́ oògùn wo.,Open Magana to hear which medicine.,App phrase,draft
+msg_bad_api_key,yo-msg_bad_api_key.m4a,Ẹ̀dà Magana yìí kò lè dé iṣẹ́ kíkà. Jọ̀wọ́ ṣe àtúnṣe áàpù náà.,This copy of Magana can't reach the reading service. Please update the app.,App phrase,draft
+msg_explain_unavailable,yo-msg_explain_unavailable.m4a,"Àlàyé kò sí lọ́wọ́lọ́wọ́. Ojú-ìwé náà nìyí, a kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́.","Explanations aren't available right now. Here is the page, read exactly as printed.",App phrase,draft
+msg_asr_unavailable,yo-msg_asr_unavailable.m4a,A kò tíì ṣètò ìdánimọ̀ ohùn lórí sáfà; ti fóònù ni a ń lò.,Speech recognition on the server is not set up; the phone's own is used.,App phrase,draft
+msg_audio_too_long,yo-msg_audio_too_long.m4a,Gbígbohùnsílẹ̀ yẹn ti gùn jù. Jọ̀wọ́ sọ ìdáhùn kúkúrú.,That recording is too long. Please say a short answer.,App phrase,draft
+msg_unreadable_audio,yo-msg_unreadable_audio.m4a,Mi ò gbọ́ gbígbohùnsílẹ̀ yẹn. Jọ̀wọ́ tún gbìyànjú.,I couldn't hear that recording. Please try again.,App phrase,draft
+aboutTitle,yo-aboutTitle.m4a,Nípa Magana,About Magana,App phrase,draft
+aboutModels,yo-aboutModels.m4a,Àwọn àwòṣe èdè,Language models,App phrase,draft
+aboutModelsNote,yo-aboutModelsNote.m4a,"Magana ń lo àwọn àwòṣe ṣíṣí wọ̀nyí lábẹ́ Òfin Ìlò N-ATLaS, ẹ̀yà 1.0. A ṣe àdàkọ àwọn ìlà ìdúpẹ́ ìsàlẹ̀ yìí gẹ́gẹ́ bí òfin náà ṣe béèrè.","Magana uses these open models under the N-ATLaS Terms of Use, version 1.0. The credit lines below are quoted as the terms require.",App phrase,draft
+aboutExplain,yo-aboutExplain.m4a,Àlàyé ní èdè rẹ,Explanations in your language,App phrase,draft
+aboutSpeech,yo-aboutSpeech.m4a,Ìdánimọ̀ ohùn,Speech recognition,App phrase,draft
+openSourceLicences,yo-openSourceLicences.m4a,Ìwé-àṣẹ orísun ṣíṣí,Open-source licences,App phrase,draft
+msg_explain_not_available,yo-msg_explain_not_available.m4a,"Àlàyé kò tíì sí. Ojú-ìwé náà nìyí, a kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́.","Explain isn't available yet. Here is the page, read exactly as printed.",App phrase,draft
+quizConfirmNo,yo-quizConfirmNo.m4a,"Rárá, tún bi mí","No, ask me again",App phrase,draft
+quizSayYesOrNo,yo-quizSayYesOrNo.m4a,Sọ bẹ́ẹ̀ni tàbí rárá,Say yes or no,App phrase,draft
+quizSayAgain,yo-quizSayAgain.m4a,Jọ̀wọ́ tún ìdáhùn rẹ sọ.,Please say your answer again.,App phrase,draft
+quizTapInstead,yo-quizTapInstead.m4a,Ó ṣòro fún mi láti gbọ́ ọ. Jọ̀wọ́ tẹ ìdáhùn rẹ lẹ́ẹ̀mejì dípò rẹ̀.,I'm having trouble hearing you. Please double tap your answer instead.,App phrase,draft
+quizSayTrueFalse,yo-quizSayTrueFalse.m4a,Sọ òótọ́ tàbí irọ́,Say true or false,App phrase,draft
+msg_too_many_requests,yo-msg_too_many_requests.m4a,Magana ń ṣiṣẹ́ lọ́wọ́ báyìí. Jọ̀wọ́ dúró fún ìṣẹ́jú kan kí o tún gbìyànjú.,Magana is busy right now. Please wait a minute and try again.,App phrase,draft
+remindersNeedApp,yo-remindersNeedApp.m4a,"Ìrántí nílò áàpù Android tàbí iPhone. Nínú aṣàwákiri, Magana kò lè dún ní àkókò tó tọ́.",Reminders need the Android or iPhone app. In a web browser Magana can't ring at the right time.,App phrase,draft
+quizVoiceUnavailable,yo-quizVoiceUnavailable.m4a,Ìdáhùn pẹ̀lú ohùn kò tíì ṣiṣẹ́ lórí ẹ̀rọ yìí. Tẹ ìdáhùn kan dípò rẹ̀.,Voice answers aren't available on this device yet. Tap an answer instead.,App phrase,draft
+quizKeysHintTrueFalse,yo-quizKeysHintTrueFalse.m4a,"Tẹ tàbí kílíkì òótọ́ tàbí irọ́, tàbí tẹ A fún òótọ́ tàbí B fún irọ́.","Tap or click true or false, or press A for true or B for false.",App phrase,draft
+quizTapAnswer,yo-quizTapAnswer.m4a,Tẹ ìdáhùn kan.,Tap an answer.,App phrase,draft
+startMagana,yo-startMagana.m4a,Bẹ̀rẹ̀ Magana,Start Magana,App phrase,draft
+classTitle,yo-classTitle.m4a,Kíláàsì wo lo wà?,Which class are you in?,App phrase,draft
+classBody,yo-classBody.m4a,Magana yóò yan àwọn ìbéèrè ìdánrawò fún kíláàsì rẹ. Olùkọ́ lè yí i padà lẹ́yìn náà.,Magana picks practice questions for your class. A teacher can change it later.,App phrase,draft
+classNotInSchool,yo-classNotInSchool.m4a,Èmi kò sí ní ilé-ìwé,I'm not in school,App phrase,draft
+classGroupPrimary,yo-classGroupPrimary.m4a,Ilé-ìwé alákọ̀ọ́bẹ̀rẹ̀,Primary school,App phrase,draft
+classGroupJss,yo-classGroupJss.m4a,Ilé-ìwé girama kékeré,Junior secondary,App phrase,draft
+classGroupSss,yo-classGroupSss.m4a,Ilé-ìwé girama àgbà,Senior secondary,App phrase,draft
+classroomChooseClass,yo-classroomChooseClass.m4a,Olùkọ́: yan kíláàsì fún ìpàdé yìí,Teacher: choose the class for this session,App phrase,draft
+classroomNeedsClass,yo-classroomNeedsClass.m4a,Kọ́kọ́ yan kíláàsì.,Choose the class first.,App phrase,draft
+settingsClass,yo-settingsClass.m4a,Kíláàsì mi,My class,App phrase,draft
+settingsChangeClass,yo-settingsChangeClass.m4a,Yí kíláàsì padà (olùkọ́),Change class (teacher),App phrase,draft
+quizFromTeacher,yo-quizFromTeacher.m4a,Láti ọ̀dọ̀ olùkọ́ rẹ,From your teacher,App phrase,draft
+quizSamples,yo-quizSamples.m4a,Àwọn ìbéèrè àpẹẹrẹ,Sample questions,App phrase,draft
+quizChooseClassHint,yo-quizChooseClassHint.m4a,Yan kíláàsì rẹ láti gba àwọn ìbéèrè rẹ̀. Olùkọ́ lè ṣètò rẹ̀ nínú Ètò.,Choose your class to get questions for it. A teacher can set it in Settings.,App phrase,draft
+quizSampleNote,yo-quizSampleNote.m4a,"Àwọn ìbéèrè àpẹẹrẹ tí ẹgbẹ́ Magana kọ. Wọn kì í ṣe ìbéèrè àtijọ́, olùkọ́ yóò sì yẹ̀ wọ́n wò. Èdè Gẹ̀ẹ́sì ni àwọn ìbéèrè wà.","Sample questions written by the Magana team. They are not past questions, and a teacher will check them. The questions are in English.",App phrase,draft
+quizTeacherNote,yo-quizTeacherNote.m4a,Olùkọ́ rẹ ló ṣe é.,Made by your teacher.,App phrase,draft
+quizOr,yo-quizOr.m4a,tàbí,or,App phrase,draft
+quizSessionOpen,yo-quizSessionOpen.m4a,Olùkọ́: ṣí ìpàdé kíláàsì rẹ,Teacher: open your class session,App phrase,draft
+quizSessionPrompt,yo-quizSessionPrompt.m4a,Olùkọ́ nìkan ló yẹ kó ṣí ìpàdé kíláàsì. Kọ kóòdù ìpàdé láti ojú-òpó olùkọ́.,Only the teacher should open a class session. Type the session code from the teacher portal.,App phrase,draft
+quizSessionCodeLabel,yo-quizSessionCodeLabel.m4a,Kóòdù ìpàdé,Session code,App phrase,draft
+quizSessionStart,yo-quizSessionStart.m4a,Ṣí ìpàdé,Open session,App phrase,draft
+quizSessionEnd,yo-quizSessionEnd.m4a,Parí ìpàdé kíláàsì,End class session,App phrase,draft
+quizSessionEmpty,yo-quizSessionEmpty.m4a,Kò sí ìdánrawò láti ọ̀dọ̀ olùkọ́ rẹ nínú ìpàdé yìí síbẹ̀.,No quizzes from your teacher in this session yet.,App phrase,draft
+msg_session_code_invalid,yo-msg_session_code_invalid.m4a,Kóòdù ìpàdé yẹn kò tọ̀nà. Ṣàyẹ̀wò rẹ̀ ní ojú-òpó olùkọ́.,That session code isn't right. Check it in the teacher portal.,App phrase,draft
+msg_paper_lines,yo-msg_paper_lines.m4a,"A kì í fi AI ṣàlàyé ìwé ìlera àti ti owó. A ń ka ìlà kọ̀ọ̀kan gẹ́lẹ́, ní èdè rẹ níbi tí ìtumọ̀ tí a ti yẹ̀wò bá wà nìkan.","Health and money papers aren't explained by AI. Each line is read exactly, in your language only where a checked translation exists.",App phrase,draft
+msg_cant_translate_line_health,yo-msg_cant_translate_line_health.m4a,Mi ò lè túmọ̀ ìlà yìí láìléwu. Jọ̀wọ́ bi oníṣègùn òyìnbó (pharmacist) léèrè.,I can't translate this line safely. Please ask a pharmacist.,App phrase,draft
+msg_cant_translate_line_money,yo-msg_cant_translate_line_money.m4a,Mi ò lè túmọ̀ ìlà yìí láìléwu. Jọ̀wọ́ bi ẹnìkan ní báǹkì rẹ léèrè.,I can't translate this line safely. Please ask someone at your bank.,App phrase,draft
+msg_numbers_left_out,yo-msg_numbers_left_out.m4a,Àwọn nọ́ńbà gangan wà lórí ojú-ìwé náà. Sọ ‘read again’ láti gbọ́ wọn.,The exact numbers are on the page. Say ‘read again’ to hear them.,App phrase,draft
+explainReadAgain,yo-explainReadAgain.m4a,Tún ojú-ìwé náà kà,Read the page again,App phrase,draft
+quizNotSure,yo-quizNotSure.m4a,Kò dá mi lójú ohun tí o sọ. Jọ̀wọ́ tún ìdáhùn rẹ sọ.,I'm not sure what you said. Please say your answer again.,App phrase,draft
+quizVoicePrimaryOff,yo-quizVoicePrimaryOff.m4a,"Ní kíláàsì alákọ̀ọ́bẹ̀rẹ̀, tẹ ìdáhùn rẹ. Ìdáhùn pẹ̀lú ohùn yóò dé lẹ́yìn náà.","In primary classes, tap your answer. Voice answers come later.",App phrase,draft
+whoTitle,yo-whoTitle.m4a,Ta ni ń lo Magana?,Who is using Magana?,App phrase,draft
+whoBody,yo-whoBody.m4a,Èyí ń ran Magana lọ́wọ́ láti yan ẹ̀kọ́ àti ìdánwò tó bá ọ mu.,This helps Magana choose the right lessons and quizzes for you.,App phrase,draft
+whoInSchool,yo-whoInSchool.m4a,Mo wà ní ilé-ìwé,I’m in school,App phrase,draft
+whoInSchoolDetail,yo-whoInSchoolDetail.m4a,Alákọ̀ọ́bẹ̀rẹ̀ tàbí girama. Wàá darapọ̀ mọ́ kíláàsì rẹ pẹ̀lú kóòdù láti ọ̀dọ̀ olùkọ́ rẹ.,Primary or secondary. You’ll join your class with a code from your teacher.,App phrase,draft
+whoFinished,yo-whoFinished.m4a,Mo ti parí ilé-ìwé,I’ve finished school,App phrase,draft
+whoFinishedDetail,yo-whoFinishedDetail.m4a,"Múra sílẹ̀ fún JAMB tàbí WAEC, mú ìwé kíkà rẹ dára sí i, tàbí kọ́ ọgbọ́n tuntun.","Practise for JAMB or WAEC, improve your reading, or learn new skills.",App phrase,draft
+whoOther,yo-whoOther.m4a,Yunifásítì tàbí òmíràn,University or other,App phrase,draft
+whoOtherDetail,yo-whoOtherDetail.m4a,"Ka àwọn ìwé, àkọsílẹ̀ àti bébà rẹ. Kò sí kíláàsì tí a nílò.","Read your own books, notes and papers. No class needed.",App phrase,draft
+joinTitle,yo-joinTitle.m4a,Darapọ̀ mọ́ kíláàsì rẹ,Join your class,App phrase,draft
+joinBody,yo-joinBody.m4a,Béèrè kóòdù kíláàsì oní-nọ́ńbà 6 lọ́wọ́ olùkọ́ rẹ.,Ask your teacher for the 6-digit class code.,App phrase,draft
+classCodeLabel,yo-classCodeLabel.m4a,Kóòdù kíláàsì,Class code,App phrase,draft
+teacherCodeLabel,yo-teacherCodeLabel.m4a,Kóòdù olùkọ́,Teacher code,App phrase,draft
+codeEmpty,yo-codeEmpty.m4a,Kò sí nọ́ńbà kankan síbẹ̀. Tẹ nọ́ńbà 6.,No digits yet. Type 6 digits.,App phrase,draft
+codeNeedsSix,yo-codeNeedsSix.m4a,Kọ́kọ́ tẹ gbogbo nọ́ńbà 6.,Type all 6 digits first.,App phrase,draft
+keypadDelete,yo-keypadDelete.m4a,Pa rẹ́,Delete,App phrase,draft
+keypadReadBack,yo-keypadReadBack.m4a,Kà á padà,Read back,App phrase (also used as pdfPasswordReadBack),draft
+joinUnder18Note,yo-joinUnder18Note.m4a,"Ṣé o kò tíì pé 18? Olùkọ́ rẹ yóò béèrè pé kí òbí tàbí alágbàtọ́ gbà kí a tó so kíláàsì rẹ pọ̀. Títí di ìgbà náà, o ṣì lè ka ojú-ìwé.",Under 18? Your teacher will ask a parent or guardian to agree before your class is linked. Until then you can still read pages.,App phrase,draft
+joinButton,yo-joinButton.m4a,Darapọ̀ mọ́ kíláàsì,Join class,App phrase,draft
+joinNoCode,yo-joinNoCode.m4a,Mi ò tíì ní kóòdù,I don’t have a code yet,App phrase,draft
+joinedTitle,yo-joinedTitle.m4a,O ti wọlé!,You’re in!,App phrase,draft
+joinedRightClass,yo-joinedRightClass.m4a,"Ṣé kíláàsì tó tọ́ nìyí? Bí kò bá rí bẹ́ẹ̀, sọ fún olùkọ́ rẹ. Olùkọ́ rẹ nìkan ló lè gbé ọ lọ sí kíláàsì mìíràn.","Is this the right class? If not, tell your teacher. Only your teacher can move you to a different class.",App phrase,draft
+joinedWaiting,yo-joinedWaiting.m4a,A ń dúró de òbí tàbí alágbàtọ́ rẹ láti gbà. Olùkọ́ rẹ yóò béèrè lọ́wọ́ wọn.,Waiting for your parent or guardian to agree. Your teacher will ask them.,App phrase,draft
+startReading,yo-startReading.m4a,Bẹ̀rẹ̀ sí í kà,Start reading,App phrase,draft
+changeClassTitle,yo-changeClassTitle.m4a,Yí kíláàsì padà,Change class,App phrase,draft
+changeClassNow,yo-changeClassNow.m4a,Kíláàsì rẹ báyìí,Your class now,App phrase,draft
+teacherCodeNeededTitle,yo-teacherCodeNeededTitle.m4a,Olùkọ́ rẹ ló gbọ́dọ̀ ṣe èyí,Your teacher needs to do this,App phrase,draft
+teacherCodeBody,yo-teacherCodeBody.m4a,Ní kí olùkọ́ rẹ tẹ kóòdù olùkọ́ wọn. Ó wà lójú-ìwé olùkọ́ Magana wọn.,Ask your teacher to enter their teacher code. It’s on their Magana teacher page.,App phrase,draft
+newClassCodeTitle,yo-newClassCodeTitle.m4a,Báyìí kóòdù kíláàsì tuntun,Now the new class’s code,App phrase,draft
+confirmLabel,yo-confirmLabel.m4a,Fìdí múlẹ̀,Confirm,App phrase,draft
+teacherCodeLockNote,yo-teacherCodeLockNote.m4a,Kóòdù tí kò tọ̀nà ní ìgbà 3? Magana máa dúró fún ìṣẹ́jú 5 kí o tó lè tún gbìyànjú.,Wrong code 3 times? Magana waits 5 minutes before you can try again.,App phrase,draft
+goalsTitle,yo-goalsTitle.m4a,Kí ni o fẹ́ ṣe?,What would you like to do?,App phrase,draft
+goalsBody,yo-goalsBody.m4a,Yan iye tí o bá fẹ́.,Choose as many as you like.,App phrase,draft
+goalJamb,yo-goalJamb.m4a,Múra sílẹ̀ fún JAMB,Prepare for JAMB,App phrase,draft
+goalJambDetail,yo-goalJambDetail.m4a,"Ìdánrawò bí ìbéèrè àtijọ́: Gẹ̀ẹ́sì, Ìṣirò àti bẹ́ẹ̀ bẹ́ẹ̀ lọ","Past-question style practice: English, Maths and more",App phrase,draft
+goalWaec,yo-goalWaec.m4a,Múra sílẹ̀ fún àtúnṣe WAEC tàbí NECO,Prepare for WAEC or NECO resit,App phrase,draft
+goalWaecDetail,yo-goalWaecDetail.m4a,"Ìdánrawò nípa kókó-ẹ̀kọ́, ní ìpele SS3","Practice by subject, at SS3 level",App phrase,draft
+goalReading,yo-goalReading.m4a,Ṣe ìdánrawò kíkà,Practise reading,App phrase,draft
+goalReadingDetail,yo-goalReadingDetail.m4a,"Àwọn àyọkà kúkúrú àti ìtàn, tí a kà pẹ̀lú rẹ","Short passages and stories, read with you",App phrase,draft
+goalSkills,yo-goalSkills.m4a,Kọ́ ọgbọ́n tuntun,Learn new skills,App phrase,draft
+goalSkillsDetail,yo-goalSkillsDetail.m4a,"Ọgbọ́n fóònù, ìrìn-àjò, ìpìlẹ̀ owó","Phone skills, getting around, money basics",App phrase,draft
+goalPapers,yo-goalPapers.m4a,Ka àwọn bébà mi nìkan,Just read my papers,App phrase,draft
+goalPapersDetail,yo-goalPapersDetail.m4a,"Lẹ́tà, owó-ìnáwó, àmì òògùn","Letters, bills, medicine labels",App phrase,draft
+goalsNote,yo-goalsNote.m4a,O lè yí wọn padà nígbàkúùgbà nínú Ètò. Kò nílò olùkọ́.,You can change these any time in Settings. No teacher needed.,App phrase,draft
+saveLabel,yo-saveLabel.m4a,Fi pamọ́,Save,App phrase,draft
+waitingBanner,yo-waitingBanner.m4a,"A ń dúró de òbí tàbí alágbàtọ́ rẹ láti gbà. Títí di ìgbà náà, o lè ka ojú-ìwé.",Waiting for your parent or guardian to agree. Until then you can read pages.,App phrase,draft
+removedNotice,yo-removedNotice.m4a,Olùkọ́ rẹ ti yọ fóònù yìí kúrò ní kíláàsì náà. O ṣì lè ka ojú-ìwé.,Your teacher removed this phone from the class. You can still read pages.,App phrase,draft
+settingsGoals,yo-settingsGoals.m4a,Àwọn àfojúsùn mi,My goals,App phrase,draft
+settingsNoClass,yo-settingsNoClass.m4a,Kò sí ní kíláàsì,Not in a class,App phrase,draft
+practiceLevelTitle,yo-practiceLevelTitle.m4a,Ìpele ìdánrawò mi,My practice level,App phrase,draft
+msg_unreadable_pdf,yo-msg_unreadable_pdf.m4a,Mi ò lè ṣí PDF yìí. Jọ̀wọ́ gbìyànjú fáìlì míì.,I couldn't open that PDF. Please try another file.,App phrase,draft
+msg_pdf_password_needed,yo-msg_pdf_password_needed.m4a,A ti tì PDF yìí. Tẹ ọ̀rọ̀ aṣínà rẹ̀: ó sábà máa ń wà nínú ímeèlì tó bá a wá.,This PDF is locked. Type its password: it is often in the email that came with it.,App phrase,draft
+msg_pdf_password_wrong,yo-msg_pdf_password_wrong.m4a,Ọ̀rọ̀ aṣínà yẹn kò ṣí PDF náà. Jọ̀wọ́ ṣàyẹ̀wò rẹ̀ kí o tún gbìyànjú.,That password didn't open the PDF. Please check it and try again.,App phrase,draft
+msg_pdf_too_long,yo-msg_pdf_too_long.m4a,PDF yìí ti gùn jù. Mo lè ka ojú-ìwé 20 lẹ́ẹ̀kan.,This PDF is too long. I can read up to 20 pages at a time.,App phrase,draft
+readPdf,yo-readPdf.m4a,Ka PDF,Read a PDF,App phrase (also used as pdfTitle),draft
+readPdfDetail,yo-readPdfDetail.m4a,"Ìwé àkọsílẹ̀ báǹkì, èsì tàbí lẹ́tà tí a fi ránṣẹ́ sí fóònù rẹ","A bank statement, result or letter sent to your phone",App phrase,draft
+pdfBody,yo-pdfBody.m4a,"Yan PDF kan lórí fóònù rẹ. O tún lè ṣí i láti WhatsApp, Gmail tàbí Files pẹ̀lú “Ṣí pẹ̀lú Magana” tàbí Pín.","Choose a PDF on your phone. You can also open one from WhatsApp, Gmail or Files with “Open with Magana” or Share.",App phrase,draft
+pdfChoose,yo-pdfChoose.m4a,Yan PDF,Choose a PDF,App phrase,draft
+pdfReading,yo-pdfReading.m4a,À ń ka PDF náà. Àkọsílẹ̀ gígùn máa ń gba ìgbà díẹ̀.,Reading the PDF. Long statements take a little while.,App phrase,draft
+pdfPasswordTitle,yo-pdfPasswordTitle.m4a,A ti tì PDF yìí,This PDF is locked,App phrase,draft
+pdfPasswordBody,yo-pdfPasswordBody.m4a,"Tẹ ọ̀rọ̀ aṣínà rẹ̀. Àwọn báǹkì sábà máa ń fi ránṣẹ́ nínú ímeèlì kan náà, tàbí ó jẹ́ apá kan nọ́ńbà fóònù rẹ tàbí ọjọ́ ìbí rẹ.","Type its password. Banks often send it in the same email, or it's part of your phone number or date of birth.",App phrase,draft
+pdfPasswordLabel,yo-pdfPasswordLabel.m4a,Ọ̀rọ̀ aṣínà PDF,PDF password,App phrase,draft
+pdfPasswordNote,yo-pdfPasswordNote.m4a,"Magana máa ń lo ọ̀rọ̀ aṣínà yìí láti ṣí fáìlì yìí nìkan, lẹ́yìn náà ó máa gbàgbé rẹ̀. A kì í tọ́jú rẹ̀. Magana kì í béèrè PIN báǹkì rẹ tàbí ọ̀rọ̀ aṣínà áàpù rẹ.","Magana uses this password only to open this file, then forgets it. It is never saved. Magana never asks for your bank PIN or app password.",App phrase,draft
+pdfOpen,yo-pdfOpen.m4a,Ṣí PDF náà,Open the PDF,App phrase,draft
+pdfPasswordEmpty,yo-pdfPasswordEmpty.m4a,Kọ́kọ́ tẹ ọ̀rọ̀ aṣínà.,Type the password first.,App phrase,draft
+pdfNotChosen,yo-pdfNotChosen.m4a,A kò yan PDF kankan.,No PDF chosen.,App phrase,draft
+msg_small_print,yo-msg_small_print.m4a,"Ọ̀rọ̀ inú fọ́tò yìí kéré jù tàbí kò hàn dáadáa, nítorí náà mo lè fo apá kan. Sún fóònù sún mọ́ ọn, tàbí ṣí PDF fúnra rẹ̀ tí o bá ní i.","The print is very small or faint in this photo, so I may miss some of it. Move the phone closer, or open the PDF itself if you have it.",App phrase,draft
+msg_handwritten_page,yo-msg_handwritten_page.m4a,"Ojú-ìwé yìí dà bí ìkọ̀wé ọwọ́. Ìkọ̀wé ọwọ́ ṣòro fún mi, nítorí náà mo lè ṣi ọ̀rọ̀ kà. Mo máa ń ka nọ́ńbà nígbà tí ó dá mi lójú nìkan.","This page looks handwritten. Handwriting is hard for me, so I may get words wrong. Numbers are only read when I'm sure.",App phrase,draft
+msg_mixed_page,yo-msg_mixed_page.m4a,Apá kan ojú-ìwé yìí dà bí ìkọ̀wé ọwọ́. Mo lè ṣi àwọn apá yẹn kà. Mo máa ń ka nọ́ńbà ibẹ̀ nígbà tí ó dá mi lójú nìkan.,Some of this page looks handwritten. I may get those parts wrong. Numbers there are only read when I'm sure.,App phrase,draft
+msg_handwritten_prescription,yo-msg_handwritten_prescription.m4a,Èyí dà bí ìkọ̀wé ọwọ́ lórí ìwé ìlera. Mi ò ní ka oògùn tàbí ìwọ̀n tí a fi ọwọ́ kọ. Jọ̀wọ́ ní kí oníṣègùn-oògùn tàbí nọ́ọ̀sì kà á fún ọ.,This looks like handwriting on a health paper. I won't read handwritten medicines or doses. Please ask the pharmacist or nurse to read it to you.,App phrase,draft
+msg_money_amounts_unreliable,yo-msg_money_amounts_unreliable.m4a,"Mi ò lè ka iye owó tó wà lójú-ìwé yìí dáadáa. Jọ̀wọ́ ṣí PDF láti inú áàpù báǹkì rẹ tàbí ímeèlì, tàbí kí o béèrè lọ́wọ́ ẹni tí o fọkàn tán.","I can't read the amounts on this page reliably. Please open the PDF from your bank's app or email, or ask someone you trust.",App phrase,draft
+msg_reading_incomplete,yo-msg_reading_incomplete.m4a,Kíkà yìí kò pé. Àwọn apá tí mo lè ṣàyẹ̀wò nìkan ni màá kà.,This reading is incomplete. I'll read only the parts I could check.,App phrase,draft
+headingLabel,yo-headingLabel.m4a,Àkọlé,Heading,App phrase,draft
+nextColumn,yo-nextColumn.m4a,Ọ̀wọ̀n tó kàn,Next column,App phrase,draft
+lastColumn,yo-lastColumn.m4a,Èyí ni ọ̀wọ̀n tó kẹ́yìn.,This is the last column.,App phrase,draft
+jumpHeadings,yo-jumpHeadings.m4a,Àwọn àkọlé,Headings,App phrase,draft
+jumpColumns,yo-jumpColumns.m4a,Àwọn ọ̀wọ̀n,Columns,App phrase,draft
+jumpTables,yo-jumpTables.m4a,Àwọn tábìlì,Tables,App phrase,draft
+noHeadings,yo-noHeadings.m4a,Mi ò rí àkọlé kankan lójú ìwé yìí.,I didn't find any headings on this page.,App phrase,draft
+noColumns,yo-noColumns.m4a,Ọ̀wọ̀n kan ṣoṣo ni ojú ìwé yìí ní.,This page has one column.,App phrase,draft
+noTables,yo-noTables.m4a,Kò sí tábìlì lójú ìwé yìí.,This page has no tables.,App phrase,draft
+mapNow,yo-mapNow.m4a,báyìí,now,App phrase,draft
+mapNext,yo-mapNext.m4a,tó kàn,next,App phrase,draft
+spellWord,yo-spellWord.m4a,Sọ lẹ́tà ọ̀rọ̀,Spell word,App phrase,draft
+spellNone,yo-spellNone.m4a,Kò sí ọ̀rọ̀ tí a sàmì sí lórí ìlà yìí.,No marked words on this line.,App phrase,draft
+askSomeone,yo-askSomeone.m4a,Béèrè lọ́wọ́ ẹnìkan,Ask someone,App phrase,draft
+msg_letters_ha,yo-msg_letters_ha.m4a,"Ojú ìwé Hausa. Mo lè pàdánù àwọn lẹ́tà bíi ƙ, ɗ àti ɓ. Àwọn ọ̀rọ̀ tí a sàmì sí lè ní ọ̀kan nínú wọn. Sọ lẹ́tà ọ̀rọ̀ kan tàbí yẹ̀ ẹ́ wò pẹ̀lú ẹnìkan.","Hausa page. I can miss letters like ƙ, ɗ and ɓ. Marked words may have one of these. Spell a word or check it with someone.",App phrase,draft
+msg_letters_yo,yo-msg_letters_yo.m4a,"Ojú ìwé Yorùbá. Mo lè pàdánù àwọn lẹ́tà bíi ẹ, ọ àti ṣ, àti àmì ohùn. Àwọn ọ̀rọ̀ tí a sàmì sí lè ní ọ̀kan nínú wọn. Sọ lẹ́tà ọ̀rọ̀ kan tàbí yẹ̀ ẹ́ wò pẹ̀lú ẹnìkan.","Yorùbá page. I can miss letters like ẹ, ọ and ṣ, and tone marks. Marked words may have one of these. Spell a word or check it with someone.",App phrase,draft
+msg_letters_ig,yo-msg_letters_ig.m4a,"Ojú ìwé Igbo. Mo lè pàdánù àwọn lẹ́tà bíi ị, ọ àti ụ. Àwọn ọ̀rọ̀ tí a sàmì sí lè ní ọ̀kan nínú wọn. Sọ lẹ́tà ọ̀rọ̀ kan tàbí yẹ̀ ẹ́ wò pẹ̀lú ẹnìkan.","Igbo page. I can miss letters like ị, ọ and ụ. Marked words may have one of these. Spell a word or check it with someone.",App phrase,draft
+msg_cut_off_top,yo-msg_cut_off_top.m4a,Apá kan ojú ìwé ti gé kúrò lókè.,Part of the page is cut off at the top.,App phrase,draft
+msg_cut_off_bottom,yo-msg_cut_off_bottom.m4a,Apá kan ojú ìwé ti gé kúrò nísàlẹ̀.,Part of the page is cut off at the bottom.,App phrase,draft
+msg_cut_off_left,yo-msg_cut_off_left.m4a,Apá kan ojú ìwé ti gé kúrò lápá òsì.,Part of the page is cut off at the left.,App phrase,draft
+msg_cut_off_right,yo-msg_cut_off_right.m4a,Apá kan ojú ìwé ti gé kúrò lápá ọ̀tún.,Part of the page is cut off at the right.,App phrase,draft
+offlineBanner,yo-offlineBanner.m4a,Kò sí íńtánẹ́ẹ̀tì. Mò ń kà á lórí fóònù yìí.,No internet. Reading on this phone.,App phrase,draft
+offlineBannerSlow,yo-offlineBannerSlow.m4a,Sáfà Magana kò dáhùn. Mò ń kà á lórí fóònù yìí.,Magana's server isn't answering. Reading on this phone.,App phrase,draft
+offlineNote,yo-offlineNote.m4a,"Kíkà ìpìlẹ̀ nìkan. Tábìlì, ọ̀wọ̀n àti Àlàyé nílò íńtánẹ́ẹ̀tì.","Basic reading only. Tables, columns and Explain need internet.",App phrase,draft
+offlineQueued,yo-offlineQueued.m4a,"Màá pa ojú ìwé yìí mọ́, màá sì kà á ní kíkún nígbà tí íńtánẹ́ẹ̀tì bá padà.",I'll keep this page and do a full reading when you're back online.,App phrase,draft
+fullReadingWhenOnline,yo-fullReadingWhenOnline.m4a,Kíkà ní kíkún nígbà tí íńtánẹ́ẹ̀tì bá wà,Full reading when online,App phrase,draft
+cueTiltToward,yo-cueTiltToward.m4a,Tẹ orí fóònù sọ́dọ̀ rẹ,Tilt the top of the phone toward you,App phrase,draft
+cueTiltAway,yo-cueTiltAway.m4a,Tẹ orí fóònù kúrò lọ́dọ̀ rẹ,Tilt the top of the phone away from you,App phrase,draft
+cueBlurry,yo-cueBlurry.m4a,Kò mọ́. Dúró jẹ́ẹ́,Blurry. Hold still,App phrase,draft
+readerCommandHelp,yo-readerCommandHelp.m4a,"O lè sọ pé: next, back, repeat, pause, read, next column, headings tàbí spell. Sọ àwọn àṣẹ ní èdè Gẹ̀ẹ́sì fún báyìí.","You can say: next, back, repeat, pause, read, next column, headings, spell or report a problem. Say commands in English for now.",App phrase,draft
+explainInEnglish,yo-explainInEnglish.m4a,Gbọ́ ọ ní Gẹ̀ẹ́sì,Hear it in English,App phrase,draft
+msg_progress_shared,yo-msg_progress_shared.m4a,A ti fi àpapọ̀ rẹ ránṣẹ́ sí olùkọ́ rẹ.,Your totals were shared with your teacher.,App phrase,draft
+helpCheckPage,yo-helpCheckPage.m4a,Ṣé o ka ojú-ìwé yìí fúnra rẹ?,Did you read this page on your own?,App phrase,draft
+helpCheckPdf,yo-helpCheckPdf.m4a,Ṣé o ka PDF yìí fúnra rẹ?,Did you read this PDF on your own?,App phrase,draft
+helpCheckQuiz,yo-helpCheckQuiz.m4a,Ṣé o ṣe ìdánwò yìí fúnra rẹ?,Did you do this quiz on your own?,App phrase,draft
+helpCheckHow,yo-helpCheckHow.m4a,"Sọ “bẹ́ẹ̀ni”, “ìrànlọ́wọ́” tàbí “fò ó”, tàbí tẹ̀ ẹ́.","Say “yes”, “some help” or “skip”, or tap.",App phrase,draft
+helpOwn,yo-helpOwn.m4a,"Bẹ́ẹ̀ni, fúnra mi","Yes, on my own",App phrase,draft
+helpOwnDetail,yo-helpOwnDetail.m4a,Kò sí ìrànlọ́wọ́ ẹni tó ríran,No sighted help,App phrase,draft
+helpSome,yo-helpSome.m4a,Mo nílò ìrànlọ́wọ́ díẹ̀,I needed some help,App phrase,draft
+helpSomeDetail,yo-helpSomeDetail.m4a,Ẹnìkan ràn mí lọ́wọ́ pẹ̀lú apá kan,Someone helped with part of it,App phrase,draft
+helpSkip,yo-helpSkip.m4a,Fò ó,Skip,App phrase,draft
+helpSkipDetail,yo-helpSkipDetail.m4a,Má ṣe béèrè lónìí,Don’t ask today,App phrase,draft
+helpCheckNoteClass,yo-helpCheckNoteClass.m4a,"A máa ń béèrè lẹ́ẹ̀kan lójúmọ́ péré. Olùkọ́ rẹ ń rí àpapọ̀ nìkan, kì í ṣe ohun tí o kà.","Asked once a day at most. Your teacher sees only the totals, never what you read.",App phrase,draft
+helpCheckNotePhone,yo-helpCheckNotePhone.m4a,A máa ń béèrè lẹ́ẹ̀kan lójúmọ́ péré. Àwọn ìdáhùn rẹ wà lórí fóònù yìí.,Asked once a day at most. Your answers stay on this phone.,App phrase,draft
+helpCheckNotHeard,yo-helpCheckNotHeard.m4a,"Jọ̀wọ́ sọ bẹ́ẹ̀ni, ìrànlọ́wọ́ tàbí fò ó, tàbí tẹ ìdáhùn rẹ.","Please say yes, some help or skip, or tap your answer.",App phrase,draft
+helpCheckThanks,yo-helpCheckThanks.m4a,O ṣeun.,Thank you.,App phrase,draft
+msg_report_sent,yo-msg_report_sent.m4a,O ṣeun. Ìjábọ̀ rẹ ti dé ọ̀dọ̀ ẹgbẹ́ Magana.,Thank you. Your report went to the Magana team.,App phrase,draft
+msg_voice_note_adults_only,yo-msg_voice_note_adults_only.m4a,Ohùn tí a gbà sílẹ̀ wà fún àgbàlagbà nìkan. Yan ohun tó ṣẹlẹ̀ láti inú àtòjọ.,Voice notes are for adults only. Choose what went wrong from the list.,App phrase,draft
+msg_voice_note_unreadable,yo-msg_voice_note_unreadable.m4a,Mi ò lè lo ohùn yẹn. Jọ̀wọ́ tún gbà á sílẹ̀ tàbí fi ìjábọ̀ ránṣẹ́ láìsí i.,I couldn't use that voice note. Please record it again or send the report without it.,App phrase,draft
+msg_voice_note_too_long,yo-msg_voice_note_too_long.m4a,Ohùn yẹn ti gùn jù. Jọ̀wọ́ jẹ́ kí ó kéré sí ìṣẹ́jú-àáyá 60.,That voice note is too long. Please keep it under 60 seconds.,App phrase,draft
+reportGoesTo,yo-reportGoesTo.m4a,Ó ń lọ sọ́dọ̀ ẹgbẹ́ Magana,Goes to the Magana team,App phrase,draft
+reportWhat,yo-reportWhat.m4a,Kí ló ṣẹlẹ̀?,What went wrong?,App phrase,draft
+reportReadWrong,yo-reportReadWrong.m4a,Ó ka nǹkan kan ní àṣìṣe,It read something wrong,App phrase,draft
+reportHardToUse,yo-reportHardToUse.m4a,Ó ṣòro láti lò,It was hard to use,App phrase,draft
+reportTooSlow,yo-reportTooSlow.m4a,Ó lọ́ra jù,It was too slow,App phrase,draft
+reportRecord,yo-reportRecord.m4a,Gba ohùn sílẹ̀ (títí dé ìṣẹ́jú-àáyá 60),Record a voice note (up to 60 seconds),App phrase,draft
+reportDeleteVoice,yo-reportDeleteVoice.m4a,Pa ohùn rẹ́,Delete voice note,App phrase,draft
+reportIncludeText,yo-reportIncludeText.m4a,Fi ọ̀rọ̀ ojú-ìwé yìí kún un,Include this page’s text,App phrase,draft
+reportIncludeTextNote,yo-reportIncludeTextNote.m4a,Ó wà ní pípa àyàfi tí o bá tàn án. A kì í fi fọ́tò ránṣẹ́ láé.,Off unless you switch it on. Photos are never sent.,App phrase,draft
+reportSend,yo-reportSend.m4a,Fi ìjábọ̀ ránṣẹ́,Send report,App phrase,draft
+reportChooseFirst,yo-reportChooseFirst.m4a,Kọ́kọ́ yan ohun tó ṣẹlẹ̀.,Choose what went wrong first.,App phrase,draft
+reportNoMic,yo-reportNoMic.m4a,Magana kò lè lo makirofóònù. O ṣì lè fi ìjábọ̀ ránṣẹ́.,Magana can't use the microphone. You can still send the report.,App phrase,draft
+msg_offline_no_confidence,yo-msg_offline_no_confidence.m4a,"Fóònù yìí kò lè sọ bí ó ṣe dá a lójú tó nípa ọ̀rọ̀ kọ̀ọ̀kan, nítorí náà gbogbo nọ́ńbà ni a ń kà sí “nọ́ńbà tí kò ṣe kedere”. Ṣàyẹ̀wò àwọn ìwé pàtàkì nígbà tí o bá wà lórí íńtánẹ́ẹ̀tì, tàbí pẹ̀lú ẹnìkan.","This phone can't say how sure it is of each word, so every number is read as “unclear number”. Check important papers when you are online, or with a person.",App phrase,draft
+msg_daily_limit,yo-msg_daily_limit.m4a,O ti ka ọ̀pọ̀ ojú-ìwé lónìí. Magana lè ka sí i lọ́la. Àwọn ojú-ìwé tí o fi pamọ́ wà nínú Ilé-ìkàwé mi.,You've read a lot of pages today. Magana can read more tomorrow. Pages you saved are in My library.,App phrase,draft
+msg_edge_cut_left,yo-msg_edge_cut_left.m4a,Àwọn ọ̀rọ̀ kan ní etí òsì ti gé.,Some words at the left edge are cut off.,App phrase,draft
+msg_edge_cut_right,yo-msg_edge_cut_right.m4a,Àwọn ọ̀rọ̀ kan ní etí ọ̀tún ti gé.,Some words at the right edge are cut off.,App phrase,draft
+msg_faint_print,yo-msg_faint_print.m4a,"Ìtẹ̀wé náà ti fẹ́ parẹ́, nítorí náà mo mú un ṣókùnkùn kí n lè kà á. Ṣàyẹ̀wò àwọn nọ́ńbà pàtàkì pẹ̀lú ẹnìkan.","The print is faint, so I darkened it to read it. Check important numbers with a person.",App phrase,draft
+summaryAsk,yo-summaryAsk.m4a,Sọ “what's unclear” láti gbọ́ ibi tí wọ́n wà.,Say “what's unclear” to hear where.,App phrase,draft
+unclearMark,yo-unclearMark.m4a,Kò ṣe kedere.,Unclear.,App phrase,draft
+whatsUnclear,yo-whatsUnclear.m4a,Kí ni kò ṣe kedere?,What's unclear?,App phrase,draft
+whatsUnclearNone,yo-whatsUnclearNone.m4a,Kò sí ohun tí kò ṣe kedere lórí ojú-ìwé yìí.,Nothing on this page is unclear.,App phrase,draft
+msg_barcode_skipped,yo-msg_barcode_skipped.m4a,Mo fo barcode kan lórí ojú-ìwé yìí.,I skipped a barcode on this page.,App phrase,draft
+touchTapAgain,yo-touchTapAgain.m4a,Tẹ̀ ẹ́ lẹ́ẹ̀kan sí i láti ṣí i.,Tap again to open.,App phrase,draft
+touchExplore,yo-touchExplore.m4a,"Fọwọ́ kàn án láti gbọ́, tàbí sọ orúkọ kan.","Touch to explore, or say a name.",App phrase,draft
+touchToHear,yo-touchToHear.m4a,Fọwọ́ kàn án láti gbọ́,Touch to hear,App phrase,draft
+touchToHearDetail,yo-touchToHearDetail.m4a,Fọwọ́ kan nǹkan láti gbọ́ ohun tó jẹ́; tẹ̀ ẹ́ lẹ́ẹ̀kan sí i láti ṣí i. A kì í lò ó nígbà tí VoiceOver tàbí TalkBack bá wà ní títàn.,Touch something to hear what it is; tap it again to open it. Not used while VoiceOver or TalkBack is on.,App phrase,draft
+touchToHearOn,yo-touchToHearOn.m4a,Fọwọ́ kàn án láti gbọ́: ó wà ní títàn,Touch to hear: on,App phrase,draft
+touchToHearOff,yo-touchToHearOff.m4a,Fọwọ́ kàn án láti gbọ́: kò sí ní títàn,Touch to hear: off,App phrase,draft
+touchIntroTitle,yo-touchIntroTitle.m4a,Lílo Magana nípa fífọwọ́kàn,Using Magana by touch,App phrase,draft
+touchIntroBody,yo-touchIntroBody.m4a,"Olùka-ojú-ìbojú fóònù rẹ kò sí ní títàn, nítorí náà Magana yóò máa sọ̀rọ̀ láti tọ́ ọ sọ́nà.","Your phone's screen reader is off, so Magana will talk you through it.",App phrase,draft
+touchStep1Body,yo-touchStep1Body.m4a,Fa ìka rẹ kiri. Magana yóò sọ ohun tó wà lábẹ́ rẹ̀.,Slide your finger. Magana says what's under it.,App phrase,draft
+touchStep2Title,yo-touchStep2Title.m4a,Tẹ̀ ẹ́ lẹ́ẹ̀kan sí i láti ṣí i,Tap again to open,App phrase,draft
+touchStep2Body,yo-touchStep2Body.m4a,Títẹ̀ ẹ̀ẹ̀kejì lórí nǹkan kan náà yóò ṣí i.,A second tap on the same thing opens it.,App phrase,draft
+touchStep3Title,yo-touchStep3Title.m4a,Tàbí kí o kàn sọ ọ́,Or just say it,App phrase,draft
+touchStep3Body,yo-touchStep3Body.m4a,"Tẹ bọ́tìnì aláwọ̀ ofeefee kí o sọ orúkọ kan, bíi “medicine label”.","Press the yellow button and say a name, like “medicine label”.",App phrase,draft
+touchPractice,yo-touchPractice.m4a,Dánrawò níbí,Practice here,App phrase,draft
+touchPracticeBody,yo-touchPracticeBody.m4a,"Fọwọ́ kan àpótí yìí. Lẹ́yìn náà, tẹ̀ ẹ́ lẹ́ẹ̀kan sí i.",Touch this box. Then tap it again.,App phrase,draft
+touchPracticeDone,yo-touchPracticeDone.m4a,O ṣe dáadáa. Báyìí ni a ṣe ń ṣí nǹkan.,Well done. That is how you open things.,App phrase,draft
+touchGotIt,yo-touchGotIt.m4a,"Ó yé mi, jẹ́ ká bẹ̀rẹ̀","Got it, start",App phrase,draft
+touchUseScreenReader,yo-touchUseScreenReader.m4a,Mo ń lo VoiceOver / TalkBack,I use VoiceOver / TalkBack,App phrase,draft
+sayName,yo-sayName.m4a,Sọ orúkọ kan,Say a name,App phrase,draft
+framingGuidanceTablet,yo-framingGuidanceTablet.m4a,"Tẹ́ ojú-ìwé náà sílẹ̀ níbi tí ìmọ́lẹ̀ dára, kí o sì di tablet mú lókè rẹ̀. Màá sọ bí o ṣe máa sún un fún ọ, màá sì ya fọ́tò náà nígbà tí gbogbo ojú-ìwé bá dúró jẹ́ẹ́. O tún lè tẹ Ya fọ́tò.","Lay the page flat in good light and hold the tablet above it. I'll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.",App phrase,draft
+readPageTablet,yo-readPageTablet.m4a,Tẹ́ ojú-ìwé sílẹ̀. Di tablet mú lókè rẹ̀.,Lay the page flat. Hold the tablet above it.,App phrase,draft
+zoomIn,yo-zoomIn.m4a,Ọ̀rọ̀ tó tóbi sí i,Bigger text,App phrase,draft
+zoomOut,yo-zoomOut.m4a,Ọ̀rọ̀ tó kéré sí i,Smaller text,App phrase,draft
+highContrast,yo-highContrast.m4a,Ìyàtọ̀ àwọ̀ tó ga,High contrast,App phrase,draft
+pageViewLabel,yo-pageViewLabel.m4a,"Ìwé rẹ, a ṣàfihàn ìlà tí a ń kà","Your page, current line highlighted",App phrase,draft
+missedLineLabel,yo-missedLineLabel.m4a,Ìlà tí mo lè ti fò,A line I may have missed,App phrase,draft
+pictureTaken,yo-pictureTaken.m4a,Mo ti ya fọ́tò. Mò ń kà á…,Picture taken. Reading…,App phrase,draft
+stillReading,yo-stillReading.m4a,Mo ṣì ń kà á…,Still reading…,App phrase,draft
+noTextMoveBack,yo-noTextMoveBack.m4a,Mi ò rí ọ̀rọ̀ kankan. Gbìyànjú láti gbé fóònù sókè díẹ̀ sí i.,I couldn't find text. Try moving the phone further away.,App phrase,draft
+torchGlareOff,yo-torchGlareOff.m4a,"Ìmọ́lẹ̀ náà ń tàn padà láti ojú ìwé, nítorí náà mo pa á.","The light was shining back off the page, so I turned it off.",App phrase,draft
+offlineBannerSendFailed,yo-offlineBannerSendFailed.m4a,Fọ́tò náà kò dé ọ̀dọ̀ sáfà Magana (ìṣòro ìsopọ̀). Mò ń kà á lórí fóònù yìí.,The photo didn't reach Magana's server (connection problem). Reading on this phone.,App phrase,draft
+offlineBannerServerError,yo-offlineBannerServerError.m4a,Sáfà Magana ní ìṣòro pẹ̀lú ojú-ìwé yìí. Mò ń kà á lórí fóònù yìí.,Magana's server had a problem with this page. Reading on this phone.,App phrase,draft
+offlineBannerBusy,yo-offlineBannerBusy.m4a,Sáfà Magana ń ṣiṣẹ́ lọ́wọ́ ní ìṣẹ́jú yìí. Mò ń kà á lórí fóònù yìí.,Magana's server is busy this minute. Reading on this phone.,App phrase,draft
+offlineBannerDailyLimit,yo-offlineBannerDailyLimit.m4a,O ti lo ìkàwé sáfà ti òní tán. Mò ń kà á lórí fóònù yìí; sáfà yóò tún kà lọ́la.,You've used today's server readings. Reading on this phone; the server reads again tomorrow.,App phrase,draft
+msg_handwriting_read_anyway,yo-msg_handwriting_read_anyway.m4a,"Mo ka ìkọ̀wé ọwọ́ yìí bí mo ṣe lè ṣe tó. Ó lè ní àṣìṣe, èmi kò sì ka àwọn nọ́ńbà rẹ̀.","I read this handwriting as best I can. It may contain mistakes, and I don't read its numbers.",App phrase,draft
+msg_offline_health_numbers,yo-msg_offline_health_numbers.m4a,"Láìsí íńtánẹ́ẹ̀tì, fóònù yìí lè ka ìkọ̀wé ọwọ́ sí ìtẹ̀wé, nítorí náà èmi kò ka nọ́ńbà lórí ìwé ìlera. Tún un kà nígbà tí o bá wà lórí íńtánẹ́ẹ̀tì, tàbí bi oníṣègùn òògùn tàbí nọ́ọ̀sì.","Without the internet, this phone may take handwriting for print, so I don't read numbers on health papers. Read it again when you are online, or ask the pharmacist or nurse.",App phrase,draft
+handwritingOffer,yo-handwritingOffer.m4a,Èyí dà bí ìkọ̀wé ọwọ́. Ṣé kí n kà á bẹ́ẹ̀? Ó lè ní àṣìṣe.,This looks handwritten. Read it anyway? It may contain mistakes.,App phrase,draft
+readItAnyway,yo-readItAnyway.m4a,Kà á bẹ́ẹ̀,Read it anyway,App phrase,draft
+serverWaking,yo-serverWaking.m4a,"Magana ń jí, ẹ dúró díẹ̀…","Magana is waking up, one moment…",App phrase (also used as msg_server_waking),draft
+offlineBannerWaking,yo-offlineBannerWaking.m4a,"Sáfà Magana ń jí, nítorí náà a ka ojú-ìwé yìí lórí fóònù yìí.","Magana's server was waking up, so this page was read on this phone.",App phrase,draft
+voiceTitle,yo-voiceTitle.m4a,Ohùn,Voice,App phrase,draft
+voiceBest,yo-voiceBest.m4a,Ohùn tó dára jù lórí fóònù yìí,Best voice on this phone,App phrase,draft
+voiceBestDetail,yo-voiceBestDetail.m4a,"Magana yóò yàn: Gẹ̀ẹ́sì Nàìjíríà lákọ̀ọ́kọ́, lẹ́yìn náà ohùn tó ṣe kedere jù.","Magana chooses: Nigerian English first, then the clearest voice.",App phrase,draft
+voicePlaySample,yo-voicePlaySample.m4a,Gbọ́ àpẹẹrẹ,Play sample,App phrase,draft
+voiceSample,yo-voiceSample.m4a,"Ẹ n lẹ́, èmi ni Magana. Màá ka àwọn ojú ìwé rẹ fún ọ.","Hello, I am Magana. I will read your pages to you.",App phrase,draft
+voiceSpeedTitle,yo-voiceSpeedTitle.m4a,Ìyára,Speed,App phrase,draft
+voiceGetBetter,yo-voiceGetBetter.m4a,Gba ohùn tó ṣe kedere jù,Get a clearer voice,App phrase,draft
+voiceHintAndroid,yo-voiceHintAndroid.m4a,"A lè ṣe ìgbàsílẹ̀ ohùn tó ṣe kedere jù: Gẹ̀ẹ́sì (Nàìjíríà). Ṣí Ètò fóònù rẹ kí o wá Speech Services by Google. Yan Install voice data, lẹ́yìn náà English (Nigeria), kí o ṣe ìgbàsílẹ̀ rẹ̀. Lẹ́yìn náà yàn án nínú Magana: Ètò, Ohùn.","A clearer voice can be downloaded: English (Nigeria). Open your phone's Settings and search for Speech Services by Google. Choose Install voice data, then English (Nigeria), and download it. Then choose it in Magana: Settings, Voice.",App phrase,draft
+voiceHintIos,yo-voiceHintIos.m4a,"A lè ṣe ìgbàsílẹ̀ ohùn tó ṣe kedere jù. Ṣí Ètò iPhone, lẹ́yìn náà Accessibility, Spoken Content, Voices, English, kí o ṣe ìgbàsílẹ̀ ohùn Enhanced tàbí Premium. Lẹ́yìn náà yàn án nínú Magana: Ètò, Ohùn.","A clearer voice can be downloaded. Open the iPhone's Settings, then Accessibility, Spoken Content, Voices, English, and download an Enhanced or Premium voice. Then choose it in Magana: Settings, Voice.",App phrase,draft
+tourTitle,yo-tourTitle.m4a,Ìrìnàjò kúkúrú,A quick tour,App phrase,draft
+tourScript,yo-tourScript.m4a,"Ẹ kú àbọ̀ sí Magana. Magana máa ń ka àwọn ojú ìwé tí a tẹ̀ jáde sókè: iṣẹ́ ilé ìwé, àmì òògùn, lẹ́tà àti ìwé báǹkì. A máa ń ka àwọn nọ́mbà gẹ́gẹ́ bí a ṣe tẹ̀ wọ́n, Magana sì máa ń sọ fún ọ nígbà tí nǹkan kò bá ṣe kedere. Lójú ìbojú àkọ́kọ́, ìlà òkè ní bọ́tìnnì èdè àti ètò. Nísàlẹ̀ rẹ̀ ni bọ́tìnnì tó tóbi jù: Ka ojú ìwé kan. Nísàlẹ̀ ìyẹn ni àwọn àṣàyàn rẹ yòókù. Ní ìsàlẹ̀ pátápátá ni Di mú láti sọ̀rọ̀: tẹ̀ ẹ́ kí o di mú, sọ ohun tí o fẹ́, bí ka ojú ìwé kan, lẹ́yìn náà fi sílẹ̀. Lójú ìbojú mìíràn, bọ́tìnnì Sọ orúkọ kan nísàlẹ̀ máa ń ṣe bẹ́ẹ̀ náà. Sọ kí ni mo lè sọ láti gbọ́ àwọn àṣàyàn ojú ìbojú náà. Tí TalkBack tàbí VoiceOver bá wà ní títàn, fa sí ọ̀tún láti lọ sí bọ́tìnnì tó kàn, kí o sì tẹ̀ lẹ́ẹ̀mejì láti yàn. Tí kò bá sí ní títàn, fọwọ́ kan ojú ìbojú láti gbọ́ ohun tó wà lábẹ́ ìka rẹ, kí o sì tẹ̀ lẹ́ẹ̀mejì láti yàn. Láti ka ojú ìwé kan, di fóònù mú lókè rẹ̀: Magana yóò sọ bí o ṣe máa gbé e. O lè tún gbọ́ ìrìnàjò yìí nínú Ètò.","Welcome to Magana. Magana reads printed pages aloud: schoolwork, medicine labels, letters and bank papers. Numbers are read exactly as printed, and Magana tells you when something is unclear. On the home screen, the top line has the language and settings buttons. Below it is the biggest button: Read a page. Under that are your other choices. At the very bottom is Hold to speak: press and hold it, say what you want, like read a page, then let go. On other screens, the Say a name button at the bottom does the same. Say what can I say to hear that screen's choices. With TalkBack or VoiceOver on, swipe right to move to the next button and double tap to choose. With it off, touch the screen to hear what is under your finger, and double tap to choose. To read a page, hold the phone above it: Magana tells you how to move it. You can hear this tour again in Settings.",App phrase,draft
+tourSkip,yo-tourSkip.m4a,Fo ìrìnàjò náà,Skip the tour,App phrase,draft
+tourAgain,yo-tourAgain.m4a,Tún gbọ́ ìrìnàjò náà,Hear the tour again,App phrase,draft
+tourOpen,yo-tourOpen.m4a,Gbọ́ ìrìnàjò náà,Hear the tour,App phrase,draft
+tourOpenDetail,yo-tourOpenDetail.m4a,"Ohun tí Magana ń ṣe, ibi tí àwọn bọ́tìnnì wà, àti bí a ṣe ń lo ohùn àti ìfọwọ́kàn.","What Magana does, where the buttons are, and how to use voice and touch.",App phrase,draft
+screenNoChoices,yo-screenNoChoices.m4a,Ojú ìbojú yìí kò ní bọ́tìnnì láti yàn. Padà sẹ́yìn láti tẹ̀síwájú.,This screen has no buttons to choose. Go back to continue.,App phrase,draft
+aiAssistantSoon,yo-aiAssistantSoon.m4a,"Olùrànlọ́wọ́ ìlera AI ń bọ̀ láìpẹ́. Fún báyìí, nọ́ọ̀sì tàbí oníṣègùn òògùn yóò pè ọ́ padà, àwọn ìbéèrè àmì ewu ti Magana yóò sì sọ fún ọ ìgbà tí o yẹ kí o lọ sí ilé ìwòsàn tàbí pe 112.","AI health assistant coming soon. For now, a nurse or pharmacist calls you back, and Magana's own danger-sign questions tell you when to go to a clinic or call 112.",App phrase,draft
+dangerCheckFirst,yo-dangerCheckFirst.m4a,Dáhùn àwọn ìbéèrè díẹ̀ nípa àmì ewu lákọ̀ọ́kọ́,Answer a few danger-sign questions first,App phrase,draft
+quickCheckNoteRules,yo-quickCheckNoteRules.m4a,"Àwọn ìdáhùn rẹ ń ran òṣìṣẹ́ ìlera lọ́wọ́ láti pinnu bí ó ṣe máa pè ọ́ kíákíá. Magana kì í ṣe àyẹ̀wò àìsàn. Tí o bá ní àmì ewu, Magana yóò sọ fún ọ pé kí o lọ sí ilé ìwòsàn nísinsìnyí tàbí pe 112.","Your answers help the health worker decide how soon to call you. Magana does not diagnose. If you have danger signs, Magana tells you to go to a clinic now or call 112.",App phrase,draft
+tpl-medicine_label-take_times_a_day-1,yo-tpl-medicine_label-take_times_a_day-1.m4a,Lo tábúlẹ́ẹ̀tì,Take {a} tablets {b} times a day,"Health template, part 1 of 3 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_times_a_day-2,yo-tpl-medicine_label-take_times_a_day-2.m4a,ní ìgbà,Take {a} tablets {b} times a day,"Health template, part 2 of 3 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_times_a_day-3,yo-tpl-medicine_label-take_times_a_day-3.m4a,lójúmọ́.,Take {a} tablets {b} times a day,"Health template, part 3 of 3 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_range_every_range_hours_as_needed-1,yo-tpl-medicine_label-take_range_every_range_hours_as_needed-1.m4a,Lo tábúlẹ́ẹ̀tì,Take {a} to {b} tablets every {c} to {d} hours as needed,"Health template, part 1 of 5 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_range_every_range_hours_as_needed-2,yo-tpl-medicine_label-take_range_every_range_hours_as_needed-2.m4a,sí,Take {a} to {b} tablets every {c} to {d} hours as needed,"Health template, part 2 of 5 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_range_every_range_hours_as_needed-3,yo-tpl-medicine_label-take_range_every_range_hours_as_needed-3.m4a,ní gbogbo wákàtí,Take {a} to {b} tablets every {c} to {d} hours as needed,"Health template, part 3 of 5 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_range_every_range_hours_as_needed-4,yo-tpl-medicine_label-take_range_every_range_hours_as_needed-4.m4a,sí,Take {a} to {b} tablets every {c} to {d} hours as needed,"Health template, part 4 of 5 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_range_every_range_hours_as_needed-5,yo-tpl-medicine_label-take_range_every_range_hours_as_needed-5.m4a,bí ó bá ṣe pọn dandan.,Take {a} to {b} tablets every {c} to {d} hours as needed,"Health template, part 5 of 5 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_every_hours-1,yo-tpl-medicine_label-take_every_hours-1.m4a,Lo tábúlẹ́ẹ̀tì,Take {a} tablets every {b} hours,"Health template, part 1 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-take_every_hours-2,yo-tpl-medicine_label-take_every_hours-2.m4a,ní gbogbo wákàtí,Take {a} tablets every {b} hours,"Health template, part 2 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-not_more_than_in_hours-1,yo-tpl-medicine_label-not_more_than_in_hours-1.m4a,Má ṣe lo ju tábúlẹ́ẹ̀tì,Do not take more than {a} tablets in {b} hours,"Health template, part 1 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-not_more_than_in_hours-2,yo-tpl-medicine_label-not_more_than_in_hours-2.m4a,lọ láàrin wákàtí,Do not take more than {a} tablets in {b} hours,"Health template, part 2 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-after_meals-1,yo-tpl-medicine_label-after_meals-1.m4a,Lò ó lẹ́yìn oúnjẹ.,Take after meals,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-before_meals-1,yo-tpl-medicine_label-before_meals-1.m4a,Lò ó ṣáájú oúnjẹ.,Take before meals,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-swallow_whole_with_water-1,yo-tpl-medicine_label-swallow_whole_with_water-1.m4a,Gbé e mì lódidi pẹ̀lú omi.,Swallow whole with water,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-do_not_chew_or_crush-1,yo-tpl-medicine_label-do_not_chew_or_crush-1.m4a,Má ṣe jẹ ẹ́ tàbí lọ̀ ọ́.,Do not chew or crush,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-shake_well-1,yo-tpl-medicine_label-shake_well-1.m4a,Mì ín dáadáa kí o tó lò ó.,Shake well before use,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-keep_from_children-1,yo-tpl-medicine_label-keep_from_children-1.m4a,Fi pamọ́ sí ibi tí ọwọ́ àwọn ọmọdé kò ti lè tó o.,Keep out of the reach of children,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-store_below_degrees-1,yo-tpl-medicine_label-store_below_degrees-1.m4a,Tọ́jú rẹ̀ ní ìsàlẹ̀ ìwọ̀n,Store below {a} degrees C,"Health template, part 1 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-store_below_degrees-2,yo-tpl-medicine_label-store_below_degrees-2.m4a,Celsius.,Store below {a} degrees C,"Health template, part 2 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-store_cool_dry-1,yo-tpl-medicine_label-store_cool_dry-1.m4a,Tọ́jú rẹ̀ sí ibi tí ó tutù tí ó sì gbẹ.,Store in a cool dry place,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-expiry_date-1,yo-tpl-medicine_label-expiry_date-1.m4a,Ọjọ́ ìbàjẹ́:,Expiry date: {a},"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-adults_and_children_over_years-1,yo-tpl-medicine_label-adults_and_children_over_years-1.m4a,Àwọn àgbàlagbà àti ọmọdé tí ó ju ọdún,Adults and children over {a} years,"Health template, part 1 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-adults_and_children_over_years-2,yo-tpl-medicine_label-adults_and_children_over_years-2.m4a,lọ,Adults and children over {a} years,"Health template, part 2 of 2 (the phone says the numbers between parts)",clinically_approved
+tpl-medicine_label-external_use_only-1,yo-tpl-medicine_label-external_use_only-1.m4a,Fún lílò sára nìkan.,For external use only,"Health template, part 1 of 1 (the phone says the numbers between parts)",clinically_approved

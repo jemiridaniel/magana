@@ -9,6 +9,8 @@ import '../profile.dart';
 import '../theme.dart';
 import '../widgets.dart';
 import 'about.dart';
+import 'tour.dart';
+import 'voice_settings.dart';
 import 'home.dart';
 import 'class_code.dart';
 import 'diagnostics.dart';
@@ -138,7 +140,35 @@ class _SettingsScreenState extends State<SettingsScreen> {
           leading: const Icon(Icons.translate, size: 30),
           onTap: () => showLanguagePicker(context),
         ),
+        ChoiceCard(
+          title: l.voiceTitle,
+          detail: l.voiceSettingsDetail(
+            switch (AppScope.of(context).speaker.voice) {
+              final v? => voiceLabel(v, language.name),
+              null => l.voiceBest,
+            },
+            l.speed(speedLabel(AppScope.of(context).speaker.rate)),
+          ),
+          leading: const Icon(Icons.record_voice_over_outlined, size: 30),
+          onTap: () async {
+            await Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const VoiceSettingsScreen()),
+            );
+            if (mounted) setState(() {});
+          },
+        ),
         const TouchToHearSwitch(),
+        ChoiceCard(
+          title: l.tourOpen,
+          detail: l.tourOpenDetail,
+          leading: const Icon(Icons.explore_outlined, size: 30),
+          onTap: () => Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (_) =>
+                  TourScreen(onDone: (c) => Navigator.of(c).pop()),
+            ),
+          ),
+        ),
         ChoiceCard(
           title: l.settingsClass,
           detail: [

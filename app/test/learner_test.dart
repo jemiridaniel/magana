@@ -253,7 +253,7 @@ void main() {
     await say(tester, voice, 'help');
     expect(speaker.said.last, contains(en.practiceQuiz));
     expect(speaker.said.last, isNot(contains(en.everydayPapers)));
-    expect(speaker.said.last, isNot(contains(en.talkToNurse)));
+    expect(speaker.said.last, isNot(contains(en.healthWorkerTitle)));
   });
 
   testWidgets('no recogniser: says so', (tester) async {

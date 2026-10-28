@@ -187,7 +187,7 @@ void main() {
       tester.getRect(find.byType(EmergencyBanner)).bottom,
       lessThanOrEqualTo(view.bottom),
     );
-    final nurse = tester.getRect(control(en.talkToNurse));
+    final nurse = tester.getRect(control(en.healthWorkerTitle));
     expect(nurse.top, greaterThanOrEqualTo(view.top));
     expect(nurse.bottom, lessThanOrEqualTo(view.bottom));
 

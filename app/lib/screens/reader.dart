@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
 
+import '../features.dart';
 import '../amount_check.dart';
 import '../api.dart';
 import '../app_scope.dart';
@@ -27,10 +28,11 @@ import '../messages.dart';
 import '../speech.dart';
 import '../spoken_numbers.dart';
 import '../theme.dart';
+import '../voices.dart';
 import '../warnings.dart';
 import '../touch.dart';
 
-const _speeds = [0.75, 1.0, 1.25, 1.5];
+const _speeds = speechSpeeds; // Settings → Voice offers the same
 
 /// Reads a page aloud item by item (lines, or table rows) with Repeat,
 /// Previous and Next. Low-confidence items carry a spoken warning.
@@ -46,6 +48,7 @@ class ReaderScreen extends StatefulWidget {
     this.paper,
     this.savedId,
     this.detected = false,
+    this.typeShown = true,
     this.offlineReason,
     this.queued = false,
     this.helpTask = HelpTask.page,
@@ -60,8 +63,12 @@ class ReaderScreen extends StatefulWidget {
   /// The photo waits, encrypted, for a full reading when the phone is online.
   final bool queued;
 
-  /// "Read any paper": [paper] was worked out from the page's words.
+  /// "Read any paper": [paper] was worked out, with confidence, from the page's words (said).
   final bool detected;
+
+  /// False when "Read any paper" couldn't tell the type: [paper] is only the letter rules then,
+  /// and its title is never said or shown (no guessed type).
+  final bool typeShown;
   final ReadResult result;
 
   /// Set when opened from My library: offers Delete instead of Save.
@@ -119,6 +126,9 @@ class _ReaderScreenState extends State<ReaderScreen> {
       .name;
   AppLocalizations get _l => AppLocalizations.of(context);
 
+  String _shownTitle(AppLocalizations l) =>
+      (widget.typeShown ? widget.paper?.title(l) : null) ?? l.yourPage;
+
   @override
   void initState() {
     super.initState();
@@ -134,7 +144,15 @@ class _ReaderScreenState extends State<ReaderScreen> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     _speaker = AppScope.of(context).speaker;
+    // Starts at the speed chosen in Settings → Voice.
+    if (!_speedSet) {
+      _speedSet = true;
+      final saved = _speeds.indexOf(_speaker.rate);
+      if (saved >= 0) _speed = saved;
+    }
   }
+
+  bool _speedSet = false;
 
   @override
   void dispose() {
@@ -175,9 +193,20 @@ class _ReaderScreenState extends State<ReaderScreen> {
 
   /// Text exactly as printed, except that a number the backend could not read
   /// reliably is said as "unclear number", never as the digit OCR guessed.
-  String _spoken(ReadItem item) {
+  /// The page's own language (its words are said in its voice); English unless the page was
+  /// found to be in Hausa, Yorùbá or Igbo. Magana's own words stay in the app language.
+  String get _textLang => widget.result.pageLanguage ?? 'en';
+  String get _appLang => Localizations.localeOf(context).languageCode;
+
+  /// Magana's words that go inside a line ("unclear number"), in the line's language: never
+  /// one language's words read by another's voice (Nurse Balogun, build 7).
+  AppLocalizations get _textWords => _textLang == _appLang
+      ? _l
+      : lookupAppLocalizations(Locale(_textLang));
+
+  List<SpeechPart> _spoken(ReadItem item) {
     final i = _items.indexOf(item);
-    final body = _body(item);
+    final body = _body(item, words: _textWords, position: false);
     final warning = _warning(item);
     final page = item.pageStart
         ? _l.pageOf(item.page!, widget.result.pageCount)
@@ -194,19 +223,28 @@ class _ReaderScreenState extends State<ReaderScreen> {
     // end of a line); the full warnings are on request ("what's unclear?", warnings.dart). A
     // band of faint print is its own item: its warning is what it says.
     final marks = PageWarnings.marks(_l, item);
-    final spoken = [
-      ?page,
-      ?column,
+    final app = _appLang, text = _textLang;
+    final parts = [
+      if (page != null) SpeechPart(page, app),
+      if (column != null) SpeechPart(column, app),
+      if (item.isRow) SpeechPart(_position(item), app),
       // Said, not shown: naira amounts and long numbers (account numbers) read naturally.
       if (body.isNotEmpty)
-        item.heading
-            ? _l.headingSpoken(spokenNumbers(body))
-            : spokenNumbers(body),
-      if (marked.isNotEmpty) _l.letterCheckWords(marked.join(', ')),
-      ...marks,
-      if (item.isFaint) ?warning,
-    ].join('. ');
-    return item.isRow && marks.isEmpty ? '$spoken.' : spoken;
+        SpeechPart(
+          item.heading
+              ? _textWords.headingSpoken(spokenNumbers(body))
+              : spokenNumbers(body),
+          text,
+        ),
+      if (marked.isNotEmpty)
+        SpeechPart(_l.letterCheckWords(marked.join(', ')), app),
+      for (final m in marks) SpeechPart(m, app),
+      if (item.isFaint && warning != null) SpeechPart(warning, app),
+    ];
+    if (item.isRow && marks.isEmpty && parts.isNotEmpty) {
+      parts.last = SpeechPart('${parts.last.text}.', parts.last.language);
+    }
+    return parts;
   }
 
   late final _warnings = PageWarnings(_items);
@@ -338,27 +376,28 @@ class _ReaderScreenState extends State<ReaderScreen> {
   ].join('\n');
 
   /// An item's text without its warning; unclear numbers stay "unclear number".
-  String _body(ReadItem item) {
+  String _body(ReadItem item, {AppLocalizations? words, bool position = true}) {
+    final l = words ?? _l;
     return switch (item.kind) {
       ItemKind.faint => '',
       ItemKind.line => [
         for (final (i, w) in item.words.indexed)
           if (!item.heldSign(i))
             item.unclearAmounts.contains(i)
-                ? _l.amountUnclear
+                ? l.amountUnclear
                 : item.unclearWords.contains(i)
-                ? _l.unclearNumber
+                ? l.unclearNumber
                 : item.currencyUnclear.contains(i)
-                ? '${digitsOf(w, sign: item.signBefore(i))}, ${_l.currencyUnclear}'
+                ? '${digitsOf(w, sign: item.signBefore(i))}, ${l.currencyUnclear}'
                 : item.unclearLetters.contains(i)
-                ? _l.unclearLetter
+                ? l.unclearLetter
                 : w,
       ].join(' '),
       ItemKind.row =>
-        '${_position(item)}. ${[for (final c in item.cells) (c.header.isEmpty ? '' : '${c.header}: ') + (c.unclear
-                  ? (c.amount ? _l.amountUnclear : _l.unclearNumber)
+        '${position ? '${_position(item)}. ' : ''}${[for (final c in item.cells) (c.header.isEmpty ? '' : '${c.header}: ') + (c.unclear
+                  ? (c.amount ? l.amountUnclear : l.unclearNumber)
                   : c.currencyUnclear
-                  ? '${digitsOf(c.value)}, ${_l.currencyUnclear}'
+                  ? '${digitsOf(c.value)}, ${l.currencyUnclear}'
                   : c.value)].join('. ')}',
     };
   }
@@ -456,7 +495,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
             for (final item in _items)
               if (!item.isFaint) _body(item),
           ],
-          source: widget.paper?.title(_l) ?? _l.yourPage,
+          source: _shownTitle(_l),
           mode: widget.paper?.mode ?? 'school',
         ),
       ),
@@ -605,10 +644,17 @@ class _ReaderScreenState extends State<ReaderScreen> {
     if (intro && !await _speaker.sayThrough(_intro(), wanted: wanted)) {
       return pause();
     }
+    // A Hausa, Yorùbá or Igbo page and no voice for it: say so, and leave the text on the
+    // screen (the Spell word button still spells marked words), never another language's voice.
+    if (!await _speaker.canSpeak(_textLang)) {
+      if (!wanted()) return;
+      _speaker.onNoVoice?.call(_textLang);
+      return pause();
+    }
     for (var i = from; i < _items.length; i++) {
       if (!wanted()) return;
       setState(() => _index = i);
-      if (!await _speaker.sayThrough(_spoken(_items[i]), wanted: wanted)) {
+      if (!await _speaker.sayParts(_spoken(_items[i]), wanted: wanted)) {
         return pause();
       }
       _heard.add(i);
@@ -626,7 +672,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
       _index = i;
       _playing = false;
     });
-    if (await _speaker.say(_spoken(_items[i]))) _heard.add(i);
+    if (await _speaker.sayParts(_spoken(_items[i]))) _heard.add(i);
     if (run == _run) await _askForHelp();
   }
 
@@ -934,7 +980,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    widget.paper?.title(l) ?? l.yourPage,
+                    _shownTitle(l),
                     style: const TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.w700,
@@ -1176,7 +1222,7 @@ class _ReaderScreenState extends State<ReaderScreen> {
                   SecondaryButton(label: l.saveQuestion, onTap: _saveQuestion),
                 const SizedBox(height: 12),
                 SecondaryButton(
-                  label: l.askANurse,
+                  label: ibaAssistant ? l.askANurse : l.healthWorkerTitle,
                   onTap: () => openHealthWorker(context, reason: 'results'),
                 ),
               ],

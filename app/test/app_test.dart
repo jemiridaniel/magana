@@ -12,6 +12,7 @@ import 'package:app/screens/splash.dart';
 import 'package:app/messages.dart';
 import 'package:app/screens/capture.dart';
 import 'package:app/speech.dart';
+import 'package:app/voices.dart';
 import 'package:app/touch.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -24,6 +25,7 @@ import 'a11y.dart';
 
 class FakeSpeaker extends Speaker {
   final said = <String>[];
+  @override
   String language = 'en';
   @override
   Future<Spoken> utter(String text) async {
@@ -50,6 +52,28 @@ class FakeSpeaker extends Speaker {
   Future<void> setRate(double rate) async => rates.add(_rate = rate);
   @override
   Future<void> setLanguage(String code) async => language = code;
+
+  /// Languages this "phone" has no voice for (Speaker.voiceReady); the engine isn't asked.
+  final noVoiceFor = <String>{};
+  final noVoiceTold = <String>[];
+  @override
+  Future<bool> voiceReady(String lang) async => !noVoiceFor.contains(lang);
+  @override
+  bool? voiceKnown(String lang) => !noVoiceFor.contains(lang);
+  @override
+  Future<bool> canSpeak(String lang) async => !noVoiceFor.contains(lang);
+  /// The phone's voices (null: the phone can't say, as in most tests).
+  List<Voice>? voices;
+  @override
+  Future<List<Voice>?> installedVoices() async => voices;
+
+  /// "Play sample" (Settings → Voice): which voice, what text.
+  final previews = <(Voice, String)>[];
+  @override
+  Future<bool> preview(Voice v, String text) async {
+    previews.add((v, text));
+    return true;
+  }
 }
 
 const readJson = {
@@ -311,10 +335,11 @@ void main() {
     );
 
     await captureToReader(tester, takePhoto: ha.takePhoto);
-    expect(
-      speaker.said,
-      contains('Take 2 tablets every 4 to 6 hours. ${ha.unclearMark}'),
-    );
+    // The English line in the English voice, Magana's Hausa word in the Hausa voice: never one
+    // language read by another's voice (speech.dart, sayParts).
+    final line = speaker.said.indexOf('Take 2 tablets every 4 to 6 hours');
+    expect(line, greaterThanOrEqualTo(0));
+    expect(speaker.said[line + 1], ha.unclearMark);
     expect(find.text(ha.yourPage), findsOneWidget);
   });
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/semantics.dart';
@@ -14,6 +16,7 @@ import 'screens/onboarding.dart';
 import 'screens/splash.dart';
 import 'screens/start.dart';
 import 'speech.dart';
+import 'voices.dart';
 import 'theme.dart';
 import 'route_speech.dart';
 import 'touch.dart';
@@ -44,7 +47,9 @@ Future<void> main() async {
     await profile.load();
     await touch.load();
     await language.load();
+    await speaker.setRate(await VoiceSettings.rate());
     await speaker.setLanguage(language.value.languageCode);
+    unawaited(speaker.clips.load()); // recorded prompts, where there are any (clips.dart)
   }();
   await precacheSplash();
   runApp(
@@ -96,6 +101,24 @@ class MaganaApp extends StatelessWidget {
       final text = lookupAppLocalizations(language.value).serverWaking;
       speaker.say(text);
       appMessenger.currentState?.showSnackBar(SnackBar(content: Text(text)));
+    };
+    // Hausa, Yorùbá or Igbo with no voice for it on this phone: never read with another
+    // language's voice (Nurse Balogun, build 7). Said once, in the app language when it has a
+    // voice, otherwise in English; shown too. The text itself stays on the screen.
+    speaker.onNoVoice = (lang) async {
+      final name = appLanguages
+          .firstWhere((a) => a.code == lang, orElse: () => appLanguages.first)
+          .name;
+      final app = language.value.languageCode;
+      final shown = lookupAppLocalizations(language.value).noVoiceYet(name);
+      appMessenger.currentState?.showSnackBar(SnackBar(content: Text(shown)));
+      final appVoice = app != lang && await speaker.canSpeak(app);
+      await speaker.say(
+        appVoice
+            ? shown
+            : lookupAppLocalizations(const Locale('en')).noVoiceYet(name),
+        language: appVoice ? app : 'en',
+      );
     };
     return AppScope(
       api: api,

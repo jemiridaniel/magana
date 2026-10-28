@@ -29,6 +29,8 @@ enum VoiceCommand {
   ask(Feature.openChat, ['ask', 'question', 'explain']),
   language(null, ['language', ...languageWords]),
   settings(null, ['settings', 'setting', 'version']),
+  // The guided start again (tour.dart).
+  tour(null, ['tour', 'guide', 'how to use']),
   help(null, ['help', 'what can i say', 'commands']),
   readPage(Feature.readSchoolwork, ['read', 'camera', 'photo', 'page']);
 

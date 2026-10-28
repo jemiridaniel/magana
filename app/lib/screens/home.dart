@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../features.dart';
 import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
 import '../language.dart';
@@ -16,6 +18,8 @@ import 'explain.dart';
 import 'health_worker.dart';
 import 'reminders.dart';
 import 'settings.dart';
+import 'tour.dart';
+import 'voice_settings.dart';
 import 'everyday.dart';
 import 'library.dart';
 import 'pdf.dart';
@@ -49,6 +53,10 @@ class _HomeScreenState extends State<HomeScreen> {
     });
     // "Magana. 7 choices. Touch to explore, or say a name." (board 10)
     speakOnOpen(context, () => AppLocalizations.of(context).appTitle);
+    // Once: how to get a clearer voice, if the phone has a better one to download.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted && !kIsWeb) maybeTellAboutBetterVoice(context);
+    });
   }
 
   void _openCapture(BuildContext context) {
@@ -727,6 +735,8 @@ void runCommand(BuildContext context, String transcript) {
       open(const ExplainScreen(lines: [], source: ''));
     case VoiceCommand.settings:
       open(const SettingsScreen());
+    case VoiceCommand.tour:
+      open(TourScreen(onDone: (c) => Navigator.of(c).pop()));
     case VoiceCommand.report:
       openReportProblem(context, screen: 'home');
     case VoiceCommand.language:
@@ -749,7 +759,7 @@ void runCommand(BuildContext context, String transcript) {
         VoiceCommand.readPage: l.readPage,
         VoiceCommand.everyday: l.everydayPapers,
         VoiceCommand.reminders: l.remindersCard,
-        VoiceCommand.nurse: l.talkToNurse,
+        VoiceCommand.nurse: ibaAssistant ? l.talkToNurse : l.healthWorkerTitle,
         VoiceCommand.quiz: l.practiceQuiz,
         VoiceCommand.library: l.myLibrary,
         VoiceCommand.skills: l.skills,
@@ -757,6 +767,7 @@ void runCommand(BuildContext context, String transcript) {
         VoiceCommand.ask: l.askQuestion,
         VoiceCommand.language: l.changeLanguageCommand,
         VoiceCommand.settings: l.settings,
+        VoiceCommand.tour: l.tourOpen,
         VoiceCommand.report: l.reportProblem,
       };
       scope.speaker.say(

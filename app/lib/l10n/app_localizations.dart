@@ -4187,6 +4187,168 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Magana is waking up, one moment…'**
   String get msg_server_waking;
+
+  /// Said once when text in a language can't be read aloud: never with another language's voice (Nurse Balogun, build 7).
+  ///
+  /// In en, this message translates to:
+  /// **'I don\'t have a {language} voice yet. The text is on the screen.'**
+  String noVoiceYet(String language);
+
+  /// No description provided for @voiceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice'**
+  String get voiceTitle;
+
+  /// No description provided for @voiceSettingsDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'{voice}. {speed}'**
+  String voiceSettingsDetail(String voice, String speed);
+
+  /// No description provided for @voiceBest.
+  ///
+  /// In en, this message translates to:
+  /// **'Best voice on this phone'**
+  String get voiceBest;
+
+  /// No description provided for @voiceBestDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Magana chooses: Nigerian English first, then the clearest voice.'**
+  String get voiceBestDetail;
+
+  /// No description provided for @voiceFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice for {language}'**
+  String voiceFor(String language);
+
+  /// No description provided for @voiceNone.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone has no {language} voice yet. Magana shows {language} text on the screen instead of reading it with another language\'s voice.'**
+  String voiceNone(String language);
+
+  /// No description provided for @voicePlaySample.
+  ///
+  /// In en, this message translates to:
+  /// **'Play sample'**
+  String get voicePlaySample;
+
+  /// No description provided for @voiceSample.
+  ///
+  /// In en, this message translates to:
+  /// **'Hello, I am Magana. I will read your pages to you.'**
+  String get voiceSample;
+
+  /// No description provided for @voiceChosen.
+  ///
+  /// In en, this message translates to:
+  /// **'{voice} chosen.'**
+  String voiceChosen(String voice);
+
+  /// No description provided for @voiceSpeedTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed'**
+  String get voiceSpeedTitle;
+
+  /// No description provided for @voiceSpeedSet.
+  ///
+  /// In en, this message translates to:
+  /// **'Speed {value}.'**
+  String voiceSpeedSet(String value);
+
+  /// No description provided for @voiceGetBetter.
+  ///
+  /// In en, this message translates to:
+  /// **'Get a clearer voice'**
+  String get voiceGetBetter;
+
+  /// No description provided for @voiceHintAndroid.
+  ///
+  /// In en, this message translates to:
+  /// **'A clearer voice can be downloaded: English (Nigeria). Open your phone\'s Settings and search for Speech Services by Google. Choose Install voice data, then English (Nigeria), and download it. Then choose it in Magana: Settings, Voice.'**
+  String get voiceHintAndroid;
+
+  /// No description provided for @voiceHintIos.
+  ///
+  /// In en, this message translates to:
+  /// **'A clearer voice can be downloaded. Open the iPhone\'s Settings, then Accessibility, Spoken Content, Voices, English, and download an Enhanced or Premium voice. Then choose it in Magana: Settings, Voice.'**
+  String get voiceHintIos;
+
+  /// No description provided for @tourTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A quick tour'**
+  String get tourTitle;
+
+  /// The guided start (about 60 s at normal speed), after language and age; replayable from Settings and by saying 'tour'.
+  ///
+  /// In en, this message translates to:
+  /// **'Welcome to Magana. Magana reads printed pages aloud: schoolwork, medicine labels, letters and bank papers. Numbers are read exactly as printed, and Magana tells you when something is unclear. On the home screen, the top line has the language and settings buttons. Below it is the biggest button: Read a page. Under that are your other choices. At the very bottom is Hold to speak: press and hold it, say what you want, like read a page, then let go. On other screens, the Say a name button at the bottom does the same. Say what can I say to hear that screen\'s choices. With TalkBack or VoiceOver on, swipe right to move to the next button and double tap to choose. With it off, touch the screen to hear what is under your finger, and double tap to choose. To read a page, hold the phone above it: Magana tells you how to move it. You can hear this tour again in Settings.'**
+  String get tourScript;
+
+  /// No description provided for @tourSkip.
+  ///
+  /// In en, this message translates to:
+  /// **'Skip the tour'**
+  String get tourSkip;
+
+  /// No description provided for @tourAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Hear the tour again'**
+  String get tourAgain;
+
+  /// No description provided for @tourContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get tourContinue;
+
+  /// No description provided for @tourOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Hear the tour'**
+  String get tourOpen;
+
+  /// No description provided for @tourOpenDetail.
+  ///
+  /// In en, this message translates to:
+  /// **'What Magana does, where the buttons are, and how to use voice and touch.'**
+  String get tourOpenDetail;
+
+  /// 'Help' or 'What can I say?' on any screen: its choices by name.
+  ///
+  /// In en, this message translates to:
+  /// **'On this screen you can say: {choices}.'**
+  String screenChoices(String choices);
+
+  /// No description provided for @screenNoChoices.
+  ///
+  /// In en, this message translates to:
+  /// **'This screen has no buttons to choose. Go back to continue.'**
+  String get screenNoChoices;
+
+  /// Ibà, the AI health assistant, isn't running in the test phase (no GPU): it is hidden behind MAGANA_IBA (lib/features.dart).
+  ///
+  /// In en, this message translates to:
+  /// **'AI health assistant coming soon. For now, a nurse or pharmacist calls you back, and Magana\'s own danger-sign questions tell you when to go to a clinic or call 112.'**
+  String get aiAssistantSoon;
+
+  /// No description provided for @dangerCheckFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Answer a few danger-sign questions first'**
+  String get dangerCheckFirst;
+
+  /// No description provided for @quickCheckNoteRules.
+  ///
+  /// In en, this message translates to:
+  /// **'Your answers help the health worker decide how soon to call you. Magana does not diagnose. If you have danger signs, Magana tells you to go to a clinic now or call 112.'**
+  String get quickCheckNoteRules;
 }
 
 class _AppLocalizationsDelegate

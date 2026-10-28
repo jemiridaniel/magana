@@ -1,7 +1,10 @@
 package com.magana.app
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.media.AudioAttributes
+import android.media.AudioDeviceInfo
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
@@ -13,6 +16,8 @@ import io.flutter.plugin.common.MethodChannel
 
 class MainActivity : FlutterActivity() {
     private var pdfChannel: MethodChannel? = null
+    // The answer to "may Magana use your Bluetooth headset's microphone?", while it is asked.
+    private var bluetoothAsked: MethodChannel.Result? = null
     // A PDF the app was opened with, until Flutter takes it. Held in memory only.
     private var pendingPdf: Map<String, Any>? = null
 
@@ -31,6 +36,9 @@ class MainActivity : FlutterActivity() {
                             SpeechRecognizer.isOnDeviceRecognitionAvailable(this)
                     )
                     "screenReaderSpeaking" -> result.success(screenReaderSpeaking())
+                    "bluetoothHeadset" -> result.success(bluetoothHeadset())
+                    "bluetoothAllowed" -> result.success(bluetoothAllowed())
+                    "askBluetooth" -> askBluetooth(result)
                     else -> result.notImplemented()
                 }
             }
@@ -99,6 +107,35 @@ class MainActivity : FlutterActivity() {
 
     companion object {
         const val MAX_BYTES = 15 * 1024 * 1024
+        const val BLUETOOTH_REQUEST = 7301
+    }
+
+    /** A Bluetooth headset with a microphone is connected (docs/BLUETOOTH.md). */
+    private fun bluetoothHeadset(): Boolean {
+        val audio = getSystemService(AUDIO_SERVICE) as AudioManager
+        return audio.getDevices(AudioManager.GET_DEVICES_INPUTS).any {
+            it.type == AudioDeviceInfo.TYPE_BLUETOOTH_SCO ||
+                (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && it.type == AudioDeviceInfo.TYPE_BLE_HEADSET)
+        }
+    }
+
+    /** speech_to_text uses a Bluetooth microphone only with this permission (Android 12+). */
+    private fun bluetoothAllowed(): Boolean =
+        Build.VERSION.SDK_INT < Build.VERSION_CODES.S ||
+            checkSelfPermission(Manifest.permission.BLUETOOTH_CONNECT) == PackageManager.PERMISSION_GRANTED
+
+    private fun askBluetooth(result: MethodChannel.Result) {
+        if (bluetoothAllowed()) return result.success(true)
+        if (bluetoothAsked != null) return result.success(false)
+        bluetoothAsked = result
+        requestPermissions(arrayOf(Manifest.permission.BLUETOOTH_CONNECT), BLUETOOTH_REQUEST)
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode != BLUETOOTH_REQUEST) return
+        bluetoothAsked?.success(grantResults.firstOrNull() == PackageManager.PERMISSION_GRANTED)
+        bluetoothAsked = null
     }
 
     /**

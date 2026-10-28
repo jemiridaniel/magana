@@ -73,7 +73,9 @@ def main(argv: list[str] | None = None) -> int:
                         (team.seal(a.totp_secret), A.iso(A.now()), mid))
         A.audit(con, None, "server", "team_owner_created" if a.role == "owner" else "team_member_created", mid,
                 role=a.role)
-    print(f"Done: {email} is a Magana team {team.ROLE_LABEL[a.role]}. Sign in at {portal_api.portal_url()}/sign-in/: "
+    role = team.ROLE_LABEL[a.role]
+    who = f"a {role}" if a.role == "owner" else f"on the Magana team as {role}"  # "is a Magana admin"
+    print(f"Done: {email} is {who}. Sign in at {portal_api.portal_url()}/sign-in/: "
           "the first sign-in sets up the authenticator app and shows the backup codes once.")
     return 0
 

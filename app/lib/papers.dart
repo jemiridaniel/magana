@@ -88,9 +88,11 @@ final _signs = <Paper, List<RegExp>>{
   ],
 };
 
-/// The kind of paper, when at least two of its signs are on the page and no
-/// other kind has as many; otherwise [Paper.letter].
-Paper detectPaper(ReadResult result) {
+/// The kind of paper, only when the page leaves little doubt: at least three of its signs, and
+/// at least two more than any other kind. Otherwise null, and Magana says no type at all: a
+/// food container with "ml" and "expiry" on it is not a medicine label (Nurse Balogun's test,
+/// build 7: a wrong type was announced). The page is still read in the strict letter mode.
+Paper? detectPaper(ReadResult result) {
   final text = [
     for (final item in result.items) ...[
       item.text,
@@ -101,7 +103,7 @@ Paper detectPaper(ReadResult result) {
     for (final MapEntry(key: paper, value: signs) in _signs.entries)
       paper: signs.where((s) => s.hasMatch(text)).length,
   };
-  final best = hits.entries.reduce((a, b) => b.value > a.value ? b : a);
-  final tied = hits.values.where((v) => v == best.value).length > 1;
-  return best.value >= 2 && !tied ? best.key : Paper.letter;
+  final ranked = hits.entries.toList()..sort((a, b) => b.value - a.value);
+  final best = ranked.first, next = ranked[1].value;
+  return best.value >= 3 && best.value - next >= 2 ? best.key : null;
 }

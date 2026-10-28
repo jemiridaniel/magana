@@ -91,6 +91,7 @@ void main() {
     await tap(tester, 'Continue');
     expect(find.text('How old are you?'), findsOneWidget);
     await tap(tester, RegExp('^I am 18 or older'));
+    await tap(tester, 'Skip the tour'); // the guided start (tour.dart)
     expect(find.text('Who is using Magana?'), findsOneWidget);
     await tap(tester, RegExp('^University or other'));
     await tap(tester, 'Start');
@@ -117,6 +118,7 @@ void main() {
     final (profile, _, _) = await start(tester);
     await tap(tester, 'Continue');
     await tap(tester, RegExp('^I am 18 or older'));
+    await tap(tester, 'Skip the tour'); // the guided start (tour.dart)
     await tap(tester, RegExp('^I’ve finished school'));
     expect(find.text('What would you like to do?'), findsOneWidget);
     await tap(tester, RegExp('^Prepare for JAMB'));
@@ -134,6 +136,7 @@ void main() {
     final (profile, _, _) = await start(tester);
     await tap(tester, 'Continue');
     await tap(tester, RegExp('^I am 13 to 17'));
+    await tap(tester, 'Skip the tour'); // the guided start (tour.dart)
     await tap(tester, RegExp('^I’m in school'));
     expect(find.text('Join your class'), findsOneWidget);
     await tap(tester, 'I don’t have a code yet');
@@ -160,6 +163,7 @@ void main() {
     final (profile, speaker, _) = await start(tester);
     await tap(tester, 'Continue');
     await tap(tester, RegExp('^I am under 13'));
+    await tap(tester, 'Skip the tour'); // the guided start (tour.dart)
     // The teacher chooses the class for the session first.
     await tap(tester, 'Teacher: start the class session');
     expect(find.text('Are you the teacher?'), findsNothing);
@@ -242,6 +246,7 @@ void main() {
     await tap(tester, 'Continue');
     expectAccessible(tester, 'Age');
     await tap(tester, RegExp('^I am 13 to 17'));
+    await tap(tester, 'Skip the tour'); // the guided start (tour.dart)
     expectAccessible(tester, 'Who is using Magana');
     await tap(tester, RegExp('^I’m in school'));
     expectAccessible(tester, 'Join your class');
@@ -254,9 +259,11 @@ void main() {
     await tap(tester, 'Back');
     await tap(tester, 'Back');
     await tap(tester, RegExp('^I am under 13'));
+    await tap(tester, 'Skip the tour'); // the guided start (tour.dart)
     expectAccessible(tester, 'Classroom');
     await tap(tester, 'Back');
     await tap(tester, RegExp('^I am 18 or older'));
+    await tap(tester, 'Skip the tour'); // the guided start (tour.dart)
     await tap(tester, RegExp('^University or other'));
     expectAccessible(tester, 'Ready');
     handle.dispose();

@@ -1,0 +1,575 @@
+Phrase ID,File name,Text to record,English meaning,Kind,Text status,Recorded? (yes/no),Notes
+appTitle,en-appTitle.m4a,Magana,Magana,App phrase,final
+greeting,en-greeting.m4a,Hello,Hello,App phrase,final
+chooseLanguage,en-chooseLanguage.m4a,Choose app language,Choose app language,App phrase,final
+settings,en-settings.m4a,Settings,Settings,App phrase,final
+readPage,en-readPage.m4a,Read a page,Read a page,App phrase,final
+readPageSubtitle,en-readPageSubtitle.m4a,"Schoolwork, medical reports, bank statements, letters — anything printed","Schoolwork, medical reports, bank statements, letters — anything printed",App phrase,final
+askQuestion,en-askQuestion.m4a,Ask a question,Ask a question,App phrase (also used as askAQuestion),final
+practiceQuiz,en-practiceQuiz.m4a,Practice quiz,Practice quiz,App phrase,final
+myLibrary,en-myLibrary.m4a,My library,My library,App phrase,final
+everydayPapers,en-everydayPapers.m4a,Everyday papers,Everyday papers,App phrase,final
+skills,en-skills.m4a,Skills,Skills,App phrase (also used as areaSkills),final
+myScore,en-myScore.m4a,My score,My score,App phrase,final
+holdToSpeak,en-holdToSpeak.m4a,Hold to speak,Hold to speak,App phrase,final
+holdToSpeakLabel,en-holdToSpeakLabel.m4a,Hold to speak a command,Hold to speak a command,App phrase,final
+voiceCommands,en-voiceCommands.m4a,Voice commands,Voice commands,App phrase,final
+comingSoonHint,en-comingSoonHint.m4a,Coming soon,Coming soon,App phrase,final
+backToHome,en-backToHome.m4a,Back to home,Back to home,App phrase (also used as backHome),final
+framingGuidance,en-framingGuidance.m4a,"Lay the page flat in good light and hold the phone about one forearm above it. I'll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.","Lay the page flat in good light and hold the phone about one forearm above it. I'll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.",App phrase,final
+repeat,en-repeat.m4a,Repeat,Repeat,App phrase,final
+repeatInstructions,en-repeatInstructions.m4a,Hear the instructions again,Hear the instructions again,App phrase,final
+takePhoto,en-takePhoto.m4a,Take photo,Take photo,App phrase,final
+gallery,en-gallery.m4a,Gallery,Gallery,App phrase,final
+galleryLabel,en-galleryLabel.m4a,Choose a photo from the gallery,Choose a photo from the gallery,App phrase,final
+cameraFailed,en-cameraFailed.m4a,I couldn't open the camera. Try Gallery instead.,I couldn't open the camera. Try Gallery instead.,App phrase,final
+readingPage,en-readingPage.m4a,Reading the page. Please wait.,Reading the page. Please wait.,App phrase,final
+noTextFound,en-noTextFound.m4a,I couldn't find any text. Check the page is face up and try again.,I couldn't find any text. Check the page is face up and try again.,App phrase,final
+cannotReach,en-cannotReach.m4a,I couldn't reach Magana. Check the connection and try again.,I couldn't reach Magana. Check the connection and try again.,App phrase,final
+serverSleeping,en-serverSleeping.m4a,Magana’s server is sleeping. Please try again later.,Magana’s server is sleeping. Please try again later.,App phrase,final
+readFailed,en-readFailed.m4a,Something went wrong reading the page. Please try again.,Something went wrong reading the page. Please try again.,App phrase,final
+yourPage,en-yourPage.m4a,Your page,Your page,App phrase,final
+nowReading,en-nowReading.m4a,now reading,now reading,App phrase,final
+previous,en-previous.m4a,Prev,Prev,App phrase,final
+next,en-next.m4a,Next,Next,App phrase (also used as nextLabel),final
+previousLine,en-previousLine.m4a,Previous line,Previous line,App phrase,final
+previousRow,en-previousRow.m4a,Previous row,Previous row,App phrase,final
+nextLine,en-nextLine.m4a,Next line,Next line,App phrase,final
+nextRow,en-nextRow.m4a,Next row,Next row,App phrase,final
+repeatLine,en-repeatLine.m4a,Repeat this line,Repeat this line,App phrase,final
+repeatRow,en-repeatRow.m4a,Repeat this row,Repeat this row,App phrase,final
+pause,en-pause.m4a,Pause,Pause,App phrase (also used as pauseLesson),final
+play,en-play.m4a,Play,Play,App phrase,final
+pauseLabel,en-pauseLabel.m4a,Pause reading,Pause reading,App phrase,final
+playLabel,en-playLabel.m4a,Read from here,Read from here,App phrase,final
+pageRead,en-pageRead.m4a,Page read.,Page read.,App phrase,final
+firstLine,en-firstLine.m4a,This is the first line.,This is the first line.,App phrase,final
+firstRow,en-firstRow.m4a,This is the first row.,This is the first row.,App phrase,final
+endOfPage,en-endOfPage.m4a,End of page.,End of page.,App phrase,final
+endOfPageHint,en-endOfPageHint.m4a,"End of page. Tap Repeat, or go back to read another page.","End of page. Tap Repeat, or go back to read another page.",App phrase,final
+whereTop,en-whereTop.m4a,near the top of the page,near the top of the page,App phrase,final
+whereMiddle,en-whereMiddle.m4a,in the middle of the page,in the middle of the page,App phrase,final
+whereBottom,en-whereBottom.m4a,near the bottom of the page,near the bottom of the page,App phrase,final
+unclearNumber,en-unclearNumber.m4a,unclear number,unclear number,App phrase,final
+amountUnclear,en-amountUnclear.m4a,I can't read the amount clearly,I can't read the amount clearly,App phrase,final
+currencyUnclear,en-currencyUnclear.m4a,I can't read the currency sign clearly,I can't read the currency sign clearly,App phrase,final
+unclearLetter,en-unclearLetter.m4a,unclear letter,unclear letter,App phrase,final
+faintPrint,en-faintPrint.m4a,Faint print,Faint print,App phrase,final
+msg_too_dark,en-msg_too_dark.m4a,It's quite dark. Turn on the torch or move to more light.,It's quite dark. Turn on the torch or move to more light.,App phrase,final
+msg_blurry,en-msg_blurry.m4a,The photo looks blurry. Hold the phone still and try again.,The photo looks blurry. Hold the phone still and try again.,App phrase,final
+msg_unknown_mode,en-msg_unknown_mode.m4a,"Choose schoolwork, health or money.","Choose schoolwork, health or money.",App phrase,final
+msg_not_allowed_for_tier,en-msg_not_allowed_for_tier.m4a,This isn't available on this account.,This isn't available on this account.,App phrase,final
+msg_consent_required,en-msg_consent_required.m4a,Learners aged 13 to 17 need a parent's or guardian's consent first.,Learners aged 13 to 17 need a parent's or guardian's consent first.,App phrase,final
+msg_teacher_session_required,en-msg_teacher_session_required.m4a,Learners under 13 can only use Magana in a teacher-run session.,Learners under 13 can only use Magana in a teacher-run session.,App phrase,final
+msg_unreadable_image,en-msg_unreadable_image.m4a,I couldn't open that photo. Please try again.,I couldn't open that photo. Please try again.,App phrase,final
+msg_numbers_unconfirmed,en-msg_numbers_unconfirmed.m4a,I couldn't explain this page safely. Here it is read again.,I couldn't explain this page safely. Here it is read again.,App phrase,final
+msg_class_code_wrong,en-msg_class_code_wrong.m4a,That class code isn't right. Check it with your teacher.,That class code isn't right. Check it with your teacher.,App phrase,final
+msg_code_locked,en-msg_code_locked.m4a,"Too many wrong codes. Please wait 5 minutes, then try again.","Too many wrong codes. Please wait 5 minutes, then try again.",App phrase,final
+msg_teacher_code_needed,en-msg_teacher_code_needed.m4a,Only your teacher can move you to another class. Ask them to enter their teacher code.,Only your teacher can move you to another class. Ask them to enter their teacher code.,App phrase,final
+msg_teacher_code_wrong,en-msg_teacher_code_wrong.m4a,That teacher code isn't right. Ask your teacher to check it.,That teacher code isn't right. Ask your teacher to check it.,App phrase,final
+msg_class_has_no_accounts,en-msg_class_has_no_accounts.m4a,This class only has lessons your teacher runs. Ask your teacher.,This class only has lessons your teacher runs. Ask your teacher.,App phrase,final
+msg_not_linked,en-msg_not_linked.m4a,This phone isn't in a class now. You can still read pages.,This phone isn't in a class now. You can still read pages.,App phrase,final
+msg_class_joined,en-msg_class_joined.m4a,You're in the class.,You're in the class.,App phrase,final
+msg_class_changed,en-msg_class_changed.m4a,Your class has changed.,Your class has changed.,App phrase,final
+msg_explain_wrong_language,en-msg_explain_wrong_language.m4a,"I couldn't explain this in your language, so I'll read the page exactly instead.","I couldn't explain this in your language, so I'll read the page exactly instead.",App phrase,final
+msg_go_to_clinic_now,en-msg_go_to_clinic_now.m4a,"This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.","This could be serious. Please go to the nearest clinic now, or call 112. Do not wait for a call back.",App phrase,final
+msg_nurse_call_within_2_hours,en-msg_nurse_call_within_2_hours.m4a,Thank you. A nurse will call you within 2 hours.,Thank you. A nurse will call you within 2 hours.,App phrase,final
+msg_nurse_call_working_hours,en-msg_nurse_call_working_hours.m4a,Thank you. A nurse will call you back during working hours.,Thank you. A nurse will call you back during working hours.,App phrase,final
+autoCapture,en-autoCapture.m4a,Auto-capture,Auto-capture,App phrase,final
+torchOn,en-torchOn.m4a,Turn on torch,Turn on torch,App phrase,final
+torchOff,en-torchOff.m4a,Turn off torch,Turn off torch,App phrase,final
+cameraView,en-cameraView.m4a,Camera view,Camera view,App phrase,final
+cameraUnavailable,en-cameraUnavailable.m4a,"I can't use the camera. Allow camera access in Settings, or choose a photo from the gallery.","I can't use the camera. Allow camera access in Settings, or choose a photo from the gallery.",App phrase,final
+msg_q_fever,en-msg_q_fever.m4a,"Do you have a fever, or does your body feel very hot?","Do you have a fever, or does your body feel very hot?",App phrase,final
+msg_q_fever_days,en-msg_q_fever_days.m4a,For how many days have you had the fever?,For how many days have you had the fever?,App phrase,final
+msg_q_fits,en-msg_q_fits.m4a,"Have you had fits, or shaking of the body you could not stop?","Have you had fits, or shaking of the body you could not stop?",App phrase,final
+msg_q_cannot_drink,en-msg_q_cannot_drink.m4a,"Are you unable to drink anything, or is the baby unable to breastfeed?","Are you unable to drink anything, or is the baby unable to breastfeed?",App phrase,final
+msg_q_vomits_everything,en-msg_q_vomits_everything.m4a,Are you vomiting everything you eat or drink?,Are you vomiting everything you eat or drink?,App phrase,final
+msg_q_very_sleepy,en-msg_q_very_sleepy.m4a,"Are you very sleepy, confused, or hard to wake?","Are you very sleepy, confused, or hard to wake?",App phrase,final
+msg_q_bleeding,en-msg_q_bleeding.m4a,"Are you bleeding without a clear reason, from the nose or gums, or in vomit or stool?","Are you bleeding without a clear reason, from the nose or gums, or in vomit or stool?",App phrase,final
+msg_q_yellow_eyes,en-msg_q_yellow_eyes.m4a,Have your eyes or skin turned yellow?,Have your eyes or skin turned yellow?,App phrase,final
+msg_q_hard_breathing,en-msg_q_hard_breathing.m4a,"Are you breathing very fast, or struggling to breathe?","Are you breathing very fast, or struggling to breathe?",App phrase,final
+msg_q_very_pale,en-msg_q_very_pale.m4a,"Are your palms, lips or inner eyelids very pale?","Are your palms, lips or inner eyelids very pale?",App phrase,final
+msg_q_dark_urine,en-msg_q_dark_urine.m4a,"Is your urine very dark, like cola or tea?","Is your urine very dark, like cola or tea?",App phrase,final
+msg_q_too_weak,en-msg_q_too_weak.m4a,Are you too weak to sit up or stand without help?,Are you too weak to sit up or stand without help?,App phrase,final
+cueHigher,en-cueHigher.m4a,Higher,Higher,App phrase,final
+cueLower,en-cueLower.m4a,Lower,Lower,App phrase,final
+cueLeft,en-cueLeft.m4a,Left,Left,App phrase,final
+cueRight,en-cueRight.m4a,Right,Right,App phrase,final
+cueHoldStill,en-cueHoldStill.m4a,Hold still,Hold still,App phrase,final
+cueCloser,en-cueCloser.m4a,Closer,Closer,App phrase,final
+cueFurther,en-cueFurther.m4a,Further,Further,App phrase,final
+cueMoreLight,en-cueMoreLight.m4a,More light,More light,App phrase,final
+cueNoPage,en-cueNoPage.m4a,No page,No page,App phrase,final
+chooseLanguageTitle,en-chooseLanguageTitle.m4a,Choose your language,Choose your language,App phrase,final
+chooseLanguageBody,en-chooseLanguageBody.m4a,Magana will speak to you in this language. You can change it any time from the Home screen.,Magana will speak to you in this language. You can change it any time from the Home screen.,App phrase,final
+languageHearsHint,en-languageHearsHint.m4a,Each option is read aloud in its own language when you touch it.,Each option is read aloud in its own language when you touch it.,App phrase,final
+continueLabel,en-continueLabel.m4a,Continue,Continue,App phrase (also used as tourContinue),final
+welcome,en-welcome.m4a,Welcome,Welcome,App phrase,final
+ageTitle,en-ageTitle.m4a,How old are you?,How old are you?,App phrase,final
+ageBody,en-ageBody.m4a,We ask so Magana is safe and right for you.,We ask so Magana is safe and right for you.,App phrase,final
+ageAdult,en-ageAdult.m4a,I am 18 or older,I am 18 or older,App phrase,final
+ageAdultDetail,en-ageAdultDetail.m4a,"Use everything in Magana, including health and money papers.","Use everything in Magana, including health and money papers.",App phrase,final
+ageTeen,en-ageTeen.m4a,I am 13 to 17,I am 13 to 17,App phrase,final
+ageTeenDetail,en-ageTeenDetail.m4a,"A parent, guardian or teacher agrees first. Magana helps with school subjects only.","A parent, guardian or teacher agrees first. Magana helps with school subjects only.",App phrase,final
+ageChild,en-ageChild.m4a,I am under 13,I am under 13,App phrase,final
+ageChildDetail,en-ageChildDetail.m4a,Your teacher will use Magana with you in class.,Your teacher will use Magana with you in class.,App phrase,final
+privacyNote,en-privacyNote.m4a,Photos of your pages are deleted after reading. We never share your details.,Photos of your pages are deleted after reading. We never share your details.,App phrase,final
+hearAgain,en-hearAgain.m4a,Hear this page again,Hear this page again,App phrase,final
+readyTitle,en-readyTitle.m4a,You're ready,You're ready,App phrase,final
+readyBody,en-readyBody.m4a,Hold your phone over any printed page and Magana will read it to you.,Hold your phone over any printed page and Magana will read it to you.,App phrase,final
+startLabel,en-startLabel.m4a,Start,Start,App phrase,final
+consentTitle,en-consentTitle.m4a,"Ask a parent, guardian or teacher","Ask a parent, guardian or teacher",App phrase,final
+consentBody,en-consentBody.m4a,Please read or listen to this together.,Please read or listen to this together.,App phrase,final
+consentPoint1,en-consentPoint1.m4a,Magana helps with school subjects only.,Magana helps with school subjects only.,App phrase,final
+consentPoint2,en-consentPoint2.m4a,"No health or money papers, no WhatsApp and no open chat.","No health or money papers, no WhatsApp and no open chat.",App phrase,final
+consentPoint3,en-consentPoint3.m4a,Photos are deleted after reading.,Photos are deleted after reading.,App phrase,final
+consentConfirm,en-consentConfirm.m4a,"I am the parent, guardian or teacher, and I agree","I am the parent, guardian or teacher, and I agree",App phrase,final
+classroomTitle,en-classroomTitle.m4a,Magana in class,Magana in class,App phrase,final
+classroomBody,en-classroomBody.m4a,"Your teacher starts Magana with you in class. When the lesson ends, close the app.","Your teacher starts Magana with you in class. When the lesson ends, close the app.",App phrase,final
+classroomStart,en-classroomStart.m4a,Teacher: start the class session,Teacher: start the class session,App phrase,final
+classroomConfirmTitle,en-classroomConfirmTitle.m4a,Are you the teacher?,Are you the teacher?,App phrase,final
+classroomConfirmYes,en-classroomConfirmYes.m4a,"Yes, start the session","Yes, start the session",App phrase,final
+cancel,en-cancel.m4a,Cancel,Cancel,App phrase,final
+back,en-back.m4a,Back,Back,App phrase,final
+msg_unknown_tier,en-msg_unknown_tier.m4a,Please set up Magana again: your age group wasn't recognised.,Please set up Magana again: your age group wasn't recognised.,App phrase,final
+readPageSubtitleSchool,en-readPageSubtitleSchool.m4a,"Schoolwork, notes, textbooks and tests","Schoolwork, notes, textbooks and tests",App phrase,final
+everydaySubtitle,en-everydaySubtitle.m4a,Health and money papers · 18+,Health and money papers · 18+,App phrase,final
+paperMedicine,en-paperMedicine.m4a,Medicine label,Medicine label,App phrase,final
+paperMedicineDetail,en-paperMedicineDetail.m4a,Labels and prescriptions,Labels and prescriptions,App phrase,final
+paperReport,en-paperReport.m4a,Medical report,Medical report,App phrase,final
+paperReportDetail,en-paperReportDetail.m4a,Test results and discharge notes,Test results and discharge notes,App phrase,final
+paperStatement,en-paperStatement.m4a,Bank statement,Bank statement,App phrase,final
+paperStatementDetail,en-paperStatementDetail.m4a,"Statements, receipts and bills","Statements, receipts and bills",App phrase,final
+talkToNurse,en-talkToNurse.m4a,Talk to a nurse,Talk to a nurse,App phrase,final
+talkToNurseDetail,en-talkToNurseDetail.m4a,With the Ibà quick check,With the Ibà quick check,App phrase,final
+everydayPrivacy,en-everydayPrivacy.m4a,Private papers are read on your phone and not saved. Magana never asks for your PIN or password.,Private papers are read on your phone and not saved. Magana never asks for your PIN or password.,App phrase,final
+readExactly,en-readExactly.m4a,Read exactly as printed,Read exactly as printed,App phrase,final
+noteMedicine,en-noteMedicine.m4a,"Magana reads what is printed. It does not give medical advice. If anything on the label is unclear, ask your pharmacist before taking it.","Magana reads what is printed. It does not give medical advice. If anything on the label is unclear, ask your pharmacist before taking it.",App phrase,final
+noteReport,en-noteReport.m4a,Numbers and ranges are read exactly as printed. Magana does not interpret results: only your health worker can explain what they mean for you.,Numbers and ranges are read exactly as printed. Magana does not interpret results: only your health worker can explain what they mean for you.,App phrase,final
+noteStatement,en-noteStatement.m4a,"Amounts are read exactly as printed. This statement is not saved. Magana never asks for your PIN or password. If an amount is unclear, check it with your bank or a trusted person.","Amounts are read exactly as printed. This statement is not saved. Magana never asks for your PIN or password. If an amount is unclear, check it with your bank or a trusted person.",App phrase,final
+askPharmacistOrNurse,en-askPharmacistOrNurse.m4a,Ask a pharmacist or nurse,Ask a pharmacist or nurse,App phrase,final
+adultsOnly,en-adultsOnly.m4a,This is for adults (18 and over).,This is for adults (18 and over).,App phrase,final
+healthWorkerTitle,en-healthWorkerTitle.m4a,Talk to a health worker,Talk to a health worker,App phrase,final
+healthWorkerSubtitle,en-healthWorkerSubtitle.m4a,A nurse or pharmacist calls you back,A nurse or pharmacist calls you back,App phrase,final
+helpWithTitle,en-helpWithTitle.m4a,What do you need help with?,What do you need help with?,App phrase,final
+reasonMedicine,en-reasonMedicine.m4a,Understanding my medicine,Understanding my medicine,App phrase,final
+reasonResults,en-reasonResults.m4a,Understanding my results,Understanding my results,App phrase,final
+reasonOther,en-reasonOther.m4a,Something else,Something else,App phrase (also used as reportSomethingElse),final
+callLanguage,en-callLanguage.m4a,Language for the call,Language for the call,App phrase,final
+answerIbaFirst,en-answerIbaFirst.m4a,Answer a few quick questions first (Ibà),Answer a few quick questions first (Ibà),App phrase,final
+requestCallback,en-requestCallback.m4a,Request a call back,Request a call back,App phrase,final
+emergencyBold,en-emergencyBold.m4a,Emergency?,Emergency?,App phrase,final
+emergencyText,en-emergencyText.m4a,Do not wait for a call back. Call 112 now.,Do not wait for a call back. Call 112 now.,App phrase,final
+call112,en-call112.m4a,Call 112,Call 112,App phrase,final
+quickCheckTitle,en-quickCheckTitle.m4a,Quick health check,Quick health check,App phrase,final
+yes,en-yes.m4a,Yes,Yes,App phrase,final
+no,en-no.m4a,No,No,App phrase,final
+moreDays,en-moreDays.m4a,One more day,One more day,App phrase,final
+fewerDays,en-fewerDays.m4a,One day fewer,One day fewer,App phrase,final
+quickCheckNote,en-quickCheckNote.m4a,"Your answers help the nurse decide how soon to call you. Ibà does not diagnose. If you have danger signs, Magana tells you to go to a clinic now.","Your answers help the nurse decide how soon to call you. Ibà does not diagnose. If you have danger signs, Magana tells you to go to a clinic now.",App phrase,final
+resultTitle,en-resultTitle.m4a,Your result,Your result,App phrase,final
+checkingAnswers,en-checkingAnswers.m4a,Checking your answers.,Checking your answers.,App phrase,final
+msg_callback_booked,en-msg_callback_booked.m4a,Your call back is booked. A nurse or pharmacist will call you.,Your call back is booked. A nurse or pharmacist will call you.,App phrase,final
+msg_callback_unavailable,en-msg_callback_unavailable.m4a,"Call backs are not available yet. If you need help now, go to a clinic or call 112.","Call backs are not available yet. If you need help now, go to a clinic or call 112.",App phrase,final
+resultUrgent,en-resultUrgent.m4a,"A nurse should call you within 2 hours. Request a call back now. If you get worse, go to a clinic or call 112.","A nurse should call you within 2 hours. Request a call back now. If you get worse, go to a clinic or call 112.",App phrase,final
+resultRoutine,en-resultRoutine.m4a,"A nurse can call you back during working hours. Request a call back. If you get worse, go to a clinic or call 112.","A nurse can call you back during working hours. Request a call back. If you get worse, go to a clinic or call 112.",App phrase,final
+quizListening,en-quizListening.m4a,Listening… Tap to stop,Listening… Tap to stop,App phrase (also used as listeningCommand),final
+quizRepeat,en-quizRepeat.m4a,Repeat question,Repeat question,App phrase,final
+quizNext,en-quizNext.m4a,Next question,Next question,App phrase,final
+quizFinish,en-quizFinish.m4a,See my result,See my result,App phrase,final
+quizYourAnswerRight,en-quizYourAnswerRight.m4a,"your answer, correct","your answer, correct",App phrase,final
+quizYourAnswerWrong,en-quizYourAnswerWrong.m4a,"your answer, not correct","your answer, not correct",App phrase,final
+quizRightAnswer,en-quizRightAnswer.m4a,correct answer,correct answer,App phrase,final
+quizResultTitle,en-quizResultTitle.m4a,Practice finished,Practice finished,App phrase,final
+quizAgain,en-quizAgain.m4a,Practise again,Practise again,App phrase,final
+skillsSubtitle,en-skillsSubtitle.m4a,"Short spoken lessons, at your pace","Short spoken lessons, at your pace",App phrase,final
+playLesson,en-playLesson.m4a,Play lesson,Play lesson,App phrase,final
+practiseNow,en-practiseNow.m4a,Practise now,Practise now,App phrase,final
+lessonDone,en-lessonDone.m4a,Done,Done,App phrase,final
+lessonNotStarted,en-lessonNotStarted.m4a,Not started,Not started,App phrase,final
+allLessonsDone,en-allLessonsDone.m4a,You have finished every lesson. Well done!,You have finished every lesson. Well done!,App phrase,final
+practiseWithChampion,en-practiseWithChampion.m4a,Practise with a Magana Champion,Practise with a Magana Champion,App phrase,final
+skillsNote,en-skillsNote.m4a,"Sample lessons written by the Magana team, to be reviewed by rehabilitation trainers. Lessons are in English for now.","Sample lessons written by the Magana team, to be reviewed by rehabilitation trainers. Lessons are in English for now.",App phrase,final
+previousStep,en-previousStep.m4a,Previous step,Previous step,App phrase,final
+nextStep,en-nextStep.m4a,Next step,Next step,App phrase,final
+lessonFinished,en-lessonFinished.m4a,Lesson finished.,Lesson finished.,App phrase,final
+scoreTitle,en-scoreTitle.m4a,My Independence Score,My Independence Score,App phrase,final
+scoreSubtitle,en-scoreSubtitle.m4a,Tasks you finished in Magana,Tasks you finished in Magana,App phrase,final
+scoreByArea,en-scoreByArea.m4a,By area,By area,App phrase,final
+areaLearning,en-areaLearning.m4a,Learning,Learning,App phrase,final
+areaHealth,en-areaHealth.m4a,Health papers,Health papers,App phrase,final
+areaMoney,en-areaMoney.m4a,Money and letters,Money and letters,App phrase,final
+scoreThisWeek,en-scoreThisWeek.m4a,This week,This week,App phrase,final
+scoreNothingThisWeek,en-scoreNothingThisWeek.m4a,No tasks yet this week. Read a page or take a quiz to start.,No tasks yet this week. Read a page or take a quiz to start.,App phrase,final
+scoreHow,en-scoreHow.m4a,Your score counts real tasks you finished in Magana in the last 30 days. It stays on this phone; only you see it.,Your score counts real tasks you finished in Magana in the last 30 days. It stays on this phone; only you see it.,App phrase,final
+championsTitle,en-championsTitle.m4a,Magana Champions,Magana Champions,App phrase,final
+championsSubtitle,en-championsSubtitle.m4a,Learn from people who have been there,Learn from people who have been there,App phrase,final
+championSample,en-championSample.m4a,Sample profile,Sample profile,App phrase,final
+championDetail,en-championDetail.m4a,"Blind since age 12 · Kano · Hausa, English","Blind since age 12 · Kano · Hausa, English",App phrase,final
+championNotYet,en-championNotYet.m4a,This is a sample profile. Champions will be matched to you through partner organisations. Calls are not available yet.,This is a sample profile. Champions will be matched to you through partner organisations. Calls are not available yet.,App phrase,final
+becomeChampion,en-becomeChampion.m4a,Become a Champion,Become a Champion,App phrase,final
+becomeChampionBody,en-becomeChampionBody.m4a,Help others in your community and earn a certificate.,Help others in your community and earn a certificate.,App phrase,final
+champStepBasics,en-champStepBasics.m4a,Finish Phone basics,Finish Phone basics,App phrase,final
+champStepPhotos,en-champStepPhotos.m4a,Finish Taking clear photos,Finish Taking clear photos,App phrase,final
+champStepScore,en-champStepScore.m4a,Reach an Independence Score of 60,Reach an Independence Score of 60,App phrase,final
+champStepTraining,en-champStepTraining.m4a,Join a 2-hour Champion training,Join a 2-hour Champion training,App phrase,final
+champStepHelp,en-champStepHelp.m4a,Help your first 3 people,Help your first 3 people,App phrase,final
+stepDone,en-stepDone.m4a,done,done,App phrase,final
+stepNotDone,en-stepNotDone.m4a,not done yet,not done yet,App phrase,final
+championsPartnerNote,en-championsPartnerNote.m4a,Champion training will be run with partner organisations. It is not open yet.,Champion training will be run with partner organisations. It is not open yet.,App phrase,final
+librarySubtitle,en-librarySubtitle.m4a,"Saved readings, kept for 30 days","Saved readings, kept for 30 days",App phrase,final
+libraryEmpty,en-libraryEmpty.m4a,"Nothing saved yet. After Magana reads a page, choose Save to my library.","Nothing saved yet. After Magana reads a page, choose Save to my library.",App phrase,final
+libraryPrivacy,en-libraryPrivacy.m4a,Saved readings stay on this phone and are deleted after 30 days. Photos are never saved.,Saved readings stay on this phone and are deleted after 30 days. Photos are never saved.,App phrase,final
+saveToLibrary,en-saveToLibrary.m4a,Save to my library,Save to my library,App phrase,final
+savedToLibrary,en-savedToLibrary.m4a,Saved to my library. It stays on this phone for 30 days.,Saved to my library. It stays on this phone for 30 days.,App phrase,final
+deleteFromLibrary,en-deleteFromLibrary.m4a,Delete from my library,Delete from my library,App phrase,final
+deleteConfirm,en-deleteConfirm.m4a,Delete this reading from your library?,Delete this reading from your library?,App phrase,final
+deleteYes,en-deleteYes.m4a,Delete,Delete,App phrase (also used as keypadDelete),final
+deletedFromLibrary,en-deletedFromLibrary.m4a,Deleted from your library.,Deleted from your library.,App phrase,final
+remindersTitle,en-remindersTitle.m4a,Today's medicines,Today's medicines,App phrase,final
+remindersSubtitle,en-remindersSubtitle.m4a,Times set with your pharmacist,Times set with your pharmacist,App phrase,final
+remindersCard,en-remindersCard.m4a,Medicine reminders,Medicine reminders,App phrase,final
+remindersCardDetail,en-remindersCardDetail.m4a,Times for your medicines,Times for your medicines,App phrase,final
+remindersEmpty,en-remindersEmpty.m4a,No reminders yet. Add the times your pharmacist or doctor gave you.,No reminders yet. Add the times your pharmacist or doctor gave you.,App phrase,final
+doseTaken,en-doseTaken.m4a,Taken,Taken,App phrase,final
+doseDue,en-doseDue.m4a,Due now,Due now,App phrase,final
+doseLater,en-doseLater.m4a,Later today,Later today,App phrase,final
+iTookIt,en-iTookIt.m4a,I've taken it,I've taken it,App phrase,final
+remindLater,en-remindLater.m4a,Remind in 15 min,Remind in 15 min,App phrase,final
+remindLaterSet,en-remindLaterSet.m4a,I will remind you again in 15 minutes.,I will remind you again in 15 minutes.,App phrase,final
+markedTaken,en-markedTaken.m4a,Marked as taken.,Marked as taken.,App phrase,final
+addReminder,en-addReminder.m4a,Add a reminder,Add a reminder,App phrase,final
+medicineName,en-medicineName.m4a,"Medicine name, as on the label","Medicine name, as on the label",App phrase,final
+medicineAmount,en-medicineAmount.m4a,"How much, as your pharmacist said (for example, 2 tablets)","How much, as your pharmacist said (for example, 2 tablets)",App phrase,final
+reminderTime,en-reminderTime.m4a,Time,Time,App phrase,final
+earlierHour,en-earlierHour.m4a,One hour earlier,One hour earlier,App phrase,final
+laterHour,en-laterHour.m4a,One hour later,One hour later,App phrase,final
+earlierMinutes,en-earlierMinutes.m4a,15 minutes earlier,15 minutes earlier,App phrase,final
+laterMinutes,en-laterMinutes.m4a,15 minutes later,15 minutes later,App phrase,final
+saveReminder,en-saveReminder.m4a,Save reminder,Save reminder,App phrase,final
+medicineNameNeeded,en-medicineNameNeeded.m4a,Type the medicine name first.,Type the medicine name first.,App phrase,final
+deleteReminder,en-deleteReminder.m4a,Delete reminder,Delete reminder,App phrase,final
+reminderNotice,en-reminderNotice.m4a,"Your phone rings and vibrates at each time, as a notification. Magana reminds you at the times you set. It never changes a dose.","Your phone rings and vibrates at each time, as a notification. Magana reminds you at the times you set. It never changes a dose.",App phrase,final
+notificationsOff,en-notificationsOff.m4a,"Notifications are off for Magana, so reminders only show when Magana is open. You can turn them on in your phone's settings.","Notifications are off for Magana, so reminders only show when Magana is open. You can turn them on in your phone's settings.",App phrase,final
+missedDose,en-missedDose.m4a,Missed a dose? Ask a pharmacist,Missed a dose? Ask a pharmacist,App phrase,final
+reminderNotifyTitle,en-reminderNotifyTitle.m4a,Time for your medicine,Time for your medicine,App phrase,final
+exactTitle,en-exactTitle.m4a,Ring on time?,Ring on time?,App phrase,final
+exactBody,en-exactBody.m4a,"To ring at the exact minute, your phone needs to allow Magana to set alarms and reminders. The next screen has one switch: turn it on, then go back.","To ring at the exact minute, your phone needs to allow Magana to set alarms and reminders. The next screen has one switch: turn it on, then go back.",App phrase,final
+exactOpen,en-exactOpen.m4a,Open the setting,Open the setting,App phrase,final
+notNow,en-notNow.m4a,Not now,Not now,App phrase,final
+remindersMayBeLate,en-remindersMayBeLate.m4a,"On this phone, reminders may ring up to an hour late. To ring on time, allow alarms and reminders for Magana.","On this phone, reminders may ring up to an hour late. To ring on time, allow alarms and reminders for Magana.",App phrase,final
+allowOnTime,en-allowOnTime.m4a,Allow on-time reminders,Allow on-time reminders,App phrase,final
+msg_q_bleeding_no_sight,en-msg_q_bleeding_no_sight.m4a,"Have you felt or tasted blood, or has anyone told you that you are bleeding, from your nose, gums, vomit or stool?","Have you felt or tasted blood, or has anyone told you that you are bleeding, from your nose, gums, vomit or stool?",App phrase,final
+msg_q_yellow_eyes_no_sight,en-msg_q_yellow_eyes_no_sight.m4a,Has anyone told you that your eyes or skin look yellow?,Has anyone told you that your eyes or skin look yellow?,App phrase,final
+msg_q_very_pale_no_sight,en-msg_q_very_pale_no_sight.m4a,"Has anyone told you that you look very pale? Do you feel very weak, dizzy or out of breath when you stand?","Has anyone told you that you look very pale? Do you feel very weak, dizzy or out of breath when you stand?",App phrase,final
+msg_q_dark_urine_no_sight,en-msg_q_dark_urine_no_sight.m4a,"Has someone near you seen that your urine is very dark, like cola or tea?","Has someone near you seen that your urine is very dark, like cola or tea?",App phrase,final
+msg_ask_someone_to_check,en-msg_ask_someone_to_check.m4a,"Please ask someone near you to check, or go to a clinic.","Please ask someone near you to check, or go to a clinic.",App phrase,final
+cantTell,en-cantTell.m4a,I can't tell,I can't tell,App phrase,final
+appLanguageTitle,en-appLanguageTitle.m4a,App language,App language,App phrase,final
+languageSheetBody,en-languageSheetBody.m4a,"Menus, buttons, help and Magana's voice all switch to the language you choose.","Menus, buttons, help and Magana's voice all switch to the language you choose.",App phrase,final
+languageVoiceTip,en-languageVoiceTip.m4a,You can also say “change language to Igbo” after pressing Speak a command on Home.,You can also say “change language to Igbo” after pressing Speak a command on Home.,App phrase,final
+settingsVersionNote,en-settingsVersionNote.m4a,Tell the Magana team this version when you report a problem.,Tell the Magana team this version when you report a problem.,App phrase,final
+reportProblem,en-reportProblem.m4a,Report a problem,Report a problem,App phrase,final
+reportHow,en-reportHow.m4a,"Tell the Magana team three things: the name of the screen, what you did, and what Magana said.","Tell the Magana team three things: the name of the screen, what you did, and what Magana said.",App phrase,final
+speakCommand,en-speakCommand.m4a,Speak a command,Speak a command,App phrase,final
+commandSorry,en-commandSorry.m4a,"Sorry, I didn't catch that. Say “read a page” or “help”.","Sorry, I didn't catch that. Say “read a page” or “help”.",App phrase,final
+commandNothingHeard,en-commandNothingHeard.m4a,"I didn't hear a command. Try again, or say help.","I didn't hear a command. Try again, or say help.",App phrase,final
+changeLanguageCommand,en-changeLanguageCommand.m4a,change language,change language,App phrase,final
+voiceCommandsUnavailable,en-voiceCommandsUnavailable.m4a,Voice commands are not available on this phone. Use the buttons instead.,Voice commands are not available on this phone. Use the buttons instead.,App phrase,final
+explainTitle,en-explainTitle.m4a,Explain,Explain,App phrase,final
+explainPreviewBanner,en-explainPreviewBanner.m4a,"Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.","Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.",App phrase,final
+youSaid,en-youSaid.m4a,You said,You said,App phrase,final
+readExactlyNote,en-readExactlyNote.m4a,Numbers and words from the page are read exactly as printed.,Numbers and words from the page are read exactly as printed.,App phrase,final
+saySimpler,en-saySimpler.m4a,Say it simpler,Say it simpler,App phrase,final
+giveExample,en-giveExample.m4a,Give an example,Give an example,App phrase,final
+explainDisclaimer,en-explainDisclaimer.m4a,Magana can make mistakes. Check important answers with your teacher.,Magana can make mistakes. Check important answers with your teacher.,App phrase,final
+explainNoPage,en-explainNoPage.m4a,"Explanations are about a page. Read a page first, then choose Explain this.","Explanations are about a page. Read a page first, then choose Explain this.",App phrase,final
+explainThis,en-explainThis.m4a,Explain this,Explain this,App phrase,final
+explainQuestionPreview,en-explainQuestionPreview.m4a,"When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.","When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.",App phrase,final
+msg_explain_preview,en-msg_explain_preview.m4a,"This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.","This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",App phrase,final
+msg_explained,en-msg_explained.m4a,Here is the explanation.,Here is the explanation.,App phrase,final
+msg_explain_bad_source,en-msg_explain_bad_source.m4a,There is no page text to explain. Please read a page first.,There is no page text to explain. Please read a page first.,App phrase,final
+jumpWithinPage,en-jumpWithinPage.m4a,Jump within page,Jump within page,App phrase,final
+jumpStart,en-jumpStart.m4a,Start of the page,Start of the page,App phrase,final
+jumpWarnings,en-jumpWarnings.m4a,Next thing I'm not sure about,Next thing I'm not sure about,App phrase,final
+jumpNotYet,en-jumpNotYet.m4a,Jumping to diagrams is not available yet.,Jumping to diagrams is not available yet.,App phrase,final
+paperLetter,en-paperLetter.m4a,Letters & forms,Letters & forms,App phrase,final
+paperLetterDetail,en-paperLetterDetail.m4a,"Notices, forms, religious texts","Notices, forms, religious texts",App phrase,final
+noteLetter,en-noteLetter.m4a,"Magana reads what is printed. It does not give legal or financial advice, and never asks for your PIN or password.","Magana reads what is printed. It does not give legal or financial advice, and never asks for your PIN or password.",App phrase,final
+readAnyPaper,en-readAnyPaper.m4a,Read any paper,Read any paper,App phrase,final
+readAnyPaperDetail,en-readAnyPaperDetail.m4a,Magana works out what kind of paper it is,Magana works out what kind of paper it is,App phrase,final
+readAgain,en-readAgain.m4a,Read again,Read again,App phrase,final
+askAboutResult,en-askAboutResult.m4a,What does this mean?,What does this mean?,App phrase,final
+resultAnswer,en-resultAnswer.m4a,"Only your health worker can explain what this result means for you. I can save your question for your next visit, or ask a nurse to call you.","Only your health worker can explain what this result means for you. I can save your question for your next visit, or ask a nurse to call you.",App phrase,final
+saveQuestion,en-saveQuestion.m4a,Save question,Save question,App phrase,final
+questionSaved,en-questionSaved.m4a,Saved. You will find it in Talk to a health worker.,Saved. You will find it in Talk to a health worker.,App phrase,final
+askANurse,en-askANurse.m4a,Ask a nurse,Ask a nurse,App phrase,final
+savedQuestionsTitle,en-savedQuestionsTitle.m4a,Questions for your next visit,Questions for your next visit,App phrase,final
+fromTheStatement,en-fromTheStatement.m4a,"From the statement, exactly as printed","From the statement, exactly as printed",App phrase,final
+findTransaction,en-findTransaction.m4a,Find a transaction,Find a transaction,App phrase,final
+findPrompt,en-findPrompt.m4a,"Say or type a word, date or amount from the transaction.","Say or type a word, date or amount from the transaction.",App phrase,final
+findField,en-findField.m4a,"Word, date or amount","Word, date or amount",App phrase,final
+findSearch,en-findSearch.m4a,Find,Find,App phrase,final
+findSpeak,en-findSpeak.m4a,Speak instead,Speak instead,App phrase,final
+sayYesOrNo,en-sayYesOrNo.m4a,"Say yes, no, or I can't tell","Say yes, no, or I can't tell",App phrase,final
+shareScore,en-shareScore.m4a,Share my score with my teacher,Share my score with my teacher,App phrase,final
+shareScoreNote,en-shareScoreNote.m4a,"Your teacher will see your score, never your pages or questions, once your class is connected to the Magana teacher portal.","Your teacher will see your score, never your pages or questions, once your class is connected to the Magana teacher portal.",App phrase,final
+sayNameWhenLocked,en-sayNameWhenLocked.m4a,Say the medicine name when locked,Say the medicine name when locked,App phrase,final
+sayNameNote,en-sayNameNote.m4a,"Off: the lock screen says only “Magana reminder”. On: the lock screen shows the medicine and how much, and Magana says them aloud at each time, so people near you may see or hear them.","Off: the lock screen says only “Magana reminder”. On: the lock screen shows the medicine and how much, and Magana says them aloud at each time, so people near you may see or hear them.",App phrase,final
+reminderGenericTitle,en-reminderGenericTitle.m4a,Magana reminder,Magana reminder,App phrase,final
+reminderGenericBody,en-reminderGenericBody.m4a,Open Magana to hear which medicine.,Open Magana to hear which medicine.,App phrase,final
+msg_bad_api_key,en-msg_bad_api_key.m4a,This copy of Magana can't reach the reading service. Please update the app.,This copy of Magana can't reach the reading service. Please update the app.,App phrase,final
+msg_explain_unavailable,en-msg_explain_unavailable.m4a,"Explanations aren't available right now. Here is the page, read exactly as printed.","Explanations aren't available right now. Here is the page, read exactly as printed.",App phrase,final
+msg_asr_unavailable,en-msg_asr_unavailable.m4a,Speech recognition on the server is not set up; the phone's own is used.,Speech recognition on the server is not set up; the phone's own is used.,App phrase,final
+msg_audio_too_long,en-msg_audio_too_long.m4a,That recording is too long. Please say a short answer.,That recording is too long. Please say a short answer.,App phrase,final
+msg_unreadable_audio,en-msg_unreadable_audio.m4a,I couldn't hear that recording. Please try again.,I couldn't hear that recording. Please try again.,App phrase,final
+aboutTitle,en-aboutTitle.m4a,About Magana,About Magana,App phrase,final
+aboutModels,en-aboutModels.m4a,Language models,Language models,App phrase,final
+aboutModelsNote,en-aboutModelsNote.m4a,"Magana uses these open models under the N-ATLaS Terms of Use, version 1.0. The credit lines below are quoted as the terms require.","Magana uses these open models under the N-ATLaS Terms of Use, version 1.0. The credit lines below are quoted as the terms require.",App phrase,final
+aboutExplain,en-aboutExplain.m4a,Explanations in your language,Explanations in your language,App phrase,final
+aboutSpeech,en-aboutSpeech.m4a,Speech recognition,Speech recognition,App phrase,final
+openSourceLicences,en-openSourceLicences.m4a,Open-source licences,Open-source licences,App phrase,final
+msg_explain_not_available,en-msg_explain_not_available.m4a,"Explain isn't available yet. Here is the page, read exactly as printed.","Explain isn't available yet. Here is the page, read exactly as printed.",App phrase,final
+quizConfirmNo,en-quizConfirmNo.m4a,"No, ask me again","No, ask me again",App phrase,final
+quizSayYesOrNo,en-quizSayYesOrNo.m4a,Say yes or no,Say yes or no,App phrase,final
+quizSayAgain,en-quizSayAgain.m4a,Please say your answer again.,Please say your answer again.,App phrase,final
+quizTapInstead,en-quizTapInstead.m4a,I'm having trouble hearing you. Please double tap your answer instead.,I'm having trouble hearing you. Please double tap your answer instead.,App phrase,final
+quizSayTrueFalse,en-quizSayTrueFalse.m4a,Say true or false,Say true or false,App phrase,final
+msg_too_many_requests,en-msg_too_many_requests.m4a,Magana is busy right now. Please wait a minute and try again.,Magana is busy right now. Please wait a minute and try again.,App phrase,final
+remindersNeedApp,en-remindersNeedApp.m4a,Reminders need the Android or iPhone app. In a web browser Magana can't ring at the right time.,Reminders need the Android or iPhone app. In a web browser Magana can't ring at the right time.,App phrase,final
+quizVoiceUnavailable,en-quizVoiceUnavailable.m4a,Voice answers aren't available on this device yet. Tap an answer instead.,Voice answers aren't available on this device yet. Tap an answer instead.,App phrase,final
+quizKeysHintTrueFalse,en-quizKeysHintTrueFalse.m4a,"Tap or click true or false, or press A for true or B for false.","Tap or click true or false, or press A for true or B for false.",App phrase,final
+quizTapAnswer,en-quizTapAnswer.m4a,Tap an answer.,Tap an answer.,App phrase,final
+startMagana,en-startMagana.m4a,Start Magana,Start Magana,App phrase,final
+classTitle,en-classTitle.m4a,Which class are you in?,Which class are you in?,App phrase,final
+classBody,en-classBody.m4a,Magana picks practice questions for your class. A teacher can change it later.,Magana picks practice questions for your class. A teacher can change it later.,App phrase,final
+classNotInSchool,en-classNotInSchool.m4a,I'm not in school,I'm not in school,App phrase,final
+classGroupPrimary,en-classGroupPrimary.m4a,Primary school,Primary school,App phrase,final
+classGroupJss,en-classGroupJss.m4a,Junior secondary,Junior secondary,App phrase,final
+classGroupSss,en-classGroupSss.m4a,Senior secondary,Senior secondary,App phrase,final
+classroomChooseClass,en-classroomChooseClass.m4a,Teacher: choose the class for this session,Teacher: choose the class for this session,App phrase,final
+classroomNeedsClass,en-classroomNeedsClass.m4a,Choose the class first.,Choose the class first.,App phrase,final
+settingsClass,en-settingsClass.m4a,My class,My class,App phrase,final
+settingsChangeClass,en-settingsChangeClass.m4a,Change class (teacher),Change class (teacher),App phrase,final
+quizFromTeacher,en-quizFromTeacher.m4a,From your teacher,From your teacher,App phrase,final
+quizSamples,en-quizSamples.m4a,Sample questions,Sample questions,App phrase,final
+quizChooseClassHint,en-quizChooseClassHint.m4a,Choose your class to get questions for it. A teacher can set it in Settings.,Choose your class to get questions for it. A teacher can set it in Settings.,App phrase,final
+quizSampleNote,en-quizSampleNote.m4a,"Sample questions written by the Magana team. They are not past questions, and a teacher will check them. The questions are in English.","Sample questions written by the Magana team. They are not past questions, and a teacher will check them. The questions are in English.",App phrase,final
+quizTeacherNote,en-quizTeacherNote.m4a,Made by your teacher.,Made by your teacher.,App phrase,final
+quizOr,en-quizOr.m4a,or,or,App phrase,final
+quizSessionOpen,en-quizSessionOpen.m4a,Teacher: open your class session,Teacher: open your class session,App phrase,final
+quizSessionPrompt,en-quizSessionPrompt.m4a,Only the teacher should open a class session. Type the session code from the teacher portal.,Only the teacher should open a class session. Type the session code from the teacher portal.,App phrase,final
+quizSessionCodeLabel,en-quizSessionCodeLabel.m4a,Session code,Session code,App phrase,final
+quizSessionStart,en-quizSessionStart.m4a,Open session,Open session,App phrase,final
+quizSessionEnd,en-quizSessionEnd.m4a,End class session,End class session,App phrase,final
+quizSessionEmpty,en-quizSessionEmpty.m4a,No quizzes from your teacher in this session yet.,No quizzes from your teacher in this session yet.,App phrase,final
+msg_session_code_invalid,en-msg_session_code_invalid.m4a,That session code isn't right. Check it in the teacher portal.,That session code isn't right. Check it in the teacher portal.,App phrase,final
+msg_paper_lines,en-msg_paper_lines.m4a,"Health and money papers aren't explained by AI. Each line is read exactly, in your language only where a checked translation exists.","Health and money papers aren't explained by AI. Each line is read exactly, in your language only where a checked translation exists.",App phrase,final
+msg_cant_translate_line_health,en-msg_cant_translate_line_health.m4a,I can't translate this line safely. Please ask a pharmacist.,I can't translate this line safely. Please ask a pharmacist.,App phrase,final
+msg_cant_translate_line_money,en-msg_cant_translate_line_money.m4a,I can't translate this line safely. Please ask someone at your bank.,I can't translate this line safely. Please ask someone at your bank.,App phrase,final
+msg_numbers_left_out,en-msg_numbers_left_out.m4a,The exact numbers are on the page. Say ‘read again’ to hear them.,The exact numbers are on the page. Say ‘read again’ to hear them.,App phrase,final
+explainReadAgain,en-explainReadAgain.m4a,Read the page again,Read the page again,App phrase,final
+quizNotSure,en-quizNotSure.m4a,I'm not sure what you said. Please say your answer again.,I'm not sure what you said. Please say your answer again.,App phrase,final
+quizVoicePrimaryOff,en-quizVoicePrimaryOff.m4a,"In primary classes, tap your answer. Voice answers come later.","In primary classes, tap your answer. Voice answers come later.",App phrase,final
+whoTitle,en-whoTitle.m4a,Who is using Magana?,Who is using Magana?,App phrase,final
+whoBody,en-whoBody.m4a,This helps Magana choose the right lessons and quizzes for you.,This helps Magana choose the right lessons and quizzes for you.,App phrase,final
+whoInSchool,en-whoInSchool.m4a,I’m in school,I’m in school,App phrase,final
+whoInSchoolDetail,en-whoInSchoolDetail.m4a,Primary or secondary. You’ll join your class with a code from your teacher.,Primary or secondary. You’ll join your class with a code from your teacher.,App phrase,final
+whoFinished,en-whoFinished.m4a,I’ve finished school,I’ve finished school,App phrase,final
+whoFinishedDetail,en-whoFinishedDetail.m4a,"Practise for JAMB or WAEC, improve your reading, or learn new skills.","Practise for JAMB or WAEC, improve your reading, or learn new skills.",App phrase,final
+whoOther,en-whoOther.m4a,University or other,University or other,App phrase,final
+whoOtherDetail,en-whoOtherDetail.m4a,"Read your own books, notes and papers. No class needed.","Read your own books, notes and papers. No class needed.",App phrase,final
+joinTitle,en-joinTitle.m4a,Join your class,Join your class,App phrase,final
+joinBody,en-joinBody.m4a,Ask your teacher for the 6-digit class code.,Ask your teacher for the 6-digit class code.,App phrase,final
+classCodeLabel,en-classCodeLabel.m4a,Class code,Class code,App phrase,final
+teacherCodeLabel,en-teacherCodeLabel.m4a,Teacher code,Teacher code,App phrase,final
+codeEmpty,en-codeEmpty.m4a,No digits yet. Type 6 digits.,No digits yet. Type 6 digits.,App phrase,final
+codeNeedsSix,en-codeNeedsSix.m4a,Type all 6 digits first.,Type all 6 digits first.,App phrase,final
+keypadReadBack,en-keypadReadBack.m4a,Read back,Read back,App phrase (also used as pdfPasswordReadBack),final
+joinUnder18Note,en-joinUnder18Note.m4a,Under 18? Your teacher will ask a parent or guardian to agree before your class is linked. Until then you can still read pages.,Under 18? Your teacher will ask a parent or guardian to agree before your class is linked. Until then you can still read pages.,App phrase,final
+joinButton,en-joinButton.m4a,Join class,Join class,App phrase,final
+joinNoCode,en-joinNoCode.m4a,I don’t have a code yet,I don’t have a code yet,App phrase,final
+joinedTitle,en-joinedTitle.m4a,You’re in!,You’re in!,App phrase,final
+joinedRightClass,en-joinedRightClass.m4a,"Is this the right class? If not, tell your teacher. Only your teacher can move you to a different class.","Is this the right class? If not, tell your teacher. Only your teacher can move you to a different class.",App phrase,final
+joinedWaiting,en-joinedWaiting.m4a,Waiting for your parent or guardian to agree. Your teacher will ask them.,Waiting for your parent or guardian to agree. Your teacher will ask them.,App phrase,final
+startReading,en-startReading.m4a,Start reading,Start reading,App phrase,final
+changeClassTitle,en-changeClassTitle.m4a,Change class,Change class,App phrase,final
+changeClassNow,en-changeClassNow.m4a,Your class now,Your class now,App phrase,final
+teacherCodeNeededTitle,en-teacherCodeNeededTitle.m4a,Your teacher needs to do this,Your teacher needs to do this,App phrase,final
+teacherCodeBody,en-teacherCodeBody.m4a,Ask your teacher to enter their teacher code. It’s on their Magana teacher page.,Ask your teacher to enter their teacher code. It’s on their Magana teacher page.,App phrase,final
+newClassCodeTitle,en-newClassCodeTitle.m4a,Now the new class’s code,Now the new class’s code,App phrase,final
+confirmLabel,en-confirmLabel.m4a,Confirm,Confirm,App phrase,final
+teacherCodeLockNote,en-teacherCodeLockNote.m4a,Wrong code 3 times? Magana waits 5 minutes before you can try again.,Wrong code 3 times? Magana waits 5 minutes before you can try again.,App phrase,final
+goalsTitle,en-goalsTitle.m4a,What would you like to do?,What would you like to do?,App phrase,final
+goalsBody,en-goalsBody.m4a,Choose as many as you like.,Choose as many as you like.,App phrase,final
+goalJamb,en-goalJamb.m4a,Prepare for JAMB,Prepare for JAMB,App phrase,final
+goalJambDetail,en-goalJambDetail.m4a,"Past-question style practice: English, Maths and more","Past-question style practice: English, Maths and more",App phrase,final
+goalWaec,en-goalWaec.m4a,Prepare for WAEC or NECO resit,Prepare for WAEC or NECO resit,App phrase,final
+goalWaecDetail,en-goalWaecDetail.m4a,"Practice by subject, at SS3 level","Practice by subject, at SS3 level",App phrase,final
+goalReading,en-goalReading.m4a,Practise reading,Practise reading,App phrase,final
+goalReadingDetail,en-goalReadingDetail.m4a,"Short passages and stories, read with you","Short passages and stories, read with you",App phrase,final
+goalSkills,en-goalSkills.m4a,Learn new skills,Learn new skills,App phrase,final
+goalSkillsDetail,en-goalSkillsDetail.m4a,"Phone skills, getting around, money basics","Phone skills, getting around, money basics",App phrase,final
+goalPapers,en-goalPapers.m4a,Just read my papers,Just read my papers,App phrase,final
+goalPapersDetail,en-goalPapersDetail.m4a,"Letters, bills, medicine labels","Letters, bills, medicine labels",App phrase,final
+goalsNote,en-goalsNote.m4a,You can change these any time in Settings. No teacher needed.,You can change these any time in Settings. No teacher needed.,App phrase,final
+saveLabel,en-saveLabel.m4a,Save,Save,App phrase,final
+waitingBanner,en-waitingBanner.m4a,Waiting for your parent or guardian to agree. Until then you can read pages.,Waiting for your parent or guardian to agree. Until then you can read pages.,App phrase,final
+removedNotice,en-removedNotice.m4a,Your teacher removed this phone from the class. You can still read pages.,Your teacher removed this phone from the class. You can still read pages.,App phrase,final
+settingsGoals,en-settingsGoals.m4a,My goals,My goals,App phrase,final
+settingsNoClass,en-settingsNoClass.m4a,Not in a class,Not in a class,App phrase,final
+practiceLevelTitle,en-practiceLevelTitle.m4a,My practice level,My practice level,App phrase,final
+msg_unreadable_pdf,en-msg_unreadable_pdf.m4a,I couldn't open that PDF. Please try another file.,I couldn't open that PDF. Please try another file.,App phrase,final
+msg_pdf_password_needed,en-msg_pdf_password_needed.m4a,This PDF is locked. Type its password: it is often in the email that came with it.,This PDF is locked. Type its password: it is often in the email that came with it.,App phrase,final
+msg_pdf_password_wrong,en-msg_pdf_password_wrong.m4a,That password didn't open the PDF. Please check it and try again.,That password didn't open the PDF. Please check it and try again.,App phrase,final
+msg_pdf_too_long,en-msg_pdf_too_long.m4a,This PDF is too long. I can read up to 20 pages at a time.,This PDF is too long. I can read up to 20 pages at a time.,App phrase,final
+readPdf,en-readPdf.m4a,Read a PDF,Read a PDF,App phrase (also used as pdfTitle),final
+readPdfDetail,en-readPdfDetail.m4a,"A bank statement, result or letter sent to your phone","A bank statement, result or letter sent to your phone",App phrase,final
+pdfBody,en-pdfBody.m4a,"Choose a PDF on your phone. You can also open one from WhatsApp, Gmail or Files with “Open with Magana” or Share.","Choose a PDF on your phone. You can also open one from WhatsApp, Gmail or Files with “Open with Magana” or Share.",App phrase,final
+pdfChoose,en-pdfChoose.m4a,Choose a PDF,Choose a PDF,App phrase,final
+pdfReading,en-pdfReading.m4a,Reading the PDF. Long statements take a little while.,Reading the PDF. Long statements take a little while.,App phrase,final
+pdfPasswordTitle,en-pdfPasswordTitle.m4a,This PDF is locked,This PDF is locked,App phrase,final
+pdfPasswordBody,en-pdfPasswordBody.m4a,"Type its password. Banks often send it in the same email, or it's part of your phone number or date of birth.","Type its password. Banks often send it in the same email, or it's part of your phone number or date of birth.",App phrase,final
+pdfPasswordLabel,en-pdfPasswordLabel.m4a,PDF password,PDF password,App phrase,final
+pdfPasswordNote,en-pdfPasswordNote.m4a,"Magana uses this password only to open this file, then forgets it. It is never saved. Magana never asks for your bank PIN or app password.","Magana uses this password only to open this file, then forgets it. It is never saved. Magana never asks for your bank PIN or app password.",App phrase,final
+pdfOpen,en-pdfOpen.m4a,Open the PDF,Open the PDF,App phrase,final
+pdfPasswordEmpty,en-pdfPasswordEmpty.m4a,Type the password first.,Type the password first.,App phrase,final
+pdfNotChosen,en-pdfNotChosen.m4a,No PDF chosen.,No PDF chosen.,App phrase,final
+msg_small_print,en-msg_small_print.m4a,"The print is very small or faint in this photo, so I may miss some of it. Move the phone closer, or open the PDF itself if you have it.","The print is very small or faint in this photo, so I may miss some of it. Move the phone closer, or open the PDF itself if you have it.",App phrase,final
+msg_handwritten_page,en-msg_handwritten_page.m4a,"This page looks handwritten. Handwriting is hard for me, so I may get words wrong. Numbers are only read when I'm sure.","This page looks handwritten. Handwriting is hard for me, so I may get words wrong. Numbers are only read when I'm sure.",App phrase,final
+msg_mixed_page,en-msg_mixed_page.m4a,Some of this page looks handwritten. I may get those parts wrong. Numbers there are only read when I'm sure.,Some of this page looks handwritten. I may get those parts wrong. Numbers there are only read when I'm sure.,App phrase,final
+msg_handwritten_prescription,en-msg_handwritten_prescription.m4a,This looks like handwriting on a health paper. I won't read handwritten medicines or doses. Please ask the pharmacist or nurse to read it to you.,This looks like handwriting on a health paper. I won't read handwritten medicines or doses. Please ask the pharmacist or nurse to read it to you.,App phrase,final
+msg_money_amounts_unreliable,en-msg_money_amounts_unreliable.m4a,"I can't read the amounts on this page reliably. Please open the PDF from your bank's app or email, or ask someone you trust.","I can't read the amounts on this page reliably. Please open the PDF from your bank's app or email, or ask someone you trust.",App phrase,final
+msg_reading_incomplete,en-msg_reading_incomplete.m4a,This reading is incomplete. I'll read only the parts I could check.,This reading is incomplete. I'll read only the parts I could check.,App phrase,final
+headingLabel,en-headingLabel.m4a,Heading,Heading,App phrase,final
+nextColumn,en-nextColumn.m4a,Next column,Next column,App phrase,final
+lastColumn,en-lastColumn.m4a,This is the last column.,This is the last column.,App phrase,final
+jumpHeadings,en-jumpHeadings.m4a,Headings,Headings,App phrase,final
+jumpColumns,en-jumpColumns.m4a,Columns,Columns,App phrase,final
+jumpTables,en-jumpTables.m4a,Tables,Tables,App phrase,final
+noHeadings,en-noHeadings.m4a,I didn't find any headings on this page.,I didn't find any headings on this page.,App phrase,final
+noColumns,en-noColumns.m4a,This page has one column.,This page has one column.,App phrase,final
+noTables,en-noTables.m4a,This page has no tables.,This page has no tables.,App phrase,final
+mapNow,en-mapNow.m4a,now,now,App phrase,final
+mapNext,en-mapNext.m4a,next,next,App phrase,final
+spellWord,en-spellWord.m4a,Spell word,Spell word,App phrase,final
+spellNone,en-spellNone.m4a,No marked words on this line.,No marked words on this line.,App phrase,final
+askSomeone,en-askSomeone.m4a,Ask someone,Ask someone,App phrase,final
+msg_letters_ha,en-msg_letters_ha.m4a,"Hausa page. I can miss letters like ƙ, ɗ and ɓ. Marked words may have one of these. Spell a word or check it with someone.","Hausa page. I can miss letters like ƙ, ɗ and ɓ. Marked words may have one of these. Spell a word or check it with someone.",App phrase,final
+msg_letters_yo,en-msg_letters_yo.m4a,"Yorùbá page. I can miss letters like ẹ, ọ and ṣ, and tone marks. Marked words may have one of these. Spell a word or check it with someone.","Yorùbá page. I can miss letters like ẹ, ọ and ṣ, and tone marks. Marked words may have one of these. Spell a word or check it with someone.",App phrase,final
+msg_letters_ig,en-msg_letters_ig.m4a,"Igbo page. I can miss letters like ị, ọ and ụ. Marked words may have one of these. Spell a word or check it with someone.","Igbo page. I can miss letters like ị, ọ and ụ. Marked words may have one of these. Spell a word or check it with someone.",App phrase,final
+msg_cut_off_top,en-msg_cut_off_top.m4a,Part of the page is cut off at the top.,Part of the page is cut off at the top.,App phrase,final
+msg_cut_off_bottom,en-msg_cut_off_bottom.m4a,Part of the page is cut off at the bottom.,Part of the page is cut off at the bottom.,App phrase,final
+msg_cut_off_left,en-msg_cut_off_left.m4a,Part of the page is cut off at the left.,Part of the page is cut off at the left.,App phrase,final
+msg_cut_off_right,en-msg_cut_off_right.m4a,Part of the page is cut off at the right.,Part of the page is cut off at the right.,App phrase,final
+offlineBanner,en-offlineBanner.m4a,No internet. Reading on this phone.,No internet. Reading on this phone.,App phrase,final
+offlineBannerSlow,en-offlineBannerSlow.m4a,Magana's server isn't answering. Reading on this phone.,Magana's server isn't answering. Reading on this phone.,App phrase,final
+offlineNote,en-offlineNote.m4a,"Basic reading only. Tables, columns and Explain need internet.","Basic reading only. Tables, columns and Explain need internet.",App phrase,final
+offlineQueued,en-offlineQueued.m4a,I'll keep this page and do a full reading when you're back online.,I'll keep this page and do a full reading when you're back online.,App phrase,final
+fullReadingWhenOnline,en-fullReadingWhenOnline.m4a,Full reading when online,Full reading when online,App phrase,final
+cueTiltToward,en-cueTiltToward.m4a,Tilt the top of the phone toward you,Tilt the top of the phone toward you,App phrase,final
+cueTiltAway,en-cueTiltAway.m4a,Tilt the top of the phone away from you,Tilt the top of the phone away from you,App phrase,final
+cueBlurry,en-cueBlurry.m4a,Blurry. Hold still,Blurry. Hold still,App phrase,final
+readerCommandHelp,en-readerCommandHelp.m4a,"You can say: next, back, repeat, pause, read, next column, headings, spell or report a problem. Say commands in English for now.","You can say: next, back, repeat, pause, read, next column, headings, spell or report a problem. Say commands in English for now.",App phrase,final
+explainInEnglish,en-explainInEnglish.m4a,Hear it in English,Hear it in English,App phrase,final
+msg_progress_shared,en-msg_progress_shared.m4a,Your totals were shared with your teacher.,Your totals were shared with your teacher.,App phrase,final
+helpCheckPage,en-helpCheckPage.m4a,Did you read this page on your own?,Did you read this page on your own?,App phrase,final
+helpCheckPdf,en-helpCheckPdf.m4a,Did you read this PDF on your own?,Did you read this PDF on your own?,App phrase,final
+helpCheckQuiz,en-helpCheckQuiz.m4a,Did you do this quiz on your own?,Did you do this quiz on your own?,App phrase,final
+helpCheckHow,en-helpCheckHow.m4a,"Say “yes”, “some help” or “skip”, or tap.","Say “yes”, “some help” or “skip”, or tap.",App phrase,final
+helpOwn,en-helpOwn.m4a,"Yes, on my own","Yes, on my own",App phrase,final
+helpOwnDetail,en-helpOwnDetail.m4a,No sighted help,No sighted help,App phrase,final
+helpSome,en-helpSome.m4a,I needed some help,I needed some help,App phrase,final
+helpSomeDetail,en-helpSomeDetail.m4a,Someone helped with part of it,Someone helped with part of it,App phrase,final
+helpSkip,en-helpSkip.m4a,Skip,Skip,App phrase,final
+helpSkipDetail,en-helpSkipDetail.m4a,Don’t ask today,Don’t ask today,App phrase,final
+helpCheckNoteClass,en-helpCheckNoteClass.m4a,"Asked once a day at most. Your teacher sees only the totals, never what you read.","Asked once a day at most. Your teacher sees only the totals, never what you read.",App phrase,final
+helpCheckNotePhone,en-helpCheckNotePhone.m4a,Asked once a day at most. Your answers stay on this phone.,Asked once a day at most. Your answers stay on this phone.,App phrase,final
+helpCheckNotHeard,en-helpCheckNotHeard.m4a,"Please say yes, some help or skip, or tap your answer.","Please say yes, some help or skip, or tap your answer.",App phrase,final
+helpCheckThanks,en-helpCheckThanks.m4a,Thank you.,Thank you.,App phrase,final
+msg_report_sent,en-msg_report_sent.m4a,Thank you. Your report went to the Magana team.,Thank you. Your report went to the Magana team.,App phrase,final
+msg_voice_note_adults_only,en-msg_voice_note_adults_only.m4a,Voice notes are for adults only. Choose what went wrong from the list.,Voice notes are for adults only. Choose what went wrong from the list.,App phrase,final
+msg_voice_note_unreadable,en-msg_voice_note_unreadable.m4a,I couldn't use that voice note. Please record it again or send the report without it.,I couldn't use that voice note. Please record it again or send the report without it.,App phrase,final
+msg_voice_note_too_long,en-msg_voice_note_too_long.m4a,That voice note is too long. Please keep it under 60 seconds.,That voice note is too long. Please keep it under 60 seconds.,App phrase,final
+reportGoesTo,en-reportGoesTo.m4a,Goes to the Magana team,Goes to the Magana team,App phrase,final
+reportWhat,en-reportWhat.m4a,What went wrong?,What went wrong?,App phrase,final
+reportReadWrong,en-reportReadWrong.m4a,It read something wrong,It read something wrong,App phrase,final
+reportHardToUse,en-reportHardToUse.m4a,It was hard to use,It was hard to use,App phrase,final
+reportTooSlow,en-reportTooSlow.m4a,It was too slow,It was too slow,App phrase,final
+reportRecord,en-reportRecord.m4a,Record a voice note (up to 60 seconds),Record a voice note (up to 60 seconds),App phrase,final
+reportDeleteVoice,en-reportDeleteVoice.m4a,Delete voice note,Delete voice note,App phrase,final
+reportIncludeText,en-reportIncludeText.m4a,Include this page’s text,Include this page’s text,App phrase,final
+reportIncludeTextNote,en-reportIncludeTextNote.m4a,Off unless you switch it on. Photos are never sent.,Off unless you switch it on. Photos are never sent.,App phrase,final
+reportSend,en-reportSend.m4a,Send report,Send report,App phrase,final
+reportChooseFirst,en-reportChooseFirst.m4a,Choose what went wrong first.,Choose what went wrong first.,App phrase,final
+reportNoMic,en-reportNoMic.m4a,Magana can't use the microphone. You can still send the report.,Magana can't use the microphone. You can still send the report.,App phrase,final
+msg_offline_no_confidence,en-msg_offline_no_confidence.m4a,"This phone can't say how sure it is of each word, so every number is read as “unclear number”. Check important papers when you are online, or with a person.","This phone can't say how sure it is of each word, so every number is read as “unclear number”. Check important papers when you are online, or with a person.",App phrase,final
+msg_daily_limit,en-msg_daily_limit.m4a,You've read a lot of pages today. Magana can read more tomorrow. Pages you saved are in My library.,You've read a lot of pages today. Magana can read more tomorrow. Pages you saved are in My library.,App phrase,final
+msg_edge_cut_left,en-msg_edge_cut_left.m4a,Some words at the left edge are cut off.,Some words at the left edge are cut off.,App phrase,final
+msg_edge_cut_right,en-msg_edge_cut_right.m4a,Some words at the right edge are cut off.,Some words at the right edge are cut off.,App phrase,final
+msg_faint_print,en-msg_faint_print.m4a,"The print is faint, so I darkened it to read it. Check important numbers with a person.","The print is faint, so I darkened it to read it. Check important numbers with a person.",App phrase,final
+summaryAsk,en-summaryAsk.m4a,Say “what's unclear” to hear where.,Say “what's unclear” to hear where.,App phrase,final
+unclearMark,en-unclearMark.m4a,Unclear.,Unclear.,App phrase,final
+whatsUnclear,en-whatsUnclear.m4a,What's unclear?,What's unclear?,App phrase,final
+whatsUnclearNone,en-whatsUnclearNone.m4a,Nothing on this page is unclear.,Nothing on this page is unclear.,App phrase,final
+msg_barcode_skipped,en-msg_barcode_skipped.m4a,I skipped a barcode on this page.,I skipped a barcode on this page.,App phrase,final
+touchTapAgain,en-touchTapAgain.m4a,Tap again to open.,Tap again to open.,App phrase,final
+touchExplore,en-touchExplore.m4a,"Touch to explore, or say a name.","Touch to explore, or say a name.",App phrase,final
+touchToHear,en-touchToHear.m4a,Touch to hear,Touch to hear,App phrase,final
+touchToHearDetail,en-touchToHearDetail.m4a,Touch something to hear what it is; tap it again to open it. Not used while VoiceOver or TalkBack is on.,Touch something to hear what it is; tap it again to open it. Not used while VoiceOver or TalkBack is on.,App phrase,final
+touchToHearOn,en-touchToHearOn.m4a,Touch to hear: on,Touch to hear: on,App phrase,final
+touchToHearOff,en-touchToHearOff.m4a,Touch to hear: off,Touch to hear: off,App phrase,final
+touchIntroTitle,en-touchIntroTitle.m4a,Using Magana by touch,Using Magana by touch,App phrase,final
+touchIntroBody,en-touchIntroBody.m4a,"Your phone's screen reader is off, so Magana will talk you through it.","Your phone's screen reader is off, so Magana will talk you through it.",App phrase,final
+touchStep1Body,en-touchStep1Body.m4a,Slide your finger. Magana says what's under it.,Slide your finger. Magana says what's under it.,App phrase,final
+touchStep2Title,en-touchStep2Title.m4a,Tap again to open,Tap again to open,App phrase,final
+touchStep2Body,en-touchStep2Body.m4a,A second tap on the same thing opens it.,A second tap on the same thing opens it.,App phrase,final
+touchStep3Title,en-touchStep3Title.m4a,Or just say it,Or just say it,App phrase,final
+touchStep3Body,en-touchStep3Body.m4a,"Press the yellow button and say a name, like “medicine label”.","Press the yellow button and say a name, like “medicine label”.",App phrase,final
+touchPractice,en-touchPractice.m4a,Practice here,Practice here,App phrase,final
+touchPracticeBody,en-touchPracticeBody.m4a,Touch this box. Then tap it again.,Touch this box. Then tap it again.,App phrase,final
+touchPracticeDone,en-touchPracticeDone.m4a,Well done. That is how you open things.,Well done. That is how you open things.,App phrase,final
+touchGotIt,en-touchGotIt.m4a,"Got it, start","Got it, start",App phrase,final
+touchUseScreenReader,en-touchUseScreenReader.m4a,I use VoiceOver / TalkBack,I use VoiceOver / TalkBack,App phrase,final
+sayName,en-sayName.m4a,Say a name,Say a name,App phrase,final
+framingGuidanceTablet,en-framingGuidanceTablet.m4a,"Lay the page flat in good light and hold the tablet above it. I'll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.","Lay the page flat in good light and hold the tablet above it. I'll tell you how to move, and take the photo when the whole page is steady. You can also tap Take photo.",App phrase,final
+readPageTablet,en-readPageTablet.m4a,Lay the page flat. Hold the tablet above it.,Lay the page flat. Hold the tablet above it.,App phrase,final
+zoomIn,en-zoomIn.m4a,Bigger text,Bigger text,App phrase,final
+zoomOut,en-zoomOut.m4a,Smaller text,Smaller text,App phrase,final
+highContrast,en-highContrast.m4a,High contrast,High contrast,App phrase,final
+pageViewLabel,en-pageViewLabel.m4a,"Your page, current line highlighted","Your page, current line highlighted",App phrase,final
+missedLineLabel,en-missedLineLabel.m4a,A line I may have missed,A line I may have missed,App phrase,final
+pictureTaken,en-pictureTaken.m4a,Picture taken. Reading…,Picture taken. Reading…,App phrase,final
+stillReading,en-stillReading.m4a,Still reading…,Still reading…,App phrase,final
+noTextMoveBack,en-noTextMoveBack.m4a,I couldn't find text. Try moving the phone further away.,I couldn't find text. Try moving the phone further away.,App phrase,final
+torchGlareOff,en-torchGlareOff.m4a,"The light was shining back off the page, so I turned it off.","The light was shining back off the page, so I turned it off.",App phrase,final
+offlineBannerSendFailed,en-offlineBannerSendFailed.m4a,The photo didn't reach Magana's server (connection problem). Reading on this phone.,The photo didn't reach Magana's server (connection problem). Reading on this phone.,App phrase,final
+offlineBannerServerError,en-offlineBannerServerError.m4a,Magana's server had a problem with this page. Reading on this phone.,Magana's server had a problem with this page. Reading on this phone.,App phrase,final
+offlineBannerBusy,en-offlineBannerBusy.m4a,Magana's server is busy this minute. Reading on this phone.,Magana's server is busy this minute. Reading on this phone.,App phrase,final
+offlineBannerDailyLimit,en-offlineBannerDailyLimit.m4a,You've used today's server readings. Reading on this phone; the server reads again tomorrow.,You've used today's server readings. Reading on this phone; the server reads again tomorrow.,App phrase,final
+msg_handwriting_read_anyway,en-msg_handwriting_read_anyway.m4a,"I read this handwriting as best I can. It may contain mistakes, and I don't read its numbers.","I read this handwriting as best I can. It may contain mistakes, and I don't read its numbers.",App phrase,final
+msg_offline_health_numbers,en-msg_offline_health_numbers.m4a,"Without the internet, this phone may take handwriting for print, so I don't read numbers on health papers. Read it again when you are online, or ask the pharmacist or nurse.","Without the internet, this phone may take handwriting for print, so I don't read numbers on health papers. Read it again when you are online, or ask the pharmacist or nurse.",App phrase,final
+handwritingOffer,en-handwritingOffer.m4a,This looks handwritten. Read it anyway? It may contain mistakes.,This looks handwritten. Read it anyway? It may contain mistakes.,App phrase,final
+readItAnyway,en-readItAnyway.m4a,Read it anyway,Read it anyway,App phrase,final
+serverWaking,en-serverWaking.m4a,"Magana is waking up, one moment…","Magana is waking up, one moment…",App phrase (also used as msg_server_waking),final
+offlineBannerWaking,en-offlineBannerWaking.m4a,"Magana's server was waking up, so this page was read on this phone.","Magana's server was waking up, so this page was read on this phone.",App phrase,final
+voiceTitle,en-voiceTitle.m4a,Voice,Voice,App phrase,final
+voiceBest,en-voiceBest.m4a,Best voice on this phone,Best voice on this phone,App phrase,final
+voiceBestDetail,en-voiceBestDetail.m4a,"Magana chooses: Nigerian English first, then the clearest voice.","Magana chooses: Nigerian English first, then the clearest voice.",App phrase,final
+voicePlaySample,en-voicePlaySample.m4a,Play sample,Play sample,App phrase,final
+voiceSample,en-voiceSample.m4a,"Hello, I am Magana. I will read your pages to you.","Hello, I am Magana. I will read your pages to you.",App phrase,final
+voiceSpeedTitle,en-voiceSpeedTitle.m4a,Speed,Speed,App phrase,final
+voiceGetBetter,en-voiceGetBetter.m4a,Get a clearer voice,Get a clearer voice,App phrase,final
+voiceHintAndroid,en-voiceHintAndroid.m4a,"A clearer voice can be downloaded: English (Nigeria). Open your phone's Settings and search for Speech Services by Google. Choose Install voice data, then English (Nigeria), and download it. Then choose it in Magana: Settings, Voice.","A clearer voice can be downloaded: English (Nigeria). Open your phone's Settings and search for Speech Services by Google. Choose Install voice data, then English (Nigeria), and download it. Then choose it in Magana: Settings, Voice.",App phrase,final
+voiceHintIos,en-voiceHintIos.m4a,"A clearer voice can be downloaded. Open the iPhone's Settings, then Accessibility, Spoken Content, Voices, English, and download an Enhanced or Premium voice. Then choose it in Magana: Settings, Voice.","A clearer voice can be downloaded. Open the iPhone's Settings, then Accessibility, Spoken Content, Voices, English, and download an Enhanced or Premium voice. Then choose it in Magana: Settings, Voice.",App phrase,final
+tourTitle,en-tourTitle.m4a,A quick tour,A quick tour,App phrase,final
+tourScript,en-tourScript.m4a,"Welcome to Magana. Magana reads printed pages aloud: schoolwork, medicine labels, letters and bank papers. Numbers are read exactly as printed, and Magana tells you when something is unclear. On the home screen, the top line has the language and settings buttons. Below it is the biggest button: Read a page. Under that are your other choices. At the very bottom is Hold to speak: press and hold it, say what you want, like read a page, then let go. On other screens, the Say a name button at the bottom does the same. Say what can I say to hear that screen's choices. With TalkBack or VoiceOver on, swipe right to move to the next button and double tap to choose. With it off, touch the screen to hear what is under your finger, and double tap to choose. To read a page, hold the phone above it: Magana tells you how to move it. You can hear this tour again in Settings.","Welcome to Magana. Magana reads printed pages aloud: schoolwork, medicine labels, letters and bank papers. Numbers are read exactly as printed, and Magana tells you when something is unclear. On the home screen, the top line has the language and settings buttons. Below it is the biggest button: Read a page. Under that are your other choices. At the very bottom is Hold to speak: press and hold it, say what you want, like read a page, then let go. On other screens, the Say a name button at the bottom does the same. Say what can I say to hear that screen's choices. With TalkBack or VoiceOver on, swipe right to move to the next button and double tap to choose. With it off, touch the screen to hear what is under your finger, and double tap to choose. To read a page, hold the phone above it: Magana tells you how to move it. You can hear this tour again in Settings.",App phrase,final
+tourSkip,en-tourSkip.m4a,Skip the tour,Skip the tour,App phrase,final
+tourAgain,en-tourAgain.m4a,Hear the tour again,Hear the tour again,App phrase,final
+tourOpen,en-tourOpen.m4a,Hear the tour,Hear the tour,App phrase,final
+tourOpenDetail,en-tourOpenDetail.m4a,"What Magana does, where the buttons are, and how to use voice and touch.","What Magana does, where the buttons are, and how to use voice and touch.",App phrase,final
+screenNoChoices,en-screenNoChoices.m4a,This screen has no buttons to choose. Go back to continue.,This screen has no buttons to choose. Go back to continue.,App phrase,final
+aiAssistantSoon,en-aiAssistantSoon.m4a,"AI health assistant coming soon. For now, a nurse or pharmacist calls you back, and Magana's own danger-sign questions tell you when to go to a clinic or call 112.","AI health assistant coming soon. For now, a nurse or pharmacist calls you back, and Magana's own danger-sign questions tell you when to go to a clinic or call 112.",App phrase,final
+dangerCheckFirst,en-dangerCheckFirst.m4a,Answer a few danger-sign questions first,Answer a few danger-sign questions first,App phrase,final
+quickCheckNoteRules,en-quickCheckNoteRules.m4a,"Your answers help the health worker decide how soon to call you. Magana does not diagnose. If you have danger signs, Magana tells you to go to a clinic now or call 112.","Your answers help the health worker decide how soon to call you. Magana does not diagnose. If you have danger signs, Magana tells you to go to a clinic now or call 112.",App phrase,final

@@ -336,9 +336,11 @@ void main() {
       // The line is read as printed, then the marked words.
       expect(
         speaker.said,
-        contains(
-          'Kasar tana da dalibai. These words may be missing a special letter: Kasar, dalibai.',
-        ),
+        // The Hausa line in its voice, then Magana's English note in the English voice.
+        containsAllInOrder([
+          'Kasar tana da dalibai',
+          'These words may be missing a special letter: Kasar, dalibai.',
+        ]),
       );
       expectAccessible(tester, 'Reader (letter check)');
       await tester.ensureVisible(find.bySemanticsLabel('Spell word'));

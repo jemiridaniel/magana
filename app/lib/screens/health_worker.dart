@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import '../features.dart';
 import '../api.dart';
 import '../app_scope.dart';
 import '../l10n/app_localizations.dart';
@@ -176,7 +177,11 @@ class _HealthWorkerScreenState extends State<HealthWorkerScreen> {
             onTap: () => setState(() => _callLanguage = language.code),
           ),
         if (_priority == null)
-          SecondaryButton(label: l.answerIbaFirst, onTap: _quickCheck),
+          SecondaryButton(
+            label: ibaAssistant ? l.answerIbaFirst : l.dangerCheckFirst,
+            onTap: _quickCheck,
+          ),
+          if (!ibaAssistant) NoteBox(text: l.aiAssistantSoon),
         if (_questions.isNotEmpty) ...[
           Semantics(
             header: true,
@@ -356,12 +361,13 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
     final asked = _questions == null ? const <TriageQuestion>[] : _asked;
     final q = asked.isEmpty ? null : asked[_index];
     return PageScaffold(
+      sayName: false, // "Or say yes or no": its own microphone
       body: [
         ScreenHeader(
           title: l.quickCheckTitle,
           subtitle: q == null
               ? null
-              : _fromIba
+              : _fromIba && ibaAssistant
               ? l.quickCheckProgress(_index + 1, asked.length)
               : l.quickCheckProgressFallback(_index + 1, asked.length),
         ),
@@ -434,7 +440,7 @@ class _QuickCheckScreenState extends State<QuickCheckScreen> {
               text: '${_text(done)} ${_answerText(l, _answers[done.id])}',
             ),
         ],
-        NoteBox(text: l.quickCheckNote),
+        NoteBox(text: ibaAssistant ? l.quickCheckNote : l.quickCheckNoteRules),
       ],
       // The answers stay pinned above the 112 banner: long questions used to
       // push Yes and No below the screen.

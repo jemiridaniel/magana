@@ -493,11 +493,14 @@ class PageScaffold extends StatelessWidget {
     super.key,
     this.bottom = const [],
     required this.body,
-    this.sayName = false,
+    this.sayName = true,
   });
 
   final List<Widget> bottom;
   final List<Widget> body;
+
+  /// "Say a name" at the foot: on every screen (open a control by its name, or "what can I
+  /// say?" for the screen's choices). Off only where the screen listens for answers itself.
   final bool sayName;
 
   @override
@@ -558,6 +561,10 @@ class SayNameButton extends StatefulWidget {
   State<SayNameButton> createState() => _SayNameButtonState();
 }
 
+final _askingForHelp = RegExp(
+  r'\b(help|what can i say|what do i say|commands|options|choices)\b',
+);
+
 class _SayNameButtonState extends State<SayNameButton> {
   late final VoiceInput _voice = voiceInputFor(context);
   bool? _works;
@@ -596,6 +603,17 @@ class _SayNameButtonState extends State<SayNameButton> {
     setState(() => _listening = false);
     if (heard.isEmpty) {
       scope.speaker.say(l.commandSorry);
+      return;
+    }
+    // "Help" or "What can I say?" on any screen: its choices by name (Nurse Balogun, build 7).
+    if (heard.any((h) => _askingForHelp.hasMatch(h.toLowerCase()))) {
+      final names = [
+        for (final t in scope.touch.choicesOf(route))
+          if (t.enabled) t.label.split(RegExp(r'(?<=[.!?])\s')).first,
+      ];
+      scope.speaker.say(
+        names.isEmpty ? l.screenNoChoices : l.screenChoices(names.join(', ')),
+      );
       return;
     }
     // Any of the recogniser's guesses that names something here.

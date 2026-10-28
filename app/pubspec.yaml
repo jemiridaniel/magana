@@ -87,6 +87,7 @@ flutter:
     - assets/sounds/
     - assets/quiz/
     - assets/lessons/
+    - assets/voice/
 
   fonts:
     - family: AtkinsonHyperlegible

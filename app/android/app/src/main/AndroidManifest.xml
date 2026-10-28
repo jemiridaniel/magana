@@ -2,6 +2,12 @@
     <uses-permission android:name="android.permission.INTERNET"/>
     <!-- Spoken quiz answers; audio goes to the phone's recogniser and is never saved. -->
     <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- Hold to speak through a Bluetooth headset's microphone (docs/BLUETOOTH.md): speech_to_text
+         uses the headset only with BLUETOOTH_CONNECT (Android 12+); older Android needs BLUETOOTH.
+         The recorder switches the headset to its call microphone (MODIFY_AUDIO_SETTINGS). -->
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT"/>
+    <uses-permission android:name="android.permission.BLUETOOTH" android:maxSdkVersion="30"/>
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>
     <!-- Medicine reminders: notifications that survive a restart, on time when allowed. -->
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>

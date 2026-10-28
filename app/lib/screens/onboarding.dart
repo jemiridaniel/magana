@@ -16,6 +16,7 @@ import '../platform/shared_pdf.dart';
 import 'class_code.dart';
 import 'pdf.dart';
 import 'touch_intro.dart';
+import 'tour.dart';
 
 /// Shows onboarding until an age tier is chosen, the classroom step when a
 /// Classroom session hasn't started, and [home] otherwise. A Guided learner whose
@@ -253,8 +254,16 @@ class _AgeStepState extends State<AgeStep> {
     speakOnOpen(context, () => _script(AppLocalizations.of(context)));
   }
 
-  void _next(Widget step) =>
-      Navigator.of(context).push(MaterialPageRoute(builder: (_) => step));
+  /// After language and age: the guided start, then the next step (Back from it returns here).
+  void _next(Widget step) => Navigator.of(context).push(
+    MaterialPageRoute(
+      builder: (_) => TourScreen(
+        onDone: (c) => Navigator.of(
+          c,
+        ).pushReplacement(MaterialPageRoute(builder: (_) => step)),
+      ),
+    ),
+  );
 
   @override
   Widget build(BuildContext context) {

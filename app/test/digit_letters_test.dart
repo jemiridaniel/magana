@@ -5,8 +5,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:app/l10n/app_localizations.dart';
 import 'package:app/offline/offline_reader.dart';
 import 'package:app/offline/page_letters.dart';
+import 'package:flutter/widgets.dart' show Locale;
 import 'package:flutter_test/flutter_test.dart';
 
 import 'a11y.dart';
@@ -139,7 +141,12 @@ void main() {
       final speaker = FakeSpeaker();
       await pumpApp(tester, speaker, body: igboJson);
       await captureToReader(tester);
-      expect(speaker.said, contains('9 buruhaala na unclear letter osuso'));
+      // Magana's word inside an Igbo line is in Igbo, read by the same voice as the line.
+      final ig = lookupAppLocalizations(const Locale('ig'));
+      expect(
+        speaker.said,
+        contains('9 buruhaala na ${ig.unclearLetter} osuso'),
+      );
       expect(speaker.said.join(' '), isNot(contains('uz9')));
       expect(
         find.textContaining('uz9'),

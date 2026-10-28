@@ -3,9 +3,19 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
+import 'clips.dart';
 import 'diagnostics.dart';
 import 'platform.dart';
 import 'platform/speech_support.dart';
+import 'voices.dart';
+
+/// A piece of what is said, in its own language: a page line in the page's language, Magana's
+/// own words in the app's ([Speaker.sayParts]).
+class SpeechPart {
+  const SpeechPart(this.text, this.language);
+  final String text;
+  final String language;
+}
 
 /// How one utterance ended.
 enum Spoken {
@@ -31,9 +41,33 @@ enum Spoken {
 /// when it was cut off, so reading loops pause there instead of skipping ahead.
 /// Something other than Magana cutting it off gets one more try (see [say]).
 class Speaker {
-  Speaker({FlutterTts? tts}) : _ttsInstance = tts {
+  Speaker({FlutterTts? tts, ClipLibrary? clips, ClipPlayer? clipPlayer})
+    : _ttsInstance = tts,
+      clips = clips ?? ClipLibrary(),
+      // ignore: prefer_initializing_formals
+      _clipPlayer = clipPlayer {
     if (tts != null) _listen(tts);
   }
+
+  /// Recorded prompts, played instead of the phone's voice where a clip exists (clips.dart).
+  ClipLibrary clips;
+  ClipPlayer? _clipPlayer;
+  ClipPlayer get clipPlayer => _clipPlayer ??= AssetClipPlayer();
+  set clipPlayer(ClipPlayer p) => _clipPlayer = p;
+
+  /// Called once per language, the first time something in [ownVoiceOnly] can't be said for
+  /// want of a voice: the app says "I don't have a Hausa voice yet" and the text stays on the
+  /// screen (main.dart).
+  void Function(String language)? onNoVoice;
+  final _noVoiceTold = <String>{};
+
+  /// The language the engine's voice is set for now.
+  String? _voiceLang;
+  Voice? _voice;
+
+  /// The voice used for the app language, once chosen (Settings → Voice).
+  Voice? get voice => _voice;
+  List<Voice>? _installed;
 
   FlutterTts? _ttsInstance;
   FlutterTts get _tts => _ttsInstance ??= _listen(FlutterTts());
@@ -80,7 +114,6 @@ class Speaker {
       _active = false;
       _onError('$error');
     });
-    unawaited(_pickVoice(tts));
     return tts;
   }
 
@@ -107,52 +140,207 @@ class Speaker {
     }
   }
 
-  /// Use a voice for the app language when the device has one (Nigerian
-  /// variant first), otherwise English. Most phones have no Hausa, Yorùbá or
-  /// Igbo voice yet; MMS-TTS on the backend will cover those.
+  /// The app language: Magana's own words are said in it. Its voice is chosen when first
+  /// needed ([voiceReady]).
   Future<void> setLanguage(String code) async {
     _languageCode = code;
-    if (_ttsInstance != null) await _pickVoice(_tts);
+    _voiceLang = null;
+    if (_ttsInstance != null) await voiceReady(code);
   }
 
-  Future<void> _pickVoice(FlutterTts tts) async {
-    final candidates = [
-      '$_languageCode-NG',
-      _languageCode,
-      'en-NG',
-      'en-GB',
-      'en-US',
-    ];
-    for (final lang in candidates) {
+  String get language => _languageCode;
+
+  /// The voices on this phone, or null when the phone can't say (tests; some browsers until
+  /// their voices load).
+  Future<List<Voice>?> installedVoices() async {
+    if (_installed case final list? when list.isNotEmpty) return list;
+    try {
+      final raw = await _tts.getVoices;
+      final list = [
+        if (raw is List)
+          for (final v in raw) ?Voice.fromMap(v),
+      ];
+      return _installed = list.isEmpty ? null : list;
+    } catch (_) {
+      return null;
+    }
+  }
+
+  /// A voice was chosen in Settings, or voices were installed: choose again.
+  void refreshVoices() {
+    _installed = null;
+    _voiceLang = null;
+    _voiceOk.clear();
+  }
+
+  /// Can [lang] be said aloud: a recorded clip or a voice of its own (for Hausa, Yorùbá and
+  /// Igbo), or any voice (English)? The Reader asks before reading a page in [lang].
+  Future<bool> canSpeak(String lang) async {
+    if (!ownVoiceOnly.contains(lang)) return true;
+    final voices = await installedVoices();
+    if (voices != null) return bestVoice(voices, lang) != null;
+    return _engineHas(lang);
+  }
+
+  /// Without a voice list: does the engine say it has [lang]? Unknown (tests) counts as yes.
+  Future<bool> _engineHas(String lang) async {
+    try {
+      for (final l in ['$lang-NG', lang]) {
+        if (await _tts.isLanguageAvailable(l) == true) return true;
+      }
+      return false;
+    } catch (_) {
+      return true;
+    }
+  }
+
+  /// Sets the engine's voice for [lang]: the one chosen in Settings, else the best installed
+  /// ([bestVoice]: Nigerian English first, then enhanced or neural voices). False when [lang]
+  /// is Hausa, Yorùbá or Igbo and the phone has no voice for it: never another language's.
+  @protected
+  Future<bool> voiceReady(String lang) async {
+    if (lang == _voiceLang) return true;
+    final tts = _tts;
+    final voices = await installedVoices();
+    if (voices != null) {
+      final chosen = await VoiceSettings.chosen(lang);
+      final v =
+          voices
+              .where((v) => v.name == chosen && v.language == lang)
+              .firstOrNull ??
+          bestVoice(voices, lang);
+      if (v != null) {
+        try {
+          await tts.setVoice(v.asMap);
+        } catch (e) {
+          devLog('speech: voice $v not set ($e)');
+        }
+        _voiceLang = lang;
+        if (lang == _languageCode) _voice = v;
+        await _applyRate(tts);
+        return true;
+      }
+      if (ownVoiceOnly.contains(lang)) return false;
+    } else if (ownVoiceOnly.contains(lang) && !await _engineHas(lang)) {
+      return false;
+    }
+    // English with no voice list, or a language with no voice of its own that may borrow one.
+    for (final l in [
+      if (ownVoiceOnly.contains(lang)) ...['$lang-NG', lang],
+      if (!ownVoiceOnly.contains(lang)) ...[
+        '$lang-NG',
+        lang,
+        'en-NG',
+        'en-GB',
+        'en-US',
+      ],
+    ]) {
       try {
-        if (await tts.isLanguageAvailable(lang) == true) {
-          await tts.setLanguage(lang);
+        if (await tts.isLanguageAvailable(l) == true) {
+          await tts.setLanguage(l);
           break;
         }
       } catch (_) {}
     }
+    _voiceLang = lang;
     await _applyRate(tts);
+    return true;
   }
 
-  Future<void> _applyRate(FlutterTts tts) =>
-      tts.setSpeechRate(normalSpeechRate * _rate);
+  /// Whether [lang] has a voice, when already known: speech then starts without waiting.
+  final _voiceOk = <String, bool>{};
+  @protected
+  bool? voiceKnown(String lang) =>
+      lang == _voiceLang ? true : (_voiceOk[lang] == false ? false : null);
+
+  Future<bool> _checkVoice(String lang) async =>
+      _voiceOk[lang] = await voiceReady(lang);
+
+  /// "Play sample" (Settings → Voice): [text] in [v], then the usual voice again.
+  Future<bool> preview(Voice v, String text) async {
+    await stop();
+    try {
+      await _tts.setVoice(v.asMap);
+      await _applyRate(_tts);
+    } catch (_) {}
+    _voiceLang = null; // the next utterance sets the chosen voice again
+    return await utter(text) == Spoken.finished;
+  }
+
+  Future<void> _applyRate(FlutterTts tts) async {
+    try {
+      await tts.setSpeechRate(normalSpeechRate * _rate);
+    } catch (_) {}
+  }
 
   Future<void> setRate(double rate) async {
     _rate = rate;
     await _applyRate(_tts);
   }
 
-  /// Says [text]. If something other than Magana cuts it off (TalkBack
-  /// announcing a new screen, say), waits [retryDelay] and says it once more,
-  /// unless Magana has moved on or [wanted] turned false. True if it was heard
-  /// to the end.
-  Future<bool> say(String text, {bool Function()? wanted}) async {
+  /// Says [text] in [language] (the app language unless given). If something other than
+  /// Magana cuts it off (TalkBack announcing a new screen, say), waits [retryDelay] and says it
+  /// once more, unless Magana has moved on or [wanted] turned false. True if it was heard to
+  /// the end, or there was nothing to hear (no voice for the language: the text is on screen).
+  Future<bool> say(String text, {bool Function()? wanted, String? language}) =>
+      sayParts([SpeechPart(text, language ?? _languageCode)], wanted: wanted);
+
+  /// Says [parts] in turn, each in its own language's voice; neighbours in the same language
+  /// are said as one sentence ("Line 2. Take one tablet."). A recorded clip is played where
+  /// there is one ([clips]). Hausa, Yorùbá or Igbo without a voice of its own is not said:
+  /// [onNoVoice] tells the person once.
+  Future<bool> sayParts(
+    List<SpeechPart> parts, {
+    bool Function()? wanted,
+  }) async {
     final turn = ++_turn;
+    final merged = <SpeechPart>[];
+    for (final p in parts) {
+      if (p.text.trim().isEmpty) continue;
+      if (merged.isNotEmpty && merged.last.language == p.language) {
+        merged.last = SpeechPart(
+          '${merged.last.text}. ${p.text}',
+          p.language,
+        );
+      } else {
+        merged.add(p);
+      }
+    }
     if (needsStart.value) {
-      _waiting = text; // said after "Start Magana"
-      devLog('speech waits for Start Magana: "$text"');
+      _waiting = merged.map((p) => p.text).join(' '); // said after "Start Magana"
+      devLog('speech waits for Start Magana: "$_waiting"');
       return false;
     }
+    var first = true;
+    for (final part in merged) {
+      final pieces =
+          clips.planNow(part.language, part.text) ??
+          [ClipPart(part.text, null)];
+      for (final piece in pieces) {
+        // After the first piece: stop if Magana moved on or the person pressed something.
+        if (turn != _turn || (!first && !(wanted?.call() ?? true))) return false;
+        first = false;
+        final ok = piece.clip != null
+            ? await _playClip(piece, part.language, turn, wanted)
+            : await _sayWithVoice(piece.text, part.language, turn, wanted);
+        if (!ok) return false;
+      }
+    }
+    return true;
+  }
+
+  Future<bool> _sayWithVoice(
+    String text,
+    String lang,
+    int turn,
+    bool Function()? wanted,
+  ) async {
+    if (!(voiceKnown(lang) ?? await _checkVoice(lang))) {
+      devLog('speech: no $lang voice on this phone; not said: "$text"');
+      if (_noVoiceTold.add(lang)) onNoVoice?.call(lang);
+      return true; // nothing to hear: the text is on the screen
+    }
+    if (turn != _turn) return false;
     final first = await utter(text);
     if (first != Spoken.cutOff || screenReaderOn) {
       return first == Spoken.finished;
@@ -163,10 +351,31 @@ class Speaker {
     return await utter(text) == Spoken.finished;
   }
 
+  /// A recorded clip; if it can't play, the phone's voice says the words instead.
+  Future<bool> _playClip(
+    ClipPart piece,
+    String lang,
+    int turn,
+    bool Function()? wanted,
+  ) async {
+    await _halt();
+    if (screenReaderOn) {
+      await screenReaderQuiet();
+      if (turn != _turn) return false;
+    }
+    diagnostics.asked('[clip ${piece.clip}] ${piece.text}');
+    final done = await clipPlayer.play(piece.clip!);
+    if (turn != _turn) return false;
+    return done || await _sayWithVoice(piece.text, lang, turn, wanted);
+  }
+
   /// For reading loops: [say], stopping if [wanted] turns false (the learner
   /// pressed something) before the second try.
-  Future<bool> sayThrough(String text, {required bool Function() wanted}) =>
-      say(text, wanted: wanted);
+  Future<bool> sayThrough(
+    String text, {
+    required bool Function() wanted,
+    String? language,
+  }) => say(text, wanted: wanted, language: language);
 
   static const retryDelay = Duration(milliseconds: 1500);
 
@@ -230,7 +439,12 @@ class Speaker {
 
   Future<void> _halt() async {
     _finish(Spoken.stoppedByMagana);
-    await _tts.stop();
+    if (_clipPlayer != null) await _clipPlayer!.stop();
+    try {
+      await _tts.stop();
+    } catch (e) {
+      devLog('speech: stop failed ($e)');
+    }
     // The web engine ignores speak() until the cancelled utterance reports
     // back, so wait briefly for that before the next say().
     for (var i = 0; i < 20 && _active; i++) {

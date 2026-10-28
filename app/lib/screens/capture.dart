@@ -591,7 +591,10 @@ class _CaptureScreenState extends State<CaptureScreen>
       _resume();
       return;
     }
-    final kind = widget.detect ? detectPaper(page) : widget.paper;
+    // Read any paper: a type only when it is clear (detectPaper); unsure, the letter rules and
+    // note apply, but no type is said or shown.
+    final sure = widget.detect ? detectPaper(page) : null;
+    final kind = widget.detect ? (sure ?? Paper.letter) : widget.paper;
     // Receipts, screenshots and bank papers: an amount is said only when this phone's own
     // reading agrees with it exactly (amount_check.dart).
     if (checksAmounts(page, mode: kind?.mode ?? mode, screenshot: screenshot)) {
@@ -610,7 +613,8 @@ class _CaptureScreenState extends State<CaptureScreen>
         builder: (_) => ReaderScreen(
           result: page,
           paper: kind,
-          detected: widget.detect,
+          detected: sure != null,
+          typeShown: !widget.detect || sure != null,
           offlineReason: why,
           queued: queued,
         ),
@@ -870,6 +874,9 @@ class _CaptureScreenState extends State<CaptureScreen>
                   ),
                 ],
               ),
+              // "Take photo" or "what can I say?" by voice here too (Nurse Balogun, build 7).
+              const SizedBox(height: 12),
+              const SayNameButton(),
             ],
           ),
         ),

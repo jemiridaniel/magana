@@ -344,6 +344,7 @@ class _QuizScreenState extends State<QuizScreen> {
     return _answerKeys(
       q,
       PageScaffold(
+        sayName: false, // answers are spoken with its own microphone
         body: [
           ScreenHeader(
             title: _title,

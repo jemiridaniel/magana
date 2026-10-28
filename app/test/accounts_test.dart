@@ -137,6 +137,7 @@ void main() {
     final (profile, speaker, backend) = await start(tester);
     await tap(tester, 'Continue');
     await tap(tester, RegExp('^I am 13 to 17'));
+    await tap(tester, 'Skip the tour'); // the guided start (tour.dart)
     await tap(tester, RegExp('^I’m in school'));
     expectAccessible(tester, 'Join your class');
 
@@ -180,6 +181,7 @@ void main() {
     final (profile, speaker, _) = await start(tester);
     await tap(tester, 'Continue');
     await tap(tester, RegExp('^I am 18 or older'));
+    await tap(tester, 'Skip the tour'); // the guided start (tour.dart)
     await tap(tester, RegExp('^I’m in school'));
     await type(tester, '111222');
     await tap(tester, 'Join class');
