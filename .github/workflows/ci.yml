@@ -30,7 +30,7 @@ jobs:
         ports: ["5432:5432"]
         options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       # In a server-like image, so the tests see the server's Tesseract (5.5.0), not
       # Ubuntu's (5.3.4 reads the faint-print test pages differently).
       - run: docker build -q -t magana-backend backend
@@ -45,7 +45,7 @@ jobs:
   app:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.47.7"
@@ -60,7 +60,7 @@ jobs:
   portal:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -74,7 +74,7 @@ jobs:
   website:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: actions/setup-node@v4
         with:
           node-version: "22"
@@ -103,7 +103,7 @@ jobs:
     env:
       DOMAIN: ${{ vars.MAGANA_DOMAIN || 'magana.ng' }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Tag the commit for the server
         run: git push --force origin "$GITHUB_SHA:refs/tags/production"
@@ -126,7 +126,7 @@ jobs:
       CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
       WRANGLER: npx --yes wrangler@4.40.0
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - uses: subosito/flutter-action@v2
         with:
           flutter-version: "3.47.7"
