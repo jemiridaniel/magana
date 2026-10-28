@@ -47,9 +47,10 @@ export async function emailedCode(email: string, after = 0): Promise<string> {
       ? fs.readdirSync(dir).map((f) => ({ f, t: fs.statSync(path.join(dir, f)).mtimeMs }))
           .filter(({ t }) => t >= after - 50)
           .sort((a, b) => a.t - b.t).map(({ f }) => JSON.parse(fs.readFileSync(path.join(dir, f), "utf8")))
-          .filter((m) => m.to === email && /sign-in code/.test(m.subject))
+          .filter((m) => m.to === email && m.kind === "sign_in_code")
       : [];
-    if (mails.length) return mails.at(-1).subject.match(/^(\d{3}) (\d{3})/).slice(1).join("");
+    // "Your Magana verification code: 642126"
+    if (mails.length) return mails.at(-1).subject.match(/^Your Magana verification code: (\d{6})$/)[1];
     await new Promise((r) => setTimeout(r, 100));
   }
   throw new Error(`no code emailed to ${email}`);
@@ -65,7 +66,8 @@ export async function lagosIkeja() {
 export async function registerSchool(email: string, school = "Ikeja Community School"): Promise<string> {
   const api = await pwRequest.newContext();
   const r = await api.post(`${apiUrl}/portal/schools/register`, { data: {
-    email, name: "Mrs Folake Adebayo", role: "Principal", phone: "0803 000 0001", school, ...(await lagosIkeja()), agree: true } });
+    email, name: "Mrs Folake Adebayo", role: "Principal", phone: "0803 000 0001", school, ...(await lagosIkeja()), agree: true,
+    address: "14 Allen Avenue", town: "Ikeja", landmark: "Opposite Ikeja City Mall" } });
   expect(r.status(), await r.text()).toBe(201);
   return (await r.json()).school_id;
 }
@@ -99,7 +101,7 @@ export async function signInTeam(page: Page, email: string) {
   await page.getByLabel("Email address").fill(email);
   const asked = Date.now();
   await page.getByRole("button", { name: "Send me a code" }).click();
-  await page.getByRole("textbox", { name: /^Sign-in code/ }).fill(await emailedCode(email, asked));
+  await page.getByRole("textbox", { name: "Verification code, 6 digits" }).fill(await emailedCode(email, asked));
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByRole("heading", { name: "Enter your authenticator code" })).toBeFocused();
   await page.getByLabel("Authenticator code").fill(await nextTotp(email));
@@ -119,7 +121,7 @@ export async function signIn(page: Page, email: string) {
   const asked = Date.now();
   await page.getByRole("button", { name: "Send me a code" }).click();
   await expect(page.getByRole("heading", { name: "Check your email" })).toBeFocused();
-  await page.getByRole("textbox", { name: /^Sign-in code/ }).fill(await emailedCode(email, asked));
+  await page.getByRole("textbox", { name: "Verification code, 6 digits" }).fill(await emailedCode(email, asked));
   await page.getByRole("button", { name: "Sign in" }).click();
   await expect(page.getByRole("heading", { level: 1 })).toContainText(/Good (morning|afternoon|evening)/);
 }

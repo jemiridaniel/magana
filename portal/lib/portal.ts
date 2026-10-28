@@ -36,7 +36,12 @@ export type Role = "admin" | "teacher";
 export type Mode = "guided" | "classroom" | "standard";
 export type Consent = "pending" | "received" | "not_needed";
 
-export interface School {
+// The school's address: empty for schools registered before it was asked for ("Not given").
+export interface SchoolAddress { address: string; town: string; landmark: string }
+/** Longest of each, in characters (the server checks the same: portal_api.ADDRESS_MAX). */
+export const ADDRESS_MAX: Record<keyof SchoolAddress, number> = { address: 200, town: 100, landmark: 120 };
+
+export interface School extends SchoolAddress {
   id: string; name: string; status: "pending" | "approved" | "rejected"; state: string; lga: string;
   // Only while waiting for confirmation (or not confirmed):
   reference?: string | null; registered?: string; call_by?: string; phone_masked?: string; reason?: string | null;
@@ -44,7 +49,7 @@ export interface School {
 
 export type Check = "person_confirmed" | "school_exists" | "details_correct";
 export type Reason = "unreachable" | "role_unconfirmed" | "not_found" | "duplicate";
-export interface SchoolRequest {
+export interface SchoolRequest extends SchoolAddress {
   id: string; name: string; status: School["status"]; reference: string; state_name: string; lga_name: string;
   contact_name: string; contact_role: string; contact_email: string; contact_undeliverable?: boolean; contact_phone: string; phone_tel: string;
   registered: string; call_by: string; days_left: number; ministry_no: string; proof: string | null;
@@ -193,6 +198,7 @@ export const portal = {
   attendance: (classId: string, day: string) => call<{ marks: Record<string, string> }>("GET", `/portal/classes/${classId}/attendance?day=${day}`),
   saveAttendance: (classId: string, day: string, marks: { learner_id: string; mark: string }[]) =>
     call("PUT", `/portal/classes/${classId}/attendance`, { day, marks }),
+  editSchool: (body: SchoolAddress) => call<{ code: string; address: SchoolAddress }>("PATCH", "/portal/school", body),
   audit: () => call<{ id: number; action: string; actor_name: string; target_name: string | null; at: string }[]>("GET", "/portal/audit"),
   adminSchools: (status: School["status"]) => call<SchoolRequest[]>("GET", `/portal/admin/schools?status=${status}`),
   saveCallNotes: (id: string, call_notes: string, checks: Check[]) =>

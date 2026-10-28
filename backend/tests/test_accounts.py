@@ -59,9 +59,9 @@ def outbox(tmp: Path, to: str) -> list[dict]:
 
 
 def last_code(tmp: Path, to: str) -> str:
-    """The code from the last sign-in email's subject ("642 126 is your Magana sign-in code")."""
+    """The code from the last sign-in email's subject ("Your Magana verification code: 642126")."""
     subject = [m for m in outbox(tmp, to) if m["kind"] == "sign_in_code"][-1]["subject"]
-    return re.match(r"(\d{3}) (\d{3})", subject).group(0).replace(" ", "")
+    return re.fullmatch(r"Your Magana verification code: (\d{6})", subject).group(1)
 
 
 def sign_in(tmp: Path, email: str) -> TestClient:
@@ -87,7 +87,8 @@ def register(email=PRINCIPAL) -> str:
     state, lga = lagos_ikeja()
     r = TestClient(app).post("/portal/schools/register", json={
         "email": email, "name": "Mrs Folake Adebayo", "role": "Principal", "phone": "0803 000 0001",
-        "school": "Ikeja Community School", "state": state, "lga": lga, "agree": True})
+        "school": "Ikeja Community School", "state": state, "lga": lga, "agree": True,
+        "address": "14 Allen Avenue", "town": "Ikeja", "landmark": "Opposite Ikeja City Mall"})
     assert r.status_code == 201, r.text
     return r.json()["school_id"]
 
@@ -190,7 +191,7 @@ def test_a_new_school_is_pending_until_the_magana_team_approves_it(fresh):
 def test_registration_checks_place_codes_phone_and_agreement():
     state, lga = lagos_ikeja()
     base = {"email": "x@yahoo.com", "name": "Mr X", "role": "Principal", "phone": "0803 000 0002",
-            "school": "Kano School", "state": "NG-KN", "lga": lga, "agree": True}
+            "school": "Kano School", "state": "NG-KN", "lga": lga, "agree": True, "address": "14 Allen Avenue", "town": "Ikeja"}
     c = TestClient(app)
     assert c.post("/portal/schools/register", json=base).json()["detail"]["code"] == "place_unknown"
     assert c.post("/portal/schools/register", json={**base, "state": state, "phone": "12345"}).status_code == 422
@@ -251,7 +252,7 @@ def test_in_production_the_cookie_is_secure(fresh, monkeypatch):
     register()
     sent = []
     import app.portal_api as pa
-    monkeypatch.setattr(pa.mailer, "send", lambda to, email: sent.append(email.subject[:7].replace(" ", "")))
+    monkeypatch.setattr(pa.mailer, "send", lambda to, email: sent.append(email.subject[-6:]))
     monkeypatch.setenv("MAGANA_ENV", "production")
     monkeypatch.setenv("MAGANA_CODE_KEY", "k" * 32)
     c = TestClient(app)
@@ -269,7 +270,7 @@ def test_invites_expire_after_7_days(fresh, monkeypatch):
         con.execute("UPDATE staff SET invite_expires = ? WHERE email = ?",
                     (accounts.iso(accounts.now() - timedelta(days=1)), "late@gmail.com"))
     TestClient(app).post("/portal/auth/request-code", json={"email": "late@gmail.com"})
-    assert [m for m in outbox(fresh, "late@gmail.com") if "sign-in code" in m["subject"]] == []
+    assert [m for m in outbox(fresh, "late@gmail.com") if m["kind"] == "sign_in_code"] == []
     assert [s["status"] for s in admin.get("/portal/staff").json() if s["email"] == "late@gmail.com"] == ["expired"]
 
 

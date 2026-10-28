@@ -658,11 +658,22 @@ html:has(dialog[open]) { overflow: hidden; }  /* the page behind a modal doesn't
 /* Long emails in team pages wrap instead of scrolling the page sideways (390 px). */
 .audit li, .req, .req-checks, .req-facts dd, .team-grid, .table-wrap td { overflow-wrap: anywhere; min-width: 0; }
 
-/* ---------- the sign-in code: six boxes */
-.code-boxes { display: grid; grid-template-columns: repeat(6, minmax(0, 52px)); gap: 8px; }
-.code-box { min-height: 64px; padding: 0; text-align: center; font-size: 1.75rem; font-weight: 700;
-  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
-.code-boxes .code-box:nth-child(3) { margin-right: 10px; }
+/* ---------- a 6-digit code (CodeInput): one real input over six drawn boxes */
+.code-boxes { position: relative; display: grid; grid-template-columns: repeat(6, minmax(0, 52px)); gap: 8px;
+  width: fit-content; max-width: 100%; }
+.code-box { display: flex; align-items: center; justify-content: center; min-height: 64px; min-width: 0;
+  border: 2px solid var(--ink); border-radius: var(--radius); background: var(--surface); color: var(--ink);
+  font-size: 1.75rem; font-weight: 700; font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace; }
+.code-boxes .code-box:nth-child(4) { margin-right: 10px; }  /* after the input: the third box */
+/* The input covers the boxes: taps and clicks reach it, its own text and caret are hidden, the
+   boxes show the digits, and the box being filled shows the focus ring. */
+.code-real { position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; min-height: 64px; margin: 0; padding: 0;
+  border: 0; background: transparent; color: transparent; caret-color: transparent; font-size: 1.75rem;
+  letter-spacing: 1em; outline: none; box-shadow: none; }
+.code-real::selection { background: transparent; color: transparent; }
+.code-real:focus-visible { outline: none; box-shadow: none; }
+.code-boxes.is-focused .code-box.is-active { outline: 3px solid var(--ink); outline-offset: 3px; box-shadow: 0 0 0 6px var(--amber); }
+.code-real[aria-invalid="true"] ~ .code-box { border-color: var(--absent-ink); border-width: 3px; }
 
 /* ---------- authenticator setup (QR) */
 .qr-card { display: flex; flex-wrap: wrap; gap: 18px; align-items: center; padding: 18px; border-radius: 16px; border: 2px solid var(--ink); background: var(--surface); }

@@ -34,7 +34,7 @@ def headers(body: bytes, secret: str = SECRET, at: float | None = None, msg_id: 
 def event(kind: str, to: str, **data) -> bytes:
     # The subject (a sign-in code's subject holds the code) is in the event: never read or logged.
     return json.dumps({"type": kind, "created_at": "2026-10-28T09:00:00Z",
-                       "data": {"email_id": "e1", "to": [to], "subject": "642 126 is your Magana sign-in code", **data}}).encode()
+                       "data": {"email_id": "e1", "to": [to], "subject": "Your Magana verification code: 642126", **data}}).encode()
 
 
 def post(body: bytes, h: dict | None = None):
@@ -87,7 +87,7 @@ def test_bounce_marks_the_address_and_stops_every_send(fresh, caplog):
     # Logged with the address masked and nothing from the email itself.
     logs = caplog.text
     assert "t***@gmail.com" in logs and "teacher@gmail.com" not in logs.lower()
-    assert "642 126" not in logs and "sign-in code" not in logs
+    assert "642126" not in logs and "verification code" not in logs
 
 
 def test_delay_and_delivery_change_nothing():
