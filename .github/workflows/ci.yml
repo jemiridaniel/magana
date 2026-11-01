@@ -12,7 +12,9 @@ name: CI
 
 on:
   push:
+    paths-ignore: ['**/*.md', 'docs/**']
   pull_request:
+    paths-ignore: ['**/*.md', 'docs/**']
   workflow_dispatch:  # scripts/publish-apk.sh: redeploy the website with the new APK
 
 concurrency:
@@ -78,10 +80,13 @@ jobs:
           TEST_DB: ${{ matrix.db == 'postgres' && 'postgresql://postgres:magana@127.0.0.1:5432/postgres' || '' }}
         # OMP_THREAD_LIMIT=1: one thread per Tesseract. With a worker per core, Tesseract's own
         # OpenMP threads only fight each other (4 CPUs, Docker: 85 s → 48 s; same results).
+        # Heavy OCR/reading-pipeline tests (-m ocr, ~46% of the suite) are excluded here --
+        # .github/workflows/ocr.yml runs them when reading-pipeline code changes, and in full
+        # every night as a safety net for a change this filter missed.
         run: |
           docker run --rm --user root --network host -v "$PWD:/m" -w /m/backend \
             -e MAGANA_TEST_DATABASE_URL="$TEST_DB" -e OMP_THREAD_LIMIT=1 \
-            magana-backend python -m pytest -q -p no:cacheprovider -n auto --durations=15
+            magana-backend python -m pytest -q -p no:cacheprovider -n auto --durations=15 -m "not ocr"
 
   app:
     runs-on: ubuntu-latest

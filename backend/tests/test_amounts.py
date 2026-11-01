@@ -13,6 +13,8 @@ from app import amounts, second_ocr, wa_flow
 from test_whatsapp import FakeClient, adult, fake_voice_note, flow, photo, say  # noqa: F401
 
 
+pytestmark = pytest.mark.ocr
+
 def lines(*texts):
     return [{"text": t, "words": [{"text": w} for w in t.split()]} for t in texts]
 

@@ -16,6 +16,8 @@ from app.reader import Line, Page, Word
 
 from pagefont import font
 
+pytestmark = pytest.mark.ocr
+
 client = TestClient(app)
 ADULT = {"X-Magana-Tier": "standard"}
 TEEN = {"X-Magana-Tier": "guided", "X-Magana-Guardian-Consent": "yes"}

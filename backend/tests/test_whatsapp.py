@@ -14,6 +14,8 @@ from app import blobs, spoken, triage, tts, wa_flow, wa_store
 from app.main import app, get_whatsapp_flow
 from app.reader import TesseractEngine
 
+pytestmark = pytest.mark.ocr
+
 ROOT = Path(__file__).resolve().parents[2]
 SMUDGED = Path(__file__).parent / "fixtures" / "misreads" / "dose_smudged_registered.png"
 USER = "2348031234567"

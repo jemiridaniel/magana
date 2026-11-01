@@ -9,6 +9,10 @@ from app import safety
 from app.main import app, checked
 from app.reader import TesseractEngine, edge_cuts, flatten_contrast, read_page
 
+import pytest
+
+pytestmark = pytest.mark.ocr
+
 client = TestClient(app)
 
 

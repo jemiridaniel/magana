@@ -11,6 +11,8 @@ from app import safety
 from app.main import app
 from app.reader import read_page, skew_angle
 
+pytestmark = pytest.mark.ocr
+
 client = TestClient(app)
 
 

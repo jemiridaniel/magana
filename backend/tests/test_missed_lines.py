@@ -13,6 +13,8 @@ import handwriting_fixtures as hf
 from app.main import app
 from app.reader import read_page
 
+pytestmark = pytest.mark.ocr
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from letter_ocr_test import draw  # noqa: E402
 import bank_benchmark as bb  # noqa: E402

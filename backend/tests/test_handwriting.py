@@ -13,6 +13,10 @@ from app.main import app, get_engine
 from app.reader import Line, Page, TesseractEngine, Word, read_page
 from pagefont import font
 
+import pytest
+
+pytestmark = pytest.mark.ocr
+
 client = TestClient(app)
 ADULT = {"X-Magana-Tier": "standard"}
 

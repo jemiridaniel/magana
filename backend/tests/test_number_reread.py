@@ -13,6 +13,8 @@ from app.reader import Line, Page, PaddleStructureEngine, TesseractEngine, Word
 
 from tests.test_line_ends import page as rendered_page  # the label renderer the line-end tests use
 
+pytestmark = pytest.mark.ocr
+
 LABEL = ["Paracetamol 500 mg tablets", "Take 2 tablets every 4 to 6 hours", "Do not take more than 8 in 24 hours"]
 
 

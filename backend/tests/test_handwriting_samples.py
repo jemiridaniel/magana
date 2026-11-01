@@ -9,6 +9,8 @@ import capture_fixtures as cf
 import handwriting_fixtures as hf
 from app.main import app
 
+pytestmark = pytest.mark.ocr
+
 client = TestClient(app)
 
 

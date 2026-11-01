@@ -6,6 +6,10 @@ from pathlib import Path
 
 from PIL import Image, ImageDraw
 
+import pytest
+
+pytestmark = pytest.mark.ocr
+
 sys.path.insert(0, str(Path(__file__).parents[1] / "scripts"))
 import column_order_test as columns  # noqa: E402
 import pagefont  # noqa: E402

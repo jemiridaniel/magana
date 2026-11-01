@@ -10,6 +10,8 @@ import capture_fixtures as cf
 from app.main import app
 from app.reader import is_screenshot, light_on_dark, read_page
 
+pytestmark = pytest.mark.ocr
+
 client = TestClient(app)
 CAMERA_TIPS = {"too_dark", "blurry", "cut_off_top", "cut_off_bottom", "cut_off_left", "cut_off_right",
                "edge_cut_left", "edge_cut_right"}

@@ -1,0 +1,115 @@
+# Heavy OCR/reading-pipeline tests (-m ocr in pytest.ini: real image fixtures, Tesseract/
+# PaddleOCR/TrOCR inference -- ~46% of the backend suite, measurably slower than the rest).
+# ci.yml's backend job excludes them (-m "not ocr") on every push/PR for fast feedback. This
+# workflow instead:
+#   - push/pull_request: runs ONLY the OCR-marked subset (sqlite only -- Postgres adds nothing
+#     these tests care about), and only when reading-pipeline code, its tests, its OCR-engine
+#     requirements files or the Docker image actually changed (the `paths:` filter below).
+#   - schedule (nightly) or a manual run: the FULL backend suite, every tests, both DB backends
+#     (sqlite + postgres, matching ci.yml's own matrix) -- a safety net for a regression from a
+#     change this workflow's own path filter missed (e.g. a shared helper the reading pipeline
+#     calls into, changed from outside the paths listed below).
+# Public repo: GitHub-hosted runner minutes are free regardless of any of this: it's here for
+# faster PR feedback and a shorter CI queue, not cost.
+name: OCR tests
+
+on:
+  push:
+    branches: [main]
+    paths: &ocr_paths
+      - backend/app/handwriting.py
+      - backend/app/layout.py
+      - backend/app/letters.py
+      - backend/app/amounts.py
+      - backend/app/codes.py
+      - backend/app/second_ocr.py
+      - backend/app/reader.py
+      - backend/app/proofs.py
+      - backend/tests/test_amounts.py
+      - backend/tests/test_book_page.py
+      - backend/tests/test_digit_letters.py
+      - backend/tests/test_faint.py
+      - backend/tests/test_handwriting.py
+      - backend/tests/test_handwriting_samples.py
+      - backend/tests/test_layout_letters.py
+      - backend/tests/test_line_ends.py
+      - backend/tests/test_missed_lines.py
+      - backend/tests/test_number_reread.py
+      - backend/tests/test_numbers.py
+      - backend/tests/test_pdfs.py
+      - backend/tests/test_screenshots.py
+      - backend/tests/test_script_card.py
+      - backend/tests/test_small_items.py
+      - backend/tests/test_tables.py
+      - backend/tests/test_uploads.py
+      - backend/tests/test_whatsapp.py
+      - backend/requirements-trocr.txt
+      - backend/requirements-second-ocr.txt
+      - backend/requirements-paddle.txt
+      - backend/Dockerfile
+      - .github/workflows/ocr.yml
+  pull_request:
+    paths: *ocr_paths
+  schedule:
+    - cron: "17 3 * * *"  # nightly, full suite, both DB backends -- the safety net
+  workflow_dispatch:
+
+concurrency:
+  group: ocr-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  # push/pull_request only: just the OCR subset, sqlite only -- fast, targeted.
+  ocr-quick:
+    name: OCR tests (sqlite, path-triggered)
+    if: github.event_name == 'push' || github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: backend
+          tags: magana-backend
+          load: true
+          cache-from: type=gha,scope=backend-image
+          cache-to: type=gha,scope=backend-image,mode=max
+      - name: OCR tests (sqlite)
+        run: |
+          docker run --rm --user root --network host -v "$PWD:/m" -w /m/backend \
+            -e OMP_THREAD_LIMIT=1 \
+            magana-backend python -m pytest -q -p no:cacheprovider -n auto --durations=15 -m ocr
+
+  # schedule or workflow_dispatch: the whole suite, both DB backends -- same matrix as ci.yml.
+  nightly-full:
+    name: Full backend suite (${{ matrix.db }}, nightly)
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        db: [sqlite, postgres]
+    services:
+      postgres:
+        image: ${{ matrix.db == 'postgres' && 'postgres:16' || '' }}
+        env:
+          POSTGRES_PASSWORD: magana
+        ports: ["5432:5432"]
+        options: --health-cmd pg_isready --health-interval 5s --health-timeout 5s --health-retries 10
+    steps:
+      - uses: actions/checkout@v5
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: backend
+          tags: magana-backend
+          load: true
+          cache-from: type=gha,scope=backend-image
+          cache-to: type=gha,scope=backend-image,mode=max
+      - name: Full suite on ${{ matrix.db }} (OCR tests included)
+        env:
+          TEST_DB: ${{ matrix.db == 'postgres' && 'postgresql://postgres:magana@127.0.0.1:5432/postgres' || '' }}
+        run: |
+          docker run --rm --user root --network host -v "$PWD:/m" -w /m/backend \
+            -e MAGANA_TEST_DATABASE_URL="$TEST_DB" -e OMP_THREAD_LIMIT=1 \
+            magana-backend python -m pytest -q -p no:cacheprovider -n auto --durations=15

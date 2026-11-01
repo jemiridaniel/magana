@@ -11,6 +11,8 @@ from app.main import app
 from app.reader import TesseractEngine, read_page
 from pagefont import font
 
+pytestmark = pytest.mark.ocr
+
 client = TestClient(app)
 FIXTURE = Path(__file__).parent / "fixtures" / "misreads" / "line_end_damaged.jpg"
 

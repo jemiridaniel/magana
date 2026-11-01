@@ -11,6 +11,10 @@ from test_accounts import approved_school, everything_in_db, fresh, invite, new_
 from test_handwriting import handwritten_line, printed_line
 
 
+import pytest
+
+pytestmark = pytest.mark.ocr
+
 def page_png(lines):
     img = Image.new("RGB", (1400, 140 + 110 * len(lines)), "white")
     d = ImageDraw.Draw(img)

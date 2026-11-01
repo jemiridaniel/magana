@@ -13,6 +13,8 @@ import capture_fixtures as cf
 from app.main import checked
 from app.reader import read_page, shadowed, TesseractEngine
 
+pytestmark = pytest.mark.ocr
+
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 from letter_ocr_test import draw  # noqa: E402
 import bank_benchmark as bb  # noqa: E402

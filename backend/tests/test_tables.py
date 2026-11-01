@@ -12,6 +12,8 @@ from app.main import app, get_engine
 import pagefont
 from app.reader import Cell, Line, Page, PaddleStructureEngine, Table, page_from_structure, parse_table_html
 
+pytestmark = pytest.mark.ocr
+
 FIXTURE = Path(__file__).parent / "fixtures" / "ppstructurev3_lab_report.json"
 
 

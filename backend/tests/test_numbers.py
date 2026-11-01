@@ -15,6 +15,8 @@ from app import safety
 from app.main import app
 import pagefont
 
+pytestmark = pytest.mark.ocr
+
 client = TestClient(app)
 MISREADS = Path(__file__).parent / "fixtures" / "misreads"
 

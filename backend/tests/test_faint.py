@@ -9,6 +9,8 @@ from app.main import app
 from app.reader import TesseractEngine, ink_bands, ink_map, read_page
 from pagefont import font
 
+pytestmark = pytest.mark.ocr
+
 client = TestClient(app)
 PAPER = (250, 248, 240)
 

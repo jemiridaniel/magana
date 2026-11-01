@@ -10,6 +10,8 @@ import pytest
 from app import letters, safety, spoken, wa_flow
 from app.main import checked
 
+pytestmark = pytest.mark.ocr
+
 CASES = json.loads((Path(__file__).parent / "fixtures" / "letters" / "ig_digit_cases.json").read_text(encoding="utf-8"))
 PHOTO = [c for c in CASES if c["kind"] == "photo"]
 
