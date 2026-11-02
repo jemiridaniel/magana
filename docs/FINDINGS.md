@@ -13,6 +13,27 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-11-02 · Hausa review pack for external reviewers: no hooked letter survives either reader (UNREVIEWED)
+
+> **Unreviewed.** These are automatic text comparisons, on generated images (drawn, then made phone-like), not camera photos. No Hausa reviewer has scored them yet. The pack itself is outside the repository.
+
+- **Pages:** 20: 14 Hausa Wikipedia extracts (CC BY-SA 4.0) and 6 team-made (2 sample medicine labels, 4 school pages). 351 hooked letters (ɓ ɗ ƙ ƴ) in the source text.
+- **Readers:** the live API (build decb007dd6be) and the app's offline reader (ML Kit, Android emulator, API 36).
+
+  | | Server | Offline |
+  |---|---|---|
+  | Pages found to be Hausa | 20 of 20 | 20 of 20 |
+  | Hooked letters kept | 0 of 351 | 0 of 351 |
+  | Words marked as maybe missing a letter | 342 | 5 |
+  | Warnings | 116 | 70 |
+  | Numbers in the source found in the reading (anywhere on the page, position not checked) | 102 of 102 | 100 of 102 |
+
+  - **Hooked letters:** Hausa pages get no second model (`letters.READ_AGAIN` has only Yorùbá and Igbo). So marking is the only protection, and offline it marks far fewer words than the server.
+- **Speech, captured from the real Reader screen:**
+  - **Hausa app, no Hausa voice:** 40 English utterances across the 20 pages for each reading path (2 a page), with no page word in any of them. Page text is not read.
+  - **Gap found:** English guidance drops plural sentences (`letterCount`, the line count), because plural texts aren't in the phrase table (`scripts/export_phrases.py`). So a listener isn't told "6 lines" or "6 words may be wrong". It also says "Page read" when the page isn't read aloud. Not changed yet.
+- **Correction:** the Explain entry of 26 Oct said the fractions answer left out 4 of 10 markers. It left out 7 of 11.
+
 ## 2026-10-28 · English guidance while Hausa, Yorùbá or Igbo has no voice; APKs per CPU type
 
 - **English guidance** (`app/lib/guidance.dart`):
@@ -812,7 +833,7 @@ Test font: Dancing Script (SIL OFL, S42 in the data sources tracker).
   - English goes only to the Magana LoRA, never to the base model.
   - Hausa, Yorùbá and Igbo answer "Explain in <language> is coming. You can hear it in English." with a "Hear it in English" button, or the learner can say "English" (`EXPLAIN_LANGS`, default `en`).
   - Tests: `test_explain.py` (10 new), `app/test/learner_test.dart`.
-- **Why the left-out rule mattered:** the saved English LoRA answer for `03_fractions` passed the old check with 4 of 10 markers left out. It said "Exercise 4 asks about a part of a loaf of bread, and Exercise 2 about water in a tank": the markers it kept were put back in the wrong places. That is an unsafe answer that would have been spoken. Under the new rule it is refused.
+- **Why the left-out rule mattered:** the saved English LoRA answer for `03_fractions` passed the old check with 7 of 11 markers left out (it kept 4; corrected 2 Nov from "4 of 10 left out", counted on the saved answer with today's masking). It said "Exercise 4 asks about a part of a loaf of bread, and Exercise 2 about water in a tank": the markers it kept were put back in the wrong places. That is an unsafe answer that would have been spoken. Under the new rule it is refused.
 - **The 20-prompt set** (5 schoolwork pages × 4 languages, the answers saved on 25 Oct; `benchmark/explain/failsafe_report.py`, output in `results/2026-10-25-kaggle-t4-magana-lora/failsafe.json`):
 
   | Model | Spoken | Safely refused | Unsafe spoken | Spoken under the old rules |
