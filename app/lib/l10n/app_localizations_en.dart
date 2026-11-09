@@ -2758,7 +2758,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get explainEnd => 'End of the explanation.';
 
   @override
-  String get stillReadingPleaseWait => 'Still reading, please wait.';
+  String get stillReadingPleaseWait => 'Please wait, I\'m still reading.';
 
   @override
   String get stopWaiting => 'Stop waiting';

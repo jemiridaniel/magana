@@ -2120,12 +2120,12 @@
   "@explainEnd": {
     "description": "Said when the learner says next after the last sentence of an explanation."
   },
-  "stillReadingPleaseWait": "Still reading, please wait.",
+  "stillReadingPleaseWait": "Please wait, I'm still reading.",
   "stopWaiting": "Stop waiting",
   "stopWaitingLabel": "Stop. Use the phone's reading now",
   "stopWaitingHint": "Say stop or double-tap to use the phone's reading now.",
   "@stillReadingPleaseWait": {
-    "description": "Capture: said every 8 s while a reading is still being waited for, so a wait is never silent."
+    "description": "Capture: said 8 s after \"Still reading…\" (which comes 5 s after the photo), then every 8 s until the reading comes, so a wait is never silent. Wording changed 9 Nov 2026; until Dr. Amos records it, the phone's voice says it."
   },
   "@stopWaitingLabel": {
     "description": "Capture: button while waiting for the server's reading of a Hausa/Yorùbá/Igbo page. Its spoken name is the part before the first full stop (\"Stop\")."

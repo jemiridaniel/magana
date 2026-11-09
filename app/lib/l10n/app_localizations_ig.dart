@@ -2757,7 +2757,7 @@ class AppLocalizationsIg extends AppLocalizations {
   String get explainEnd => 'Njedebe nkọwa.';
 
   @override
-  String get stillReadingPleaseWait => 'M ka na-agụ, biko chere.';
+  String get stillReadingPleaseWait => 'Biko chere, m ka na-agụ.';
 
   @override
   String get stopWaiting => 'Kwụsị ichere';

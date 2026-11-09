@@ -35,7 +35,7 @@ PRIORITY: list[tuple[str, list[str]]] = [
     ]),
     ("Home screen", [
         "appTitle", "greeting", "chooseLanguage", "settings", "readPage", "readPageSubtitle",
-        "askQuestion", "practiceQuiz", "myLibrary", "backToHome",
+        "practiceQuiz", "myLibrary", "backToHome",
     ]),
     ("Capture cues", [
         "takePhoto", "cameraView", "autoCapture", "cameraFailed", "cameraUnavailable",
@@ -43,6 +43,8 @@ PRIORITY: list[tuple[str, list[str]]] = [
     ]),
     ("Reader controls", [
         "play", "pause", "playLabel", "pauseLabel", "repeat", "repeatLine", "stillReading",
+        # Added 9 Nov 2026 for the second session (new wording, not yet recorded).
+        "stillReadingPleaseWait",
         # speed/speedLabel have a {value} placeholder -- the device's own TTS reads the number
         # live, in every language including English, so there's nothing fixed to record.
     ]),

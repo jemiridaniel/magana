@@ -578,7 +578,7 @@ msg_explain_one_task,ig-msg_explain_one_task.m4a,Nkọwa na-akọwa naanị peej
 explainCommandsHint,ig-explainCommandsHint.m4a,"Mgbe nkọwa gasịrị, kwuo “repeat”, “slower”, “next” ma ọ bụ “stop”.","After the explanation, say “repeat”, “slower”, “next” or “stop”.",App phrase,draft
 explainSlower,ig-explainSlower.m4a,Nwayọọ,Slower,App phrase,draft
 explainEnd,ig-explainEnd.m4a,Njedebe nkọwa.,End of the explanation.,App phrase,draft
-stillReadingPleaseWait,ig-stillReadingPleaseWait.m4a,"M ka na-agụ, biko chere.","Still reading, please wait.",App phrase,draft
+stillReadingPleaseWait,ig-stillReadingPleaseWait.m4a,"Biko chere, m ka na-agụ.","Please wait, I'm still reading.",App phrase,draft
 stopWaiting,ig-stopWaiting.m4a,Kwụsị ichere,Stop waiting,App phrase,draft
 stopWaitingLabel,ig-stopWaitingLabel.m4a,Kwụsị. Jiri ọgụgụ ekwentị ugbu a,Stop. Use the phone's reading now,App phrase,draft
 stopWaitingHint,ig-stopWaitingHint.m4a,Kwuo stop ma ọ bụ pịa ugboro abụọ iji ọgụgụ ekwentị ugbu a.,Say stop or double-tap to use the phone's reading now.,App phrase,draft

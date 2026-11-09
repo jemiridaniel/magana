@@ -2763,7 +2763,7 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get stillReadingPleaseWait =>
-      'Har yanzu ina karantawa, don Allah a jira.';
+      'Don Allah a jira, har yanzu ina karantawa.';
 
   @override
   String get stopWaiting => 'Daina jira';

@@ -579,7 +579,7 @@
   "After the explanation, say “repeat”, “slower”, “next” or “stop”.": "explainCommandsHint",
   "Slower": "explainSlower",
   "End of the explanation.": "explainEnd",
-  "Still reading, please wait.": "stillReadingPleaseWait",
+  "Please wait, I'm still reading.": "stillReadingPleaseWait",
   "Stop waiting": "stopWaiting",
   "Stop. Use the phone's reading now": "stopWaitingLabel",
   "Say stop or double-tap to use the phone's reading now.": "stopWaitingHint"
@@ -1165,7 +1165,7 @@
   "Bayan bayanin, faɗi “repeat”, “slower”, “next” ko “stop”.": "explainCommandsHint",
   "A hankali": "explainSlower",
   "Ƙarshen bayanin.": "explainEnd",
-  "Har yanzu ina karantawa, don Allah a jira.": "stillReadingPleaseWait",
+  "Don Allah a jira, har yanzu ina karantawa.": "stillReadingPleaseWait",
   "Daina jira": "stopWaiting",
   "Tsaya. Yi amfani da karatun wayar yanzu": "stopWaitingLabel",
   "Ka ce stop ko ka taɓa sau biyu don amfani da karatun wayar yanzu.": "stopWaitingHint"
@@ -1752,7 +1752,7 @@
   "Lẹ́yìn àlàyé, sọ “repeat”, “slower”, “next” tàbí “stop”.": "explainCommandsHint",
   "Lọ́ra díẹ̀": "explainSlower",
   "Òpin àlàyé.": "explainEnd",
-  "Mo ṣì ń kà á, ẹ jọ̀ọ́ ẹ dúró.": "stillReadingPleaseWait",
+  "Ẹ jọ̀ọ́ ẹ dúró, mo ṣì ń kà á.": "stillReadingPleaseWait",
   "Dẹ́kun ìdúró": "stopWaiting",
   "Dúró. Lo kíkà fóònù báyìí": "stopWaitingLabel",
   "Sọ stop tàbí tẹ̀ ẹ́ lẹ́ẹ̀mejì láti lo kíkà fóònù báyìí.": "stopWaitingHint"
@@ -2337,7 +2337,7 @@
   "Mgbe nkọwa gasịrị, kwuo “repeat”, “slower”, “next” ma ọ bụ “stop”.": "explainCommandsHint",
   "Nwayọọ": "explainSlower",
   "Njedebe nkọwa.": "explainEnd",
-  "M ka na-agụ, biko chere.": "stillReadingPleaseWait",
+  "Biko chere, m ka na-agụ.": "stillReadingPleaseWait",
   "Kwụsị ichere": "stopWaiting",
   "Kwụsị. Jiri ọgụgụ ekwentị ugbu a": "stopWaitingLabel",
   "Kwuo stop ma ọ bụ pịa ugboro abụọ iji ọgụgụ ekwentị ugbu a.": "stopWaitingHint"
@@ -3696,7 +3696,7 @@
   "waitingFullReading": "{language} page. Waiting a little longer for the full reading.",
   "explainSlower": "Slower",
   "explainEnd": "End of the explanation.",
-  "stillReadingPleaseWait": "Still reading, please wait.",
+  "stillReadingPleaseWait": "Please wait, I'm still reading.",
   "stopWaiting": "Stop waiting",
   "stopWaitingLabel": "Stop. Use the phone's reading now",
   "stopWaitingHint": "Say stop or double-tap to use the phone's reading now."

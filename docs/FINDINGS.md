@@ -30,7 +30,8 @@ No real phone and no blind or low-vision tester has been used yet.
   - Test: `hausa_safety_test.dart`.
   - **Follow-up (same day): no wait is silent.**
     - Before, after "Still reading…" at 5 s, the 25 s server wait and the 40 s wait for a Hausa, Yorùbá or Igbo page could each go 20 s or more with no speech.
-    - Now "Still reading, please wait." is said every 8 s until the reading comes.
+    - Now "Still reading…" is said 5 s after the photo, then a reminder 8 s later (13 s) and every 8 s after that (21 s, 29 s…) until the reading comes (`stillReadingAfter`, `stillReadingEvery` in `capture.dart`).
+    - The reminder now says "Please wait, I'm still reading." (was "Still reading, please wait."; Hausa, Yorùbá and Igbo drafts reordered the same way). The old wording started like "Still reading…" said 8 s earlier, and one local speech-to-text model heard Dr. Amos's "Still reading" as "Stop reading", next to a "Stop waiting" button. Leading with "Please wait" makes the two prompts sound different. It is in Dr. Amos's pack as a new phrase; until he records it, the phone's voice says it.
     - The 40 s wait can be stopped: say "stop", use the "Stop waiting" button, or double-tap anywhere. The phone's reading is then used straight away, with the "may have many mistakes" warning.
     - Test (tag `safety`): from the photo to the page, with a server that answers after 60 s, the longest silence is at most 8 s; "stop" by button and by double tap.
 - **Recorded prompts: same loudness, no crackle** (`scripts/import_clips.py`, measured on Dr. Amos's 46 English prompts, 9 Nov 2026; the clips are not in the app yet):

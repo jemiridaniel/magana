@@ -579,7 +579,7 @@ msg_explain_one_task,ha-msg_explain_one_task.m4a,Bayani yana bayyana shafin da k
 explainCommandsHint,ha-explainCommandsHint.m4a,"Bayan bayanin, faɗi “repeat”, “slower”, “next” ko “stop”.","After the explanation, say “repeat”, “slower”, “next” or “stop”.",App phrase,draft
 explainSlower,ha-explainSlower.m4a,A hankali,Slower,App phrase,draft
 explainEnd,ha-explainEnd.m4a,Ƙarshen bayanin.,End of the explanation.,App phrase,draft
-stillReadingPleaseWait,ha-stillReadingPleaseWait.m4a,"Har yanzu ina karantawa, don Allah a jira.","Still reading, please wait.",App phrase,draft
+stillReadingPleaseWait,ha-stillReadingPleaseWait.m4a,"Don Allah a jira, har yanzu ina karantawa.","Please wait, I'm still reading.",App phrase,draft
 stopWaiting,ha-stopWaiting.m4a,Daina jira,Stop waiting,App phrase,draft
 stopWaitingLabel,ha-stopWaitingLabel.m4a,Tsaya. Yi amfani da karatun wayar yanzu,Stop. Use the phone's reading now,App phrase,draft
 stopWaitingHint,ha-stopWaitingHint.m4a,Ka ce stop ko ka taɓa sau biyu don amfani da karatun wayar yanzu.,Say stop or double-tap to use the phone's reading now.,App phrase,draft

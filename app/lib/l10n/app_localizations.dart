@@ -4404,10 +4404,10 @@ abstract class AppLocalizations {
   /// **'End of the explanation.'**
   String get explainEnd;
 
-  /// Capture: said every 8 s while a reading is still being waited for, so a wait is never silent.
+  /// Capture: said 8 s after "Still reading…" (which comes 5 s after the photo), then every 8 s until the reading comes, so a wait is never silent. Wording changed 9 Nov 2026; until Dr. Amos records it, the phone's voice says it.
   ///
   /// In en, this message translates to:
-  /// **'Still reading, please wait.'**
+  /// **'Please wait, I\'m still reading.'**
   String get stillReadingPleaseWait;
 
   /// No description provided for @stopWaiting.

@@ -2762,7 +2762,7 @@ class AppLocalizationsYo extends AppLocalizations {
   String get explainEnd => 'Òpin àlàyé.';
 
   @override
-  String get stillReadingPleaseWait => 'Mo ṣì ń kà á, ẹ jọ̀ọ́ ẹ dúró.';
+  String get stillReadingPleaseWait => 'Ẹ jọ̀ọ́ ẹ dúró, mo ṣì ń kà á.';
 
   @override
   String get stopWaiting => 'Dẹ́kun ìdúró';

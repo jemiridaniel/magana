@@ -19,6 +19,14 @@ has had — people using Magana in English have only heard the phone's own voice
   Everywhere else in the list, if a line genuinely reads awkwardly out loud, say what sounds
   right and note what you changed — we'll check it before using it.
 
+## Added later
+
+- **9 Nov 2026: one new phrase.** "Please wait, I'm still reading." (`en-stillReadingPleaseWait.m4a`,
+  number 30 in the list, in the reader's controls). Magana says it every 8 seconds while a page
+  is still being read, so a wait is never silent. Until it is recorded, the phone's own voice
+  says it.
+- "Ask a question" (`askQuestion`) is no longer in the app, so it has left the list.
+
 ## Where and how
 
 - **A quiet room.** Close the windows, turn off fans and the TV. Soft things around you
