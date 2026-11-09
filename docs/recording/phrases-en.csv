@@ -577,3 +577,7 @@ msg_explain_one_task,en-msg_explain_one_task.m4a,Explain only explains the page 
 explainCommandsHint,en-explainCommandsHint.m4a,"After the explanation, say “repeat”, “slower”, “next” or “stop”.","After the explanation, say “repeat”, “slower”, “next” or “stop”.",App phrase,final
 explainSlower,en-explainSlower.m4a,Slower,Slower,App phrase,final
 explainEnd,en-explainEnd.m4a,End of the explanation.,End of the explanation.,App phrase,final
+stillReadingPleaseWait,en-stillReadingPleaseWait.m4a,"Still reading, please wait.","Still reading, please wait.",App phrase,final
+stopWaiting,en-stopWaiting.m4a,Stop waiting,Stop waiting,App phrase,final
+stopWaitingLabel,en-stopWaitingLabel.m4a,Stop. Use the phone's reading now,Stop. Use the phone's reading now,App phrase,final
+stopWaitingHint,en-stopWaitingHint.m4a,Say stop or double-tap to use the phone's reading now.,Say stop or double-tap to use the phone's reading now.,App phrase,final

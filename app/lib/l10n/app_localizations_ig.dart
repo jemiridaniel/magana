@@ -2755,4 +2755,17 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get explainEnd => 'Njedebe nkọwa.';
+
+  @override
+  String get stillReadingPleaseWait => 'M ka na-agụ, biko chere.';
+
+  @override
+  String get stopWaiting => 'Kwụsị ichere';
+
+  @override
+  String get stopWaitingLabel => 'Kwụsị. Jiri ọgụgụ ekwentị ugbu a';
+
+  @override
+  String get stopWaitingHint =>
+      'Kwuo stop ma ọ bụ pịa ugboro abụọ iji ọgụgụ ekwentị ugbu a.';
 }

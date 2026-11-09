@@ -4403,6 +4403,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'End of the explanation.'**
   String get explainEnd;
+
+  /// Capture: said every 8 s while a reading is still being waited for, so a wait is never silent.
+  ///
+  /// In en, this message translates to:
+  /// **'Still reading, please wait.'**
+  String get stillReadingPleaseWait;
+
+  /// No description provided for @stopWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop waiting'**
+  String get stopWaiting;
+
+  /// Capture: button while waiting for the server's reading of a Hausa/Yorùbá/Igbo page. Its spoken name is the part before the first full stop ("Stop").
+  ///
+  /// In en, this message translates to:
+  /// **'Stop. Use the phone\'s reading now'**
+  String get stopWaitingLabel;
+
+  /// Capture: said after waitingFullReading. "stop" stays in English (voice commands are English for now).
+  ///
+  /// In en, this message translates to:
+  /// **'Say stop or double-tap to use the phone\'s reading now.'**
+  String get stopWaitingHint;
 }
 
 class _AppLocalizationsDelegate

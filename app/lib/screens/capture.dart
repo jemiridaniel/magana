@@ -47,6 +47,10 @@ bool handwritingReading = const bool.fromEnvironment('MAGANA_HANDWRITING');
 /// "Still reading…" after this long, so a wait is never silent.
 const stillReadingAfter = Duration(seconds: 5);
 
+/// Then "Still reading, please wait" this often, for as long as the reading takes: no wait,
+/// the 40 s one for a Hausa, Yorùbá or Igbo page included, goes longer than this without speech.
+const stillReadingEvery = Duration(seconds: 8);
+
 /// A Hausa, Yorùbá or Igbo page read on the phone while the server is only slow or waking (still
 /// reachable): the server's reading is far better (offline kept 0 of 351 hooked letters and
 /// marked 5 words to the server's 342: docs/FINDINGS.md, 9 Nov 2026), so it is waited for this
@@ -93,6 +97,10 @@ class _CaptureScreenState extends State<CaptureScreen>
   bool _torchWorks = torchSupported;
   bool _auto = true;
   bool _busy = false;
+
+  /// Waiting for the server's reading of a Hausa, Yorùbá or Igbo page (preferServerWait).
+  /// Completing it ("Use the phone's reading now", a double tap, or "stop") stops the wait.
+  Completer<void>? _skipWait;
   bool _analysing = false;
   DateTime _lastFrame = DateTime(0);
   final _analyzer = FrameAnalyzer();
@@ -362,6 +370,12 @@ class _CaptureScreenState extends State<CaptureScreen>
     if (mounted) AppScope.of(context).speaker.say(text);
   }
 
+  /// Stop waiting for the server: the phone's reading now, with its warning.
+  void _stopWaiting() {
+    final skip = _skipWait;
+    if (skip != null && !skip.isCompleted) skip.complete();
+  }
+
   void _setStatus(String? text) {
     if (!mounted) return;
     setState(() => _status = text);
@@ -485,9 +499,20 @@ class _CaptureScreenState extends State<CaptureScreen>
     // A camera photo was announced already ("Picture taken. Reading…").
     if (_status != l.pictureTaken) _setStatus(l.readingPage);
     final sent = DateTime.now();
+    // Never silent while reading: "Still reading…", then a reminder every 8 s.
+    Timer? every;
     final still = Timer(stillReadingAfter, () {
-      if (mounted && _busy) _setStatus(l.stillReading);
+      if (!mounted || !_busy) return;
+      _setStatus(l.stillReading);
+      every = Timer.periodic(stillReadingEvery, (_) {
+        if (mounted && _busy) _say(l.stillReadingPleaseWait);
+      });
     });
+    void quiet() {
+      still.cancel();
+      every?.cancel();
+    }
+
     var online = scope.api.read(bytes, filename: filename, mode: mode);
     ReadResult? result;
     OfflineReason? why;
@@ -502,7 +527,7 @@ class _CaptureScreenState extends State<CaptureScreen>
         why = OfflineReason.forCode(e.code, web: runningOnWeb);
         if (why == null) {
           // Not allowed, a bad photo...: that is the answer, said as it is.
-          still.cancel();
+          quiet();
           _setStatus(messageFor(l, e.code));
           _resume();
           return;
@@ -518,7 +543,6 @@ class _CaptureScreenState extends State<CaptureScreen>
       }
       break;
     }
-    still.cancel();
     var queued = false;
     ReadResult? phoneReading; // this phone's own reading, when it made one
     var dropped = 0; // oldest waiting pages dropped to keep at most 20
@@ -535,6 +559,7 @@ class _CaptureScreenState extends State<CaptureScreen>
           result = await online;
           why = null;
         } on ApiException catch (e) {
+          quiet();
           _setStatus(messageFor(l, e.code));
           _resume();
           return;
@@ -543,20 +568,22 @@ class _CaptureScreenState extends State<CaptureScreen>
         if (local.pageLanguage case final lang?
             when why == OfflineReason.slow || why == OfflineReason.waking) {
           _setStatus(
-            l.waitingFullReading(
-              appLanguages
-                  .firstWhere(
-                    (a) => a.code == lang,
-                    orElse: () => appLanguages.first,
-                  )
-                  .name,
-            ),
+            '${l.waitingFullReading(appLanguages.firstWhere((a) => a.code == lang, orElse: () => appLanguages.first).name)} '
+            '${l.stopWaitingHint}',
           );
+          final skip = _skipWait = Completer<void>();
+          setState(() {});
           try {
-            result = await online.timeout(preferServerWait);
-            why = null;
+            result = await Future.any<ReadResult?>([
+              online.timeout(preferServerWait),
+              skip.future.then((_) => null),
+            ]);
+            if (result != null) why = null;
           } catch (_) {
             result = null; // the phone's reading after all, with its warning
+          } finally {
+            _skipWait = null;
+            if (mounted) setState(() {});
           }
         }
         if (result == null) {
@@ -590,6 +617,7 @@ class _CaptureScreenState extends State<CaptureScreen>
         if (n > 0) scope.speaker.say(l.fullReadingsReady(n));
       });
     }
+    quiet();
     var page = result;
     // Schoolwork that looks handwritten: offered, never automatic (handwritingReading).
     if (handwritingReading &&
@@ -687,225 +715,239 @@ class _CaptureScreenState extends State<CaptureScreen>
     );
     return Scaffold(
       backgroundColor: MaganaColors.camera,
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              // TalkBack lands on the first item: the title, then Back and the torch.
-              Semantics(
-                container: true,
-                explicitChildNodes: true,
-                child: Row(
-                  children: [
-                    Semantics(
-                      container: true,
-                      sortKey: const OrdinalSortKey(1),
-                      child: Labelled(
-                        label: l.backToHome,
-                        counted: false,
-                        radius: 32,
-                        onTap: () => Navigator.of(context).maybePop(),
-                        child: OutlinedButton(
-                          onPressed: () => Navigator.of(context).maybePop(),
-                          style: onDark.copyWith(
-                            padding: const WidgetStatePropertyAll(
-                              EdgeInsets.zero,
-                            ),
-                          ),
-                          child: const Icon(Icons.chevron_left, size: 32),
-                        ),
-                      ),
-                    ),
-                    Expanded(
-                      child: Semantics(
-                        container: true,
-                        sortKey: const OrdinalSortKey(0),
-                        child: Column(
-                          children: [
-                            Semantics(
-                              header: true,
-                              child: Text(
-                                widget.detect
-                                    ? l.readAnyPaper
-                                    : widget.paper?.title(l) ?? l.readPage,
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 21,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ),
-                            // The installed build, for testers; not read aloud.
-                            ExcludeSemantics(
-                              child: FutureBuilder<String>(
-                                future: appVersionLabel(),
-                                builder: (context, v) => Text(
-                                  v.data ?? '',
-                                  style: const TextStyle(
-                                    color: Color(0xFFB8BEC4),
-                                    fontSize: 13,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    if (live && _torchWorks)
+      body: GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onDoubleTap: _skipWait != null ? _stopWaiting : null,
+        child: SafeArea(
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // TalkBack lands on the first item: the title, then Back and the torch.
+                Semantics(
+                  container: true,
+                  explicitChildNodes: true,
+                  child: Row(
+                    children: [
                       Semantics(
                         container: true,
-                        sortKey: const OrdinalSortKey(2),
+                        sortKey: const OrdinalSortKey(1),
                         child: Labelled(
-                          toggled: _torchOn,
-                          label: _torchOn ? l.torchOff : l.torchOn,
-                          onTap: () => _setTorch(!_torchOn),
+                          label: l.backToHome,
+                          counted: false,
+                          radius: 32,
+                          onTap: () => Navigator.of(context).maybePop(),
                           child: OutlinedButton(
-                            onPressed: () => _setTorch(!_torchOn),
+                            onPressed: () => Navigator.of(context).maybePop(),
                             style: onDark.copyWith(
                               padding: const WidgetStatePropertyAll(
                                 EdgeInsets.zero,
                               ),
-                              backgroundColor: WidgetStatePropertyAll(
-                                _torchOn
-                                    ? MaganaColors.amber
-                                    : Colors.transparent,
-                              ),
-                              foregroundColor: WidgetStatePropertyAll(
-                                _torchOn ? MaganaColors.ink : Colors.white,
-                              ),
                             ),
-                            child: Icon(
-                              _torchOn
-                                  ? Icons.flashlight_on
-                                  : Icons.flashlight_off,
-                              size: 28,
-                            ),
+                            child: const Icon(Icons.chevron_left, size: 32),
                           ),
                         ),
-                      )
-                    else
-                      const SizedBox(width: minTarget),
-                  ],
-                ),
-              ),
-              const SizedBox(height: 18),
-              Expanded(
-                child: Semantics(
-                  image: true,
-                  label: l.cameraView,
-                  excludeSemantics: true,
-                  child: _Viewfinder(
-                    camera: live ? camera : null,
-                    advice: _advice,
-                    busy: _busy,
-                  ),
-                ),
-              ),
-              const SizedBox(height: 18),
-              // Not a live region: the app already speaks this every second,
-              // and TalkBack reading each change too would double the speech.
-              Semantics(
-                container: true,
-                child: Container(
-                  padding: const EdgeInsets.all(18),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const ExcludeSemantics(
-                        child: Icon(
-                          Icons.volume_up_outlined,
-                          size: 30,
-                          color: MaganaColors.ink,
-                        ),
                       ),
-                      const SizedBox(width: 14),
                       Expanded(
-                        child: Text(
-                          text,
-                          style: const TextStyle(
-                            fontSize: 20,
-                            height: 1.35,
-                            fontWeight: FontWeight.w700,
-                            color: MaganaColors.ink,
+                        child: Semantics(
+                          container: true,
+                          sortKey: const OrdinalSortKey(0),
+                          child: Column(
+                            children: [
+                              Semantics(
+                                header: true,
+                                child: Text(
+                                  widget.detect
+                                      ? l.readAnyPaper
+                                      : widget.paper?.title(l) ?? l.readPage,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 21,
+                                    fontWeight: FontWeight.w700,
+                                  ),
+                                ),
+                              ),
+                              // The installed build, for testers; not read aloud.
+                              ExcludeSemantics(
+                                child: FutureBuilder<String>(
+                                  future: appVersionLabel(),
+                                  builder: (context, v) => Text(
+                                    v.data ?? '',
+                                    style: const TextStyle(
+                                      color: Color(0xFFB8BEC4),
+                                      fontSize: 13,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ),
+                      if (live && _torchWorks)
+                        Semantics(
+                          container: true,
+                          sortKey: const OrdinalSortKey(2),
+                          child: Labelled(
+                            toggled: _torchOn,
+                            label: _torchOn ? l.torchOff : l.torchOn,
+                            onTap: () => _setTorch(!_torchOn),
+                            child: OutlinedButton(
+                              onPressed: () => _setTorch(!_torchOn),
+                              style: onDark.copyWith(
+                                padding: const WidgetStatePropertyAll(
+                                  EdgeInsets.zero,
+                                ),
+                                backgroundColor: WidgetStatePropertyAll(
+                                  _torchOn
+                                      ? MaganaColors.amber
+                                      : Colors.transparent,
+                                ),
+                                foregroundColor: WidgetStatePropertyAll(
+                                  _torchOn ? MaganaColors.ink : Colors.white,
+                                ),
+                              ),
+                              child: Icon(
+                                _torchOn
+                                    ? Icons.flashlight_on
+                                    : Icons.flashlight_off,
+                                size: 28,
+                              ),
+                            ),
+                          ),
+                        )
+                      else
+                        const SizedBox(width: minTarget),
                     ],
                   ),
                 ),
-              ),
-              const SizedBox(height: 18),
-              Row(
-                children: [
-                  Expanded(
-                    child: live && _streaming
-                        ? _AutoCaptureToggle(
-                            value: _auto,
-                            onChanged: (v) => setState(() => _auto = v),
-                          )
-                        : Labelled(
-                            label: l.repeatInstructions,
-                            onTap: _busy ? null : () => _say(text),
-                            child: OutlinedButton(
-                              onPressed: _busy ? null : () => _say(text),
-                              style: onDark,
-                              child: Text(
-                                l.repeat,
-                                textAlign: TextAlign.center,
-                              ),
+                const SizedBox(height: 18),
+                Expanded(
+                  child: Semantics(
+                    image: true,
+                    label: l.cameraView,
+                    excludeSemantics: true,
+                    child: _Viewfinder(
+                      camera: live ? camera : null,
+                      advice: _advice,
+                      busy: _busy,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 18),
+                // Not a live region: the app already speaks this every second,
+                // and TalkBack reading each change too would double the speech.
+                Semantics(
+                  container: true,
+                  child: Container(
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const ExcludeSemantics(
+                          child: Icon(
+                            Icons.volume_up_outlined,
+                            size: 30,
+                            color: MaganaColors.ink,
+                          ),
+                        ),
+                        const SizedBox(width: 14),
+                        Expanded(
+                          child: Text(
+                            text,
+                            style: const TextStyle(
+                              fontSize: 20,
+                              height: 1.35,
+                              fontWeight: FontWeight.w700,
+                              color: MaganaColors.ink,
                             ),
                           ),
+                        ),
+                      ],
+                    ),
                   ),
-                  const SizedBox(width: 12),
-                  Labelled(
-                    label: l.takePhoto,
-                    onTap: !_busy ? takePhoto : null,
-                    child: SizedBox(
-                      width: 92,
-                      height: 92,
-                      child: FilledButton(
-                        onPressed: takePhoto,
-                        style: FilledButton.styleFrom(
-                          backgroundColor: MaganaColors.amber,
-                          foregroundColor: MaganaColors.ink,
-                          shape: const CircleBorder(
-                            side: BorderSide(color: Colors.white, width: 5),
+                ),
+                const SizedBox(height: 18),
+                Row(
+                  children: [
+                    Expanded(
+                      child: live && _streaming
+                          ? _AutoCaptureToggle(
+                              value: _auto,
+                              onChanged: (v) => setState(() => _auto = v),
+                            )
+                          : Labelled(
+                              label: l.repeatInstructions,
+                              onTap: _busy ? null : () => _say(text),
+                              child: OutlinedButton(
+                                onPressed: _busy ? null : () => _say(text),
+                                style: onDark,
+                                child: Text(
+                                  l.repeat,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                            ),
+                    ),
+                    const SizedBox(width: 12),
+                    Labelled(
+                      label: l.takePhoto,
+                      onTap: !_busy ? takePhoto : null,
+                      child: SizedBox(
+                        width: 92,
+                        height: 92,
+                        child: FilledButton(
+                          onPressed: takePhoto,
+                          style: FilledButton.styleFrom(
+                            backgroundColor: MaganaColors.amber,
+                            foregroundColor: MaganaColors.ink,
+                            shape: const CircleBorder(
+                              side: BorderSide(color: Colors.white, width: 5),
+                            ),
+                            padding: EdgeInsets.zero,
                           ),
-                          padding: EdgeInsets.zero,
-                        ),
-                        child: const Icon(
-                          Icons.photo_camera_outlined,
-                          size: 36,
+                          child: const Icon(
+                            Icons.photo_camera_outlined,
+                            size: 36,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Labelled(
-                      label: l.galleryLabel,
-                      onTap: !_busy ? openGallery : null,
-                      child: OutlinedButton(
-                        onPressed: openGallery,
-                        style: onDark,
-                        child: Text(l.gallery, textAlign: TextAlign.center),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: Labelled(
+                        label: l.galleryLabel,
+                        onTap: !_busy ? openGallery : null,
+                        child: OutlinedButton(
+                          onPressed: openGallery,
+                          style: onDark,
+                          child: Text(l.gallery, textAlign: TextAlign.center),
+                        ),
                       ),
                     ),
+                  ],
+                ),
+                // Waiting for the server's reading of a Hausa, Yorùbá or Igbo page: "stop"
+                // (Say a name: its name is "Stop"), this button, or a double tap anywhere.
+                if (_skipWait != null) ...[
+                  const SizedBox(height: 12),
+                  PrimaryButton(
+                    label: l.stopWaiting,
+                    semanticLabel: l.stopWaitingLabel,
+                    onTap: _stopWaiting,
                   ),
                 ],
-              ),
-              // "Take photo" or "what can I say?" by voice here too (Nurse Balogun, build 7).
-              const SizedBox(height: 12),
-              const SayNameButton(),
-            ],
+                // "Take photo" or "what can I say?" by voice here too (Nurse Balogun, build 7).
+                const SizedBox(height: 12),
+                const SayNameButton(),
+              ],
+            ),
           ),
         ),
       ),

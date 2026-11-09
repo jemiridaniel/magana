@@ -717,5 +717,9 @@
   "explainCommandsHint": "Bayan bayanin, faɗi “repeat”, “slower”, “next” ko “stop”.",
   "waitingFullReading": "Shafin {language}. Ina ɗan jira don cikakken karatu.",
   "explainSlower": "A hankali",
-  "explainEnd": "Ƙarshen bayanin."
+  "explainEnd": "Ƙarshen bayanin.",
+  "stillReadingPleaseWait": "Har yanzu ina karantawa, don Allah a jira.",
+  "stopWaiting": "Daina jira",
+  "stopWaitingLabel": "Tsaya. Yi amfani da karatun wayar yanzu",
+  "stopWaitingHint": "Ka ce stop ko ka taɓa sau biyu don amfani da karatun wayar yanzu."
 }

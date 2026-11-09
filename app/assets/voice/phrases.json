@@ -578,7 +578,11 @@
   "Explain only explains the page you read. Questions aren't answered.": "msg_explain_one_task",
   "After the explanation, say “repeat”, “slower”, “next” or “stop”.": "explainCommandsHint",
   "Slower": "explainSlower",
-  "End of the explanation.": "explainEnd"
+  "End of the explanation.": "explainEnd",
+  "Still reading, please wait.": "stillReadingPleaseWait",
+  "Stop waiting": "stopWaiting",
+  "Stop. Use the phone's reading now": "stopWaitingLabel",
+  "Say stop or double-tap to use the phone's reading now.": "stopWaitingHint"
  },
  "ha": {
   "Magana": "appTitle",
@@ -1160,7 +1164,11 @@
   "Bayani yana bayyana shafin da ka karanta kawai. Ba a amsa tambayoyi.": "msg_explain_one_task",
   "Bayan bayanin, faɗi “repeat”, “slower”, “next” ko “stop”.": "explainCommandsHint",
   "A hankali": "explainSlower",
-  "Ƙarshen bayanin.": "explainEnd"
+  "Ƙarshen bayanin.": "explainEnd",
+  "Har yanzu ina karantawa, don Allah a jira.": "stillReadingPleaseWait",
+  "Daina jira": "stopWaiting",
+  "Tsaya. Yi amfani da karatun wayar yanzu": "stopWaitingLabel",
+  "Ka ce stop ko ka taɓa sau biyu don amfani da karatun wayar yanzu.": "stopWaitingHint"
  },
  "yo": {
   "Magana": "appTitle",
@@ -1743,7 +1751,11 @@
   "Àlàyé máa ń ṣàlàyé ojú ìwé tí o kà nìkan. A kì í dáhùn ìbéèrè.": "msg_explain_one_task",
   "Lẹ́yìn àlàyé, sọ “repeat”, “slower”, “next” tàbí “stop”.": "explainCommandsHint",
   "Lọ́ra díẹ̀": "explainSlower",
-  "Òpin àlàyé.": "explainEnd"
+  "Òpin àlàyé.": "explainEnd",
+  "Mo ṣì ń kà á, ẹ jọ̀ọ́ ẹ dúró.": "stillReadingPleaseWait",
+  "Dẹ́kun ìdúró": "stopWaiting",
+  "Dúró. Lo kíkà fóònù báyìí": "stopWaitingLabel",
+  "Sọ stop tàbí tẹ̀ ẹ́ lẹ́ẹ̀mejì láti lo kíkà fóònù báyìí.": "stopWaitingHint"
  },
  "ig": {
   "Magana": "appTitle",
@@ -2324,7 +2336,11 @@
   "Nkọwa na-akọwa naanị peeji ị gụrụ. Anaghị aza ajụjụ.": "msg_explain_one_task",
   "Mgbe nkọwa gasịrị, kwuo “repeat”, “slower”, “next” ma ọ bụ “stop”.": "explainCommandsHint",
   "Nwayọọ": "explainSlower",
-  "Njedebe nkọwa.": "explainEnd"
+  "Njedebe nkọwa.": "explainEnd",
+  "M ka na-agụ, biko chere.": "stillReadingPleaseWait",
+  "Kwụsị ichere": "stopWaiting",
+  "Kwụsị. Jiri ọgụgụ ekwentị ugbu a": "stopWaitingLabel",
+  "Kwuo stop ma ọ bụ pịa ugboro abụọ iji ọgụgụ ekwentị ugbu a.": "stopWaitingHint"
  },
  "_patterns": {
   "ha": [
@@ -3679,7 +3695,11 @@
   "explainCommandsHint": "After the explanation, say “repeat”, “slower”, “next” or “stop”.",
   "waitingFullReading": "{language} page. Waiting a little longer for the full reading.",
   "explainSlower": "Slower",
-  "explainEnd": "End of the explanation."
+  "explainEnd": "End of the explanation.",
+  "stillReadingPleaseWait": "Still reading, please wait.",
+  "stopWaiting": "Stop waiting",
+  "stopWaitingLabel": "Stop. Use the phone's reading now",
+  "stopWaitingHint": "Say stop or double-tap to use the phone's reading now."
  },
  "_ui_patterns": {
   "ha": [

@@ -28,8 +28,17 @@ No real phone and no blind or low-vision tester has been used yet.
   - Every offline reading of these pages now starts with "This reading may have many mistakes." (`offline_letters_unreliable`). It stays until the offline reader has been measured as good enough.
   - When the server is slow or waking up, Capture waits up to 40 s for the server's reading ("Hausa page. Waiting a little longer for the full reading.") before falling back to the phone.
   - Test: `hausa_safety_test.dart`.
+  - **Follow-up (same day): no wait is silent.**
+    - Before, after "Still reading…" at 5 s, the 25 s server wait and the 40 s wait for a Hausa, Yorùbá or Igbo page could each go 20 s or more with no speech.
+    - Now "Still reading, please wait." is said every 8 s until the reading comes.
+    - The 40 s wait can be stopped: say "stop", use the "Stop waiting" button, or double-tap anywhere. The phone's reading is then used straight away, with the "may have many mistakes" warning.
+    - Test (tag `safety`): from the photo to the page, with a server that answers after 60 s, the longest silence is at most 8 s; "stop" by button and by double tap.
+- **Recorded prompts: same loudness, no crackle** (`scripts/import_clips.py`, measured on Dr. Amos's 46 English prompts, 9 Nov 2026; the clips are not in the app yet):
+  - One-pass loudness normalisation left the prompts between −19.1 and −13.6 LUFS, so some would sound clearly louder than the next. Two passes give −15.5 to −18.8 LUFS (target −16).
+  - AAC encoding took 6 prompts above 0 dBTP (up to +1.4), which a phone speaker can play as a crackle. With a peak limiter, none goes above 0.0 dBTP.
+  - `--shorten-pauses` cuts pauses inside a clip to about 0.4 s. Three prompts had 1.8–2.3 s pauses; after cutting, both local speech-to-text models still hear the same words as before.
 - **N-ATLaS safety layer (Explain only)** (docs/LLM_SAFETY.md):
-  - **Why.** The Brydl audit (v1.1, 3 Nov 2026) found N-ATLaS refuses harmful requests in English but answers them in Hausa. N-ATLaS's own model card gives Hausa a Bias/Fairness score of 1.11 out of 5 (English 3.18, Yorùbá 2.23, Igbo 4.01; the card doesn't say whether higher is better).
+  - **Why.** The Brydl audit (v1.1, 3 Nov 2026) found N-ATLaS refuses harmful requests in English but answers them in Hausa. N-ATLaS's own model card gives Hausa a Bias/Fairness score of 1.11 out of 5 (English 3.18, Yorùbá 2.23, Igbo 4.01). The card does not state whether a higher score is better; we make no ranking claim from it.
   - **One way to the model:** `backend/llm/natlas_guard.py`, for one task, `explain_page`. Questions and chat are gone: the Home "Ask a question" tile, the question bubble, and the "simpler" and "example" buttons. Explain's microphone now takes only commands.
   - **Before the model:** pages about health, money or harm are stopped, in all four languages: "Please ask your teacher."
   - **After the model:** an answer isn't spoken if it adds a number, a medicine name, a dose word, a web address or phone number not on the page, or a new health, money or harm term, or if it is too long.

@@ -2756,4 +2756,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get explainEnd => 'End of the explanation.';
+
+  @override
+  String get stillReadingPleaseWait => 'Still reading, please wait.';
+
+  @override
+  String get stopWaiting => 'Stop waiting';
+
+  @override
+  String get stopWaitingLabel => 'Stop. Use the phone\'s reading now';
+
+  @override
+  String get stopWaitingHint =>
+      'Say stop or double-tap to use the phone\'s reading now.';
 }

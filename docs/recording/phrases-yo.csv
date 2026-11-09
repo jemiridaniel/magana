@@ -580,6 +580,10 @@ msg_explain_one_task,yo-msg_explain_one_task.m4a,Àlàyé máa ń ṣàlàyé oj
 explainCommandsHint,yo-explainCommandsHint.m4a,"Lẹ́yìn àlàyé, sọ “repeat”, “slower”, “next” tàbí “stop”.","After the explanation, say “repeat”, “slower”, “next” or “stop”.",App phrase,draft
 explainSlower,yo-explainSlower.m4a,Lọ́ra díẹ̀,Slower,App phrase,draft
 explainEnd,yo-explainEnd.m4a,Òpin àlàyé.,End of the explanation.,App phrase,draft
+stillReadingPleaseWait,yo-stillReadingPleaseWait.m4a,"Mo ṣì ń kà á, ẹ jọ̀ọ́ ẹ dúró.","Still reading, please wait.",App phrase,draft
+stopWaiting,yo-stopWaiting.m4a,Dẹ́kun ìdúró,Stop waiting,App phrase,draft
+stopWaitingLabel,yo-stopWaitingLabel.m4a,Dúró. Lo kíkà fóònù báyìí,Stop. Use the phone's reading now,App phrase,draft
+stopWaitingHint,yo-stopWaitingHint.m4a,Sọ stop tàbí tẹ̀ ẹ́ lẹ́ẹ̀mejì láti lo kíkà fóònù báyìí.,Say stop or double-tap to use the phone's reading now.,App phrase,draft
 tpl-medicine_label-take_times_a_day-1,yo-tpl-medicine_label-take_times_a_day-1.m4a,Lo tábúlẹ́ẹ̀tì,Take {a} tablets {b} times a day,"Health template, part 1 of 3 (the phone says the numbers between parts)",clinically_approved
 tpl-medicine_label-take_times_a_day-2,yo-tpl-medicine_label-take_times_a_day-2.m4a,ní ìgbà,Take {a} tablets {b} times a day,"Health template, part 2 of 3 (the phone says the numbers between parts)",clinically_approved
 tpl-medicine_label-take_times_a_day-3,yo-tpl-medicine_label-take_times_a_day-3.m4a,lójúmọ́.,Take {a} tablets {b} times a day,"Health template, part 3 of 3 (the phone says the numbers between parts)",clinically_approved

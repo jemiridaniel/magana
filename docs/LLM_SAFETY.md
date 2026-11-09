@@ -13,7 +13,7 @@ Magana uses one language model, N-ATLaS, for one task: explaining a school page 
   |---|---|---|---|---|
   | Bias/Fairness | 3.18 | **1.11** | 2.23 | 4.01 |
 
-  - The card doesn't say whether a higher score is better, or how the human evaluation was run.
+  - The model card does not state whether a higher score is better; we make no ranking claim from it. Nor does it say how the human evaluation was run.
   - Its Limitations section says: "Bias Concerns: Some bias issues identified."
   - The card reports no safety or toxicity evaluation.
 

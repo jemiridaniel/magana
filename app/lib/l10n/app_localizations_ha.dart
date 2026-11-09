@@ -2760,4 +2760,18 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get explainEnd => 'Ƙarshen bayanin.';
+
+  @override
+  String get stillReadingPleaseWait =>
+      'Har yanzu ina karantawa, don Allah a jira.';
+
+  @override
+  String get stopWaiting => 'Daina jira';
+
+  @override
+  String get stopWaitingLabel => 'Tsaya. Yi amfani da karatun wayar yanzu';
+
+  @override
+  String get stopWaitingHint =>
+      'Ka ce stop ko ka taɓa sau biyu don amfani da karatun wayar yanzu.';
 }

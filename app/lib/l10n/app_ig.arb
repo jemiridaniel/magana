@@ -717,5 +717,9 @@
   "explainCommandsHint": "Mgbe nkọwa gasịrị, kwuo “repeat”, “slower”, “next” ma ọ bụ “stop”.",
   "waitingFullReading": "Peeji {language}. M na-echere ntakịrị maka ọgụgụ zuru ezu.",
   "explainSlower": "Nwayọọ",
-  "explainEnd": "Njedebe nkọwa."
+  "explainEnd": "Njedebe nkọwa.",
+  "stillReadingPleaseWait": "M ka na-agụ, biko chere.",
+  "stopWaiting": "Kwụsị ichere",
+  "stopWaitingLabel": "Kwụsị. Jiri ọgụgụ ekwentị ugbu a",
+  "stopWaitingHint": "Kwuo stop ma ọ bụ pịa ugboro abụọ iji ọgụgụ ekwentị ugbu a."
 }

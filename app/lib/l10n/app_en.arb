@@ -2119,5 +2119,18 @@
   },
   "@explainEnd": {
     "description": "Said when the learner says next after the last sentence of an explanation."
+  },
+  "stillReadingPleaseWait": "Still reading, please wait.",
+  "stopWaiting": "Stop waiting",
+  "stopWaitingLabel": "Stop. Use the phone's reading now",
+  "stopWaitingHint": "Say stop or double-tap to use the phone's reading now.",
+  "@stillReadingPleaseWait": {
+    "description": "Capture: said every 8 s while a reading is still being waited for, so a wait is never silent."
+  },
+  "@stopWaitingLabel": {
+    "description": "Capture: button while waiting for the server's reading of a Hausa/Yorùbá/Igbo page. Its spoken name is the part before the first full stop (\"Stop\")."
+  },
+  "@stopWaitingHint": {
+    "description": "Capture: said after waitingFullReading. \"stop\" stays in English (voice commands are English for now)."
   }
 }
