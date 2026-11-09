@@ -190,3 +190,42 @@ def test_prompt_files_carry_a_version_and_status():
     for lang in ("en", "ha", "yo", "ig"):
         head = (g.PROMPTS / f"{lang}.txt").read_text(encoding="utf-8").splitlines()[:2]
         assert head[0].startswith("# version:") and head[1].startswith("# status:")
+
+
+# ---------- dose words with a number in them ("every N hours")
+
+@pytest.mark.parametrize("answer", [
+    "Water the plants every 6 hours.",
+    "Water the plants every six hours.",
+    "Water the plants every 4 to 6 hours.",
+    "Water the plants every 4-6 hrs.",
+    "Water the plants every 1 hr.",
+    "Water the plants every one hour.",
+    "Water the plants 8-hourly.",
+    "Water the plants 8 hourly.",
+    "Water the plants eight-hourly.",
+    "Water the plants 3 times a day.",
+    "Water the plants three times a day.",
+    "Water the plants 2 or 3 times a day.",
+    "Water the plants EVERY 12 HOURS.",
+])
+def test_a_dose_with_a_number_is_a_dose_word(answer):
+    page = "Plants need water every 1 2 3 4 6 8 12 hours, or 4-6."  # the numbers are on the page
+    assert g.answer_problem(answer, page, "en") == "dose_word", answer
+
+
+@pytest.mark.parametrize("answer", [
+    "Water the plants every few hours.",        # no number
+    "The class meets every day.",
+    "Many hours of sunlight help plants grow.",
+    "Plants grow in hours, not minutes.",
+    "The sun rises every morning.",
+])
+def test_ordinary_words_near_hours_are_not_dose_words(answer):
+    assert g.answer_problem(answer, "Plants need sunlight every day.", "en") is None, answer
+
+
+def test_every_hours_with_no_number_is_no_longer_a_dose_word():
+    # The old literal "every hours" matched only those exact words (docs/FINDINGS.md, 9 Nov 2026).
+    assert "every hours" not in g._answer_lists()["dose_words"]["en"]
+    assert all("N" in w for w in g._answer_lists()["dose_words"]["en"] if w.startswith("every"))

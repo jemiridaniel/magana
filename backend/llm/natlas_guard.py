@@ -155,6 +155,45 @@ def _answer_lists() -> dict:
     return json.loads((CONTENT / "llm_safety" / "answer_checks.json").read_text(encoding="utf-8"))
 
 
+_NUMBER_SLOT = re.compile(r"(?<![\w])N(?![\w])")
+
+
+@lru_cache(maxsize=None)
+def _dose_patterns(lang: str) -> tuple[re.Pattern, ...]:
+    """The dose words of [lang] and English with a number in them, written with N: "every N hours",
+    "N-hourly", "N times a day". N is digits (4, 0.5) or a number word of that language
+    (content/number_words/), or a range of them ("4 to 6", "4-6"). A space matches any spacing; a
+    hyphen may be there or not ("4-hourly", "4 hourly")."""
+    from app import placeholders
+
+    numbers = set()
+    for code in {lang, "en"}:
+        try:
+            numbers |= {_fold(w) for w in placeholders.word_list(code).words}
+        except FileNotFoundError:
+            pass
+    numbers |= {"one", "a", "an", "half"}  # English; "one" is ambiguous elsewhere, not here
+    one = r"(?:\d+(?:[.,]\d+)?|" + "|".join(sorted(map(re.escape, numbers), key=len, reverse=True)) + ")"
+    number = rf"{one}(?:\s*(?:-|–|to|or)\s*{one})?"
+    out = []
+    for term in _answer_lists()["dose_words"].get(lang, []) + _answer_lists()["dose_words"]["en"]:
+        if not _NUMBER_SLOT.search(term):
+            continue
+        parts = []
+        for piece in re.split(r"(\s+|-)", _fold(term)):
+            if piece == "n":  # N, lowercased by folding
+                parts.append(number)
+            elif piece.isspace():
+                parts.append(r"\s+")
+            elif piece == "-":
+                parts.append(r"\s*-?\s*")
+            elif piece:
+                parts.append(re.escape(piece))
+        body = "".join(parts)
+        out.append(re.compile(rf"(?<![\w]){body}(?![\w])"))
+    return tuple(out)
+
+
 def _has(folded: str, term: str) -> bool:
     t = _fold(term)
     if not any(ch.isalnum() for ch in t):  # a symbol such as ₦
@@ -205,7 +244,9 @@ def answer_problem(answer: str, source: str, lang: str) -> str | None:
     lists = _answer_lists()
     if any(_has(folded, m) for m in lists["medicines"]):
         return "medicine_name"
-    if any(_has(folded, w) for w in lists["dose_words"].get(lang, []) + lists["dose_words"]["en"]):
+    dose = lists["dose_words"].get(lang, []) + lists["dose_words"]["en"]
+    if any(_has(folded, w) for w in dose if not _NUMBER_SLOT.search(w)) or any(
+            p.search(folded) for p in _dose_patterns(lang)):
         return "dose_word"
     for lists_ in (v for k, v in _topics().items() if not k.startswith("_")):
         for topic, terms in lists_.items():

@@ -37,6 +37,11 @@ No real phone and no blind or low-vision tester has been used yet.
   - One-pass loudness normalisation left the prompts between −19.1 and −13.6 LUFS, so some would sound clearly louder than the next. Two passes give −15.5 to −18.8 LUFS (target −16).
   - AAC encoding took 6 prompts above 0 dBTP (up to +1.4), which a phone speaker can play as a crackle. With a peak limiter, none goes above 0.0 dBTP.
   - `--shorten-pauses` cuts pauses inside a clip to about 0.4 s. Three prompts had 1.8–2.3 s pauses; after cutting, both local speech-to-text models still hear the same words as before.
+- **Dose word fix (same day):**
+  - The dose word "every hours" only matched those exact words, so "every 6 hours" got through that check. A number added by the model is still stopped by the number check; one copied from the page was not.
+  - Dose words can now hold a number, written N: "every N hours/hour/hrs/hr", "N-hourly" and "N times a day". N is digits, a number word or a range, e.g. "every 4 to 6 hours", "eight-hourly", "2 or 3 times a day".
+  - The old "times a day" became "N times a day", so it no longer stops "many times a day".
+  - Tests in `test_natlas_guard.py`: 13 dose phrasings are caught; 5 ordinary sentences with "every" or "hours" are not.
 - **N-ATLaS safety layer (Explain only)** (docs/LLM_SAFETY.md):
   - **Why.** The Brydl audit (v1.1, 3 Nov 2026) found N-ATLaS refuses harmful requests in English but answers them in Hausa. N-ATLaS's own model card gives Hausa a Bias/Fairness score of 1.11 out of 5 (English 3.18, Yorùbá 2.23, Igbo 4.01). The card does not state whether a higher score is better; we make no ranking claim from it.
   - **One way to the model:** `backend/llm/natlas_guard.py`, for one task, `explain_page`. Questions and chat are gone: the Home "Ask a question" tile, the question bubble, and the "simpler" and "example" buttons. Explain's microphone now takes only commands.
