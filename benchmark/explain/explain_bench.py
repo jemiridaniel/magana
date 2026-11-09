@@ -24,15 +24,16 @@ ROOT = Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / "backend"))
 
 from app import explain, placeholders, safety, templates  # noqa: E402
+from llm import natlas_guard  # noqa: E402
 
 
-def engine_from(args) -> explain.Engine:
+def engine_from(args) -> natlas_guard.Engine:
     if args.engine == "stub":
-        return explain.StubEngine()
+        return natlas_guard.StubEngine()
     if args.engine in ("vllm", "hf_space"):
-        return explain.OpenAIChatEngine(args.url, args.api_key, args.model)
+        return natlas_guard.OpenAIChatEngine(args.url, args.api_key, args.model)
     if args.engine == "llamacpp":
-        return explain.LlamaCppEngine(args.url, args.api_key)
+        return natlas_guard.LlamaCppEngine(args.url, args.api_key)
     raise SystemExit(f"unknown engine {args.engine}")
 
 
@@ -74,17 +75,17 @@ def run(args) -> None:
                       f"{row['would_match_drafts']}", flush=True)
                 continue
             parts = explain.sections(text)
-            system = explain.system_prompt(lang, guided=False)
+            system = natlas_guard.eval_prompt(lang).system(guided=False)
             raws, finals, problems, t0, error, left = [], [], [], time.monotonic(), None, False
             for n, section in enumerate(parts, 1):
                 masked = placeholders.mask(section)
                 markers = [f"⟦N{k}⟧" for k in range(1, len(masked.slots) + 1)]
                 try:
-                    raw = engine.complete(
-                        system, explain.user_prompt(masked.text, None, "explain", (n, len(parts)), markers),
+                    raw = natlas_guard.benchmark_complete(
+                        engine, system, explain.user_prompt(masked.text, (n, len(parts)), markers),
                         args.timeout,
                     ).strip()
-                except explain.ExplainUnavailable as e:
+                except natlas_guard.ExplainUnavailable as e:
                     error = str(e)
                     break
                 final, found = explain.check_answer(raw, masked, None, lang)
@@ -173,7 +174,7 @@ def write(rows, out: Path, langs, args) -> None:
                             " ".join(sorted({p["code"] for p in r["problems"]})), "", "", "", "", ""])
 
     meta = {"engine": args.engine, "model": args.model, "design": "placeholders + templates",
-            "temperature": explain.TEMPERATURE, "repetition_penalty": explain.REPETITION_PENALTY,
+            "temperature": natlas_guard.TEMPERATURE, "repetition_penalty": natlas_guard.REPETITION_PENALTY,
             "note": args.note}
     (out / "summary.json").write_text(json.dumps({"run": meta, "by_language": summary}, indent=2,
                                                  ensure_ascii=False))

@@ -102,8 +102,8 @@ void main() {
       (await SharedPreferences.getInstance()).getString('age_tier'),
       'standard',
     );
+    // No "Ask a question": Explain answers no questions (docs/LLM_SAFETY.md).
     expect(homeTiles(tester), {
-      'Ask a question',
       'Practice quiz',
       'My library',
       'Everyday papers',

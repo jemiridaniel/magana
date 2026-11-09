@@ -26,6 +26,7 @@ COPY backend/requirements.txt backend/requirements-second-ocr.txt ./
 RUN pip install --no-cache-dir -r requirements.txt -r requirements-second-ocr.txt \
  && pip install --no-cache-dir --no-deps rapidocr_onnxruntime==1.4.4
 COPY backend/app ./app
+COPY backend/llm ./llm
 COPY content ./content
 # The commit, for /health and /livez: the deploy waits until the server answers with it.
 ARG BUILD=""

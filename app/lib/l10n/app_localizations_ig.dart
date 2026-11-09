@@ -39,9 +39,6 @@ class AppLocalizationsIg extends AppLocalizations {
       'Ihe ọmụmụ ụlọ akwụkwọ, akụkọ ahụike, nkwupụta ụlọ akụ, akwụkwọ ozi — ihe ọ bụla e biri ebi';
 
   @override
-  String get askQuestion => 'Jụọ ajụjụ';
-
-  @override
   String get practiceQuiz => 'Ajụjụ omume';
 
   @override
@@ -1297,9 +1294,6 @@ class AppLocalizationsIg extends AppLocalizations {
   }
 
   @override
-  String get youSaid => 'Ị kwuru';
-
-  @override
   String basedOnPage(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -1315,17 +1309,8 @@ class AppLocalizationsIg extends AppLocalizations {
       'A na-agụ nọmba na okwu sitere na peeji ahụ kpọmkwem ka e si bipụta ha.';
 
   @override
-  String get saySimpler => 'Kwuo ya n\'ụzọ dị mfe';
-
-  @override
-  String get giveExample => 'Nye ihe atụ';
-
-  @override
   String get explainDisclaimer =>
       'Magana nwere ike imehie. Lelee azịza ndị dị mkpa na onye nkuzi gị.';
-
-  @override
-  String get askAQuestion => 'Jụọ ajụjụ';
 
   @override
   String get explainNoPage =>
@@ -1333,10 +1318,6 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get explainThis => 'Kọwaa nke a';
-
-  @override
-  String get explainQuestionPreview =>
-      'Mgbe ejikọrọ N-ATLAS, Magana ga-aza ajụjụ gị site na peeji a. Ugbu a, lee peeji ahụ.';
 
   @override
   String get msg_explain_preview =>
@@ -2720,4 +2701,58 @@ class AppLocalizationsIg extends AppLocalizations {
 
   @override
   String get voiceEnglishGuidanceOff => 'Ntụziaka olu na Bekee: agbanyụrụ.';
+
+  @override
+  String pageNoVoice(String language) {
+    return 'Peeji a dị n\'asụsụ $language. Enweghị m ike ịgụpụta ya ugbu a.';
+  }
+
+  @override
+  String linesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ahụrụ ahịrị $count.',
+      one: 'Ahụrụ ahịrị 1.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rowsFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Ahụrụ ahịrị tebụl $count.',
+      one: 'Ahụrụ ahịrị tebụl 1.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get msg_offline_letters_unreliable =>
+      'Ọgụgụ a nwere ike inwe ọtụtụ mmejọ.';
+
+  @override
+  String get msg_explain_ask_teacher =>
+      'Peeji a na-ekwu maka ahụike, ego ma ọ bụ nchekwa, ya mere agaghị m akọwa ya. Biko jụọ onye nkuzi gị.';
+
+  @override
+  String get msg_explain_one_task =>
+      'Nkọwa na-akọwa naanị peeji ị gụrụ. Anaghị aza ajụjụ.';
+
+  @override
+  String get explainCommandsHint =>
+      'Mgbe nkọwa gasịrị, kwuo “repeat”, “slower”, “next” ma ọ bụ “stop”.';
+
+  @override
+  String waitingFullReading(String language) {
+    return 'Peeji $language. M na-echere ntakịrị maka ọgụgụ zuru ezu.';
+  }
+
+  @override
+  String get explainSlower => 'Nwayọọ';
+
+  @override
+  String get explainEnd => 'Njedebe nkọwa.';
 }

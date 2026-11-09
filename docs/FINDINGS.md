@@ -13,6 +13,37 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-11-09 · Pages with no voice, offline Hausa, and a safety layer for N-ATLaS
+
+> Changes made because of the Hausa review pack (2 Nov 2026, below) and an outside audit. No new accuracy was measured; the counts below are from the review pack.
+
+- **The figures behind these changes** (Hausa review pack, measured 2 Nov 2026, 20 pages, 351 hooked letters ɓ ɗ ƙ ƴ):
+  - Neither reader kept a single hooked letter: **0 of 351**, on the server and offline.
+  - The server marked **342** words as maybe missing a letter. The phone's offline reader marked **5**, so offline it sounds far surer than it is.
+- **English guidance for a page with no voice** (Hausa, Yorùbá or Igbo, and no voice installed for it):
+  - Magana no longer says "Page read". It says "This page is in Hausa. I can't read it aloud yet. 6 lines found." (or Yorùbá, Igbo; rows for a table). Play and Next say the first sentence again.
+  - English guidance now keeps counts ("6 words may be wrong"): the plural forms in each language are matched and the count is carried into the English sentence.
+  - Tests: `voice_feedback_test.dart`, `hausa_safety_test.dart` (tag `safety`).
+- **Offline Hausa, Yorùbá or Igbo:**
+  - Every offline reading of these pages now starts with "This reading may have many mistakes." (`offline_letters_unreliable`). It stays until the offline reader has been measured as good enough.
+  - When the server is slow or waking up, Capture waits up to 40 s for the server's reading ("Hausa page. Waiting a little longer for the full reading.") before falling back to the phone.
+  - Test: `hausa_safety_test.dart`.
+- **N-ATLaS safety layer (Explain only)** (docs/LLM_SAFETY.md):
+  - **Why.** The Brydl audit (v1.1, 3 Nov 2026) found N-ATLaS refuses harmful requests in English but answers them in Hausa. N-ATLaS's own model card gives Hausa a Bias/Fairness score of 1.11 out of 5 (English 3.18, Yorùbá 2.23, Igbo 4.01; the card doesn't say whether higher is better).
+  - **One way to the model:** `backend/llm/natlas_guard.py`, for one task, `explain_page`. Questions and chat are gone: the Home "Ask a question" tile, the question bubble, and the "simpler" and "example" buttons. Explain's microphone now takes only commands.
+  - **Before the model:** pages about health, money or harm are stopped, in all four languages: "Please ask your teacher."
+  - **After the model:** an answer isn't spoken if it adds a number, a medicine name, a dose word, a web address or phone number not on the page, or a new health, money or harm term, or if it is too long.
+  - **Prompts:** one per language. Hausa, Yorùbá and Igbo are placeholders, so those languages are off until native speakers write them.
+  - **Switching a language off:** `NATLAS_ENABLED_LANGS`, no app release needed.
+  - **Nightly evaluation:** `natlas-eval.yml`. It has no model to run against until the `NATLAS_EVAL_URL` secret is set.
+  - Tests: `test_natlas_guard.py`, `tests/safety/natlas_refusal/`.
+- **Fast safety tests on every push:**
+  - backend `pytest -m safety`: 208 tests in about 2 s on the Mac;
+  - app `flutter test --tags safety`: 6 tests.
+  - The CI `safety` job runs them first, and both deploys wait for it.
+
+---
+
 ## 2026-11-02 · Hausa review pack for external reviewers: no hooked letter survives either reader (UNREVIEWED)
 
 > **Unreviewed.** These are automatic text comparisons, on generated images (drawn, then made phone-like), not camera photos. No Hausa reviewer has scored them yet. The pack itself is outside the repository.

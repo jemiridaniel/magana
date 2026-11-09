@@ -44,3 +44,22 @@ def fresh_rate_limits(monkeypatch):
     for name in ("RATE_IP_PER_MIN", "RATE_DEVICE_PER_MIN", "RATE_HEAVY_IP_PER_MIN", "RATE_HEAVY_DEVICE_PER_MIN",
                  "RATE_HEAVY_IP_PER_DAY", "RATE_HEAVY_DEVICE_PER_DAY"):
         monkeypatch.setenv(name, "100000")
+
+
+@pytest.fixture
+def natlas_test_prompts(monkeypatch, tmp_path):
+    """Hausa, Yorùbá and Igbo switched on with test prompts, for tests of the checks around the
+    model (their real prompts are placeholders until native speakers write them, which keeps
+    them off: test_natlas_guard.py)."""
+    from llm import natlas_guard as g
+
+    monkeypatch.setenv("NATLAS_ENABLED_LANGS", "en,ha,yo,ig")
+    (tmp_path / "en.txt").write_text((g.PROMPTS / "en.txt").read_text(encoding="utf-8"), encoding="utf-8")
+    for lang in ("ha", "yo", "ig"):
+        (tmp_path / f"{lang}.txt").write_text(
+            f"# version: test-{lang}\n# status: test\nTest rules for {lang}. Copy every marker exactly once.\n",
+            encoding="utf-8")
+    monkeypatch.setattr(g, "PROMPTS", tmp_path)
+    g.prompt.cache_clear()
+    yield
+    g.prompt.cache_clear()

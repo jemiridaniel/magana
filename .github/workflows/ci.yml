@@ -43,6 +43,29 @@ jobs:
       - name: Scan the full history for secrets
         run: '"$RUNNER_TEMP/gitleaks" git --redact --verbose --no-banner --log-opts=--all --config .gitleaks.toml .'
 
+  # The safety rules a learner depends on (pytest -m safety; flutter test --tags safety): no
+  # model, no OCR, a few seconds each, so they run first on every push and pull request and a
+  # broken rule shows up before the long suites finish (they run again inside them).
+  safety:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+          cache-dependency-path: backend/requirements.txt
+      - run: pip install -r requirements.txt
+        working-directory: backend
+      - run: python -m pytest -q -p no:cacheprovider -m safety
+        working-directory: backend
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version: "3.47.7"
+          cache: true
+      - run: flutter pub get && flutter test --tags safety
+        working-directory: app
+
   # The backend suite runs twice side by side, on SQLite and on Postgres, each spread over the
   # runner's cores (pytest-xdist; every worker has its own data dir and schema, tests/conftest.py).
   backend:
@@ -139,7 +162,7 @@ jobs:
         working-directory: website
 
   deploy:
-    needs: [secrets, backend, app, portal, website]
+    needs: [secrets, safety, backend, app, portal, website]
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     permissions:
@@ -159,7 +182,7 @@ jobs:
         run: scripts/wait-for-deploy.sh "${GITHUB_SHA:0:12}"
 
   pages:
-    needs: [secrets, backend, app, portal, website]
+    needs: [secrets, safety, backend, app, portal, website]
     # Only main, and only once Cloudflare is set up (docs/DEPLOY_PAGES.md, step 2).
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request' && vars.CLOUDFLARE_ACCOUNT_ID != ''
     runs-on: ubuntu-latest

@@ -20,7 +20,7 @@ class EnglishGuidance {
     Map<String, String> english, [
     Map<String, List<ClipPattern>> patterns = const {},
   ]) : _bundle = rootBundle {
-    _ready = _Guide(_normalised(phrases), english, patterns);
+    _ready = _Guide(_normalised(phrases), english, patterns, const {}, const {});
     _index = Future.value(_ready);
   }
 
@@ -52,10 +52,31 @@ class EnglishGuidance {
             in ((json['_ui_patterns'] as Map?) ?? const {}).entries)
           '$key': [for (final p in value as List) ?ClipPattern.fromJson(p)],
       };
-      return _Guide(_normalised(phrases), english, patterns);
+      // Plural texts ("6 words may be wrong."): one pattern per branch, and the English branches.
+      final plurals = <String, List<_Plural>>{
+        for (final MapEntry(:key, :value)
+            in ((json['_ui_plurals'] as Map?) ?? const {}).entries)
+          '$key': [
+            for (final p in value as List)
+              if (ClipPattern.fromJson(p) case final pattern?)
+                _Plural(pattern, '${p['var']}', '${p['branch']}'),
+          ],
+      };
+      final englishPlural = <String, ({String variable, Map<String, String> branches})>{
+        for (final MapEntry(:key, :value)
+            in ((json['_english_plural'] as Map?) ?? const {}).entries)
+          '$key': (
+            variable: '${value['var']}',
+            branches: {
+              for (final b in (value['branches'] as Map).entries)
+                '${b.key}': '${b.value}',
+            },
+          ),
+      };
+      return _Guide(_normalised(phrases), english, patterns, plurals, englishPlural);
     } catch (e) {
       devLog('guidance: phrases not read ($e)');
-      return _Guide(const {}, const {}, const {});
+      return _Guide(const {}, const {}, const {}, const {}, const {});
     }
   }
 
@@ -109,6 +130,42 @@ class EnglishGuidance {
         }
         return out;
       }
+      // A plural text: the count read from the sentence picks the English branch.
+      for (final pl in g.plurals[lang] ?? const <_Plural>[]) {
+        final p = pl.pattern;
+        final m = p.regex.firstMatch(s.trim());
+        final en = g.englishPlural[p.id];
+        if (m == null || en == null) continue;
+        final values = <String, String>{};
+        var i = 0;
+        for (final name in p.slotNames) {
+          values[name] = m.group(++i)!.trim();
+        }
+        if (values.values.any(
+          (v) => byText[ClipLibrary.normalise(v)] == null && !_isData(v),
+        )) {
+          continue;
+        }
+        final count =
+            values[pl.variable] ??
+            (pl.branch.startsWith('=') ? pl.branch.substring(1) : null);
+        final n = int.tryParse(count ?? '');
+        if (n == null) continue;
+        final branch =
+            en.branches['=$n'] ??
+            (n == 1 ? en.branches['one'] : null) ??
+            en.branches['other'];
+        if (branch == null) continue;
+        var out = branch.replaceAll('{${en.variable}}', '$n');
+        for (final MapEntry(key: name, value: v) in values.entries) {
+          final asPhrase = byText[ClipLibrary.normalise(v)];
+          out = out.replaceAll(
+            '{$name}',
+            asPhrase != null ? (g.english[asPhrase] ?? v) : v,
+          );
+        }
+        return out;
+      }
       return null;
     }
 
@@ -154,8 +211,25 @@ bool _isData(String v) =>
     !RegExp(r'[.!?…]\s').hasMatch(v) && v.split(RegExp(r'\s+')).length <= 3;
 
 class _Guide {
-  _Guide(this.phrases, this.english, this.patterns);
+  _Guide(
+    this.phrases,
+    this.english,
+    this.patterns,
+    this.plurals,
+    this.englishPlural,
+  );
   final Map<String, Map<String, String>> phrases; // lang → normalised text → ID
   final Map<String, String> english; // ID → English text
   final Map<String, List<ClipPattern>> patterns; // lang → phrases with blanks
+  final Map<String, List<_Plural>> plurals; // lang → each branch of each plural text
+  final Map<String, ({String variable, Map<String, String> branches})>
+  englishPlural; // ID → its English branches
+}
+
+/// One branch ("=1", "other") of a plural text in one language.
+class _Plural {
+  _Plural(this.pattern, this.variable, this.branch);
+  final ClipPattern pattern;
+  final String variable; // "count"
+  final String branch;
 }

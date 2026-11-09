@@ -1,0 +1,2 @@
+# version: ha-placeholder
+# status: placeholder (to be written in Hausa by a native speaker; until then Explain in Hausa stays off, whatever NATLAS_ENABLED_LANGS says)

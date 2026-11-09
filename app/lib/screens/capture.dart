@@ -13,6 +13,7 @@ import '../capture/feedback.dart';
 import '../capture/frame_analysis.dart';
 import '../diagnostics.dart';
 import '../l10n/app_localizations.dart';
+import '../language.dart';
 import '../messages.dart';
 import '../amount_check.dart';
 import '../offline/offline_reader.dart';
@@ -45,6 +46,12 @@ bool handwritingReading = const bool.fromEnvironment('MAGANA_HANDWRITING');
 
 /// "Still reading…" after this long, so a wait is never silent.
 const stillReadingAfter = Duration(seconds: 5);
+
+/// A Hausa, Yorùbá or Igbo page read on the phone while the server is only slow or waking (still
+/// reachable): the server's reading is far better (offline kept 0 of 351 hooked letters and
+/// marked 5 words to the server's 342: docs/FINDINGS.md, 9 Nov 2026), so it is waited for this
+/// much longer before the phone's reading is used.
+const preferServerWait = Duration(seconds: 40);
 
 /// Live camera preview with spoken framing guidance about every second,
 /// auto-capture when the page is whole and steady, a torch, and the gallery.
@@ -533,27 +540,48 @@ class _CaptureScreenState extends State<CaptureScreen>
           return;
         }
       } else {
-        result = phoneReading = local;
-        if (mayKeep && await FullReadingSetting.get()) {
-          queued = true;
-          // A slow server may still answer: its reading goes to My library. If it
-          // doesn't, the photo waits, encrypted, for the next time we're online.
-          online.then<void>(
-            (full) async {
-              attempt?.serverLate = true;
-              final saved =
-                  checksAmounts(full, mode: mode, screenshot: screenshot)
-                  ? await confirmOnPhone(full, bytes, phone: local)
-                  : full;
-              await Library.save(saved, paper);
-            },
-            onError: (Object _) async {
-              dropped = await photoQueue.add(bytes, mode: mode, paper: paper);
-              if (dropped > 0) scope.speaker.say(l.queueDropped(dropped));
-            },
+        if (local.pageLanguage case final lang?
+            when why == OfflineReason.slow || why == OfflineReason.waking) {
+          _setStatus(
+            l.waitingFullReading(
+              appLanguages
+                  .firstWhere(
+                    (a) => a.code == lang,
+                    orElse: () => appLanguages.first,
+                  )
+                  .name,
+            ),
           );
-        } else {
-          online.ignore();
+          try {
+            result = await online.timeout(preferServerWait);
+            why = null;
+          } catch (_) {
+            result = null; // the phone's reading after all, with its warning
+          }
+        }
+        if (result == null) {
+          result = phoneReading = local;
+          if (mayKeep && await FullReadingSetting.get()) {
+            queued = true;
+            // A slow server may still answer: its reading goes to My library. If it
+            // doesn't, the photo waits, encrypted, for the next time we're online.
+            online.then<void>(
+              (full) async {
+                attempt?.serverLate = true;
+                final saved =
+                    checksAmounts(full, mode: mode, screenshot: screenshot)
+                    ? await confirmOnPhone(full, bytes, phone: local)
+                    : full;
+                await Library.save(saved, paper);
+              },
+              onError: (Object _) async {
+                dropped = await photoQueue.add(bytes, mode: mode, paper: paper);
+                if (dropped > 0) scope.speaker.say(l.queueDropped(dropped));
+              },
+            );
+          } else {
+            online.ignore();
+          }
         }
       }
     } else if (mayKeep) {

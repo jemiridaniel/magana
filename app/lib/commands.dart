@@ -24,9 +24,6 @@ enum VoiceCommand {
   library(Feature.library, ['library', 'saved']),
   skills(Feature.skills, ['skill', 'lesson']),
   score(Feature.score, ['score', 'independence', 'progress']),
-  // Like the Home tile: open questions are 18+ (Guided learners use Explain
-  // this from the Reader, on a school page).
-  ask(Feature.openChat, ['ask', 'question', 'explain']),
   language(null, ['language', ...languageWords]),
   settings(null, ['settings', 'setting', 'version']),
   // The guided start again (tour.dart).
@@ -104,6 +101,36 @@ ReaderCommand? matchReaderCommand(String transcript) {
   final text = ' ${_norm(transcript)} ';
   for (final c in ReaderCommand.values) {
     if (c.words.any((w) => RegExp(' ${RegExp.escape(w)} ').hasMatch(text))) {
+      return c;
+    }
+  }
+  return null;
+}
+
+/// What the learner may say on the Explain screen. Only these: whatever else is
+/// heard is not understood, never sent to the model as a question
+/// (docs/LLM_SAFETY.md: one task, explain_page; no chat).
+enum ExplainCommand {
+  // "read again" before "repeat": the page as printed, not the explanation.
+  readAgain(['read again', 'read the page', 'read page']),
+  repeat(['repeat', 'again', 'say it again']),
+  slower(['slower', 'slow', 'slowly']),
+  next(['next']),
+  stop(['stop', 'quiet', 'pause']),
+  english(['english', 'turanci', 'gẹ̀ẹ́sì', 'geesi', 'bekee']),
+  help(['help', 'what can i say', 'commands']);
+
+  const ExplainCommand(this.words);
+  final List<String> words;
+}
+
+/// The Explain command a transcript asks for, or null.
+ExplainCommand? matchExplainCommand(String transcript) {
+  final text = ' ${_norm(transcript)} ';
+  for (final c in ExplainCommand.values) {
+    if (c.words.any(
+      (w) => RegExp(' ${RegExp.escape(_norm(w))} ').hasMatch(text),
+    )) {
       return c;
     }
   }

@@ -595,6 +595,13 @@ class _ReaderScreenState extends State<ReaderScreen> {
     ].join(', ');
   }
 
+  /// "6 lines found." "2 table rows found."
+  List<String> _found() {
+    final lines = _items.where((i) => i.kind == ItemKind.line).length;
+    final rows = _items.where((i) => i.isRow).length;
+    return [if (lines > 0) _l.linesFound(lines), if (rows > 0) _l.rowsFound(rows)];
+  }
+
   String? get _offlineBanner => switch (widget.offlineReason) {
     OfflineReason.noInternet => _l.offlineBanner,
     OfflineReason.sendFailed => _l.offlineBannerSendFailed,
@@ -606,7 +613,10 @@ class _ReaderScreenState extends State<ReaderScreen> {
     null => widget.result.offline ? _l.offlineBanner : null,
   };
 
-  String _intro() {
+  /// [voice]: the page's language has a voice. Without one, the page isn't read aloud, so
+  /// "Page read" is never said: "This page is in Hausa. I can't read it aloud yet. 6 lines
+  /// found." (Hausa review pack, 2 Nov 2026), and the counts stay.
+  String _intro({bool voice = true}) {
     final marks = widget.result.letterMarkCount;
     return [
       if (widget.result.offline) ...[
@@ -620,8 +630,13 @@ class _ReaderScreenState extends State<ReaderScreen> {
       for (final tip in widget.result.tips) messageFor(_l, tip),
       if (widget.result.pageLanguage != null && marks > 0)
         _l.letterCount(marks),
-      _l.pageRead,
-      '${_counts()}.',
+      if (voice) ...[
+        _l.pageRead,
+        '${_counts()}.',
+      ] else ...[
+        _l.pageNoVoice(_languageName),
+        ..._found(),
+      ],
       ..._warnings.summary(_l),
     ].join(' ');
   }
@@ -642,14 +657,18 @@ class _ReaderScreenState extends State<ReaderScreen> {
 
     bool wanted() => run == _run && mounted;
     if (intro) ReadTiming.firstWord(offline: widget.result.offline);
-    if (intro && !await _speaker.sayThrough(_intro(), wanted: wanted)) {
+    // A Hausa, Yorùbá or Igbo page and no voice for it: the intro says so (never "Page read"),
+    // and the text stays on the screen (Spell word still spells marked words), never read by
+    // another language's voice.
+    final voice = await _speaker.canSpeak(_textLang);
+    if (!wanted()) return;
+    if (intro &&
+        !await _speaker.sayThrough(_intro(voice: voice), wanted: wanted)) {
       return pause();
     }
-    // A Hausa, Yorùbá or Igbo page and no voice for it: say so, and leave the text on the
-    // screen (the Spell word button still spells marked words), never another language's voice.
-    if (!await _speaker.canSpeak(_textLang)) {
-      if (!wanted()) return;
-      _speaker.onNoVoice?.call(_textLang);
+    if (!voice) {
+      // Asked to read on (Play, Next): say why nothing is read.
+      if (!intro) await _speaker.say(_l.pageNoVoice(_languageName));
       return pause();
     }
     for (var i = from; i < _items.length; i++) {

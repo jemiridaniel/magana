@@ -22,6 +22,7 @@ sys.path.insert(0, str(ROOT / "backend"))
 sys.path.insert(0, str(ROOT / "benchmark" / "explain"))
 
 from app import explain, placeholders, safety  # noqa: E402
+from llm import natlas_guard  # noqa: E402
 from explain_bench import PAGE_MODE  # noqa: E402
 
 
@@ -47,7 +48,7 @@ def main() -> None:
         text = tok.apply_chat_template(messages, add_generation_prompt=True, tokenize=False)
         ids = tok(text, add_special_tokens=False, return_tensors="pt")["input_ids"].to(0)
         kw = dict(max_new_tokens=explain.ANSWER_TOKENS, do_sample=False,
-                  repetition_penalty=explain.REPETITION_PENALTY, pad_token_id=tok.eos_token_id)
+                  repetition_penalty=natlas_guard.REPETITION_PENALTY, pad_token_id=tok.eos_token_id)
         with torch.no_grad():
             if use_adapter:
                 out = model.generate(input_ids=ids, **kw)
@@ -65,8 +66,8 @@ def main() -> None:
                 text = page.read_text().strip()
                 masked = placeholders.mask(text)
                 markers = [f"⟦N{k}⟧" for k in range(1, len(masked.slots) + 1)]
-                messages = [{"role": "system", "content": explain.system_prompt(lang, guided=False)},
-                            {"role": "user", "content": explain.user_prompt(masked.text, None, "explain", (1, 1), markers)}]
+                messages = [{"role": "system", "content": natlas_guard.eval_prompt(lang).system(guided=False)},
+                            {"role": "user", "content": explain.user_prompt(masked.text, (1, 1), markers)}]
                 for model_name, use in (("base", False), ("magana-lora", True)):
                     t0 = time.monotonic()
                     raw = generate(messages, use)

@@ -25,7 +25,6 @@
   "settings": "Settings",
   "readPage": "Read a page",
   "readPageSubtitle": "Schoolwork, medical reports, bank statements, letters — anything printed",
-  "askQuestion": "Ask a question",
   "practiceQuiz": "Practice quiz",
   "myLibrary": "My library",
   "everydayPapers": "Everyday papers",
@@ -909,7 +908,6 @@
       }
     }
   },
-  "youSaid": "You said",
   "basedOnPage": "{count, plural, =1{Based on: 1 line of your page} other{Based on: {count} lines and rows of your page}}",
   "@basedOnPage": {
     "placeholders": {
@@ -919,13 +917,9 @@
     }
   },
   "readExactlyNote": "Numbers and words from the page are read exactly as printed.",
-  "saySimpler": "Say it simpler",
-  "giveExample": "Give an example",
   "explainDisclaimer": "Magana can make mistakes. Check important answers with your teacher.",
-  "askAQuestion": "Ask a question",
   "explainNoPage": "Explanations are about a page. Read a page first, then choose Explain this.",
   "explainThis": "Explain this",
-  "explainQuestionPreview": "When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.",
   "msg_explain_preview": "This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",
   "msg_explained": "Here is the explanation.",
   "msg_explain_bad_source": "There is no page text to explain. Please read a page first.",
@@ -2070,5 +2064,60 @@
     }
   },
   "voiceEnglishGuidanceOn": "Spoken guidance in English: on.",
-  "voiceEnglishGuidanceOff": "Spoken guidance in English: off."
+  "voiceEnglishGuidanceOff": "Spoken guidance in English: off.",
+  "pageNoVoice": "This page is in {language}. I can't read it aloud yet.",
+  "@pageNoVoice": {
+    "description": "Instead of 'Page read' when the page's language has no voice: the page was found but is not read aloud (Hausa review pack, 2 Nov 2026).",
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "linesFound": "{count, plural, =1{1 line found.} other{{count} lines found.}}",
+  "@linesFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "rowsFound": "{count, plural, =1{1 table row found.} other{{count} table rows found.}}",
+  "@rowsFound": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "msg_offline_letters_unreliable": "This reading may have many mistakes.",
+  "@msg_offline_letters_unreliable": {
+    "description": "Said once at the start of a Hausa, Yorùbá or Igbo page read on the phone (no internet): the offline reader keeps no hooked letters and marks few words (docs/FINDINGS.md, 9 Nov 2026)."
+  },
+  "msg_explain_ask_teacher": "This page is about health, money or safety, so I won't explain it. Please ask your teacher.",
+  "@msg_explain_ask_teacher": {
+    "description": "Explain: the page is about health, money or harm, so it never reaches the model (backend/llm/natlas_guard.py)."
+  },
+  "msg_explain_one_task": "Explain only explains the page you read. Questions aren't answered.",
+  "@msg_explain_one_task": {
+    "description": "An older app asked a free-form question or a different style: Explain has one task, explaining the page."
+  },
+  "explainCommandsHint": "After the explanation, say “repeat”, “slower”, “next” or “stop”.",
+  "waitingFullReading": "{language} page. Waiting a little longer for the full reading.",
+  "@waitingFullReading": {
+    "description": "Hausa, Yorùbá or Igbo read on the phone while the server is only slow: its reading is far better, so Capture waits for it longer (docs/FINDINGS.md, 9 Nov 2026).",
+    "placeholders": {
+      "language": {
+        "type": "String"
+      }
+    }
+  },
+  "explainSlower": "Slower",
+  "explainEnd": "End of the explanation.",
+  "@explainSlower": {
+    "description": "Explain screen button and voice command: say the explanation again, more slowly."
+  },
+  "@explainEnd": {
+    "description": "Said when the learner says next after the last sentence of an explanation."
+  }
 }

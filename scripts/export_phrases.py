@@ -13,8 +13,10 @@ Fixed phrases are the app's own texts (app/lib/l10n/app_<lang>.arb) with no blan
 text with a blank ("Line {n} of {total}") is left to the phone's voice: its numbers change.
 It also holds what English guidance needs (app/lib/guidance.dart): every phrase's English text by
 ID ("_english"), and each phrase with blanks as a pattern per language ("_ui_patterns"), so
-Magana's own words can be said in English when a language has no voice yet. Plural and select
-texts are left out.
+Magana's own words can be said in English when a language has no voice yet. A plural text
+("{count, plural, =1{1 line} other{{count} lines}}") is one pattern per branch ("_ui_plurals"),
+with its English branches ("_english_plural"), so counts are kept in English too. Select texts
+are left out.
 Health templates (content/templates/*.json) are recorded in parts: the words between the number
 slots. The numbers themselves are always said by the phone, exactly as printed (CLAUDE.md, rule 1).
 """
@@ -34,6 +36,27 @@ SLOT = re.compile(r"\{[a-z]\}")
 def arb(lang: str) -> dict[str, str]:
     data = json.loads((ROOT / f"app/lib/l10n/app_{lang}.arb").read_text(encoding="utf-8"))
     return {k: v for k, v in data.items() if not k.startswith("@") and isinstance(v, str)}
+
+
+def plural(text: str) -> tuple[str, dict[str, str]] | None:
+    """A whole-text ICU plural, "{count, plural, =1{…} other{…}}", as (variable, branches)."""
+    m = re.fullmatch(r"\{(\w+),\s*plural,\s*(.*)\}", text.strip(), re.S)
+    if not m:
+        return None
+    var, rest, branches, i = m.group(1), m.group(2), {}, 0
+    while i < len(rest):
+        sel = re.match(r"\s*(=\d+|zero|one|two|few|many|other)\s*\{", rest[i:])
+        if not sel:
+            return None if rest[i:].strip() else (var, branches)
+        i += sel.end()
+        depth, start = 1, i
+        while i < len(rest) and depth:
+            depth += {"{": 1, "}": -1}.get(rest[i], 0)
+            i += 1
+        if depth:
+            return None
+        branches[sel.group(1)] = rest[start:i - 1]
+    return (var, branches) if "other" in branches else None
 
 
 def templates() -> list[dict]:
@@ -108,11 +131,30 @@ def main() -> int:
             pieces = [({"slot": p[1:-1]} if re.fullmatch(r"\{\w+\}", p) else {"text": p})
                       for p in re.split(r"(\{\w+\})", text) if p]
             ui_patterns.setdefault(lang, []).append({"id": key, "pattern": pieces})
+    # Plural texts: each branch of each language a pattern; the English branches to choose from.
+    english_plural: dict[str, dict] = {}
+    ui_plurals: dict[str, list[dict]] = {}
+    for key, text in arb("en").items():
+        if (pl := plural(text)) is not None:
+            english_plural[key] = {"var": pl[0], "branches": pl[1]}
+    for lang in LANGS:
+        if lang == "en":
+            continue
+        for key, text in arb(lang).items():
+            pl = plural(text)
+            if pl is None or key not in english_plural:
+                continue
+            var, branches = pl
+            for branch, body in branches.items():
+                pieces = [({"slot": p[1:-1]} if re.fullmatch(r"\{\w+\}", p) else {"text": p})
+                          for p in re.split(r"(\{\w+\})", body) if p]
+                ui_plurals.setdefault(lang, []).append({"id": key, "var": var, "branch": branch, "pattern": pieces})
     out = ROOT / "app/assets/voice/phrases.json"
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps({"_about": "Made by scripts/export_phrases.py; do not edit.",
                                **phrases, "_patterns": patterns, "_english": english,
-                               "_ui_patterns": ui_patterns},
+                               "_ui_patterns": ui_patterns, "_english_plural": english_plural,
+                               "_ui_plurals": ui_plurals},
                               ensure_ascii=False, indent=1, sort_keys=False) + "\n", encoding="utf-8")
     clips = ROOT / "app/assets/voice/clips.json"
     if not clips.exists():

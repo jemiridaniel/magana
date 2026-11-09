@@ -39,9 +39,6 @@ class AppLocalizationsYo extends AppLocalizations {
       'Iṣẹ́ ilé-ìwé, àbájáde ìwòsàn, ìwé àkọsílẹ̀ báǹkì, lẹ́tà — ohunkóhun tí a tẹ̀ jáde';
 
   @override
-  String get askQuestion => 'Béèrè ìbéèrè';
-
-  @override
   String get practiceQuiz => 'Ìdánrawò ìbéèrè';
 
   @override
@@ -1295,9 +1292,6 @@ class AppLocalizationsYo extends AppLocalizations {
   }
 
   @override
-  String get youSaid => 'O sọ pé';
-
-  @override
   String basedOnPage(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -1313,17 +1307,8 @@ class AppLocalizationsYo extends AppLocalizations {
       'A ń ka àwọn nọ́ńbà àti ọ̀rọ̀ láti ojú-ìwé náà gẹ́gẹ́ bí a ṣe tẹ̀ wọ́n.';
 
   @override
-  String get saySimpler => 'Sọ ọ́ ní ìrọ̀rùn';
-
-  @override
-  String get giveExample => 'Fún mi ní àpẹẹrẹ';
-
-  @override
   String get explainDisclaimer =>
       'Magana lè ṣe àṣìṣe. Yẹ àwọn ìdáhùn pàtàkì wò pẹ̀lú olùkọ́ rẹ.';
-
-  @override
-  String get askAQuestion => 'Béèrè ìbéèrè';
 
   @override
   String get explainNoPage =>
@@ -1331,10 +1316,6 @@ class AppLocalizationsYo extends AppLocalizations {
 
   @override
   String get explainThis => 'Ṣàlàyé èyí';
-
-  @override
-  String get explainQuestionPreview =>
-      'Nígbà tí N-ATLAS bá so pọ̀, Magana yóò dáhùn ìbéèrè rẹ láti ojú-ìwé yìí. Fún báyìí, ojú-ìwé náà nìyí.';
 
   @override
   String get msg_explain_preview =>
@@ -2726,4 +2707,57 @@ class AppLocalizationsYo extends AppLocalizations {
   @override
   String get voiceEnglishGuidanceOff =>
       'Ìtọ́sọ́nà ohùn ní Gẹ̀ẹ́sì: ó wà ní pípa.';
+
+  @override
+  String pageNoVoice(String language) {
+    return 'Ojú ìwé yìí wà ní $language. Mi ò tíì lè kà á sókè.';
+  }
+
+  @override
+  String linesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'A rí ìlà $count.',
+      one: 'A rí ìlà 1.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rowsFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'A rí ìlà tábìlì $count.',
+      one: 'A rí ìlà tábìlì 1.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get msg_offline_letters_unreliable => 'Kíkà yìí lè ní àṣìṣe púpọ̀.';
+
+  @override
+  String get msg_explain_ask_teacher =>
+      'Ojú ìwé yìí sọ nípa ìlera, owó tàbí ààbò, nítorí náà mi ò ní ṣàlàyé rẹ̀. Jọ̀wọ́ bi olùkọ́ rẹ.';
+
+  @override
+  String get msg_explain_one_task =>
+      'Àlàyé máa ń ṣàlàyé ojú ìwé tí o kà nìkan. A kì í dáhùn ìbéèrè.';
+
+  @override
+  String get explainCommandsHint =>
+      'Lẹ́yìn àlàyé, sọ “repeat”, “slower”, “next” tàbí “stop”.';
+
+  @override
+  String waitingFullReading(String language) {
+    return 'Ojú ìwé $language. Mo ń dúró díẹ̀ sí i fún kíkà kíkún.';
+  }
+
+  @override
+  String get explainSlower => 'Lọ́ra díẹ̀';
+
+  @override
+  String get explainEnd => 'Òpin àlàyé.';
 }

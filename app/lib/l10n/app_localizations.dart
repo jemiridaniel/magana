@@ -150,12 +150,6 @@ abstract class AppLocalizations {
   /// **'Schoolwork, medical reports, bank statements, letters — anything printed'**
   String get readPageSubtitle;
 
-  /// No description provided for @askQuestion.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask a question'**
-  String get askQuestion;
-
   /// No description provided for @practiceQuiz.
   ///
   /// In en, this message translates to:
@@ -2148,12 +2142,6 @@ abstract class AppLocalizations {
   /// **'Answer language, currently {language}'**
   String answerLanguage(String language);
 
-  /// No description provided for @youSaid.
-  ///
-  /// In en, this message translates to:
-  /// **'You said'**
-  String get youSaid;
-
   /// No description provided for @basedOnPage.
   ///
   /// In en, this message translates to:
@@ -2166,29 +2154,11 @@ abstract class AppLocalizations {
   /// **'Numbers and words from the page are read exactly as printed.'**
   String get readExactlyNote;
 
-  /// No description provided for @saySimpler.
-  ///
-  /// In en, this message translates to:
-  /// **'Say it simpler'**
-  String get saySimpler;
-
-  /// No description provided for @giveExample.
-  ///
-  /// In en, this message translates to:
-  /// **'Give an example'**
-  String get giveExample;
-
   /// No description provided for @explainDisclaimer.
   ///
   /// In en, this message translates to:
   /// **'Magana can make mistakes. Check important answers with your teacher.'**
   String get explainDisclaimer;
-
-  /// No description provided for @askAQuestion.
-  ///
-  /// In en, this message translates to:
-  /// **'Ask a question'**
-  String get askAQuestion;
 
   /// No description provided for @explainNoPage.
   ///
@@ -2201,12 +2171,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Explain this'**
   String get explainThis;
-
-  /// No description provided for @explainQuestionPreview.
-  ///
-  /// In en, this message translates to:
-  /// **'When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.'**
-  String get explainQuestionPreview;
 
   /// No description provided for @msg_explain_preview.
   ///
@@ -4379,6 +4343,66 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Spoken guidance in English: off.'**
   String get voiceEnglishGuidanceOff;
+
+  /// Instead of 'Page read' when the page's language has no voice: the page was found but is not read aloud (Hausa review pack, 2 Nov 2026).
+  ///
+  /// In en, this message translates to:
+  /// **'This page is in {language}. I can\'t read it aloud yet.'**
+  String pageNoVoice(String language);
+
+  /// No description provided for @linesFound.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 line found.} other{{count} lines found.}}'**
+  String linesFound(int count);
+
+  /// No description provided for @rowsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 table row found.} other{{count} table rows found.}}'**
+  String rowsFound(int count);
+
+  /// Said once at the start of a Hausa, Yorùbá or Igbo page read on the phone (no internet): the offline reader keeps no hooked letters and marks few words (docs/FINDINGS.md, 9 Nov 2026).
+  ///
+  /// In en, this message translates to:
+  /// **'This reading may have many mistakes.'**
+  String get msg_offline_letters_unreliable;
+
+  /// Explain: the page is about health, money or harm, so it never reaches the model (backend/llm/natlas_guard.py).
+  ///
+  /// In en, this message translates to:
+  /// **'This page is about health, money or safety, so I won\'t explain it. Please ask your teacher.'**
+  String get msg_explain_ask_teacher;
+
+  /// An older app asked a free-form question or a different style: Explain has one task, explaining the page.
+  ///
+  /// In en, this message translates to:
+  /// **'Explain only explains the page you read. Questions aren\'t answered.'**
+  String get msg_explain_one_task;
+
+  /// No description provided for @explainCommandsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'After the explanation, say “repeat”, “slower”, “next” or “stop”.'**
+  String get explainCommandsHint;
+
+  /// Hausa, Yorùbá or Igbo read on the phone while the server is only slow: its reading is far better, so Capture waits for it longer (docs/FINDINGS.md, 9 Nov 2026).
+  ///
+  /// In en, this message translates to:
+  /// **'{language} page. Waiting a little longer for the full reading.'**
+  String waitingFullReading(String language);
+
+  /// Explain screen button and voice command: say the explanation again, more slowly.
+  ///
+  /// In en, this message translates to:
+  /// **'Slower'**
+  String get explainSlower;
+
+  /// Said when the learner says next after the last sentence of an explanation.
+  ///
+  /// In en, this message translates to:
+  /// **'End of the explanation.'**
+  String get explainEnd;
 }
 
 class _AppLocalizationsDelegate

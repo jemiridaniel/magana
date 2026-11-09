@@ -24,6 +24,7 @@ import httpx
 from pydantic import BaseModel, ConfigDict, Field
 
 from . import accounts, asr, codes, curriculum, explain, handwriting, learner_api, mail_events, mail_health, pdfs, policy, portal_api, quizzes, ratelimit, reports_api, safety, templates, team_api, triage, uploads_api, wa_flow
+from llm import natlas_guard
 from .wa_client import WhatsAppClient
 from .iba_client import IbaClient, IbaUnavailable
 from .iba_monitor import monitor as iba_monitor
@@ -372,9 +373,11 @@ def explain_check(body: ExplainCheck) -> dict:
 class ExplainRequest(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    source_text: str  # the page (or part of it) the learner is asking about: data, never instructions
-    question: str | None = None
+    source_text: str  # the page Magana read: data, never instructions
     lang: Literal["en", "ha", "yo", "ig"] = "en"
+    # One task only, explain_page (backend/llm/natlas_guard.py): older apps may still send a
+    # question or another style; neither reaches the model.
+    question: str | None = None
     style: Literal["explain", "simpler", "example"] = "explain"
     # school: N-ATLaS, numbers as placeholders. health, money, letter: never a model,
     # only approved phrase templates (templates.py).
@@ -390,38 +393,33 @@ EXPLAIN_FEATURE = {
 
 
 @lru_cache(maxsize=1)
-def get_explain_engine() -> explain.Engine:
+def get_explain_engine() -> natlas_guard.Engine:
     """One engine per process, from EXPLAIN_ENGINE (docs/MODELS.md)."""
-    return explain.default_engine()
+    return natlas_guard.default_engine()
 
 
 @app.post("/explain")
 def explain_page(body: ExplainRequest, tier: policy.Tier = Depends(caller_tier),
-                 engine: explain.Engine = Depends(get_explain_engine)) -> dict:
-    """An explanation of page text, always through the verbatim-number guard (CLAUDE.md
-    rule 1). If the guard fails or the model is unavailable, the app reads the page instead.
+                 engine: natlas_guard.Engine = Depends(get_explain_engine)) -> dict:
+    """An explanation of the page, only through natlas_guard.explain_page: no question, no chat;
+    a page about health, money or harm never reaches the model; every answer is checked before
+    it is spoken, and otherwise the page is read instead (CLAUDE.md rule 1, docs/LLM_SAFETY.md).
     Guided learners (13-17) get a curriculum-only prompt."""
     require(tier, EXPLAIN_FEATURE[body.mode])
     if not body.source_text.strip() or len(body.source_text) > explain.MAX_SOURCE_CHARS:
         raise HTTPException(400, {"code": "explain_bad_source"})
     if body.mode != "school":
         # Health and money papers: no model, ever. Approved templates or English as printed.
-        # No model is involved, so this works whether or not Explain is switched on.
         t = templates.translate(body.source_text, body.lang, body.mode)
         return {"code": "paper_lines", "explanation": None, "read_instead": None, "preview": False,
                 "lines": t["lines"], "fallback": t["fallback"]}
-    if body.lang not in explain.live_languages():
-        # Hausa, Yorùbá and Igbo: not yet (native review first). The app offers English.
-        return {"code": "explain_language_coming", "explanation": None, "read_instead": None, "preview": False,
-                "language": body.lang}
-    if not explain.allowed(engine):
-        # Tester and production builds: Explain stays off (no page text leaves for an
-        # unapproved host).
-        return {"code": "explain_not_available", "explanation": None, "read_instead": body.source_text,
-                "preview": False}
-    r = explain.explain(explain.for_language(engine, body.lang), body.source_text, body.question, body.lang,
-                        body.style, guided=tier is policy.Tier.GUIDED)
-    return {"code": r.code, "explanation": r.explanation, "read_instead": r.read_instead, "preview": r.preview}
+    if (body.question or "").strip() or body.style != "explain":
+        return {"code": "explain_one_task", "explanation": None, "read_instead": None, "preview": False}
+    r = natlas_guard.explain_page(engine, body.source_text, body.lang, guided=tier is policy.Tier.GUIDED)
+    out = {"code": r.code, "explanation": r.explanation, "read_instead": r.read_instead, "preview": r.preview}
+    if r.code == "explain_language_coming":
+        out["language"] = body.lang
+    return out
 
 
 @lru_cache(maxsize=1)

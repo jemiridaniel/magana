@@ -528,6 +528,10 @@ Future<Map<String, dynamic>> _reading(
     'offline': true,
     'columns': 1,
     'tips': [
+      // Hausa, Yorùbá and Igbo read on the phone: no hooked letter or tone mark survives, and
+      // few words are marked (0 of 351 hooked letters kept; 5 words marked against the
+      // server's 342: docs/FINDINGS.md, 9 Nov 2026). Said first, until it is measured as good.
+      if (language != null) 'offline_letters_unreliable',
       if (!sure && seen.isNotEmpty) 'offline_no_confidence',
       if (handwriting) 'handwriting_read_anyway',
       if (visionHealth &&

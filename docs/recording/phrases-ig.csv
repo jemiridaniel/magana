@@ -5,7 +5,6 @@ chooseLanguage,ig-chooseLanguage.m4a,Họrọ asụsụ ngwa,Choose app language
 settings,ig-settings.m4a,Ntọala,Settings,App phrase,draft
 readPage,ig-readPage.m4a,Gụọ peeji,Read a page,App phrase,draft
 readPageSubtitle,ig-readPageSubtitle.m4a,"Ihe ọmụmụ ụlọ akwụkwọ, akụkọ ahụike, nkwupụta ụlọ akụ, akwụkwọ ozi — ihe ọ bụla e biri ebi","Schoolwork, medical reports, bank statements, letters — anything printed",App phrase,draft
-askQuestion,ig-askQuestion.m4a,Jụọ ajụjụ,Ask a question,App phrase (also used as askAQuestion),draft
 practiceQuiz,ig-practiceQuiz.m4a,Ajụjụ omume,Practice quiz,App phrase,draft
 myLibrary,ig-myLibrary.m4a,Ọbá akwụkwọ m,My library,App phrase,draft
 everydayPapers,ig-everydayPapers.m4a,Akwụkwọ kwa ụbọchị,Everyday papers,App phrase,draft
@@ -280,14 +279,10 @@ changeLanguageCommand,ig-changeLanguageCommand.m4a,change language,change langua
 voiceCommandsUnavailable,ig-voiceCommandsUnavailable.m4a,Enweghị ike iji iwu olu na ekwentị a. Jiri bọtịnụ kama.,Voice commands are not available on this phone. Use the buttons instead.,App phrase,draft
 explainTitle,ig-explainTitle.m4a,Nkọwa,Explain,App phrase,draft
 explainPreviewBanner,ig-explainPreviewBanner.m4a,"Nlele. N-ATLAS, nke ga-akọwa peeji n'asụsụ gị, ejikọbeghị. Ugbu a Magana na-agụ ederede peeji ahụ kpọmkwem ka e si bipụta ya.","Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.",App phrase,draft
-youSaid,ig-youSaid.m4a,Ị kwuru,You said,App phrase,draft
 readExactlyNote,ig-readExactlyNote.m4a,A na-agụ nọmba na okwu sitere na peeji ahụ kpọmkwem ka e si bipụta ha.,Numbers and words from the page are read exactly as printed.,App phrase,draft
-saySimpler,ig-saySimpler.m4a,Kwuo ya n'ụzọ dị mfe,Say it simpler,App phrase,draft
-giveExample,ig-giveExample.m4a,Nye ihe atụ,Give an example,App phrase,draft
 explainDisclaimer,ig-explainDisclaimer.m4a,Magana nwere ike imehie. Lelee azịza ndị dị mkpa na onye nkuzi gị.,Magana can make mistakes. Check important answers with your teacher.,App phrase,draft
 explainNoPage,ig-explainNoPage.m4a,"Nkọwa bụ maka peeji. Buru ụzọ gụọ peeji, wee họrọ Kọwaa nke a.","Explanations are about a page. Read a page first, then choose Explain this.",App phrase,draft
 explainThis,ig-explainThis.m4a,Kọwaa nke a,Explain this,App phrase,draft
-explainQuestionPreview,ig-explainQuestionPreview.m4a,"Mgbe ejikọrọ N-ATLAS, Magana ga-aza ajụjụ gị site na peeji a. Ugbu a, lee peeji ahụ.","When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.",App phrase,draft
 msg_explain_preview,ig-msg_explain_preview.m4a,"Nke a bụ nlele. Nkọwa n'asụsụ gị ga-abịa mgbe ejikọrọ N-ATLAS. Lee peeji ahụ, a gụrụ ya kpọmkwem ka e si bipụta ya.","This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",App phrase,draft
 msg_explained,ig-msg_explained.m4a,Lee nkọwa ahụ.,Here is the explanation.,App phrase,draft
 msg_explain_bad_source,ig-msg_explain_bad_source.m4a,Enweghị ederede peeji a ga-akọwa. Biko buru ụzọ gụọ peeji.,There is no page text to explain. Please read a page first.,App phrase,draft
@@ -577,6 +572,12 @@ quickCheckNoteRules,ig-quickCheckNoteRules.m4a,"Azịza gị na-enyere onye ọr
 voiceEnglishGuidance,ig-voiceEnglishGuidance.m4a,Ntụziaka olu na Bekee,Spoken guidance in English,App phrase,draft
 voiceEnglishGuidanceOn,ig-voiceEnglishGuidanceOn.m4a,Ntụziaka olu na Bekee: agbanyere.,Spoken guidance in English: on.,App phrase,draft
 voiceEnglishGuidanceOff,ig-voiceEnglishGuidanceOff.m4a,Ntụziaka olu na Bekee: agbanyụrụ.,Spoken guidance in English: off.,App phrase,draft
+msg_offline_letters_unreliable,ig-msg_offline_letters_unreliable.m4a,Ọgụgụ a nwere ike inwe ọtụtụ mmejọ.,This reading may have many mistakes.,App phrase,draft
+msg_explain_ask_teacher,ig-msg_explain_ask_teacher.m4a,"Peeji a na-ekwu maka ahụike, ego ma ọ bụ nchekwa, ya mere agaghị m akọwa ya. Biko jụọ onye nkuzi gị.","This page is about health, money or safety, so I won't explain it. Please ask your teacher.",App phrase,draft
+msg_explain_one_task,ig-msg_explain_one_task.m4a,Nkọwa na-akọwa naanị peeji ị gụrụ. Anaghị aza ajụjụ.,Explain only explains the page you read. Questions aren't answered.,App phrase,draft
+explainCommandsHint,ig-explainCommandsHint.m4a,"Mgbe nkọwa gasịrị, kwuo “repeat”, “slower”, “next” ma ọ bụ “stop”.","After the explanation, say “repeat”, “slower”, “next” or “stop”.",App phrase,draft
+explainSlower,ig-explainSlower.m4a,Nwayọọ,Slower,App phrase,draft
+explainEnd,ig-explainEnd.m4a,Njedebe nkọwa.,End of the explanation.,App phrase,draft
 tpl-medicine_label-take_times_a_day-1,ig-tpl-medicine_label-take_times_a_day-1.m4a,Ṅụọ mkpụrụ ọgwụ,Take {a} tablets {b} times a day,"Health template, part 1 of 3 (the phone says the numbers between parts)",clinically_approved
 tpl-medicine_label-take_times_a_day-2,ig-tpl-medicine_label-take_times_a_day-2.m4a,ugboro,Take {a} tablets {b} times a day,"Health template, part 2 of 3 (the phone says the numbers between parts)",clinically_approved
 tpl-medicine_label-take_times_a_day-3,ig-tpl-medicine_label-take_times_a_day-3.m4a,n'ụbọchị.,Take {a} tablets {b} times a day,"Health template, part 3 of 3 (the phone says the numbers between parts)",clinically_approved

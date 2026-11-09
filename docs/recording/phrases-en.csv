@@ -5,7 +5,6 @@ chooseLanguage,en-chooseLanguage.m4a,Choose app language,Choose app language,App
 settings,en-settings.m4a,Settings,Settings,App phrase,final
 readPage,en-readPage.m4a,Read a page,Read a page,App phrase,final
 readPageSubtitle,en-readPageSubtitle.m4a,"Schoolwork, medical reports, bank statements, letters — anything printed","Schoolwork, medical reports, bank statements, letters — anything printed",App phrase,final
-askQuestion,en-askQuestion.m4a,Ask a question,Ask a question,App phrase (also used as askAQuestion),final
 practiceQuiz,en-practiceQuiz.m4a,Practice quiz,Practice quiz,App phrase,final
 myLibrary,en-myLibrary.m4a,My library,My library,App phrase,final
 everydayPapers,en-everydayPapers.m4a,Everyday papers,Everyday papers,App phrase,final
@@ -279,14 +278,10 @@ changeLanguageCommand,en-changeLanguageCommand.m4a,change language,change langua
 voiceCommandsUnavailable,en-voiceCommandsUnavailable.m4a,Voice commands are not available on this phone. Use the buttons instead.,Voice commands are not available on this phone. Use the buttons instead.,App phrase,final
 explainTitle,en-explainTitle.m4a,Explain,Explain,App phrase,final
 explainPreviewBanner,en-explainPreviewBanner.m4a,"Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.","Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.",App phrase,final
-youSaid,en-youSaid.m4a,You said,You said,App phrase,final
 readExactlyNote,en-readExactlyNote.m4a,Numbers and words from the page are read exactly as printed.,Numbers and words from the page are read exactly as printed.,App phrase,final
-saySimpler,en-saySimpler.m4a,Say it simpler,Say it simpler,App phrase,final
-giveExample,en-giveExample.m4a,Give an example,Give an example,App phrase,final
 explainDisclaimer,en-explainDisclaimer.m4a,Magana can make mistakes. Check important answers with your teacher.,Magana can make mistakes. Check important answers with your teacher.,App phrase,final
 explainNoPage,en-explainNoPage.m4a,"Explanations are about a page. Read a page first, then choose Explain this.","Explanations are about a page. Read a page first, then choose Explain this.",App phrase,final
 explainThis,en-explainThis.m4a,Explain this,Explain this,App phrase,final
-explainQuestionPreview,en-explainQuestionPreview.m4a,"When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.","When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.",App phrase,final
 msg_explain_preview,en-msg_explain_preview.m4a,"This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.","This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",App phrase,final
 msg_explained,en-msg_explained.m4a,Here is the explanation.,Here is the explanation.,App phrase,final
 msg_explain_bad_source,en-msg_explain_bad_source.m4a,There is no page text to explain. Please read a page first.,There is no page text to explain. Please read a page first.,App phrase,final
@@ -576,3 +571,9 @@ quickCheckNoteRules,en-quickCheckNoteRules.m4a,"Your answers help the health wor
 voiceEnglishGuidance,en-voiceEnglishGuidance.m4a,Spoken guidance in English,Spoken guidance in English,App phrase,final
 voiceEnglishGuidanceOn,en-voiceEnglishGuidanceOn.m4a,Spoken guidance in English: on.,Spoken guidance in English: on.,App phrase,final
 voiceEnglishGuidanceOff,en-voiceEnglishGuidanceOff.m4a,Spoken guidance in English: off.,Spoken guidance in English: off.,App phrase,final
+msg_offline_letters_unreliable,en-msg_offline_letters_unreliable.m4a,This reading may have many mistakes.,This reading may have many mistakes.,App phrase,final
+msg_explain_ask_teacher,en-msg_explain_ask_teacher.m4a,"This page is about health, money or safety, so I won't explain it. Please ask your teacher.","This page is about health, money or safety, so I won't explain it. Please ask your teacher.",App phrase,final
+msg_explain_one_task,en-msg_explain_one_task.m4a,Explain only explains the page you read. Questions aren't answered.,Explain only explains the page you read. Questions aren't answered.,App phrase,final
+explainCommandsHint,en-explainCommandsHint.m4a,"After the explanation, say “repeat”, “slower”, “next” or “stop”.","After the explanation, say “repeat”, “slower”, “next” or “stop”.",App phrase,final
+explainSlower,en-explainSlower.m4a,Slower,Slower,App phrase,final
+explainEnd,en-explainEnd.m4a,End of the explanation.,End of the explanation.,App phrase,final

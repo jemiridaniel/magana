@@ -5,7 +5,6 @@ chooseLanguage,ha-chooseLanguage.m4a,Zaɓi harshen manhaja,Choose app language,A
 settings,ha-settings.m4a,Saituna,Settings,App phrase,draft
 readPage,ha-readPage.m4a,Karanta shafi,Read a page,App phrase,draft
 readPageSubtitle,ha-readPageSubtitle.m4a,"Aikin makaranta, rahoton asibiti, bayanan banki, wasiƙu — duk abin da aka buga","Schoolwork, medical reports, bank statements, letters — anything printed",App phrase,draft
-askQuestion,ha-askQuestion.m4a,Yi tambaya,Ask a question,App phrase (also used as askAQuestion),draft
 practiceQuiz,ha-practiceQuiz.m4a,Jarabawar gwaji,Practice quiz,App phrase,draft
 myLibrary,ha-myLibrary.m4a,Ɗakin karatuna,My library,App phrase,draft
 everydayPapers,ha-everydayPapers.m4a,Takardun yau da kullum,Everyday papers,App phrase,draft
@@ -279,14 +278,10 @@ changeLanguageCommand,ha-changeLanguageCommand.m4a,change language,change langua
 voiceCommandsUnavailable,ha-voiceCommandsUnavailable.m4a,Ba a iya amfani da umarnin murya a wannan wayar ba. Yi amfani da maɓallai maimakon haka.,Voice commands are not available on this phone. Use the buttons instead.,App phrase,draft
 explainTitle,ha-explainTitle.m4a,Bayani,Explain,App phrase,draft
 explainPreviewBanner,ha-explainPreviewBanner.m4a,"Gwaji. N-ATLAS, wanda zai yi bayanin shafuka a harshenka, ba a haɗa shi ba tukuna. A yanzu Magana tana karanta rubutun shafin daidai yadda aka buga.","Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.",App phrase,draft
-youSaid,ha-youSaid.m4a,Ka ce,You said,App phrase,draft
 readExactlyNote,ha-readExactlyNote.m4a,Ana karanta lambobi da kalmomi daga shafin daidai yadda aka buga.,Numbers and words from the page are read exactly as printed.,App phrase,draft
-saySimpler,ha-saySimpler.m4a,Faɗa a sauƙaƙe,Say it simpler,App phrase,draft
-giveExample,ha-giveExample.m4a,Ba da misali,Give an example,App phrase,draft
 explainDisclaimer,ha-explainDisclaimer.m4a,Magana na iya yin kuskure. Duba muhimman amsoshi tare da malaminka.,Magana can make mistakes. Check important answers with your teacher.,App phrase,draft
 explainNoPage,ha-explainNoPage.m4a,"Bayani game da shafi ne. Karanta shafi da farko, sannan ka zaɓi Yi bayanin wannan.","Explanations are about a page. Read a page first, then choose Explain this.",App phrase,draft
 explainThis,ha-explainThis.m4a,Yi bayanin wannan,Explain this,App phrase,draft
-explainQuestionPreview,ha-explainQuestionPreview.m4a,"Idan an haɗa N-ATLAS, Magana za ta amsa tambayarka daga wannan shafin. A yanzu, ga shafin.","When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.",App phrase,draft
 msg_explain_preview,ha-msg_explain_preview.m4a,"Wannan gwaji ne. Bayani a harshenka zai zo idan an haɗa N-ATLAS. Ga shafin, an karanta shi daidai yadda aka buga.","This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",App phrase,draft
 msg_explained,ha-msg_explained.m4a,Ga bayanin.,Here is the explanation.,App phrase,draft
 msg_explain_bad_source,ha-msg_explain_bad_source.m4a,Babu rubutun shafi da za a yi bayani. Don Allah ka karanta shafi da farko.,There is no page text to explain. Please read a page first.,App phrase,draft
@@ -578,6 +573,12 @@ quickCheckNoteRules,ha-quickCheckNoteRules.m4a,"Amsoshinka suna taimaka wa ma'ai
 voiceEnglishGuidance,ha-voiceEnglishGuidance.m4a,Jagorar murya cikin Turanci,Spoken guidance in English,App phrase,draft
 voiceEnglishGuidanceOn,ha-voiceEnglishGuidanceOn.m4a,Jagorar murya cikin Turanci: a kunne.,Spoken guidance in English: on.,App phrase,draft
 voiceEnglishGuidanceOff,ha-voiceEnglishGuidanceOff.m4a,Jagorar murya cikin Turanci: a kashe.,Spoken guidance in English: off.,App phrase,draft
+msg_offline_letters_unreliable,ha-msg_offline_letters_unreliable.m4a,Wannan karatun na iya samun kurakurai da yawa.,This reading may have many mistakes.,App phrase,draft
+msg_explain_ask_teacher,ha-msg_explain_ask_teacher.m4a,"Wannan shafi yana magana ne kan lafiya, kuɗi ko tsaro, don haka ba zan bayyana shi ba. Don Allah ka tambayi malaminka.","This page is about health, money or safety, so I won't explain it. Please ask your teacher.",App phrase,draft
+msg_explain_one_task,ha-msg_explain_one_task.m4a,Bayani yana bayyana shafin da ka karanta kawai. Ba a amsa tambayoyi.,Explain only explains the page you read. Questions aren't answered.,App phrase,draft
+explainCommandsHint,ha-explainCommandsHint.m4a,"Bayan bayanin, faɗi “repeat”, “slower”, “next” ko “stop”.","After the explanation, say “repeat”, “slower”, “next” or “stop”.",App phrase,draft
+explainSlower,ha-explainSlower.m4a,A hankali,Slower,App phrase,draft
+explainEnd,ha-explainEnd.m4a,Ƙarshen bayanin.,End of the explanation.,App phrase,draft
 tpl-medicine_label-take_times_a_day-1,ha-tpl-medicine_label-take_times_a_day-1.m4a,Sha ƙwaya,Take {a} tablets {b} times a day,"Health template, part 1 of 3 (the phone says the numbers between parts)",clinically_approved
 tpl-medicine_label-take_times_a_day-2,ha-tpl-medicine_label-take_times_a_day-2.m4a,sau,Take {a} tablets {b} times a day,"Health template, part 2 of 3 (the phone says the numbers between parts)",clinically_approved
 tpl-medicine_label-take_times_a_day-3,ha-tpl-medicine_label-take_times_a_day-3.m4a,a rana.,Take {a} tablets {b} times a day,"Health template, part 3 of 3 (the phone says the numbers between parts)",clinically_approved

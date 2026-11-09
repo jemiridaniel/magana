@@ -11,6 +11,8 @@ from app import triage
 from app.iba_client import IbaClient
 from app.main import app, get_iba
 
+pytestmark = pytest.mark.safety
+
 client = TestClient(app)
 
 

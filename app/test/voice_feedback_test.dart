@@ -11,6 +11,7 @@ import 'package:app/speech.dart';
 import 'package:app/voice_input.dart';
 import 'package:app/voices.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -19,6 +20,14 @@ import 'onboarding_test.dart' as onboarding;
 import 'quiz_test.dart' show FakeVoice;
 
 final en = lookupAppLocalizations(const Locale('en'));
+
+/// The app's assets read straight from disk (asset loading inside a widget test waits on the
+/// test's own clock, so a first load there never finishes).
+class DiskBundle extends CachingAssetBundle {
+  @override
+  Future<ByteData> load(String key) async =>
+      ByteData.sublistView(File(key).readAsBytesSync());
+}
 
 class FakeClipPlayer implements ClipPlayer {
   final played = <String>[];
@@ -133,9 +142,12 @@ void main() {
           speaker.said.where((t) => t.contains('Ruwa yana da')),
           isEmpty,
         );
-        expect(speaker.said, contains(en.noVoiceYet('Hausa')));
-        expect(find.text(en.noVoiceYet('Hausa')), findsOneWidget);
+        // Never "Page read": the page wasn't read aloud. Said instead, with the count kept.
+        final intro = speaker.said.firstWhere((t) => t.contains(en.pageNoVoice('Hausa')));
+        expect(intro, contains(en.linesFound(1)));
+        expect(speaker.said.where((t) => t.contains(en.pageRead)), isEmpty);
       },
+      tags: 'safety',
     );
   });
 
@@ -371,6 +383,8 @@ void main() {
       'Hausa app, no Hausa voice, a Hausa page: guidance in English, the page shown',
       (tester) async {
         final speaker = FakeSpeaker()..noVoiceFor.add('ha');
+        // Read from disk: asset loading inside a widget test waits on the test's clock.
+        speaker.guidance = EnglishGuidance(bundle: DiskBundle());
         await tester.runAsync(() => speaker.guidance.load()); // real file reading
         await speaker.setLanguage('ha'); // as main() does at start
         await pumpApp(
@@ -394,9 +408,13 @@ void main() {
           reason: '${speaker.said}',
         );
         expect(speaker.said.where((t) => t.contains('Ruwa yana da')), isEmpty);
-        expect(speaker.said, contains(en.noVoiceYet('Hausa')));
+        // In English, with the counts, and never "Page read".
+        final intro = speaker.said.firstWhere((t) => t.contains(en.pageNoVoice('Hausa')));
+        expect(intro, contains(en.linesFound(1)));
+        expect(speaker.said.where((t) => t.contains(en.pageRead)), isEmpty);
         expect(find.text('Ruwa yana da muhimmanci'), findsWidgets);
       },
+      tags: 'safety',
     );
   });
 

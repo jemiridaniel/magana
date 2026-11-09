@@ -7,7 +7,6 @@
   "Settings": "settings",
   "Read a page": "readPage",
   "Schoolwork, medical reports, bank statements, letters — anything printed": "readPageSubtitle",
-  "Ask a question": "askQuestion",
   "Practice quiz": "practiceQuiz",
   "My library": "myLibrary",
   "Everyday papers": "everydayPapers",
@@ -281,14 +280,10 @@
   "Voice commands are not available on this phone. Use the buttons instead.": "voiceCommandsUnavailable",
   "Explain": "explainTitle",
   "Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.": "explainPreviewBanner",
-  "You said": "youSaid",
   "Numbers and words from the page are read exactly as printed.": "readExactlyNote",
-  "Say it simpler": "saySimpler",
-  "Give an example": "giveExample",
   "Magana can make mistakes. Check important answers with your teacher.": "explainDisclaimer",
   "Explanations are about a page. Read a page first, then choose Explain this.": "explainNoPage",
   "Explain this": "explainThis",
-  "When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.": "explainQuestionPreview",
   "This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.": "msg_explain_preview",
   "Here is the explanation.": "msg_explained",
   "There is no page text to explain. Please read a page first.": "msg_explain_bad_source",
@@ -577,7 +572,13 @@
   "Your answers help the health worker decide how soon to call you. Magana does not diagnose. If you have danger signs, Magana tells you to go to a clinic now or call 112.": "quickCheckNoteRules",
   "Spoken guidance in English": "voiceEnglishGuidance",
   "Spoken guidance in English: on.": "voiceEnglishGuidanceOn",
-  "Spoken guidance in English: off.": "voiceEnglishGuidanceOff"
+  "Spoken guidance in English: off.": "voiceEnglishGuidanceOff",
+  "This reading may have many mistakes.": "msg_offline_letters_unreliable",
+  "This page is about health, money or safety, so I won't explain it. Please ask your teacher.": "msg_explain_ask_teacher",
+  "Explain only explains the page you read. Questions aren't answered.": "msg_explain_one_task",
+  "After the explanation, say “repeat”, “slower”, “next” or “stop”.": "explainCommandsHint",
+  "Slower": "explainSlower",
+  "End of the explanation.": "explainEnd"
  },
  "ha": {
   "Magana": "appTitle",
@@ -586,7 +587,6 @@
   "Saituna": "settings",
   "Karanta shafi": "readPage",
   "Aikin makaranta, rahoton asibiti, bayanan banki, wasiƙu — duk abin da aka buga": "readPageSubtitle",
-  "Yi tambaya": "askQuestion",
   "Jarabawar gwaji": "practiceQuiz",
   "Ɗakin karatuna": "myLibrary",
   "Takardun yau da kullum": "everydayPapers",
@@ -860,14 +860,10 @@
   "Ba a iya amfani da umarnin murya a wannan wayar ba. Yi amfani da maɓallai maimakon haka.": "voiceCommandsUnavailable",
   "Bayani": "explainTitle",
   "Gwaji. N-ATLAS, wanda zai yi bayanin shafuka a harshenka, ba a haɗa shi ba tukuna. A yanzu Magana tana karanta rubutun shafin daidai yadda aka buga.": "explainPreviewBanner",
-  "Ka ce": "youSaid",
   "Ana karanta lambobi da kalmomi daga shafin daidai yadda aka buga.": "readExactlyNote",
-  "Faɗa a sauƙaƙe": "saySimpler",
-  "Ba da misali": "giveExample",
   "Magana na iya yin kuskure. Duba muhimman amsoshi tare da malaminka.": "explainDisclaimer",
   "Bayani game da shafi ne. Karanta shafi da farko, sannan ka zaɓi Yi bayanin wannan.": "explainNoPage",
   "Yi bayanin wannan": "explainThis",
-  "Idan an haɗa N-ATLAS, Magana za ta amsa tambayarka daga wannan shafin. A yanzu, ga shafin.": "explainQuestionPreview",
   "Wannan gwaji ne. Bayani a harshenka zai zo idan an haɗa N-ATLAS. Ga shafin, an karanta shi daidai yadda aka buga.": "msg_explain_preview",
   "Ga bayanin.": "msg_explained",
   "Babu rubutun shafi da za a yi bayani. Don Allah ka karanta shafi da farko.": "msg_explain_bad_source",
@@ -1158,7 +1154,13 @@
   "Amsoshinka suna taimaka wa ma'aikacin lafiya ya yanke shawarar lokacin da zai kira ka. Magana ba ta gano cuta. Idan kana da alamun haɗari, Magana za ta gaya maka ka je asibiti yanzu ko ka kira 112.": "quickCheckNoteRules",
   "Jagorar murya cikin Turanci": "voiceEnglishGuidance",
   "Jagorar murya cikin Turanci: a kunne.": "voiceEnglishGuidanceOn",
-  "Jagorar murya cikin Turanci: a kashe.": "voiceEnglishGuidanceOff"
+  "Jagorar murya cikin Turanci: a kashe.": "voiceEnglishGuidanceOff",
+  "Wannan karatun na iya samun kurakurai da yawa.": "msg_offline_letters_unreliable",
+  "Wannan shafi yana magana ne kan lafiya, kuɗi ko tsaro, don haka ba zan bayyana shi ba. Don Allah ka tambayi malaminka.": "msg_explain_ask_teacher",
+  "Bayani yana bayyana shafin da ka karanta kawai. Ba a amsa tambayoyi.": "msg_explain_one_task",
+  "Bayan bayanin, faɗi “repeat”, “slower”, “next” ko “stop”.": "explainCommandsHint",
+  "A hankali": "explainSlower",
+  "Ƙarshen bayanin.": "explainEnd"
  },
  "yo": {
   "Magana": "appTitle",
@@ -1167,7 +1169,6 @@
   "Ètò": "settings",
   "Ka ojú-ìwé kan": "readPage",
   "Iṣẹ́ ilé-ìwé, àbájáde ìwòsàn, ìwé àkọsílẹ̀ báǹkì, lẹ́tà — ohunkóhun tí a tẹ̀ jáde": "readPageSubtitle",
-  "Béèrè ìbéèrè": "askQuestion",
   "Ìdánrawò ìbéèrè": "practiceQuiz",
   "Ilé-ìkàwé mi": "myLibrary",
   "Ìwé ojoojúmọ́": "everydayPapers",
@@ -1443,14 +1444,10 @@
   "A kò lè lo àṣẹ ohùn lórí fóònù yìí. Lo àwọn bọ́tìnnì dípò rẹ̀.": "voiceCommandsUnavailable",
   "Àlàyé": "explainTitle",
   "Àyẹ̀wò. N-ATLAS, tí yóò ṣàlàyé ojú-ìwé ní èdè rẹ, kò tíì so pọ̀. Fún báyìí Magana ń ka ọ̀rọ̀ ojú-ìwé náà gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́.": "explainPreviewBanner",
-  "O sọ pé": "youSaid",
   "A ń ka àwọn nọ́ńbà àti ọ̀rọ̀ láti ojú-ìwé náà gẹ́gẹ́ bí a ṣe tẹ̀ wọ́n.": "readExactlyNote",
-  "Sọ ọ́ ní ìrọ̀rùn": "saySimpler",
-  "Fún mi ní àpẹẹrẹ": "giveExample",
   "Magana lè ṣe àṣìṣe. Yẹ àwọn ìdáhùn pàtàkì wò pẹ̀lú olùkọ́ rẹ.": "explainDisclaimer",
   "Àlàyé jẹ́ nípa ojú-ìwé kan. Ka ojú-ìwé kan kọ́kọ́, lẹ́yìn náà yan Ṣàlàyé èyí.": "explainNoPage",
   "Ṣàlàyé èyí": "explainThis",
-  "Nígbà tí N-ATLAS bá so pọ̀, Magana yóò dáhùn ìbéèrè rẹ láti ojú-ìwé yìí. Fún báyìí, ojú-ìwé náà nìyí.": "explainQuestionPreview",
   "Àyẹ̀wò ni èyí. Àlàyé ní èdè rẹ yóò dé nígbà tí N-ATLAS bá so pọ̀. Ojú-ìwé náà nìyí, a kà á gẹ́gẹ́ bí a ṣe tẹ̀ ẹ́.": "msg_explain_preview",
   "Àlàyé náà nìyí.": "msg_explained",
   "Kò sí ọ̀rọ̀ ojú-ìwé láti ṣàlàyé. Jọ̀wọ́ ka ojú-ìwé kan kọ́kọ́.": "msg_explain_bad_source",
@@ -1740,7 +1737,13 @@
   "Àwọn ìdáhùn rẹ ń ran òṣìṣẹ́ ìlera lọ́wọ́ láti pinnu bí ó ṣe máa pè ọ́ kíákíá. Magana kì í ṣe àyẹ̀wò àìsàn. Tí o bá ní àmì ewu, Magana yóò sọ fún ọ pé kí o lọ sí ilé ìwòsàn nísinsìnyí tàbí pe 112.": "quickCheckNoteRules",
   "Ìtọ́sọ́nà ohùn ní Gẹ̀ẹ́sì": "voiceEnglishGuidance",
   "Ìtọ́sọ́nà ohùn ní Gẹ̀ẹ́sì: ó wà ní títàn.": "voiceEnglishGuidanceOn",
-  "Ìtọ́sọ́nà ohùn ní Gẹ̀ẹ́sì: ó wà ní pípa.": "voiceEnglishGuidanceOff"
+  "Ìtọ́sọ́nà ohùn ní Gẹ̀ẹ́sì: ó wà ní pípa.": "voiceEnglishGuidanceOff",
+  "Kíkà yìí lè ní àṣìṣe púpọ̀.": "msg_offline_letters_unreliable",
+  "Ojú ìwé yìí sọ nípa ìlera, owó tàbí ààbò, nítorí náà mi ò ní ṣàlàyé rẹ̀. Jọ̀wọ́ bi olùkọ́ rẹ.": "msg_explain_ask_teacher",
+  "Àlàyé máa ń ṣàlàyé ojú ìwé tí o kà nìkan. A kì í dáhùn ìbéèrè.": "msg_explain_one_task",
+  "Lẹ́yìn àlàyé, sọ “repeat”, “slower”, “next” tàbí “stop”.": "explainCommandsHint",
+  "Lọ́ra díẹ̀": "explainSlower",
+  "Òpin àlàyé.": "explainEnd"
  },
  "ig": {
   "Magana": "appTitle",
@@ -1749,7 +1752,6 @@
   "Ntọala": "settings",
   "Gụọ peeji": "readPage",
   "Ihe ọmụmụ ụlọ akwụkwọ, akụkọ ahụike, nkwupụta ụlọ akụ, akwụkwọ ozi — ihe ọ bụla e biri ebi": "readPageSubtitle",
-  "Jụọ ajụjụ": "askQuestion",
   "Ajụjụ omume": "practiceQuiz",
   "Ọbá akwụkwọ m": "myLibrary",
   "Akwụkwọ kwa ụbọchị": "everydayPapers",
@@ -2024,14 +2026,10 @@
   "Enweghị ike iji iwu olu na ekwentị a. Jiri bọtịnụ kama.": "voiceCommandsUnavailable",
   "Nkọwa": "explainTitle",
   "Nlele. N-ATLAS, nke ga-akọwa peeji n'asụsụ gị, ejikọbeghị. Ugbu a Magana na-agụ ederede peeji ahụ kpọmkwem ka e si bipụta ya.": "explainPreviewBanner",
-  "Ị kwuru": "youSaid",
   "A na-agụ nọmba na okwu sitere na peeji ahụ kpọmkwem ka e si bipụta ha.": "readExactlyNote",
-  "Kwuo ya n'ụzọ dị mfe": "saySimpler",
-  "Nye ihe atụ": "giveExample",
   "Magana nwere ike imehie. Lelee azịza ndị dị mkpa na onye nkuzi gị.": "explainDisclaimer",
   "Nkọwa bụ maka peeji. Buru ụzọ gụọ peeji, wee họrọ Kọwaa nke a.": "explainNoPage",
   "Kọwaa nke a": "explainThis",
-  "Mgbe ejikọrọ N-ATLAS, Magana ga-aza ajụjụ gị site na peeji a. Ugbu a, lee peeji ahụ.": "explainQuestionPreview",
   "Nke a bụ nlele. Nkọwa n'asụsụ gị ga-abịa mgbe ejikọrọ N-ATLAS. Lee peeji ahụ, a gụrụ ya kpọmkwem ka e si bipụta ya.": "msg_explain_preview",
   "Lee nkọwa ahụ.": "msg_explained",
   "Enweghị ederede peeji a ga-akọwa. Biko buru ụzọ gụọ peeji.": "msg_explain_bad_source",
@@ -2320,7 +2318,13 @@
   "Azịza gị na-enyere onye ọrụ ahụike aka ikpebi oge ọ ga-akpọ gị. Magana anaghị achọpụta ọrịa. Ọ bụrụ na i nwere akara ihe egwu, Magana ga-agwa gị ka ị gaa ụlọ ọgwụ ugbu a ma ọ bụ kpọọ 112.": "quickCheckNoteRules",
   "Ntụziaka olu na Bekee": "voiceEnglishGuidance",
   "Ntụziaka olu na Bekee: agbanyere.": "voiceEnglishGuidanceOn",
-  "Ntụziaka olu na Bekee: agbanyụrụ.": "voiceEnglishGuidanceOff"
+  "Ntụziaka olu na Bekee: agbanyụrụ.": "voiceEnglishGuidanceOff",
+  "Ọgụgụ a nwere ike inwe ọtụtụ mmejọ.": "msg_offline_letters_unreliable",
+  "Peeji a na-ekwu maka ahụike, ego ma ọ bụ nchekwa, ya mere agaghị m akọwa ya. Biko jụọ onye nkuzi gị.": "msg_explain_ask_teacher",
+  "Nkọwa na-akọwa naanị peeji ị gụrụ. Anaghị aza ajụjụ.": "msg_explain_one_task",
+  "Mgbe nkọwa gasịrị, kwuo “repeat”, “slower”, “next” ma ọ bụ “stop”.": "explainCommandsHint",
+  "Nwayọọ": "explainSlower",
+  "Njedebe nkọwa.": "explainEnd"
  },
  "_patterns": {
   "ha": [
@@ -2991,7 +2995,6 @@
   "settings": "Settings",
   "readPage": "Read a page",
   "readPageSubtitle": "Schoolwork, medical reports, bank statements, letters — anything printed",
-  "askQuestion": "Ask a question",
   "practiceQuiz": "Practice quiz",
   "myLibrary": "My library",
   "everydayPapers": "Everyday papers",
@@ -3313,15 +3316,10 @@
   "explainFrom": "From: {source}",
   "explainPreviewBanner": "Preview. N-ATLAS, which will explain pages in your language, is not connected yet. For now Magana reads the page text exactly as printed.",
   "answerLanguage": "Answer language, currently {language}",
-  "youSaid": "You said",
   "readExactlyNote": "Numbers and words from the page are read exactly as printed.",
-  "saySimpler": "Say it simpler",
-  "giveExample": "Give an example",
   "explainDisclaimer": "Magana can make mistakes. Check important answers with your teacher.",
-  "askAQuestion": "Ask a question",
   "explainNoPage": "Explanations are about a page. Read a page first, then choose Explain this.",
   "explainThis": "Explain this",
-  "explainQuestionPreview": "When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.",
   "msg_explain_preview": "This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",
   "msg_explained": "Here is the explanation.",
   "msg_explain_bad_source": "There is no page text to explain. Please read a page first.",
@@ -3673,7 +3671,15 @@
   "voiceEnglishGuidance": "Spoken guidance in English",
   "voiceEnglishGuidanceDetail": "While this phone has no {language} voice, Magana says its own menus, cues and warnings in English. {language} page text is never read in English: it is shown on the screen.",
   "voiceEnglishGuidanceOn": "Spoken guidance in English: on.",
-  "voiceEnglishGuidanceOff": "Spoken guidance in English: off."
+  "voiceEnglishGuidanceOff": "Spoken guidance in English: off.",
+  "pageNoVoice": "This page is in {language}. I can't read it aloud yet.",
+  "msg_offline_letters_unreliable": "This reading may have many mistakes.",
+  "msg_explain_ask_teacher": "This page is about health, money or safety, so I won't explain it. Please ask your teacher.",
+  "msg_explain_one_task": "Explain only explains the page you read. Questions aren't answered.",
+  "explainCommandsHint": "After the explanation, say “repeat”, “slower”, “next” or “stop”.",
+  "waitingFullReading": "{language} page. Waiting a little longer for the full reading.",
+  "explainSlower": "Slower",
+  "explainEnd": "End of the explanation."
  },
  "_ui_patterns": {
   "ha": [
@@ -5152,6 +5158,34 @@
       "text": " cikin Turanci ba: ana nuna shi a kan allo."
      }
     ]
+   },
+   {
+    "id": "pageNoVoice",
+    "pattern": [
+     {
+      "text": "Wannan shafi da "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": " yake. Ba zan iya karanta shi da murya ba tukuna."
+     }
+    ]
+   },
+   {
+    "id": "waitingFullReading",
+    "pattern": [
+     {
+      "text": "Shafin "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": ". Ina ɗan jira don cikakken karatu."
+     }
+    ]
    }
   ],
   "yo": [
@@ -6625,6 +6659,34 @@
      },
      {
       "text": " ní Gẹ̀ẹ́sì: a máa ń fi hàn lójú ìbojú."
+     }
+    ]
+   },
+   {
+    "id": "pageNoVoice",
+    "pattern": [
+     {
+      "text": "Ojú ìwé yìí wà ní "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": ". Mi ò tíì lè kà á sókè."
+     }
+    ]
+   },
+   {
+    "id": "waitingFullReading",
+    "pattern": [
+     {
+      "text": "Ojú ìwé "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": ". Mo ń dúró díẹ̀ sí i fún kíkà kíkún."
      }
     ]
    }
@@ -8106,6 +8168,1773 @@
      },
      {
       "text": " n'asụsụ Bekee: a na-egosi ya na ihuenyo."
+     }
+    ]
+   },
+   {
+    "id": "pageNoVoice",
+    "pattern": [
+     {
+      "text": "Peeji a dị n'asụsụ "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": ". Enweghị m ike ịgụpụta ya ugbu a."
+     }
+    ]
+   },
+   {
+    "id": "waitingFullReading",
+    "pattern": [
+     {
+      "text": "Peeji "
+     },
+     {
+      "slot": "language"
+     },
+     {
+      "text": ". M na-echere ntakịrị maka ọgụgụ zuru ezu."
+     }
+    ]
+   }
+  ]
+ },
+ "_english_plural": {
+  "lineCount": {
+   "var": "count",
+   "branches": {
+    "=1": "1 line",
+    "other": "{count} lines"
+   }
+  },
+  "rowCount": {
+   "var": "count",
+   "branches": {
+    "=1": "1 row",
+    "other": "{count} rows"
+   }
+  },
+  "daysCount": {
+   "var": "count",
+   "branches": {
+    "=1": "1 day",
+    "other": "{count} days"
+   }
+  },
+  "weekReadSchool": {
+   "var": "count",
+   "branches": {
+    "=1": "1 page of schoolwork read",
+    "other": "{count} pages of schoolwork read"
+   }
+  },
+  "weekReadMedicine": {
+   "var": "count",
+   "branches": {
+    "=1": "1 medicine label read",
+    "other": "{count} medicine labels read"
+   }
+  },
+  "weekReadReport": {
+   "var": "count",
+   "branches": {
+    "=1": "1 medical report read",
+    "other": "{count} medical reports read"
+   }
+  },
+  "weekReadStatement": {
+   "var": "count",
+   "branches": {
+    "=1": "1 bank statement or receipt read",
+    "other": "{count} bank statements or receipts read"
+   }
+  },
+  "weekQuiz": {
+   "var": "count",
+   "branches": {
+    "=1": "1 quiz finished",
+    "other": "{count} quizzes finished"
+   }
+  },
+  "weekLesson": {
+   "var": "count",
+   "branches": {
+    "=1": "1 lesson finished",
+    "other": "{count} lessons finished"
+   }
+  },
+  "libraryDeletesIn": {
+   "var": "count",
+   "branches": {
+    "=0": "deleted today",
+    "=1": "deleted tomorrow",
+    "other": "deleted in {count} days"
+   }
+  },
+  "basedOnPage": {
+   "var": "count",
+   "branches": {
+    "=1": "Based on: 1 line of your page",
+    "other": "Based on: {count} lines and rows of your page"
+   }
+  },
+  "weekReadLetter": {
+   "var": "count",
+   "branches": {
+    "=1": "1 letter or form read",
+    "other": "{count} letters or forms read"
+   }
+  },
+  "letterCount": {
+   "var": "count",
+   "branches": {
+    "=1": "1 word may be wrong.",
+    "other": "{count} words may be wrong."
+   }
+  },
+  "queueDropped": {
+   "var": "count",
+   "branches": {
+    "=1": "The oldest waiting page was removed: up to 20 pages can wait.",
+    "other": "The {count} oldest waiting pages were removed: up to 20 pages can wait."
+   }
+  },
+  "fullReadingsReady": {
+   "var": "count",
+   "branches": {
+    "=1": "A full reading is ready in My library.",
+    "other": "{count} full readings are ready in My library."
+   }
+  },
+  "summaryNumbers": {
+   "var": "count",
+   "branches": {
+    "=1": "1 number is unclear.",
+    "other": "{count} numbers are unclear."
+   }
+  },
+  "summaryLines": {
+   "var": "count",
+   "branches": {
+    "=1": "1 line is hard to read.",
+    "other": "{count} lines are hard to read."
+   }
+  },
+  "touchChoices": {
+   "var": "count",
+   "branches": {
+    "=1": "1 choice",
+    "other": "{count} choices"
+   }
+  },
+  "summaryMissed": {
+   "var": "count",
+   "branches": {
+    "=1": "I may have missed 1 line.",
+    "other": "I may have missed {count} lines."
+   }
+  },
+  "linesFound": {
+   "var": "count",
+   "branches": {
+    "=1": "1 line found.",
+    "other": "{count} lines found."
+   }
+  },
+  "rowsFound": {
+   "var": "count",
+   "branches": {
+    "=1": "1 table row found.",
+    "other": "{count} table rows found."
+   }
+  }
+ },
+ "_ui_plurals": {
+  "ha": [
+   {
+    "id": "lineCount",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "layi 1"
+     }
+    ]
+   },
+   {
+    "id": "lineCount",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "layuka "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "rowCount",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "jere 1"
+     }
+    ]
+   },
+   {
+    "id": "rowCount",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "jeri "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "daysCount",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "kwana 1"
+     }
+    ]
+   },
+   {
+    "id": "daysCount",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "kwanaki "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "weekReadSchool",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "An karanta shafin aikin makaranta 1"
+     }
+    ]
+   },
+   {
+    "id": "weekReadSchool",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "An karanta shafukan aikin makaranta "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "weekReadMedicine",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "An karanta alamar magani 1"
+     }
+    ]
+   },
+   {
+    "id": "weekReadMedicine",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "An karanta alamun magani "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "weekReadReport",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "An karanta rahoton lafiya 1"
+     }
+    ]
+   },
+   {
+    "id": "weekReadReport",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "An karanta rahotannin lafiya "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "weekReadStatement",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "An karanta bayanin banki ko rasidi 1"
+     }
+    ]
+   },
+   {
+    "id": "weekReadStatement",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "An karanta bayanan banki ko rasidi "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "weekQuiz",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "An gama gwaji 1"
+     }
+    ]
+   },
+   {
+    "id": "weekQuiz",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "An gama gwaje-gwaje "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "weekLesson",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "An gama darasi 1"
+     }
+    ]
+   },
+   {
+    "id": "weekLesson",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "An gama darussa "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "libraryDeletesIn",
+    "var": "count",
+    "branch": "=0",
+    "pattern": [
+     {
+      "text": "za a goge yau"
+     }
+    ]
+   },
+   {
+    "id": "libraryDeletesIn",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "za a goge gobe"
+     }
+    ]
+   },
+   {
+    "id": "libraryDeletesIn",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "za a goge cikin kwanaki "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "basedOnPage",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Bisa: layi 1 na shafinka"
+     }
+    ]
+   },
+   {
+    "id": "basedOnPage",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Bisa: layuka "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " na shafinka"
+     }
+    ]
+   },
+   {
+    "id": "weekReadLetter",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "An karanta wasiƙa ko fom 1"
+     }
+    ]
+   },
+   {
+    "id": "weekReadLetter",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "An karanta wasiƙu ko fom "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "letterCount",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Kalma 1 na iya zama ba daidai ba."
+     }
+    ]
+   },
+   {
+    "id": "letterCount",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Kalmomi "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " na iya zama ba daidai ba."
+     }
+    ]
+   },
+   {
+    "id": "queueDropped",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "An cire tsohon shafin da ke jira: shafuka 20 ne kawai ke iya jira."
+     }
+    ]
+   },
+   {
+    "id": "queueDropped",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "An cire tsofaffin shafuka "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " da ke jira: shafuka 20 ne kawai ke iya jira."
+     }
+    ]
+   },
+   {
+    "id": "fullReadingsReady",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Cikakken karatu ya shirya a Ɗakin karatuna."
+     }
+    ]
+   },
+   {
+    "id": "fullReadingsReady",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Cikakkun karatu "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " sun shirya a Ɗakin karatuna."
+     }
+    ]
+   },
+   {
+    "id": "summaryNumbers",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Lamba 1 ba ta bayyana ba."
+     }
+    ]
+   },
+   {
+    "id": "summaryNumbers",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Lambobi "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " ba su bayyana ba."
+     }
+    ]
+   },
+   {
+    "id": "summaryLines",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Layi 1 yana da wahalar karantawa."
+     }
+    ]
+   },
+   {
+    "id": "summaryLines",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Layuka "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " suna da wahalar karantawa."
+     }
+    ]
+   },
+   {
+    "id": "touchChoices",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "zaɓi 1"
+     }
+    ]
+   },
+   {
+    "id": "touchChoices",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "zaɓuɓɓuka "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "summaryMissed",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Wataƙila na tsallake layi 1."
+     }
+    ]
+   },
+   {
+    "id": "summaryMissed",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Wataƙila na tsallake layuka "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "linesFound",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "An sami layi 1."
+     }
+    ]
+   },
+   {
+    "id": "linesFound",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "An sami layuka "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "rowsFound",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "An sami layin tebur 1."
+     }
+    ]
+   },
+   {
+    "id": "rowsFound",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "An sami layukan tebur "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": "."
+     }
+    ]
+   }
+  ],
+  "yo": [
+   {
+    "id": "lineCount",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "ìlà 1"
+     }
+    ]
+   },
+   {
+    "id": "lineCount",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "ìlà "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "rowCount",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "ọ̀wọ́ 1"
+     }
+    ]
+   },
+   {
+    "id": "rowCount",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "ọ̀wọ́ "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "daysCount",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "ọjọ́ 1"
+     }
+    ]
+   },
+   {
+    "id": "daysCount",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "ọjọ́ "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "weekReadSchool",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Ojú-ìwé iṣẹ́ ilé-ìwé 1 ni a kà"
+     }
+    ]
+   },
+   {
+    "id": "weekReadSchool",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Ojú-ìwé iṣẹ́ ilé-ìwé "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " ni a kà"
+     }
+    ]
+   },
+   {
+    "id": "weekReadMedicine",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Àmì oògùn 1 ni a kà"
+     }
+    ]
+   },
+   {
+    "id": "weekReadMedicine",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Àmì oògùn "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " ni a kà"
+     }
+    ]
+   },
+   {
+    "id": "weekReadReport",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Ìròyìn ìlera 1 ni a kà"
+     }
+    ]
+   },
+   {
+    "id": "weekReadReport",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Ìròyìn ìlera "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " ni a kà"
+     }
+    ]
+   },
+   {
+    "id": "weekReadStatement",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Ìwé bánkì tàbí rìsíìtì 1 ni a kà"
+     }
+    ]
+   },
+   {
+    "id": "weekReadStatement",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Ìwé bánkì tàbí rìsíìtì "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " ni a kà"
+     }
+    ]
+   },
+   {
+    "id": "weekQuiz",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Ìdánrawò 1 ti parí"
+     }
+    ]
+   },
+   {
+    "id": "weekQuiz",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Ìdánrawò "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " ti parí"
+     }
+    ]
+   },
+   {
+    "id": "weekLesson",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Ẹ̀kọ́ 1 ti parí"
+     }
+    ]
+   },
+   {
+    "id": "weekLesson",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Ẹ̀kọ́ "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " ti parí"
+     }
+    ]
+   },
+   {
+    "id": "libraryDeletesIn",
+    "var": "count",
+    "branch": "=0",
+    "pattern": [
+     {
+      "text": "a ó pa á rẹ́ lónìí"
+     }
+    ]
+   },
+   {
+    "id": "libraryDeletesIn",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "a ó pa á rẹ́ lọ́la"
+     }
+    ]
+   },
+   {
+    "id": "libraryDeletesIn",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "a ó pa á rẹ́ ní ọjọ́ "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "basedOnPage",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Ó dá lórí: ìlà 1 nínú ojú-ìwé rẹ"
+     }
+    ]
+   },
+   {
+    "id": "basedOnPage",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Ó dá lórí: ìlà "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " nínú ojú-ìwé rẹ"
+     }
+    ]
+   },
+   {
+    "id": "weekReadLetter",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Lẹ́tà tàbí fọ́ọ̀mù 1 ni a kà"
+     }
+    ]
+   },
+   {
+    "id": "weekReadLetter",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Lẹ́tà tàbí fọ́ọ̀mù "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " ni a kà"
+     }
+    ]
+   },
+   {
+    "id": "letterCount",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Ọ̀rọ̀ 1 lè ṣàṣìṣe."
+     }
+    ]
+   },
+   {
+    "id": "letterCount",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Ọ̀rọ̀ "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " lè ṣàṣìṣe."
+     }
+    ]
+   },
+   {
+    "id": "queueDropped",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "A ti yọ ojú ìwé tó ti pẹ́ jù tó ń dúró: ojú ìwé 20 péré ló lè dúró."
+     }
+    ]
+   },
+   {
+    "id": "queueDropped",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "A ti yọ ojú ìwé "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " tó ti pẹ́ jù tó ń dúró: ojú ìwé 20 péré ló lè dúró."
+     }
+    ]
+   },
+   {
+    "id": "fullReadingsReady",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Kíkà kíkún kan ti ṣetán nínú Ilé-ìkàwé mi."
+     }
+    ]
+   },
+   {
+    "id": "fullReadingsReady",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Kíkà kíkún "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " ti ṣetán nínú Ilé-ìkàwé mi."
+     }
+    ]
+   },
+   {
+    "id": "summaryNumbers",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Nọ́ńbà 1 kò ṣe kedere."
+     }
+    ]
+   },
+   {
+    "id": "summaryNumbers",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Nọ́ńbà "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " kò ṣe kedere."
+     }
+    ]
+   },
+   {
+    "id": "summaryLines",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Ìlà 1 ṣòro láti kà."
+     }
+    ]
+   },
+   {
+    "id": "summaryLines",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Ìlà "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " ṣòro láti kà."
+     }
+    ]
+   },
+   {
+    "id": "touchChoices",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "àṣàyàn 1"
+     }
+    ]
+   },
+   {
+    "id": "touchChoices",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "àṣàyàn "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "summaryMissed",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Ó ṣeé ṣe kí n ti fo ìlà 1."
+     }
+    ]
+   },
+   {
+    "id": "summaryMissed",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Ó ṣeé ṣe kí n ti fo ìlà "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "linesFound",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "A rí ìlà 1."
+     }
+    ]
+   },
+   {
+    "id": "linesFound",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "A rí ìlà "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "rowsFound",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "A rí ìlà tábìlì 1."
+     }
+    ]
+   },
+   {
+    "id": "rowsFound",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "A rí ìlà tábìlì "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": "."
+     }
+    ]
+   }
+  ],
+  "ig": [
+   {
+    "id": "lineCount",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "ahịrị 1"
+     }
+    ]
+   },
+   {
+    "id": "lineCount",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "ahịrị "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "rowCount",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "usoro 1"
+     }
+    ]
+   },
+   {
+    "id": "rowCount",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "usoro "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "daysCount",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "ụbọchị 1"
+     }
+    ]
+   },
+   {
+    "id": "daysCount",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "ụbọchị "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "weekReadSchool",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Agụrụ peeji ọrụ ụlọ akwụkwọ 1"
+     }
+    ]
+   },
+   {
+    "id": "weekReadSchool",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Agụrụ peeji ọrụ ụlọ akwụkwọ "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "weekReadMedicine",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Agụrụ akara ọgwụ 1"
+     }
+    ]
+   },
+   {
+    "id": "weekReadMedicine",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Agụrụ akara ọgwụ "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "weekReadReport",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Agụrụ akụkọ ahụike 1"
+     }
+    ]
+   },
+   {
+    "id": "weekReadReport",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Agụrụ akụkọ ahụike "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "weekReadStatement",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Agụrụ akwụkwọ ụlọ akụ ma ọ bụ nnata 1"
+     }
+    ]
+   },
+   {
+    "id": "weekReadStatement",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Agụrụ akwụkwọ ụlọ akụ ma ọ bụ nnata "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "weekQuiz",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Emechara ajụjụ 1"
+     }
+    ]
+   },
+   {
+    "id": "weekQuiz",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Emechara ajụjụ "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "weekLesson",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Emechara nkuzi 1"
+     }
+    ]
+   },
+   {
+    "id": "weekLesson",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Emechara nkuzi "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "libraryDeletesIn",
+    "var": "count",
+    "branch": "=0",
+    "pattern": [
+     {
+      "text": "a ga-ehichapụ ya taa"
+     }
+    ]
+   },
+   {
+    "id": "libraryDeletesIn",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "a ga-ehichapụ ya echi"
+     }
+    ]
+   },
+   {
+    "id": "libraryDeletesIn",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "a ga-ehichapụ ya n'ụbọchị "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "basedOnPage",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Dabere na: ahịrị 1 nke peeji gị"
+     }
+    ]
+   },
+   {
+    "id": "basedOnPage",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Dabere na: ahịrị "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " nke peeji gị"
+     }
+    ]
+   },
+   {
+    "id": "weekReadLetter",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Agụrụ akwụkwọ ozi ma ọ bụ fọm 1"
+     }
+    ]
+   },
+   {
+    "id": "weekReadLetter",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Agụrụ akwụkwọ ozi ma ọ bụ fọm "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "letterCount",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Otu okwu nwere ike ịdị njọ."
+     }
+    ]
+   },
+   {
+    "id": "letterCount",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Okwu "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " nwere ike ịdị njọ."
+     }
+    ]
+   },
+   {
+    "id": "queueDropped",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "E wepụrụ peeji kacha ochie na-eche: naanị peeji 20 nwere ike ichere."
+     }
+    ]
+   },
+   {
+    "id": "queueDropped",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "E wepụrụ peeji "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " kacha ochie na-eche: naanị peeji 20 nwere ike ichere."
+     }
+    ]
+   },
+   {
+    "id": "fullReadingsReady",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Ọgụgụ zuru ezu dị njikere n'Ọbá akwụkwọ m."
+     }
+    ]
+   },
+   {
+    "id": "fullReadingsReady",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Ọgụgụ zuru ezu "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " dị njikere n'Ọbá akwụkwọ m."
+     }
+    ]
+   },
+   {
+    "id": "summaryNumbers",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Nọmba 1 edoghị anya."
+     }
+    ]
+   },
+   {
+    "id": "summaryNumbers",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Nọmba "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " edoghị anya."
+     }
+    ]
+   },
+   {
+    "id": "summaryLines",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Ahịrị 1 siri ike ịgụ."
+     }
+    ]
+   },
+   {
+    "id": "summaryLines",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Ahịrị "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": " siri ike ịgụ."
+     }
+    ]
+   },
+   {
+    "id": "touchChoices",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "nhọrọ 1"
+     }
+    ]
+   },
+   {
+    "id": "touchChoices",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "nhọrọ "
+     },
+     {
+      "slot": "count"
+     }
+    ]
+   },
+   {
+    "id": "summaryMissed",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Enwere ike m hapụrụ ahịrị 1."
+     }
+    ]
+   },
+   {
+    "id": "summaryMissed",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Enwere ike m hapụrụ ahịrị "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "linesFound",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Ahụrụ ahịrị 1."
+     }
+    ]
+   },
+   {
+    "id": "linesFound",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Ahụrụ ahịrị "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": "."
+     }
+    ]
+   },
+   {
+    "id": "rowsFound",
+    "var": "count",
+    "branch": "=1",
+    "pattern": [
+     {
+      "text": "Ahụrụ ahịrị tebụl 1."
+     }
+    ]
+   },
+   {
+    "id": "rowsFound",
+    "var": "count",
+    "branch": "other",
+    "pattern": [
+     {
+      "text": "Ahụrụ ahịrị tebụl "
+     },
+     {
+      "slot": "count"
+     },
+     {
+      "text": "."
      }
     ]
    }

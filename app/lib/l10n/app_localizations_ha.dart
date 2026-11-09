@@ -39,9 +39,6 @@ class AppLocalizationsHa extends AppLocalizations {
       'Aikin makaranta, rahoton asibiti, bayanan banki, wasiƙu — duk abin da aka buga';
 
   @override
-  String get askQuestion => 'Yi tambaya';
-
-  @override
   String get practiceQuiz => 'Jarabawar gwaji';
 
   @override
@@ -1300,9 +1297,6 @@ class AppLocalizationsHa extends AppLocalizations {
   }
 
   @override
-  String get youSaid => 'Ka ce';
-
-  @override
   String basedOnPage(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -1318,17 +1312,8 @@ class AppLocalizationsHa extends AppLocalizations {
       'Ana karanta lambobi da kalmomi daga shafin daidai yadda aka buga.';
 
   @override
-  String get saySimpler => 'Faɗa a sauƙaƙe';
-
-  @override
-  String get giveExample => 'Ba da misali';
-
-  @override
   String get explainDisclaimer =>
       'Magana na iya yin kuskure. Duba muhimman amsoshi tare da malaminka.';
-
-  @override
-  String get askAQuestion => 'Yi tambaya';
 
   @override
   String get explainNoPage =>
@@ -1336,10 +1321,6 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get explainThis => 'Yi bayanin wannan';
-
-  @override
-  String get explainQuestionPreview =>
-      'Idan an haɗa N-ATLAS, Magana za ta amsa tambayarka daga wannan shafin. A yanzu, ga shafin.';
 
   @override
   String get msg_explain_preview =>
@@ -2725,4 +2706,58 @@ class AppLocalizationsHa extends AppLocalizations {
 
   @override
   String get voiceEnglishGuidanceOff => 'Jagorar murya cikin Turanci: a kashe.';
+
+  @override
+  String pageNoVoice(String language) {
+    return 'Wannan shafi da $language yake. Ba zan iya karanta shi da murya ba tukuna.';
+  }
+
+  @override
+  String linesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'An sami layuka $count.',
+      one: 'An sami layi 1.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rowsFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'An sami layukan tebur $count.',
+      one: 'An sami layin tebur 1.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get msg_offline_letters_unreliable =>
+      'Wannan karatun na iya samun kurakurai da yawa.';
+
+  @override
+  String get msg_explain_ask_teacher =>
+      'Wannan shafi yana magana ne kan lafiya, kuɗi ko tsaro, don haka ba zan bayyana shi ba. Don Allah ka tambayi malaminka.';
+
+  @override
+  String get msg_explain_one_task =>
+      'Bayani yana bayyana shafin da ka karanta kawai. Ba a amsa tambayoyi.';
+
+  @override
+  String get explainCommandsHint =>
+      'Bayan bayanin, faɗi “repeat”, “slower”, “next” ko “stop”.';
+
+  @override
+  String waitingFullReading(String language) {
+    return 'Shafin $language. Ina ɗan jira don cikakken karatu.';
+  }
+
+  @override
+  String get explainSlower => 'A hankali';
+
+  @override
+  String get explainEnd => 'Ƙarshen bayanin.';
 }

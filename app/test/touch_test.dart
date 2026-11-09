@@ -33,7 +33,7 @@ void main() {
     expect(find.byType(EverydayScreen), findsNothing);
     expect(
       speaker.said.last,
-      matches(RegExp(r'^Everyday papers\. \d of 9\. Tap again to open\.$')),
+      matches(RegExp(r'^Everyday papers\. \d of 8\. Tap again to open\.$')),
     );
     expect(touch.focused.value?.label, en.everydayPapers);
     // What was said is shown at the foot, for low vision.
@@ -258,16 +258,16 @@ void main() {
       final touch = TouchToHear(on: false);
       await pumpApp(tester, FakeSpeaker(), touch: touch);
       final off = [
-        en.askQuestion,
         en.practiceQuiz,
+        en.myLibrary,
       ].map((t) => tester.getSize(control(t))).toList();
       await touch.set(true);
       await tester.pumpAndSettle();
       await tester.tap(control(en.practiceQuiz));
       await tester.pumpAndSettle();
       final on = [
-        en.askQuestion,
         en.practiceQuiz,
+        en.myLibrary,
       ].map((t) => tester.getSize(control(t))).toList();
       expect(
         on,

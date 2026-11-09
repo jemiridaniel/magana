@@ -152,7 +152,6 @@ void main() {
         ('my library', VoiceCommand.library),
         ('skills', VoiceCommand.skills),
         ('my score', VoiceCommand.score),
-        ('ask a question', VoiceCommand.ask),
         ('medicine reminders', VoiceCommand.reminders),
         ('talk to a nurse', VoiceCommand.nurse),
         ('change language to Igbo', VoiceCommand.language),
@@ -162,6 +161,8 @@ void main() {
         expect(matchCommand(said, all), want, reason: said);
       }
       expect(matchCommand('the latest news', all), isNull);
+      // No open questions (docs/LLM_SAFETY.md): asking opens nothing.
+      expect(matchCommand('ask a question', all), isNull);
       expect(matchCommand('', all), isNull);
     });
 
@@ -170,6 +171,23 @@ void main() {
       expect(matchCommand('talk to a nurse', teen), isNull);
       expect(matchCommand('practice quiz', teen), VoiceCommand.quiz);
     });
+
+    test('Explain hears commands only, never a question', () {
+      for (final (said, want) in [
+        ('repeat', ExplainCommand.repeat),
+        ('say it again', ExplainCommand.repeat),
+        ('slower please', ExplainCommand.slower),
+        ('next', ExplainCommand.next),
+        ('stop', ExplainCommand.stop),
+        ('read the page again', ExplainCommand.readAgain),
+        ('in English please', ExplainCommand.english),
+        ('help', ExplainCommand.help),
+      ]) {
+        expect(matchExplainCommand(said), want, reason: said);
+      }
+      expect(matchExplainCommand('how much paracetamol should I take'), isNull);
+      expect(matchExplainCommand('what does this table mean'), isNull);
+    }, tags: 'safety');
 
     test('a named language', () {
       expect(namedLanguage('change language to Igbo')?.code, 'ig');
@@ -293,20 +311,38 @@ void main() {
       expect(find.text(en.basedOnPage(2)), findsOneWidget);
       expectAccessible(tester, 'Explain');
 
+      // Each explanation is the one task: no question, no other style.
+      expect(sent.containsKey('question'), isFalse);
+      expect(sent['style'], 'explain');
       await tap(tester, en.answerLanguage('English'));
-      await tap(tester, en.saySimpler);
       expect(backend.explains.last['lang'], 'ha');
-      expect(backend.explains.last['style'], 'simpler');
-
-      voice.replies.add(['what does this table mean']);
-      await tap(tester, en.askAQuestion);
-      expect(voice.languages.last, 'en'); // the app language
       expect(
-        find.bySemanticsLabel('${en.youSaid}: what does this table mean'),
-        findsOneWidget,
+        find.bySemanticsLabel(RegExp('simpler', caseSensitive: false)),
+        findsNothing,
       );
-      expect(backend.explains.last['question'], 'what does this table mean');
-      expect(speaker.said.last, startsWith(en.explainQuestionPreview));
+
+      // What the learner says is a command, never a question to the model.
+      final asked = backend.explains.length;
+      voice.replies.add(['what does this table mean']);
+      await tap(tester, en.speakCommand);
+      expect(voice.languages.last, 'en'); // the app language
+      expect(backend.explains, hasLength(asked));
+      expect(
+        speaker.said.last,
+        '${en.commandNotUnderstood('what does this table mean')} '
+        '${en.explainCommandsHint}',
+      );
+      voice.replies.add(['repeat']);
+      await tap(tester, en.speakCommand);
+      expect(backend.explains, hasLength(asked));
+      expect(speaker.said.last, startsWith(en.msg_explain_preview));
+      voice.replies.add(['slower']);
+      await tap(tester, en.speakCommand);
+      expect(speaker.rates.last, lessThan(1.0));
+      expect(speaker.said.last, startsWith(en.msg_explain_preview));
+      voice.replies.add(['next']);
+      await tap(tester, en.speakCommand);
+      expect(speaker.said.last, isNot(startsWith(en.msg_explain_preview)));
 
       await tap(tester, en.reportProblem);
       expect(
@@ -340,7 +376,6 @@ void main() {
       await captureToReader(tester);
       await tap(tester, en.explainThis);
       await tap(tester, en.answerLanguage('English')); // → Hausa
-      await tap(tester, en.saySimpler);
       expect(backend.explains.last['lang'], 'ha');
       final coming = en.msg_explain_language_coming('Hausa');
       expect(coming, 'Explain in Hausa is coming. You can hear it in English.');
@@ -354,26 +389,22 @@ void main() {
 
       // By voice: "English" takes the offer too.
       await tap(tester, en.answerLanguage('English'));
-      await tap(tester, en.saySimpler);
       expect(find.text(coming), findsOneWidget);
       voice.replies.add(['in english please']);
-      await tap(tester, en.askAQuestion);
+      await tap(tester, en.speakCommand);
       expect(backend.explains.last['lang'], 'en');
       handle.dispose();
     },
   );
 
-  testWidgets('ask a question from Home: explains a page, so read one first', (
+  testWidgets('Home has no Ask a question: Explain starts from a page', (
     tester,
   ) async {
-    final handle = tester.ensureSemantics();
-    final (speaker, backend, _, _) = await start(tester);
-    await tap(tester, en.askQuestion);
-    expect(find.text(en.explainNoPage), findsOneWidget);
-    expect(speaker.said.last, '${en.explainTitle}. ${en.explainNoPage}');
+    final (speaker, backend, voice, _) = await start(tester);
+    expect(find.bySemanticsLabel(RegExp('^Ask a question')), findsNothing);
+    await say(tester, voice, 'ask a question');
+    expect(speaker.said.last, isNot(contains('Ask a question')));
     expect(backend.explains, isEmpty);
-    expectAccessible(tester, 'Explain without a page');
-    handle.dispose();
   });
 
   testWidgets('under 13: no Explain this in the Reader', (tester) async {
@@ -381,24 +412,6 @@ void main() {
     await captureToReader(tester);
     expect(find.bySemanticsLabel(en.explainThis), findsNothing);
   });
-
-  for (final tier in [Tier.guided, Tier.classroom]) {
-    testWidgets('${tier.name}: Ask a question is hidden, by tile and by voice', (
-      tester,
-    ) async {
-      final (speaker, backend, voice, _) = await start(tester, tier: tier);
-      expect(find.bySemanticsLabel(RegExp('^${en.askQuestion}')), findsNothing);
-      if (tier == Tier.guided) {
-        // Classroom sessions have no voice commands for open questions either;
-        // Guided learners can speak commands, but this one isn't offered.
-        await say(tester, voice, 'ask a question');
-        expect(speaker.said.last, en.commandSorry);
-        await say(tester, voice, 'help');
-        expect(speaker.said.last, isNot(contains(en.askQuestion)));
-      }
-      expect(backend.explains, isEmpty);
-    });
-  }
 
   testWidgets(
     'tester build without an approved host: not available, page read',

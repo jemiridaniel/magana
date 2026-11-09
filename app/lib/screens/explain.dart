@@ -2,19 +2,24 @@ import 'package:flutter/material.dart';
 
 import '../api.dart';
 import '../app_scope.dart';
+import '../commands.dart';
 import '../l10n/app_localizations.dart';
 import '../language.dart';
 import '../messages.dart';
+import '../speech.dart';
 import '../theme.dart';
 import '../voice_input.dart';
 import '../widgets.dart';
 import 'capture.dart';
 import 'report_problem.dart';
 
-/// Explain in my language (design 6). N-ATLAS is not hosted yet, so this is a
-/// preview: the backend's preview engine gives back the page text itself. Every
-/// answer comes through the backend's number guard; when the guard fails, the
-/// page text is read instead (CLAUDE.md rule 1).
+/// Explain in my language (design 6). One task only: explain the page Magana
+/// read (backend/llm/natlas_guard.py, docs/LLM_SAFETY.md). No questions, no
+/// chat: what the learner says here is a command (repeat, slower, next, stop,
+/// read again, English, help), never sent to the model. Every answer comes
+/// through the backend's checks; when one fails, the page text is read instead
+/// (CLAUDE.md rule 1). Pages about health, money or harm are never explained:
+/// "Ask your teacher".
 class ExplainScreen extends StatefulWidget {
   const ExplainScreen({
     super.key,
@@ -41,8 +46,11 @@ class _ExplainScreenState extends State<ExplainScreen> {
   bool? _voiceWorks;
   bool _listening = false;
   late String _language = Localizations.localeOf(context).languageCode;
-  String? _question;
   Explanation? _answer;
+  String _spoken = ''; // the whole answer as last said
+  List<String> _sentences = const [];
+  int _at = -1; // the sentence "next" last said; -1: the whole answer
+  (Speaker, double)? _rateBefore; // "slower": put back on leaving
   String? _error;
   bool _busy = false;
 
@@ -65,10 +73,11 @@ class _ExplainScreenState extends State<ExplainScreen> {
   @override
   void dispose() {
     if (_listening) _voice.stop();
+    if (_rateBefore case (final speaker, final rate)) speaker.setRate(rate);
     super.dispose();
   }
 
-  Future<void> _ask({String style = 'explain'}) async {
+  Future<void> _ask() async {
     final scope = AppScope.of(context);
     setState(() {
       _busy = true;
@@ -78,20 +87,24 @@ class _ExplainScreenState extends State<ExplainScreen> {
       final a = await scope.api.explain(
         sourceText: widget.lines.join('\n'),
         language: _language,
-        question: _question,
-        style: style,
         mode: widget.mode,
       );
       if (!mounted) return;
-      setState(() => _answer = a);
-      scope.speaker.say(
-        [
-          if (_question != null && a.preview) _l.explainQuestionPreview,
+      final body = a.spoken((code) => messageFor(_l, code));
+      setState(() {
+        _answer = a;
+        _at = -1;
+        _sentences = [
+          for (final s in body.split(RegExp(r'(?<=[.!?])\s+')))
+            if (s.trim().isNotEmpty) s.trim(),
+        ];
+        _spoken = [
           messageFor(_l, a.code, language: _languageName),
-          a.spoken((code) => messageFor(_l, code)),
+          body,
           if (a.followup case final f?) messageFor(_l, f),
-        ].join(' '),
-      );
+        ].join(' ');
+      });
+      scope.speaker.say(_spoken);
     } on ApiException catch (e) {
       if (!mounted) return;
       final msg = messageFor(_l, e.code);
@@ -134,25 +147,57 @@ class _ExplainScreenState extends State<ExplainScreen> {
       speaker.say(_l.commandNothingHeard);
       return;
     }
-    // "read again": the page exactly as printed, numbers and all.
-    if (RegExp(r'\bread\b.*\bagain\b|\bread the page\b')
-        .hasMatch(heard.first.toLowerCase())) {
-      _readPage();
+    _command(heard.first);
+  }
+
+  /// A spoken command. Anything else is not understood: never a question.
+  void _command(String heard) {
+    final speaker = AppScope.of(context).speaker;
+    switch (matchExplainCommand(heard)) {
+      case ExplainCommand.readAgain:
+        // The page exactly as printed, numbers and all.
+        _readPage();
+      case ExplainCommand.repeat:
+        _repeat();
+      case ExplainCommand.slower:
+        _slower();
+      case ExplainCommand.next:
+        _next();
+      case ExplainCommand.stop:
+        speaker.stop();
+      case ExplainCommand.english when _languageComing:
+        // The offer when this language isn't on yet.
+        _inEnglish();
+      case ExplainCommand.help:
+        speaker.say(_l.explainCommandsHint);
+      case ExplainCommand.english || null:
+        speaker.say(
+          '${_l.commandNotUnderstood(heard)} ${_l.explainCommandsHint}',
+        );
+    }
+  }
+
+  void _repeat() {
+    if (!_hasPage) return;
+    AppScope.of(context).speaker
+        .say(_at >= 0 && _at < _sentences.length ? _sentences[_at] : _spoken);
+  }
+
+  Future<void> _slower() async {
+    final speaker = AppScope.of(context).speaker;
+    _rateBefore ??= (speaker, speaker.rate);
+    await speaker.setRate((speaker.rate * 0.75).clamp(0.5, 2.0));
+    if (mounted) _repeat();
+  }
+
+  void _next() {
+    final speaker = AppScope.of(context).speaker;
+    if (_at + 1 >= _sentences.length) {
+      speaker.say(_l.explainEnd);
       return;
     }
-    // "English": the offer when this language isn't on yet.
-    if (_languageComing &&
-        RegExp(r'\benglish\b|turanci|gẹ̀ẹ́sì|geesi|bekee')
-            .hasMatch(heard.first.toLowerCase())) {
-      _inEnglish();
-      return;
-    }
-    setState(() => _question = heard.first);
-    if (_hasPage) {
-      _ask();
-    } else {
-      speaker.say(_l.explainNoPage);
-    }
+    setState(() => _at++);
+    speaker.say(_sentences[_at]);
   }
 
   void _readPage() => AppScope.of(context).speaker.say(widget.lines.join('\n'));
@@ -172,7 +217,11 @@ class _ExplainScreenState extends State<ExplainScreen> {
     final i = appLanguages.indexWhere((a) => a.code == _language);
     final next = appLanguages[(i + 1) % appLanguages.length];
     setState(() => _language = next.code);
-    AppScope.of(context).speaker.say(_l.answerLanguage(next.name));
+    if (_hasPage) {
+      _ask(); // the same page, explained again in the new language
+    } else {
+      AppScope.of(context).speaker.say(_l.answerLanguage(next.name));
+    }
   }
 
   void _report() => openReportProblem(
@@ -216,48 +265,6 @@ class _ExplainScreenState extends State<ExplainScreen> {
             ),
           ),
         ],
-        if (_question case final q?)
-          Align(
-            alignment: Alignment.centerRight,
-            child: Semantics(
-              container: true,
-              label: '${l.youSaid}: $q',
-              excludeSemantics: true,
-              child: Container(
-                constraints: const BoxConstraints(maxWidth: 300),
-                padding: const EdgeInsets.all(14),
-                decoration: const BoxDecoration(
-                  color: MaganaColors.ink,
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(18),
-                    topRight: Radius.circular(18),
-                    bottomLeft: Radius.circular(18),
-                    bottomRight: Radius.circular(4),
-                  ),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      l.youSaid,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        color: Color(0xFFC9CED4),
-                      ),
-                    ),
-                    Text(
-                      q,
-                      style: const TextStyle(
-                        fontSize: 19,
-                        height: 1.4,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
         if (_error case final e?) NoteBox(text: e, kind: NoteKind.warning),
         if (_busy) const Center(child: CircularProgressIndicator()),
         if (answer != null && !_busy)
@@ -319,17 +326,21 @@ class _ExplainScreenState extends State<ExplainScreen> {
           PrimaryButton(label: l.explainInEnglish, onTap: _inEnglish),
         if (_hasPage) ...[
           SecondaryButton(
-            label: l.saySimpler,
-            onTap: _busy ? null : () => _ask(style: 'simpler'),
+            label: l.repeat,
+            onTap: _busy || answer == null ? null : _repeat,
           ),
           SecondaryButton(
-            label: l.giveExample,
-            onTap: _busy ? null : () => _ask(style: 'example'),
+            label: l.explainSlower,
+            onTap: _busy || answer == null ? null : _slower,
           ),
-          if (answer?.followup != null)
-            SecondaryButton(label: l.explainReadAgain, onTap: _readPage),
+          SecondaryButton(
+            label: l.next,
+            onTap: _busy || answer == null ? null : _next,
+          ),
+          SecondaryButton(label: l.explainReadAgain, onTap: _readPage),
           SecondaryButton(label: l.reportProblem, onTap: _report),
         ],
+        if (_hasPage) Text(l.explainCommandsHint, textAlign: TextAlign.center),
         Text(
           l.explainDisclaimer,
           textAlign: TextAlign.center,
@@ -338,12 +349,12 @@ class _ExplainScreenState extends State<ExplainScreen> {
       ],
       bottom: [
         Labelled(
-          label: _listening ? l.listeningCommand : l.askAQuestion,
+          label: _listening ? l.listeningCommand : l.speakCommand,
           onTap: _listen,
           child: FilledButton.icon(
             onPressed: _listen,
             icon: Icon(_listening ? Icons.stop : Icons.mic_none, size: 30),
-            label: Text(_listening ? l.listeningCommand : l.askAQuestion),
+            label: Text(_listening ? l.listeningCommand : l.speakCommand),
             style: FilledButton.styleFrom(
               backgroundColor: MaganaColors.amber,
               foregroundColor: MaganaColors.ink,

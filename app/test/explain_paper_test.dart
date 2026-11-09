@@ -155,7 +155,7 @@ void main() {
 
       speaker.said.clear();
       voice.replies.add(['read again']);
-      await tester.tap(find.bySemanticsLabel(en.askAQuestion));
+      await tester.tap(find.bySemanticsLabel(en.speakCommand));
       await tester.pumpAndSettle();
       expect(speaker.said.last, page);
     },

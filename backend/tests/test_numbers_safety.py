@@ -17,10 +17,12 @@ from app.main import app, get_explain_engine
 client = TestClient(app)
 
 
+pytestmark = pytest.mark.safety
+
+
 @pytest.fixture(autouse=True)
-def development(monkeypatch):
-    monkeypatch.setenv("MAGANA_ENV", "development")
-    monkeypatch.setenv("EXPLAIN_LANGS", "en,ha,yo,ig")  # the checks, in every language
+def development(monkeypatch, natlas_test_prompts):
+    monkeypatch.setenv("MAGANA_ENV", "development")  # the checks, in every language
 
 
 class Recording:
@@ -128,7 +130,7 @@ def test_the_old_benchmark_problems_are_all_refused(answer, source, lang, expect
 
 
 def test_each_placeholder_at_most_once_and_no_others_left_out_is_allowed():
-    source = "Take 2 tablets every 4 to 6 hours."  # ⟦N1⟧ every ⟦N2⟧ to ⟦N3⟧
+    source = SCHOOL_PAGE  # ⟦N1⟧ every ⟦N2⟧ to ⟦N3⟧
     assert problems_with("Sha ⟦N1⟧ kowane ⟦N2⟧ zuwa ⟦N3⟧.", source, "ha") == set()
     # Left out: allowed, nothing numeric was added (the app points to the page).
     assert problems_with("Sha ⟦N1⟧ kowane ⟦N2⟧.", source, "ha") == set()
@@ -138,26 +140,31 @@ def test_each_placeholder_at_most_once_and_no_others_left_out_is_allowed():
     assert problems_with("Sha ⟦N1⟧ kowane ⟦N2⟧ zuwa ⟦N3⟧ ⟦N9⟧.", source, "ha") == {"placeholder_unknown"}
 
 
+# A school page (health pages never reach the model). Masks as:
+# Plants need ⟦N1⟧ of sunlight. Water them with ⟦N2⟧ cups every ⟦N3⟧ to ⟦N4⟧.
+SCHOOL_PAGE = "Plants need 6 hours of sunlight. Water them with 2 cups every 4 to 6 days."
+
+
 def test_an_answer_that_leaves_numbers_out_is_refused_and_the_page_read(engine):
     """Every ⟦N⟧ must be in the answer exactly once (CLAUDE.md rule 1): one left out is refused,
     after one retry."""
-    engine.answer = "Sha magani kamar yadda aka rubuta a takardar."  # no markers at all
-    body = client.post("/explain", json={"source_text": "Take 2 tablets every 4 to 6 hours.", "lang": "ha"},
+    engine.answer = "Shuka tana bukatar hasken rana da ruwa."  # no markers at all
+    body = client.post("/explain", json={"source_text": SCHOOL_PAGE, "lang": "ha"},
                        headers={"X-Magana-Tier": "standard"}).json()
     assert body["code"] == "numbers_unconfirmed" and body["explanation"] is None
-    assert body["read_instead"] == "Take 2 tablets every 4 to 6 hours." and len(engine.calls) == 2
+    assert body["read_instead"] == SCHOOL_PAGE and len(engine.calls) == 2
 
 
 def test_an_answer_with_every_marker_is_given(engine):
-    engine.answer = "Sha ⟦N1⟧ kowane ⟦N2⟧ zuwa ⟦N3⟧."
-    body = client.post("/explain", json={"source_text": "Take 2 tablets every 4 to 6 hours.", "lang": "ha"},
+    engine.answer = "Shuka ⟦N1⟧: ruwa ⟦N2⟧ kowane ⟦N3⟧ zuwa ⟦N4⟧."
+    body = client.post("/explain", json={"source_text": SCHOOL_PAGE, "lang": "ha"},
                        headers={"X-Magana-Tier": "standard"}).json()
     assert body["code"] == "explained" and "followup" not in body
 
 
 def test_an_answer_that_adds_a_number_is_still_refused(engine):
-    engine.answer = "Sha ⟦N1⟧ sau 3 a rana."  # "3 times a day" is not on the page
-    body = client.post("/explain", json={"source_text": "Take 2 tablets every 4 to 6 hours.", "lang": "ha"},
+    engine.answer = "Shuka ⟦N1⟧ sau 3 a rana."  # "3 times a day" is not on the page
+    body = client.post("/explain", json={"source_text": SCHOOL_PAGE, "lang": "ha"},
                        headers={"X-Magana-Tier": "standard"}).json()
     assert body["code"] == "numbers_unconfirmed" and "followup" not in body
 

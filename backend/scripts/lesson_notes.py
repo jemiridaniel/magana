@@ -159,19 +159,15 @@ def _dictionary() -> set[str]:
     return _words_cache
 
 
-def ask_local(system: str, user: str, schema: dict, n_predict: int = 400) -> dict | None:
-    """N-ATLaS on this Mac (llama.cpp), JSON constrained by [schema]; never a remote API."""
-    import httpx
-
-    from app.explain import render_llama31, today
+def ask_local(system: str, user: str, schema: dict, max_tokens: int = 400) -> dict | None:
+    """N-ATLaS on this Mac (llama.cpp), JSON constrained by [schema]; never a remote API. Through
+    the one entry point to the model (backend/llm/natlas_guard.py)."""
+    from llm import natlas_guard
 
     if not LLM.startswith(("http://127.0.0.1", "http://localhost")):
         raise SystemExit("LESSON_LLM_URL must be a model on this machine")
-    r = httpx.post(f"{LLM}/completion", timeout=600, json={
-        "prompt": render_llama31(system, user, today()), "temperature": 0, "n_predict": n_predict,
-        "json_schema": schema})
     try:
-        return json.loads(r.json()["content"])
+        return json.loads(natlas_guard.local_tool_completion(LLM, system, user, schema, max_tokens))
     except (ValueError, KeyError):
         return None
 

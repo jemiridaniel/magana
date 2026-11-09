@@ -1,0 +1,2 @@
+# version: ig-placeholder
+# status: placeholder (to be written in Igbo by a native speaker; until then Explain in Igbo stays off, whatever NATLAS_ENABLED_LANGS says)

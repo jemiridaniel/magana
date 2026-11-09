@@ -14,7 +14,6 @@ import '../commands.dart';
 import '../layout.dart';
 import '../voice_input.dart';
 import 'capture.dart';
-import 'explain.dart';
 import 'health_worker.dart';
 import 'reminders.dart';
 import 'settings.dart';
@@ -75,12 +74,6 @@ class _HomeScreenState extends State<HomeScreen> {
     // Only what this age tier may use: a screen-reader user never
     // reaches a dead end (CLAUDE.md rule 4).
     final tiles = [
-      if (can(Feature.openChat))
-        _Tile(
-          Icons.help_outline,
-          l.askQuestion,
-          () => _open(const ExplainScreen(lines: [], source: '')),
-        ),
       if (can(Feature.quiz))
         _Tile(
           Icons.task_alt,
@@ -731,8 +724,6 @@ void runCommand(BuildContext context, String transcript) {
       open(const SkillsScreen());
     case VoiceCommand.score:
       open(const ScoreScreen());
-    case VoiceCommand.ask:
-      open(const ExplainScreen(lines: [], source: ''));
     case VoiceCommand.settings:
       open(const SettingsScreen());
     case VoiceCommand.tour:
@@ -764,7 +755,6 @@ void runCommand(BuildContext context, String transcript) {
         VoiceCommand.library: l.myLibrary,
         VoiceCommand.skills: l.skills,
         VoiceCommand.score: l.myScore,
-        VoiceCommand.ask: l.askQuestion,
         VoiceCommand.language: l.changeLanguageCommand,
         VoiceCommand.settings: l.settings,
         VoiceCommand.tour: l.tourOpen,

@@ -24,9 +24,9 @@ void main() {
     await pumpApp(tester, FakeSpeaker(), size: ipadPortrait);
     expect(tester.getRect(find.byType(Scaffold).first).width, 834);
     final row = [
-      en.askQuestion,
       en.practiceQuiz,
       en.myLibrary,
+      en.readPdf,
     ].map((t) => tester.getRect(control(t))).toList();
     expect(row.map((r) => r.top).toSet(), hasLength(1)); // one row of three
     expect(row[0].left < row[1].left && row[1].left < row[2].left, isTrue);
@@ -49,11 +49,11 @@ void main() {
   testWidgets('a phone held sideways is still a phone', (tester) async {
     await pumpApp(tester, FakeSpeaker(), size: const Size(844, 390));
     expect(find.text(en.readPageTablet), findsNothing);
-    final ask = tester.getRect(control(en.askQuestion));
     final quiz = tester.getRect(control(en.practiceQuiz));
     final library = tester.getRect(control(en.myLibrary));
-    expect(ask.top, quiz.top); // the phone's 2 columns
-    expect(library.top, greaterThan(quiz.top));
+    final everyday = tester.getRect(control(en.everydayPapers));
+    expect(library.top, quiz.top); // the phone's 2 columns
+    expect(everyday.top, greaterThan(quiz.top));
     expect(control(en.readPdf), findsNothing);
   });
 

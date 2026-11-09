@@ -1,0 +1,5 @@
+# Test tags (dart test / flutter test --tags safety).
+tags:
+  # Safety rules a learner depends on (CLAUDE.md): kept fast, run on every push (ci.yml, job
+  # "safety"), as well as in the full run.
+  safety:

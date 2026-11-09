@@ -39,9 +39,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Schoolwork, medical reports, bank statements, letters — anything printed';
 
   @override
-  String get askQuestion => 'Ask a question';
-
-  @override
   String get practiceQuiz => 'Practice quiz';
 
   @override
@@ -1295,9 +1292,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get youSaid => 'You said';
-
-  @override
   String basedOnPage(num count) {
     String _temp0 = intl.Intl.pluralLogic(
       count,
@@ -1313,17 +1307,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'Numbers and words from the page are read exactly as printed.';
 
   @override
-  String get saySimpler => 'Say it simpler';
-
-  @override
-  String get giveExample => 'Give an example';
-
-  @override
   String get explainDisclaimer =>
       'Magana can make mistakes. Check important answers with your teacher.';
-
-  @override
-  String get askAQuestion => 'Ask a question';
 
   @override
   String get explainNoPage =>
@@ -1331,10 +1316,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get explainThis => 'Explain this';
-
-  @override
-  String get explainQuestionPreview =>
-      'When N-ATLAS is connected, Magana will answer your question from this page. For now, here is the page.';
 
   @override
   String get msg_explain_preview =>
@@ -2721,4 +2702,58 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get voiceEnglishGuidanceOff => 'Spoken guidance in English: off.';
+
+  @override
+  String pageNoVoice(String language) {
+    return 'This page is in $language. I can\'t read it aloud yet.';
+  }
+
+  @override
+  String linesFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count lines found.',
+      one: '1 line found.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String rowsFound(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count table rows found.',
+      one: '1 table row found.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get msg_offline_letters_unreliable =>
+      'This reading may have many mistakes.';
+
+  @override
+  String get msg_explain_ask_teacher =>
+      'This page is about health, money or safety, so I won\'t explain it. Please ask your teacher.';
+
+  @override
+  String get msg_explain_one_task =>
+      'Explain only explains the page you read. Questions aren\'t answered.';
+
+  @override
+  String get explainCommandsHint =>
+      'After the explanation, say “repeat”, “slower”, “next” or “stop”.';
+
+  @override
+  String waitingFullReading(String language) {
+    return '$language page. Waiting a little longer for the full reading.';
+  }
+
+  @override
+  String get explainSlower => 'Slower';
+
+  @override
+  String get explainEnd => 'End of the explanation.';
 }

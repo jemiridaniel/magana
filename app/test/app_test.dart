@@ -223,7 +223,7 @@ void main() {
       await captureToReader(tester);
 
       // Home says what it is first (board 10), then Capture its guidance.
-      expect(speaker.said.take(2), ['Magana. 9 choices.', en.framingGuidance]);
+      expect(speaker.said.take(2), ['Magana. 8 choices.', en.framingGuidance]);
       // The fake speaker finishes instantly, so the whole page has been read.
       expect(find.text('Take 2 tablets every 4 to 6 hours'), findsOneWidget);
       expect(

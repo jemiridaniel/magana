@@ -76,6 +76,8 @@ ENGLISH = {
     # Explanations
     "numbers_unconfirmed": "I couldn't explain this page safely. Here it is read again.",
     "explain_language_coming": "Explain in {language} is coming. You can hear it in English.",
+    "explain_ask_teacher": "This page is about health, money or safety, so I won't explain it. Please ask your teacher.",
+    "explain_one_task": "Explain only explains the page you read. Questions aren't answered.",
     "explain_wrong_language": "I couldn't explain this in your language, so I'll read the page exactly instead.",
     "explain_preview": "This is a preview. Explanations in your language come when N-ATLAS is connected. Here is the page, read exactly as printed.",
     "explained": "Here is the explanation.",

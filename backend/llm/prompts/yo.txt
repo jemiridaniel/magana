@@ -1,0 +1,2 @@
+# version: yo-placeholder
+# status: placeholder (to be written in Yorùbá by a native speaker; until then Explain in Yorùbá stays off, whatever NATLAS_ENABLED_LANGS says)

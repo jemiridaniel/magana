@@ -36,6 +36,7 @@ RUN pip install --no-cache-dir -r requirements.txt -r requirements-second-ocr.tx
  && if [ "$SPEECH" = "on" ]; then pip install --no-cache-dir -r requirements-asr.txt; fi
 
 COPY app ./app
+COPY llm ./llm
 # Teachers' quizzes (MAGANA_DATA_DIR): a volume, owned by the app user.
 RUN mkdir -p /data /home/magana/.cache/huggingface && chown magana /data /home/magana/.cache /home/magana/.cache/huggingface
 USER magana

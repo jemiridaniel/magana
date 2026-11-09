@@ -1,0 +1,298 @@
+{
+  "_about": "Explain's check before the model (backend/llm/natlas_guard.py). A page that is about health or medicine, money or payments, or harm never reaches N-ATLaS: the app plays 'Please ask your teacher'. One 'strong' term is enough; otherwise two different 'words' of the same topic. Matching ignores case, tone marks and hooked letters (OCR loses them), whole words only. DRAFT: written by the developer, for Dr. Amos (health) and native speakers to review. Over-blocking is the safe side.",
+  "en": {
+    "health": {
+      "strong": [
+        "dose",
+        "doses",
+        "dosage",
+        "mg",
+        "tablet",
+        "tablets",
+        "capsule",
+        "capsules",
+        "prescription",
+        "overdose",
+        "syrup",
+        "injection",
+        "vaccine",
+        "pharmacy",
+        "pharmacist"
+      ],
+      "words": [
+        "medicine",
+        "medicines",
+        "drug",
+        "drugs",
+        "hospital",
+        "clinic",
+        "doctor",
+        "nurse",
+        "disease",
+        "malaria",
+        "fever",
+        "pregnant",
+        "pregnancy",
+        "hiv",
+        "treatment",
+        "symptoms",
+        "illness",
+        "sick"
+      ]
+    },
+    "money": {
+      "strong": [
+        "bank account",
+        "account number",
+        "pin",
+        "password",
+        "bvn",
+        "atm",
+        "transfer",
+        "loan",
+        "payment",
+        "payments",
+        "pay now",
+        "debit card",
+        "credit card"
+      ],
+      "words": [
+        "bank",
+        "naira",
+        "₦",
+        "ngn",
+        "money",
+        "fee",
+        "fees",
+        "pay",
+        "price",
+        "balance",
+        "salary",
+        "cash",
+        "deposit"
+      ]
+    },
+    "harm": {
+      "strong": [
+        "suicide",
+        "kill yourself",
+        "bomb",
+        "explosive",
+        "weapon",
+        "weapons",
+        "gun",
+        "guns",
+        "poison",
+        "rape",
+        "kidnap",
+        "self-harm"
+      ],
+      "words": [
+        "kill",
+        "killing",
+        "knife",
+        "attack",
+        "fight",
+        "blood",
+        "hurt",
+        "violence",
+        "drugs",
+        "steal"
+      ]
+    }
+  },
+  "ha": {
+    "health": {
+      "strong": [
+        "magani",
+        "allura",
+        "ƙwayar magani",
+        "kwayar magani",
+        "rigakafi",
+        "kantin magani",
+        "sau uku a rana",
+        "sau biyu a rana"
+      ],
+      "words": [
+        "asibiti",
+        "likita",
+        "cuta",
+        "cututtuka",
+        "zazzaɓi",
+        "zazzabi",
+        "ciwo",
+        "jinya",
+        "ma'aikaciyar jinya",
+        "zazzabin cizon sauro",
+        "rashin lafiya"
+      ]
+    },
+    "money": {
+      "strong": [
+        "asusun banki",
+        "lambar sirri",
+        "kalmar sirri",
+        "bashi",
+        "biyan kuɗi",
+        "biyan kudi",
+        "tura kuɗi",
+        "tura kudi",
+        "katin banki"
+      ],
+      "words": [
+        "banki",
+        "naira",
+        "₦",
+        "kuɗi",
+        "kudi",
+        "biya",
+        "farashi",
+        "albashi",
+        "ajiya"
+      ]
+    },
+    "harm": {
+      "strong": [
+        "kashe kansa",
+        "kashe kai",
+        "bam",
+        "bindiga",
+        "makami",
+        "makamai",
+        "guba",
+        "fyaɗe",
+        "fyade",
+        "garkuwa da mutane"
+      ],
+      "words": [
+        "kisa",
+        "wuƙa",
+        "wuka",
+        "jini",
+        "rauni",
+        "sata"
+      ]
+    }
+  },
+  "yo": {
+    "health": {
+      "strong": [
+        "oògùn",
+        "abẹ́rẹ́",
+        "abẹrẹ",
+        "ilé ìtajà oògùn",
+        "àjẹsára",
+        "ẹ̀ẹ̀mẹta lójúmọ́"
+      ],
+      "words": [
+        "ilé ìwòsàn",
+        "dókítà",
+        "nọ́ọ̀sì",
+        "àìsàn",
+        "ibà",
+        "ìtọ́jú",
+        "aláboyún",
+        "oyún"
+      ]
+    },
+    "money": {
+      "strong": [
+        "àkọọ́lẹ̀ báńkì",
+        "nọ́ńbà àkọọ́lẹ̀",
+        "ọ̀rọ̀ ìpamọ́",
+        "gbèsè",
+        "ìsanwó",
+        "fi owó ránṣẹ́",
+        "káàdì báńkì"
+      ],
+      "words": [
+        "báńkì",
+        "náírà",
+        "₦",
+        "owó",
+        "sanwó",
+        "iye owó",
+        "owó oṣù"
+      ]
+    },
+    "harm": {
+      "strong": [
+        "ìpara-ẹni",
+        "pa ara rẹ̀",
+        "àdó olóró",
+        "ìbọn",
+        "ohun ìjà",
+        "májèlé",
+        "ìfipábánilòpọ̀",
+        "jíjí ènìyàn gbé"
+      ],
+      "words": [
+        "pípa",
+        "ọ̀bẹ",
+        "ìjà",
+        "ẹ̀jẹ̀",
+        "ọgbẹ́",
+        "olè"
+      ]
+    }
+  },
+  "ig": {
+    "health": {
+      "strong": [
+        "ọgwụ",
+        "ọgwụ mgbochi",
+        "ịgba ọgwụ",
+        "ụlọ ahịa ọgwụ",
+        "ugboro atọ n'ụbọchị"
+      ],
+      "words": [
+        "ụlọ ọgwụ",
+        "dọkịta",
+        "nọọsụ",
+        "ọrịa",
+        "ahụ ọkụ",
+        "ịba",
+        "ọgwụgwọ"
+      ]
+    },
+    "money": {
+      "strong": [
+        "akaụntụ ụlọ akụ",
+        "nọmba akaụntụ",
+        "okwuntughe",
+        "ụgwọ",
+        "ịkwụ ụgwọ",
+        "ziga ego",
+        "kaadị ụlọ akụ"
+      ],
+      "words": [
+        "ụlọ akụ",
+        "naịra",
+        "₦",
+        "ego",
+        "kwụọ",
+        "ọnụ ahịa",
+        "ụgwọ ọnwa"
+      ]
+    },
+    "harm": {
+      "strong": [
+        "igbu onwe",
+        "gbuo onwe gị",
+        "bọmbụ",
+        "egbe",
+        "ngwa agha",
+        "nsi",
+        "idina n'ike",
+        "ịtọrọ mmadụ"
+      ],
+      "words": [
+        "igbu",
+        "ọgụ",
+        "ọbara",
+        "merụọ ahụ",
+        "ohi"
+      ]
+    }
+  }
+}
