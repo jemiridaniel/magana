@@ -1,15 +1,17 @@
 #!/usr/bin/env python3
 """Put native speakers' recordings into the app (docs/recording/RECORDING_GUIDE.md).
 
-    backend/.venv/bin/python scripts/import_clips.py <folder of recordings> [--dry-run]
+    backend/.venv/bin/python scripts/import_clips.py <folder of recordings> [--dry-run] [--out DIR]
 
 Each file is named <lang>-<phrase ID>.<m4a|mp3|wav|…> as in docs/recording/magana-phrases.xlsx.
 Each one is checked against app/assets/voice/phrases.json (unknown names are listed, not used)
 and for clipping in the ORIGINAL recording (CLIP_THRESHOLD_DB; a clipped original can't be fixed
 by loudness normalisation, so this is checked before conversion, not after). It's then converted
 with ffmpeg: mono, 22.05 kHz AAC in .m4a, loudness evened out (EBU R128, -16 LUFS), silence
-trimmed at both ends. The results go to app/assets/voice/<lang>-<ID>.m4a and
-app/assets/voice/clips.json, which the app reads (app/lib/clips.dart). The report at the end
+trimmed at both ends (about 150 ms of quiet kept on each side). The results go to
+app/assets/voice/<lang>-<ID>.m4a and app/assets/voice/clips.json, which the app reads
+(app/lib/clips.dart); with --out DIR they go to DIR instead (a staging folder, for checking
+before they go into the app). The report at the end
 also names every known phrase ID with no recording yet (not just a count), for each language.
 Recordings are a person's voice: keep the originals out of the repository.
 """
@@ -25,9 +27,28 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 VOICE = ROOT / "app/assets/voice"
 AUDIO = {".m4a", ".mp3", ".wav", ".aac", ".ogg", ".opus", ".flac", ".caf", ".3gp", ".amr"}
-FILTER = ("silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.15,"
-          "areverse,silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.25,areverse,"
-          "loudnorm=I=-16:TP=-1.5:LRA=11")
+TRIM = ("silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.15,"
+        "areverse,silenceremove=start_periods=1:start_threshold=-45dB:start_silence=0.15,areverse")
+LOUDNORM = "loudnorm=I=-16:TP=-1.5:LRA=11"
+# Peaks held at -3 dBFS after normalising: AAC encoding overshoots by 1-2 dB, and without this
+# some prompts peaked above 0 dBFS (+1.4), which a phone speaker plays as a crackle.
+LIMIT = "alimiter=limit=0.708:attack=5:release=50:level=false"
+LOUDNORM_JSON = re.compile(r"\{[^{}]*\"input_i\"[^{}]*\}", re.S)
+
+
+def loudness_filter(path: Path) -> str:
+    """Two-pass loudness normalisation: measure the trimmed clip, then correct it linearly. One
+    pass leaves short prompts several LU apart (-19 to -14 LUFS for one speaker's 46 prompts,
+    9 Nov 2026); two passes put each one at the same level, so no prompt is louder than the next."""
+    r = subprocess.run(["ffmpeg", "-nostdin", "-hide_banner", "-i", str(path), "-ac", "1", "-ar", "22050",
+                        "-af", f"{TRIM},{LOUDNORM}:print_format=json", "-f", "null", "-"],
+                       capture_output=True, text=True)
+    m = LOUDNORM_JSON.search(r.stderr)
+    if not m:
+        return LOUDNORM
+    v = json.loads(m.group(0))
+    return (f"{LOUDNORM}:measured_I={v['input_i']}:measured_TP={v['input_tp']}:measured_LRA={v['input_lra']}"
+            f":measured_thresh={v['input_thresh']}:offset={v['target_offset']}:linear=true")
 # A peak this close to 0 dBFS means the original recording was almost certainly clipped (the
 # microphone was overloaded) -- loudness normalisation can't recover audio that was never
 # captured, so this is checked on the ORIGINAL file, before ffmpeg touches it.
@@ -61,11 +82,13 @@ def main(argv: list[str]) -> int:
         print(__doc__)
         return 2
     src, dry = Path(argv[0]), "--dry-run" in argv
+    out_dir = Path(argv[argv.index("--out") + 1]).expanduser() if "--out" in argv else VOICE
+    out_dir.mkdir(parents=True, exist_ok=True)
     if not shutil.which("ffmpeg") and not dry:
         print("ffmpeg is needed (brew install ffmpeg)")
         return 1
     ids = known_ids()
-    clips_file = VOICE / "clips.json"
+    clips_file = out_dir / "clips.json"
     clips = json.loads(clips_file.read_text(encoding="utf-8")) if clips_file.exists() else {}
     added, unknown, failed, clipped = 0, [], [], []
     for f in sorted(p for p in src.rglob("*") if p.suffix.lower() in AUDIO):
@@ -77,10 +100,11 @@ def main(argv: list[str]) -> int:
         if peak is not None and peak >= CLIP_THRESHOLD_DB:
             clipped.append(f"{f.name}: peak {peak:+.1f} dB (re-record quieter or further from the mic)")
             continue  # a clipped original is unusable regardless of what conversion would do
-        out = VOICE / f"{lang}-{pid}.m4a"
+        out = out_dir / f"{lang}-{pid}.m4a"
         if not dry:
             r = subprocess.run(["ffmpeg", "-y", "-loglevel", "error", "-i", str(f), "-ac", "1",
-                                "-ar", "22050", "-af", FILTER, "-c:a", "aac", "-b:a", "64k", str(out)],
+                                "-ar", "22050", "-af", f"{TRIM},{loudness_filter(f)},{LIMIT}", "-c:a", "aac",
+                                "-b:a", "64k", str(out)],
                                capture_output=True, text=True)
             if r.returncode != 0 or not out.exists() or out.stat().st_size < 1000:
                 failed.append(f"{f.name}: {r.stderr.strip()[:120] or 'empty after trimming'}")
