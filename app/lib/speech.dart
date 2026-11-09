@@ -410,7 +410,13 @@ class Speaker {
       if (turn != _turn) return false;
     }
     diagnostics.asked('[clip ${piece.clip}] ${piece.text}');
-    final done = await clipPlayer.play(piece.clip!);
+    bool done;
+    try {
+      done = await clipPlayer.play(piece.clip!);
+    } catch (e) {
+      devLog('clips: ${piece.clip} failed ($e)');
+      done = false;
+    }
     if (turn != _turn) return false;
     return done || await _sayWithVoice(piece.text, lang, turn, wanted);
   }

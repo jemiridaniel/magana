@@ -2526,9 +2526,6 @@ class AppLocalizationsYo extends AppLocalizations {
   String get pictureTaken => 'Mo ti ya fọ́tò. Mò ń kà á…';
 
   @override
-  String get stillReading => 'Mo ṣì ń kà á…';
-
-  @override
   String get noTextMoveBack =>
       'Mi ò rí ọ̀rọ̀ kankan. Gbìyànjú láti gbé fóònù sókè díẹ̀ sí i.';
 

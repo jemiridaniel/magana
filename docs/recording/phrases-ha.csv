@@ -538,7 +538,6 @@ highContrast,ha-highContrast.m4a,Bambanci mai ƙarfi,High contrast,App phrase,dr
 pageViewLabel,ha-pageViewLabel.m4a,"Takardarka, an haskaka layin da ake karantawa","Your page, current line highlighted",App phrase,draft
 missedLineLabel,ha-missedLineLabel.m4a,Layin da wataƙila na tsallake,A line I may have missed,App phrase,draft
 pictureTaken,ha-pictureTaken.m4a,An ɗauki hoto. Ina karantawa…,Picture taken. Reading…,App phrase,draft
-stillReading,ha-stillReading.m4a,Har yanzu ina karantawa…,Still reading…,App phrase,draft
 noTextMoveBack,ha-noTextMoveBack.m4a,Ban sami rubutu ba. Gwada ɗaga wayar nesa kaɗan.,I couldn't find text. Try moving the phone further away.,App phrase,draft
 torchGlareOff,ha-torchGlareOff.m4a,"Hasken yana haskakawa a kan takardar, don haka na kashe shi.","The light was shining back off the page, so I turned it off.",App phrase,draft
 offlineBannerSendFailed,ha-offlineBannerSendFailed.m4a,Hoton bai isa sabar Magana ba (matsalar haɗi). Ina karantawa a wannan wayar.,The photo didn't reach Magana's server (connection problem). Reading on this phone.,App phrase,draft

@@ -222,18 +222,33 @@ class ClipPart {
 
 /// Plays a clip to the end. Replaceable in tests.
 abstract class ClipPlayer {
-  /// True when it played to the end; false when stopped or it couldn't play.
+  /// True when it played to the end; false when stopped or it couldn't play (the file is
+  /// missing, the player failed or didn't start): the phone's voice then says the words
+  /// (Speaker._playClip), so a failed clip is never a silence.
   Future<bool> play(String file);
   Future<void> stop();
 }
 
 class AssetClipPlayer implements ClipPlayer {
+  /// [create]: for tests, an audio player that needs no plugin.
+  AssetClipPlayer({AudioPlayer Function()? create}) : _create = create ?? AudioPlayer.new;
+
+  final AudioPlayer Function() _create;
   AudioPlayer? _player;
   Completer<bool>? _playing;
 
-  AudioPlayer get _p => _player ??= AudioPlayer()
+  /// A clip that hasn't started by then counts as not played.
+  static const startTimeout = Duration(seconds: 2);
+
+  AudioPlayer get _p => _player ??= _create()
     ..setReleaseMode(ReleaseMode.stop)
-    ..onPlayerComplete.listen((_) => _end(true));
+    ..onPlayerComplete.listen(
+      (_) => _end(true),
+      onError: (Object e) {
+        devLog('clips: playback failed ($e)');
+        _end(false);
+      },
+    );
 
   void _end(bool done) {
     final c = _playing;
@@ -246,10 +261,12 @@ class AssetClipPlayer implements ClipPlayer {
     _end(false);
     final done = _playing = Completer<bool>();
     try {
-      await _p.play(AssetSource('voice/$file'));
+      await _p.play(AssetSource('voice/$file')).timeout(startTimeout);
     } catch (e) {
       devLog('clips: $file not played ($e)');
       _end(false);
+      // No late start over the phone's voice.
+      unawaited(_player?.stop().catchError((_) {}));
     }
     return done.future;
   }

@@ -661,7 +661,6 @@
   "summaryMissed": "{count, plural, =1{Wataƙila na tsallake layi 1.} other{Wataƙila na tsallake layuka {count}.}}",
   "missedLineLabel": "Layin da wataƙila na tsallake",
   "pictureTaken": "An ɗauki hoto. Ina karantawa…",
-  "stillReading": "Har yanzu ina karantawa…",
   "noTextMoveBack": "Ban sami rubutu ba. Gwada ɗaga wayar nesa kaɗan.",
   "torchGlareOff": "Hasken yana haskakawa a kan takardar, don haka na kashe shi.",
   "offlineBannerSendFailed": "Hoton bai isa sabar Magana ba (matsalar haɗi). Ina karantawa a wannan wayar.",

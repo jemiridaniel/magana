@@ -4062,12 +4062,6 @@ abstract class AppLocalizations {
   /// **'Picture taken. Reading…'**
   String get pictureTaken;
 
-  /// No description provided for @stillReading.
-  ///
-  /// In en, this message translates to:
-  /// **'Still reading…'**
-  String get stillReading;
-
   /// No description provided for @noTextMoveBack.
   ///
   /// In en, this message translates to:
@@ -4404,7 +4398,7 @@ abstract class AppLocalizations {
   /// **'End of the explanation.'**
   String get explainEnd;
 
-  /// Capture: said 8 s after "Still reading…" (which comes 5 s after the photo), then every 8 s until the reading comes, so a wait is never silent. Wording changed 9 Nov 2026; until Dr. Amos records it, the phone's voice says it.
+  /// Capture: said 5 s after the photo while the reading is still being waited for, then every 8 s until it comes, so a wait is never silent. Wording changed 9 Nov 2026; until Dr. Amos records it, the phone's voice says it.
   ///
   /// In en, this message translates to:
   /// **'Please wait, I\'m still reading.'**

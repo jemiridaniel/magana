@@ -30,14 +30,19 @@ No real phone and no blind or low-vision tester has been used yet.
   - Test: `hausa_safety_test.dart`.
   - **Follow-up (same day): no wait is silent.**
     - Before, after "Still reading…" at 5 s, the 25 s server wait and the 40 s wait for a Hausa, Yorùbá or Igbo page could each go 20 s or more with no speech.
-    - Now "Still reading…" is said 5 s after the photo, then a reminder 8 s later (13 s) and every 8 s after that (21 s, 29 s…) until the reading comes (`stillReadingAfter`, `stillReadingEvery` in `capture.dart`).
-    - The reminder now says "Please wait, I'm still reading." (was "Still reading, please wait."; Hausa, Yorùbá and Igbo drafts reordered the same way). The old wording started like "Still reading…" said 8 s earlier, and one local speech-to-text model heard Dr. Amos's "Still reading" as "Stop reading", next to a "Stop waiting" button. Leading with "Please wait" makes the two prompts sound different. It is in Dr. Amos's pack as a new phrase; until he records it, the phone's voice says it.
+    - Now "Please wait, I'm still reading." is said 5 s after the photo and every 8 s after that (13 s, 21 s…) until the reading comes (`stillReadingAfter`, `stillReadingEvery` in `capture.dart`). The safety test checks the first three at 5, 13 and 21 s.
+    - Wording (later the same day): the reminder was "Still reading, please wait.", after a separate "Still reading…" at 5 s. One local speech-to-text model heard Dr. Amos's recorded "Still reading" as "Stop reading", next to a "Stop waiting" button, so "Still reading…" is gone and the one reminder leads with "Please wait" (Hausa, Yorùbá and Igbo drafts reordered the same way). It is in Dr. Amos's pack as a new phrase; until he records it, the phone's voice says it.
     - The 40 s wait can be stopped: say "stop", use the "Stop waiting" button, or double-tap anywhere. The phone's reading is then used straight away, with the "may have many mistakes" warning.
     - Test (tag `safety`): from the photo to the page, with a server that answers after 60 s, the longest silence is at most 8 s; "stop" by button and by double tap.
 - **Recorded prompts: same loudness, no crackle** (`scripts/import_clips.py`, measured on Dr. Amos's 46 English prompts, 9 Nov 2026; the clips are not in the app yet):
   - One-pass loudness normalisation left the prompts between −19.1 and −13.6 LUFS, so some would sound clearly louder than the next. Two passes give −15.5 to −18.8 LUFS (target −16).
   - AAC encoding took 6 prompts above 0 dBTP (up to +1.4), which a phone speaker can play as a crackle. With a peak limiter, none goes above 0.0 dBTP.
   - `--shorten-pauses` cuts pauses inside a clip to about 0.4 s. Three prompts had 1.8–2.3 s pauses; after cutting, both local speech-to-text models still hear the same words as before.
+- **A recorded clip that can't play is said by the phone's voice (same day).** Found by building with Dr. Amos's clips in a local copy: two app tests failed, because the test runner has no audio player.
+  - Checked in the app's code: a clip that couldn't play was already said by the phone's voice. But a player that threw an error, or never started, left Magana silent.
+  - Fixed: an error from the player counts as not played. A clip that hasn't started within 2 s also counts as not played, and is stopped so it can't start late over the voice. An error during playback counts the same.
+  - Tests (tag `safety`, `voice_feedback_test.dart`): a missing file, a player that throws, a playback error, and a player that never starts are each said by the phone's voice straight after, within 2 s. A clip that plays is not said again.
+  - Tests now use a stand-in clip player that records each clip played (`FakeSpeaker.heard` / `spoken`). So a test can check "clip played" or "the phone said it", and passes with or without recorded clips.
 - **Dose word fix (same day):**
   - The dose word "every hours" only matched those exact words, so "every 6 hours" got through that check. A number added by the model is still stopped by the number check; one copied from the page was not.
   - Dose words can now hold a number, written N: "every N hours/hour/hrs/hr", "N-hourly" and "N times a day". N is digits, a number word or a range, e.g. "every 4 to 6 hours", "eight-hourly", "2 or 3 times a day".

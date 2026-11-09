@@ -1,10 +1,12 @@
 // Nurse Balogun's voice-note feedback (Android, build 7, eyes closed): voices per language
 // (never Hausa, Yorùbá or Igbo read with an English voice), the best voice and Settings → Voice,
 // recorded prompts, the guided tour, "What can I say?" on every screen, Bluetooth headsets.
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
 import 'package:app/clips.dart';
+import 'package:audioplayers/audioplayers.dart';
 import 'package:app/guidance.dart';
 import 'package:app/l10n/app_localizations.dart';
 import 'package:app/speech.dart';
@@ -29,16 +31,38 @@ class DiskBundle extends CachingAssetBundle {
       ByteData.sublistView(File(key).readAsBytesSync());
 }
 
-class FakeClipPlayer implements ClipPlayer {
-  final played = <String>[];
+/// An audio player that needs no plugin: it plays to the end at once, or fails as asked.
+class FakeAudio implements AudioPlayer {
+  FakeAudio({this.fails = false, this.errors = false, this.hangs = false});
+  final bool fails, errors, hangs;
+  final _complete = StreamController<void>.broadcast();
+
   @override
-  Future<bool> play(String file) async {
-    played.add(file);
-    return true;
+  Stream<void> get onPlayerComplete => _complete.stream;
+  @override
+  Future<void> setReleaseMode(ReleaseMode mode) async {}
+  @override
+  Future<void> play(
+    Source source, {
+    double? volume,
+    double? balance,
+    AudioContext? ctx,
+    Duration? position,
+    PlayerMode? mode,
+  }) async {
+    if (fails) throw Exception('Unable to load asset');
+    if (hangs) return Completer<void>().future;
+    if (errors) {
+      scheduleMicrotask(() => _complete.addError(Exception('decoder failed')));
+    } else {
+      scheduleMicrotask(() => _complete.add(null));
+    }
   }
 
   @override
   Future<void> stop() async {}
+  @override
+  dynamic noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
 }
 
 Future<void> tapLabel(WidgetTester tester, Pattern label) async {
@@ -196,6 +220,102 @@ void main() {
       await s.say('Sha ƙwaya 2 sau 3 a rana.', language: 'ha');
       expect(player.played, ['ha-tpl-x-1.m4a', 'ha-tpl-x-3.m4a']);
       expect(s.said, ['2', 'sau', '3']); // numbers exactly as printed, never a clip
+    });
+
+    group('a clip that fails is said by the phone, with no silence', () {
+      FakeSpeaker withClip(void Function(FakeClipPlayer) setUp) {
+        final s = FakeSpeaker()
+          ..clips = ClipLibrary.of(
+            {
+              'en': {'Page read.': 'pageRead', 'Seven lines.': 'sevenLines'},
+            },
+            {
+              'en': {
+                'pageRead': 'en-pageRead.m4a',
+                'sevenLines': 'en-sevenLines.m4a',
+              },
+            },
+          );
+        setUp(s.clipsPlayed);
+        return s;
+      }
+
+      for (final (why, setUp, heard) in [
+        (
+          'the file is missing',
+          (FakeClipPlayer p) => p.missing.add('en-pageRead.m4a'),
+          ['clip:en-pageRead.m4a', 'Page read.', 'clip:en-sevenLines.m4a'],
+        ),
+        (
+          'the player throws',
+          (FakeClipPlayer p) => p.failing = true,
+          [
+            'clip:en-pageRead.m4a',
+            'Page read.',
+            'clip:en-sevenLines.m4a',
+            'Seven lines.',
+          ],
+        ),
+      ]) {
+        test(why, () async {
+          final s = withClip(setUp);
+          expect(await s.say('Page read. Seven lines.'), isTrue);
+          // The phone's voice says the same words straight after the failed clip; the next
+          // sentence still plays from its clip where it can.
+          expect(s.heard, heard);
+        }, tags: 'safety');
+      }
+
+      test('a clip that plays is not said a second time', () async {
+        final s = withClip((_) {});
+        await s.say('Page read.');
+        expect(s.said, isEmpty);
+        expect(s.clipsPlayed.played, ['en-pageRead.m4a']);
+      }, tags: 'safety');
+
+      // The app's real player (AssetClipPlayer), with an audio player that needs no plugin.
+      for (final (why, audio) in [
+        ('the file is missing', FakeAudio(fails: true)),
+        ('the player reports an error', FakeAudio(errors: true)),
+        ('the player never starts', FakeAudio(hangs: true)),
+      ]) {
+        test('the real player: $why counts as not played', () async {
+          final player = AssetClipPlayer(create: () => audio);
+          final s = FakeSpeaker()
+            ..clips = ClipLibrary.of(
+              {
+                'en': {'Page read.': 'pageRead'},
+              },
+              {
+                'en': {'pageRead': 'en-pageRead.m4a'},
+              },
+            )
+            ..clipPlayer = player;
+          final watch = Stopwatch()..start();
+          expect(await s.say('Page read.'), isTrue);
+          expect(s.said, ['Page read.']);
+          // At most the start timeout before the phone's voice says it.
+          expect(
+            watch.elapsed,
+            lessThan(AssetClipPlayer.startTimeout + const Duration(milliseconds: 500)),
+          );
+        }, tags: 'safety');
+      }
+
+      test('the real player: a clip that plays to the end is not said again', () async {
+        final s = FakeSpeaker()
+          ..clips = ClipLibrary.of(
+            {
+              'en': {'Page read.': 'pageRead'},
+            },
+            {
+              'en': {'pageRead': 'en-pageRead.m4a'},
+            },
+          )
+          ..clipPlayer = AssetClipPlayer(create: () => FakeAudio());
+        expect(await s.say('Page read.'), isTrue);
+        expect(s.said, isEmpty);
+      }, tags: 'safety');
     });
 
     test('no clips recorded yet: everything as before', () async {

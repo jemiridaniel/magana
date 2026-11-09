@@ -2524,9 +2524,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get pictureTaken => 'Picture taken. Reading…';
 
   @override
-  String get stillReading => 'Still reading…';
-
-  @override
   String get noTextMoveBack =>
       'I couldn\'t find text. Try moving the phone further away.';
 

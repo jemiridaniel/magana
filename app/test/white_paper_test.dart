@@ -489,7 +489,7 @@ void main() {
   });
 
   testWidgets(
-    '5e: a slow server: "Still reading…" at 5 s, read on the phone after 25 s, the full reading still saved',
+    '5e: a slow server: "Please wait, I\'m still reading." at 5 s, read on the phone after 25 s, the full reading still saved',
     (tester) async {
       final speaker = FakeSpeaker();
       pageRecognizer = FakeRecognizer(
@@ -509,7 +509,7 @@ void main() {
       );
       await openCaptureAndTakePhoto(tester);
       await tester.pump(const Duration(seconds: 6));
-      expect(speaker.said, contains('Still reading…'));
+      expect(speaker.spoken, contains("Please wait, I'm still reading."));
       await tester.pump(
         const Duration(seconds: 20),
       ); // past the 25 s wait: read on the phone

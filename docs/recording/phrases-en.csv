@@ -536,7 +536,6 @@ highContrast,en-highContrast.m4a,High contrast,High contrast,App phrase,final
 pageViewLabel,en-pageViewLabel.m4a,"Your page, current line highlighted","Your page, current line highlighted",App phrase,final
 missedLineLabel,en-missedLineLabel.m4a,A line I may have missed,A line I may have missed,App phrase,final
 pictureTaken,en-pictureTaken.m4a,Picture taken. Reading…,Picture taken. Reading…,App phrase,final
-stillReading,en-stillReading.m4a,Still reading…,Still reading…,App phrase,final
 noTextMoveBack,en-noTextMoveBack.m4a,I couldn't find text. Try moving the phone further away.,I couldn't find text. Try moving the phone further away.,App phrase,final
 torchGlareOff,en-torchGlareOff.m4a,"The light was shining back off the page, so I turned it off.","The light was shining back off the page, so I turned it off.",App phrase,final
 offlineBannerSendFailed,en-offlineBannerSendFailed.m4a,The photo didn't reach Magana's server (connection problem). Reading on this phone.,The photo didn't reach Magana's server (connection problem). Reading on this phone.,App phrase,final

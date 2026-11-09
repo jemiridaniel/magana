@@ -2529,9 +2529,6 @@ class AppLocalizationsHa extends AppLocalizations {
   String get pictureTaken => 'An ɗauki hoto. Ina karantawa…';
 
   @override
-  String get stillReading => 'Har yanzu ina karantawa…';
-
-  @override
   String get noTextMoveBack =>
       'Ban sami rubutu ba. Gwada ɗaga wayar nesa kaɗan.';
 

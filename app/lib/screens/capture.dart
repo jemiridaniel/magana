@@ -44,11 +44,11 @@ const serverWait = Duration(seconds: 25);
 /// 48% (Vision) of the words read were dictionary words (docs/FINDINGS.md). Replaceable in tests.
 bool handwritingReading = const bool.fromEnvironment('MAGANA_HANDWRITING');
 
-/// "Still reading…" after this long, so a wait is never silent.
+/// "Please wait, I'm still reading." after this long, so a wait is never silent.
 const stillReadingAfter = Duration(seconds: 5);
 
-/// Then "Still reading, please wait" this often, for as long as the reading takes: no wait,
-/// the 40 s one for a Hausa, Yorùbá or Igbo page included, goes longer than this without speech.
+/// Then again this often, for as long as the reading takes: no wait, the 40 s one for a
+/// Hausa, Yorùbá or Igbo page included, goes longer than this without speech.
 const stillReadingEvery = Duration(seconds: 8);
 
 /// A Hausa, Yorùbá or Igbo page read on the phone while the server is only slow or waking (still
@@ -499,11 +499,11 @@ class _CaptureScreenState extends State<CaptureScreen>
     // A camera photo was announced already ("Picture taken. Reading…").
     if (_status != l.pictureTaken) _setStatus(l.readingPage);
     final sent = DateTime.now();
-    // Never silent while reading: "Still reading…", then a reminder every 8 s.
+    // Never silent while reading: "Please wait, I'm still reading." at 5 s, then every 8 s.
     Timer? every;
     final still = Timer(stillReadingAfter, () {
       if (!mounted || !_busy) return;
-      _setStatus(l.stillReading);
+      _setStatus(l.stillReadingPleaseWait);
       every = Timer.periodic(stillReadingEvery, (_) {
         if (mounted && _busy) _say(l.stillReadingPleaseWait);
       });

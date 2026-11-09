@@ -661,7 +661,6 @@
   "summaryMissed": "{count, plural, =1{Enwere ike m hapụrụ ahịrị 1.} other{Enwere ike m hapụrụ ahịrị {count}.}}",
   "missedLineLabel": "Ahịrị m nwere ike ịhapụ",
   "pictureTaken": "E sere foto. A na m agụ ya…",
-  "stillReading": "A ka na m agụ ya…",
   "noTextMoveBack": "Ahụghị m ederede. Nwaa ibuli ekwentị ahụ elu ntakịrị.",
   "torchGlareOff": "Ọkụ ahụ na-enwu n'elu akwụkwọ ahụ, ya mere m gbanyụrụ ya.",
   "offlineBannerSendFailed": "Foto ahụ eruteghị sava Magana (nsogbu njikọ). A na m agụ ya na ekwentị a.",

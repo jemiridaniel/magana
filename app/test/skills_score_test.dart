@@ -159,8 +159,8 @@ void main() {
     expectAccessible(tester, 'Skills');
 
     await tap(tester, en.playLesson);
-    expect(speaker.said, contains(startsWith('To press the item')));
-    expect(speaker.said.last, en.lessonFinished);
+    expect(speaker.spoken, contains(startsWith('To press the item')));
+    expect(speaker.spoken.last, en.lessonFinished);
     expect(find.text(en.lessonStepOf(6, 6)), findsOne);
     expect(find.bySemanticsLabel(en.practiseNow), findsOne);
     expectAccessible(tester, 'Lesson');

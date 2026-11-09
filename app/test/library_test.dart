@@ -108,7 +108,7 @@ void main() {
     await settle(tester);
     expect(find.text(en.savedToLibrary), findsOneWidget);
     expect(find.bySemanticsLabel(en.saveToLibrary), findsNothing);
-    expect(speaker.said.last, en.savedToLibrary);
+    expect(speaker.spoken.last, en.savedToLibrary);
 
     await tap(tester, en.backToHome);
     expect(
@@ -125,7 +125,7 @@ void main() {
     expectAccessible(tester, 'Library');
 
     await tap(tester, entry);
-    expect(speaker.said, contains('Food tests'));
+    expect(speaker.spoken, contains('Food tests'));
     expect(find.bySemanticsLabel(en.saveToLibrary), findsNothing);
     await tap(tester, en.deleteFromLibrary);
     expect(find.text(en.deleteConfirm), findsOneWidget);
@@ -134,7 +134,7 @@ void main() {
     await tap(tester, en.deleteFromLibrary);
     await tap(tester, en.deleteYes);
     await settle(tester);
-    expect(speaker.said.last, en.deletedFromLibrary);
+    expect(speaker.spoken.last, en.deletedFromLibrary);
     expect(find.text(en.libraryEmpty), findsOneWidget);
     handle.dispose();
   });

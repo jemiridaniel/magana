@@ -42,8 +42,9 @@ PRIORITY: list[tuple[str, list[str]]] = [
         "pictureTaken", "readingPage", "privacyNote",
     ]),
     ("Reader controls", [
-        "play", "pause", "playLabel", "pauseLabel", "repeat", "repeatLine", "stillReading",
-        # Added 9 Nov 2026 for the second session (new wording, not yet recorded).
+        "play", "pause", "playLabel", "pauseLabel", "repeat", "repeatLine",
+        # 9 Nov 2026: "Still reading…" is no longer said; this new wait reminder replaces it
+        # (second session, not yet recorded).
         "stillReadingPleaseWait",
         # speed/speedLabel have a {value} placeholder -- the device's own TTS reads the number
         # live, in every language including English, so there's nothing fixed to record.

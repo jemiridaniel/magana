@@ -2523,9 +2523,6 @@ class AppLocalizationsIg extends AppLocalizations {
   String get pictureTaken => 'E sere foto. A na m agụ ya…';
 
   @override
-  String get stillReading => 'A ka na m agụ ya…';
-
-  @override
   String get noTextMoveBack =>
       'Ahụghị m ederede. Nwaa ibuli ekwentị ahụ elu ntakịrị.';
 

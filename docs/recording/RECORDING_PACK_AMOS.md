@@ -6,7 +6,7 @@ has had — people using Magana in English have only heard the phone's own voice
 ## What to record
 
 - Open **priority-phrases.docx** or **priority-phrases.xlsx** (in this folder, next to this
-  guide). It's 47 phrases, in six groups: the tour opening, the home screen, taking a photo,
+  guide). It's 46 phrases, in six groups: the tour opening, the home screen, taking a photo,
   the reader's controls, what Magana says when something is unclear, and health-worker/medicine
   lines.
 - Record each line **exactly as written**, once per file, in the order given.
@@ -22,10 +22,11 @@ has had — people using Magana in English have only heard the phone's own voice
 ## Added later
 
 - **9 Nov 2026: one new phrase.** "Please wait, I'm still reading." (`en-stillReadingPleaseWait.m4a`,
-  number 30 in the list, in the reader's controls). Magana says it every 8 seconds while a page
-  is still being read, so a wait is never silent. Until it is recorded, the phone's own voice
+  number 29 in the list, in the reader's controls). Magana says it 5 seconds after a photo
+  if the page is still being read, then every 8 seconds, so a wait is never silent. Until it is recorded, the phone's own voice
   says it.
-- "Ask a question" (`askQuestion`) is no longer in the app, so it has left the list.
+- "Still reading…" (`stillReading`) and "Ask a question" (`askQuestion`) are no longer in the
+  app, so they have left the list.
 
 ## Where and how
 

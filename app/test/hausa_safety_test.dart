@@ -173,12 +173,17 @@ void main() {
       final speaker = await slowHausaServer(tester);
       await openCaptureAndTakePhoto(tester);
       // From the photo to the page itself: the 25 s server wait, then the 40 s one.
-      final started = speaker.said.length;
+      // Counted on everything heard (the phone's voice or a recorded clip).
+      final started = speaker.heard.length;
       var lastSpoken = 0, longestSilence = 0, heard = started;
+      final reminders = <int>[];
       for (var s = 1; s <= 70; s++) {
         await tester.pump(const Duration(seconds: 1));
-        if (speaker.said.length != heard) {
-          heard = speaker.said.length;
+        if (speaker.heard.length != heard) {
+          if (speaker.spoken.last == en.stillReadingPleaseWait) {
+            reminders.add(s);
+          }
+          heard = speaker.heard.length;
           longestSilence = s - lastSpoken > longestSilence
               ? s - lastSpoken
               : longestSilence;
@@ -187,7 +192,9 @@ void main() {
       }
       await tester.pumpAndSettle();
       expect(longestSilence, lessThanOrEqualTo(8));
-      expect(speaker.said, contains(en.stillReadingPleaseWait));
+      // "Please wait, I'm still reading." at 5 s, then every 8 s; no "Still reading…" before it.
+      expect(reminders.take(3), [5, 13, 21]);
+      expect(speaker.spoken, isNot(contains(startsWith('Still reading'))));
       expect(
         speaker.said,
         contains('${en.waitingFullReading('Hausa')} ${en.stopWaitingHint}'),

@@ -1930,7 +1930,6 @@
   },
   "missedLineLabel": "A line I may have missed",
   "pictureTaken": "Picture taken. Reading…",
-  "stillReading": "Still reading…",
   "noTextMoveBack": "I couldn't find text. Try moving the phone further away.",
   "torchGlareOff": "The light was shining back off the page, so I turned it off.",
   "offlineBannerSendFailed": "The photo didn't reach Magana's server (connection problem). Reading on this phone.",
@@ -2125,7 +2124,7 @@
   "stopWaitingLabel": "Stop. Use the phone's reading now",
   "stopWaitingHint": "Say stop or double-tap to use the phone's reading now.",
   "@stillReadingPleaseWait": {
-    "description": "Capture: said 8 s after \"Still reading…\" (which comes 5 s after the photo), then every 8 s until the reading comes, so a wait is never silent. Wording changed 9 Nov 2026; until Dr. Amos records it, the phone's voice says it."
+    "description": "Capture: said 5 s after the photo while the reading is still being waited for, then every 8 s until it comes, so a wait is never silent. Wording changed 9 Nov 2026; until Dr. Amos records it, the phone's voice says it."
   },
   "@stopWaitingLabel": {
     "description": "Capture: button while waiting for the server's reading of a Hausa/Yorùbá/Igbo page. Its spoken name is the part before the first full stop (\"Stop\")."

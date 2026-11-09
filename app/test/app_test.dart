@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:app/api.dart';
+import 'package:app/clips.dart';
 import 'package:app/l10n/app_localizations.dart';
 import 'package:app/language.dart';
 import 'package:app/main.dart';
@@ -15,6 +17,7 @@ import 'package:app/speech.dart';
 import 'package:app/voices.dart';
 import 'package:app/touch.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:http/http.dart' as http;
 import 'package:http/testing.dart';
@@ -23,13 +26,84 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'a11y.dart';
 
+/// Plays no sound: records each clip Magana plays. [missing] files and [failing] make a clip
+/// not play, the way the real player reports a missing file (false) or a player error (throws).
+class FakeClipPlayer implements ClipPlayer {
+  FakeClipPlayer([List<String>? heard]) : heard = heard ?? [];
+  final List<String> heard;
+  final played = <String>[];
+  final missing = <String>{};
+  bool failing = false;
+  @override
+  Future<bool> play(String file) async {
+    heard.add('clip:$file');
+    if (failing) throw StateError('player failed');
+    if (missing.contains(file)) return false;
+    played.add(file);
+    return true;
+  }
+
+  @override
+  Future<void> stop() async {}
+}
+
+/// The phone's voice engine, without the plugin: every call answers at once. The phone's
+/// voice in tests is [FakeSpeaker.utter]; this only keeps stopping speech (before a clip, too)
+/// as quick as it is on a phone, so clips and the voice stay in order.
+class _NoTts implements FlutterTts {
+  @override
+  dynamic noSuchMethod(Invocation invocation) => Future<dynamic>.value(1);
+}
+
+/// The English text of each recorded phrase ID (assets/voice/phrases.json, "_english").
+final Map<String, String> _englishById = () {
+  final json =
+      jsonDecode(File('assets/voice/phrases.json').readAsStringSync()) as Map;
+  return {
+    for (final e in (json['_english'] as Map).entries) '${e.key}': '${e.value}',
+  };
+}();
+
 class FakeSpeaker extends Speaker {
+  FakeSpeaker() : this._(<String>[]);
+  FakeSpeaker._(List<String> heard)
+    : heard = heard,
+      clipsPlayed = FakeClipPlayer(heard),
+      super(tts: _NoTts()) {
+    clipPlayer = clipsPlayed;
+  }
+
+  /// What the phone's voice said.
   final said = <String>[];
+
+  /// Everything Magana tried to make heard, in order: the phone's voice (the text) or a clip
+  /// ("clip:en-myLibrary.m4a").
+  final List<String> heard;
+
+  /// Recorded prompts played instead of the phone's voice (the app's clips, where there are any).
+  final FakeClipPlayer clipsPlayed;
+
+  /// What the person heard, by voice or by clip: a played English clip as its text. Use this
+  /// where a phrase may have a recorded clip, so a test passes with or without clips.
+  List<String> get spoken => [
+    for (final h in heard)
+      if (!h.startsWith('clip:'))
+        h
+      else if (clipsPlayed.played.contains(h.substring(5)))
+        _clipText(h.substring(5)),
+  ];
+
+  static String _clipText(String file) {
+    final m = RegExp(r'^en-(.+)\.m4a$').firstMatch(file);
+    return (m == null ? null : _englishById[m.group(1)]) ?? file;
+  }
+
   @override
   String language = 'en';
   @override
   Future<Spoken> utter(String text) async {
     said.add(text);
+    heard.add(text);
     return interrupt.contains(text) || interruptOnce.remove(text)
         ? Spoken.cutOff
         : Spoken.finished;
@@ -65,6 +139,7 @@ class FakeSpeaker extends Speaker {
   bool? voiceKnown(String lang) => !noVoiceFor.contains(lang);
   @override
   Future<bool> canSpeak(String lang) async => !noVoiceFor.contains(lang);
+
   /// The phone's voices (null: the phone can't say, as in most tests).
   List<Voice>? voices;
   @override
