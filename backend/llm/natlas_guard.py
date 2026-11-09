@@ -159,11 +159,9 @@ _NUMBER_SLOT = re.compile(r"(?<![\w])N(?![\w])")
 
 
 @lru_cache(maxsize=None)
-def _dose_patterns(lang: str) -> tuple[re.Pattern, ...]:
-    """The dose words of [lang] and English with a number in them, written with N: "every N hours",
-    "N-hourly", "N times a day". N is digits (4, 0.5) or a number word of that language
-    (content/number_words/), or a range of them ("4 to 6", "4-6"). A space matches any spacing; a
-    hyphen may be there or not ("4-hourly", "4 hourly")."""
+def _number(lang: str) -> str:
+    """A number in [lang] or English, as a regex: digits (4, 0.5) or a number word
+    (content/number_words/), or a range of them ("4 to 6", "4-6", "2 or 3")."""
     from app import placeholders
 
     numbers = set()
@@ -172,11 +170,24 @@ def _dose_patterns(lang: str) -> tuple[re.Pattern, ...]:
             numbers |= {_fold(w) for w in placeholders.word_list(code).words}
         except FileNotFoundError:
             pass
-    numbers |= {"one", "a", "an", "half"}  # English; "one" is ambiguous elsewhere, not here
+    # English; "one" is ambiguous elsewhere, not here. Never "a": "a bid to win" isn't a dose.
+    numbers |= {"one", "half"}
     one = r"(?:\d+(?:[.,]\d+)?|" + "|".join(sorted(map(re.escape, numbers), key=len, reverse=True)) + ")"
-    number = rf"{one}(?:\s*(?:-|–|to|or)\s*{one})?"
+    return rf"{one}(?:\s*(?:-|–|to|or)\s*{one})?"
+
+
+@lru_cache(maxsize=None)
+def _dose_patterns(lang: str) -> tuple[re.Pattern, ...]:
+    """The dose words that need more than a whole-word match:
+    - written with N, which stands for a number (_number): "every N hours", "N-hourly",
+      "N times daily". A space matches any spacing; a hyphen may be there or not ("4-hourly");
+    - short ones that are also ordinary words ("bid", "stat", "daily", "od": dose_abbreviations):
+      only right next to a number or a dose form (dose_forms), before or after it: "1 tab bd",
+      "500mg tds", "od x 5 days", "bd for 7 days". Never on their own ("a bid to win")."""
+    lists = _answer_lists()
+    number = _number(lang)
     out = []
-    for term in _answer_lists()["dose_words"].get(lang, []) + _answer_lists()["dose_words"]["en"]:
+    for term in lists["dose_words"].get(lang, []) + lists["dose_words"]["en"]:
         if not _NUMBER_SLOT.search(term):
             continue
         parts = []
@@ -189,8 +200,14 @@ def _dose_patterns(lang: str) -> tuple[re.Pattern, ...]:
                 parts.append(r"\s*-?\s*")
             elif piece:
                 parts.append(re.escape(piece))
-        body = "".join(parts)
-        out.append(re.compile(rf"(?<![\w]){body}(?![\w])"))
+        out.append(re.compile(rf"(?<![\w]){''.join(parts)}(?![\w])"))
+    forms = [_fold(f) for code in {lang, "en"} for f in lists.get("dose_forms", {}).get(code, [])]
+    form = "(?:" + "|".join(sorted(map(re.escape, forms), key=len, reverse=True)) + ")" if forms else None
+    # What makes a short dose word count: a number (with a unit glued on or not), or a dose form.
+    near = rf"(?:{number}\s*{form}|{number}|{form})" if form else number
+    for abbr in lists.get("dose_abbreviations", {}).get(lang, []) + lists.get("dose_abbreviations", {}).get("en", []):
+        a = re.escape(_fold(abbr))
+        out.append(re.compile(rf"(?<![\w]){near}\s*{a}(?![\w])|(?<![\w]){a}\s*(?:x|×|for)?\s*{near}(?![\w])"))
     return tuple(out)
 
 

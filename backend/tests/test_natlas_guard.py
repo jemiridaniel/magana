@@ -229,3 +229,47 @@ def test_every_hours_with_no_number_is_no_longer_a_dose_word():
     # The old literal "every hours" matched only those exact words (docs/FINDINGS.md, 9 Nov 2026).
     assert "every hours" not in g._answer_lists()["dose_words"]["en"]
     assert all("N" in w for w in g._answer_lists()["dose_words"]["en"] if w.startswith("every"))
+
+
+# ---------- dose words in words and in prescription shorthand
+
+PAGE_NUMBERS = "Plants: 1 2 3 5 7 500 numbers on the page."
+
+
+@pytest.mark.parametrize("dose", [
+    "once daily", "Once Daily", "twice daily", "thrice daily", "twice a day",
+    "three times daily", "3 times daily", "2 or 3 times daily",
+    "as needed", "PRN", "prn", "nocte", "1 tab mane", "mane 2 tabs",
+    # Short forms next to a number or a dose form (tab, cap, mg, ml…), before or after it.
+    "1 tab od", "1 tab OD", "2 tabs bd", "1 cap BID", "500mg tds", "500 mg TDS", "1 tab tid",
+    "2 tabs qds", "5 ml qid", "2 tabs stat", "stat 2 tabs", "1 tab daily", "take 2 daily",
+    "bd x 5 days", "tds for 7 days", "od x 3 days", "one tab bd",
+])
+def test_dose_words_and_prescription_shorthand_are_dose_words(dose):
+    assert g.answer_problem(f"This page is about plants. {dose}.", PAGE_NUMBERS, "en") == "dose_word", dose
+
+
+@pytest.mark.parametrize("answer", [
+    "The team made a bid to win the cup.",          # "bid" on its own
+    "They made a final bid.",
+    "Good food and a bad odour.",                   # "od" inside other words
+    "The method is odd but it works.",
+    "Plants are part of our daily life.",           # "daily" on its own
+    "We read the daily news.",
+    "The stat on the board shows the score.",       # "stat" on its own
+    "Plants need water daily.",
+    "The tides came in.",                           # "tds", "tid" inside other words
+    "The lion shook its mane.",                     # "mane" on its own
+])
+def test_the_short_forms_alone_or_inside_words_are_not_dose_words(answer):
+    assert g.answer_problem(answer, "Plants need water.", "en") is None, answer
+
+
+def test_the_short_forms_need_a_number_or_a_dose_form_next_to_them():
+    lists = g._answer_lists()
+    short = set(lists["dose_abbreviations"]["en"])
+    assert {"od", "bd", "bid", "tds", "tid", "qds", "qid", "stat", "daily", "mane"} <= short
+    # Never also on the plain list, where they would match on their own.
+    assert not short & set(lists["dose_words"]["en"])
+    assert {"nocte", "prn", "as needed", "once daily", "twice daily", "thrice daily"} <= set(
+        lists["dose_words"]["en"])

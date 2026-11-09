@@ -26,6 +26,10 @@ USE = {
     "words": "Health topic, ordinary: two different ones on a page stop the explanation.",
     "medicine": "Medicine name: an explanation that names it is never spoken (the page is read instead).",
     "dose": "Dose word: an explanation that uses it is never spoken (the page is read instead).",
+    "short": ("Dose shorthand: counts as a dose word only right next to a number or a dose form "
+              "(\"1 tab bd\", \"500mg tds\", \"bd x 5 days\"), never on its own, because it is also an "
+              "ordinary word or letters (\"a bid to win\", \"daily life\", \"a lion's mane\")."),
+    "form": "Dose form: makes dose shorthand count when it is next to it (\"2 tabs bd\").",
 }
 N_NOTE = ("N stands for any number: digits (6, 0.5), a number word (six) or a range (4 to 6, 4-6). "
           "Examples it catches: {examples}.")
@@ -36,7 +40,11 @@ EXAMPLES = {
     "every N hr": "every 1 hr",
     "N-hourly": "8-hourly, 8 hourly, eight-hourly",
     "N times a day": "3 times a day, three times a day, 2 or 3 times a day",
+    "N times daily": "3 times daily, three times daily",
 }
+SHORT_MEANING = {"od": "once daily", "bd": "twice daily", "bid": "twice daily", "tds": "three times daily",
+                 "tid": "three times daily", "qds": "four times daily", "qid": "four times daily",
+                 "stat": "at once", "daily": "every day", "mane": "in the morning"}
 
 THIN = Side(style="thin", color="BBBBBB")
 BOX = Border(top=THIN, bottom=THIN, left=THIN, right=THIN)
@@ -104,7 +112,8 @@ def main() -> None:
          "the page as printed instead.", False),
         ("Matching ignores capitals, tone marks and hooked letters (ɓ ɗ ƙ ƴ), and only matches whole words. In a dose "
          "word, N stands for any number: digits, a number word or a range (\"every N hours\" catches \"every 6 hours\", "
-         "\"every six hours\" and \"every 4 to 6 hours\").", False),
+         "\"every six hours\" and \"every 4 to 6 hours\"). Dose shorthand (od, bd, tds…) counts only next to a "
+         "number or a dose form such as tab or mg, so ordinary words like \"bid\" or \"daily\" aren't blocked.", False),
         ("Blocking too much is the safe side, but a list that blocks ordinary school words (e.g. a biology page about "
          "the body) makes Explain useless for that page.", False),
         ("", False),
@@ -128,6 +137,9 @@ def main() -> None:
     en += [["Health: ordinary", w, USE["words"], "", ""] for w in health["words"]]
     en += [["Medicine name", w, USE["medicine"], "", ""] for w in checks["medicines"]]
     en += [["Dose word", w, USE["dose"], "", note(w)] for w in checks["dose_words"]["en"]]
+    en += [["Dose shorthand", w, USE["short"], "", f"Means: {SHORT_MEANING[w]}." if w in SHORT_MEANING else ""]
+           for w in checks.get("dose_abbreviations", {}).get("en", [])]
+    en += [["Dose form", w, USE["form"], "", ""] for w in checks.get("dose_forms", {}).get("en", [])]
     sheet(wb.create_sheet(), "English (Dr. Amos)", en, lang_col=False)
 
     other = []

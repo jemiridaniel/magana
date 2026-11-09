@@ -42,6 +42,12 @@ No real phone and no blind or low-vision tester has been used yet.
   - Dose words can now hold a number, written N: "every N hours/hour/hrs/hr", "N-hourly" and "N times a day". N is digits, a number word or a range, e.g. "every 4 to 6 hours", "eight-hourly", "2 or 3 times a day".
   - The old "times a day" became "N times a day", so it no longer stops "many times a day".
   - Tests in `test_natlas_guard.py`: 13 dose phrasings are caught; 5 ordinary sentences with "every" or "hours" are not.
+  - **Word forms and shorthand:**
+    - Added "once daily", "twice daily", "thrice daily", "N times daily", "as needed", "prn" and "nocte". These always count.
+    - "od", "bd", "bid", "tds", "tid", "qds", "qid", "stat", "daily" and "mane" count only right next to a number or a dose form (tab, cap, mg, ml…).
+    - Without that rule they would block "a bid to win", "daily life" and "a lion's mane".
+    - Making a number "a" first blocked "a bid to win"; numbers no longer include "a" or "an".
+    - Tests: 31 dose forms are caught; 10 ordinary sentences are not.
 - **N-ATLaS safety layer (Explain only)** (docs/LLM_SAFETY.md):
   - **Why.** The Brydl audit (v1.1, 3 Nov 2026) found N-ATLaS refuses harmful requests in English but answers them in Hausa. N-ATLaS's own model card gives Hausa a Bias/Fairness score of 1.11 out of 5 (English 3.18, Yorùbá 2.23, Igbo 4.01). The card does not state whether a higher score is better; we make no ranking claim from it.
   - **One way to the model:** `backend/llm/natlas_guard.py`, for one task, `explain_page`. Questions and chat are gone: the Home "Ask a question" tile, the question bubble, and the "simpler" and "example" buttons. Explain's microphone now takes only commands.
