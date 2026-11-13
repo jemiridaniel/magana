@@ -99,3 +99,6 @@ def test_the_phone_has_the_same_language_words():
     spec.loader.exec_module(gen)
     def squash(t): return "".join(t.split()).replace(",}", "}")  # dart format may reflow it
     assert squash(gen.OUT.read_text(encoding="utf-8")) == squash(gen.dart()), "run scripts/gen_offline_language.py"
+    # The word lists the offline reader marks words with (raw strings: compared exactly, line by line).
+    assert squash(gen.WORD_LISTS.read_text(encoding="utf-8")) == squash(gen.word_lists_dart()), \
+        "run scripts/gen_offline_language.py"

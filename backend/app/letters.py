@@ -7,6 +7,10 @@ Measured on 10 pages per language (benchmark/letters, scripts/letter_ocr_test.py
 So a page in one of these languages is read again with the better model (`READ_AGAIN`), the
 app warns once per page, and words that could be a special-letter word are marked. A word is
 never changed: "kaya" may be "ƙaya" (thorn) or really "kaya" (load), and only a person can say.
+Two exceptions on Hausa pages (restore_hausa; Brydl's review, 13 Nov 2026), both still marked:
+"đ" is ɗ ("Đ" is Ɗ), a letter Hausa doesn't have; and a capital K in the middle of a sentence
+("ta Kungiyar") is ƙ when the ƙ word is in the word list: Tesseract reads the hooked ƙ as K,
+and a capital there is otherwise a name.
 A digit inside a word on these pages ("uz9" for ụzọ) is an unclear letter, never a number
 (digit_in_word); a number standing alone keeps the verbatim rule.
 """
@@ -110,6 +114,55 @@ def digit_in_word(token: str) -> bool:
     return False
 
 
+_D = str.maketrans({"đ": "ɗ", "Đ": "Ɗ"})
+_SENTENCE_END = re.compile(r"[.!?][\"'”’)\]]*$")
+
+
+def _hooked_k(token: str, previous: str | None) -> str | None:
+    """[token] with its capital K made ƙ, or None: mid-sentence only (not the line's first word,
+    not after . ! ?), the rest of the word in small letters, and the ƙ word in the list."""
+    if previous is None or _SENTENCE_END.search(previous):
+        return None
+    m = _WORD.search(token)
+    if not m or len(m.group()) < 2 or m.group()[0] != "K" or m.group()[1:] != m.group()[1:].lower():
+        return None
+    hooked = "ƙ" + m.group()[1:]
+    if untoned(hooked) not in _index("ha").get(plain(hooked), ()):
+        return None
+    return token[: m.start()] + hooked + token[m.end():]
+
+
+def restore_hausa(lines: list[dict]) -> None:
+    """Hausa pages, in place: "đ"/"Đ" become ɗ/Ɗ, and a mid-sentence capital K becomes ƙ where
+    the ƙ word is listed (_hooked_k). Each changed word's index goes in the line's
+    "restored_words", and marks() marks it: a person should still check it."""
+    for line in lines:
+        words = line.get("words") or []
+        tokens = [w.get("text", "") for w in words] if words else line.get("text", "").split()
+        new = [t.translate(_D) for t in tokens]
+        changed = [j for j, (a, b) in enumerate(zip(tokens, new)) if a != b]
+        for j in range(len(new)):
+            k = _hooked_k(new[j], new[j - 1] if j else None)
+            if k is not None:
+                new[j] = k
+                changed.append(j)
+        if new == tokens:
+            continue
+        if words:
+            for w, text in zip(words, new):
+                w["text"] = text
+        # The line's text: each word replaced where it stands, spacing kept.
+        text, at, out = line.get("text", ""), 0, []
+        for old, text_new in zip(tokens, new):
+            i = text.find(old, at)
+            if i < 0:
+                continue
+            out.append(text[at:i] + text_new)
+            at = i + len(old)
+        line["text"] = "".join(out) + text[at:]
+        line["restored_words"] = sorted(set(changed))
+
+
 def marks(lines: list[dict], lang: str) -> list[dict]:
     """Words to check with a person: {"block_index", "word_index", "kind"}. "special_letter":
     a listed word with a special letter has this spelling without it. "unclear_letter": a
@@ -122,6 +175,6 @@ def marks(lines: list[dict], lang: str) -> list[dict]:
             text = w.get("text", "")
             if digit_in_word(text):
                 out.append({"block_index": i, "word_index": j, "kind": "unclear_letter"})
-            elif may_miss_letter(text, lang):
+            elif j in line.get("restored_words", ()) or may_miss_letter(text, lang):
                 out.append({"block_index": i, "word_index": j, "kind": "special_letter"})
     return out

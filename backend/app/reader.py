@@ -1301,6 +1301,8 @@ def read_page(image: Image.Image, engine: OCREngine | None = None, second_pass: 
     result = {"tips": tips, **_page_dict(page), "faint_regions": faint, "script": script, "columns": columns,
               "page_language": language, "show_through_words": seen_through, "shadow": shadow,
               "screenshot": screenshot, "inverted": inverted}
+    if language == "ha":
+        letters.restore_hausa(result["lines"])
     if language:
         result["letter_marks"] = letters.marks(result["lines"], language)
     if second_pass:

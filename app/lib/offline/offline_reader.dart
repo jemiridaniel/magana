@@ -5,6 +5,7 @@ import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart
 import '../api.dart';
 import '../platform.dart';
 import 'page_letters.dart';
+import 'word_lists.dart';
 
 /// Offline basic reading (board 5e; CLAUDE.md: "offline fallback with ML Kit OCR +
 /// device TTS"). When the server can't be reached, fails or is slow, the photo is read
@@ -498,7 +499,8 @@ Future<Map<String, dynamic>> _reading(
     });
     var numberFlagged = false;
     for (final (j, w) in line.words.indexed) {
-      if (!_digit.hasMatch(w.text)) continue;
+      // As the server (letters.marks): a digit inside a word is an unclear letter; a word a
+      // listed special-letter word lost its letter in is marked. Nothing is changed.
       if (language != null && digitInWord(w.text)) {
         letterMarks.add({
           'block_index': i,
@@ -507,6 +509,14 @@ Future<Map<String, dynamic>> _reading(
         });
         continue;
       }
+      if (language != null && mayMissLetter(w.text, language)) {
+        letterMarks.add({
+          'block_index': i,
+          'word_index': j,
+          'kind': 'special_letter',
+        });
+      }
+      if (!_digit.hasMatch(w.text)) continue;
       // Held without a check: every number in handwriting read anyway (schoolwork only), and
       // on a health paper every number Apple Vision reads. Vision stays sure of handwriting
       // (73 of 89 handwritten lines with digits at 0.90 or more on the teachers' lesson notes;
@@ -528,9 +538,10 @@ Future<Map<String, dynamic>> _reading(
     'offline': true,
     'columns': 1,
     'tips': [
-      // Hausa, Yorùbá and Igbo read on the phone: no hooked letter or tone mark survives, and
-      // few words are marked (0 of 351 hooked letters kept; 5 words marked against the
-      // server's 342: docs/FINDINGS.md, 9 Nov 2026). Said first, until it is measured as good.
+      // Hausa, Yorùbá and Igbo read on the phone: no hooked letter or tone mark survives
+      // (0 of 351 hooked letters kept on the Hausa pack, 2 Nov 2026 build). Words that may have
+      // lost one are now marked from the server's word lists (page_letters.mayMissLetter), so
+      // the "marked words" page note below is true. Said first, until it is measured as good.
       if (language != null) 'offline_letters_unreliable',
       if (!sure && seen.isNotEmpty) 'offline_no_confidence',
       if (handwriting) 'handwriting_read_anyway',
@@ -539,7 +550,9 @@ Future<Map<String, dynamic>> _reading(
         'offline_health_numbers',
       if (enhanced) 'faint_print',
       ..._cutOff(photo, seen),
-      if (language != null) 'letters_$language',
+      // "Marked words may have one of these": only where this phone can mark them.
+      if (language != null && (wordListLines[language] ?? '').isNotEmpty)
+        'letters_$language',
     ],
     'page_language': language,
     'letter_marks': letterMarks,

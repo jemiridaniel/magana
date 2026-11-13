@@ -118,7 +118,8 @@ void main() {
         expect(r.tips, contains('letters_ig'));
         final item = r.items.first;
         expect(item.unclearLetters, {3});
-        expect(item.letterMarks, {3});
+        // 1 and 4 may have lost a letter (ụ, ọ), as the server marks them (letters.marks).
+        expect(item.letterMarks, {1, 3, 4});
         // The lone "9" keeps the number rule: unclear when unsure, read as printed when sure.
         expect(item.unclearWords, conf < 0.9 ? {0} : <int>{});
         expect(item.unclearWords.contains(3), isFalse);

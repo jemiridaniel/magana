@@ -1,8 +1,10 @@
 import 'language_words.dart';
+import 'word_lists.dart';
 
 /// The server's letter rules for offline reading (backend letters.py): which page is
-/// Hausa, Yorùbá or Igbo, and a digit inside a word on such a page, which is an unclear
-/// letter, never a number (Tesseract read Igbo ọ as "9"; ML Kit can too).
+/// Hausa, Yorùbá or Igbo; a digit inside a word on such a page, which is an unclear
+/// letter, never a number (Tesseract read Igbo ọ as "9"; ML Kit can too); and a word that
+/// may have lost a special letter, from the same word lists as the server.
 
 final _word = RegExp(r"\p{L}+(?:['’]\p{L}+)*", unicode: true);
 final _combining = RegExp(r'[̀-ͯ]');
@@ -60,4 +62,32 @@ bool digitInWord(String token) {
     }
   }
   return false;
+}
+
+final _tones = RegExp('[\u0300\u0301\u0304]');
+
+/// The word without tone marks, keeping dotted and hooked letters (letters.untoned).
+String untonedWord(String word) => word
+    .toLowerCase()
+    .split('')
+    .map((c) => untonedLetters[c] ?? c)
+    .join()
+    .replaceAll(_tones, '');
+
+final _index = <String, Map<String, List<String>>>{};
+
+/// Plain form → the list's words with that form (letters._index), parsed when first needed.
+Map<String, List<String>> _wordIndex(String lang) => _index[lang] ??= {
+  for (final line in (wordListLines[lang] ?? '').split('\n'))
+    if (line.trim().isNotEmpty)
+      line.split(' ').first: line.split(' ').skip(1).toList(),
+};
+
+/// True when a listed word spelled like [token] has a special letter [token] lacks
+/// (letters.may_miss_letter): "kwaya" (ƙwaya) is marked; "ƙwaya" and "da" are not.
+bool mayMissLetter(String token, String lang) {
+  final m = _word.firstMatch(token);
+  if (m == null) return false;
+  final found = untonedWord(m.group(0)!);
+  return (_wordIndex(lang)[plainWord(found)] ?? const []).any((c) => c != found);
 }
