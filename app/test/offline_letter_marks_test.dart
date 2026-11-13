@@ -46,6 +46,7 @@ Future<OfflineResultForTest> readLines(List<String> lines, String mode) async {
   return OfflineResultForTest(
     r.pageLanguage,
     r.tips,
+    [for (final item in r.items) item.text],
     [
       for (final (i, item) in r.items.indexed)
         for (final j in item.letterMarks) (i, j, item.text.split(' ')[j]),
@@ -58,9 +59,16 @@ Future<OfflineResultForTest> readLines(List<String> lines, String mode) async {
 }
 
 class OfflineResultForTest {
-  OfflineResultForTest(this.language, this.tips, this.marked, this.unclear);
+  OfflineResultForTest(
+    this.language,
+    this.tips,
+    this.texts,
+    this.marked,
+    this.unclear,
+  );
   final String? language;
   final List<String> tips;
+  final List<String> texts;
   final List<(int, int, String)> marked;
   final List<(int, int)> unclear;
 }
@@ -112,6 +120,7 @@ void main() {
       ];
       expect([for (final m in r.marked) (m.$1, m.$2)]..removeWhere(r.unclear.contains), unorderedEquals(server));
       expect(r.unclear, unorderedEquals(unclear));
+      expect(r.texts, (page['server_texts'] as List).cast<String>());
     });
   }
 

@@ -1,0 +1,143 @@
+{
+ "_about": "Hausa pages: what letters.restore_hausa (server) and page_letters.restoreHausa (phone) make of a line, and which words they mark. Read by backend/tests/test_hausa_restore.py and app/test/hausa_restore_test.dart, so both sides pass the same cases. Brydl's review, 13 Nov 2026.",
+ "cases": [
+  {
+   "why": "a capital K mid-sentence: hooked k, marked",
+   "line": "Ita ce Kungiyar mafi girma.",
+   "restored": "Ita ce ƙungiyar mafi girma.",
+   "marked": [
+    2
+   ]
+  },
+  {
+   "why": "after a number mid-sentence",
+   "line": "187 (NPCs), 18 Kungiyoyin Kasa da Kasa,",
+   "restored": "187 (NPCs), 18 ƙungiyoyin ƙasa da ƙasa,",
+   "marked": [
+    3,
+    4,
+    6
+   ]
+  },
+  {
+   "why": "punctuation around the word is kept",
+   "line": "Wannan ta (Kungiyar) ce.",
+   "restored": "Wannan ta (ƙungiyar) ce.",
+   "marked": [
+    2
+   ]
+  },
+  {
+   "why": "a comma after the word is kept",
+   "line": "Wannan ta Kungiyar, ce.",
+   "restored": "Wannan ta ƙungiyar, ce.",
+   "marked": [
+    2
+   ]
+  },
+  {
+   "why": "the line's first word may start a sentence (kafa is marked too: ƙafa)",
+   "line": "Kungiyar ta kafa makaranta.",
+   "restored": "Kungiyar ta kafa makaranta.",
+   "marked": [
+    0,
+    2
+   ]
+  },
+  {
+   "why": "a Wikipedia heading: the word after == starts the line",
+   "line": "== Kuruciya ==",
+   "restored": "== Kuruciya ==",
+   "marked": [
+    1
+   ]
+  },
+  {
+   "why": "a list bullet: the word after it starts the line",
+   "line": "• Kasar Najeriya",
+   "restored": "• Kasar Najeriya",
+   "marked": [
+    1
+   ]
+  },
+  {
+   "why": "a dash at the start of a line",
+   "line": "— Kungiyar ta zo.",
+   "restored": "— Kungiyar ta zo.",
+   "marked": [
+    1
+   ]
+  },
+  {
+   "why": "after a full stop",
+   "line": "Ya tafi. Kungiyar ta kafa makaranta.",
+   "restored": "Ya tafi. Kungiyar ta kafa makaranta.",
+   "marked": [
+    2,
+    4
+   ]
+  },
+  {
+   "why": "after a question mark",
+   "line": "Me ya faru? Kungiyar ta zo.",
+   "restored": "Me ya faru? Kungiyar ta zo.",
+   "marked": [
+    3
+   ]
+  },
+  {
+   "why": "after ! and a closing quote",
+   "line": "Ya ce \"Ka zo!\" Kungiyar ta zo.",
+   "restored": "Ya ce \"Ka zo!\" Kungiyar ta zo.",
+   "marked": [
+    4
+   ]
+  },
+  {
+   "why": "a name: ƙano is not in the word list",
+   "line": "Ya je Kano jiya.",
+   "restored": "Ya je Kano jiya.",
+   "marked": []
+  },
+  {
+   "why": "capitals: a heading or a shout, left alone (still marked)",
+   "line": "Ya ga KUNGIYAR jiya.",
+   "restored": "Ya ga KUNGIYAR jiya.",
+   "marked": [
+    2
+   ]
+  },
+  {
+   "why": "a small k is never changed, only marked",
+   "line": "Ita ce kungiyar mafi girma.",
+   "restored": "Ita ce kungiyar mafi girma.",
+   "marked": [
+    2
+   ]
+  },
+  {
+   "why": "đ is ɗ, marked",
+   "line": "Yana da đalibai da yawa.",
+   "restored": "Yana da ɗalibai da yawa.",
+   "marked": [
+    2
+   ]
+  },
+  {
+   "why": "Đ is Ɗ, marked",
+   "line": "Đan Adam yana nan.",
+   "restored": "Ɗan Adam yana nan.",
+   "marked": [
+    0
+   ]
+  },
+  {
+   "why": "đ mid-sentence, marked",
+   "line": "Ya ga đan uwansa.",
+   "restored": "Ya ga ɗan uwansa.",
+   "marked": [
+    2
+   ]
+  }
+ ]
+}

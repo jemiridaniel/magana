@@ -91,3 +91,54 @@ bool mayMissLetter(String token, String lang) {
   final found = untonedWord(m.group(0)!);
   return (_wordIndex(lang)[plainWord(found)] ?? const []).any((c) => c != found);
 }
+
+final _sentenceEnd = RegExp('[.!?]["\'”’)\\]]*\$');
+final _letter = RegExp(r'\p{L}', unicode: true);
+const _strokeD = {'đ': 'ɗ', 'Đ': 'Ɗ'};
+
+/// [token] with its capital K made ƙ, or null (letters._hooked_k): mid-sentence only (not the
+/// line's first word, not after . ! ?), the rest of the word in small letters, and the ƙ word
+/// in the list. [previous] is the nearest earlier word with a letter in it, so a heading's
+/// "== Kuruciya ==" or a list's "• Kasar" starts its line.
+String? _hookedK(String token, String? previous) {
+  if (previous == null || _sentenceEnd.hasMatch(previous)) return null;
+  final m = _word.firstMatch(token);
+  if (m == null) return null;
+  final w = m.group(0)!;
+  final rest = w.substring(1);
+  if (w.length < 2 || !w.startsWith('K') || rest != rest.toLowerCase()) {
+    return null;
+  }
+  final hooked = 'ƙ$rest';
+  final listed = _wordIndex('ha')[plainWord(hooked)] ?? const [];
+  if (!listed.contains(untonedWord(hooked))) return null;
+  return token.replaceRange(m.start, m.end, hooked);
+}
+
+/// A Hausa line's words as the server makes them (letters.restore_hausa): "đ"/"Đ" become ɗ/Ɗ,
+/// and a mid-sentence capital K becomes ƙ where the ƙ word is listed. [changed] holds each
+/// changed word's index; those words are marked, so a person still checks them.
+({List<String> words, Set<int> changed}) restoreHausa(List<String> tokens) {
+  final words = [
+    for (final t in tokens) t.split('').map((c) => _strokeD[c] ?? c).join(),
+  ];
+  final changed = {
+    for (final (j, t) in tokens.indexed)
+      if (words[j] != t) j,
+  };
+  for (var j = 0; j < words.length; j++) {
+    String? previous;
+    for (var i = j - 1; i >= 0; i--) {
+      if (_letter.hasMatch(words[i])) {
+        previous = words[i];
+        break;
+      }
+    }
+    final k = _hookedK(words[j], previous);
+    if (k != null) {
+      words[j] = k;
+      changed.add(j);
+    }
+  }
+  return (words: words, changed: changed);
+}

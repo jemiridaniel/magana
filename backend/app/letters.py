@@ -116,11 +116,14 @@ def digit_in_word(token: str) -> bool:
 
 _D = str.maketrans({"đ": "ɗ", "Đ": "Ɗ"})
 _SENTENCE_END = re.compile(r"[.!?][\"'”’)\]]*$")
+_LETTER = re.compile(r"[^\W\d_]")
 
 
 def _hooked_k(token: str, previous: str | None) -> str | None:
     """[token] with its capital K made ƙ, or None: mid-sentence only (not the line's first word,
-    not after . ! ?), the rest of the word in small letters, and the ƙ word in the list."""
+    not after . ! ?), the rest of the word in small letters, and the ƙ word in the list.
+    [previous] is the nearest earlier word with a letter in it: a heading's "== Kuruciya ==" or
+    a list's "• Kasar" starts its line (Brydl's review: "== Kuruciya ==" was changed)."""
     if previous is None or _SENTENCE_END.search(previous):
         return None
     m = _WORD.search(token)
@@ -142,7 +145,8 @@ def restore_hausa(lines: list[dict]) -> None:
         new = [t.translate(_D) for t in tokens]
         changed = [j for j, (a, b) in enumerate(zip(tokens, new)) if a != b]
         for j in range(len(new)):
-            k = _hooked_k(new[j], new[j - 1] if j else None)
+            previous = next((new[i] for i in range(j - 1, -1, -1) if _LETTER.search(new[i])), None)
+            k = _hooked_k(new[j], previous)
             if k is not None:
                 new[j] = k
                 changed.append(j)

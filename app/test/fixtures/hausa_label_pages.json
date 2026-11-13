@@ -84,6 +84,18 @@
     "A ajiye shi a wuri mai sanyi da bushewa.",
     "Ranar lalacewa: 03/2028"
    ],
+   "server_texts": [
+    "SAMFURI NE KAWAI: BA MAGANI NA GASKE BA",
+    "Maganin Misali 500 mg",
+    "Sha kwaya 2 sau 3 a rana.",
+    "A sha bayan cin abinci.",
+    "A hadiye shi duka da ruwa.",
+    "Kada a tauna shi ko a nika shi.",
+    "Kada ka sha fiye da kwaya 8 cikin sa'o'i 24.",
+    "A ajiye shi nesa da hannun yara.",
+    "A ajiye shi a wuri mai sanyi da bushewa.",
+    "Ranar lalacewa: 03/2028"
+   ],
    "server_marks": [
     [
      2,
@@ -121,6 +133,18 @@
     "Don amfani a waje kawai.",
     "Ranar lalacewa: 11/2027"
    ],
+   "server_texts": [
+    "SAMFURI NE KAWAI: BA MAGANI NA GASKE BA",
+    "Ruwan Misali 125 mg/5 ml",
+    "A girgiza shi sosai kafin amfani.",
+    "Manya da yara sama da shekara 12",
+    "Sha kwaya l zuwa 2 duk bayan sa'o'i 4 zuwa 6 gwargwadon",
+    "bukata.",
+    "A sha kafin a ci abinci.",
+    "ajiye shi kasa da digiri 25 na Celsius.",
+    "Don amfani a waje kawai.",
+    "Ranar lalacewa: 11/2027"
+   ],
    "server_marks": [
     [
      4,
@@ -142,6 +166,14 @@
   {
    "id": "page-17",
    "offline_lines": [
+    "Darasi na 4: Rabe-rabe",
+    "Aisha tana da lemu 12. Ta raba su daidai ga kawayenta 3.",
+    "Kowace kawa ta samu lemu 4.",
+    "Dalibai 24 ne a aji. Rabinsu 'yan mata ne.",
+    "Tambaya: 'yan mata nawa ne a ajin?",
+    "Dan karamin bangare na lemu daya shi ne 1/4."
+   ],
+   "server_texts": [
     "Darasi na 4: Rabe-rabe",
     "Aisha tana da lemu 12. Ta raba su daidai ga kawayenta 3.",
     "Kowace kawa ta samu lemu 4.",
@@ -193,6 +225,15 @@
     "Tururi yana tashi sama ya zama gajimare, sannan ruwan sama",
     "ya sauka."
    ],
+   "server_texts": [
+    "Darasin Kimiyya: Yanayin Ruwa",
+    "Ruwa yana da yanayi 3: kankara, ruwa da tururi.",
+    "Ruwa yana tafasa a digiri 100 na Celsius.",
+    "Yana daskarewa ya zama kankara a digiri 0.",
+    "Idan rana ta yi karfi, ruwa yana kafewa ya zama tururi.",
+    "Tururi yana tashi sama ya zama gajimare, sannan ruwan sama",
+    "ya sauka."
+   ],
    "server_marks": [
     [
      1,
@@ -219,6 +260,14 @@
   {
    "id": "page-19",
    "offline_lines": [
+    "Sanarwar Makaranta",
+    "Za a yi taron iyaye a ranar Alhamis, 12 ga Nuwamba, 2026, da",
+    "karfe 10 na safe.",
+    "Dalibai su zo da littattafansu da kudin abinci N500.",
+    "Kowane dalibi ya kawo takardar izini daga iyayensa.",
+    "A kiyaye lokaci, don Allah."
+   ],
+   "server_texts": [
     "Sanarwar Makaranta",
     "Za a yi taron iyaye a ranar Alhamis, 12 ga Nuwamba, 2026, da",
     "karfe 10 na safe.",
@@ -259,6 +308,14 @@
     "Yan'uwanta biyu suka taimaka mata.",
     "Bayan kwana 7, đan tsuntsu ya warke ya tashi sama."
    ],
+   "server_texts": [
+    "Labari: Dan Tsuntsu",
+    "Wata karamar yarinya ta ga ɗan tsuntsu a karkashin bishiya.",
+    "Kafarsa ta karye, kuma yana jin kishirwa.",
+    "Ta dauke shi ta kai gida, ta ba shi ruwa da dan hatsi.",
+    "Yan'uwanta biyu suka taimaka mata.",
+    "Bayan kwana 7, ɗan tsuntsu ya warke ya tashi sama."
+   ],
    "server_marks": [
     [
      0,
@@ -268,6 +325,11 @@
     [
      1,
      1,
+     "special_letter"
+    ],
+    [
+     1,
+     5,
      "special_letter"
     ],
     [
@@ -294,9 +356,14 @@
      3,
      11,
      "special_letter"
+    ],
+    [
+     5,
+     3,
+     "special_letter"
     ]
    ]
   }
  ],
- "_about_parity": "Pages 15-20 (all made by the Magana team, CC BY 4.0): the offline reading's lines and what the server's letters.marks marks on exactly those lines ([line, word, kind]). Made with the backend; the phone must give the same."
+ "_about_parity": "Pages 15-20 (all made by the Magana team, CC BY 4.0): the offline reading's lines, and what the server makes of exactly those lines on a Hausa page (letters.restore_hausa, then letters.marks: [line, word, kind]). Made with the backend; the phone must give the same."
 }
