@@ -219,7 +219,8 @@ def test_a_dose_with_a_number_is_a_dose_word(answer):
     "The class meets every day.",
     "Many hours of sunlight help plants grow.",
     "Plants grow in hours, not minutes.",
-    "The sun rises every morning.",
+    # "The sun rises every morning." was here; "every morning" is a dose word since Dr. Amos's
+    # review (17 Nov 2026): test_health_words_review.py, test_known_over_blocks_for_dr_amos.
 ])
 def test_ordinary_words_near_hours_are_not_dose_words(answer):
     assert g.answer_problem(answer, "Plants need sunlight every day.", "en") is None, answer
@@ -228,7 +229,8 @@ def test_ordinary_words_near_hours_are_not_dose_words(answer):
 def test_every_hours_with_no_number_is_no_longer_a_dose_word():
     # The old literal "every hours" matched only those exact words (docs/FINDINGS.md, 9 Nov 2026).
     assert "every hours" not in g._answer_lists()["dose_words"]["en"]
-    assert all("N" in w for w in g._answer_lists()["dose_words"]["en"] if w.startswith("every"))
+    assert all("N" in w for w in g._answer_lists()["dose_words"]["en"]
+               if w.startswith("every") and ("hour" in w or "hr" in w))
 
 
 # ---------- dose words in words and in prescription shorthand

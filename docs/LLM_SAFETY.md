@@ -2,7 +2,7 @@
 
 Magana uses one language model, N-ATLaS, for one task: explaining a school page in the learner's language. This page sets out what stands between that model and a learner, and why.
 
-**Status: draft (9 Nov 2026).** The word lists and the prompts for Hausa, Yorùbá and Igbo are waiting for review: Dr. Amos for the health and medicine words, native speakers for each language.
+**Status: draft (9 Nov 2026; English health words reviewed 17 Nov).** Dr. Amos reviewed the English health, medicine and dose word lists on 17 Nov 2026: he kept all 135 and added 220 (imported with `scripts/import_health_word_review.py`; his reasons are in each file's `_notes`). The words that stop harmless school pages are listed for him in docs/FINDINGS.md (19 Nov 2026). The Hausa, Yorùbá and Igbo lists and prompts are still waiting for native speakers.
 
 ## Why the model's own refusals aren't relied on
 
@@ -41,7 +41,7 @@ So Magana doesn't trust the model to refuse, in any language. Everything below i
    - The number-placeholder checks run as before (`app/explain.py`, `safety.guard_explanation`).
    - Then `natlas_guard.answer_problem` checks the answer:
      - every number in the answer must be on the page;
-     - no medicine names and no dose words (`content/llm_safety/answer_checks.json`, per language, for Dr. Amos to review);
+     - no medicine names and no dose words (`content/llm_safety/answer_checks.json`, per language; English reviewed by Dr. Amos);
        - a dose word may contain N, which stands for a number: digits, a number word or a range. "every N hours" catches "every 6 hours", "every six hours" and "every 4 to 6 hours"; "N-hourly" catches "8-hourly" and "8 hourly";
        - word forms ("once daily", "twice daily", "thrice daily", "as needed", "prn", "nocte") always count. Prescription shorthand that is also an ordinary word or letters ("od", "bd", "bid", "tds", "tid", "qds", "qid", "stat", "daily", "mane") counts only next to a number or a dose form ("1 tab bd", "500mg tds", "bd x 5 days"), so "a bid to win" or "daily life" is not blocked;
        - the review workbook is `docs/review/amos-health-words.xlsx` (`scripts/export_health_word_review.py`);

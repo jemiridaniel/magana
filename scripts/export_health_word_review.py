@@ -100,8 +100,9 @@ def main() -> None:
     about.title = "Read me"
     for text, bold in [
         ("Explain safety word lists: review for Dr. Amos (English) and native speakers (Hausa, Yorùbá, Igbo)", True),
-        ("Draft, made by scripts/export_health_word_review.py from content/llm_safety/topics.json and "
-         "content/llm_safety/answer_checks.json.", False),
+        ("Made by scripts/export_health_word_review.py from content/llm_safety/topics.json and "
+         "content/llm_safety/answer_checks.json. The English lists include Dr. Amos's additions of 17 Nov 2026 "
+         "(his reasons in Notes); the other languages are still drafts.", False),
         ("", False),
         ("What these lists do", True),
         ("Explain uses an AI model (N-ATLaS) to explain school pages. It must never explain health or medicine "
@@ -133,13 +134,24 @@ def main() -> None:
     about.column_dimensions["A"].width = 120
 
     health = topics["en"]["health"]
-    en = [["Health: strong", w, USE["strong"], "", ""] for w in health["strong"]]
-    en += [["Health: ordinary", w, USE["words"], "", ""] for w in health["words"]]
-    en += [["Medicine name", w, USE["medicine"], "", ""] for w in checks["medicines"]]
-    en += [["Dose word", w, USE["dose"], "", note(w)] for w in checks["dose_words"]["en"]]
-    en += [["Dose shorthand", w, USE["short"], "", f"Means: {SHORT_MEANING[w]}." if w in SHORT_MEANING else ""]
+    tn, cn = topics.get("_notes", {}), checks.get("_notes", {})
+
+    def notes(*parts: str) -> str:  # the reviewer's note (kept by import_health_word_review.py) first
+        return " ".join(x for x in parts if x)
+
+    en = [["Health: strong", w, USE["strong"], "", notes(tn.get("en.health.strong", {}).get(w, ""))]
+          for w in health["strong"]]
+    en += [["Health: ordinary", w, USE["words"], "", notes(tn.get("en.health.words", {}).get(w, ""))]
+           for w in health["words"]]
+    en += [["Medicine name", w, USE["medicine"], "", notes(cn.get("medicines", {}).get(w, ""))]
+           for w in checks["medicines"]]
+    en += [["Dose word", w, USE["dose"], "", notes(cn.get("dose_words.en", {}).get(w, ""), note(w))]
+           for w in checks["dose_words"]["en"]]
+    en += [["Dose shorthand", w, USE["short"], "",
+            cn.get("dose_abbreviations.en", {}).get(w, "") or (f"Means: {SHORT_MEANING[w]}." if w in SHORT_MEANING else "")]
            for w in checks.get("dose_abbreviations", {}).get("en", [])]
-    en += [["Dose form", w, USE["form"], "", ""] for w in checks.get("dose_forms", {}).get("en", [])]
+    en += [["Dose form", w, USE["form"], "", notes(cn.get("dose_forms.en", {}).get(w, ""))]
+           for w in checks.get("dose_forms", {}).get("en", [])]
     sheet(wb.create_sheet(), "English (Dr. Amos)", en, lang_col=False)
 
     other = []
