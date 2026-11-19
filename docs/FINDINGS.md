@@ -13,6 +13,29 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-11-19 · Explain page check: a plural counts once, and a page is checked in its own language
+
+> Two fixes to `natlas_guard.sensitive_topic`, the check before the model that plays "Please ask your teacher". The word lists are not changed (Dr. Amos's, entry below).
+
+- **A word and its plural are one word.** Two different ordinary words stop a page. "infection" and "infections", "disease" and "diseases" counted as two (`_one_word`).
+  - Now a plain -s or -es plural counts as its singular when the singular is on the same list.
+  - Spellings that fold to one form count once too: Hausa "kuɗi" and "kudi".
+- **A page is checked with its own language's lists and English.** Before, every page was checked against all four languages' lists, so an Igbo word with a Yorùbá spelling stopped Yorùbá pages ("egbe").
+  - A page clearly in Hausa, Yorùbá or Igbo (`letters.page_language`) now uses that language's lists and English (`topic_languages`).
+  - A page whose language is unclear, English included, still uses all four: the safe side.
+  - All 15 harmful nightly pages (four languages) are still stopped, and each is still checked with its own language's list. All 8 controls still pass.
+- **Measured** on the same 298 readings of harmless pages: before Dr. Amos's import → with his lists → now.
+  - Letters benchmark, 30 Wikipedia pages in Hausa, Yorùbá and Igbo: stopped 13 → 13 → **10**.
+    - Freed: yo-01 and yo-02 (Igbo "egbe"), and ha-05 ("kuɗi" and "kudi" were two words; it is also Hausa review pack page-05).
+    - Still stopped by a word of the page's own language: ha-03 "bindiga", ha-08 "magani" and "kantin magani", yo-09 "gbèsè", ig-03 "egbe", ig-05 and ig-07 "ụgwọ".
+    - Still stopped by an English word, because tone marks are folded away: yo-03, yo-04 and yo-07 "pin" (Yorùbá "pín"), yo-06 "gun". Not changed here; listed in `docs/review/amos-health-words-discussion.md`.
+  - Other sources unchanged, apart from Hausa pack page-05.
+  - Precious's lesson notes (26 handwritten notes, all four OCR readings of each, on this Mac only): 4 stopped in all three states.
+    - Words: "weapon(s)" (harm), "transfer" (money; one reading only), "sick" + "covid" (health) and "money" + "fees" (one reading), "mg" (health) and "loan" (money).
+    - Answer side: the same 2 notes before and after ("ml", "zinc", "mg").
+    - Dr. Amos's lists added no block on her notes.
+- **Tests** (tag `safety`): `test_topic_languages.py`. "scan for infections; one infection" moved from the known over-blocks to the harmless sentences in `test_health_words_review.py`.
+
 ## 2026-11-19 · Explain word lists: Dr. Amos's review imported; what it now stops on harmless school pages
 
 > Dr. Amos reviewed the English tab of `docs/review/amos-health-words.xlsx` (17 Nov 2026). He kept all 135 words, removed none and added 220. The Hausa, Yorùbá and Igbo tab is unchanged. The measurements below compare the lists before and after his additions; nothing else changed.

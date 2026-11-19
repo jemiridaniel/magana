@@ -90,6 +90,8 @@ def test_his_dose_forms_make_shorthand_count(form):
     "Geography: the Tropic of Cancer is north of the equator.",
     "English: do not make a rash decision.",
     "Read Part IV and Part V. Use the PC in the lab. Practise the stroke.",
+    # A word and its plural are one word (19 Nov 2026): this was stopped on 17 Nov.
+    "Computer studies: scan for infections; one infection can spread.",
 ])
 def test_harmless_school_sentences_are_not_caught(text):
     assert g.sensitive_topic(text) is None, text
@@ -104,7 +106,6 @@ def test_harmless_school_sentences_are_not_caught(text):
     ("Commerce: the shopkeeper sells goods over the counter.", "health", None),
     ("Biology: lipids include fats, oils, waxes and steroids.", "health", None),
     ("History of science: Fleming discovered penicillin, the first antibiotic.", "health", None),
-    ("Computer studies: scan for infections; one infection can spread.", "health", None),
     ("The sun rises every morning.", None, "dose_word"),
     ("Wash your hands before meals.", None, "dose_word"),
     ("A car uses 5 litres of fuel per day.", None, "dose_word"),

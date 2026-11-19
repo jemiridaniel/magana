@@ -218,16 +218,42 @@ def _has(folded: str, term: str) -> bool:
     return re.search(rf"(?<![\w]){re.escape(t)}(?![\w])", folded) is not None
 
 
+def _one_word(term: str, listed: frozenset[str]) -> str:
+    """The form a listed word counts as toward "two different words": folded, and a plain -s or
+    -es plural as its singular when that is listed too ("infections" and "infection", "diseases"
+    and "disease", "kuɗi" and "kudi" are one word each)."""
+    t = _fold(term)
+    for ending in ("s", "es"):
+        if t.endswith(ending) and t[: -len(ending)] in listed:
+            return t[: -len(ending)]
+    return t
+
+
+def topic_languages(page_text: str) -> list[str]:
+    """Whose word lists a page is checked against. A page clearly in Hausa, Yorùbá or Igbo
+    (letters.page_language): that language and English (Nigerian pages mix in English terms), so a
+    Yorùbá page isn't stopped by an Igbo word that happens to share its spelling ("egbe"). Any
+    other page, English or not clearly one language: all four, the safe side."""
+    from app import letters
+
+    langs = [k for k in _topics() if not k.startswith("_")]
+    page = letters.page_language(page_text)
+    return [l for l in langs if l in (page, "en")] if page in langs else langs
+
+
 def sensitive_topic(page_text: str) -> str | None:
-    """'health', 'money' or 'harm' when the page is about it, in any of the four languages (a
-    page's language isn't always known); else None. One strong term is enough, or two different
-    words of one topic. Also 'health' for a line matching a health phrase template."""
+    """'health', 'money' or 'harm' when the page is about it, checked against the lists of the
+    page's language and English (topic_languages); else None. One strong term is enough, or two
+    different words of one topic (a word and its plural are one: _one_word). Also 'health' for a
+    line matching a health phrase template."""
     folded = _fold(page_text)
-    for lists in (v for k, v in _topics().items() if not k.startswith("_")):
+    topics = _topics()
+    for lists in (topics[l] for l in topic_languages(page_text)):
         for topic, terms in lists.items():
             if any(_has(folded, t) for t in terms["strong"]):
                 return topic
-            if len({t for t in terms["words"] if _has(folded, t)}) >= 2:
+            listed = frozenset(_fold(t) for t in terms["words"])
+            if len({_one_word(t, listed) for t in terms["words"] if _has(folded, t)}) >= 2:
                 return topic
     for line in page_text.splitlines():
         if line.strip() and templates.match(line, "ha", "health", {"clinically_approved", "native_reviewed", "draft"}):

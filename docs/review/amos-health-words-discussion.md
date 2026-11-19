@@ -13,7 +13,7 @@ What the suggestions mean:
 | patient (ordinary) | "Swimming: practise the breast stroke. Be patient: it takes time." | Ask your teacher (with "stroke") | post-check only |
 | stroke (ordinary) | "Biology: stroke volume… blood pressure is highest in the arteries." | Ask your teacher (with "blood pressure") | ordinary (keep) |
 | emergency (ordinary) | "Civic education: in an emergency, stay calm and be patient." | Ask your teacher (with "patient") | post-check only |
-| infection / infections (ordinary) | "Computer studies: scan for infections; one infection can spread." | Ask your teacher: singular and plural count as two words | ordinary, but a word and its plural count once |
+| infection / infections (ordinary) | "Computer studies: scan for infections; one infection can spread." | **Fixed 19 Nov:** a word and its plural now count as one word; no longer stopped | done |
 | over the counter (strong) | "Commerce: the shopkeeper sells goods over the counter." | Ask your teacher | ordinary |
 | steroid / steroids (strong) | "Biology: lipids include fats, oils, waxes and steroids." | Ask your teacher | ordinary |
 | antibiotic (strong) | "History of science: Fleming discovered penicillin, the first antibiotic." | Ask your teacher | ordinary |
@@ -30,3 +30,4 @@ What the suggestions mean:
 | tablespoon(s) (dose word) | "Add 2 tablespoons of sugar to the mixture." | Explanation refused, page read instead | restricted |
 | ac, iv, sc, im, hs, sos (shorthand) | "Connect the AC 12 V supply." / "question iv 3 marks" / "B.Sc 4 years" | Explanation refused (next to a bare number) | only next to a dose form, not a bare number |
 | poison (ordinary) | "Biology: some plants make poison." | Ask your teacher, already before: it is a harm strong word | no change needed |
+| pin, gun (English money and harm lists; not his) | Yorùbá pages with "pín" (share) or "gún" | Ask your teacher: with tone marks folded, they match the English words | for the team: match English words on a Yorùbá page only as written without tone marks |
