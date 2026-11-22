@@ -10,7 +10,11 @@ never changed: "kaya" may be "ƙaya" (thorn) or really "kaya" (load), and only a
 Two exceptions on Hausa pages (restore_hausa; Brydl's review, 13 Nov 2026), both still marked:
 "đ" is ɗ ("Đ" is Ɗ), a letter Hausa doesn't have; and a capital K in the middle of a sentence
 ("ta Kungiyar") is ƙ when the ƙ word is in the word list: Tesseract reads the hooked ƙ as K,
-and a capital there is otherwise a name.
+and a capital there is otherwise a name. It stays a capital Ƙ when the word before or after is
+such a K word too, as in a name's title case ("18 Kungiyoyin Kasa da Kasa": Ƙungiyoyin Ƙasa;
+Brydl, 22 Nov 2026); a name next to it doesn't count ("Kasar Najeriya": ƙasar). A word with a plain letter right before its own hooked one ("hadđaka",
+"habɓakar") is left as read and marked: the word list holds one such word (habɓakar, from
+Wikipedia), so we can't say the pair never occurs (docs/FINDINGS.md, 22 Nov 2026).
 A digit inside a word on these pages ("uz9" for ụzọ) is an unclear letter, never a number
 (digit_in_word); a number standing alone keeps the verbatim rule.
 """
@@ -115,41 +119,67 @@ def digit_in_word(token: str) -> bool:
 
 
 _D = str.maketrans({"đ": "ɗ", "Đ": "Ɗ"})
+# A plain letter right before its own hooked form, any case, đ counted as ɗ ("hadđaka").
+_PAIR = re.compile(r"[dD][ɗƊđĐ]|[bB][ɓƁ]|[kK][ƙƘ]|[yY][ƴƳ]")
 _SENTENCE_END = re.compile(r"[.!?][\"'”’)\]]*$")
 _LETTER = re.compile(r"[^\W\d_]")
 
 
-def _hooked_k(token: str, previous: str | None) -> str | None:
+def _k_word(token: str | None) -> str | None:
+    """The word's letters with K made ƙ, or None: [token] is a capital K word ("Kasa", or "Ƙasa"
+    already restored), the rest in small letters, and the ƙ word is in the list."""
+    m = _WORD.search(token or "")
+    if not m or len(m.group()) < 2 or m.group()[0] not in "KƘ" or m.group()[1:] != m.group()[1:].lower():
+        return None
+    hooked = "ƙ" + m.group()[1:]
+    return hooked if untoned(hooked) in _index("ha").get(plain(hooked), ()) else None
+
+
+def _hooked_k(token: str, previous: str | None, before: str | None = None,
+              after: str | None = None) -> str | None:
     """[token] with its capital K made ƙ, or None: mid-sentence only (not the line's first word,
     not after . ! ?), the rest of the word in small letters, and the ƙ word in the list.
     [previous] is the nearest earlier word with a letter in it: a heading's "== Kuruciya ==" or
-    a list's "• Kasar" starts its line (Brydl's review: "== Kuruciya ==" was changed)."""
+    a list's "• Kasar" starts its line (Brydl's review: "== Kuruciya ==" was changed).
+    The capital stays (Ƙ) when the word right [before] or [after] it is such a K word too: a
+    title-cased name ("18 Kungiyoyin Kasa da Kasa": Ƙungiyoyin Ƙasa). Any other capitalised
+    neighbour doesn't count: "Kasar Najeriya", "Kungiyar Paralympic" are ƙasar, ƙungiyar
+    (Brydl's 23; docs/FINDINGS.md, 22 Nov 2026)."""
     if previous is None or _SENTENCE_END.search(previous):
         return None
     m = _WORD.search(token)
-    if not m or len(m.group()) < 2 or m.group()[0] != "K" or m.group()[1:] != m.group()[1:].lower():
+    if not m or not m.group().startswith("K"):  # "Ƙasa" is already restored
         return None
-    hooked = "ƙ" + m.group()[1:]
-    if untoned(hooked) not in _index("ha").get(plain(hooked), ()):
+    hooked = _k_word(token)
+    if hooked is None:
         return None
+    if _k_word(before) or _k_word(after):
+        hooked = "Ƙ" + hooked[1:]
     return token[: m.start()] + hooked + token[m.end():]
 
 
 def restore_hausa(lines: list[dict]) -> None:
-    """Hausa pages, in place: "đ"/"Đ" become ɗ/Ɗ, and a mid-sentence capital K becomes ƙ where
-    the ƙ word is listed (_hooked_k). Each changed word's index goes in the line's
-    "restored_words", and marks() marks it: a person should still check it."""
+    """Hausa pages, in place: "đ"/"Đ" become ɗ/Ɗ, and a mid-sentence capital K becomes ƙ (or Ƙ)
+    where the ƙ word is listed (_hooked_k). Each changed word's index goes in the line's
+    "restored_words", and marks() marks it: a person should still check it. A word with a plain
+    letter before its own hooked one (_PAIR) is left as read; its index goes in "held_words"
+    and it is marked too."""
     for line in lines:
         words = line.get("words") or []
         tokens = [w.get("text", "") for w in words] if words else line.get("text", "").split()
-        new = [t.translate(_D) for t in tokens]
+        held = [j for j, t in enumerate(tokens) if _PAIR.search(t)]
+        new = [t if j in held else t.translate(_D) for j, t in enumerate(tokens)]
         changed = [j for j, (a, b) in enumerate(zip(tokens, new)) if a != b]
         for j in range(len(new)):
+            if j in held:
+                continue
             previous = next((new[i] for i in range(j - 1, -1, -1) if _LETTER.search(new[i])), None)
-            k = _hooked_k(new[j], previous)
+            k = _hooked_k(new[j], previous, new[j - 1] if j else None, new[j + 1] if j + 1 < len(new) else None)
             if k is not None:
                 new[j] = k
                 changed.append(j)
+        if held:
+            line["held_words"] = held
         if new == tokens:
             continue
         if words:
@@ -179,6 +209,7 @@ def marks(lines: list[dict], lang: str) -> list[dict]:
             text = w.get("text", "")
             if digit_in_word(text):
                 out.append({"block_index": i, "word_index": j, "kind": "unclear_letter"})
-            elif j in line.get("restored_words", ()) or may_miss_letter(text, lang):
+            elif (j in line.get("restored_words", ()) or j in line.get("held_words", ())
+                  or may_miss_letter(text, lang)):
                 out.append({"block_index": i, "word_index": j, "kind": "special_letter"})
     return out

@@ -13,6 +13,39 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-11-22 · Hausa restore: a capital Ƙ kept between two K words; a plain-then-hooked word left as read (Brydl's review)
+
+> Two fixes to the Hausa K → ƙ / đ → ɗ restore, the same on the server (`letters.restore_hausa`) and the phone (`page_letters.restoreHausa`), from Brydl's review. Measured on the Hausa review pack's 2 Nov readings, with the same OCR output and today's restore.
+
+- **Capitals.** The restore always made a capital K a small ƙ.
+  - Brydl counted 23 places where the server read a small ƙ as a capital K mid-sentence. Separately, 4 words on each reader are a capital Ƙ in the source that we restored as small ƙ: Ƙungiyoyin ×2, Ƙungiya, Ƙasa.
+  - Three rules were compared on the same lines. "Right" means the restored letter is the source letter.
+
+    | Rule | Brydl's 23 (server) | Source Ƙ, server | Source Ƙ, phone |
+    |---|---|---|---|
+    | Before: always ƙ | 20 right, 3 left as K (line start or not listed) | 0 of 4 | 0 of 4 |
+    | Ƙ when the word before or after is capitalised | 12 right, **8 made Ƙ**, 3 left as K | 3 of 4 | 3 of 4 |
+    | **Used:** Ƙ when the word before or after is a capital K word too | 20 right, 3 left as K | 1 of 4 | 1 of 4 |
+
+  - The first rule breaks on a Hausa pattern: a small ƙ word before a name ("ƙasar Najeriya", "ƙungiyar Paralympic", "Yammacin ƙasar Amurka").
+  - The rule used fixes "Kungiyoyin Kasa da Kasa" (Ƙungiyoyin Ƙasa) and changes none of Brydl's 23. It still misses "Kungiyoyin Wasanni", "Yankin Kungiya" and "dan Kasa". Neither rule can tell those titles from "Kasar Najeriya" on the letters alone. Every restored word is marked either way.
+- **Plain letter before its own hooked form** (dɗ, bɓ, kƙ, yƴ, any case; dđ before đ becomes ɗ). The phone read "haɗaka" as "hadđaka", and the restore made it "hadɗaka".
+  - Checked first:
+    - The pack's source text (3,757 words) has no such pair.
+    - The other Hausa texts in the repo (benchmark, templates, WhatsApp, app strings) have none.
+    - The Hausa word list `content/word_lists/ha.txt` has one: **"habɓakar"**. It came from Wikipedia (26 Oct), most likely a misspelling of haɓakar, which is also listed.
+  - So the pair is not merged. A word with one is now left as read and marked (`held_words` on the server, `held` on the phone). Doubled hooked letters (ƙƙ, ɗɗ; đđ becomes ɗɗ) are not pairs and are unchanged.
+  - If habɓakar is removed from the list, merging can be decided again. A test fails if the list's pair words change.
+- **Restoration counts** on the 2 Nov readings, before → after:
+
+  | Reader | Changed | As in the source | Capital only | Not as in the source | Left as read and marked |
+  |---|---|---|---|---|---|
+  | Server | 28 → 28 | 26 → 26 | 4 → 3 | 2 → 2 | 0 → 0 |
+  | Phone | 17 → 16 | 14 → 14 | 4 → 3 | 3 → 2 | 0 → 1 ("hadđaka") |
+
+  - The 2 left on each reader are the same: "Kasa da Kasa" on page-01, where the source itself has no hook. "Kasa" is now Ƙasa, "Kasa," is ƙasa,.
+- **Tests** (tag `safety`): new shared cases in `backend/tests/fixtures/letters/hausa_restore_cases.json`, run by `test_hausa_restore.py` and `app/test/hausa_restore_test.dart`. They cover ƙasar Najeriya, ƙungiyar Paralympic, Ƙungiyoyin Ƙasa, hadđaka, habɓakar, DƊan, hakƙi, đđ and ƙƙ. Another test checks which word-list words have a pair. The pack-page parity (pages 15–20) is unchanged.
+
 ## 2026-11-19 · Explain page check: a plural counts once, and a page is checked in its own language
 
 > Two fixes to `natlas_guard.sensitive_topic`, the check before the model that plays "Please ask your teacher". The word lists are not changed (Dr. Amos's, entry below).

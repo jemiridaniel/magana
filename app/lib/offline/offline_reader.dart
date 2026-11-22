@@ -481,7 +481,11 @@ Future<Map<String, dynamic>> _reading(
     // A Hausa page: ƙ and ɗ put back where it is safe, as the server does (restoreHausa).
     final restored = language == 'ha'
         ? restoreHausa([for (final w in line.words) w.text])
-        : (words: [for (final w in line.words) w.text], changed: <int>{});
+        : (
+            words: [for (final w in line.words) w.text],
+            changed: <int>{},
+            held: <int>{},
+          );
     lines.add({
       'text': restored.words.join(' '),
       'confidence': conf,
@@ -514,7 +518,9 @@ Future<Map<String, dynamic>> _reading(
         continue;
       }
       if (language != null &&
-          (restored.changed.contains(j) || mayMissLetter(w.text, language))) {
+          (restored.changed.contains(j) ||
+              restored.held.contains(j) ||
+              mayMissLetter(w.text, language))) {
         letterMarks.add({
           'block_index': i,
           'word_index': j,

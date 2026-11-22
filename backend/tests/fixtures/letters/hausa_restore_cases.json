@@ -1,5 +1,5 @@
 {
- "_about": "Hausa pages: what letters.restore_hausa (server) and page_letters.restoreHausa (phone) make of a line, and which words they mark. Read by backend/tests/test_hausa_restore.py and app/test/hausa_restore_test.dart, so both sides pass the same cases. Brydl's review, 13 Nov 2026.",
+ "_about": "Hausa pages: what letters.restore_hausa (server) and page_letters.restoreHausa (phone) make of a line, and which words they mark. Read by backend/tests/test_hausa_restore.py and app/test/hausa_restore_test.dart, so both sides pass the same cases. Brydl's review, 13 Nov 2026; capitals and plain-then-hooked pairs, 22 Nov 2026.",
  "cases": [
   {
    "why": "a capital K mid-sentence: hooked k, marked",
@@ -10,9 +10,9 @@
    ]
   },
   {
-   "why": "after a number mid-sentence",
+   "why": "a title-cased name: two K words side by side keep their capital; the last Kasa doesn't",
    "line": "187 (NPCs), 18 Kungiyoyin Kasa da Kasa,",
-   "restored": "187 (NPCs), 18 ƙungiyoyin ƙasa da ƙasa,",
+   "restored": "187 (NPCs), 18 Ƙungiyoyin Ƙasa da ƙasa,",
    "marked": [
     3,
     4,
@@ -138,6 +138,87 @@
    "marked": [
     2
    ]
+  },
+  {
+   "why": "a K word before a name stays small: ƙasar Najeriya",
+   "line": "Ya zama shugaban Kasar Najeriya.",
+   "restored": "Ya zama shugaban ƙasar Najeriya.",
+   "marked": [
+    3
+   ]
+  },
+  {
+   "why": "a K word before a name stays small: ƙungiyar Paralympic",
+   "line": "Ita ce Kungiyar Paralympic.",
+   "restored": "Ita ce ƙungiyar Paralympic.",
+   "marked": [
+    2
+   ]
+  },
+  {
+   "why": "a capitalised neighbour that isn't a K word doesn't keep the capital",
+   "line": "Ya kafa Kungiyoyin Wasanni na duniya.",
+   "restored": "Ya kafa ƙungiyoyin Wasanni na duniya.",
+   "marked": [
+    1,
+    2
+   ]
+  },
+  {
+   "why": "plain d before đ: left as read, marked",
+   "line": "Ana kiran ta hadđaka a nan.",
+   "restored": "Ana kiran ta hadđaka a nan.",
+   "marked": [
+    3
+   ]
+  },
+  {
+   "why": "plain b before ɓ (habɓakar is in the word list): left as read, marked",
+   "line": "Ana kiran ta habɓakar a nan.",
+   "restored": "Ana kiran ta habɓakar a nan.",
+   "marked": [
+    3
+   ]
+  },
+  {
+   "why": "plain D before Ɗ: left as read, marked",
+   "line": "Ya ga DƊan uwansa.",
+   "restored": "Ya ga DƊan uwansa.",
+   "marked": [
+    2
+   ]
+  },
+  {
+   "why": "plain k before ƙ: left as read, marked",
+   "line": "Ya ga hakƙi.",
+   "restored": "Ya ga hakƙi.",
+   "marked": [
+    2
+   ]
+  },
+  {
+   "why": "a held word doesn't stop its neighbours being restored",
+   "line": "Yana da hadđaka Kungiyar Kasa.",
+   "restored": "Yana da hadđaka Ƙungiyar Ƙasa.",
+   "marked": [
+    2,
+    3,
+    4
+   ]
+  },
+  {
+   "why": "doubled đđ is ɗɗ, not a pair",
+   "line": "Ya ga nađađđen littafi.",
+   "restored": "Ya ga naɗaɗɗen littafi.",
+   "marked": [
+    2
+   ]
+  },
+  {
+   "why": "doubled ƙƙ is left alone",
+   "line": "Ya ga haƙƙin sa.",
+   "restored": "Ya ga haƙƙin sa.",
+   "marked": []
   }
  ]
 }

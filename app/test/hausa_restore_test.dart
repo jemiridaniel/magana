@@ -14,11 +14,9 @@ import 'offline_letter_marks_test.dart' show readLines;
 
 final cases =
     ((jsonDecode(
-                  File(
-                    '../backend/tests/fixtures/letters/hausa_restore_cases.json',
-                  ).readAsStringSync(),
-                )
-                as Map<String, dynamic>)['cases']
+              File('../backend/tests/fixtures/letters/hausa_restore_cases.json')
+                  .readAsStringSync(),
+            ) as Map<String, dynamic>)['cases']
             as List)
         .cast<Map<String, dynamic>>();
 
@@ -32,7 +30,10 @@ void main() {
       // special letter (letters.marks).
       final marked = [
         for (final (j, t) in tokens.indexed)
-          if (r.changed.contains(j) || mayMissLetter(t, 'ha')) j,
+          if (r.changed.contains(j) ||
+              r.held.contains(j) ||
+              mayMissLetter(t, 'ha'))
+            j,
       ];
       expect(marked, (c['marked'] as List).cast<int>());
     });

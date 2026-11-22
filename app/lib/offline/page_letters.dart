@@ -89,44 +89,78 @@ bool mayMissLetter(String token, String lang) {
   final m = _word.firstMatch(token);
   if (m == null) return false;
   final found = untonedWord(m.group(0)!);
-  return (_wordIndex(lang)[plainWord(found)] ?? const []).any((c) => c != found);
+  return (_wordIndex(lang)[plainWord(found)] ?? const []).any(
+    (c) => c != found,
+  );
 }
 
 final _sentenceEnd = RegExp('[.!?]["\'”’)\\]]*\$');
 final _letter = RegExp(r'\p{L}', unicode: true);
 const _strokeD = {'đ': 'ɗ', 'Đ': 'Ɗ'};
 
-/// [token] with its capital K made ƙ, or null (letters._hooked_k): mid-sentence only (not the
-/// line's first word, not after . ! ?), the rest of the word in small letters, and the ƙ word
-/// in the list. [previous] is the nearest earlier word with a letter in it, so a heading's
-/// "== Kuruciya ==" or a list's "• Kasar" starts its line.
-String? _hookedK(String token, String? previous) {
-  if (previous == null || _sentenceEnd.hasMatch(previous)) return null;
-  final m = _word.firstMatch(token);
+/// A plain letter right before its own hooked form, any case, đ counted as ɗ ("hadđaka"):
+/// left as read and marked (letters._PAIR). The word list holds one such word (habɓakar).
+final _pair = RegExp('[dD][ɗƊđĐ]|[bB][ɓƁ]|[kK][ƙƘ]|[yY][ƴƳ]');
+
+/// The word's letters with K made ƙ, or null (letters._k_word): [token] is a capital K word
+/// ("Kasa", or "Ƙasa" already restored), the rest in small letters, and the ƙ word is listed.
+String? _kWord(String? token) {
+  final m = token == null ? null : _word.firstMatch(token);
   if (m == null) return null;
   final w = m.group(0)!;
   final rest = w.substring(1);
-  if (w.length < 2 || !w.startsWith('K') || rest != rest.toLowerCase()) {
+  if (w.length < 2 || !'KƘ'.contains(w[0]) || rest != rest.toLowerCase()) {
     return null;
   }
   final hooked = 'ƙ$rest';
   final listed = _wordIndex('ha')[plainWord(hooked)] ?? const [];
-  if (!listed.contains(untonedWord(hooked))) return null;
+  return listed.contains(untonedWord(hooked)) ? hooked : null;
+}
+
+/// [token] with its capital K made ƙ, or null (letters._hooked_k): mid-sentence only (not the
+/// line's first word, not after . ! ?), the rest of the word in small letters, and the ƙ word
+/// in the list. [previous] is the nearest earlier word with a letter in it, so a heading's
+/// "== Kuruciya ==" or a list's "• Kasar" starts its line. The capital stays (Ƙ) when the word
+/// right [before] or [after] it is such a K word too ("Kungiyoyin Kasa da Kasa": Ƙungiyoyin
+/// Ƙasa); a name doesn't count ("Kasar Najeriya": ƙasar).
+String? _hookedK(
+  String token,
+  String? previous, [
+  String? before,
+  String? after,
+]) {
+  if (previous == null || _sentenceEnd.hasMatch(previous)) return null;
+  final m = _word.firstMatch(token);
+  if (m == null || !m.group(0)!.startsWith('K')) return null;
+  var hooked = _kWord(token);
+  if (hooked == null) return null;
+  if (_kWord(before) != null || _kWord(after) != null) {
+    hooked = 'Ƙ${hooked.substring(1)}';
+  }
   return token.replaceRange(m.start, m.end, hooked);
 }
 
 /// A Hausa line's words as the server makes them (letters.restore_hausa): "đ"/"Đ" become ɗ/Ɗ,
-/// and a mid-sentence capital K becomes ƙ where the ƙ word is listed. [changed] holds each
-/// changed word's index; those words are marked, so a person still checks them.
-({List<String> words, Set<int> changed}) restoreHausa(List<String> tokens) {
+/// and a mid-sentence capital K becomes ƙ (or Ƙ) where the ƙ word is listed. [changed] holds
+/// each changed word's index; [held], each word with a plain letter before its own hooked one,
+/// left as read. Both are marked, so a person still checks them.
+({List<String> words, Set<int> changed, Set<int> held}) restoreHausa(
+  List<String> tokens,
+) {
+  final held = {
+    for (final (j, t) in tokens.indexed)
+      if (_pair.hasMatch(t)) j,
+  };
   final words = [
-    for (final t in tokens) t.split('').map((c) => _strokeD[c] ?? c).join(),
+    for (final (j, t) in tokens.indexed)
+      held.contains(j) ? t : t.split('').map((c) => _strokeD[c] ?? c).join(),
   ];
   final changed = {
     for (final (j, t) in tokens.indexed)
       if (words[j] != t) j,
   };
   for (var j = 0; j < words.length; j++) {
+    if (held.contains(j)) continue;
     String? previous;
     for (var i = j - 1; i >= 0; i--) {
       if (_letter.hasMatch(words[i])) {
@@ -134,11 +168,16 @@ String? _hookedK(String token, String? previous) {
         break;
       }
     }
-    final k = _hookedK(words[j], previous);
+    final k = _hookedK(
+      words[j],
+      previous,
+      j > 0 ? words[j - 1] : null,
+      j + 1 < words.length ? words[j + 1] : null,
+    );
     if (k != null) {
       words[j] = k;
       changed.add(j);
     }
   }
-  return (words: words, changed: changed);
+  return (words: words, changed: changed, held: held);
 }

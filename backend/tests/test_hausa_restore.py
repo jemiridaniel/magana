@@ -56,3 +56,20 @@ def test_only_hausa_pages_are_restored(monkeypatch):
     from app import reader
     src = inspect.getsource(reader.read_page)
     assert 'if language == "ha":\n        letters.restore_hausa(result["lines"])' in src
+
+
+def test_the_word_list_has_a_plain_then_hooked_word_so_none_are_merged():
+    """Brydl's review, 22 Nov 2026: "hadđaka" (haɗaka) has a plain d before its own hooked one.
+    Merging the pair would be safe only if Hausa never writes one; our word list has "habɓakar"
+    (from Wikipedia, likely haɓakar misspelt), so such words are left as read and marked. If
+    this list changes, decide again (docs/FINDINGS.md, 22 Nov 2026)."""
+    words = (Path(__file__).parents[2] / "content/word_lists/ha.txt").read_text(encoding="utf-8").split()
+    assert sorted({w for w in words if letters._PAIR.search(w)}) == ["habɓakar"]
+
+
+def test_a_held_word_is_listed_and_unchanged():
+    lines = [line("Ana kiran ta hadđaka a nan.")]
+    letters.restore_hausa(lines)
+    assert lines[0]["held_words"] == [3]
+    assert "restored_words" not in lines[0]
+    assert lines[0]["text"] == "Ana kiran ta hadđaka a nan."
