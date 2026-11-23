@@ -12,7 +12,9 @@ Two exceptions on Hausa pages (restore_hausa; Brydl's review, 13 Nov 2026), both
 ("ta Kungiyar") is ƙ when the ƙ word is in the word list: Tesseract reads the hooked ƙ as K,
 and a capital there is otherwise a name. It stays a capital Ƙ when the word before or after is
 such a K word too, as in a name's title case ("18 Kungiyoyin Kasa da Kasa": Ƙungiyoyin Ƙasa;
-Brydl, 22 Nov 2026); a name next to it doesn't count ("Kasar Najeriya": ƙasar). A word with a plain letter right before its own hooked one ("hadđaka",
+Brydl, 22 Nov 2026); a name next to it doesn't count ("Kasar Najeriya": ƙasar). "X da X"
+("Kasa da Kasa") is one unit: the K word check looks through "da", and a restored X gives its
+partner the same letter (Ƙ or ƙ) when the partner starts with K or k (Brydl, 23 Nov 2026). A word with a plain letter right before its own hooked one ("hadđaka",
 "habɓakar") is left as read and marked: the word list holds one such word (habɓakar, from
 Wikipedia), so we can't say the pair never occurs (docs/FINDINGS.md, 22 Nov 2026).
 A digit inside a word on these pages ("uz9" for ụzọ) is an unclear letter, never a number
@@ -142,7 +144,8 @@ def _hooked_k(token: str, previous: str | None, before: str | None = None,
     [previous] is the nearest earlier word with a letter in it: a heading's "== Kuruciya ==" or
     a list's "• Kasar" starts its line (Brydl's review: "== Kuruciya ==" was changed).
     The capital stays (Ƙ) when the word right [before] or [after] it is such a K word too: a
-    title-cased name ("18 Kungiyoyin Kasa da Kasa": Ƙungiyoyin Ƙasa). Any other capitalised
+    title-cased name ("18 Kungiyoyin Kasa da Kasa": Ƙungiyoyin Ƙasa). restore_hausa passes the
+    word two away as [before] or [after] when the word between is "da" ("Kasa da Kasa"). Any other capitalised
     neighbour doesn't count: "Kasar Najeriya", "Kungiyar Paralympic" are ƙasar, ƙungiyar
     (Brydl's 23; docs/FINDINGS.md, 22 Nov 2026)."""
     if previous is None or _SENTENCE_END.search(previous):
@@ -158,6 +161,53 @@ def _hooked_k(token: str, previous: str | None, before: str | None = None,
     return token[: m.start()] + hooked + token[m.end():]
 
 
+def _is_da(token: str) -> bool:
+    return token.lower() == "da"
+
+
+def _neighbours(words: list[str], j: int) -> tuple[str | None, str | None]:
+    """The words next to [j] for the K word check, looking through "da": in "Kasa da Kasa" each
+    Kasa's neighbour is the other."""
+    before = words[j - 1] if j else None
+    if before is not None and _is_da(before) and j >= 2:
+        before = words[j - 2]
+    after = words[j + 1] if j + 1 < len(words) else None
+    if after is not None and _is_da(after) and j + 2 < len(words):
+        after = words[j + 2]
+    return before, after
+
+
+def _fold(token: str) -> str:
+    m = _WORD.search(token.translate(_D))
+    return plain(m.group()) if m else ""
+
+
+def _da_partners(words: list[str], restored: list[int], held: list[int]) -> list[tuple[int, int]]:
+    """(restored X, its partner) for each "X da X" whose two words fold to one (hooks and case
+    ignored): the partner, not restored itself and starting with K or k, takes X's letter. The
+    first X wins when both were restored differently. "kowa da kowa" has no restored word."""
+    out = []
+    for j in range(len(words) - 2):
+        if not _is_da(words[j + 1]) or not _fold(words[j]) or _fold(words[j]) != _fold(words[j + 2]):
+            continue
+        a, b = (j, j + 2) if j in restored else (j + 2, j)
+        if a not in restored or b in held:
+            continue
+        letter, other = _first(words[a]), _first(words[b])
+        if other in "Kk" or (b in restored and other != letter):
+            out.append((a, b))
+    return out
+
+
+def _first(token: str) -> str:
+    return _WORD.search(token).group()[0]
+
+
+def _with_first(token: str, letter: str) -> str:
+    m = _WORD.search(token)
+    return token[: m.start()] + letter + token[m.start() + 1:]
+
+
 def restore_hausa(lines: list[dict]) -> None:
     """Hausa pages, in place: "đ"/"Đ" become ɗ/Ɗ, and a mid-sentence capital K becomes ƙ (or Ƙ)
     where the ƙ word is listed (_hooked_k). Each changed word's index goes in the line's
@@ -170,14 +220,20 @@ def restore_hausa(lines: list[dict]) -> None:
         held = [j for j, t in enumerate(tokens) if _PAIR.search(t)]
         new = [t if j in held else t.translate(_D) for j, t in enumerate(tokens)]
         changed = [j for j, (a, b) in enumerate(zip(tokens, new)) if a != b]
+        restored_k: list[int] = []
         for j in range(len(new)):
             if j in held:
                 continue
             previous = next((new[i] for i in range(j - 1, -1, -1) if _LETTER.search(new[i])), None)
-            k = _hooked_k(new[j], previous, new[j - 1] if j else None, new[j + 1] if j + 1 < len(new) else None)
+            k = _hooked_k(new[j], previous, *_neighbours(new, j))
             if k is not None:
                 new[j] = k
                 changed.append(j)
+                restored_k.append(j)
+        # "X da X": a restored X gives its partner the same first letter (_da_partners).
+        for a, b in _da_partners(new, restored_k, held):
+            new[b] = _with_first(new[b], _first(new[a]))
+            changed.append(b)
         if held:
             line["held_words"] = held
         if new == tokens:

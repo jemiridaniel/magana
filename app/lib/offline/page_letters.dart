@@ -122,7 +122,7 @@ String? _kWord(String? token) {
 /// in the list. [previous] is the nearest earlier word with a letter in it, so a heading's
 /// "== Kuruciya ==" or a list's "• Kasar" starts its line. The capital stays (Ƙ) when the word
 /// right [before] or [after] it is such a K word too ("Kungiyoyin Kasa da Kasa": Ƙungiyoyin
-/// Ƙasa); a name doesn't count ("Kasar Najeriya": ƙasar).
+/// Ƙasa); a name doesn't count ("Kasar Najeriya": ƙasar). restoreHausa looks through "da".
 String? _hookedK(
   String token,
   String? previous, [
@@ -159,6 +159,7 @@ String? _hookedK(
     for (final (j, t) in tokens.indexed)
       if (words[j] != t) j,
   };
+  final restoredK = <int>{};
   for (var j = 0; j < words.length; j++) {
     if (held.contains(j)) continue;
     String? previous;
@@ -168,16 +169,68 @@ String? _hookedK(
         break;
       }
     }
-    final k = _hookedK(
-      words[j],
-      previous,
-      j > 0 ? words[j - 1] : null,
-      j + 1 < words.length ? words[j + 1] : null,
-    );
+    final (before, after) = _neighbours(words, j);
+    final k = _hookedK(words[j], previous, before, after);
     if (k != null) {
       words[j] = k;
       changed.add(j);
+      restoredK.add(j);
     }
   }
+  // "X da X": a restored X gives its partner the same first letter (_daPartners).
+  for (final (a, b) in _daPartners(words, restoredK, held)) {
+    words[b] = _withFirst(words[b], _first(words[a]));
+    changed.add(b);
+  }
   return (words: words, changed: changed, held: held);
+}
+
+bool _isDa(String token) => token.toLowerCase() == 'da';
+
+/// The words next to [j] for the K word check, looking through "da" (letters._neighbours):
+/// in "Kasa da Kasa" each Kasa's neighbour is the other.
+(String?, String?) _neighbours(List<String> words, int j) {
+  var before = j > 0 ? words[j - 1] : null;
+  if (before != null && _isDa(before) && j >= 2) before = words[j - 2];
+  var after = j + 1 < words.length ? words[j + 1] : null;
+  if (after != null && _isDa(after) && j + 2 < words.length) {
+    after = words[j + 2];
+  }
+  return (before, after);
+}
+
+String _fold(String token) {
+  final m = _word.firstMatch(
+    token.split('').map((c) => _strokeD[c] ?? c).join(),
+  );
+  return m == null ? '' : plainWord(m.group(0)!);
+}
+
+String _first(String token) => _word.firstMatch(token)!.group(0)![0];
+
+String _withFirst(String token, String letter) {
+  final m = _word.firstMatch(token)!;
+  return token.replaceRange(m.start, m.start + 1, letter);
+}
+
+/// (restored X, its partner) for each "X da X" whose two words fold to one, hooks and case
+/// ignored (letters._da_partners): the partner, starting with K or k, takes X's letter; the
+/// first X wins when both were restored differently. "kowa da kowa" has no restored word.
+List<(int, int)> _daPartners(
+  List<String> words,
+  Set<int> restored,
+  Set<int> held,
+) {
+  final out = <(int, int)>[];
+  for (var j = 0; j + 2 < words.length; j++) {
+    final f = _fold(words[j]);
+    if (!_isDa(words[j + 1]) || f.isEmpty || f != _fold(words[j + 2])) continue;
+    final (a, b) = restored.contains(j) ? (j, j + 2) : (j + 2, j);
+    if (!restored.contains(a) || held.contains(b)) continue;
+    final letter = _first(words[a]), other = _first(words[b]);
+    if ('Kk'.contains(other) || (restored.contains(b) && other != letter)) {
+      out.add((a, b));
+    }
+  }
+  return out;
 }

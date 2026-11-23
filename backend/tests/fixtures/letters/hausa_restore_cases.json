@@ -1,5 +1,5 @@
 {
- "_about": "Hausa pages: what letters.restore_hausa (server) and page_letters.restoreHausa (phone) make of a line, and which words they mark. Read by backend/tests/test_hausa_restore.py and app/test/hausa_restore_test.dart, so both sides pass the same cases. Brydl's review, 13 Nov 2026; capitals and plain-then-hooked pairs, 22 Nov 2026.",
+ "_about": "Hausa pages: what letters.restore_hausa (server) and page_letters.restoreHausa (phone) make of a line, and which words they mark. Read by backend/tests/test_hausa_restore.py and app/test/hausa_restore_test.dart, so both sides pass the same cases. Brydl's review, 13 Nov 2026; capitals and plain-then-hooked pairs, 22 Nov 2026; \"X da X\", 23 Nov 2026.",
  "cases": [
   {
    "why": "a capital K mid-sentence: hooked k, marked",
@@ -10,9 +10,9 @@
    ]
   },
   {
-   "why": "a title-cased name: two K words side by side keep their capital; the last Kasa doesn't",
+   "why": "a title-cased name: K words side by side, and through \"da\", keep their capital",
    "line": "187 (NPCs), 18 Kungiyoyin Kasa da Kasa,",
-   "restored": "187 (NPCs), 18 Ƙungiyoyin Ƙasa da ƙasa,",
+   "restored": "187 (NPCs), 18 Ƙungiyoyin Ƙasa da Ƙasa,",
    "marked": [
     3,
     4,
@@ -219,6 +219,74 @@
    "line": "Ya ga haƙƙin sa.",
    "restored": "Ya ga haƙƙin sa.",
    "marked": []
+  },
+  {
+   "why": "Hausa pack page-01: \"X da X\" through da keeps both capitals",
+   "line": "187 (NPCs), 18 Kungiyoyin Kasa da Kasa, kungiyoyin Wasanni",
+   "restored": "187 (NPCs), 18 Ƙungiyoyin Ƙasa da Ƙasa, kungiyoyin Wasanni",
+   "marked": [
+    3,
+    4,
+    6,
+    7
+   ]
+  },
+  {
+   "why": "\"X da X\": the restored X gives its small-k partner the same letter",
+   "line": "Ya ce Kasa da kasa.",
+   "restored": "Ya ce ƙasa da ƙasa.",
+   "marked": [
+    2,
+    4
+   ]
+  },
+  {
+   "why": "\"X da X\": the partner before da takes it too",
+   "line": "Ya ce kasa da Kasa.",
+   "restored": "Ya ce ƙasa da ƙasa.",
+   "marked": [
+    2,
+    4
+   ]
+  },
+  {
+   "why": "\"X da X\" in small letters: nothing restored, a small k is never changed",
+   "line": "Ya ce kasa da kasa.",
+   "restored": "Ya ce kasa da kasa.",
+   "marked": [
+    2,
+    4
+   ]
+  },
+  {
+   "why": "\"X da X\" with no ƙ word: unchanged",
+   "line": "Ya ce kowa da kowa.",
+   "restored": "Ya ce kowa da kowa.",
+   "marked": []
+  },
+  {
+   "why": "\"X da X\" not restored: the case is never changed",
+   "line": "Ya ga makarantar da Makarantar.",
+   "restored": "Ya ga makarantar da Makarantar.",
+   "marked": []
+  },
+  {
+   "why": "\"X da X\" at the line's start: the partner gives the first word its letter",
+   "line": "Kasa da Kasa ta zo.",
+   "restored": "Ƙasa da Ƙasa ta zo.",
+   "marked": [
+    0,
+    2
+   ]
+  },
+  {
+   "why": "two names joined by da: each K word before a name stays small",
+   "line": "Ya ga Kasar Najeriya da Kasar Nijar.",
+   "restored": "Ya ga ƙasar Najeriya da ƙasar Nijar.",
+   "marked": [
+    2,
+    5
+   ]
   }
  ]
 }

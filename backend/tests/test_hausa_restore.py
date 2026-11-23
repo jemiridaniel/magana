@@ -62,7 +62,10 @@ def test_the_word_list_has_a_plain_then_hooked_word_so_none_are_merged():
     """Brydl's review, 22 Nov 2026: "hadđaka" (haɗaka) has a plain d before its own hooked one.
     Merging the pair would be safe only if Hausa never writes one; our word list has "habɓakar"
     (from Wikipedia, likely haɓakar misspelt), so such words are left as read and marked. If
-    this list changes, decide again (docs/FINDINGS.md, 22 Nov 2026)."""
+    this list changes, decide again (docs/FINDINGS.md, 22 Nov 2026). 23 Nov 2026: habɓakar is
+    6 uses in the 1 Oct dump (haɓakar 1,690), above the bar for removing it; and 8 of the
+    dump's 36 pair words are a doubled letter ("sharudɗan": sharuɗɗan), so a merge into one
+    hooked letter would misspell them."""
     words = (Path(__file__).parents[2] / "content/word_lists/ha.txt").read_text(encoding="utf-8").split()
     assert sorted({w for w in words if letters._PAIR.search(w)}) == ["habɓakar"]
 

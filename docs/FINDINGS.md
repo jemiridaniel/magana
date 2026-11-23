@@ -13,6 +13,47 @@ No real phone and no blind or low-vision tester has been used yet.
 
 ---
 
+## 2026-11-23 · Hausa restore: "X da X" restored as one unit; "habɓakar" counted in Wikipedia, so pairs stay unmerged (Brydl's review)
+
+> Two follow-ups to the entry below, from Brydl. Server (`letters.restore_hausa`) and phone (`page_letters.restoreHausa`), shared fixture.
+
+- **"X da X" is one unit** ("Kasa da Kasa").
+  - The check for a K word next door now looks through "da".
+  - A restored X gives its partner the same first letter (Ƙ or ƙ), when the two fold to one word with hooks and case ignored and the partner starts with K or k.
+  - A word that isn't restored keeps its case: "makarantar da Makarantar" and "kowa da kowa" are unchanged.
+  - Hausa pack page-01 now reads "18 Ƙungiyoyin Ƙasa da Ƙasa,".
+  - "kasa da kasa" all in small letters stays as read: a small k on its own is never changed (13 Nov rule). "Kasa da kasa" gives "ƙasa da ƙasa".
+  - Brydl's 23 are still 20 right, 0 made Ƙ (3 left as K). Source Ƙ is still 1 of 4 on each reader: the 3 misses are not "X da X".
+  - Restoration counts on the 2 Nov readings are unchanged: server 28 changed / 26 as in the source / 3 capital only / 2 not; phone 16 / 14 / 3 / 2, plus 1 left as read. The second "Kasa," on page-01 is now Ƙasa, like its partner. The source has no hook there, so it still counts as not as in the source.
+- **"habɓakar" counted in Hausa Wikipedia.** Our copy of the dump the word list was built from had been deleted. The same dump (1 Oct 2026, the "latest" on 26 Oct; SHA-1 matches Wikimedia's) was downloaded again and counted with the build's own text cleaning (123,812 articles).
+
+  | Form | Uses | Articles |
+  |---|---|---|
+  | haɓaka | 17,584 | 10,733 |
+  | haɓakar | 1,690 | 1,221 |
+  | habɓaka | 7 | 6 |
+  | **habɓakar** | **6** | **4** |
+  | haɓɓakar | 12 | — |
+
+  - The bar for removing it was 2 uses or fewer, with haɓakar at least 10 times as frequent. habɓakar has 6, so it stays in the list and pairs are not merged.
+  - The dump has 36 plain-then-hooked words (54 uses in all). **8 of them are a doubled hooked letter typed as a pair**:
+
+    | Typed | Really | Uses of the real form |
+    |---|---|---|
+    | sharudɗan | sharuɗɗan | 756 |
+    | sharudɗa | sharuɗɗa | 409 |
+    | hakƙin | haƙƙin | 18,088 |
+    | buɗadɗen | buɗaɗɗen | 457 |
+
+    A merge into one hooked letter would misspell these. Others are a single letter ("kadɗan": kaɗan 5,488; "dɗin": ɗin). So even without habɓakar, a pair can't be merged safely by rule. Left as read and marked is still right.
+  - List: `~/magana-review-brydl/for-brydl/hausa_wiki_pair_words.csv` (not in the repo).
+- **Tests** (tag `safety`), shared cases:
+  - page-01's line;
+  - Kasa da kasa, kasa da Kasa, kasa da kasa;
+  - kowa da kowa, makarantar da Makarantar;
+  - Kasa da Kasa at a line's start;
+  - Kasar Najeriya da Kasar Nijar.
+
 ## 2026-11-22 · Hausa restore: a capital Ƙ kept between two K words; a plain-then-hooked word left as read (Brydl's review)
 
 > Two fixes to the Hausa K → ƙ / đ → ɗ restore, the same on the server (`letters.restore_hausa`) and the phone (`page_letters.restoreHausa`), from Brydl's review. Measured on the Hausa review pack's 2 Nov readings, with the same OCR output and today's restore.
