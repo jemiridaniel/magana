@@ -1,0 +1,32 @@
+# Keeps ~3 GB of RAM in use so Oracle doesn't reclaim the server as idle (magana-memhold;
+# docs/INFRA.md, "Oracle's idle reclaim"). Lets the memory go if the API needs it.
+[Unit]
+Description=Magana memory hold (Oracle idle reclaim)
+After=docker.service
+
+[Service]
+ExecStart=/usr/bin/python3 -I /usr/local/bin/magana-memhold
+Environment=HOLD_MB=3072 MIN_AVAILABLE_MB=4096 MAX_USED_PCT=50
+Restart=always
+RestartSec=60
+# Never in the API's way: lowest CPU and disk priority, capped, killed first if memory runs out.
+Nice=19
+CPUQuota=2%
+IOSchedulingClass=idle
+MemoryMax=3400M
+MemorySwapMax=0
+OOMScoreAdjust=1000
+# Needs nothing but /proc/meminfo.
+DynamicUser=yes
+NoNewPrivileges=yes
+PrivateNetwork=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectControlGroups=yes
+RestrictAddressFamilies=AF_UNIX
+CapabilityBoundingSet=
+
+[Install]
+WantedBy=multi-user.target

@@ -129,7 +129,17 @@ You move between places, so SSH isn't limited to one home address. It goes over 
 - **What happens:** idle instances may be stopped ("reclaimed"). Oracle's notice says a stopped instance can be started again if the shape is available. Its earlier announcement also mentions termination.
 - **Magana will look idle.** During testing, the CPU is mostly quiet between readings, and the API uses 1–2 GB of the 12 GB. So the risk is real on a free-tier account.
 - **Accounts on Pay As You Go are not reclaimed**, but upgrading puts a hold of about €93 on the card. **Decision (28 Oct 2026): the account stays on the free tier for now.**
-- **No fake load.** We don't run a load generator to look busy. It wastes the free capacity, and Oracle may treat it as abuse.
+- **Measured (27 Nov 2026):** 695 MB of 11,925 MB in use (about 6%), load about 0.1 on 2 cores. So the server is idle by this rule.
+- **Memory hold (decision, 27 Nov 2026):** `magana-memhold` keeps about 3 GB of RAM in use, so memory reads about 30%. It adds no CPU or network load. This replaces the earlier "no fake load" line. Oracle could still treat it as gaming the rule; the risk is accepted.
+  - **Files:** `deploy/server/magana-memhold` (Python, no packages) and `magana-memhold.service`. `bootstrap.sh` installs them, and `magana-deploy` keeps them up to date after each deploy.
+  - **What it does:** it touches 3 GB once, then sleeps. Every 15 s it reads `/proc/meminfo`.
+  - **The API comes first:**
+    - It lets go at once if available memory falls below 4 GB, or total use goes over 50%.
+    - It takes the memory again only after 10 minutes with room for it: at least 4 GB still available and total use no more than 50% with it.
+  - **systemd limits:** nice 19, `CPUQuota=2%`, idle disk priority, `MemoryMax=3400M`, no swap. It is the first process killed if memory runs out (`OOMScoreAdjust=1000`). It has no network and runs as a throwaway user.
+  - **Installed 27 Nov 2026** (by hand; the deploy keeps it up to date from then on). After it, `free -m` showed 3,798 MB of 11,925 MB in use (32%) and 8,126 MB available. Its CPU: 1.1 s to fill the memory (the 2% cap makes that take about a minute), then none. The API stayed healthy.
+  - **Check it:** `systemctl status magana-memhold` and `journalctl -u magana-memhold`. To stop it: `sudo systemctl disable --now magana-memhold`. It would come back with the next deploy, so to remove it for good, delete it from the deploy scripts.
+  - **Confirm in Oracle:** **Oracle Cloud → Compute → Instances → magana-api → Metrics → Memory Utilization** should read above 20%.
 - **If Oracle stops the instance:**
   1. The monitor emails within about 30 minutes ("Magana API is down").
   2. Open **Oracle Cloud → Compute → Instances → magana-api** and choose **Start**.

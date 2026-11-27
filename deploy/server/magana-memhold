@@ -1,0 +1,80 @@
+#!/usr/bin/env python3
+"""Holds some RAM so Oracle doesn't count the server as idle (docs/INFRA.md, "Oracle's idle reclaim").
+
+Oracle reclaims an Always Free A1 instance when CPU, network and memory are all under 20% for
+7 days. The API uses about 0.7 GB of the 12 GB, so this keeps HOLD_MB (3 GB) of memory in use,
+touched once and then left alone: no CPU, no network, no disk.
+
+The API always comes first. Checked every 15 s from /proc/meminfo:
+- the memory is let go at once if available memory drops below MIN_AVAILABLE_MB (4 GB), or if
+  total use goes over MAX_USED_PCT (50%);
+- it is taken again only when, with it, available memory stays at least MIN_AVAILABLE_MB and total
+  use at most MAX_USED_PCT, and that has been true for 10 minutes.
+systemd also caps it (MemoryMax), and it is the first process the kernel kills if memory runs out
+(OOMScoreAdjust=1000). Run by magana-memhold.service."""
+import mmap
+import os
+import signal
+import sys
+import time
+
+HOLD_MB = int(os.environ.get("HOLD_MB", "3072"))
+MIN_AVAILABLE_MB = int(os.environ.get("MIN_AVAILABLE_MB", "4096"))
+MAX_USED_PCT = float(os.environ.get("MAX_USED_PCT", "50"))
+CHECK_S = 15
+CALM_S = 600
+PAGE = mmap.PAGESIZE
+
+
+def meminfo() -> tuple[int, int]:
+    """(total, available) in MB."""
+    values = {}
+    with open("/proc/meminfo") as f:
+        for line in f:
+            key, rest = line.split(":", 1)
+            values[key] = int(rest.split()[0]) // 1024
+    return values["MemTotal"], values["MemAvailable"]
+
+
+def log(message: str) -> None:
+    print(message, flush=True)
+
+
+def take() -> mmap.mmap:
+    block = mmap.mmap(-1, HOLD_MB * 1024 * 1024, flags=mmap.MAP_PRIVATE | mmap.MAP_ANONYMOUS)
+    for i in range(0, len(block), PAGE):  # one non-zero byte per page makes the page real
+        block[i] = 1
+    return block
+
+
+def main() -> None:
+    signal.signal(signal.SIGTERM, lambda *_: sys.exit(0))
+    held = None
+    calm_since = None
+    first = True  # just started: take it straight away if there is room
+    while True:
+        total, available = meminfo()
+        used_pct = 100 * (total - available) / total
+        if held is not None:
+            if available < MIN_AVAILABLE_MB or used_pct > MAX_USED_PCT:
+                held.close()
+                held, calm_since = None, None
+                log(f"let go of {HOLD_MB} MB: available {available} MB, used {used_pct:.0f}%")
+        else:
+            room = (available - HOLD_MB >= MIN_AVAILABLE_MB
+                    and 100 * (total - available + HOLD_MB) / total <= MAX_USED_PCT)
+            if not room:
+                calm_since = None
+            elif calm_since is None:
+                calm_since = time.monotonic()
+            if room and (first or time.monotonic() - calm_since >= CALM_S):
+                held = take()
+                total, available = meminfo()
+                log(f"holding {HOLD_MB} MB: available {available} MB, "
+                    f"used {100 * (total - available) / total:.0f}% of {total} MB")
+        first = False
+        time.sleep(CHECK_S)
+
+
+if __name__ == "__main__":
+    main()

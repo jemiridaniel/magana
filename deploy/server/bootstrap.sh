@@ -6,7 +6,8 @@
 # - SSH: keys only, no root;
 # - Docker (the API's containers) and Caddy (TLS for api.magana.ng), both started at boot and
 #   restarted if they stop;
-# - magana-deploy and its timer (every minute).
+# - magana-deploy and its timer (every minute);
+# - magana-memhold: keeps ~3 GB of RAM in use so Oracle doesn't reclaim the server as idle.
 # It never prints a secret, and never writes /etc/magana/magana.env (scripts/server-env.sh does).
 set -euo pipefail
 HERE="$(cd "$(dirname "$0")" && pwd)"
@@ -153,6 +154,12 @@ systemctl daemon-reload
 systemctl enable caddy >/dev/null && systemctl reload-or-restart caddy
 systemctl enable --now magana-deploy.timer >/dev/null
 
+echo "== magana-memhold"
+install -m 755 "$HERE/magana-memhold" /usr/local/bin/magana-memhold
+install -m 644 "$HERE/magana-memhold.service" /etc/systemd/system/
+systemctl daemon-reload
+systemctl enable magana-memhold >/dev/null && systemctl restart magana-memhold
+
 echo "== done"
 echo "settings: $( [ -f /etc/magana/magana.env ] && echo present || echo 'missing (scripts/server-env.sh --push)')"
-systemctl is-active docker caddy magana-deploy.timer unattended-upgrades fail2ban tailscaled | paste -sd' ' -
+systemctl is-active docker caddy magana-deploy.timer magana-memhold unattended-upgrades fail2ban tailscaled | paste -sd' ' -

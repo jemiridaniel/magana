@@ -70,7 +70,7 @@ through_caddy() {  # commit: Caddy answers with it
   return 1
 }
 
-update_host_files() {  # the Caddyfile, this script and its timer, from the commit now live
+update_host_files() {  # the Caddyfile, this script, its timer and the memory hold, from the commit now live
   if ! cmp -s "$SRC/deploy/server/Caddyfile" /etc/caddy/Caddyfile; then
     if caddy validate --config "$SRC/deploy/server/Caddyfile" --adapter caddyfile >/dev/null 2>&1; then
       install -m 644 "$SRC/deploy/server/Caddyfile" /etc/caddy/Caddyfile && systemctl reload caddy && log "Caddyfile updated"
@@ -81,6 +81,14 @@ update_host_files() {  # the Caddyfile, this script and its timer, from the comm
   for u in magana-deploy.service magana-deploy.timer; do
     cmp -s "$SRC/deploy/server/$u" "/etc/systemd/system/$u" || { install -m 644 "$SRC/deploy/server/$u" /etc/systemd/system/; systemctl daemon-reload; }
   done
+  # The memory hold (docs/INFRA.md, "Oracle's idle reclaim"): installed, kept running, restarted on change.
+  local hold=0
+  cmp -s "$SRC/deploy/server/magana-memhold" /usr/local/bin/magana-memhold || \
+    { install -m 755 "$SRC/deploy/server/magana-memhold" /usr/local/bin/magana-memhold && hold=1; }
+  cmp -s "$SRC/deploy/server/magana-memhold.service" /etc/systemd/system/magana-memhold.service || \
+    { install -m 644 "$SRC/deploy/server/magana-memhold.service" /etc/systemd/system/ && systemctl daemon-reload && hold=1; }
+  systemctl is-enabled --quiet magana-memhold || { systemctl enable magana-memhold >/dev/null; hold=1; }
+  if [ "$hold" = 1 ]; then systemctl restart magana-memhold && log "magana-memhold updated"; fi
   cmp -s "$SRC/deploy/server/magana-deploy" /usr/local/bin/magana-deploy || \
     { bash -n "$SRC/deploy/server/magana-deploy" && install -m 755 "$SRC/deploy/server/magana-deploy" /usr/local/bin/magana-deploy.new \
       && mv /usr/local/bin/magana-deploy.new /usr/local/bin/magana-deploy && log "magana-deploy updated"; }
